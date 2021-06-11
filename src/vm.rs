@@ -112,8 +112,7 @@ fn read_number(c: u8, input: &mut InputManager) -> Result<u64, LexError> {
     Ok(number)
 }
 
-#[allow(dead_code)]
-fn lex(input: &mut InputManager) -> Vec<Token> {
+pub fn lex(input: &mut InputManager) -> Vec<Token> {
     let mut tokens = Vec::new();
     while let Ok(token) = next_token(input) {
         tokens.push(token);

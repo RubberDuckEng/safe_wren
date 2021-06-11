@@ -10,6 +10,7 @@ mod vm;
 use crate::vm::*;
 
 enum ExitCode {
+    Success = 0,
     GenericError = 1,
     Usage = 64,
     CompileError = 65,
@@ -56,19 +57,29 @@ fn run_file(path: &String) {
     });
 }
 
-fn main() {
-    let args: Vec<_> = env::args().collect();
+fn wren_test_main(args: &Vec<String>) {
     handle_usage(&args);
     // handle API tests.
     run_file(&args[1]);
+}
 
-    // if args.len() < 2 {
-    //     println!("Usage: `cargo run STATEMENT`");
-    //     println!("Example: `cargo run \"1+1\"`");
-    // } else {
+fn tokenize(source: &String) {
+    let mut input = InputManager::from_string(source.clone());
+    let tokens = lex(&mut input);
+    println!("{:?}", tokens);
+}
+
+fn main() {
+    let args: Vec<_> = env::args().collect();
+    if args[1] == "--tokenize" {
+        tokenize(&args[2]);
+    } else {
+        wren_test_main(&args);
+    }
+    exit(ExitCode::Success);
+
     //     let input = InputManager::from_string("1 + 1");
     //     // let token = next_token(&mut input);
-    //     // let tokens = lex(&mut input);
     //     let closure = compile(input);
     //     println!("{:?}", closure);
     //     let mut vm = WrenVM::new();
