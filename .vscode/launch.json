@@ -1,0 +1,47 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'wren_rust'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=wren_rust",
+                    "--package=wren_rust"
+                ],
+                "filter": {
+                    "name": "wren_rust",
+                    "kind": "bin"
+                }
+            },
+            "args": [
+                "1 + 1"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'wren_rust'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=wren_rust",
+                    "--package=wren_rust"
+                ],
+                "filter": {
+                    "name": "wren_rust",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

@@ -1,4 +1,11 @@
 use std::env;
+use std::fmt;
+
+#[macro_use]
+extern crate num_derive;
+extern crate num_traits;
+
+use num_traits::FromPrimitive;
 
 // MVP: Able to parse/execute "1+1"
 // Lexer
@@ -11,7 +18,7 @@ use std::env;
 pub enum Token {
     Op(char),
     Num(u64),
-    Paren(char),
+    // Paren(char),
     EndOfFile, // Does this belong here or as an Err?
 }
 
@@ -67,9 +74,9 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
             b'+' | b'*' => {
                 return Ok(Token::Op(c.into()));
             }
-            b'(' | b')' => {
-                return Ok(Token::Paren(c.into()));
-            }
+            // b'(' | b')' => {
+            //     return Ok(Token::Paren(c.into()));
+            // }
             b' ' => {
                 while input.peek().unwrap_or(b'\0') == b' ' {
                     input.next();
@@ -129,19 +136,61 @@ struct WrenFunction {}
 //     input: InputManager,
 // }
 
-struct Expression {}
-
-#[derive(PartialOrd, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialOrd, PartialEq, FromPrimitive)]
 enum Precedence {
+    None = 0, // Newlines, EOF, etc.
     Lowest,
     Assignment,
-    // Conditional,
-    // Sum,
-    // Product,
-    // Exponent,
-    // Prefix,
-    // Postfix,
-    // Call,
+    Term,
+    Call,
+}
+
+// fn turn(d: Direction) -> Direction {
+//     FromPrimitive::from_u8((d as u8 + 1) % 4).unwrap()
+// }
+
+impl Precedence {
+    fn one_higher(self) -> Precedence {
+        FromPrimitive::from_u8(self as u8 + 1).unwrap()
+    }
+}
+
+#[derive(Debug)]
+enum Ops {
+    Constant(usize),
+    Call(Signature),
+    End,
+}
+
+#[derive(Default)]
+struct Program {
+    constants: Vec<Value>,
+    code: Vec<Ops>,
+}
+
+impl Program {
+    fn emit_constant(&mut self, value: u64) {
+        let index = self.constants.len();
+        self.constants.push(Value::Num(value));
+        self.code.push(Ops::Constant(index));
+    }
+
+    fn emit_call(&mut self, signature: Signature) {
+        self.code.push(Ops::Call(signature));
+    }
+
+    fn emit_end(&mut self) {
+        self.code.push(Ops::End);
+    }
+}
+
+impl fmt::Debug for Program {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_tuple("")
+            .field(&self.constants)
+            .field(&self.code)
+            .finish()
+    }
 }
 
 // Takes an InputManager.  Knows how to use a Tokenizer to break it up into
@@ -149,79 +198,260 @@ enum Precedence {
 // Module / Function / Closure are likely the eventual objects?
 struct Parser {
     input: InputManager,
+    previous: Option<Token>,
+    current: Option<Token>,
+    next: Option<Token>,
+    program: Program,
 }
 
 // Following the Pratt parser example:
 // https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
-type PrefixParslet = fn(parser: &Parser, token: &Token) -> Expression;
-type InfixParslet = fn(parser: &Parser, left: Expression, token: &Token) -> Expression;
+type PrefixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
+type InfixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
 
-// Parslets belong in some sort of grouped parslet object per token?
-impl Token {
-    fn prefix_parslet(&self) -> PrefixParslet {
-        |_, _| Expression {}
+fn literal(parser: &mut Parser) -> Result<(), ParserError> {
+    // TODO: Pass in Token instead of needing to use "previous"?
+    println!("{:?}", parser.previous);
+    match parser.previous {
+        Some(Token::Num(num)) => parser.program.emit_constant(num),
+        _ => panic!("invalid literal"),
+    }
+    Ok(())
+}
+
+#[derive(Debug)]
+enum SignatureType {
+    Method,
+}
+
+#[derive(Debug)]
+struct Signature {
+    name: String,
+    call_type: SignatureType,
+    arity: u8,
+}
+
+fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
+    let rule = parser.previous.as_ref().unwrap().grammar_rule();
+    // TODO: Ignore newlines.
+    // Compile the right-hand side.
+    parser.parse_expression(rule.precedence.one_higher())?;
+
+    // Call the operator method on the left-hand side.
+    let signature = Signature {
+        name: rule.name.unwrap(),
+        call_type: SignatureType::Method,
+        arity: 1,
+    };
+    parser.program.emit_call(signature);
+    Ok(())
+}
+
+struct GrammarRule {
+    prefix: Option<PrefixParslet>,
+    infix: Option<InfixParslet>,
+    precedence: Precedence,
+    name: Option<String>,
+}
+
+impl GrammarRule {
+    fn prefix(prefix_parselet: PrefixParslet) -> GrammarRule {
+        GrammarRule {
+            prefix: Some(prefix_parselet),
+            infix: None,
+            precedence: Precedence::None,
+            name: None,
+        }
+    }
+    fn infix_operator(precedence: Precedence, name: &str) -> GrammarRule {
+        GrammarRule {
+            prefix: None,
+            infix: Some(infix_op),
+            precedence: precedence,
+            name: Some(name.to_string()),
+        }
     }
 
-    fn infix_parselet(&self) -> Option<InfixParslet> {
-        Some(|_, _, _| Expression {})
-    }
-
-    fn infix_precedence(&self) -> Precedence {
-        Precedence::Assignment
+    fn unused() -> GrammarRule {
+        GrammarRule {
+            prefix: None,
+            infix: None,
+            precedence: Precedence::None,
+            name: None,
+        }
     }
 }
 
-impl Parser {
-    fn consume(&self) -> Token {
-        Token::EndOfFile
+// Parslets belong in some sort of grouped parslet object per token?
+impl Token {
+    fn grammar_rule(&self) -> GrammarRule {
+        match self {
+            Token::Op(_) => GrammarRule::infix_operator(Precedence::Term, "+"),
+            Token::Num(_) => GrammarRule::prefix(literal),
+            Token::EndOfFile => GrammarRule::unused(),
+        }
     }
+}
 
-    fn look_ahead(&self, offset: u8) -> Token {
-        Token::EndOfFile
+#[derive(Debug)]
+enum ParserError {
+    Lexer(LexError),
+    Grammar(String),
+}
+
+impl Parser {
+    fn consume(&mut self) -> Result<(), ParserError> {
+        self.previous = self.current.take();
+        self.current = self.next.take();
+        self.next = Some(next_token(&mut self.input).map_err(|e| ParserError::Lexer(e))?);
+        Ok(())
     }
 
     fn next_precedence(&self) -> Precedence {
         // Grabs the next token to be consumed
         // Checks its precedence if it has one and returns that
         // Otherwise returns lowest precedence?
-        let current = self.look_ahead(0);
-        match current.infix_parselet() {
-            Some(parser) => current.infix_precedence(),
-            None => Precedence::Lowest,
+        // TODO: This should grab the GrammarRules object, not the parselet.
+        let grammar = self.current.as_ref().unwrap().grammar_rule();
+        match grammar.infix {
+            Some(_) => grammar.precedence,
+            None => Precedence::None,
         }
     }
-    fn parse_expression(&mut self, precedence: Precedence) -> Result<Expression, LexError> {
-        let prefix_token = self.consume();
-        let prefix_parser = prefix_token.prefix_parslet();
-        let mut left = prefix_parser(self, &prefix_token);
+    fn parse_expression(&mut self, precedence: Precedence) -> Result<(), ParserError> {
+        let prefix_parser = self
+            .current
+            .as_ref()
+            .unwrap()
+            .grammar_rule()
+            .prefix
+            .ok_or(ParserError::Grammar("Expected Expression".to_string()))?;
+        self.consume()?;
+        prefix_parser(self)?;
+
         while precedence < self.next_precedence() {
-            let token = next_token(&mut self.input)?;
-            let infix_parser = token.infix_parselet().expect("Invalid token");
-            left = infix_parser(self, left, &token);
+            self.consume()?;
+            let infix_parser = self
+                .previous
+                .as_ref()
+                .unwrap()
+                .grammar_rule()
+                .infix
+                .expect("Invalid token");
+            infix_parser(self)?;
         }
-        Ok(left)
+        Ok(())
     }
 }
 
-fn compile(input: InputManager) -> Result<WrenFunction, LexError> {
+fn compile(input: InputManager) -> Result<Program, ParserError> {
     // Init the parser & compiler
     // let mut compiler = WrenCompiler { input };
-    let mut parser = Parser { input };
+    let mut parser = Parser {
+        input: input,
+        previous: None,
+        current: None,
+        next: None,
+        program: Program::default(),
+    };
+    parser.consume()?; // Fill next
+    parser.consume()?; // Move next -> current
 
     // Ignore newlines
-    loop {
-        let token = next_token(&mut parser.input)?;
-        if token == Token::EndOfFile {
-            break;
-        }
-    }
+    // loop {
+    //     let token = next_token(&mut parser.input)?;
+    //     if token == Token::EndOfFile {
+    //         break;
+    //     }
+    // }
     // While not EOF
-    let expression = parser.parse_expression(Precedence::Lowest);
+    parser.parse_expression(Precedence::Lowest)?;
 
     // build definitions.
     // End of module
     // Emit return?
-    Ok(WrenFunction {})
+    parser.program.emit_end();
+    Ok(parser.program)
+}
+
+#[derive(Debug, Copy, Clone)]
+enum Value {
+    Num(u64),
+}
+
+enum RuntimeError {
+    StackUnderflow,
+    NumberRequired(Value),
+}
+
+impl Value {
+    fn try_into_num(self) -> Result<u64, RuntimeError> {
+        match self {
+            Value::Num(value) => Ok(value),
+            _ => Err(RuntimeError::NumberRequired(self)),
+        }
+    }
+}
+
+struct WrenVM {
+    stack: Vec<Value>,
+    pc: usize,
+}
+
+enum Method {
+    Primitive,
+    ForeignFunction,
+    Closure,
+}
+
+//   PRIMITIVE(vm->numClass, "+(_)", num_plus);
+
+impl WrenVM {
+    fn new() -> Self {
+        Self {
+            stack: Vec::new(),
+            pc: 0,
+        }
+    }
+
+    fn run(&mut self, program: Program) -> Result<(), RuntimeError> {
+        loop {
+            let op = &program.code[self.pc];
+            self.pc += 1;
+            match op {
+                Ops::Constant(index) => {
+                    self.push(program.constants[*index]);
+                }
+                Ops::Call(signature) => {
+                    if signature.name == "+" {
+                        let a = self.pop()?.try_into_num()?;
+                        let b = self.pop()?.try_into_num()?;
+                        self.push(Value::Num(a + b));
+                    }
+                    // Get symbol # from signature?
+                    // Args are on the stack.  Grab a slice?
+                    // Look up the class for the first arg.
+                    // If the class's method table doesn't include the symbol, bail.
+                    // method = &classObj->methods.data[symbol]
+                    // match on method type.
+                    // If primative, make direct call.  Expecting result on the stack.
+                }
+                Ops::End => {
+                    return Ok(());
+                }
+            }
+        }
+    }
+}
+
+impl WrenVM {
+    fn push(&mut self, value: Value) {
+        self.stack.push(value);
+    }
+
+    fn pop(&mut self) -> Result<Value, RuntimeError> {
+        self.stack.pop().ok_or(RuntimeError::StackUnderflow)
+    }
 }
 
 fn main() {
@@ -236,8 +466,11 @@ fn main() {
         };
         // let token = next_token(&mut input);
         // let tokens = lex(&mut input);
-        let object = compile(input);
-        println!("{:?}", object);
+        let closure = compile(input);
+        println!("{:?}", closure);
+        let mut vm = WrenVM::new();
+        vm.run(closure.expect("foo"));
+        println!("{:?}", vm.stack);
         // println!("Executing: {}", args[1]);
         // println!("{:?}", parse(&args[1])));
     }
