@@ -27,7 +27,7 @@ pub struct InputManager {
 }
 
 impl InputManager {
-    pub fn from_string(source: &str) -> InputManager {
+    pub fn from_string(source: String) -> InputManager {
         InputManager {
             source: source.as_bytes().to_vec(),
             offset: 0,
