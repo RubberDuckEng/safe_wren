@@ -5,29 +5,8 @@ use std::env;
 // Compiler
 // VM
 
-// #[derive(Debug, Clone)]
-// pub enum GrammarItem {
-//     Product,
-//     Sum,
-//     Number(u64),
-//     Paren,
-// }
-
-// #[derive(Debug, Clone)]
-// pub struct ParseNode {
-//     pub children: Vec<ParseNode>,
-//     pub entry: GrammarItem,
-// }
-
-// impl ParseNode {
-//     pub fn new() -> ParseNode {
-//         ParseNode {
-//             children: Vec::new(),
-//             entry: GrammarItem::Paren,
-//         }
-//     }
-// }
-
+// Unclear how to check against a type concisely?
+// matches!(a, Token::Num(_)) maybe?
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Op(char),
@@ -36,6 +15,10 @@ pub enum Token {
     EndOfFile, // Does this belong here or as an Err?
 }
 
+// Is this really the tokenizer?
+// Should have an input stream which it can pull (and cache) from
+// And then the ability to pull more when needed and look-ahead when needed.
+// Keeps track of when the current token starts, and knows how to start a new.
 struct InputManager {
     source: Vec<u8>,
     offset: usize,
@@ -66,6 +49,13 @@ enum LexError {
     UnexpectedChar,
 }
 
+// Takes an InputManager (from which it gets source)
+// Produces tokens one at a time.  Keeps reference to current and next
+// as well as can look-ahead (and cache in a buffer if needed)?
+// Knows if it's at the end of the file.
+// struct Tokenizer {}
+
+// Probably belongs on the InputManager/Tokenizer?
 fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
     while !input.is_at_end() {
         let c = input.next();
@@ -93,6 +83,9 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
     return Ok(Token::EndOfFile);
 }
 
+// Knows how to advance to the end of something that looks like a number
+// and then turn that into a token.
+// Belongs on the Tokenizer/InputManager.
 fn read_number(c: u8, input: &mut InputManager) -> Result<u64, LexError> {
     fn from_ascii_digit(c: u8) -> u64 {
         assert!(c.is_ascii_digit());
@@ -111,120 +104,7 @@ fn read_number(c: u8, input: &mut InputManager) -> Result<u64, LexError> {
     Ok(number)
 }
 
-// pub fn parse(input: &String) -> Result<ParseNode, String> {
-//     let tokens = nextToken(input)?;
-//     println!("{:?}", tokens);
-//     parse_expr(&tokens, 0).and_then(|(n, i)| {
-//         if i == tokens.len() {
-//             Ok(n)
-//         } else {
-//             Err(format!(
-//                 "Expected end of input, found {:?} at {}",
-//                 tokens[i], i
-//             ))
-//         }
-//     })
-// }
-
-// fn parse_expr(tokens: &Vec<Token>, pos: usize) -> Result<(ParseNode, usize), String> {
-//     let (node_summand, next_pos) = parse_summand(tokens, pos)?;
-//     let c = tokens.get(next_pos);
-//     match c {
-//         Some(&Token::Op('+')) => {
-//             // recurse on the expr
-//             let mut sum = ParseNode::new();
-//             sum.entry = GrammarItem::Sum;
-//             sum.children.push(node_summand);
-//             let (rhs, i) = parse_expr(tokens, next_pos + 1)?;
-//             sum.children.push(rhs);
-//             Ok((sum, i))
-//         }
-//         _ => {
-//             // we have just the summand production, nothing more.
-//             Ok((node_summand, next_pos))
-//         }
-//     }
-// }
-
-// fn parse_summand(tokens: &Vec<Token>, pos: usize) -> Result<(ParseNode, usize), String> {
-//     let (node_term, next_pos) = parse_term(tokens, pos)?;
-//     let c = tokens.get(next_pos);
-//     match c {
-//         Some(&Token::Op('*')) => {
-//             // recurse on the summand
-//             let mut product = ParseNode::new();
-//             product.entry = GrammarItem::Product;
-//             product.children.push(node_term);
-//             let (rhs, i) = parse_summand(tokens, next_pos + 1)?;
-//             product.children.push(rhs);
-//             Ok((product, i))
-//         }
-//         _ => {
-//             // we have just the term production, nothing more.
-//             Ok((node_term, next_pos))
-//         }
-//     }
-// }
-
-// fn parse_term(tokens: &Vec<Token>, pos: usize) -> Result<(ParseNode, usize), String> {
-//     let c: &Token = tokens.get(pos).ok_or(String::from(
-//         "Unexpected end of input, expected paren or number",
-//     ))?;
-//     match c {
-//         &Token::Num(n) => {
-//             let mut node = ParseNode::new();
-//             node.entry = GrammarItem::Number(n);
-//             Ok((node, pos + 1))
-//         }
-//         &Token::Paren(c) => {
-//             match c {
-//                 '(' | '[' | '{' => {
-//                     parse_expr(tokens, pos + 1).and_then(|(node, next_pos)| {
-//                         if let Some(&Token::Paren(c2)) = tokens.get(next_pos) {
-//                             if c2 == matching(c) {
-//                                 // okay!
-//                                 let mut paren = ParseNode::new();
-//                                 paren.children.push(node);
-//                                 Ok((paren, next_pos + 1))
-//                             } else {
-//                                 Err(format!(
-//                                     "Expected {} but found {} at {}",
-//                                     matching(c),
-//                                     c2,
-//                                     next_pos
-//                                 ))
-//                             }
-//                         } else {
-//                             Err(format!(
-//                                 "Expected closing paren at {} but found {:?}",
-//                                 next_pos,
-//                                 tokens.get(next_pos)
-//                             ))
-//                         }
-//                     })
-//                 }
-//                 _ => Err(format!("Expected paren at {} but found {:?}", pos, c)),
-//             }
-//         }
-//         _ => Err(format!(
-//             "Unexpected token {:?}, expected paren or number",
-//             { c }
-//         )),
-//     }
-// }
-
-// fn matching(c: char) -> char {
-//     match c {
-//         ')' => '(',
-//         ']' => '[',
-//         '}' => '{',
-//         '(' => ')',
-//         '[' => ']',
-//         '{' => '}',
-//         _ => panic!("should have been a parenthesis!"),
-//     }
-// }
-
+#[allow(dead_code)]
 fn lex(input: &mut InputManager) -> Vec<Token> {
     let mut tokens = Vec::new();
     while let Ok(token) = next_token(input) {
@@ -236,20 +116,112 @@ fn lex(input: &mut InputManager) -> Vec<Token> {
     tokens
 }
 
+// Keeps the buffer of compiled code for the compiled function.
+// Eventually will keep a few other things?
+#[derive(Debug, Clone)]
 struct WrenFunction {}
 
-enum OpCodes {
-    End,
+// enum OpCodes {
+//     End,
+// }
+
+// struct WrenCompiler {
+//     input: InputManager,
+// }
+
+struct Expression {}
+
+#[derive(PartialOrd, PartialEq)]
+enum Precedence {
+    Lowest,
+    Assignment,
+    // Conditional,
+    // Sum,
+    // Product,
+    // Exponent,
+    // Prefix,
+    // Postfix,
+    // Call,
 }
 
-fn compile(input: &mut InputManager) -> WrenFunction {
+// Takes an InputManager.  Knows how to use a Tokenizer to break it up into
+// tokens one at a time.  Turns a stream of tokens into a tree of objects.
+// Module / Function / Closure are likely the eventual objects?
+struct Parser {
+    input: InputManager,
+}
+
+// Following the Pratt parser example:
+// https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
+type PrefixParslet = fn(parser: &Parser, token: &Token) -> Expression;
+type InfixParslet = fn(parser: &Parser, left: Expression, token: &Token) -> Expression;
+
+// Parslets belong in some sort of grouped parslet object per token?
+impl Token {
+    fn prefix_parslet(&self) -> PrefixParslet {
+        |_, _| Expression {}
+    }
+
+    fn infix_parselet(&self) -> Option<InfixParslet> {
+        Some(|_, _, _| Expression {})
+    }
+
+    fn infix_precedence(&self) -> Precedence {
+        Precedence::Assignment
+    }
+}
+
+impl Parser {
+    fn consume(&self) -> Token {
+        Token::EndOfFile
+    }
+
+    fn look_ahead(&self, offset: u8) -> Token {
+        Token::EndOfFile
+    }
+
+    fn next_precedence(&self) -> Precedence {
+        // Grabs the next token to be consumed
+        // Checks its precedence if it has one and returns that
+        // Otherwise returns lowest precedence?
+        let current = self.look_ahead(0);
+        match current.infix_parselet() {
+            Some(parser) => current.infix_precedence(),
+            None => Precedence::Lowest,
+        }
+    }
+    fn parse_expression(&mut self, precedence: Precedence) -> Result<Expression, LexError> {
+        let prefix_token = self.consume();
+        let prefix_parser = prefix_token.prefix_parslet();
+        let mut left = prefix_parser(self, &prefix_token);
+        while precedence < self.next_precedence() {
+            let token = next_token(&mut self.input)?;
+            let infix_parser = token.infix_parselet().expect("Invalid token");
+            left = infix_parser(self, left, &token);
+        }
+        Ok(left)
+    }
+}
+
+fn compile(input: InputManager) -> Result<WrenFunction, LexError> {
     // Init the parser & compiler
+    // let mut compiler = WrenCompiler { input };
+    let mut parser = Parser { input };
+
     // Ignore newlines
+    loop {
+        let token = next_token(&mut parser.input)?;
+        if token == Token::EndOfFile {
+            break;
+        }
+    }
     // While not EOF
+    let expression = parser.parse_expression(Precedence::Lowest);
+
     // build definitions.
     // End of module
     // Emit return?
-    WrenFunction {}
+    Ok(WrenFunction {})
 }
 
 fn main() {
@@ -258,13 +230,14 @@ fn main() {
         println!("Usage: `cargo run STATEMENT`");
         println!("Example: `cargo run \"1+1\"`");
     } else {
-        let mut input = InputManager {
+        let input = InputManager {
             source: "1 + 1".as_bytes().to_vec(),
             offset: 0,
         };
         // let token = next_token(&mut input);
-        let tokens = lex(&mut input);
-        println!("{:?}", tokens);
+        // let tokens = lex(&mut input);
+        let object = compile(input);
+        println!("{:?}", object);
         // println!("Executing: {}", args[1]);
         // println!("{:?}", parse(&args[1])));
     }
