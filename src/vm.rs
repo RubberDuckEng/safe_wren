@@ -1,5 +1,6 @@
 use std::error;
 use std::fmt;
+use std::str;
 
 use num_traits::FromPrimitive;
 
@@ -7,12 +8,14 @@ use num_traits::FromPrimitive;
 pub enum Token {
     LeftParen,
     RightParen,
-    Op(char),
+    OpTerm(char),
+    OpFactor(char),
     Num(u64),
     Dot,
     Keyword(String),
     Name(String),
     // Paren(char),
+    Newline,
     EndOfFile, // Does this belong here or as an Err?
 }
 
@@ -88,7 +91,8 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
                 return Ok(Token::Num(n));
             }
             b'.' => return Ok(Token::Dot),
-            b'+' | b'*' => return Ok(Token::Op(c.into())),
+            b'+' | b'-' => return Ok(Token::OpTerm(c.into())),
+            b'*' | b'/' | b'%' => return Ok(Token::OpFactor(c.into())),
             b'(' => return Ok(Token::LeftParen),
             b')' => return Ok(Token::RightParen),
             b' ' => {
@@ -100,6 +104,7 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
                 return Ok(read_name(c, input));
             }
+            b'\n' => return Ok(Token::Newline),
             _ => {
                 return Err(LexError::UnexpectedChar(c as char));
             }
@@ -182,7 +187,8 @@ enum Precedence {
     None = 0, // Newlines, EOF, etc.
     Lowest,
     Assignment,
-    Term,
+    Term,   // + -
+    Factor, // * / %
     Call,
 }
 
@@ -201,6 +207,7 @@ enum Ops {
     Constant(usize),
     Call(Signature),
     Load(Variable),
+    Pop,
     End,
 }
 
@@ -221,6 +228,10 @@ impl Compiler {
 
     fn emit_call(&mut self, signature: Signature) {
         self.code.push(Ops::Call(signature));
+    }
+
+    fn emit_pop(&mut self) {
+        self.code.push(Ops::Pop);
     }
 
     fn emit_end(&mut self) {
@@ -394,9 +405,26 @@ fn expression(parser: &mut Parser) -> Result<(), ParserError> {
     parser.parse_precendence(Precedence::Lowest)
 }
 
+// Break, continue, if, for, while, blocks, etc.
+// Unlike expression, does not leave something on the stack.
+fn statement(parser: &mut Parser) -> Result<(), ParserError> {
+    // No statements currently implemented
+    // Fall through to expression case, but pop the stack after.
+    expression(parser)?;
+    parser.compiler.emit_pop();
+    Ok(())
+}
+
+// Class definitions, imports, etc.
+fn definition(parser: &mut Parser) -> Result<(), ParserError> {
+    // We don't handle class definitions, etc. yet.
+    // Fall through to the "statement" case.
+    statement(parser)
+}
+
 fn grouping(parser: &mut Parser) -> Result<(), ParserError> {
-    expression(parser);
-    parser.consume_expecting_right_paren();
+    expression(parser)?;
+    parser.consume_expecting_right_paren()?;
     Ok(())
 }
 
@@ -459,12 +487,14 @@ impl Token {
         match self {
             Token::LeftParen => GrammarRule::prefix(grouping),
             Token::RightParen => GrammarRule::unused(),
-            Token::Op(_) => GrammarRule::infix_operator(Precedence::Term, "+"),
+            Token::OpTerm(c) => GrammarRule::infix_operator(Precedence::Term, &c.to_string()),
+            Token::OpFactor(c) => GrammarRule::infix_operator(Precedence::Factor, &c.to_string()),
             Token::Num(_) => GrammarRule::prefix(literal),
-            Token::EndOfFile => GrammarRule::unused(),
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
             Token::Keyword(_) => GrammarRule::unused(), // TODO: This is wrong.
             Token::Name(_) => GrammarRule::prefix(name), // TODO: Also wrong.
+            Token::Newline => GrammarRule::unused(),
+            Token::EndOfFile => GrammarRule::unused(),
         }
     }
 }
@@ -500,11 +530,33 @@ impl From<LexError> for ParserError {
 }
 
 impl<'a> Parser<'a> {
+    // This is just called nextToken(Compiler) in wren_c
     fn consume(&mut self) -> Result<(), ParserError> {
         self.previous = self.current.take();
         self.current = self.next.take();
         self.next = Some(next_token(&mut self.input).map_err(|e| ParserError::Lexer(e))?);
         Ok(())
+    }
+
+    // Hack until we split TokenType and Token.
+    fn match_eof(&mut self) -> Result<bool, ParserError> {
+        match self.current {
+            Some(Token::EndOfFile) => {
+                self.consume()?;
+                Ok(true)
+            }
+            _ => Ok(false),
+        }
+    }
+    // Hack until we split TokenType and Token.
+    fn match_newline(&mut self) -> Result<bool, ParserError> {
+        match self.current {
+            Some(Token::Newline) => {
+                self.consume()?;
+                Ok(true)
+            }
+            _ => Ok(false),
+        }
     }
 
     // Hack until we split TokenType and Token.
@@ -522,6 +574,15 @@ impl<'a> Parser<'a> {
         match self.previous {
             Some(Token::RightParen) => Ok(()),
             _ => Err(ParserError::Grammar("Expected right paren".into())),
+        }
+    }
+
+    // Hack until we split TokenType and Token.
+    fn consume_expecting_eof(&mut self) -> Result<(), ParserError> {
+        self.consume()?;
+        match self.previous {
+            Some(Token::EndOfFile) => Ok(()),
+            _ => Err(ParserError::Grammar("Expected end of file".into())),
         }
     }
 
@@ -628,19 +689,27 @@ pub fn compile<'a>(
     parser.consume()?; // Fill next
     parser.consume()?; // Move next -> current
 
-    // Ignore newlines
-    // loop {
-    //     let token = next_token(&mut parser.input)?;
-    //     if token == Token::EndOfFile {
-    //         break;
-    //     }
-    // }
-    // While not EOF
-    parser.parse_precendence(Precedence::Lowest)?;
+    // FIXME: Ignore leading newlines
+    loop {
+        let found_eof = parser.match_eof()?;
+        if found_eof {
+            break;
+        }
+        definition(&mut parser)?;
 
-    // build definitions.
-    // End of module
-    // Emit return?
+        let found_newline = parser.match_newline()?;
+        // If there is no newline we must be EOF?
+        if !found_newline {
+            parser.consume_expecting_eof()?;
+            break;
+        }
+    }
+    // parser.emit_end_module();
+    // parser.emit_return();
+
+    // FIXME: Check for undefined implicit variables and throw errors.
+
+    // FIXME: Missing lots of "endCompiler" cleanup here.
     parser.compiler.emit_end();
     Ok(Closure {
         function: Function {
@@ -723,6 +792,9 @@ impl WrenVM {
                 Ops::Load(variable) => {
                     let value = self.module.variables[variable.index];
                     self.push(value);
+                }
+                Ops::Pop => {
+                    self.pop()?;
                 }
                 Ops::End => {
                     return Ok(());
