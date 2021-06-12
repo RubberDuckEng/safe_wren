@@ -263,7 +263,6 @@ type InfixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
 
 fn literal(parser: &mut Parser) -> Result<(), ParserError> {
     // TODO: Pass in Token instead of needing to use "previous"?
-    println!("{:?}", parser.previous);
     match parser.previous {
         Some(Token::Num(num)) => parser.compiler.emit_constant(num),
         _ => panic!("invalid literal"),
@@ -288,7 +287,7 @@ fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
     let rule = parser.previous.as_ref().unwrap().grammar_rule();
     // TODO: Ignore newlines.
     // Compile the right-hand side.
-    parser.parse_expression(rule.precedence.one_higher())?;
+    parser.parse_precendence(rule.precedence.one_higher())?;
 
     // Call the operator method on the left-hand side.
     let signature = Signature {
@@ -338,7 +337,7 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
 
 fn call(parser: &mut Parser) -> Result<(), ParserError> {
     // ignoreNewlines(compiler);
-    parser.consume_expecting_dot()?;
+    parser.consume_expecting_name()?;
     method_call(parser)?; // namedCall in the original
     Ok(())
 }
@@ -499,14 +498,15 @@ impl<'a> Parser<'a> {
     }
 
     // Hack until we split TokenType and Token.
-    fn consume_expecting_dot(&mut self) -> Result<(), ParserError> {
-        match self.next {
-            Some(Token::Dot) => self.consume(),
-            _ => Err(ParserError::Grammar("Expected dot".into())),
+    fn consume_expecting_name(&mut self) -> Result<(), ParserError> {
+        self.consume()?;
+        match self.previous {
+            Some(Token::Name(_)) => Ok(()),
+            _ => Err(ParserError::Grammar("Expected name".into())),
         }
     }
 
-    fn next_precedence(&self) -> Precedence {
+    fn current_precedence(&self) -> Precedence {
         // Grabs the next token to be consumed
         // Checks its precedence if it has one and returns that
         // Otherwise returns lowest precedence?
@@ -517,18 +517,18 @@ impl<'a> Parser<'a> {
             None => Precedence::None,
         }
     }
-    fn parse_expression(&mut self, precedence: Precedence) -> Result<(), ParserError> {
+    fn parse_precendence(&mut self, precedence: Precedence) -> Result<(), ParserError> {
+        self.consume()?;
         let prefix_parser = self
-            .current
+            .previous
             .as_ref()
             .unwrap()
             .grammar_rule()
             .prefix
             .ok_or(ParserError::Grammar("Expected Expression".into()))?;
-        self.consume()?;
         prefix_parser(self)?;
 
-        while precedence < self.next_precedence() {
+        while precedence < self.current_precedence() {
             self.consume()?;
             let infix_parser = self
                 .previous
@@ -617,7 +617,7 @@ pub fn compile<'a>(
     //     }
     // }
     // While not EOF
-    parser.parse_expression(Precedence::Lowest)?;
+    parser.parse_precendence(Precedence::Lowest)?;
 
     // build definitions.
     // End of module
