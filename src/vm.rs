@@ -5,6 +5,8 @@ use num_traits::FromPrimitive;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
+    LeftParen,
+    RightParen,
     Op(char),
     Num(u64),
     Dot,
@@ -85,15 +87,10 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
                 let n = read_number(c, input)?;
                 return Ok(Token::Num(n));
             }
-            b'.' => {
-                return Ok(Token::Dot);
-            }
-            b'+' | b'*' => {
-                return Ok(Token::Op(c.into()));
-            }
-            // b'(' | b')' => {
-            //     return Ok(Token::Paren(c.into()));
-            // }
+            b'.' => return Ok(Token::Dot),
+            b'+' | b'*' => return Ok(Token::Op(c.into())),
+            b'(' => return Ok(Token::LeftParen),
+            b')' => return Ok(Token::RightParen),
             b' ' => {
                 while input.peek().unwrap_or(b'\0') == b' ' {
                     input.next();
@@ -393,6 +390,16 @@ fn name(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
+fn expression(parser: &mut Parser) -> Result<(), ParserError> {
+    parser.parse_precendence(Precedence::Lowest)
+}
+
+fn grouping(parser: &mut Parser) -> Result<(), ParserError> {
+    expression(parser);
+    parser.consume_expecting_right_paren();
+    Ok(())
+}
+
 struct GrammarRule {
     prefix: Option<PrefixParslet>,
     infix: Option<InfixParslet>,
@@ -450,6 +457,8 @@ impl Token {
     fn grammar_rule(&self) -> GrammarRule {
         // This should switch on TokenType, not Token itself.
         match self {
+            Token::LeftParen => GrammarRule::prefix(grouping),
+            Token::RightParen => GrammarRule::unused(),
             Token::Op(_) => GrammarRule::infix_operator(Precedence::Term, "+"),
             Token::Num(_) => GrammarRule::prefix(literal),
             Token::EndOfFile => GrammarRule::unused(),
@@ -504,6 +513,15 @@ impl<'a> Parser<'a> {
         match self.previous {
             Some(Token::Name(_)) => Ok(()),
             _ => Err(ParserError::Grammar("Expected name".into())),
+        }
+    }
+
+    // Hack until we split TokenType and Token.
+    fn consume_expecting_right_paren(&mut self) -> Result<(), ParserError> {
+        self.consume()?;
+        match self.previous {
+            Some(Token::RightParen) => Ok(()),
+            _ => Err(ParserError::Grammar("Expected right paren".into())),
         }
     }
 
