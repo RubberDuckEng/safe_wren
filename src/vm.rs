@@ -51,13 +51,13 @@ impl InputManager {
 
 #[derive(Debug, Clone)]
 pub enum LexError {
-    UnexpectedChar,
+    UnexpectedChar(char),
 }
 
 impl fmt::Display for LexError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            LexError::UnexpectedChar => write!(f, "Unexpected char"),
+            LexError::UnexpectedChar(c) => write!(f, "Unexpected char '{}'", c),
         }
     }
 }
@@ -65,7 +65,7 @@ impl fmt::Display for LexError {
 impl error::Error for LexError {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         match self {
-            LexError::UnexpectedChar => None,
+            LexError::UnexpectedChar(_) => None,
         }
     }
 }
@@ -104,7 +104,7 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
                 return Ok(read_name(c, input));
             }
             _ => {
-                return Err(LexError::UnexpectedChar);
+                return Err(LexError::UnexpectedChar(c as char));
             }
         }
     }
@@ -163,16 +163,17 @@ fn read_name(start_char: u8, input: &mut InputManager) -> Token {
     }
 }
 
-pub fn lex(input: InputManager) -> Vec<Token> {
+pub fn lex(input: InputManager) -> Result<Vec<Token>, LexError> {
     let mut input_manager = input;
     let mut tokens = Vec::new();
-    while let Ok(token) = next_token(&mut input_manager) {
+    loop {
+        let token = next_token(&mut input_manager)?;
         tokens.push(token);
         if tokens.last().unwrap() == &Token::EndOfFile {
             break;
         }
     }
-    tokens
+    Ok(tokens)
 }
 
 // enum OpCodes {
