@@ -63,16 +63,24 @@ fn wren_test_main(args: &Vec<String>) {
     run_file(&args[1]);
 }
 
-fn tokenize(source: &String) {
-    let mut input = InputManager::from_string(source.clone());
-    let tokens = lex(&mut input);
+fn print_tokens(source: &String) {
+    let input = InputManager::from_string(source.clone());
+    let tokens = lex(input);
     println!("{:?}", tokens);
+}
+
+fn print_bytecode(source: &String) {
+    let input = InputManager::from_string(source.clone());
+    let closure = compile(input);
+    println!("{:?}", closure);
 }
 
 fn main() {
     let args: Vec<_> = env::args().collect();
     if args[1] == "--tokenize" {
-        tokenize(&args[2]);
+        print_tokens(&args[2]);
+    } else if args[1] == "--compile" {
+        print_bytecode(&args[2]);
     } else {
         wren_test_main(&args);
     }
