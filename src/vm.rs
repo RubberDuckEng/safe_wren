@@ -557,6 +557,11 @@ impl Module {
     fn lookup_symbol(&self, name: &str) -> Option<usize> {
         self.variable_names.iter().position(|e| e.eq(name))
     }
+
+    fn define_variable(&mut self, name: &str, value: Value) {
+        self.variable_names.push(name.into());
+        self.variables.push(value);
+    }
 }
 
 #[derive(Debug)]
@@ -588,6 +593,9 @@ pub fn compile<'a>(
     //                      coreModule->variableNames.data[i]->length,
     //                      coreModule->variables.data[i], NULL);
     // }
+
+    // Initailize the fake "core" module.
+    vm.module.define_variable("System", Value::Num(1));
 
     // Init the parser & compiler
     let mut parser = Parser {
@@ -631,6 +639,9 @@ pub enum Value {
 #[derive(Debug)]
 pub enum RuntimeError {
     StackUnderflow,
+    // VariableAlreadyDefined,
+    // TooManyVariablesDefined,
+    // VariableUsedBeforeDefinition,
     NumberRequired(Value),
 }
 
@@ -647,6 +658,8 @@ pub struct WrenVM {
     module: Module, // No support for multiple modules yet.
     pub stack: Vec<Value>,
     pc: usize,
+    // Missing pointers for wren_core.
+    // Missing Global Symbol Table.
 }
 
 // enum Method {
@@ -665,6 +678,7 @@ impl WrenVM {
             pc: 0,
         }
     }
+
     pub fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {
         loop {
             let op = &closure.function.code[self.pc];
