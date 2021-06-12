@@ -46,7 +46,8 @@ fn run_file(path: &String) {
     // handle module setup.
     let mut vm = WrenVM::new();
     let input = InputManager::from_string(source);
-    let closure = compile(input).unwrap_or_else(|e| {
+    let module_name = "dummy_module";
+    let closure = compile(&mut vm, input, module_name).unwrap_or_else(|e| {
         println!("{:?}", e);
         exit(ExitCode::CompileError);
     });
@@ -70,8 +71,9 @@ fn print_tokens(source: &String) {
 }
 
 fn print_bytecode(source: &String) {
+    let mut vm = WrenVM::new();
     let input = InputManager::from_string(source.clone());
-    let closure = compile(input);
+    let closure = compile(&mut vm, input, "dummy_module");
     println!("{:?}", closure);
 }
 

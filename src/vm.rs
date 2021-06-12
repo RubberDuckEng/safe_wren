@@ -1,14 +1,8 @@
+use std::error;
 use std::fmt;
 
 use num_traits::FromPrimitive;
 
-// MVP: Able to parse/execute "1+1"
-// Lexer
-// Compiler
-// VM
-
-// Unclear how to check against a type concisely?
-// matches!(a, Token::Num(_)) maybe?
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Op(char),
@@ -58,6 +52,22 @@ impl InputManager {
 #[derive(Debug, Clone)]
 pub enum LexError {
     UnexpectedChar,
+}
+
+impl fmt::Display for LexError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            LexError::UnexpectedChar => write!(f, "Unexpected char"),
+        }
+    }
+}
+
+impl error::Error for LexError {
+    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
+        match self {
+            LexError::UnexpectedChar => None,
+        }
+    }
 }
 
 // Takes an InputManager (from which it gets source)
@@ -192,6 +202,7 @@ impl Precedence {
 enum Ops {
     Constant(usize),
     Call(Signature),
+    Load(Variable),
     End,
 }
 
@@ -217,6 +228,10 @@ impl Compiler {
     fn emit_end(&mut self) {
         self.code.push(Ops::End);
     }
+
+    fn emit_load(&mut self, variable: Variable) {
+        self.code.push(Ops::Load(variable))
+    }
 }
 
 impl fmt::Debug for Compiler {
@@ -231,8 +246,10 @@ impl fmt::Debug for Compiler {
 // Takes an InputManager.  Knows how to use a Tokenizer to break it up into
 // tokens one at a time.  Turns a stream of tokens into a tree of objects.
 // Module / Function / Closure are likely the eventual objects?
-struct Parser {
+// Parser has the lifetime of a given compilation of a module.
+struct Parser<'a> {
     input: InputManager,
+    module: &'a Module,
     previous: Option<Token>,
     current: Option<Token>,
     next: Option<Token>,
@@ -326,18 +343,20 @@ fn call(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
-// enum Scope {
-//     Local,
-//     Upvalue,
-//     Module,
-// }
+#[derive(Debug)]
+enum Scope {
+    // Local,
+    // Upvalue,
+    Module,
+}
 
-// struct Variable {
-//     scope: Scope,
-//     index: u8,
-// }
+#[derive(Debug)]
+struct Variable {
+    scope: Scope,
+    index: usize,
+}
 
-fn name(_parser: &mut Parser) -> Result<(), ParserError> {
+fn name(parser: &mut Parser) -> Result<(), ParserError> {
     // This needs to be much more complicated to handle module
     // lookups as well as setters.
 
@@ -346,7 +365,19 @@ fn name(_parser: &mut Parser) -> Result<(), ParserError> {
     // If failed handle in-method case.
 
     // Otherwise if in module scope handle module case:
-    // let index = compiler.module_symbol_lookup(parser.previous)
+
+    let name = parser.previous.as_ref().unwrap().name();
+    let maybe_index = parser.module.lookup_symbol(name);
+    match maybe_index {
+        Some(index) => {
+            parser.compiler.emit_load(Variable {
+                scope: Scope::Module,
+                index: index,
+            });
+        }
+        None => Err(ParserError::Grammar(format!("Undeclared {}", name)))?,
+    }
+
     // variable.scope = SCOPE_MODULE;
     // variable.index = wrenSymbolTableFind(&compiler->parser->module->variableNames,
     //                                      token->start, token->length);
@@ -408,6 +439,14 @@ impl GrammarRule {
 
 // Parslets belong in some sort of grouped parslet object per token?
 impl Token {
+    fn name(&self) -> &String {
+        match self {
+            Token::Keyword(name) => name,
+            Token::Name(name) => name,
+            _ => panic!("invaid"),
+        }
+    }
+
     fn grammar_rule(&self) -> GrammarRule {
         // This should switch on TokenType, not Token itself.
         match self {
@@ -427,7 +466,31 @@ pub enum ParserError {
     Grammar(String),
 }
 
-impl Parser {
+impl fmt::Display for ParserError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            ParserError::Lexer(..) => write!(f, "Lex failure"),
+            ParserError::Grammar(..) => write!(f, "Grammer failure"),
+        }
+    }
+}
+
+impl error::Error for ParserError {
+    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
+        match *self {
+            ParserError::Lexer(ref e) => Some(e),
+            ParserError::Grammar(..) => None,
+        }
+    }
+}
+
+impl From<LexError> for ParserError {
+    fn from(err: LexError) -> ParserError {
+        ParserError::Lexer(err)
+    }
+}
+
+impl<'a> Parser<'a> {
     fn consume(&mut self) -> Result<(), ParserError> {
         self.previous = self.current.take();
         self.current = self.next.take();
@@ -480,14 +543,21 @@ impl Parser {
     }
 }
 
-// struct Module {
-//     // Missing some pointer to the actual code?
+#[derive(Default)]
+struct Module {
+    // Missing some pointer to the actual code?
 
-//     // Should this just be a map?  wren_utils.h suggests so?
-//     variables: Vec<Value>,
-//     variableNames: Vec<String>,
-//     name: String, // Should be a GC'd object?
-// }
+    // Should this just be a map?  wren_utils.h suggests so?
+    variables: Vec<Value>,
+    variable_names: Vec<String>,
+    // name: String, // Should be a GC'd object?
+}
+
+impl Module {
+    fn lookup_symbol(&self, name: &str) -> Option<usize> {
+        self.variable_names.iter().position(|e| e.eq(name))
+    }
+}
 
 #[derive(Debug)]
 pub struct Function {
@@ -500,7 +570,13 @@ pub struct Closure {
     function: Function,
 }
 
-pub fn compile(input: InputManager) -> Result<Closure, ParserError> {
+pub fn compile<'a>(
+    vm: &'a mut WrenVM,
+    input: InputManager,
+    _module_name: &str,
+) -> Result<Closure, ParserError> {
+    // TODO: We should create one per module_name instead.
+
     // When compiling, we create a module and register it.
     // We automatically import Core into all modules.
     // Implicitly import the core module.
@@ -520,6 +596,7 @@ pub fn compile(input: InputManager) -> Result<Closure, ParserError> {
         current: None,
         next: None,
         compiler: Compiler::default(),
+        module: &vm.module,
     };
     parser.consume()?; // Fill next
     parser.consume()?; // Move next -> current
@@ -567,6 +644,7 @@ impl Value {
 }
 
 pub struct WrenVM {
+    module: Module, // No support for multiple modules yet.
     pub stack: Vec<Value>,
     pc: usize,
 }
@@ -582,11 +660,11 @@ pub struct WrenVM {
 impl WrenVM {
     pub fn new() -> Self {
         Self {
+            module: Module::default(),
             stack: Vec::new(),
             pc: 0,
         }
     }
-
     pub fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {
         loop {
             let op = &closure.function.code[self.pc];
@@ -608,6 +686,10 @@ impl WrenVM {
                     // method = &classObj->methods.data[symbol]
                     // match on method type.
                     // If primative, make direct call.  Expecting result on the stack.
+                }
+                Ops::Load(variable) => {
+                    let value = self.module.variables[variable.index];
+                    self.push(value);
                 }
                 Ops::End => {
                     return Ok(());
