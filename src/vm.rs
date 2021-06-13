@@ -1,10 +1,13 @@
+use std::rc::Rc;
 use std::str;
 
 use crate::compiler::Ops;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub enum Value {
     Num(u64),
+    Boolean(bool),
+    String(Rc<String>),
 }
 
 #[derive(Default, Debug)]
@@ -79,8 +82,10 @@ pub struct WrenVM {
 // System.print is not actually in C in wren_c, but since we can't yet parse
 // classes or methods, implementing here to get unit tests working.
 fn prim_system_print(value: Value) -> Value {
-    let string = match value {
+    let string = match &value {
         Value::Num(i) => format!("{}", i),
+        Value::Boolean(b) => format!("{}", b),
+        Value::String(s) => format!("{}", s),
     };
 
     println!("{}", string);
@@ -102,7 +107,10 @@ impl WrenVM {
             self.pc += 1;
             match op {
                 Ops::Constant(index) => {
-                    self.push(closure.function.constants[*index]);
+                    self.push(closure.function.constants[*index].clone());
+                }
+                Ops::Boolean(value) => {
+                    self.push(Value::Boolean(*value));
                 }
                 Ops::Call(signature) => {
                     if signature.name.eq("+") {
@@ -125,7 +133,7 @@ impl WrenVM {
                     // If primative, make direct call.  Expecting result on the stack.
                 }
                 Ops::Load(variable) => {
-                    let value = self.module.variables[variable.index];
+                    let value = self.module.variables[variable.index].clone();
                     self.push(value);
                 }
                 Ops::Pop => {

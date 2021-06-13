@@ -89,11 +89,11 @@ fn interpret_and_print_vm(source: &String) {
 
 fn main() {
     let args: Vec<_> = env::args().collect();
-    if args[1] == "--tokenize" {
+    if args.len() > 1 && args[1] == "--tokenize" {
         print_tokens(&args[2]);
-    } else if args[1] == "--compile" {
+    } else if args.len() > 1 && args[1] == "--compile" {
         print_bytecode(&args[2]);
-    } else if args[1] == "--interpret" {
+    } else if args.len() > 1 && args[1] == "--interpret" {
         interpret_and_print_vm(&args[2]);
     } else {
         wren_test_main(&args);

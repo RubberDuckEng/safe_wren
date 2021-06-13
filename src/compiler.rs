@@ -1,5 +1,6 @@
 use std::error;
 use std::fmt;
+use std::rc::Rc;
 use std::str;
 
 use num_traits::FromPrimitive;
@@ -15,8 +16,9 @@ pub enum Token {
     Num(u64),
     Dot,
     Comma,
-    Keyword(String),
+    Boolean(bool),
     Name(String),
+    String(String),
     Newline,
     EndOfFile, // Does this belong here or as an Err?
 }
@@ -59,11 +61,15 @@ impl InputManager {
 #[derive(Debug, Clone)]
 pub enum LexError {
     UnexpectedChar(char),
+    DecoderError,
+    UnterminatedString,
 }
 
 impl fmt::Display for LexError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
+            LexError::DecoderError => write!(f, "Decoder Error"),
+            LexError::UnterminatedString => write!(f, "Unterminated String"),
             LexError::UnexpectedChar(c) => write!(f, "Unexpected char '{}'", c),
         }
     }
@@ -72,6 +78,8 @@ impl fmt::Display for LexError {
 impl error::Error for LexError {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         match self {
+            LexError::DecoderError => None,
+            LexError::UnterminatedString => None,
             LexError::UnexpectedChar(_) => None,
         }
     }
@@ -133,9 +141,10 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
                 }
                 return Ok(Token::OpFactor('/'));
             }
+            b'"' => return read_string(input),
             // TODO: How can we share code with is_name above?
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
-                return Ok(read_name(c, input));
+                return Ok(read_name(c, input)?);
             }
             b'\n' => return Ok(Token::Newline),
             _ => {
@@ -167,10 +176,15 @@ fn read_number(c: u8, input: &mut InputManager) -> Result<u64, LexError> {
     Ok(number)
 }
 
-const KEYWORDS: &[&str] = &["break", "continue"];
-
-fn is_keyword(word: &str) -> bool {
-    KEYWORDS.iter().any(|keyword| keyword.eq(&word))
+fn keyword_token(name: &str) -> Option<Token> {
+    // FIXME: Hack until TokenType is separate from Token
+    if name.eq("true") {
+        return Some(Token::Boolean(true));
+    }
+    if name.eq("false") {
+        return Some(Token::Boolean(false));
+    }
+    None
 }
 
 fn is_name(c: Option<u8>) -> bool {
@@ -181,21 +195,33 @@ fn is_digit(c: Option<u8>) -> bool {
     matches!(c, Some(b'0'..=b'9'))
 }
 
-fn read_name(start_char: u8, input: &mut InputManager) -> Token {
+fn read_name(first_byte: u8, input: &mut InputManager) -> Result<Token, LexError> {
     // This should be a string?
-    let mut name_bytes = Vec::new();
-    name_bytes.push(start_char);
+    let mut bytes = Vec::new();
+    bytes.push(first_byte);
     while is_name(input.peek()) || is_digit(input.peek()) {
-        name_bytes.push(input.next());
+        bytes.push(input.next());
     }
 
-    let name = String::from_utf8(name_bytes).expect("Decoder err");
+    let name = String::from_utf8(bytes).map_err(|_| LexError::DecoderError)?;
+    Ok(keyword_token(&name).unwrap_or(Token::Name(name)))
+}
 
-    if is_keyword(&name) {
-        Token::Keyword(name)
-    } else {
-        Token::Name(name)
+fn read_string(input: &mut InputManager) -> Result<Token, LexError> {
+    let mut bytes = Vec::new();
+    loop {
+        if input.is_at_end() {
+            return Err(LexError::UnterminatedString);
+        }
+        let next = input.next();
+        if next == b'"' {
+            break;
+        }
+        bytes.push(next);
     }
+    let string = String::from_utf8(bytes).expect("Decoder err");
+
+    Ok(Token::String(string))
 }
 
 pub fn lex(input: InputManager) -> Result<Vec<Token>, LexError> {
@@ -230,6 +256,7 @@ impl Precedence {
 #[derive(Debug)]
 pub enum Ops {
     Constant(usize),
+    Boolean(bool), // Unclear if needed, could be Constant?
     Call(Signature),
     Load(Variable),
     Pop,
@@ -245,10 +272,14 @@ pub struct Compiler {
 }
 
 impl Compiler {
-    fn emit_constant(&mut self, value: u64) {
+    fn emit_constant(&mut self, value: Value) {
         let index = self.constants.len();
-        self.constants.push(Value::Num(value));
+        self.constants.push(value);
         self.code.push(Ops::Constant(index));
+    }
+
+    fn emit_boolean(&mut self, value: bool) {
+        self.code.push(Ops::Boolean(value));
     }
 
     fn emit_call(&mut self, signature: Signature) {
@@ -297,8 +328,11 @@ type InfixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
 
 fn literal(parser: &mut Parser) -> Result<(), ParserError> {
     // TODO: Pass in Token instead of needing to use "previous"?
-    match parser.previous {
-        Some(Token::Num(num)) => parser.compiler.emit_constant(num),
+    match &parser.previous {
+        Some(Token::Num(n)) => parser.compiler.emit_constant(Value::Num(*n)),
+        Some(Token::String(s)) => parser
+            .compiler
+            .emit_constant(Value::String(Rc::new(s.clone()))),
         _ => panic!("invalid literal"),
     }
     Ok(())
@@ -465,6 +499,15 @@ fn grouping(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
+fn boolean(parser: &mut Parser) -> Result<(), ParserError> {
+    if let Some(Token::Boolean(b)) = parser.previous {
+        parser.compiler.emit_boolean(b);
+    } else {
+        panic!("boolean called w/o boolean token");
+    }
+    Ok(())
+}
+
 struct GrammarRule {
     prefix: Option<PrefixParslet>,
     infix: Option<InfixParslet>,
@@ -513,7 +556,6 @@ impl GrammarRule {
 impl Token {
     fn name(&self) -> &String {
         match self {
-            Token::Keyword(name) => name,
             Token::Name(name) => name,
             _ => panic!("invaid"),
         }
@@ -527,8 +569,9 @@ impl Token {
             Token::OpTerm(c) => GrammarRule::infix_operator(Precedence::Term, &c.to_string()),
             Token::OpFactor(c) => GrammarRule::infix_operator(Precedence::Factor, &c.to_string()),
             Token::Num(_) => GrammarRule::prefix(literal),
+            Token::String(_) => GrammarRule::prefix(literal),
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
-            Token::Keyword(_) => GrammarRule::unused(), // TODO: This is wrong.
+            Token::Boolean(_) => GrammarRule::prefix(boolean),
             Token::Name(_) => GrammarRule::prefix(name), // TODO: Also wrong.
             Token::Comma => GrammarRule::unused(),
             Token::Newline => GrammarRule::unused(),
