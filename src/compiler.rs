@@ -114,6 +114,13 @@ fn skip_line_comment(input: &mut InputManager) {
 // Knows if it's at the end of the file.
 // struct Tokenizer {}
 
+fn is_whitespace(maybe_b: Option<u8>) -> bool {
+    if let Some(b) = maybe_b {
+        return b == b' ' || b == b'\t' || b == b'\r';
+    }
+    return false;
+}
+
 // Probably belongs on the InputManager/Tokenizer?
 fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
     while !input.is_at_end() {
@@ -129,8 +136,8 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
             b'*' | b'%' => return Ok(Token::OpFactor(c.into())),
             b'(' => return Ok(Token::LeftParen),
             b')' => return Ok(Token::RightParen),
-            b' ' => {
-                while input.peek().unwrap_or(b'\0') == b' ' {
+            b' ' | b'\t' | b'\r' => {
+                while is_whitespace(input.peek()) {
                     input.next();
                 }
             }
