@@ -424,7 +424,8 @@ else:
 for key in sorted(skipped.keys()):
     print('Skipped ' + yellow(skipped[key]) + ' tests: ' + key)
 
-print(passes)
+print('PASSING: ' + green(passed))
+print('\n'.join(passes))
 
 if failed != 0:
     sys.exit(1)

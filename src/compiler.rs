@@ -129,7 +129,7 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
             b'/' => {
                 if match_char(input, b'/') {
                     skip_line_comment(input);
-                    break;
+                    continue;
                 }
                 return Ok(Token::OpFactor('/'));
             }
