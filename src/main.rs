@@ -77,25 +77,24 @@ fn print_bytecode(source: &String) {
     println!("{:?}", closure);
 }
 
+fn interpret_and_print_vm(source: &String) {
+    let mut vm = WrenVM::new();
+    let input = InputManager::from_string(source.clone());
+    let closure = compile(&mut vm, input, "dummy_module").expect("compile");
+    vm.run(closure).expect("runtime");
+    println!("{:?}", vm);
+}
+
 fn main() {
     let args: Vec<_> = env::args().collect();
     if args[1] == "--tokenize" {
         print_tokens(&args[2]);
     } else if args[1] == "--compile" {
         print_bytecode(&args[2]);
+    } else if args[1] == "--interpret" {
+        interpret_and_print_vm(&args[2]);
     } else {
         wren_test_main(&args);
     }
     exit(ExitCode::Success);
-
-    //     let input = InputManager::from_string("1 + 1");
-    //     // let token = next_token(&mut input);
-    //     let closure = compile(input);
-    //     println!("{:?}", closure);
-    //     let mut vm = WrenVM::new();
-    //     vm.run(closure.expect("foo")).expect("VM Error");
-    //     println!("{:?}", vm.stack);
-    //     // println!("Executing: {}", args[1]);
-    //     // println!("{:?}", parse(&args[1])));
-    // }
 }

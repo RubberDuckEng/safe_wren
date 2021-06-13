@@ -310,10 +310,12 @@ fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
-fn finish_arguments_list(parser: &mut Parser) -> Result<(), ParserError> {
+fn finish_arguments_list(parser: &mut Parser) -> Result<u8, ParserError> {
+    let mut arg_count = 0;
     loop {
         ignore_newlines(parser)?;
         // TODO: Check and throw an error if too many parameters.
+        arg_count += 1;
         expression(parser)?;
         let found_comma = parser.match_comma()?;
         if !found_comma {
@@ -321,7 +323,8 @@ fn finish_arguments_list(parser: &mut Parser) -> Result<(), ParserError> {
         }
     }
     // Allow a newline before the closing delimiter.
-    ignore_newlines(parser)
+    ignore_newlines(parser)?;
+    Ok(arg_count)
 }
 
 // // Compiles an (optional) argument list for a method call with [methodSignature]
@@ -334,7 +337,7 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
             "named_call previous token not name".into(),
         )),
     }?;
-    let signature = Signature {
+    let mut signature = Signature {
         name: name.into(),
         call_type: SignatureType::Getter,
         arity: 0,
@@ -343,13 +346,9 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
     let found_left_paren = parser.match_left_paren()?;
     if found_left_paren {
         ignore_newlines(parser)?;
-        // signature = Signature {
-        //     name: name,
-        //     call_type: SignatureType::Method,
-        //     arity: 0,
-        // };
+        signature.call_type = SignatureType::Method;
         if !parser.peek_for_right_paren() {
-            finish_arguments_list(parser)?;
+            signature.arity = finish_arguments_list(parser)?;
         }
         parser.consume_expecting_right_paren()?;
     }
@@ -680,7 +679,7 @@ fn ignore_newlines(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 struct Module {
     // Missing some pointer to the actual code?
 
@@ -788,6 +787,7 @@ pub enum RuntimeError {
     // TooManyVariablesDefined,
     // VariableUsedBeforeDefinition,
     NumberRequired(Value),
+    MethodNotFound,
 }
 
 impl Value {
@@ -800,6 +800,7 @@ impl Value {
     }
 }
 
+#[derive(Debug)]
 pub struct WrenVM {
     module: Module, // No support for multiple modules yet.
     pub stack: Vec<Value>,
@@ -815,6 +816,17 @@ pub struct WrenVM {
 // }
 
 //   PRIMITIVE(vm->numClass, "+(_)", num_plus);
+
+// System.print is not actually in C in wren_c, but since we can't yet parse
+// classes or methods, implementing here to get unit tests working.
+fn prim_system_print(value: Value) -> Value {
+    let string = match value {
+        Value::Num(i) => format!("{}", i),
+    };
+
+    println!("{}", string);
+    value
+}
 
 impl WrenVM {
     pub fn new() -> Self {
@@ -834,10 +846,16 @@ impl WrenVM {
                     self.push(closure.function.constants[*index]);
                 }
                 Ops::Call(signature) => {
-                    if signature.name == "+" {
+                    if signature.name.eq("+") {
                         let a = self.pop()?.try_into_num()?;
                         let b = self.pop()?.try_into_num()?;
                         self.push(Value::Num(a + b));
+                    } else if signature.name.eq("print") {
+                        let value = self.pop()?;
+                        self.pop()?; // this value.
+                        self.push(prim_system_print(value));
+                    } else {
+                        return Err(RuntimeError::MethodNotFound);
                     }
                     // Get symbol # from signature?
                     // Args are on the stack.  Grab a slice?
