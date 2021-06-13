@@ -77,6 +77,29 @@ impl error::Error for LexError {
     }
 }
 
+fn match_char(input: &mut InputManager, c: u8) -> bool {
+    if let Some(next) = input.peek() {
+        if next == c {
+            input.next();
+            return true;
+        }
+    }
+    false
+}
+
+fn skip_line_comment(input: &mut InputManager) {
+    loop {
+        if let Some(next) = input.peek() {
+            if next == b'\n' {
+                break;
+            }
+            input.next();
+        } else {
+            break;
+        }
+    }
+}
+
 // Takes an InputManager (from which it gets source)
 // Produces tokens one at a time.  Keeps reference to current and next
 // as well as can look-ahead (and cache in a buffer if needed)?
@@ -95,13 +118,20 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
             b'.' => return Ok(Token::Dot),
             b',' => return Ok(Token::Comma),
             b'+' | b'-' => return Ok(Token::OpTerm(c.into())),
-            b'*' | b'/' | b'%' => return Ok(Token::OpFactor(c.into())),
+            b'*' | b'%' => return Ok(Token::OpFactor(c.into())),
             b'(' => return Ok(Token::LeftParen),
             b')' => return Ok(Token::RightParen),
             b' ' => {
                 while input.peek().unwrap_or(b'\0') == b' ' {
                     input.next();
                 }
+            }
+            b'/' => {
+                if match_char(input, b'/') {
+                    skip_line_comment(input);
+                    break;
+                }
+                return Ok(Token::OpFactor('/'));
             }
             // TODO: How can we share code with is_name above?
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {

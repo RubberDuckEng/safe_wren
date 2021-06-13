@@ -410,6 +410,7 @@ def run_example(path):
 
 
 walk(join(WREN_DIR, 'test'), run_test, ignored=['api', 'benchmark'])
+walk(join(WREN_RUST_DIR, 'test'), run_test)
 walk(join(WREN_DIR, 'test', 'api'), run_api_test)
 walk(join(WREN_DIR, 'example'), run_example)
 
