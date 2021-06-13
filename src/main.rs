@@ -5,9 +5,11 @@ use std::fs;
 extern crate num_derive;
 extern crate num_traits;
 
+mod compiler;
 mod vm;
 
-use crate::vm::*;
+use crate::compiler::{compile, lex, InputManager};
+use crate::vm::WrenVM;
 
 enum ExitCode {
     Success = 0,
