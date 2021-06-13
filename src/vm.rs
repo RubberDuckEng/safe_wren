@@ -12,6 +12,7 @@ pub enum Token {
     OpFactor(char),
     Num(u64),
     Dot,
+    Comma,
     Keyword(String),
     Name(String),
     // Paren(char),
@@ -91,6 +92,7 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
                 return Ok(Token::Num(n));
             }
             b'.' => return Ok(Token::Dot),
+            b',' => return Ok(Token::Comma),
             b'+' | b'-' => return Ok(Token::OpTerm(c.into())),
             b'*' | b'/' | b'%' => return Ok(Token::OpFactor(c.into())),
             b'(' => return Ok(Token::LeftParen),
@@ -294,7 +296,7 @@ struct Signature {
 
 fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
     let rule = parser.previous.as_ref().unwrap().grammar_rule();
-    // TODO: Ignore newlines.
+    ignore_newlines(parser)?;
     // Compile the right-hand side.
     parser.parse_precendence(rule.precedence.one_higher())?;
 
@@ -306,6 +308,20 @@ fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
     };
     parser.compiler.emit_call(signature);
     Ok(())
+}
+
+fn finish_arguments_list(parser: &mut Parser) -> Result<(), ParserError> {
+    loop {
+        ignore_newlines(parser)?;
+        // TODO: Check and throw an error if too many parameters.
+        expression(parser)?;
+        let found_comma = parser.match_comma()?;
+        if !found_comma {
+            break;
+        }
+    }
+    // Allow a newline before the closing delimiter.
+    ignore_newlines(parser)
 }
 
 // // Compiles an (optional) argument list for a method call with [methodSignature]
@@ -324,20 +340,19 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
         arity: 0,
     };
 
-    // if (match(compiler, TOKEN_LEFT_PAREN)) {
-    //     // Allow whitespace.
-    //     signature = Signature {
-    //         name: name,
-    //         call_type: SignatureType::Method,
-    //         arity: 0,
-    //     };
-    //         //     // Allow empty an argument list.
-    // //     if (peek(compiler) != TOKEN_RIGHT_PAREN)
-    // //     {
-    // //       finishArgumentList(compiler, &called);
-    // //     }
-    // //     consume(compiler, TOKEN_RIGHT_PAREN, "Expect ')' after arguments.");
-    // }
+    let found_left_paren = parser.match_left_paren()?;
+    if found_left_paren {
+        ignore_newlines(parser)?;
+        // signature = Signature {
+        //     name: name,
+        //     call_type: SignatureType::Method,
+        //     arity: 0,
+        // };
+        if !parser.peek_for_right_paren() {
+            finish_arguments_list(parser)?;
+        }
+        parser.consume_expecting_right_paren()?;
+    }
 
     parser.compiler.emit_call(signature);
 
@@ -345,7 +360,7 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
 }
 
 fn call(parser: &mut Parser) -> Result<(), ParserError> {
-    // ignoreNewlines(compiler);
+    ignore_newlines(parser)?;
     parser.consume_expecting_name()?;
     method_call(parser)?; // namedCall in the original
     Ok(())
@@ -493,6 +508,7 @@ impl Token {
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
             Token::Keyword(_) => GrammarRule::unused(), // TODO: This is wrong.
             Token::Name(_) => GrammarRule::prefix(name), // TODO: Also wrong.
+            Token::Comma => GrammarRule::unused(),
             Token::Newline => GrammarRule::unused(),
             Token::EndOfFile => GrammarRule::unused(),
         }
@@ -539,6 +555,15 @@ impl<'a> Parser<'a> {
     }
 
     // Hack until we split TokenType and Token.
+    fn peek_for_right_paren(&self) -> bool {
+        match self.current {
+            Some(Token::RightParen) => true,
+
+            _ => false,
+        }
+    }
+
+    // Hack until we split TokenType and Token.
     fn match_eof(&mut self) -> Result<bool, ParserError> {
         match self.current {
             Some(Token::EndOfFile) => {
@@ -557,6 +582,38 @@ impl<'a> Parser<'a> {
             }
             _ => Ok(false),
         }
+    }
+
+    // Hack until we split TokenType and Token.
+    fn match_comma(&mut self) -> Result<bool, ParserError> {
+        match self.current {
+            Some(Token::Comma) => {
+                self.consume()?;
+                Ok(true)
+            }
+            _ => Ok(false),
+        }
+    }
+
+    // Hack until we split TokenType and Token.
+    fn match_left_paren(&mut self) -> Result<bool, ParserError> {
+        match self.current {
+            Some(Token::LeftParen) => {
+                self.consume()?;
+                Ok(true)
+            }
+            _ => Ok(false),
+        }
+    }
+
+    // Hack until we split TokenType and Token.
+    fn match_line(&mut self) -> Result<bool, ParserError> {
+        let mut saw_line = false;
+        while let Some(Token::Newline) = self.current {
+            self.consume()?;
+            saw_line = true;
+        }
+        Ok(saw_line)
     }
 
     // Hack until we split TokenType and Token.
@@ -587,16 +644,11 @@ impl<'a> Parser<'a> {
     }
 
     fn current_precedence(&self) -> Precedence {
-        // Grabs the next token to be consumed
-        // Checks its precedence if it has one and returns that
-        // Otherwise returns lowest precedence?
-        // TODO: This should grab the GrammarRules object, not the parselet.
-        let grammar = self.current.as_ref().unwrap().grammar_rule();
-        match grammar.infix {
-            Some(_) => grammar.precedence,
-            None => Precedence::None,
-        }
+        // TODO: There must be a shorter way to write this.
+        // self.current being None would be a programming error/panic.
+        self.current.as_ref().unwrap().grammar_rule().precedence
     }
+
     fn parse_precendence(&mut self, precedence: Precedence) -> Result<(), ParserError> {
         self.consume()?;
         let prefix_parser = self
@@ -608,7 +660,7 @@ impl<'a> Parser<'a> {
             .ok_or(ParserError::Grammar("Expected Expression".into()))?;
         prefix_parser(self)?;
 
-        while precedence < self.current_precedence() {
+        while precedence <= self.current_precedence() {
             self.consume()?;
             let infix_parser = self
                 .previous
@@ -621,6 +673,11 @@ impl<'a> Parser<'a> {
         }
         Ok(())
     }
+}
+
+fn ignore_newlines(parser: &mut Parser) -> Result<(), ParserError> {
+    parser.match_line()?;
+    Ok(())
 }
 
 #[derive(Default)]
@@ -689,7 +746,7 @@ pub fn compile<'a>(
     parser.consume()?; // Fill next
     parser.consume()?; // Move next -> current
 
-    // FIXME: Ignore leading newlines
+    ignore_newlines(&mut parser)?;
     loop {
         let found_eof = parser.match_eof()?;
         if found_eof {
@@ -734,6 +791,7 @@ pub enum RuntimeError {
 }
 
 impl Value {
+    #![allow(unreachable_patterns)] // Temporary until we have more Value types.
     fn try_into_num(self) -> Result<u64, RuntimeError> {
         match self {
             Value::Num(value) => Ok(value),

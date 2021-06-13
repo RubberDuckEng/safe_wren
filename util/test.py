@@ -54,6 +54,7 @@ failed = 0
 num_skipped = 0
 skipped = defaultdict(int)
 expectations = 0
+passes = []
 
 
 class Test:
@@ -343,6 +344,7 @@ def run_script(app, path, type):
     global passed
     global failed
     global num_skipped
+    global passes
 
     if (splitext(path)[1] != '.wren'):
         return
@@ -375,6 +377,7 @@ def run_script(app, path, type):
     # Display the results.
     if len(test.failures) == 0:
         passed += 1
+        passes.append(path)
     else:
         failed += 1
         print_line(red('FAIL') + ': ' + path)
@@ -419,6 +422,8 @@ else:
 
 for key in sorted(skipped.keys()):
     print('Skipped ' + yellow(skipped[key]) + ' tests: ' + key)
+
+print(passes)
 
 if failed != 0:
     sys.exit(1)
