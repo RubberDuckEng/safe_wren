@@ -1,0 +1,5 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "null" on line 5 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }".
+Missing expected output "String does not implement 'unknown'." on line 6.
+Missing expected output "String does not implement 'unknown'." on line 7.

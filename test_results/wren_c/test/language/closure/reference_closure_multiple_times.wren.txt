@@ -1,0 +1,4 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "a" on line 12 and got "WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'null\'") }".
+Missing expected output "a" on line 13.

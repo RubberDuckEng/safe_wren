@@ -1,0 +1,31 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "a" on line 2 and got "WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('[')) }".
+Missing expected output "b" on line 3.
+Missing expected output "c" on line 4.
+Missing expected output "d" on line 5.
+Missing expected output "a" on line 8.
+Missing expected output "b" on line 9.
+Missing expected output "c" on line 10.
+Missing expected output "d" on line 11.
+Missing expected output "true" on line 14.
+Missing expected output "s" on line 21.
+Missing expected output "ø" on line 22.
+Missing expected output "m" on line 23.
+Missing expected output "ஃ" on line 24.
+Missing expected output "h" on line 25.
+Missing expected output "g" on line 26.
+Missing expected output "n" on line 27.
+Missing expected output "î" on line 28.
+Missing expected output "true" on line 31.
+Missing expected output "true" on line 32.
+Missing expected output "true" on line 33.
+Missing expected output "true" on line 34.
+Missing expected output "true" on line 35.
+Missing expected output "true" on line 38.
+Missing expected output "true" on line 39.
+Missing expected output "true" on line 40.
+Missing expected output "true" on line 41.
+Missing expected output "true" on line 42.
+Missing expected output "true" on line 45.
+Missing expected output "true" on line 46.

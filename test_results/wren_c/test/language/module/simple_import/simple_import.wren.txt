@@ -1,0 +1,4 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "ran module" on line 2 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }".
+Missing expected output "from module" on line 4.

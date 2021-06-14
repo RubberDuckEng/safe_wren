@@ -1,0 +1,4 @@
+Expected runtime error "Could not compile module './test/language/module/compile_error/module'." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Expected output "before" on line 1 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'import\'") }".

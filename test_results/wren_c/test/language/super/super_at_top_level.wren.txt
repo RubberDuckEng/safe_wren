@@ -1,0 +1,5 @@
+Missing expected error on line 1.
+Missing expected error on line 2.
+Missing expected error on line 3.
+Missing expected error on line 4.
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'super\'") }" when none was expected.

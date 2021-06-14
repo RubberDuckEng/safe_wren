@@ -1,0 +1,3 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "10" on line 11 and got "WrenError { module: "dummy_module", line: 3, error: Lexer(UnexpectedChar('{')) }".

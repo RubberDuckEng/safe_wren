@@ -1,0 +1,2 @@
+Expected runtime error "Argument must be a string." and got none.
+Got output "MethodNotFound" when none was expected.

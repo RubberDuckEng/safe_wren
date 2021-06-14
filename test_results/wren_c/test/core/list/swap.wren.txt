@@ -1,0 +1,5 @@
+Expected runtime error "Index 0 out of bounds." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Expected output "[3, 1, 2, 0, 4]" on line 4 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('[')) }".
+Missing expected output "[3, 1, 4, 0, 2]" on line 7.

@@ -1,0 +1,2 @@
+Missing expected error on line 65538.
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fn\'") }" when none was expected.

@@ -1,0 +1,2 @@
+Missing expected error on line 2.
+Got output "WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }" when none was expected.

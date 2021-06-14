@@ -1,0 +1,10 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "zero" on line 6 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fn\'") }".
+Missing expected output "zero" on line 7.
+Missing expected output "one a" on line 9.
+Missing expected output "one a" on line 10.
+Missing expected output "two a b" on line 12.
+Missing expected output "two a b" on line 13.
+Missing expected output "three a b c" on line 15.
+Missing expected output "three a b c" on line 16.

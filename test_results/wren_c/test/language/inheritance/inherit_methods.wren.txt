@@ -1,0 +1,9 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "foo" on line 17 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "bar" on line 18.
+Missing expected output "foo" on line 21.
+Missing expected output "bar" on line 22.
+Missing expected output "foo" on line 23.
+Missing expected output "bar" on line 24.
+Missing expected output "bar" on line 25.

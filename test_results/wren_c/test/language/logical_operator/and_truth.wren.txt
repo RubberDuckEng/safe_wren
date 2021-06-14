@@ -1,0 +1,7 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "false" on line 2 and got "WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('&')) }".
+Missing expected output "null" on line 3.
+Missing expected output "ok" on line 6.
+Missing expected output "ok" on line 7.
+Missing expected output "ok" on line 8.

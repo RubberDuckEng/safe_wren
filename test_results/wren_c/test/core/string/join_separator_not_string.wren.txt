@@ -1,0 +1,2 @@
+Expected runtime error "Right operand must be a string." and got none.
+Got output "MethodNotFound" when none was expected.

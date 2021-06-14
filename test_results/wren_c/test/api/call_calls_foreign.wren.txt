@@ -1,0 +1,6 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "slots before 2" on line 11 and got "WrenError { module: "dummy_module", line: 6, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "[1, 2, 3, 4, 5, 6, 7, 8, 9]" on line 12.
+Missing expected output "parameter" on line 13.
+Missing expected output "slots after 1" on line 14.

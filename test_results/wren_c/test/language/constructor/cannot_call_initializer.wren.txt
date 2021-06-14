@@ -1,0 +1,4 @@
+Expected runtime error "Foo does not implement 'new()'." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Expected output "ok" on line 7 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".

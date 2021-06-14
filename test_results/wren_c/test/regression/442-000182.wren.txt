@@ -1,0 +1,7 @@
+Unexpected output on stderr:
+Could not find file "wren_c/test/regression/442-000182.wren".
+Missing expected error on line 3.
+Missing expected error on line 5.
+Expected return code 65 and got 66. Stderr:
+Could not find file "wren_c/test/regression/442-000182.wren".
+

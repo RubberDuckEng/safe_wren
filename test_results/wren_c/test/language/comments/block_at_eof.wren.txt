@@ -1,0 +1,3 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "ok" on line 1 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Expected Expression") }".

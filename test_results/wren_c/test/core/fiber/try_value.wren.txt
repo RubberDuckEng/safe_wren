@@ -1,0 +1,6 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "before" on line 9 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }".
+Missing expected output "value" on line 10.
+Missing expected output "Bool does not implement 'unknownMethod'." on line 11.
+Missing expected output "after try" on line 12.

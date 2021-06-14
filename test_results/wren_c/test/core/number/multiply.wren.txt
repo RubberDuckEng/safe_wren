@@ -1,0 +1,4 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "15" on line 1 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }".
+Missing expected output "3.702" on line 2.

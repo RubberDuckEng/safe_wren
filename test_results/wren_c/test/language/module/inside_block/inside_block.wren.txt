@@ -1,0 +1,5 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "ran module" on line 5 and got "WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'if\'") }".
+Missing expected output "from module" on line 7.
+Missing expected output "outer" on line 10.

@@ -1,0 +1,4 @@
+Expected runtime error "Start out of bounds." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression") }" when none was expected.

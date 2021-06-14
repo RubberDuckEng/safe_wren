@@ -1,0 +1,9 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "{null: {getter: [null]}}" on line 26 and got "WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "null" on line 27.
+Missing expected output "{regular: [2]}" on line 28.
+Missing expected output "[null]" on line 29.
+Missing expected output "[value]" on line 30.
+Missing expected output "[hello]" on line 31.
+Missing expected output "{is_static: [true]}" on line 32.

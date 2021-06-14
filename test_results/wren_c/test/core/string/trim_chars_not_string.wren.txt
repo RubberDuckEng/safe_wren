@@ -1,0 +1,2 @@
+Expected runtime error "Characters must be a string." and got none.
+Got output "MethodNotFound" when none was expected.

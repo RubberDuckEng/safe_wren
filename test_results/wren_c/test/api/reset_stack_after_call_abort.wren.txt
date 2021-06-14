@@ -1,0 +1,4 @@
+Expected runtime error "Abort!" and got none.
+Expected return code 0 and got 65. Stderr:
+
+Expected output "3" on line 12 and got "WrenError { module: "dummy_module", line: 6, error: Lexer(UnexpectedChar('{')) }".

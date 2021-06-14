@@ -1,0 +1,6 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "Derived.bar(a)" on line 19 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "Base.foo" on line 20.
+Missing expected output "Base.foo(a)" on line 21.
+Missing expected output "Base.foo(a, b)" on line 22.

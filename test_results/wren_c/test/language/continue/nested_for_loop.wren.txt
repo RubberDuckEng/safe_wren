@@ -1,0 +1,9 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "outer 0" on line 11 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'for\'") }".
+Missing expected output "inner 0" on line 12.
+Missing expected output "inner 2" on line 13.
+Missing expected output "outer 1" on line 14.
+Missing expected output "outer 2" on line 15.
+Missing expected output "inner 0" on line 16.
+Missing expected output "inner 2" on line 17.

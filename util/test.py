@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from argparse import ArgumentParser
 from collections import defaultdict
-from os import listdir
+from os import listdir, makedirs, remove
 from os.path import abspath, basename, dirname, isdir, isfile, join, realpath, relpath, splitext
 import re
 from subprocess import Popen, PIPE
@@ -25,6 +25,8 @@ is_debug = args.suffix.startswith('_d')
 WREN_RUST_DIR = dirname(dirname(realpath(__file__)))
 WREN_DIR = join(WREN_RUST_DIR, 'wren_c')
 WREN_APP = join(WREN_RUST_DIR, 'target', 'debug', 'wren_rust' + args.suffix)
+
+RESULTS_DIR = join(WREN_RUST_DIR, 'test_results')
 
 WREN_APP_WITH_EXT = WREN_APP
 if platform.system() == "Windows":
@@ -374,16 +376,30 @@ def run_script(app, path, type):
 
     test.run(app, type)
 
+    test_dir_path = dirname(path)
+    test_filename = basename(path)
+    output_filename = test_filename + ".txt"
+    output_dir = join(RESULTS_DIR, test_dir_path)
+    makedirs(output_dir, exist_ok=True)
+    output_path = join(output_dir, output_filename)
+
     # Display the results.
     if len(test.failures) == 0:
         passed += 1
         passes.append(path)
+        try:
+            remove(output_path)
+        except OSError:
+            pass
     else:
+        fail_file = open(output_path, mode="wb")
         failed += 1
         print_line(red('FAIL') + ': ' + path)
         print('')
         for failure in test.failures:
             print('      ' + pink(failure))
+            fail_file.write(failure.encode("utf8"))
+            fail_file.write("\n".encode("utf8"))
         print('')
 
 

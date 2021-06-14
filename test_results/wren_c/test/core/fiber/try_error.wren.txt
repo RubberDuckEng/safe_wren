@@ -1,0 +1,4 @@
+Expected runtime error "Cannot try an aborted fiber." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Expected output "try" on line 6 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }".

@@ -1,0 +1,3 @@
+Missing expected error on line 6.
+Missing expected error on line 7.
+Got output "WrenError { module: "dummy_module", line: 5, error: Grammar("Undeclared variable \'Fiber\'") }" when none was expected.

@@ -1,0 +1,2 @@
+Missing expected error on line 10.
+Got output "WrenError { module: "dummy_module", line: 6, error: Lexer(UnexpectedChar('{')) }" when none was expected.

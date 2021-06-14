@@ -1,0 +1,2 @@
+Missing expected error on line 5.
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'if\'") }" when none was expected.

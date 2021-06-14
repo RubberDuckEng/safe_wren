@@ -1,0 +1,10 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "start a" on line 4 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'import\'") }".
+Missing expected output "a defined a value" on line 5.
+Missing expected output "start b" on line 6.
+Missing expected output "b defined b value" on line 7.
+Missing expected output "b imported a value" on line 8.
+Missing expected output "end b" on line 9.
+Missing expected output "a imported b value" on line 10.
+Missing expected output "end a" on line 11.

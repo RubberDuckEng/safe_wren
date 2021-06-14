@@ -1,0 +1,17 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "loading foo/bar" on line 12 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "ok" on line 13.
+Missing expected output "success" on line 14.
+Missing expected output "Could not resolve module 'foo/bar' imported from 'main'." on line 18.
+Missing expected output "error" on line 19.
+Missing expected output "loading main/foo/bar" on line 23.
+Missing expected output "ok" on line 24.
+Missing expected output "success" on line 25.
+Missing expected output "loading main/foo/bar" on line 30.
+Missing expected output "ok" on line 31.
+Missing expected output "success" on line 32.
+Missing expected output "loading main/baz/bang" on line 36.
+Missing expected output "loading main/baz/bang/foo/bar" on line 37.
+Missing expected output "ok" on line 38.
+Missing expected output "success" on line 39.

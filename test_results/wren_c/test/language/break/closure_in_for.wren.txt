@@ -1,0 +1,3 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "5" on line 9 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'for\'") }".

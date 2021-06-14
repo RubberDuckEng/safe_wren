@@ -1,0 +1,14 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "a" on line 2 and got "WrenError { module: "dummy_module", line: 6, error: Grammar("Expected right paren") }".
+Missing expected output "b" on line 3.
+Missing expected output "ç" on line 4.
+Missing expected output "true" on line 6.
+Missing expected output "d" on line 7.
+Missing expected output "true" on line 11.
+Missing expected output "true" on line 12.
+Missing expected output "true" on line 13.
+Missing expected output "true" on line 14.
+Missing expected output "true" on line 15.
+Missing expected output "true" on line 18.
+Missing expected output "true" on line 19.

@@ -1,0 +1,4 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "key" on line 3 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'MapEntry\'") }".
+Missing expected output "value" on line 4.

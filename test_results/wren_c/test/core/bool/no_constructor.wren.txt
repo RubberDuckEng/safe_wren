@@ -1,0 +1,4 @@
+Expected runtime error "Bool metaclass does not implement 'new()'." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Bool\'") }" when none was expected.

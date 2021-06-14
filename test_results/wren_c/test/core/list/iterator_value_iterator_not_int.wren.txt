@@ -1,0 +1,4 @@
+Expected runtime error "Iterator must be an integer." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Got output "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('[')) }" when none was expected.

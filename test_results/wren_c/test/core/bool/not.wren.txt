@@ -1,0 +1,5 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "false" on line 1 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('!')) }".
+Missing expected output "true" on line 2.
+Missing expected output "true" on line 3.

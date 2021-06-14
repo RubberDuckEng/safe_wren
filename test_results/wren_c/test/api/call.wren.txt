@@ -1,0 +1,17 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "noParams" on line 42 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "zero" on line 43.
+Missing expected output "one 1" on line 44.
+Missing expected output "two 1 2" on line 45.
+Missing expected output "unary" on line 46.
+Missing expected output "binary 1" on line 47.
+Missing expected output "subscript 1 2" on line 48.
+Missing expected output "subscript set 1 2 3" on line 49.
+Missing expected output "slots after call: 1" on line 51.
+Missing expected output "two true false" on line 52.
+Missing expected output "two 1.2 3.4" on line 53.
+Missing expected output "two string another" on line 54.
+Missing expected output "two null [a, b]" on line 55.
+Missing expected output "two str [98, 0, 121, 0, 116, 0, 101]" on line 56.
+Missing expected output "one 0.1" on line 57.

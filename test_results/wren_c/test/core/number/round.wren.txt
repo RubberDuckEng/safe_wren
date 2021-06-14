@@ -1,0 +1,10 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "123" on line 1 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Expected Expression") }".
+Missing expected output "-123" on line 2.
+Missing expected output "0" on line 3.
+Missing expected output "-0" on line 4.
+Missing expected output "0" on line 5.
+Missing expected output "12" on line 6.
+Missing expected output "-0" on line 7.
+Missing expected output "-12" on line 8.

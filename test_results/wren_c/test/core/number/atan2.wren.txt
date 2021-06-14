@@ -1,0 +1,5 @@
+Expected return code 0 and got 70. Stderr:
+
+Expected output "0" on line 1 and got "MethodNotFound".
+Missing expected output "0" on line 2.
+Missing expected output "1.5707963267949" on line 4.

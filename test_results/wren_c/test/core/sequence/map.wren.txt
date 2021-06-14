@@ -1,0 +1,9 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "true" on line 32 and got "WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "instance of MapSequence" on line 33.
+Missing expected output "0" on line 36.
+Missing expected output "1" on line 39.
+Missing expected output "1" on line 42.
+Missing expected output "4" on line 45.
+Missing expected output "9" on line 48.

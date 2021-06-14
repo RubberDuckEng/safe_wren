@@ -1,0 +1,4 @@
+Expected runtime error "Num metaclass does not implement 'new()'." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Num\'") }" when none was expected.

@@ -1,0 +1,16 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "0" on line 13 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "3.1" on line 15.
+Missing expected output "4.3" on line 17.
+Missing expected output "1, 2, 3" on line 40.
+Missing expected output "(1, 2, 3)" on line 41.
+Missing expected output "(4, 6, 8)" on line 43.
+Missing expected output "default" on line 45.
+Missing expected output "(0, 0, 0)" on line 46.
+Missing expected output "inherited method" on line 48.
+Missing expected output "Class 'Subclass' cannot inherit from foreign class 'Point'." on line 53.
+Missing expected output "0" on line 67.
+Missing expected output "1" on line 72.
+Missing expected output "3" on line 77.
+Missing expected output "Something went wrong" on line 87.

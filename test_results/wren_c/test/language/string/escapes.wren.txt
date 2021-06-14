@@ -1,0 +1,7 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output """ on line 2 and got "WrenError { module: "dummy_module", line: 3, error: Grammar("Expected right paren") }".
+Missing expected output "\" on line 3.
+Missing expected output "(" on line 4.
+Missing expected output ")" on line 5.
+Missing expected output "%" on line 6.

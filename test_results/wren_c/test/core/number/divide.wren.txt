@@ -1,0 +1,12 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "4" on line 1 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }".
+Missing expected output "-30.85" on line 2.
+Missing expected output "infinity" on line 5.
+Missing expected output "-infinity" on line 6.
+Missing expected output "nan" on line 7.
+Missing expected output "nan" on line 8.
+Missing expected output "-infinity" on line 9.
+Missing expected output "infinity" on line 10.
+Missing expected output "nan" on line 11.
+Missing expected output "nan" on line 12.

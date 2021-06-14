@@ -1,0 +1,4 @@
+Expected runtime error "Right operand must be a string." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }" when none was expected.

@@ -1,0 +1,4 @@
+Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Fiber'." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'class\'") }" when none was expected.

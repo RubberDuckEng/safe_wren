@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+thread 'main' panicked at 'not implemented: Ops::Store local', src\vm.rs:158:41
+Unexpected output on stderr:
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Expected return code 0 and got 101. Stderr:
+thread 'main' panicked at 'not implemented: Ops::Store local', src\vm.rs:158:41
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+Missing expected output "c" on line 7.
+Missing expected output "c" on line 8.
+Missing expected output "c" on line 9.

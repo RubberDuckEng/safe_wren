@@ -1,0 +1,22 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "true" on line 20 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "0" on line 21.
+Missing expected output "London" on line 24.
+Missing expected output "[]" on line 25.
+Missing expected output "42" on line 26.
+Missing expected output "true" on line 27.
+Missing expected output "null" on line 28.
+Missing expected output "value" on line 33.
+Missing expected output "null" on line 36.
+Missing expected output "3" on line 41.
+Missing expected output "2" on line 43.
+Missing expected output "1" on line 45.
+Missing expected output "5" on line 48.
+Missing expected output "true" on line 53.
+Missing expected output "false" on line 54.
+Missing expected output "true" on line 55.
+Missing expected output "false" on line 58.
+Missing expected output "false" on line 61.
+Missing expected output "true" on line 63.
+Missing expected output "false" on line 64.

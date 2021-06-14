@@ -1,0 +1,4 @@
+Expected runtime error "Range start out of bounds." and got none.
+Expected return code 70 and got 65. Stderr:
+
+Got output "WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('[')) }" when none was expected.

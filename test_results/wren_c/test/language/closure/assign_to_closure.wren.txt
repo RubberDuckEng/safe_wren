@@ -1,0 +1,6 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "local" on line 20 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'null\'") }".
+Missing expected output "after f" on line 21.
+Missing expected output "after f" on line 24.
+Missing expected output "after g" on line 25.

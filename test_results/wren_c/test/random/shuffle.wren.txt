@@ -1,0 +1,5 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "[]" on line 8 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }".
+Missing expected output "[1]" on line 13.
+Missing expected output "24" on line 27.

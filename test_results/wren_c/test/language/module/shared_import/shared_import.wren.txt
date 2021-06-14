@@ -1,0 +1,9 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "a" on line 5 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }".
+Missing expected output "shared" on line 6.
+Missing expected output "a done" on line 7.
+Missing expected output "b" on line 8.
+Missing expected output "b done" on line 9.
+Missing expected output "a shared" on line 11.
+Missing expected output "b shared" on line 12.

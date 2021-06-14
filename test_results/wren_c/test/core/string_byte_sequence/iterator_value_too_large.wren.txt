@@ -1,0 +1,2 @@
+Expected runtime error "Index out of bounds." and got none.
+Got output "MethodNotFound" when none was expected.

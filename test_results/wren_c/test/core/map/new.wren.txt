@@ -1,0 +1,4 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "0" on line 3 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Map\'") }".
+Missing expected output "{}" on line 4.

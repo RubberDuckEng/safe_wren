@@ -1,0 +1,20 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "getter" on line 24 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "no args" on line 25.
+Missing expected output "1" on line 26.
+Missing expected output "3" on line 27.
+Missing expected output "6" on line 28.
+Missing expected output "10" on line 29.
+Missing expected output "15" on line 30.
+Missing expected output "21" on line 31.
+Missing expected output "28" on line 32.
+Missing expected output "36" on line 33.
+Missing expected output "45" on line 34.
+Missing expected output "55" on line 35.
+Missing expected output "66" on line 36.
+Missing expected output "78" on line 37.
+Missing expected output "91" on line 38.
+Missing expected output "105" on line 39.
+Missing expected output "120" on line 40.
+Missing expected output "136" on line 41.

@@ -1,0 +1,8 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "1-subscript a" on line 12 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "2-subscript a b" on line 13.
+Missing expected output "3-subscript a b c" on line 14.
+Missing expected output "1-subscript setter a = value" on line 15.
+Missing expected output "2-subscript setter a b = value" on line 16.
+Missing expected output "3-subscript setter a b c = value" on line 17.

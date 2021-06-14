@@ -1,0 +1,6 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "before" on line 3 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fn\'") }".
+Missing expected output "after" on line 6.
+Missing expected output "arg" on line 8.
+Missing expected output "arg" on line 9.

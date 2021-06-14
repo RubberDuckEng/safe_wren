@@ -1,0 +1,2 @@
+Missing expected error on line 3.
+Got output "WrenError { module: "dummy_module", line: 4, error: Grammar("Expected end of file") }" when none was expected.

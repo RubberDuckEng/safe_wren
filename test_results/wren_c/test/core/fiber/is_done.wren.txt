@@ -1,0 +1,7 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "false" on line 7 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }".
+Missing expected output "1" on line 8.
+Missing expected output "false" on line 9.
+Missing expected output "2" on line 10.
+Missing expected output "true" on line 11.

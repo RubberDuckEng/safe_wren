@@ -1,0 +1,20 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "0" on line 2 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'null\'") }".
+Missing expected output "1" on line 3.
+Missing expected output "2" on line 4.
+Missing expected output "4" on line 6.
+Missing expected output "4" on line 8.
+Missing expected output "false" on line 9.
+Missing expected output "false" on line 12.
+Missing expected output "false" on line 13.
+Missing expected output "false" on line 16.
+Missing expected output "0" on line 19.
+Missing expected output "1" on line 20.
+Missing expected output "2" on line 21.
+Missing expected output "3" on line 22.
+Missing expected output "4" on line 23.
+Missing expected output "false" on line 24.
+Missing expected output "0" on line 27.
+Missing expected output "1" on line 28.
+Missing expected output "false" on line 29.

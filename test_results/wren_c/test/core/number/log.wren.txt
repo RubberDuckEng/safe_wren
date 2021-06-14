@@ -1,0 +1,5 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "1.0986122886681" on line 1 and got "WrenError { module: "dummy_module", line: 3, error: Grammar("Expected Expression") }".
+Missing expected output "4.6051701859881" on line 2.
+Missing expected output "nan" on line 3.

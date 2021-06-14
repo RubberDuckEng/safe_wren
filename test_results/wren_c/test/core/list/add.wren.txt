@@ -1,0 +1,5 @@
+Expected return code 0 and got 65. Stderr:
+
+Expected output "[1, 2]" on line 3 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('[')) }".
+Missing expected output "[1, 2, 3]" on line 5.
+Missing expected output "4" on line 8.
