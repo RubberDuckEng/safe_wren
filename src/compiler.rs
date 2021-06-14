@@ -172,8 +172,9 @@ fn is_whitespace(maybe_b: Option<u8>) -> bool {
 
 // Probably belongs on the InputManager/Tokenizer?
 fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
-    input.token_start_offset = input.offset;
     while !input.is_at_end() {
+        // Reset token start at top of loop to avoid counting leading whitespace
+        input.token_start_offset = input.offset;
         let c = input.next();
         match c {
             b'0'..=b'9' => {
@@ -333,6 +334,7 @@ pub enum Ops {
     End,
 }
 
+#[derive(Debug)]
 struct Local {
     name: String,
     //   depth: i8,
@@ -407,10 +409,10 @@ struct Parser<'a> {
 
 // Following the Pratt parser example:
 // https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
-type PrefixParslet = fn(parser: &mut Parser, can_assign: bool) -> Result<(), ParserError>;
-type InfixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
+type PrefixParslet = fn(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError>;
+type InfixParslet = fn(parser: &mut Parser) -> Result<(), WrenError>;
 
-fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), ParserError> {
+fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
     match &parser.previous.token {
         Token::Num(n) => parser.compiler.emit_constant(Value::Num(*n)),
@@ -435,7 +437,7 @@ pub struct Signature {
     arity: u8,
 }
 
-fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
+fn infix_op(parser: &mut Parser) -> Result<(), WrenError> {
     let rule = parser.previous.token.grammar_rule();
     ignore_newlines(parser)?;
     // Compile the right-hand side.
@@ -451,7 +453,7 @@ fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
-fn finish_arguments_list(parser: &mut Parser) -> Result<u8, ParserError> {
+fn finish_arguments_list(parser: &mut Parser) -> Result<u8, WrenError> {
     let mut arg_count = 0;
     loop {
         ignore_newlines(parser)?;
@@ -470,13 +472,13 @@ fn finish_arguments_list(parser: &mut Parser) -> Result<u8, ParserError> {
 
 // // Compiles an (optional) argument list for a method call with [methodSignature]
 // // and then calls it.
-fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
+fn method_call(parser: &mut Parser) -> Result<(), WrenError> {
     // Grab name from previous token.
     let name = match &parser.previous.token {
         Token::Name(n) => Ok(n),
-        _ => Err(ParserError::Grammar(
+        _ => Err(parser.parse_error(ParserError::Grammar(
             "named_call previous token not name".into(),
-        )),
+        ))),
     }?;
     let mut signature = Signature {
         name: name.into(),
@@ -499,7 +501,7 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
-fn call(parser: &mut Parser) -> Result<(), ParserError> {
+fn call(parser: &mut Parser) -> Result<(), WrenError> {
     ignore_newlines(parser)?;
     parser.consume_expecting_name()?;
     method_call(parser)?; // namedCall in the original
@@ -519,7 +521,7 @@ pub struct Variable {
     pub index: usize,
 }
 
-fn allow_line_before_dot(parser: &mut Parser) -> Result<(), ParserError> {
+fn allow_line_before_dot(parser: &mut Parser) -> Result<(), WrenError> {
     if parser.current.token == Token::Newline && parser.next.token == Token::Dot {
         parser.consume()?;
     }
@@ -527,7 +529,7 @@ fn allow_line_before_dot(parser: &mut Parser) -> Result<(), ParserError> {
 }
 
 // Compiles a read or assignment to [variable].
-fn bare_name(parser: &mut Parser, can_assign: bool, variable: Variable) -> Result<(), ParserError> {
+fn bare_name(parser: &mut Parser, can_assign: bool, variable: Variable) -> Result<(), WrenError> {
     // If there's an "=" after a bare name, it's a variable assignment.
     if can_assign && parser.match_current(Token::Equals)? {
         // Compile the right-hand side.
@@ -552,11 +554,14 @@ fn resolve_non_module(parser: &Parser, name: &str) -> Option<Variable> {
     None
 }
 
-fn name(parser: &mut Parser, can_assign: bool) -> Result<(), ParserError> {
+fn name(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError> {
     // This needs to be much more complicated to handle module
     // lookups as well as setters.
 
-    let name = parser.previous.name(&parser.input)?;
+    let name = parser
+        .previous
+        .name(&parser.input)
+        .map_err(|e| parser.parse_error(e.into()))?;
     if let Some(variable) = resolve_non_module(parser, &name) {
         bare_name(parser, can_assign, variable)?;
         return Ok(());
@@ -572,7 +577,10 @@ fn name(parser: &mut Parser, can_assign: bool) -> Result<(), ParserError> {
                 index: index,
             });
         }
-        None => Err(ParserError::Grammar(format!("Undeclared {}", name)))?,
+        None => Err(parser.parse_error(ParserError::Grammar(format!(
+            "Undeclared variable '{}'",
+            name
+        ))))?,
     }
 
     // variable.scope = SCOPE_MODULE;
@@ -590,13 +598,13 @@ fn name(parser: &mut Parser, can_assign: bool) -> Result<(), ParserError> {
     Ok(())
 }
 
-fn expression(parser: &mut Parser) -> Result<(), ParserError> {
+fn expression(parser: &mut Parser) -> Result<(), WrenError> {
     parser.parse_precendence(Precedence::Lowest)
 }
 
 // Break, continue, if, for, while, blocks, etc.
 // Unlike expression, does not leave something on the stack.
-fn statement(parser: &mut Parser) -> Result<(), ParserError> {
+fn statement(parser: &mut Parser) -> Result<(), WrenError> {
     // No statements currently implemented
     // Fall through to expression case, but pop the stack after.
     expression(parser)?;
@@ -610,21 +618,23 @@ fn add_local(parser: &mut Parser, name: &str) {
     parser.compiler.locals.push(Local { name: name.into() });
 }
 
-fn declare_variable(parser: &mut Parser, name: &str) -> Result<(), ParserError> {
+fn declare_variable(parser: &mut Parser, name: &str) -> Result<(), WrenError> {
     // TODO: Check variable name max length.
     // TODO: Handle top level scope?
     // TODO: Check to see if another local with the same name exists
     // TODO: Enforce max number of local variables.
-    println!("declare_variable");
     add_local(parser, name);
     Ok(())
 }
 
-fn variable_definition(parser: &mut Parser) -> Result<(), ParserError> {
+fn variable_definition(parser: &mut Parser) -> Result<(), WrenError> {
     // Grab its name, but don't declare it yet. A (local) variable shouldn't be
     // in scope in its own initializer.
     parser.consume_expecting_name()?;
-    let name = parser.previous.name(&parser.input)?;
+    let name = parser
+        .previous
+        .name(&parser.input)
+        .map_err(|e| parser.parse_error(e.into()))?;
 
     // Compile the initializer.
     if parser.match_current(Token::Equals)? {
@@ -642,7 +652,7 @@ fn variable_definition(parser: &mut Parser) -> Result<(), ParserError> {
 }
 
 // Class definitions, imports, etc.
-fn definition(parser: &mut Parser) -> Result<(), ParserError> {
+fn definition(parser: &mut Parser) -> Result<(), WrenError> {
     // We don't handle class definitions, etc. yet.
     // Fall through to the "statement" case.
     if parser.match_current(Token::Var)? {
@@ -652,13 +662,13 @@ fn definition(parser: &mut Parser) -> Result<(), ParserError> {
     }
 }
 
-fn grouping(parser: &mut Parser, _can_assign: bool) -> Result<(), ParserError> {
+fn grouping(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     expression(parser)?;
     parser.consume_expecting(Token::RightParen)?;
     Ok(())
 }
 
-fn boolean(parser: &mut Parser, _can_assign: bool) -> Result<(), ParserError> {
+fn boolean(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     if let Token::Boolean(b) = parser.previous.token {
         parser.compiler.emit_boolean(b);
     } else {
@@ -770,11 +780,6 @@ pub enum ParserError {
     Grammar(String),
 }
 
-// Errors should have
-// Line and offset
-// A snippet from that line?
-// Some sort of error-type?
-
 impl fmt::Display for ParserError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -799,16 +804,41 @@ impl From<LexError> for ParserError {
     }
 }
 
+// typedef void (*WrenErrorFn)(
+//     WrenVM* vm, WrenErrorType type, const char* module, int line,
+//     const char* message);
+
+#[derive(Debug)]
+pub struct WrenError {
+    module: String,
+    line: usize,
+    error: ParserError,
+}
+
+// FIXME: This is a stub.
+impl fmt::Display for WrenError {
+    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
+        Ok(())
+    }
+}
+
+// FIXME: This is a stub.
+impl error::Error for WrenError {
+    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
+        None
+    }
+}
+
 impl<'a> Parser<'a> {
     // This is just called nextToken(Compiler) in wren_c
-    fn consume(&mut self) -> Result<(), ParserError> {
+    fn consume(&mut self) -> Result<(), WrenError> {
         std::mem::swap(&mut self.previous, &mut self.current);
         std::mem::swap(&mut self.current, &mut self.next);
-        self.next = next_token(&mut self.input).map_err(|e| ParserError::Lexer(e))?;
+        self.next = next_token(&mut self.input).map_err(|e| self.parse_error(e.into()))?;
         Ok(())
     }
 
-    fn match_current(&mut self, token: Token) -> Result<bool, ParserError> {
+    fn match_current(&mut self, token: Token) -> Result<bool, WrenError> {
         if self.current.token == token {
             self.consume()?;
             return Ok(true);
@@ -817,7 +847,7 @@ impl<'a> Parser<'a> {
     }
 
     // Hack until we split TokenType and Token.
-    fn match_line(&mut self) -> Result<bool, ParserError> {
+    fn match_line(&mut self) -> Result<bool, WrenError> {
         let mut saw_line = false;
         while Token::Newline == self.current.token {
             self.consume()?;
@@ -827,31 +857,41 @@ impl<'a> Parser<'a> {
     }
 
     // Hack until we split TokenType and Token.
-    fn consume_expecting_name(&mut self) -> Result<(), ParserError> {
+    fn consume_expecting_name(&mut self) -> Result<(), WrenError> {
         self.consume()?;
         match self.previous.token {
             Token::Name(_) => Ok(()),
-            _ => Err(ParserError::Grammar("Expected name".into())),
+            _ => Err(self.parse_error(ParserError::Grammar("Expected name".into()))),
         }
     }
 
-    fn consume_expecting(&mut self, token: Token) -> Result<(), ParserError> {
+    fn parse_error(&self, error: ParserError) -> WrenError {
+        WrenError {
+            line: self.input.line_number,
+            module: self.module.name.clone(),
+            error: error,
+        }
+    }
+
+    fn consume_expecting(&mut self, token: Token) -> Result<(), WrenError> {
         self.consume()?;
         let name_for_error = token.error_message_name(); // Can we avoid this?
         if self.previous.token != token {
-            return Err(ParserError::Grammar(format!("Expected {}", name_for_error)));
+            return Err(
+                self.parse_error(ParserError::Grammar(format!("Expected {}", name_for_error)))
+            );
         }
         Ok(())
     }
 
-    fn parse_precendence(&mut self, precedence: Precedence) -> Result<(), ParserError> {
+    fn parse_precendence(&mut self, precedence: Precedence) -> Result<(), WrenError> {
         self.consume()?;
         let prefix_parser = self
             .previous
             .token
             .grammar_rule()
             .prefix
-            .ok_or(ParserError::Grammar("Expected Expression".into()))?;
+            .ok_or(self.parse_error(ParserError::Grammar("Expected Expression".into())))?;
 
         // Track if the precendence of the surrounding expression is low enough to
         // allow an assignment inside this one. We can't compile an assignment like
@@ -877,7 +917,7 @@ impl<'a> Parser<'a> {
     }
 }
 
-fn ignore_newlines(parser: &mut Parser) -> Result<(), ParserError> {
+fn ignore_newlines(parser: &mut Parser) -> Result<(), WrenError> {
     parser.match_line()?;
     Ok(())
 }
@@ -885,8 +925,8 @@ fn ignore_newlines(parser: &mut Parser) -> Result<(), ParserError> {
 pub fn compile<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
-    _module_name: &str,
-) -> Result<Closure, ParserError> {
+    module_name: &str,
+) -> Result<Closure, WrenError> {
     // TODO: We should create one per module_name instead.
 
     // When compiling, we create a module and register it.
@@ -900,6 +940,8 @@ pub fn compile<'a>(
     //                      coreModule->variableNames.data[i]->length,
     //                      coreModule->variables.data[i], NULL);
     // }
+
+    vm.module = Module::with_name(module_name);
 
     // Initailize the fake "core" module.
     vm.module.define_variable("System", Value::Num(1));

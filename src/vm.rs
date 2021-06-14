@@ -18,10 +18,17 @@ pub struct Module {
     // Should this just be a map?  wren_utils.h suggests so?
     variables: Vec<Value>,
     variable_names: Vec<String>,
-    // name: String, // Should be a GC'd object?
+    pub name: String, // Should be a GC'd object?
 }
 
 impl Module {
+    pub fn with_name(name: &str) -> Module {
+        Module {
+            name: name.into(),
+            ..Module::default()
+        }
+    }
+
     pub fn lookup_symbol(&self, name: &str) -> Option<usize> {
         self.variable_names.iter().position(|e| e.eq(name))
     }
