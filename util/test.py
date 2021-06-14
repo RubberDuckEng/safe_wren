@@ -440,7 +440,6 @@ else:
 for key in sorted(skipped.keys()):
     print('Skipped ' + yellow(skipped[key]) + ' tests: ' + key)
 
-print('PASSING: ' + green(passed))
 print('\n'.join(passes))
 
 if failed != 0:

@@ -152,10 +152,10 @@ impl WrenVM {
                     self.push(value);
                 }
                 Ops::Store(variable) => {
-                    let value = self.pop()?;
+                    let value = self.peek()?;
                     match variable.scope {
                         Scope::Module => self.module.variables[variable.index] = value.clone(),
-                        Scope::Local => unimplemented!("Ops::Store local"),
+                        Scope::Local => self.stack[variable.index] = value.clone(),
                     };
                 }
                 Ops::Pop => {
@@ -176,5 +176,9 @@ impl WrenVM {
 
     fn pop(&mut self) -> Result<Value, RuntimeError> {
         self.stack.pop().ok_or(RuntimeError::StackUnderflow)
+    }
+
+    fn peek(&mut self) -> Result<&Value, RuntimeError> {
+        self.stack.last().ok_or(RuntimeError::StackUnderflow)
     }
 }

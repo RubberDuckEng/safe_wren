@@ -20,10 +20,10 @@
 * Limit tests
 * Fibers
 
-## Missing
-* Basically everything.  Only 14 of 869 tests pass.
-
 ### Passing Tests:
+16 tests passed. 853 tests failed.
+wren_c/test/language/assignment/associativity.wren
+wren_c/test/language/assignment/global.wren
 wren_c/test/language/comments/line_at_eof.wren
 wren_c/test/language/comments/only_line_comment.wren
 wren_c/test/language/comments/only_line_comment_and_line.wren
