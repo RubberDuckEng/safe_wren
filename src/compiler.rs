@@ -846,8 +846,7 @@ impl<'a> Parser<'a> {
         Ok(false)
     }
 
-    // Hack until we split TokenType and Token.
-    fn match_line(&mut self) -> Result<bool, WrenError> {
+    fn match_at_least_one_line(&mut self) -> Result<bool, WrenError> {
         let mut saw_line = false;
         while Token::Newline == self.current.token {
             self.consume()?;
@@ -918,7 +917,7 @@ impl<'a> Parser<'a> {
 }
 
 fn ignore_newlines(parser: &mut Parser) -> Result<(), WrenError> {
-    parser.match_line()?;
+    parser.match_at_least_one_line()?;
     Ok(())
 }
 
@@ -966,7 +965,7 @@ pub fn compile<'a>(
         }
         definition(&mut parser)?;
 
-        let found_newline = parser.match_current(Token::Newline)?;
+        let found_newline = parser.match_at_least_one_line()?;
         // If there is no newline we must be EOF?
         if !found_newline {
             parser.consume_expecting(Token::EndOfFile)?;
