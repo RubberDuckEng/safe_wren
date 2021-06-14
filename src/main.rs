@@ -66,22 +66,34 @@ fn wren_test_main(args: &Vec<String>) {
     run_file(&args[1]);
 }
 
-fn print_tokens(source: &String) {
-    let input = InputManager::from_string(source.clone());
+fn input_from_source_or_path(source_or_path: &String) -> InputManager {
+    if source_or_path.ends_with(".wren") {
+        let source = fs::read_to_string(source_or_path).unwrap_or_else(|_| {
+            eprintln!("Could not find file \"{}\".", source_or_path);
+            exit(ExitCode::NoInput);
+        });
+        InputManager::from_string(source)
+    } else {
+        InputManager::from_string(source_or_path.clone())
+    }
+}
+
+fn print_tokens(source_or_path: &String) {
+    let input = input_from_source_or_path(source_or_path);
     let tokens = lex(input);
     println!("{:?}", tokens);
 }
 
-fn print_bytecode(source: &String) {
+fn print_bytecode(source_or_path: &String) {
     let mut vm = WrenVM::new();
-    let input = InputManager::from_string(source.clone());
+    let input = input_from_source_or_path(source_or_path);
     let closure = compile(&mut vm, input, "dummy_module");
     println!("{:?}", closure);
 }
 
-fn interpret_and_print_vm(source: &String) {
+fn interpret_and_print_vm(source_or_path: &String) {
     let mut vm = WrenVM::new();
-    let input = InputManager::from_string(source.clone());
+    let input = input_from_source_or_path(source_or_path);
     let closure = compile(&mut vm, input, "dummy_module").expect("compile");
     vm.run(closure).expect("runtime");
     println!("{:?}", vm);
