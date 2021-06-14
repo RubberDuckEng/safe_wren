@@ -1,7 +1,7 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 8, error: Grammar("Expected right paren") }
+Unexpected error:
+[dummy_module line 8] Error Grammar("Expected right paren")
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 8, error: Grammar("Expected right paren") }
+[dummy_module line 8] Error Grammar("Expected right paren")
 
 Missing expected output "0" on line 1.
 Missing expected output "a string" on line 2.

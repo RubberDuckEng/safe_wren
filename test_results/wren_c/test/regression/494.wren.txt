@@ -1,4 +1,1 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('[')) }
-Missing expected error on line 1.
 Missing expected error on line 4.

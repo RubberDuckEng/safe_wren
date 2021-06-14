@@ -1,7 +1,7 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 6, error: Lexer(UnexpectedChar('{')) }
+Unexpected error:
+[dummy_module line 6] Error Lexer(UnexpectedChar('{'))
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 6, error: Lexer(UnexpectedChar('{')) }
+[dummy_module line 6] Error Lexer(UnexpectedChar('{'))
 
 Missing expected output "before" on line 2.
 Missing expected output "after" on line 4.

@@ -1,7 +1,7 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('{')) }
+Unexpected error:
+[dummy_module line 2] Error Lexer(UnexpectedChar('{'))
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('{')) }
+[dummy_module line 2] Error Lexer(UnexpectedChar('{'))
 
 Missing expected output "true" on line 32.
 Missing expected output "instance of WhereSequence" on line 33.

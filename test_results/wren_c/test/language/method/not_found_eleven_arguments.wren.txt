@@ -1,7 +1,6 @@
 Expected runtime error "Foo does not implement 'someUnknownMethod(_,_,_,_,_,_,_,_,_,_,_)'." and got:
-WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
-Expected stack trace and got:
 
+Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
+[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
 

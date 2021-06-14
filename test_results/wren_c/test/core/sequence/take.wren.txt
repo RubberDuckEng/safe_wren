@@ -1,7 +1,7 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'class\'") }
+Unexpected error:
+[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'class\'") }
+[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
 
 Missing expected output "true" on line 15.
 Missing expected output "instance of TakeSequence" on line 16.

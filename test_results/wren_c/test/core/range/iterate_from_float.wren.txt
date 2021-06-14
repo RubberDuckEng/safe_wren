@@ -1,7 +1,7 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'for\'") }
+Unexpected error:
+[dummy_module line 3] Error Grammar("Undeclared variable \'for\'")
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'for\'") }
+[dummy_module line 3] Error Grammar("Undeclared variable \'for\'")
 
 Missing expected output "1.3" on line 4.
 Missing expected output "2.3" on line 5.

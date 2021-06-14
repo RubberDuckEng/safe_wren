@@ -1,7 +1,6 @@
 Expected runtime error "Right operand must be a class." and got:
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expected end of file") }
-Expected stack trace and got:
 
+Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expected end of file") }
+[dummy_module line 2] Error Grammar("Expected end of file")
 

@@ -1,7 +1,7 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'import\'") }
+Unexpected error:
+[dummy_module line 2] Error Grammar("Undeclared variable \'import\'")
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'import\'") }
+[dummy_module line 2] Error Grammar("Undeclared variable \'import\'")
 
 Missing expected output "Bool" on line 2.
 Missing expected output "Class" on line 3.

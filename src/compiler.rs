@@ -810,9 +810,9 @@ impl From<LexError> for ParserError {
 
 #[derive(Debug)]
 pub struct WrenError {
-    module: String,
-    line: usize,
-    error: ParserError,
+    pub module: String,
+    pub line: usize,
+    pub error: ParserError, // Probably shouldn't be public?
 }
 
 // FIXME: This is a stub.

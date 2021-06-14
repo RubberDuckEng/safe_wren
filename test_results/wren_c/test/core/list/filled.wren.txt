@@ -1,7 +1,7 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'List\'") }
+Unexpected error:
+[dummy_module line 1] Error Grammar("Undeclared variable \'List\'")
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'List\'") }
+[dummy_module line 1] Error Grammar("Undeclared variable \'List\'")
 
 Missing expected output "3" on line 2.
 Missing expected output "[value, value, value]" on line 3.

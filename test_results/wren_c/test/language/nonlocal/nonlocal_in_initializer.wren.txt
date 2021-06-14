@@ -1,6 +1,6 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'A\'") }
+Unexpected error:
+[dummy_module line 1] Error Grammar("Undeclared variable \'A\'")
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'A\'") }
+[dummy_module line 1] Error Grammar("Undeclared variable \'A\'")
 
 Missing expected output "true" on line 2.

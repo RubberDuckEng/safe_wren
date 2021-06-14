@@ -1,7 +1,6 @@
 Expected runtime error "Object metaclass does not implement 'new()'." and got:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Object\'") }
-Expected stack trace and got:
 
+Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Object\'") }
+[dummy_module line 1] Error Grammar("Undeclared variable \'Object\'")
 

@@ -50,7 +50,8 @@ fn run_file(path: &String) {
     let input = InputManager::from_string(source);
     let module_name = "dummy_module";
     let closure = compile(&mut vm, input, module_name).unwrap_or_else(|e| {
-        eprintln!("{:?}", e);
+        // Matching test.c output:
+        eprintln!("[{} line {}] Error {:?}", e.module, e.line, e.error);
         exit(ExitCode::CompileError);
     });
 

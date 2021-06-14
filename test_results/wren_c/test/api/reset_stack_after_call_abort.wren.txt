@@ -1,8 +1,7 @@
 Expected runtime error "Abort!" and got:
-WrenError { module: "dummy_module", line: 6, error: Lexer(UnexpectedChar('{')) }
-Expected stack trace and got:
 
+Expected stack trace and got:
 Expected return code 0 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 6, error: Lexer(UnexpectedChar('{')) }
+[dummy_module line 6] Error Lexer(UnexpectedChar('{'))
 
 Missing expected output "3" on line 12.

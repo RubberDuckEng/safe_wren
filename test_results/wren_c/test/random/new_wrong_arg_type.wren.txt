@@ -1,7 +1,6 @@
 Expected runtime error "Seed must be a number or a sequence of numbers." and got:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }
-Expected stack trace and got:
 
+Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }
+[dummy_module line 1] Error Grammar("Undeclared variable \'import\'")
 

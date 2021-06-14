@@ -1,7 +1,6 @@
 Expected runtime error "Iterator out of bounds." and got:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression") }
-Expected stack trace and got:
 
+Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression") }
+[dummy_module line 1] Error Grammar("Expected Expression")
 

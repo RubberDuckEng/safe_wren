@@ -1,3 +1,0 @@
-Unexpected output on stderr:
-WrenError { module: "dummy_module", line: 3, error: Grammar("Expected end of file") }
-Missing expected error on line 3.
