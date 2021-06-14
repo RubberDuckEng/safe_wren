@@ -9,6 +9,7 @@ use crate::vm::{Closure, Function, Module, Value, WrenVM};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
+    BeforeFile, // Error state, should never be encountered.
     LeftParen,
     RightParen,
     OpTerm(char),
@@ -322,9 +323,9 @@ impl fmt::Debug for Compiler {
 struct Parser<'a> {
     input: InputManager,
     module: &'a Module,
-    previous: Option<Token>,
-    current: Option<Token>,
-    next: Option<Token>,
+    previous: Token,
+    current: Token,
+    next: Token,
     compiler: Compiler,
 }
 
@@ -336,8 +337,8 @@ type InfixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
 fn literal(parser: &mut Parser) -> Result<(), ParserError> {
     // TODO: Pass in Token instead of needing to use "previous"?
     match &parser.previous {
-        Some(Token::Num(n)) => parser.compiler.emit_constant(Value::Num(*n)),
-        Some(Token::String(s)) => parser
+        Token::Num(n) => parser.compiler.emit_constant(Value::Num(*n)),
+        Token::String(s) => parser
             .compiler
             .emit_constant(Value::String(Rc::new(s.clone()))),
         _ => panic!("invalid literal"),
@@ -359,7 +360,7 @@ pub struct Signature {
 }
 
 fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
-    let rule = parser.previous.as_ref().unwrap().grammar_rule();
+    let rule = parser.previous.grammar_rule();
     ignore_newlines(parser)?;
     // Compile the right-hand side.
     parser.parse_precendence(rule.precedence.one_higher())?;
@@ -396,7 +397,7 @@ fn finish_arguments_list(parser: &mut Parser) -> Result<u8, ParserError> {
 fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
     // Grab name from previous token.
     let name = match &parser.previous {
-        Some(Token::Name(n)) => Ok(n),
+        Token::Name(n) => Ok(n),
         _ => Err(ParserError::Grammar(
             "named_call previous token not name".into(),
         )),
@@ -411,7 +412,7 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
     if found_left_paren {
         ignore_newlines(parser)?;
         signature.call_type = SignatureType::Method;
-        if parser.current != Some(Token::RightParen) {
+        if parser.current != Token::RightParen {
             signature.arity = finish_arguments_list(parser)?;
         }
         parser.consume_expecting(Token::RightParen)?;
@@ -452,7 +453,7 @@ fn name(parser: &mut Parser) -> Result<(), ParserError> {
 
     // Otherwise if in module scope handle module case:
 
-    let name = parser.previous.as_ref().unwrap().name();
+    let name = parser.previous.name();
     let maybe_index = parser.module.lookup_symbol(name);
     match maybe_index {
         Some(index) => {
@@ -507,7 +508,7 @@ fn grouping(parser: &mut Parser) -> Result<(), ParserError> {
 }
 
 fn boolean(parser: &mut Parser) -> Result<(), ParserError> {
-    if let Some(Token::Boolean(b)) = parser.previous {
+    if let Token::Boolean(b) = parser.previous {
         parser.compiler.emit_boolean(b);
     } else {
         panic!("boolean called w/o boolean token");
@@ -577,6 +578,7 @@ impl Token {
 
     fn error_message_name(&self) -> &'static str {
         match self {
+            Token::BeforeFile => unimplemented!(),
             Token::LeftParen => "left paren",
             Token::RightParen => "right paren",
             Token::OpTerm(_) => "operator + or -",
@@ -595,6 +597,7 @@ impl Token {
     fn grammar_rule(&self) -> GrammarRule {
         // This should switch on TokenType, not Token itself.
         match self {
+            Token::BeforeFile => unimplemented!(),
             Token::LeftParen => GrammarRule::prefix(grouping),
             Token::RightParen => GrammarRule::unused(),
             Token::OpTerm(c) => GrammarRule::infix_operator(Precedence::Term, &c.to_string()),
@@ -644,14 +647,14 @@ impl From<LexError> for ParserError {
 impl<'a> Parser<'a> {
     // This is just called nextToken(Compiler) in wren_c
     fn consume(&mut self) -> Result<(), ParserError> {
-        self.previous = self.current.take();
-        self.current = self.next.take();
-        self.next = Some(next_token(&mut self.input).map_err(|e| ParserError::Lexer(e))?);
+        std::mem::swap(&mut self.previous, &mut self.current);
+        std::mem::swap(&mut self.current, &mut self.next);
+        self.next = next_token(&mut self.input).map_err(|e| ParserError::Lexer(e))?;
         Ok(())
     }
 
     fn match_current(&mut self, token: Token) -> Result<bool, ParserError> {
-        if self.current == Some(token) {
+        if self.current == token {
             self.consume()?;
             return Ok(true);
         }
@@ -661,7 +664,7 @@ impl<'a> Parser<'a> {
     // Hack until we split TokenType and Token.
     fn match_line(&mut self) -> Result<bool, ParserError> {
         let mut saw_line = false;
-        while let Some(Token::Newline) = self.current {
+        while Token::Newline == self.current {
             self.consume()?;
             saw_line = true;
         }
@@ -672,7 +675,7 @@ impl<'a> Parser<'a> {
     fn consume_expecting_name(&mut self) -> Result<(), ParserError> {
         self.consume()?;
         match self.previous {
-            Some(Token::Name(_)) => Ok(()),
+            Token::Name(_) => Ok(()),
             _ => Err(ParserError::Grammar("Expected name".into())),
         }
     }
@@ -681,7 +684,7 @@ impl<'a> Parser<'a> {
     fn consume_expecting(&mut self, token: Token) -> Result<(), ParserError> {
         self.consume()?;
         let name_for_error = token.error_message_name(); // Can we avoid this?
-        if self.previous != Some(token) {
+        if self.previous != token {
             return Err(ParserError::Grammar(format!("Expected {}", name_for_error)));
         }
         Ok(())
@@ -690,15 +693,13 @@ impl<'a> Parser<'a> {
     fn current_precedence(&self) -> Precedence {
         // TODO: There must be a shorter way to write this.
         // self.current being None would be a programming error/panic.
-        self.current.as_ref().unwrap().grammar_rule().precedence
+        self.current.grammar_rule().precedence
     }
 
     fn parse_precendence(&mut self, precedence: Precedence) -> Result<(), ParserError> {
         self.consume()?;
         let prefix_parser = self
             .previous
-            .as_ref()
-            .unwrap()
             .grammar_rule()
             .prefix
             .ok_or(ParserError::Grammar("Expected Expression".into()))?;
@@ -706,13 +707,7 @@ impl<'a> Parser<'a> {
 
         while precedence <= self.current_precedence() {
             self.consume()?;
-            let infix_parser = self
-                .previous
-                .as_ref()
-                .unwrap()
-                .grammar_rule()
-                .infix
-                .expect("Invalid token");
+            let infix_parser = self.previous.grammar_rule().infix.expect("Invalid token");
             infix_parser(self)?;
         }
         Ok(())
@@ -749,9 +744,9 @@ pub fn compile<'a>(
     // Init the parser & compiler
     let mut parser = Parser {
         input: input,
-        previous: None,
-        current: None,
-        next: None,
+        previous: Token::BeforeFile,
+        current: Token::BeforeFile,
+        next: Token::BeforeFile,
         compiler: Compiler::default(),
         module: &vm.module,
     };
