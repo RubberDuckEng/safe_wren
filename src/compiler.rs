@@ -381,7 +381,7 @@ fn finish_arguments_list(parser: &mut Parser) -> Result<u8, ParserError> {
         // TODO: Check and throw an error if too many parameters.
         arg_count += 1;
         expression(parser)?;
-        let found_comma = parser.match_comma()?;
+        let found_comma = parser.match_current(Token::Comma)?;
         if !found_comma {
             break;
         }
@@ -407,14 +407,14 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
         arity: 0,
     };
 
-    let found_left_paren = parser.match_left_paren()?;
+    let found_left_paren = parser.match_current(Token::LeftParen)?;
     if found_left_paren {
         ignore_newlines(parser)?;
         signature.call_type = SignatureType::Method;
-        if !parser.peek_for_right_paren() {
+        if parser.current != Some(Token::RightParen) {
             signature.arity = finish_arguments_list(parser)?;
         }
-        parser.consume_expecting_right_paren()?;
+        parser.consume_expecting(Token::RightParen)?;
     }
 
     parser.compiler.emit_call(signature);
@@ -502,7 +502,7 @@ fn definition(parser: &mut Parser) -> Result<(), ParserError> {
 
 fn grouping(parser: &mut Parser) -> Result<(), ParserError> {
     expression(parser)?;
-    parser.consume_expecting_right_paren()?;
+    parser.consume_expecting(Token::RightParen)?;
     Ok(())
 }
 
@@ -515,11 +515,18 @@ fn boolean(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
+// How many states are needed here?
+// Could this just be an enum?
+// enum Grammar {
+//     Prefix(PrefixParslet),
+//     Infix(InfixParslet),
+//     Unused,
+// }
 struct GrammarRule {
     prefix: Option<PrefixParslet>,
     infix: Option<InfixParslet>,
     precedence: Precedence,
-    name: Option<String>,
+    name: Option<String>, // REMOVE
 }
 
 impl GrammarRule {
@@ -565,6 +572,23 @@ impl Token {
         match self {
             Token::Name(name) => name,
             _ => panic!("invaid"),
+        }
+    }
+
+    fn error_message_name(&self) -> &'static str {
+        match self {
+            Token::LeftParen => "left paren",
+            Token::RightParen => "right paren",
+            Token::OpTerm(_) => "operator + or -",
+            Token::OpFactor(_) => "operator * or / or %",
+            Token::Num(_) => "number literal",
+            Token::String(_) => "string literal",
+            Token::Dot => "dot",
+            Token::Boolean(_) => "boolean literal",
+            Token::Name(_) => "name",
+            Token::Comma => "comma",
+            Token::Newline => "newline",
+            Token::EndOfFile => "end of file",
         }
     }
 
@@ -626,56 +650,12 @@ impl<'a> Parser<'a> {
         Ok(())
     }
 
-    // Hack until we split TokenType and Token.
-    fn peek_for_right_paren(&self) -> bool {
-        match self.current {
-            Some(Token::RightParen) => true,
-
-            _ => false,
+    fn match_current(&mut self, token: Token) -> Result<bool, ParserError> {
+        if self.current == Some(token) {
+            self.consume()?;
+            return Ok(true);
         }
-    }
-
-    // Hack until we split TokenType and Token.
-    fn match_eof(&mut self) -> Result<bool, ParserError> {
-        match self.current {
-            Some(Token::EndOfFile) => {
-                self.consume()?;
-                Ok(true)
-            }
-            _ => Ok(false),
-        }
-    }
-    // Hack until we split TokenType and Token.
-    fn match_newline(&mut self) -> Result<bool, ParserError> {
-        match self.current {
-            Some(Token::Newline) => {
-                self.consume()?;
-                Ok(true)
-            }
-            _ => Ok(false),
-        }
-    }
-
-    // Hack until we split TokenType and Token.
-    fn match_comma(&mut self) -> Result<bool, ParserError> {
-        match self.current {
-            Some(Token::Comma) => {
-                self.consume()?;
-                Ok(true)
-            }
-            _ => Ok(false),
-        }
-    }
-
-    // Hack until we split TokenType and Token.
-    fn match_left_paren(&mut self) -> Result<bool, ParserError> {
-        match self.current {
-            Some(Token::LeftParen) => {
-                self.consume()?;
-                Ok(true)
-            }
-            _ => Ok(false),
-        }
+        Ok(false)
     }
 
     // Hack until we split TokenType and Token.
@@ -698,21 +678,13 @@ impl<'a> Parser<'a> {
     }
 
     // Hack until we split TokenType and Token.
-    fn consume_expecting_right_paren(&mut self) -> Result<(), ParserError> {
+    fn consume_expecting(&mut self, token: Token) -> Result<(), ParserError> {
         self.consume()?;
-        match self.previous {
-            Some(Token::RightParen) => Ok(()),
-            _ => Err(ParserError::Grammar("Expected right paren".into())),
+        let name_for_error = token.error_message_name(); // Can we avoid this?
+        if self.previous != Some(token) {
+            return Err(ParserError::Grammar(format!("Expected {}", name_for_error)));
         }
-    }
-
-    // Hack until we split TokenType and Token.
-    fn consume_expecting_eof(&mut self) -> Result<(), ParserError> {
-        self.consume()?;
-        match self.previous {
-            Some(Token::EndOfFile) => Ok(()),
-            _ => Err(ParserError::Grammar("Expected end of file".into())),
-        }
+        Ok(())
     }
 
     fn current_precedence(&self) -> Precedence {
@@ -788,16 +760,16 @@ pub fn compile<'a>(
 
     ignore_newlines(&mut parser)?;
     loop {
-        let found_eof = parser.match_eof()?;
+        let found_eof = parser.match_current(Token::EndOfFile)?;
         if found_eof {
             break;
         }
         definition(&mut parser)?;
 
-        let found_newline = parser.match_newline()?;
+        let found_newline = parser.match_current(Token::Newline)?;
         // If there is no newline we must be EOF?
         if !found_newline {
-            parser.consume_expecting_eof()?;
+            parser.consume_expecting(Token::EndOfFile)?;
             break;
         }
     }
