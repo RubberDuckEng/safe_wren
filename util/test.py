@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from argparse import ArgumentParser
 from collections import defaultdict
-from os import listdir, makedirs, remove
+from os import listdir, makedirs, remove, environ
 from os.path import abspath, basename, dirname, isdir, isfile, join, realpath, relpath, splitext
 import re
 from subprocess import Popen, PIPE
@@ -50,6 +50,16 @@ STACK_TRACE_PATTERN = re.compile(r'(?:\[\./)?test/.* line (\d+)\] in')
 STDIN_PATTERN = re.compile(r'// stdin: (.*)')
 SKIP_PATTERN = re.compile(r'// skip: (.*)')
 NONTEST_PATTERN = re.compile(r'// nontest')
+
+
+def supports_colored_text():
+    return (sys.platform != 'win32' or
+            'ANSICON' in environ or
+            'WT_SESSION' in environ or
+            environ.get('TERM_PROGRAM') == 'vscode')
+
+
+SUPPORTS_COLORED_TEXT = supports_colored_text()
 
 passed = 0
 failed = 0
@@ -301,8 +311,7 @@ def color_text(text, color):
     """Converts text to a string and wraps it in the ANSI escape sequence for
     color, if supported."""
 
-    # No ANSI escapes on Windows.
-    if sys.platform == 'win32':
+    if not SUPPORTS_COLORED_TEXT:
         return str(text)
 
     return color + str(text) + '\033[0m'
