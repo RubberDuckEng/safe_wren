@@ -21,18 +21,21 @@
 * Fibers
 
 ## Missing
-* Basically everything.  Only 11 of 869 tests pass.
+* Basically everything.  Only 14 of 869 tests pass.
 
 ### Passing Tests:
 wren_c/test/language/comments/line_at_eof.wren
-wren_c/test/language/comments/only_line_comment_and_line.wren
 wren_c/test/language/comments/only_line_comment.wren
+wren_c/test/language/comments/only_line_comment_and_line.wren
 wren_c/test/language/comments/unicode.wren
 wren_c/test/language/empty_file.wren
 wren_c/test/language/module/module_dir/something/module.wren
+wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
 wren_c/test/language/no_trailing_newline.wren
+wren_c/test/language/variable/global_without_initializer.wren
 wren_c/test/language/whitespace.wren
 test/bringup/add.wren
+test/bringup/locals.wren
 test/bringup/trailing_newlines.wren
 wren_c/example/hello.wren
 

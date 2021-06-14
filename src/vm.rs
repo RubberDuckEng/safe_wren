@@ -147,7 +147,7 @@ impl WrenVM {
                 Ops::Load(variable) => {
                     let value = match variable.scope {
                         Scope::Module => self.module.variables[variable.index].clone(),
-                        Scope::Local => unimplemented!("Ops::Load local"),
+                        Scope::Local => self.stack[variable.index].clone(),
                     };
                     self.push(value);
                 }
