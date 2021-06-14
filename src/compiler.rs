@@ -1,5 +1,6 @@
 use std::error;
 use std::fmt;
+use std::ops::Range;
 use std::rc::Rc;
 use std::str;
 
@@ -7,6 +8,7 @@ use num_traits::FromPrimitive;
 
 use crate::vm::{Closure, Function, Module, Value, WrenVM};
 
+// Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     BeforeFile, // Error state, should never be encountered.
@@ -17,11 +19,36 @@ pub enum Token {
     Num(u64),
     Dot,
     Comma,
+    Var,
+    Equals,
+    EqualsEquals,
     Boolean(bool),
     Name(String),
     String(String),
     Newline,
     EndOfFile, // Does this belong here or as an Err?
+}
+
+#[derive(Debug)]
+pub struct ParseToken {
+    bytes_range: Range<usize>,
+    token: Token,
+    line: usize,
+}
+
+impl ParseToken {
+    fn name(&self, input: &InputManager) -> Result<String, LexError> {
+        String::from_utf8(input.source[self.bytes_range.clone()].into())
+            .map_err(|_| LexError::DecoderError)
+    }
+
+    fn before_file() -> ParseToken {
+        ParseToken {
+            bytes_range: Range::default(),
+            token: Token::BeforeFile,
+            line: 0,
+        }
+    }
 }
 
 // Is this really the tokenizer?
@@ -31,6 +58,8 @@ pub enum Token {
 pub struct InputManager {
     source: Vec<u8>,
     offset: usize,
+    line_number: usize,
+    token_start_offset: usize,
 }
 
 impl InputManager {
@@ -38,6 +67,8 @@ impl InputManager {
         InputManager {
             source: source.as_bytes().to_vec(),
             offset: 0,
+            line_number: 1,
+            token_start_offset: 0,
         }
     }
     fn peek(&self) -> Option<u8> {
@@ -50,8 +81,25 @@ impl InputManager {
 
     fn next(&mut self) -> u8 {
         let val = self.source[self.offset];
+        if val == b'\n' {
+            self.line_number += 1;
+        }
         self.offset += 1;
         return val;
+    }
+
+    fn make_token(&self, token: Token) -> ParseToken {
+        // Report Newline tokens as the line they are ending.
+        let line_number = if token == Token::Newline {
+            self.line_number - 1
+        } else {
+            self.line_number
+        };
+        ParseToken {
+            line: line_number,
+            token: token,
+            bytes_range: self.token_start_offset..self.offset,
+        }
     }
 
     fn is_at_end(&self) -> bool {
@@ -123,20 +171,21 @@ fn is_whitespace(maybe_b: Option<u8>) -> bool {
 }
 
 // Probably belongs on the InputManager/Tokenizer?
-fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
+fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
+    input.token_start_offset = input.offset;
     while !input.is_at_end() {
         let c = input.next();
         match c {
             b'0'..=b'9' => {
-                let n = read_number(c, input)?;
-                return Ok(Token::Num(n));
+                let num = read_number(c, input)?;
+                return Ok(input.make_token(Token::Num(num)));
             }
-            b'.' => return Ok(Token::Dot),
-            b',' => return Ok(Token::Comma),
-            b'+' | b'-' => return Ok(Token::OpTerm(c.into())),
-            b'*' | b'%' => return Ok(Token::OpFactor(c.into())),
-            b'(' => return Ok(Token::LeftParen),
-            b')' => return Ok(Token::RightParen),
+            b'.' => return Ok(input.make_token(Token::Dot)),
+            b',' => return Ok(input.make_token(Token::Comma)),
+            b'+' | b'-' => return Ok(input.make_token(Token::OpTerm(c.into()))),
+            b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
+            b'(' => return Ok(input.make_token(Token::LeftParen)),
+            b')' => return Ok(input.make_token(Token::RightParen)),
             b' ' | b'\t' | b'\r' => {
                 while is_whitespace(input.peek()) {
                     input.next();
@@ -147,20 +196,30 @@ fn next_token(input: &mut InputManager) -> Result<Token, LexError> {
                     skip_line_comment(input);
                     continue;
                 }
-                return Ok(Token::OpFactor('/'));
+                return Ok(input.make_token(Token::OpFactor('/')));
+            }
+            b'=' => {
+                let token = match input.peek() {
+                    Some(b'=') => {
+                        input.next();
+                        Token::EqualsEquals
+                    }
+                    _ => Token::Equals,
+                };
+                return Ok(input.make_token(token));
             }
             b'"' => return read_string(input),
             // TODO: How can we share code with is_name above?
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
                 return Ok(read_name(c, input)?);
             }
-            b'\n' => return Ok(Token::Newline),
+            b'\n' => return Ok(input.make_token(Token::Newline)),
             _ => {
                 return Err(LexError::UnexpectedChar(c as char));
             }
         }
     }
-    return Ok(Token::EndOfFile);
+    return Ok(input.make_token(Token::EndOfFile));
 }
 
 // Knows how to advance to the end of something that looks like a number
@@ -189,6 +248,7 @@ fn keyword_token(name: &str) -> Option<Token> {
     match name {
         "true" => Some(Token::Boolean(true)),
         "false" => Some(Token::Boolean(false)),
+        "var" => Some(Token::Var),
         _ => None,
     }
 }
@@ -201,7 +261,7 @@ fn is_digit(c: Option<u8>) -> bool {
     matches!(c, Some(b'0'..=b'9'))
 }
 
-fn read_name(first_byte: u8, input: &mut InputManager) -> Result<Token, LexError> {
+fn read_name(first_byte: u8, input: &mut InputManager) -> Result<ParseToken, LexError> {
     // This should be a string?
     let mut bytes = Vec::new();
     bytes.push(first_byte);
@@ -210,10 +270,10 @@ fn read_name(first_byte: u8, input: &mut InputManager) -> Result<Token, LexError
     }
 
     let name = String::from_utf8(bytes).map_err(|_| LexError::DecoderError)?;
-    Ok(keyword_token(&name).unwrap_or(Token::Name(name)))
+    Ok(input.make_token(keyword_token(&name).unwrap_or(Token::Name(name))))
 }
 
-fn read_string(input: &mut InputManager) -> Result<Token, LexError> {
+fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
     let mut bytes = Vec::new();
     loop {
         if input.is_at_end() {
@@ -227,16 +287,17 @@ fn read_string(input: &mut InputManager) -> Result<Token, LexError> {
     }
     let string = String::from_utf8(bytes).expect("Decoder err");
 
-    Ok(Token::String(string))
+    Ok(input.make_token(Token::String(string)))
 }
 
-pub fn lex(input: InputManager) -> Result<Vec<Token>, LexError> {
-    let mut input_manager = input;
+pub fn lex(input: &mut InputManager) -> Result<Vec<ParseToken>, LexError> {
+    let input_manager = input;
     let mut tokens = Vec::new();
     loop {
-        let token = next_token(&mut input_manager)?;
+        let token = next_token(input_manager)?;
+        let is_eof = token.token == Token::EndOfFile;
         tokens.push(token);
-        if tokens.last().unwrap() == &Token::EndOfFile {
+        if is_eof {
             break;
         }
     }
@@ -248,6 +309,7 @@ enum Precedence {
     None = 0, // Newlines, EOF, etc.
     Lowest,
     Assignment,
+    Conditional,
     Term,   // + -
     Factor, // * / %
     Call,
@@ -262,11 +324,18 @@ impl Precedence {
 #[derive(Debug)]
 pub enum Ops {
     Constant(usize),
-    Boolean(bool), // Unclear if needed, could be Constant?
+    Boolean(bool), // Unclear if needed, could be constant?
+    Null,          // Unclear if needed, could be constant?
     Call(Signature),
     Load(Variable),
+    Store(Variable),
     Pop,
     End,
+}
+
+struct Local {
+    name: String,
+    //   depth: i8,
 }
 
 // Only lives for the function (or module top) compile.
@@ -274,6 +343,7 @@ pub enum Ops {
 #[derive(Default)]
 pub struct Compiler {
     constants: Vec<Value>,
+    locals: Vec<Local>, // A fixed size array in wren_c
     code: Vec<Ops>,
 }
 
@@ -288,6 +358,10 @@ impl Compiler {
         self.code.push(Ops::Boolean(value));
     }
 
+    fn emit_null(&mut self) {
+        self.code.push(Ops::Null);
+    }
+
     fn emit_call(&mut self, signature: Signature) {
         self.code.push(Ops::Call(signature));
     }
@@ -298,6 +372,10 @@ impl Compiler {
 
     fn emit_end(&mut self) {
         self.code.push(Ops::End);
+    }
+
+    fn emit_store(&mut self, variable: Variable) {
+        self.code.push(Ops::Store(variable))
     }
 
     fn emit_load(&mut self, variable: Variable) {
@@ -321,20 +399,20 @@ impl fmt::Debug for Compiler {
 struct Parser<'a> {
     input: InputManager,
     module: &'a Module,
-    previous: Token,
-    current: Token,
-    next: Token,
+    previous: ParseToken,
+    current: ParseToken,
+    next: ParseToken,
     compiler: Compiler,
 }
 
 // Following the Pratt parser example:
 // https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
-type PrefixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
+type PrefixParslet = fn(parser: &mut Parser, can_assign: bool) -> Result<(), ParserError>;
 type InfixParslet = fn(parser: &mut Parser) -> Result<(), ParserError>;
 
-fn literal(parser: &mut Parser) -> Result<(), ParserError> {
+fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), ParserError> {
     // TODO: Pass in Token instead of needing to use "previous"?
-    match &parser.previous {
+    match &parser.previous.token {
         Token::Num(n) => parser.compiler.emit_constant(Value::Num(*n)),
         Token::String(s) => parser
             .compiler
@@ -358,7 +436,7 @@ pub struct Signature {
 }
 
 fn infix_op(parser: &mut Parser) -> Result<(), ParserError> {
-    let rule = parser.previous.grammar_rule();
+    let rule = parser.previous.token.grammar_rule();
     ignore_newlines(parser)?;
     // Compile the right-hand side.
     parser.parse_precendence(rule.precedence.one_higher())?;
@@ -394,7 +472,7 @@ fn finish_arguments_list(parser: &mut Parser) -> Result<u8, ParserError> {
 // // and then calls it.
 fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
     // Grab name from previous token.
-    let name = match &parser.previous {
+    let name = match &parser.previous.token {
         Token::Name(n) => Ok(n),
         _ => Err(ParserError::Grammar(
             "named_call previous token not name".into(),
@@ -410,7 +488,7 @@ fn method_call(parser: &mut Parser) -> Result<(), ParserError> {
     if found_left_paren {
         ignore_newlines(parser)?;
         signature.call_type = SignatureType::Method;
-        if parser.current != Token::RightParen {
+        if parser.current.token != Token::RightParen {
             signature.arity = finish_arguments_list(parser)?;
         }
         parser.consume_expecting(Token::RightParen)?;
@@ -428,31 +506,65 @@ fn call(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
-#[derive(Debug)]
-enum Scope {
-    // Local,
+#[derive(Debug, Clone)]
+pub enum Scope {
+    Local,
     // Upvalue,
     Module,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Variable {
-    scope: Scope,
+    pub scope: Scope,
     pub index: usize,
 }
 
-fn name(parser: &mut Parser) -> Result<(), ParserError> {
+fn allow_line_before_dot(parser: &mut Parser) -> Result<(), ParserError> {
+    if parser.current.token == Token::Newline && parser.next.token == Token::Dot {
+        parser.consume()?;
+    }
+    Ok(())
+}
+
+// Compiles a read or assignment to [variable].
+fn bare_name(parser: &mut Parser, can_assign: bool, variable: Variable) -> Result<(), ParserError> {
+    // If there's an "=" after a bare name, it's a variable assignment.
+    if can_assign && parser.match_current(Token::Equals)? {
+        // Compile the right-hand side.
+        expression(parser)?;
+        parser.compiler.emit_store(variable.clone());
+    }
+
+    parser.compiler.emit_load(variable);
+
+    allow_line_before_dot(parser)?;
+    Ok(())
+}
+
+fn resolve_non_module(parser: &Parser, name: &str) -> Option<Variable> {
+    if let Some(index) = parser.compiler.locals.iter().position(|l| l.name.eq(name)) {
+        return Some(Variable {
+            scope: Scope::Local,
+            index: index,
+        });
+    }
+
+    None
+}
+
+fn name(parser: &mut Parser, can_assign: bool) -> Result<(), ParserError> {
     // This needs to be much more complicated to handle module
     // lookups as well as setters.
 
-    // Search current scope
-    // let variable = resolveNonmodule(compiler, token->start, token->length);
-    // If failed handle in-method case.
+    let name = parser.previous.name(&parser.input)?;
+    if let Some(variable) = resolve_non_module(parser, &name) {
+        bare_name(parser, can_assign, variable)?;
+        return Ok(());
+    }
 
     // Otherwise if in module scope handle module case:
 
-    let name = parser.previous.name();
-    let maybe_index = parser.module.lookup_symbol(name);
+    let maybe_index = parser.module.lookup_symbol(&name);
     match maybe_index {
         Some(index) => {
             parser.compiler.emit_load(Variable {
@@ -492,21 +604,62 @@ fn statement(parser: &mut Parser) -> Result<(), ParserError> {
     Ok(())
 }
 
+// Create a new local variable with [name]. Assumes the current scope is local
+// and the name is unique.
+fn add_local(parser: &mut Parser, name: &str) {
+    parser.compiler.locals.push(Local { name: name.into() });
+}
+
+fn declare_variable(parser: &mut Parser, name: &str) -> Result<(), ParserError> {
+    // TODO: Check variable name max length.
+    // TODO: Handle top level scope?
+    // TODO: Check to see if another local with the same name exists
+    // TODO: Enforce max number of local variables.
+    println!("declare_variable");
+    add_local(parser, name);
+    Ok(())
+}
+
+fn variable_definition(parser: &mut Parser) -> Result<(), ParserError> {
+    // Grab its name, but don't declare it yet. A (local) variable shouldn't be
+    // in scope in its own initializer.
+    parser.consume_expecting_name()?;
+    let name = parser.previous.name(&parser.input)?;
+
+    // Compile the initializer.
+    if parser.match_current(Token::Equals)? {
+        ignore_newlines(parser)?;
+        expression(parser)?;
+    } else {
+        // Default initialize it to null.
+        parser.compiler.emit_null();
+    }
+
+    // Now put it in scope.
+    declare_variable(parser, &name)?;
+    // TODO: Add define_variable in non-local case.
+    Ok(())
+}
+
 // Class definitions, imports, etc.
 fn definition(parser: &mut Parser) -> Result<(), ParserError> {
     // We don't handle class definitions, etc. yet.
     // Fall through to the "statement" case.
-    statement(parser)
+    if parser.match_current(Token::Var)? {
+        variable_definition(parser)
+    } else {
+        statement(parser)
+    }
 }
 
-fn grouping(parser: &mut Parser) -> Result<(), ParserError> {
+fn grouping(parser: &mut Parser, _can_assign: bool) -> Result<(), ParserError> {
     expression(parser)?;
     parser.consume_expecting(Token::RightParen)?;
     Ok(())
 }
 
-fn boolean(parser: &mut Parser) -> Result<(), ParserError> {
-    if let Token::Boolean(b) = parser.previous {
+fn boolean(parser: &mut Parser, _can_assign: bool) -> Result<(), ParserError> {
+    if let Token::Boolean(b) = parser.previous.token {
         parser.compiler.emit_boolean(b);
     } else {
         panic!("boolean called w/o boolean token");
@@ -567,13 +720,6 @@ impl GrammarRule {
 
 // Parslets belong in some sort of grouped parslet object per token?
 impl Token {
-    fn name(&self) -> &String {
-        match self {
-            Token::Name(name) => name,
-            _ => panic!("invaid"),
-        }
-    }
-
     fn error_message_name(&self) -> &'static str {
         match self {
             Token::BeforeFile => unimplemented!(),
@@ -589,6 +735,9 @@ impl Token {
             Token::Comma => "comma",
             Token::Newline => "newline",
             Token::EndOfFile => "end of file",
+            Token::Var => "var",
+            Token::Equals => "equal sign",
+            Token::EqualsEquals => "==",
         }
     }
 
@@ -604,10 +753,13 @@ impl Token {
             Token::String(_) => GrammarRule::prefix(literal),
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
             Token::Boolean(_) => GrammarRule::prefix(boolean),
-            Token::Name(_) => GrammarRule::prefix(name), // TODO: Also wrong.
+            Token::Var => GrammarRule::unused(),
             Token::Comma => GrammarRule::unused(),
             Token::Newline => GrammarRule::unused(),
             Token::EndOfFile => GrammarRule::unused(),
+            Token::Equals => GrammarRule::unused(),
+            Token::EqualsEquals => GrammarRule::unused(), // Wrong!
+            Token::Name(_) => GrammarRule::prefix(name),  // TODO: Also wrong.
         }
     }
 }
@@ -617,6 +769,11 @@ pub enum ParserError {
     Lexer(LexError),
     Grammar(String),
 }
+
+// Errors should have
+// Line and offset
+// A snippet from that line?
+// Some sort of error-type?
 
 impl fmt::Display for ParserError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -652,7 +809,7 @@ impl<'a> Parser<'a> {
     }
 
     fn match_current(&mut self, token: Token) -> Result<bool, ParserError> {
-        if self.current == token {
+        if self.current.token == token {
             self.consume()?;
             return Ok(true);
         }
@@ -662,7 +819,7 @@ impl<'a> Parser<'a> {
     // Hack until we split TokenType and Token.
     fn match_line(&mut self) -> Result<bool, ParserError> {
         let mut saw_line = false;
-        while Token::Newline == self.current {
+        while Token::Newline == self.current.token {
             self.consume()?;
             saw_line = true;
         }
@@ -672,7 +829,7 @@ impl<'a> Parser<'a> {
     // Hack until we split TokenType and Token.
     fn consume_expecting_name(&mut self) -> Result<(), ParserError> {
         self.consume()?;
-        match self.previous {
+        match self.previous.token {
             Token::Name(_) => Ok(()),
             _ => Err(ParserError::Grammar("Expected name".into())),
         }
@@ -681,7 +838,7 @@ impl<'a> Parser<'a> {
     fn consume_expecting(&mut self, token: Token) -> Result<(), ParserError> {
         self.consume()?;
         let name_for_error = token.error_message_name(); // Can we avoid this?
-        if self.previous != token {
+        if self.previous.token != token {
             return Err(ParserError::Grammar(format!("Expected {}", name_for_error)));
         }
         Ok(())
@@ -691,14 +848,29 @@ impl<'a> Parser<'a> {
         self.consume()?;
         let prefix_parser = self
             .previous
+            .token
             .grammar_rule()
             .prefix
             .ok_or(ParserError::Grammar("Expected Expression".into()))?;
-        prefix_parser(self)?;
 
-        while precedence <= self.current.grammar_rule().precedence {
+        // Track if the precendence of the surrounding expression is low enough to
+        // allow an assignment inside this one. We can't compile an assignment like
+        // a normal expression because it requires us to handle the LHS specially --
+        // it needs to be an lvalue, not an rvalue. So, for each of the kinds of
+        // expressions that are valid lvalues -- names, subscripts, fields, etc. --
+        // we pass in whether or not it appears in a context loose enough to allow
+        // "=". If so, it will parse the "=" itself and handle it appropriately.
+        let can_assign = precedence <= Precedence::Conditional;
+        prefix_parser(self, can_assign)?;
+
+        while precedence <= self.current.token.grammar_rule().precedence {
             self.consume()?;
-            let infix_parser = self.previous.grammar_rule().infix.expect("Invalid token");
+            let infix_parser = self
+                .previous
+                .token
+                .grammar_rule()
+                .infix
+                .expect("Invalid token");
             infix_parser(self)?;
         }
         Ok(())
@@ -735,9 +907,9 @@ pub fn compile<'a>(
     // Init the parser & compiler
     let mut parser = Parser {
         input: input,
-        previous: Token::BeforeFile,
-        current: Token::BeforeFile,
-        next: Token::BeforeFile,
+        previous: ParseToken::before_file(),
+        current: ParseToken::before_file(),
+        next: ParseToken::before_file(),
         compiler: Compiler::default(),
         module: &vm.module,
     };

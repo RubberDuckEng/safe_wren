@@ -1,10 +1,11 @@
 use std::rc::Rc;
 use std::str;
 
-use crate::compiler::Ops;
+use crate::compiler::{Ops, Scope};
 
 #[derive(Debug, Clone)]
 pub enum Value {
+    Null,
     Num(u64),
     Boolean(bool),
     String(Rc<String>),
@@ -83,6 +84,7 @@ pub struct WrenVM {
 // classes or methods, implementing here to get unit tests working.
 fn prim_system_print(value: Value) -> Value {
     let string = match &value {
+        Value::Null => "null".into(),
         Value::Num(i) => format!("{}", i),
         Value::Boolean(b) => format!("{}", b),
         Value::String(s) => format!("{}", s),
@@ -112,6 +114,9 @@ impl WrenVM {
                 Ops::Boolean(value) => {
                     self.push(Value::Boolean(*value));
                 }
+                Ops::Null => {
+                    self.push(Value::Null);
+                }
                 Ops::Call(signature) => {
                     if signature.name.eq("+") {
                         let a = self.pop()?.try_into_num()?;
@@ -133,8 +138,18 @@ impl WrenVM {
                     // If primative, make direct call.  Expecting result on the stack.
                 }
                 Ops::Load(variable) => {
-                    let value = self.module.variables[variable.index].clone();
+                    let value = match variable.scope {
+                        Scope::Module => self.module.variables[variable.index].clone(),
+                        Scope::Local => unimplemented!("Ops::Load local"),
+                    };
                     self.push(value);
+                }
+                Ops::Store(variable) => {
+                    let value = self.pop()?;
+                    match variable.scope {
+                        Scope::Module => self.module.variables[variable.index] = value.clone(),
+                        Scope::Local => unimplemented!("Ops::Store local"),
+                    };
                 }
                 Ops::Pop => {
                     self.pop()?;

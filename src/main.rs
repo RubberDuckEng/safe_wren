@@ -79,8 +79,8 @@ fn input_from_source_or_path(source_or_path: &String) -> InputManager {
 }
 
 fn print_tokens(source_or_path: &String) {
-    let input = input_from_source_or_path(source_or_path);
-    let tokens = lex(input);
+    let mut input = input_from_source_or_path(source_or_path);
+    let tokens = lex(&mut input);
     println!("{:?}", tokens);
 }
 
