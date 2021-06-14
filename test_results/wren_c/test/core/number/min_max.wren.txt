@@ -1,4 +1,7 @@
+Unexpected output on stderr:
+MethodNotFound
 Expected return code 0 and got 70. Stderr:
+MethodNotFound
 
-Expected output "6" on line 4 and got "MethodNotFound".
+Missing expected output "6" on line 4.
 Missing expected output "4" on line 5.

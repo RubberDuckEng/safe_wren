@@ -1,3 +1,5 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('{')) }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('{')) }
 
-Got output "WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('{')) }" when none was expected.

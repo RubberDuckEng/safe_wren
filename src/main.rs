@@ -50,12 +50,12 @@ fn run_file(path: &String) {
     let input = InputManager::from_string(source);
     let module_name = "dummy_module";
     let closure = compile(&mut vm, input, module_name).unwrap_or_else(|e| {
-        println!("{:?}", e);
+        eprintln!("{:?}", e);
         exit(ExitCode::CompileError);
     });
 
     vm.run(closure).unwrap_or_else(|e| {
-        println!("{:?}", e);
+        eprintln!("{:?}", e);
         exit(ExitCode::RuntimeError);
     });
 }

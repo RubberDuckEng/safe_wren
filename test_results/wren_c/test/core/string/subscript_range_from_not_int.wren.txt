@@ -1,4 +1,7 @@
-Expected runtime error "Range start must be an integer." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Range start must be an integer." and got:
+WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('[')) }
+Expected stack trace and got:
 
-Got output "WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('[')) }" when none was expected.
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('[')) }
+

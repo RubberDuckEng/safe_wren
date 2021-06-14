@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
 
-Expected output "infix + a" on line 25 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "infix + a" on line 25.
 Missing expected output "infix - a" on line 26.
 Missing expected output "infix * a" on line 27.
 Missing expected output "infix / a" on line 28.

@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
 
-Expected output "loading foo/bar" on line 12 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "loading foo/bar" on line 12.
 Missing expected output "ok" on line 13.
 Missing expected output "success" on line 14.
 Missing expected output "Could not resolve module 'foo/bar' imported from 'main'." on line 18.

@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'String\'") }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'String\'") }
 
-Expected output "A" on line 1 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'String\'") }".
+Missing expected output "A" on line 1.
 Missing expected output "¤" on line 2.
 Missing expected output "Ǝ" on line 3.
 Missing expected output "‡" on line 4.

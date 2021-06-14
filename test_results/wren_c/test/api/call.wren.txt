@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }
 
-Expected output "noParams" on line 42 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('{')) }".
+Missing expected output "noParams" on line 42.
 Missing expected output "zero" on line 43.
 Missing expected output "one 1" on line 44.
 Missing expected output "two 1 2" on line 45.

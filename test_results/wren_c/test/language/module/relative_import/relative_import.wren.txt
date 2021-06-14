@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'import\'") }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'import\'") }
 
-Expected output "sub/module" on line 3 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'import\'") }".
+Missing expected output "sub/module" on line 3.
 Missing expected output "sub/module_2" on line 4.
 Missing expected output "sub/dir/module" on line 5.
 Missing expected output "sub/dir/module_2" on line 6.

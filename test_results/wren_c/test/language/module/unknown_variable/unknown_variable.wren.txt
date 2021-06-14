@@ -1,4 +1,8 @@
-Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got:
+WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'import\'") }
+Expected stack trace and got:
 
-Expected output "ran module" on line 2 and got "WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'import\'") }".
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'import\'") }
+
+Missing expected output "ran module" on line 2.

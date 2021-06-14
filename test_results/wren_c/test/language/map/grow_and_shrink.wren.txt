@@ -1,5 +1,8 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 4, error: Lexer(UnexpectedChar('[')) }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 4, error: Lexer(UnexpectedChar('[')) }
 
-Expected output "249" on line 67 and got "WrenError { module: "dummy_module", line: 4, error: Lexer(UnexpectedChar('[')) }".
+Missing expected output "249" on line 67.
 Missing expected output "99" on line 73.
 Missing expected output "99" on line 81.

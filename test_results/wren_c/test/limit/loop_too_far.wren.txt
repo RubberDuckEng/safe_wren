@@ -1,2 +1,3 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'while\'") }
 Missing expected error on line 289.
-Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'while\'") }" when none was expected.

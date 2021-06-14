@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }
 
-Expected output "5" on line 2 and got "WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }".
+Missing expected output "5" on line 2.
 Missing expected output "3" on line 3.
 Missing expected output "3" on line 4.
 Missing expected output "3" on line 5.

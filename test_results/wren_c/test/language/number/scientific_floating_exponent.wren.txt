@@ -1,2 +1,3 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }
 Missing expected error on line 1.
-Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }" when none was expected.

@@ -1,2 +1,4 @@
-Expected runtime error "Right operand must be a number." and got none.
-Got output "MethodNotFound" when none was expected.
+Expected runtime error "Right operand must be a number." and got:
+MethodNotFound
+Expected stack trace and got:
+

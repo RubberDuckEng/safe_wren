@@ -1,6 +1,10 @@
-Expected runtime error "Comparer must be a function." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Comparer must be a function." and got:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('[')) }
+Expected stack trace and got:
 
-Expected output "[1, 2, 3, 4]" on line 1 and got "WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('[')) }".
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Lexer(UnexpectedChar('[')) }
+
+Missing expected output "[1, 2, 3, 4]" on line 1.
 Missing expected output "[1, 5, 7, 8, 9, 10]" on line 5.
 Missing expected output "[10, 9, 8, 7, 5, 1]" on line 7.

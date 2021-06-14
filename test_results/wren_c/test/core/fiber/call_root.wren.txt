@@ -1,5 +1,9 @@
-Expected runtime error "Cannot call root fiber." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Cannot call root fiber." and got:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+Expected stack trace and got:
 
-Expected output "begin root" on line 2 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }".
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+
+Missing expected output "begin root" on line 2.
 Missing expected output "in new fiber" on line 5.

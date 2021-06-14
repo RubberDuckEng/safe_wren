@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+MethodNotFound
 Expected return code 0 and got 70. Stderr:
+MethodNotFound
 
-Expected output "[so, ing]" on line 1 and got "MethodNotFound".
+Missing expected output "[so, ing]" on line 1.
 Missing expected output "[, thing]" on line 2.
 Missing expected output "[someth, ]" on line 3.
 Missing expected output "[something]" on line 4.

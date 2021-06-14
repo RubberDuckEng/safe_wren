@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'for\'") }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'for\'") }
 
-Expected output "outer 0" on line 11 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'for\'") }".
+Missing expected output "outer 0" on line 11.
 Missing expected output "inner 0" on line 12.
 Missing expected output "inner 1" on line 13.
 Missing expected output "inner 2" on line 14.

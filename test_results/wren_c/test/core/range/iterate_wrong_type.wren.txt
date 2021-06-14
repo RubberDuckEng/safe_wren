@@ -1,4 +1,7 @@
-Expected runtime error "Iterator must be a number." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Iterator must be a number." and got:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }
+Expected stack trace and got:
 
-Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }" when none was expected.
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }
+

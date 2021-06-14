@@ -1,4 +1,7 @@
-Expected runtime error "Count must be a non-negative integer." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Count must be a non-negative integer." and got:
+WrenError { module: "dummy_module", line: 2, error: Grammar("Expected Expression") }
+Expected stack trace and got:
 
-Got output "WrenError { module: "dummy_module", line: 2, error: Grammar("Expected Expression") }" when none was expected.
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 2, error: Grammar("Expected Expression") }
+

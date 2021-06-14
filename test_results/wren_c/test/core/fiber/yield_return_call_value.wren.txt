@@ -1,6 +1,9 @@
+Unexpected output on stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
 Expected return code 0 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
 
-Expected output "fiber 1" on line 7 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }".
+Missing expected output "fiber 1" on line 7.
 Missing expected output "main 1" on line 8.
 Missing expected output "call 1" on line 9.
 Missing expected output "main 2" on line 10.

@@ -1,4 +1,7 @@
-Expected runtime error "Code point cannot be greater than 0x10ffff." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Code point cannot be greater than 0x10ffff." and got:
+WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'String\'") }
+Expected stack trace and got:
 
-Got output "WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'String\'") }" when none was expected.
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'String\'") }
+

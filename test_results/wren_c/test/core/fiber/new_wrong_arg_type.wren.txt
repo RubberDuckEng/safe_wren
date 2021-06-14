@@ -1,4 +1,7 @@
-Expected runtime error "Argument must be a function." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Argument must be a function." and got:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+Expected stack trace and got:
 
-Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }" when none was expected.
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+

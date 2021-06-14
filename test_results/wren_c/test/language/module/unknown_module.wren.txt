@@ -1,4 +1,7 @@
-Expected runtime error "Could not load module './test/language/module/does_not_exist'." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Could not load module './test/language/module/does_not_exist'." and got:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }
+Expected stack trace and got:
 
-Got output "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }" when none was expected.
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }
+

@@ -1,2 +1,4 @@
-Expected runtime error "Delimiter must be a non-empty string." and got none.
-Got output "MethodNotFound" when none was expected.
+Expected runtime error "Delimiter must be a non-empty string." and got:
+MethodNotFound
+Expected stack trace and got:
+

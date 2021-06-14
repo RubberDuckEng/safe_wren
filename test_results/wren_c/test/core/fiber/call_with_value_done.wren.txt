@@ -1,4 +1,8 @@
-Expected runtime error "Cannot call a finished fiber." and got none.
-Expected return code 70 and got 65. Stderr:
+Expected runtime error "Cannot call a finished fiber." and got:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+Expected stack trace and got:
 
-Expected output "call" on line 5 and got "WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }".
+Expected return code 70 and got 65. Stderr:
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+
+Missing expected output "call" on line 5.

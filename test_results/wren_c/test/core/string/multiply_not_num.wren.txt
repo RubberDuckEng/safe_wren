@@ -1,2 +1,4 @@
-Expected runtime error "Count must be a non-negative integer." and got none.
-Got output "MethodNotFound" when none was expected.
+Expected runtime error "Count must be a non-negative integer." and got:
+MethodNotFound
+Expected stack trace and got:
+
