@@ -185,14 +185,12 @@ fn read_number(c: u8, input: &mut InputManager) -> Result<u64, LexError> {
 }
 
 fn keyword_token(name: &str) -> Option<Token> {
-    // FIXME: Hack until TokenType is separate from Token
-    if name.eq("true") {
-        return Some(Token::Boolean(true));
+    // FIXME: Hack until TokenType is separate from Token?
+    match name {
+        "true" => Some(Token::Boolean(true)),
+        "false" => Some(Token::Boolean(false)),
+        _ => None,
     }
-    if name.eq("false") {
-        return Some(Token::Boolean(false));
-    }
-    None
 }
 
 fn is_name(c: Option<u8>) -> bool {
@@ -680,7 +678,6 @@ impl<'a> Parser<'a> {
         }
     }
 
-    // Hack until we split TokenType and Token.
     fn consume_expecting(&mut self, token: Token) -> Result<(), ParserError> {
         self.consume()?;
         let name_for_error = token.error_message_name(); // Can we avoid this?
@@ -688,12 +685,6 @@ impl<'a> Parser<'a> {
             return Err(ParserError::Grammar(format!("Expected {}", name_for_error)));
         }
         Ok(())
-    }
-
-    fn current_precedence(&self) -> Precedence {
-        // TODO: There must be a shorter way to write this.
-        // self.current being None would be a programming error/panic.
-        self.current.grammar_rule().precedence
     }
 
     fn parse_precendence(&mut self, precedence: Precedence) -> Result<(), ParserError> {
@@ -705,7 +696,7 @@ impl<'a> Parser<'a> {
             .ok_or(ParserError::Grammar("Expected Expression".into()))?;
         prefix_parser(self)?;
 
-        while precedence <= self.current_precedence() {
+        while precedence <= self.current.grammar_rule().precedence {
             self.consume()?;
             let infix_parser = self.previous.grammar_rule().infix.expect("Invalid token");
             infix_parser(self)?;

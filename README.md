@@ -32,3 +32,9 @@ wren_c/test/language/comments/only_line_comment.wren
 wren_c/test/language/comments/unicode.wren
 wren_c/test/language/empty_file.wren
 wren_c/test/language/no_trailing_newline.wren
+
+
+### Leads to pursue
+* Making InputManager an Iterator, could make easier the "skip until" pattern?
+* https://docs.rs/once_cell/1.8.0/once_cell/
+* https://docs.rs/anyhow/1.0.41/anyhow/
