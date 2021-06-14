@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-thread 'main' panicked at 'attempt to multiply with overflow', src\compiler.rs:241:18
+thread 'main' panicked at 'attempt to multiply with overflow', src\compiler.rs:274:18
 Unexpected output on stderr:
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 Missing expected error on line 1.
 Expected return code 65 and got 101. Stderr:
-thread 'main' panicked at 'attempt to multiply with overflow', src\compiler.rs:241:18
+thread 'main' panicked at 'attempt to multiply with overflow', src\compiler.rs:274:18
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 

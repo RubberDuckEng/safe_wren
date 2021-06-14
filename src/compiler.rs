@@ -78,6 +78,13 @@ impl InputManager {
             None
         }
     }
+    fn peek_next(&self) -> Option<u8> {
+        if self.offset + 1 < self.source.len() {
+            Some(self.source[self.offset + 1])
+        } else {
+            None
+        }
+    }
 
     fn next(&mut self) -> u8 {
         let val = self.source[self.offset];
@@ -112,6 +119,7 @@ pub enum LexError {
     UnexpectedChar(char),
     DecoderError,
     UnterminatedString,
+    UnterminatedBlockComment,
 }
 
 impl fmt::Display for LexError {
@@ -119,6 +127,7 @@ impl fmt::Display for LexError {
         match *self {
             LexError::DecoderError => write!(f, "Decoder Error"),
             LexError::UnterminatedString => write!(f, "Unterminated String"),
+            LexError::UnterminatedBlockComment => write!(f, "Unterminated Block Comment"),
             LexError::UnexpectedChar(c) => write!(f, "Unexpected char '{}'", c),
         }
     }
@@ -129,6 +138,7 @@ impl error::Error for LexError {
         match self {
             LexError::DecoderError => None,
             LexError::UnterminatedString => None,
+            LexError::UnterminatedBlockComment => None,
             LexError::UnexpectedChar(_) => None,
         }
     }
@@ -145,16 +155,35 @@ fn match_char(input: &mut InputManager, c: u8) -> bool {
 }
 
 fn skip_line_comment(input: &mut InputManager) {
-    loop {
-        if let Some(next) = input.peek() {
-            if next == b'\n' {
-                break;
+    while let Some(next) = input.peek() {
+        if next == b'\n' {
+            return;
+        }
+        input.next();
+    }
+}
+
+fn skip_block_comment(input: &mut InputManager) -> Result<(), LexError> {
+    let mut nesting = 1;
+    while nesting > 0 {
+        match input.peek() {
+            Some(b'/') if input.peek_next() == Some(b'*') => {
+                input.next();
+                input.next();
+                nesting += 1;
             }
-            input.next();
-        } else {
-            break;
+            Some(b'*') if input.peek_next() == Some(b'/') => {
+                input.next();
+                input.next();
+                nesting -= 1;
+            }
+            Some(_) => {
+                input.next();
+            }
+            None => return Err(LexError::UnterminatedBlockComment),
         }
     }
+    Ok(())
 }
 
 // Takes an InputManager (from which it gets source)
@@ -195,6 +224,10 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             b'/' => {
                 if match_char(input, b'/') {
                     skip_line_comment(input);
+                    continue;
+                }
+                if match_char(input, b'*') {
+                    skip_block_comment(input)?;
                     continue;
                 }
                 return Ok(input.make_token(Token::OpFactor('/')));

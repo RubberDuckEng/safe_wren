@@ -1,6 +1,0 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expected Expression")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected Expression")
-
-Missing expected output "ok" on line 1.

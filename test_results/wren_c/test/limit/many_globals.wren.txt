@@ -1,6 +1,1 @@
-Unexpected error:
-[dummy_module line 4107] Error Grammar("Expected Expression")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 4107] Error Grammar("Expected Expression")
-
-Missing expected output "4096" on line 4098.
+Expected output "4096" on line 4098 and got "4444".

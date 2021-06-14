@@ -1,5 +1,5 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Expected Expression")
+[dummy_module line 8] Error Lexer(UnexpectedChar('{'))
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Expected Expression")
+[dummy_module line 8] Error Lexer(UnexpectedChar('{'))
 

@@ -25,7 +25,7 @@
 e.g. we might throw a lexer error even though the test is expecting
 a grammar error, but the harness doesn't distinguish and thus passes.)
 
-62 tests passed. 807 tests failed.
+65 tests passed. 804 tests failed.
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/global.wren
@@ -34,11 +34,14 @@ wren_c/test/language/assignment/prefix_operator.wren
 wren_c/test/language/assignment/undefined.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
 wren_c/test/language/class/missing_class_after_foreign.wren
+wren_c/test/language/comments/block.wren
+wren_c/test/language/comments/block_at_eof.wren
 wren_c/test/language/comments/line_at_eof.wren
 wren_c/test/language/comments/only_line_comment.wren
 wren_c/test/language/comments/only_line_comment_and_line.wren
 wren_c/test/language/comments/unicode.wren
 wren_c/test/language/comments/unterminated_block.wren
+wren_c/test/language/comments/unterminated_nested_block.wren
 wren_c/test/language/conditional/conditional_in_then.wren
 wren_c/test/language/conditional/missing_colon.wren
 wren_c/test/language/conditional/missing_condition.wren
