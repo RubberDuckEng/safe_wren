@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 4] Error Grammar("Expected right curly brace")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 4] Error Grammar("Expected right curly brace")
 
 Missing expected output "method" on line 20.
 Missing expected output "class method" on line 21.

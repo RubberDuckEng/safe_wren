@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
 
 Missing expected output "C.foo" on line 19.
 Missing expected output "A.foo" on line 20.

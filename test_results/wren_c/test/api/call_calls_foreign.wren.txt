@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 6] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 6] Error Grammar("Undeclared variable \'class\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 6] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 6] Error Grammar("Undeclared variable \'class\'")
 
 Missing expected output "slots before 2" on line 11.
 Missing expected output "[1, 2, 3, 4, 5, 6, 7, 8, 9]" on line 12.

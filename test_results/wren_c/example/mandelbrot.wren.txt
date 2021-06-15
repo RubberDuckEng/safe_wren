@@ -1,5 +1,5 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Expected Expression")
+[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 11..12, token: OpTerm(\'-\'), line: 1 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Expected Expression")
+[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 11..12, token: OpTerm(\'-\'), line: 1 }")
 

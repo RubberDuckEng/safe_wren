@@ -11,7 +11,6 @@
 * function parsing
 * lists
 * Logical operators
-* Block comments
 
 ## Longer off
 * Garbage Collection
@@ -58,9 +57,9 @@ wren_c/test/language/interpolation/unterminated.wren
 wren_c/test/language/list/duplicate_comma.wren
 wren_c/test/language/list/duplicate_trailing_comma.wren
 wren_c/test/language/list/empty_list_with_comma.wren
+wren_c/test/language/map/bad_key_precedence.wren
 wren_c/test/language/map/duplicate_comma.wren
 wren_c/test/language/map/duplicate_trailing_comma.wren
-wren_c/test/language/map/empty_map_with_comma.wren
 wren_c/test/language/map/eof_after_colon.wren
 wren_c/test/language/map/eof_after_key.wren
 wren_c/test/language/module/missing_for.wren
@@ -82,11 +81,13 @@ wren_c/test/language/string/unterminated_raw.wren
 wren_c/test/language/unexpected_character.wren
 wren_c/test/language/variable/global_in_initializer.wren
 wren_c/test/language/variable/global_without_initializer.wren
+wren_c/test/language/variable/local_in_initializer.wren
 wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
+wren_c/test/regression/429.wren
 test/bringup/add.wren
 test/bringup/locals.wren
 test/bringup/trailing_newlines.wren

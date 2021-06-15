@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 3] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 84..85, token: LeftCurlyBrace, line: 3 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 84..85, token: LeftCurlyBrace, line: 3 }")
 
 Missing expected output "null" on line 4.

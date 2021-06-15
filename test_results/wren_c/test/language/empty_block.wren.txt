@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 4] Error Grammar("Undeclared variable \'if\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 4] Error Grammar("Undeclared variable \'if\'")
 
 Missing expected output "ok" on line 7.

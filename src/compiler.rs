@@ -14,12 +14,16 @@ pub enum Token {
     BeforeFile, // Error state, should never be encountered.
     LeftParen,
     RightParen,
+    LeftCurlyBrace,
+    RightCurlyBrace,
     OpTerm(char),
     OpFactor(char),
     Num(u64),
     Dot,
     Comma,
     Var,
+    While,
+    Break,
     Equals,
     EqualsEquals,
     Boolean(bool),
@@ -216,6 +220,8 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
             b'(' => return Ok(input.make_token(Token::LeftParen)),
             b')' => return Ok(input.make_token(Token::RightParen)),
+            b'{' => return Ok(input.make_token(Token::LeftCurlyBrace)),
+            b'}' => return Ok(input.make_token(Token::RightCurlyBrace)),
             b' ' | b'\t' | b'\r' => {
                 while is_whitespace(input.peek()) {
                     input.next();
@@ -283,6 +289,8 @@ fn keyword_token(name: &str) -> Option<Token> {
         "true" => Some(Token::Boolean(true)),
         "false" => Some(Token::Boolean(false)),
         "var" => Some(Token::Var),
+        "while" => Some(Token::While),
+        "break" => Some(Token::Break),
         _ => None,
     }
 }
@@ -355,7 +363,7 @@ impl Precedence {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Ops {
     Constant(usize),
     Boolean(bool), // Unclear if needed, could be constant?
@@ -363,6 +371,11 @@ pub enum Ops {
     Call(Signature),
     Load(Variable),
     Store(Variable),
+    JumpIfPlaceholder,
+    JumpIf(u16), // Pop stack, if truthy, Jump forward relative offset.
+    JumpPlaceholder,
+    Jump(u16), // Jump forward relative offset.
+    Loop(u16), // Jump backwards relative offset.
     Pop,
     End,
 }
@@ -380,6 +393,8 @@ pub struct Compiler {
     constants: Vec<Value>,
     locals: Vec<Local>, // A fixed size array in wren_c
     code: Vec<Ops>,
+    scope_depth: usize,      // Not fully wired up.
+    loops: Vec<LoopOffsets>, // wren_c uses stack-allocated objects instead.
 }
 
 impl Compiler {
@@ -405,12 +420,26 @@ impl Compiler {
         self.code.push(Ops::Pop);
     }
 
+    fn emit_loop(&mut self, backwards_by: u16) {
+        self.code.push(Ops::Loop(backwards_by))
+    }
+
     fn emit_end(&mut self) {
         self.code.push(Ops::End);
     }
 
     fn emit_store(&mut self, variable: Variable) {
         self.code.push(Ops::Store(variable))
+    }
+
+    fn emit_jump_if_placeholder(&mut self) -> usize {
+        self.code.push(Ops::JumpIfPlaceholder);
+        self.code.len() - 1
+    }
+
+    fn emit_break_placeholder(&mut self) -> usize {
+        self.code.push(Ops::JumpPlaceholder);
+        self.code.len() - 1
     }
 
     fn emit_load(&mut self, variable: Variable) {
@@ -457,13 +486,13 @@ fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum SignatureType {
     Getter,
     Method,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Signature {
     pub name: String,
     call_type: SignatureType,
@@ -541,14 +570,14 @@ fn call(parser: &mut Parser) -> Result<(), WrenError> {
     Ok(())
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Scope {
     Local,
     // Upvalue,
     Module,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Variable {
     pub scope: Scope,
     pub index: usize,
@@ -635,13 +664,161 @@ fn expression(parser: &mut Parser) -> Result<(), WrenError> {
     parser.parse_precendence(Precedence::Lowest)
 }
 
+// Bookkeeping information for the current loop being compiled.
+#[derive(Default, Copy, Clone)]
+struct LoopOffsets {
+    // Index of the instruction that the loop should jump back to.
+    start: usize,
+    // Index of the argument for the CODE_JUMP_IF instruction used to exit the
+    // loop. Stored so we can patch it once we know where the loop ends.
+    exit_jump: usize,
+    // Index of the first instruction of the body of the loop.
+    body: usize,
+    // Depth of the scope(s) that need to be exited if a break is hit inside the
+    // loop.
+    //    scope_depth: usize,
+}
+
+impl Compiler {
+    fn start_loop(&mut self) -> u8 {
+        self.loops.push(LoopOffsets {
+            start: self.code.len(), // Unclear why wren_c has code - 1 here?
+            //scope_depth: self.scope_depth,
+            body: 0,
+            exit_jump: 0,
+        });
+        (self.loops.len() - 1) as u8
+    }
+}
+
+fn loop_body(parser: &mut Parser) -> Result<(), WrenError> {
+    parser.compiler.loops.last_mut().unwrap().body = parser.compiler.code.len();
+    statement(parser)
+}
+
+impl Compiler {
+    fn offset_to_current_pc(&self, offset: usize) -> u16 {
+        (self.code.len() - offset) as u16
+    }
+
+    fn end_loop(&mut self) {
+        let offsets = self.loops.pop().expect("end_loop called with no loop!");
+        // Emit a loop instruction which jumps to start of current loop.
+        self.emit_loop(self.offset_to_current_pc(offsets.start));
+        // Load up the exitLoop instruction and patch it to the current code offset.
+        self.code[offsets.exit_jump] = Ops::JumpIf(self.offset_to_current_pc(offsets.exit_jump));
+
+        // Find any break placeholders and make them real jumps.
+        for i in offsets.body..self.code.len() {
+            if self.code[i] == Ops::JumpPlaceholder {
+                self.code[i] = Ops::Jump(self.offset_to_current_pc(i))
+            }
+            if self.code[i] == Ops::JumpIfPlaceholder {
+                self.code[i] = Ops::JumpIf(self.offset_to_current_pc(i))
+            }
+        }
+    }
+}
+
+fn while_statement(parser: &mut Parser) -> Result<(), WrenError> {
+    parser.compiler.start_loop();
+
+    // Compile the condition.
+    parser.consume_expecting(Token::LeftParen)?;
+    expression(parser)?;
+    parser.consume_expecting(Token::RightParen)?;
+
+    parser.compiler.loops.last_mut().unwrap().exit_jump =
+        parser.compiler.emit_jump_if_placeholder();
+    loop_body(parser)?;
+    parser.compiler.end_loop();
+    Ok(())
+}
+
+// Parses a block body, after the initial "{" has been consumed.
+//
+// Returns true if it was a expression body, false if it was a statement body.
+// (More precisely, returns true if a value was left on the stack. An empty
+// block returns false.)
+fn finish_block(parser: &mut Parser) -> Result<bool, WrenError> {
+    // Empty blocks do nothing. (Is this required or an optimization?)
+    if parser.match_current(Token::RightCurlyBrace)? {
+        return Ok(false);
+    }
+
+    // This is a bit magical of Wren...
+    // If there's no line after the "{", it's a single-expression body.
+    if !parser.match_at_least_one_line()? {
+        expression(parser)?;
+        parser.consume_expecting(Token::RightCurlyBrace)?;
+        return Ok(true);
+    }
+
+    // Empty blocks (with just a newline inside) do nothing.
+    if parser.match_current(Token::RightCurlyBrace)? {
+        return Ok(false);
+    }
+
+    // Compile the definition list.
+    loop {
+        definition(parser)?;
+        parser.consume_expecting(Token::Newline)?;
+        if parser.current.token == Token::RightCurlyBrace
+            || parser.current.token != Token::EndOfFile
+        {
+            break;
+        }
+    }
+
+    parser.consume_expecting(Token::RightCurlyBrace)?;
+    return Ok(false);
+}
+
+fn auto_scope(
+    parser: &mut Parser,
+    f: fn(&mut Parser) -> Result<(), WrenError>,
+) -> Result<(), WrenError> {
+    parser.compiler.scope_depth += 1;
+    let v = f(parser);
+    parser.compiler.scope_depth -= 1;
+    return v;
+}
+
 // Break, continue, if, for, while, blocks, etc.
 // Unlike expression, does not leave something on the stack.
 fn statement(parser: &mut Parser) -> Result<(), WrenError> {
-    // No statements currently implemented
-    // Fall through to expression case, but pop the stack after.
-    expression(parser)?;
-    parser.compiler.emit_pop();
+    // TODO: Many more statements to implement!
+
+    if parser.match_current(Token::Break)? {
+        if parser.compiler.loops.is_empty() {
+            return Err(parser.parse_error(ParserError::Grammar(
+                "Cannot use 'break' outside of a loop.".into(),
+            )));
+        }
+
+        // Since we will be jumping out of the scope, make sure any locals in it
+        // are discarded first.
+        //   discardLocals(compiler, compiler->loop->scopeDepth + 1);
+
+        // Emit a placeholder instruction for the jump to the end of the body.
+        // We'll fix these up with real Jumps at the end of compiling this loop.
+        parser.compiler.emit_break_placeholder();
+    } else if parser.match_current(Token::While)? {
+        while_statement(parser)?;
+    } else if parser.match_current(Token::LeftCurlyBrace)? {
+        // Block statement.
+        fn finish(p: &mut Parser) -> Result<(), WrenError> {
+            if finish_block(p)? {
+                // Block was an expression, so discard it.
+                p.compiler.emit_pop();
+            }
+            Ok(())
+        }
+        auto_scope(parser, finish)?;
+    } else {
+        expression(parser)?;
+        parser.compiler.emit_pop();
+    }
     Ok(())
 }
 
@@ -768,6 +945,8 @@ impl Token {
             Token::BeforeFile => unimplemented!(),
             Token::LeftParen => "left paren",
             Token::RightParen => "right paren",
+            Token::LeftCurlyBrace => "left curly brace",
+            Token::RightCurlyBrace => "right curly brace",
             Token::OpTerm(_) => "operator + or -",
             Token::OpFactor(_) => "operator * or / or %",
             Token::Num(_) => "number literal",
@@ -779,6 +958,8 @@ impl Token {
             Token::Newline => "newline",
             Token::EndOfFile => "end of file",
             Token::Var => "var",
+            Token::While => "while",
+            Token::Break => "break",
             Token::Equals => "equal sign",
             Token::EqualsEquals => "==",
         }
@@ -790,6 +971,9 @@ impl Token {
             Token::BeforeFile => unimplemented!(),
             Token::LeftParen => GrammarRule::prefix(grouping),
             Token::RightParen => GrammarRule::unused(),
+            // Unclear if subscriptSignature is needed?
+            Token::LeftCurlyBrace => GrammarRule::unused(), // WRONG
+            Token::RightCurlyBrace => GrammarRule::unused(),
             Token::OpTerm(c) => GrammarRule::infix_operator(Precedence::Term, &c.to_string()),
             Token::OpFactor(c) => GrammarRule::infix_operator(Precedence::Factor, &c.to_string()),
             Token::Num(_) => GrammarRule::prefix(literal),
@@ -797,6 +981,8 @@ impl Token {
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
             Token::Boolean(_) => GrammarRule::prefix(boolean),
             Token::Var => GrammarRule::unused(),
+            Token::While => GrammarRule::unused(),
+            Token::Break => GrammarRule::unused(),
             Token::Comma => GrammarRule::unused(),
             Token::Newline => GrammarRule::unused(),
             Token::EndOfFile => GrammarRule::unused(),
@@ -923,7 +1109,10 @@ impl<'a> Parser<'a> {
             .token
             .grammar_rule()
             .prefix
-            .ok_or(self.parse_error(ParserError::Grammar("Expected Expression".into())))?;
+            .ok_or(self.parse_error(ParserError::Grammar(format!(
+                "Expected Expression: {:?}",
+                self.previous
+            ))))?;
 
         // Track if the precendence of the surrounding expression is low enough to
         // allow an assignment inside this one. We can't compile an assignment like

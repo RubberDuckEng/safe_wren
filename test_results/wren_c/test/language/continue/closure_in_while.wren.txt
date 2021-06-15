@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Undeclared variable \'while\'")
+[dummy_module line 2] Error Grammar("Expected right paren")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Undeclared variable \'while\'")
+[dummy_module line 2] Error Grammar("Expected right paren")
 
 Missing expected output "i" on line 9.

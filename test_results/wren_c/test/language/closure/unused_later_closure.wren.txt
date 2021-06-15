@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 9] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 13] Error Grammar("Expected right curly brace")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 9] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 13] Error Grammar("Expected right curly brace")
 
 Missing expected output "a" on line 18.

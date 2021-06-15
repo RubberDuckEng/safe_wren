@@ -11,6 +11,17 @@ pub enum Value {
     String(Rc<String>),
 }
 
+impl Value {
+    // In Wren false and null are false, everything else is true.
+    fn is_truthy(&self) -> bool {
+        match self {
+            Value::Null => false,
+            Value::Boolean(b) => *b,
+            _ => true,
+        }
+    }
+}
+
 #[derive(Default, Debug)]
 pub struct Module {
     // Missing some pointer to the actual code?
@@ -164,6 +175,20 @@ impl WrenVM {
                 Ops::End => {
                     return Ok(());
                 }
+                Ops::Loop(offset_backwards) => {
+                    self.pc -= *offset_backwards as usize;
+                }
+                Ops::Jump(offset_forward) => {
+                    self.pc += *offset_forward as usize;
+                }
+                Ops::JumpIf(offset_forward) => {
+                    let value = self.pop()?;
+                    if value.is_truthy() {
+                        self.pc += *offset_forward as usize;
+                    }
+                }
+                Ops::JumpIfPlaceholder => unimplemented!(),
+                Ops::JumpPlaceholder => unimplemented!(),
             }
         }
     }

@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 4] Error Grammar("Expected Expression")
+[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 128..129, token: OpTerm(\'-\'), line: 4 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expected Expression")
+[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 128..129, token: OpTerm(\'-\'), line: 4 }")
 
 Missing expected output "123" on line 1.
 Missing expected output "987654" on line 2.

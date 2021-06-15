@@ -1,4 +1,4 @@
 Unexpected error:
-[dummy_module line 1] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
 Missing expected error on line 2.
 Missing expected error on line 3.

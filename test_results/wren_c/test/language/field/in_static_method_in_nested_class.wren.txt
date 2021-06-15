@@ -1,3 +1,3 @@
 Unexpected error:
-[dummy_module line 6] Error Lexer(UnexpectedChar('{'))
+[dummy_module line 6] Error Grammar("Undeclared variable \'class\'")
 Missing expected error on line 10.
