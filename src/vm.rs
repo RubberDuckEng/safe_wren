@@ -20,6 +20,10 @@ impl Value {
             _ => true,
         }
     }
+
+    fn is_falsey(&self) -> bool {
+        !self.is_truthy()
+    }
 }
 
 #[derive(Default, Debug)]
@@ -72,7 +76,6 @@ pub enum RuntimeError {
 }
 
 impl Value {
-    #![allow(unreachable_patterns)] // Temporary until we have more Value types.
     fn try_into_num(self) -> Result<u64, RuntimeError> {
         match self {
             Value::Num(value) => Ok(value),
@@ -86,6 +89,7 @@ pub struct WrenVM {
     pub module: Module, // No support for multiple modules yet.
     pub stack: Vec<Value>,
     pc: usize,
+    debug: bool,
     // Missing pointers for wren_core.
     // Missing Global Symbol Table.
 }
@@ -113,11 +117,12 @@ fn prim_system_print(value: Value) -> Value {
 }
 
 impl WrenVM {
-    pub fn new() -> Self {
+    pub fn new(debug: bool) -> Self {
         Self {
             module: Module::default(),
             stack: Vec::new(),
             pc: 0,
+            debug: debug,
         }
     }
 
@@ -125,6 +130,10 @@ impl WrenVM {
         loop {
             let op = &closure.function.code[self.pc];
             self.pc += 1;
+            if self.debug {
+                self.dump_stack();
+                self.dump_instruction(&closure, op);
+            }
             match op {
                 Ops::Constant(index) => {
                     self.push(closure.function.constants[*index].clone());
@@ -137,9 +146,13 @@ impl WrenVM {
                 }
                 Ops::Call(signature) => {
                     if signature.name.eq("+") {
-                        let a = self.pop()?.try_into_num()?;
-                        let b = self.pop()?.try_into_num()?;
-                        self.push(Value::Num(a + b));
+                        let other = self.pop()?.try_into_num()?;
+                        let this = self.pop()?.try_into_num()?;
+                        self.push(Value::Num(this + other));
+                    } else if signature.name.eq("<") {
+                        let other = self.pop()?.try_into_num()?;
+                        let this = self.pop()?.try_into_num()?;
+                        self.push(Value::Boolean(this < other));
                     } else if signature.name.eq("print") {
                         let value = self.pop()?;
                         self.pop()?; // this value.
@@ -181,13 +194,13 @@ impl WrenVM {
                 Ops::Jump(offset_forward) => {
                     self.pc += *offset_forward as usize;
                 }
-                Ops::JumpIf(offset_forward) => {
+                Ops::JumpIfFalse(offset_forward) => {
                     let value = self.pop()?;
-                    if value.is_truthy() {
+                    if value.is_falsey() {
                         self.pc += *offset_forward as usize;
                     }
                 }
-                Ops::JumpIfPlaceholder => unimplemented!(),
+                Ops::JumpIfFalsePlaceholder => unimplemented!(),
                 Ops::JumpPlaceholder => unimplemented!(),
             }
         }
@@ -206,4 +219,61 @@ impl WrenVM {
     fn peek(&mut self) -> Result<&Value, RuntimeError> {
         self.stack.last().ok_or(RuntimeError::StackUnderflow)
     }
+
+    fn dump_instruction(&self, closure: &Closure, op: &Ops) {
+        let string = match op {
+            Ops::Constant(i) => format!("Constant ({}: {:?})", i, closure.function.constants[*i]),
+            Ops::Boolean(b) => format!("Boolean {}", b),
+            Ops::Null => format!("{:?}", op),
+            Ops::Call(_) => format!("{:?}", op),
+            Ops::Load(v) => format!("Load {:?} {}: {:?}", v.scope, v.index, self.stack[v.index]),
+            Ops::Store(_) => format!("{:?}", op),
+            Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
+            Ops::JumpIfFalse(_) => format!("{:?}", op),
+            Ops::JumpPlaceholder => format!("{:?}", op),
+            Ops::Jump(_) => format!("{:?}", op),
+            Ops::Loop(_) => format!("{:?}", op),
+            Ops::Pop => format!("{:?}", op),
+            Ops::End => format!("{:?}", op),
+        };
+        println!("{}", string);
+    }
+
+    fn dump_stack(&self) {
+        // Print the stack left (top) to right (bottom)
+        let mut as_string = Vec::new();
+        for value in &self.stack {
+            as_string.push(format!("{:?}", value));
+        }
+        as_string.reverse();
+        println!("  Stack: [{}]", as_string.join(", "));
+    }
+}
+
+impl Ops {
+    fn debug_string(&self) -> String {
+        match self {
+            Ops::Constant(_) => format!("{:?}", self),
+            Ops::Boolean(_) => format!("{:?}", self),
+            Ops::Null => format!("{:?}", self),
+            Ops::Call(_) => format!("{:?}", self),
+            Ops::Load(_) => format!("{:?}", self),
+            Ops::Store(_) => format!("{:?}", self),
+            Ops::JumpIfFalsePlaceholder => format!("{:?}", self),
+            Ops::JumpIfFalse(_) => format!("{:?}", self),
+            Ops::JumpPlaceholder => format!("{:?}", self),
+            Ops::Jump(_) => format!("{:?}", self),
+            Ops::Loop(_) => format!("{:?}", self),
+            Ops::Pop => format!("{:?}", self),
+            Ops::End => format!("{:?}", self),
+        }
+    }
+}
+
+pub fn debug_bytecode(_vm: &WrenVM, closure: &Closure) {
+    println!("{:?}", closure);
+    let ops = closure.function.code.iter();
+    ops.enumerate().for_each(|(i, op)| {
+        println!("{:02}: {}", i, op.debug_string());
+    })
 }

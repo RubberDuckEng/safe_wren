@@ -1,4 +1,5 @@
-while (true) {
-    break
+var i = 0
+while (i < 2) {
+    i = i + 1
 }
-false
+System.print(i) // expect: 2

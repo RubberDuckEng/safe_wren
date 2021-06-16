@@ -9,7 +9,7 @@ mod compiler;
 mod vm;
 
 use crate::compiler::{compile, lex, InputManager};
-use crate::vm::WrenVM;
+use crate::vm::{debug_bytecode, WrenVM};
 
 enum ExitCode {
     Success = 0,
@@ -46,7 +46,7 @@ fn run_file(path: &String) {
         exit(ExitCode::NoInput);
     });
     // handle module setup.
-    let mut vm = WrenVM::new();
+    let mut vm = WrenVM::new(false);
     let input = InputManager::from_string(source);
     let module_name = "dummy_module";
     let closure = compile(&mut vm, input, module_name).unwrap_or_else(|e| {
@@ -86,14 +86,17 @@ fn print_tokens(source_or_path: &String) {
 }
 
 fn print_bytecode(source_or_path: &String) {
-    let mut vm = WrenVM::new();
+    let mut vm = WrenVM::new(false);
     let input = input_from_source_or_path(source_or_path);
-    let closure = compile(&mut vm, input, "dummy_module");
-    println!("{:?}", closure);
+    let result = compile(&mut vm, input, "dummy_module");
+    match result {
+        Ok(closure) => debug_bytecode(&vm, &closure),
+        Err(e) => eprintln!("{:?}", e),
+    }
 }
 
 fn interpret_and_print_vm(source_or_path: &String) {
-    let mut vm = WrenVM::new();
+    let mut vm = WrenVM::new(false);
     let input = input_from_source_or_path(source_or_path);
     let closure = compile(&mut vm, input, "dummy_module").expect("compile");
     vm.run(closure).expect("runtime");

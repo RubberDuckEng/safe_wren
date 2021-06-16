@@ -24,7 +24,7 @@
 e.g. we might throw a lexer error even though the test is expecting
 a grammar error, but the harness doesn't distinguish and thus passes.)
 
-65 tests passed. 804 tests failed.
+69 tests passed. 802 tests failed.
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/global.wren
@@ -89,7 +89,9 @@ wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
 wren_c/test/regression/429.wren
 test/bringup/add.wren
+test/bringup/do_nothing_while.wren
 test/bringup/locals.wren
+test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
 wren_c/example/hello.wren
 

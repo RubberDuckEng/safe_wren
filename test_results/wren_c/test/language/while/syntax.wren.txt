@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Lexer(UnexpectedChar('<'))
+[dummy_module line 12] Error Grammar("Expected right curly brace")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Lexer(UnexpectedChar('<'))
+[dummy_module line 12] Error Grammar("Expected right curly brace")
 
 Missing expected output "1" on line 4.
 Missing expected output "2" on line 5.

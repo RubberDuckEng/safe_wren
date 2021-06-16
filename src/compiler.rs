@@ -21,6 +21,7 @@ pub enum Token {
     Num(u64),
     Dot,
     Comma,
+    LessThan,
     Var,
     While,
     Break,
@@ -218,6 +219,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             b',' => return Ok(input.make_token(Token::Comma)),
             b'+' | b'-' => return Ok(input.make_token(Token::OpTerm(c.into()))),
             b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
+            b'<' => return Ok(input.make_token(Token::LessThan)),
             b'(' => return Ok(input.make_token(Token::LeftParen)),
             b')' => return Ok(input.make_token(Token::RightParen)),
             b'{' => return Ok(input.make_token(Token::LeftCurlyBrace)),
@@ -350,11 +352,23 @@ pub fn lex(input: &mut InputManager) -> Result<Vec<ParseToken>, LexError> {
 enum Precedence {
     None = 0, // Newlines, EOF, etc.
     Lowest,
-    Assignment,
-    Conditional,
-    Term,   // + -
-    Factor, // * / %
-    Call,
+    Assignment,   // =
+    Conditional,  // ?:
+    LogicalOr,    // ||
+    LogicalAnd,   // &&
+    Equality,     // == !=
+    Is,           // is
+    Comparison,   // < > <= >=
+    BitwiseOr,    // |
+    BitwiseXor,   // ^
+    BitwiseAnd,   // &
+    BitwiseShift, // << >>
+    Range,        // .. ...
+    Term,         // + -
+    Factor,       // * / %
+    Unary,        // unary - ! ~
+    Call,         // . () []
+    Primary,
 }
 
 impl Precedence {
@@ -371,8 +385,8 @@ pub enum Ops {
     Call(Signature),
     Load(Variable),
     Store(Variable),
-    JumpIfPlaceholder,
-    JumpIf(u16), // Pop stack, if truthy, Jump forward relative offset.
+    JumpIfFalsePlaceholder,
+    JumpIfFalse(u16), // Pop stack, if truthy, Jump forward relative offset.
     JumpPlaceholder,
     Jump(u16), // Jump forward relative offset.
     Loop(u16), // Jump backwards relative offset.
@@ -433,7 +447,7 @@ impl Compiler {
     }
 
     fn emit_jump_if_placeholder(&mut self) -> usize {
-        self.code.push(Ops::JumpIfPlaceholder);
+        self.code.push(Ops::JumpIfFalsePlaceholder);
         self.code.len() - 1
     }
 
@@ -501,13 +515,17 @@ pub struct Signature {
 
 fn infix_op(parser: &mut Parser) -> Result<(), WrenError> {
     let rule = parser.previous.token.grammar_rule();
+    let name = parser
+        .previous
+        .name(&parser.input)
+        .map_err(|e| parser.parse_error(e.into()))?;
     ignore_newlines(parser)?;
     // Compile the right-hand side.
     parser.parse_precendence(rule.precedence.one_higher())?;
 
     // Call the operator method on the left-hand side.
     let signature = Signature {
-        name: rule.name.unwrap(),
+        name: name,
         call_type: SignatureType::Method,
         arity: 1,
     };
@@ -697,24 +715,31 @@ fn loop_body(parser: &mut Parser) -> Result<(), WrenError> {
 }
 
 impl Compiler {
-    fn offset_to_current_pc(&self, offset: usize) -> u16 {
-        (self.code.len() - offset) as u16
+    fn offset_to_current_pc_from_after(&self, offset: usize) -> u16 {
+        // We are commonly passed in the instruction offset
+        // we're about to fix.  However our output is used
+        // as the offset from *after* that instruction to the
+        // end of the current PC.  Hence after = offset + 1
+        let after = offset + 1;
+        (self.code.len() - after) as u16
     }
 
     fn end_loop(&mut self) {
         let offsets = self.loops.pop().expect("end_loop called with no loop!");
         // Emit a loop instruction which jumps to start of current loop.
-        self.emit_loop(self.offset_to_current_pc(offsets.start));
+        // Measures from *after* start and doesn't include this Loop, so +2.
+        self.emit_loop(self.offset_to_current_pc_from_after(offsets.start) + 2);
         // Load up the exitLoop instruction and patch it to the current code offset.
-        self.code[offsets.exit_jump] = Ops::JumpIf(self.offset_to_current_pc(offsets.exit_jump));
+        self.code[offsets.exit_jump] =
+            Ops::JumpIfFalse(self.offset_to_current_pc_from_after(offsets.exit_jump));
 
         // Find any break placeholders and make them real jumps.
         for i in offsets.body..self.code.len() {
             if self.code[i] == Ops::JumpPlaceholder {
-                self.code[i] = Ops::Jump(self.offset_to_current_pc(i))
+                self.code[i] = Ops::Jump(self.offset_to_current_pc_from_after(i))
             }
-            if self.code[i] == Ops::JumpIfPlaceholder {
-                self.code[i] = Ops::JumpIf(self.offset_to_current_pc(i))
+            if self.code[i] == Ops::JumpIfFalsePlaceholder {
+                self.code[i] = Ops::JumpIfFalse(self.offset_to_current_pc_from_after(i))
             }
         }
     }
@@ -898,7 +923,6 @@ struct GrammarRule {
     prefix: Option<PrefixParslet>,
     infix: Option<InfixParslet>,
     precedence: Precedence,
-    name: Option<String>, // REMOVE
 }
 
 impl GrammarRule {
@@ -907,15 +931,13 @@ impl GrammarRule {
             prefix: Some(prefix_parselet),
             infix: None,
             precedence: Precedence::None,
-            name: None,
         }
     }
-    fn infix_operator(precedence: Precedence, name: &str) -> GrammarRule {
+    fn infix_operator(precedence: Precedence) -> GrammarRule {
         GrammarRule {
             prefix: None,
             infix: Some(infix_op),
             precedence: precedence,
-            name: Some(name.to_string()),
         }
     }
 
@@ -924,7 +946,6 @@ impl GrammarRule {
             prefix: None,
             infix: Some(infix_parselet),
             precedence: precedence,
-            name: None,
         }
     }
 
@@ -933,7 +954,6 @@ impl GrammarRule {
             prefix: None,
             infix: None,
             precedence: Precedence::None,
-            name: None,
         }
     }
 }
@@ -955,6 +975,7 @@ impl Token {
             Token::Boolean(_) => "boolean literal",
             Token::Name(_) => "name",
             Token::Comma => "comma",
+            Token::LessThan => "less than",
             Token::Newline => "newline",
             Token::EndOfFile => "end of file",
             Token::Var => "var",
@@ -974,8 +995,8 @@ impl Token {
             // Unclear if subscriptSignature is needed?
             Token::LeftCurlyBrace => GrammarRule::unused(), // WRONG
             Token::RightCurlyBrace => GrammarRule::unused(),
-            Token::OpTerm(c) => GrammarRule::infix_operator(Precedence::Term, &c.to_string()),
-            Token::OpFactor(c) => GrammarRule::infix_operator(Precedence::Factor, &c.to_string()),
+            Token::OpTerm(_) => GrammarRule::infix_operator(Precedence::Term),
+            Token::OpFactor(_) => GrammarRule::infix_operator(Precedence::Factor),
             Token::Num(_) => GrammarRule::prefix(literal),
             Token::String(_) => GrammarRule::prefix(literal),
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
@@ -983,6 +1004,7 @@ impl Token {
             Token::Var => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
+            Token::LessThan => GrammarRule::infix_operator(Precedence::Comparison),
             Token::Comma => GrammarRule::unused(),
             Token::Newline => GrammarRule::unused(),
             Token::EndOfFile => GrammarRule::unused(),
