@@ -1,8 +1,0 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expected name")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected name")
-
-Missing expected output "3" on line 1.
-Missing expected output "12.47" on line 2.
-Missing expected output "10" on line 3.

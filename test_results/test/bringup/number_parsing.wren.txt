@@ -3,5 +3,3 @@ MethodNotFound
 Expected return code 0 and got 70. Stderr:
 MethodNotFound
 
-Missing expected output "15" on line 1.
-Missing expected output "3.702" on line 2.

@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected name")
+[dummy_module line 1] Error Lexer(UnterminatedScientificNotation)
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected name")
+[dummy_module line 1] Error Lexer(UnterminatedScientificNotation)
 
 Missing expected output "255" on line 3.
 Missing expected output "256" on line 4.

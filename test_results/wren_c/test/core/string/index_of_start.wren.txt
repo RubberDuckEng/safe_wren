@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 21] Error Grammar("Expected Expression: ParseToken { bytes_range: 819..820, token: OpTerm(\'-\'), line: 21 }")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 21] Error Grammar("Expected Expression: ParseToken { bytes_range: 819..820, token: OpTerm(\'-\'), line: 21 }")
+Unexpected output on stderr:
+MethodNotFound
+Expected return code 0 and got 70. Stderr:
+MethodNotFound
 
 Missing expected output "0" on line 2.
 Missing expected output "1" on line 3.

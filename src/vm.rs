@@ -6,7 +6,7 @@ use crate::compiler::{Ops, Scope};
 #[derive(Debug, Clone)]
 pub enum Value {
     Null,
-    Num(u64),
+    Num(f64),
     Boolean(bool),
     String(Rc<String>),
 }
@@ -76,7 +76,7 @@ pub enum RuntimeError {
 }
 
 impl Value {
-    fn try_into_num(self) -> Result<u64, RuntimeError> {
+    fn try_into_num(self) -> Result<f64, RuntimeError> {
         match self {
             Value::Num(value) => Ok(value),
             _ => Err(RuntimeError::NumberRequired(self)),
@@ -86,12 +86,17 @@ impl Value {
 
 #[derive(Debug)]
 pub struct WrenVM {
+    // Current executing module (only module currently)
     pub module: Module, // No support for multiple modules yet.
+    // Stack for this executing VM
     pub stack: Vec<Value>,
+    // Program counter (offset into current code block)
     pc: usize,
+    // Print debug information when running
     debug: bool,
-    // Missing pointers for wren_core.
-    // Missing Global Symbol Table.
+    // Single global symbol table for all method names (matches wren_c)
+    pub method_names: Vec<String>,
+    // FIXME: Missing pointers for wren_core.
 }
 
 // enum Method {
@@ -121,9 +126,20 @@ impl WrenVM {
         Self {
             module: Module::default(),
             stack: Vec::new(),
+            method_names: Vec::new(),
             pc: 0,
             debug: debug,
         }
+    }
+
+    pub fn ensure_method_symbol(&mut self, name: &str) -> usize {
+        if let Some(index) = self.method_names.iter().position(|n| n.eq(name)) {
+            return index;
+        }
+
+        // New symbol, so add it.
+        self.method_names.push(name.into());
+        self.method_names.len() - 1
     }
 
     pub fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {

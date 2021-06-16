@@ -1,4 +1,4 @@
 Missing expected error on line 1.
 Expected return code 65 and got 0. Stderr:
 
-Got output "11" when none was expected.
+Got output "17" when none was expected.

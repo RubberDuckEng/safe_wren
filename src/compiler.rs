@@ -16,9 +16,10 @@ pub enum Token {
     RightParen,
     LeftCurlyBrace,
     RightCurlyBrace,
-    OpTerm(char),
+    Minus,
+    Plus,
     OpFactor(char),
-    Num(u64),
+    Num(f64),
     Dot,
     Comma,
     LessThan,
@@ -43,8 +44,9 @@ pub struct ParseToken {
 
 impl ParseToken {
     fn name(&self, input: &InputManager) -> Result<String, LexError> {
-        String::from_utf8(input.source[self.bytes_range.clone()].into())
-            .map_err(|_| LexError::DecoderError)
+        // There must be a nicer way to do this into-error on a single line?
+        let name = String::from_utf8(input.source[self.bytes_range.clone()].into())?;
+        Ok(name)
     }
 
     fn before_file() -> ParseToken {
@@ -83,11 +85,40 @@ impl InputManager {
             None
         }
     }
+
+    fn peek_is(&self, expected: u8) -> bool {
+        match self.peek() {
+            Some(c) => c == expected,
+            None => false,
+        }
+    }
+
+    fn peek_is_fn(&self, precicate: fn(u8) -> bool) -> bool {
+        match self.peek() {
+            Some(c) => precicate(c),
+            None => false,
+        }
+    }
+
     fn peek_next(&self) -> Option<u8> {
         if self.offset + 1 < self.source.len() {
             Some(self.source[self.offset + 1])
         } else {
             None
+        }
+    }
+
+    // fn peek_next_is(&self, expected: u8) -> bool {
+    //     match self.peek_next() {
+    //         Some(c) => c == expected,
+    //         None => false,
+    //     }
+    // }
+
+    fn peek_next_is_fn(&self, precicate: fn(u8) -> bool) -> bool {
+        match self.peek_next() {
+            Some(c) => precicate(c),
+            None => false,
         }
     }
 
@@ -98,6 +129,15 @@ impl InputManager {
         }
         self.offset += 1;
         return val;
+    }
+
+    fn skip_while(&mut self, precicate: fn(u8) -> bool) {
+        while let Some(val) = self.peek() {
+            if !precicate(val) {
+                break;
+            }
+            self.next();
+        }
     }
 
     fn make_token(&self, token: Token) -> ParseToken {
@@ -122,17 +162,52 @@ impl InputManager {
 #[derive(Debug, Clone)]
 pub enum LexError {
     UnexpectedChar(char),
-    DecoderError,
+    // Perhaps there is a better way to wrap these errors?
+    SliceDecoderError(std::str::Utf8Error),
+    StringDecoderError(std::string::FromUtf8Error),
+    IntegerParsingError(std::num::ParseIntError),
+    FloatParsingError(std::num::ParseFloatError),
     UnterminatedString,
     UnterminatedBlockComment,
+    UnterminatedScientificNotation,
+}
+
+impl From<std::string::FromUtf8Error> for LexError {
+    fn from(err: std::string::FromUtf8Error) -> LexError {
+        LexError::StringDecoderError(err)
+    }
+}
+
+impl From<std::str::Utf8Error> for LexError {
+    fn from(err: std::str::Utf8Error) -> LexError {
+        LexError::SliceDecoderError(err)
+    }
+}
+
+impl From<std::num::ParseIntError> for LexError {
+    fn from(err: std::num::ParseIntError) -> LexError {
+        LexError::IntegerParsingError(err)
+    }
+}
+
+impl From<std::num::ParseFloatError> for LexError {
+    fn from(err: std::num::ParseFloatError) -> LexError {
+        LexError::FloatParsingError(err)
+    }
 }
 
 impl fmt::Display for LexError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            LexError::DecoderError => write!(f, "Decoder Error"),
+        match self {
+            LexError::SliceDecoderError(e) => write!(f, "Slice decoding {}", e),
+            LexError::StringDecoderError(e) => write!(f, "String decoding {}", e),
+            LexError::IntegerParsingError(e) => write!(f, "Integer parsing {}", e),
+            LexError::FloatParsingError(e) => write!(f, "Float parsing {}", e),
             LexError::UnterminatedString => write!(f, "Unterminated String"),
             LexError::UnterminatedBlockComment => write!(f, "Unterminated Block Comment"),
+            LexError::UnterminatedScientificNotation => {
+                write!(f, "Unterminated Scientific Notation")
+            }
             LexError::UnexpectedChar(c) => write!(f, "Unexpected char '{}'", c),
         }
     }
@@ -141,9 +216,13 @@ impl fmt::Display for LexError {
 impl error::Error for LexError {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         match self {
-            LexError::DecoderError => None,
+            LexError::StringDecoderError(e) => Some(e),
+            LexError::SliceDecoderError(e) => Some(e),
+            LexError::IntegerParsingError(e) => Some(e),
+            LexError::FloatParsingError(e) => Some(e),
             LexError::UnterminatedString => None,
             LexError::UnterminatedBlockComment => None,
+            LexError::UnterminatedScientificNotation => None,
             LexError::UnexpectedChar(_) => None,
         }
     }
@@ -212,12 +291,13 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
         let c = input.next();
         match c {
             b'0'..=b'9' => {
-                let num = read_number(c, input)?;
+                let num = read_number(input)?;
                 return Ok(input.make_token(Token::Num(num)));
             }
             b'.' => return Ok(input.make_token(Token::Dot)),
             b',' => return Ok(input.make_token(Token::Comma)),
-            b'+' | b'-' => return Ok(input.make_token(Token::OpTerm(c.into()))),
+            b'+' => return Ok(input.make_token(Token::Plus)),
+            b'-' => return Ok(input.make_token(Token::Minus)),
             b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
             b'<' => return Ok(input.make_token(Token::LessThan)),
             b'(' => return Ok(input.make_token(Token::LeftParen)),
@@ -264,25 +344,48 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
     return Ok(input.make_token(Token::EndOfFile));
 }
 
+fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
+    let name = str::from_utf8(&input.source[input.token_start_offset..input.offset])
+        .map_err(|e| LexError::SliceDecoderError(e))?;
+
+    let result = if is_hex {
+        i32::from_str_radix(name, 16).map_err(|e| LexError::IntegerParsingError(e))? as f64
+    } else {
+        name.parse::<f64>()
+            .map_err(|e| LexError::FloatParsingError(e))?
+    };
+    Ok(result)
+}
+
 // Knows how to advance to the end of something that looks like a number
 // and then turn that into a token.
 // Belongs on the Tokenizer/InputManager.
-fn read_number(c: u8, input: &mut InputManager) -> Result<u64, LexError> {
-    fn from_ascii_digit(c: u8) -> u64 {
-        assert!(c.is_ascii_digit());
-        u64::from(c - b'0')
+fn read_number(input: &mut InputManager) -> Result<f64, LexError> {
+    fn is_digit(b: u8) -> bool {
+        b.is_ascii_digit()
     }
 
-    let mut number = from_ascii_digit(c);
-    while let Some(byte) = input.peek() {
-        if !byte.is_ascii_digit() {
-            break;
-        }
-        let digit = from_ascii_digit(c);
-        number = number * 10 + digit;
+    input.skip_while(is_digit);
+
+    // See if it has a floating point. Make sure there is a digit after the "."
+    // so we don't get confused by method calls on number literals.
+    if input.peek_is(b'.') && input.peek_next_is_fn(is_digit) {
         input.next();
+        input.skip_while(is_digit);
     }
-    Ok(number)
+    // See if the number is in scientific notation.
+    if input.peek_is(b'e') || input.peek_is(b'E') {
+        // Allow a single positive/negative exponent symbol.
+        if !match_char(input, b'+') {
+            match_char(input, b'-');
+        }
+        if !input.peek_is_fn(is_digit) {
+            return Err(LexError::UnterminatedScientificNotation);
+        }
+        input.skip_while(is_digit);
+    }
+
+    make_number(input, false)
 }
 
 fn keyword_token(name: &str) -> Option<Token> {
@@ -313,7 +416,7 @@ fn read_name(first_byte: u8, input: &mut InputManager) -> Result<ParseToken, Lex
         bytes.push(input.next());
     }
 
-    let name = String::from_utf8(bytes).map_err(|_| LexError::DecoderError)?;
+    let name = String::from_utf8(bytes)?;
     Ok(input.make_token(keyword_token(&name).unwrap_or(Token::Name(name))))
 }
 
@@ -329,16 +432,20 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
         }
         bytes.push(next);
     }
-    let string = String::from_utf8(bytes).expect("Decoder err");
+    let string = String::from_utf8(bytes)?;
 
     Ok(input.make_token(Token::String(string)))
 }
 
-pub fn lex(input: &mut InputManager) -> Result<Vec<ParseToken>, LexError> {
+pub fn lex(input: &mut InputManager) -> Result<Vec<ParseToken>, WrenError> {
     let input_manager = input;
     let mut tokens = Vec::new();
     loop {
-        let token = next_token(input_manager)?;
+        let token = next_token(input_manager).map_err(|e| WrenError {
+            module: "dummy".into(),
+            line: input_manager.line_number,
+            error: ParserError::Lexer(e),
+        })?;
         let is_eof = token.token == Token::EndOfFile;
         tokens.push(token);
         if is_eof {
@@ -476,7 +583,7 @@ impl fmt::Debug for Compiler {
 // Parser has the lifetime of a given compilation of a module.
 struct Parser<'a> {
     input: InputManager,
-    module: &'a Module,
+    vm: &'a mut WrenVM,
     previous: ParseToken,
     current: ParseToken,
     next: ParseToken,
@@ -530,6 +637,31 @@ fn infix_op(parser: &mut Parser) -> Result<(), WrenError> {
         arity: 1,
     };
     parser.compiler.emit_call(signature);
+    Ok(())
+}
+
+// Compiles a method call with [numArgs] for a method with [name] with [length].
+fn call_method(parser: &mut Parser, arity: u8, name: String) {
+    parser.vm.ensure_method_symbol(&name);
+    let signature = Signature {
+        name: name,
+        call_type: SignatureType::Method,
+        arity: arity,
+    };
+    parser.compiler.emit_call(signature);
+}
+
+fn unary_op(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
+    let name = parser
+        .previous
+        .name(&parser.input)
+        .map_err(|e| parser.parse_error(e.into()))?;
+
+    ignore_newlines(parser)?;
+    // Compile the argument.
+    parser.parse_precendence(Precedence::Unary.one_higher())?;
+    // Call the operator method on the left-hand side.
+    call_method(parser, 0, name);
     Ok(())
 }
 
@@ -649,7 +781,7 @@ fn name(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError> {
 
     // Otherwise if in module scope handle module case:
 
-    let maybe_index = parser.module.lookup_symbol(&name);
+    let maybe_index = parser.vm.module.lookup_symbol(&name);
     match maybe_index {
         Some(index) => {
             parser.compiler.emit_load(Variable {
@@ -922,6 +1054,8 @@ fn boolean(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
 struct GrammarRule {
     prefix: Option<PrefixParslet>,
     infix: Option<InfixParslet>,
+    // Eventually signature_function for generating correct method names
+    // from operator tokens.
     precedence: Precedence,
 }
 
@@ -933,6 +1067,7 @@ impl GrammarRule {
             precedence: Precedence::None,
         }
     }
+
     fn infix_operator(precedence: Precedence) -> GrammarRule {
         GrammarRule {
             prefix: None,
@@ -967,7 +1102,8 @@ impl Token {
             Token::RightParen => "right paren",
             Token::LeftCurlyBrace => "left curly brace",
             Token::RightCurlyBrace => "right curly brace",
-            Token::OpTerm(_) => "operator + or -",
+            Token::Plus => "plus sign",
+            Token::Minus => "minus sign",
             Token::OpFactor(_) => "operator * or / or %",
             Token::Num(_) => "number literal",
             Token::String(_) => "string literal",
@@ -995,7 +1131,12 @@ impl Token {
             // Unclear if subscriptSignature is needed?
             Token::LeftCurlyBrace => GrammarRule::unused(), // WRONG
             Token::RightCurlyBrace => GrammarRule::unused(),
-            Token::OpTerm(_) => GrammarRule::infix_operator(Precedence::Term),
+            Token::Minus => GrammarRule {
+                prefix: Some(unary_op),
+                infix: Some(infix_op),
+                precedence: Precedence::Term,
+            },
+            Token::Plus => GrammarRule::infix_operator(Precedence::Term),
             Token::OpFactor(_) => GrammarRule::infix_operator(Precedence::Factor),
             Token::Num(_) => GrammarRule::prefix(literal),
             Token::String(_) => GrammarRule::prefix(literal),
@@ -1108,7 +1249,7 @@ impl<'a> Parser<'a> {
     fn parse_error(&self, error: ParserError) -> WrenError {
         WrenError {
             line: self.input.line_number,
-            module: self.module.name.clone(),
+            module: self.vm.module.name.clone(),
             error: error,
         }
     }
@@ -1187,7 +1328,7 @@ pub fn compile<'a>(
     vm.module = Module::with_name(module_name);
 
     // Initailize the fake "core" module.
-    vm.module.define_variable("System", Value::Num(1));
+    vm.module.define_variable("System", Value::Num(1.0));
 
     // Init the parser & compiler
     let mut parser = Parser {
@@ -1196,7 +1337,7 @@ pub fn compile<'a>(
         current: ParseToken::before_file(),
         next: ParseToken::before_file(),
         compiler: Compiler::default(),
-        module: &vm.module,
+        vm: vm,
     };
     parser.consume()?; // Fill next
     parser.consume()?; // Move next -> current

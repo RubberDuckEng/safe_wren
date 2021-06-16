@@ -24,8 +24,9 @@
 e.g. we might throw a lexer error even though the test is expecting
 a grammar error, but the harness doesn't distinguish and thus passes.)
 
-69 tests passed. 802 tests failed.
+75 tests passed. 797 tests failed.
 wren_c/test/core/number/decimal_point_at_eof.wren
+wren_c/test/core/number/plus.wren
 wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/global.wren
 wren_c/test/language/assignment/is.wren
@@ -69,6 +70,9 @@ wren_c/test/language/module/name_collision.wren
 wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/number/scientific_floating_exponent.wren
+wren_c/test/language/number/scientific_float_missing_exponent.wren
+wren_c/test/language/number/scientific_missing_exponent.wren
+wren_c/test/language/number/scientific_multiple_exponants.wren
 wren_c/test/language/number/scientific_multiple_exponent_signs.wren
 wren_c/test/language/semicolon.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
@@ -82,9 +86,11 @@ wren_c/test/language/unexpected_character.wren
 wren_c/test/language/variable/global_in_initializer.wren
 wren_c/test/language/variable/global_without_initializer.wren
 wren_c/test/language/variable/local_in_initializer.wren
+wren_c/test/language/variable/newline_after_equals.wren
 wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/whitespace.wren
+wren_c/test/limit/many_globals.wren
 wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
 wren_c/test/regression/429.wren
