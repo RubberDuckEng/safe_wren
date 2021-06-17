@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("isInfinity")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("isInfinity")
 
 Missing expected output "false" on line 1.
 Missing expected output "true" on line 2.

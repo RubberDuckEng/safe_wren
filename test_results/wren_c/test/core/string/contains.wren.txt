@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("contains(_)")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("contains(_)")
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

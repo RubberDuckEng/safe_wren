@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("clamp(_,_)")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("clamp(_,_)")
 
 Missing expected output "4" on line 3.
 Missing expected output "1" on line 4.

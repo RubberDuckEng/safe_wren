@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("sign")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("sign")
 
 Missing expected output "1" on line 1.
 Missing expected output "-1" on line 2.

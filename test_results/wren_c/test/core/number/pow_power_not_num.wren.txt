@@ -1,4 +1,4 @@
 Expected runtime error "Power value must be a number." and got:
-MethodNotFound
+MethodNotFound("pow(_)")
 Expected stack trace and got:
 

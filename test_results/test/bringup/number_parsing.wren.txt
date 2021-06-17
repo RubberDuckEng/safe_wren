@@ -1,5 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound
-Expected return code 0 and got 70. Stderr:
-MethodNotFound
-

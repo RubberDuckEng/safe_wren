@@ -1,4 +1,4 @@
 Expected runtime error "From must be a non-empty string." and got:
-MethodNotFound
+MethodNotFound("replace(_,_)")
 Expected stack trace and got:
 

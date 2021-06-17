@@ -1,4 +1,4 @@
 Expected runtime error "Characters must be a string." and got:
-MethodNotFound
+MethodNotFound("trim(_)")
 Expected stack trace and got:
 

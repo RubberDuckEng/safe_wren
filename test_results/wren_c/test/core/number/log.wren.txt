@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("log")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("log")
 
 Missing expected output "1.0986122886681" on line 1.
 Missing expected output "4.6051701859881" on line 2.

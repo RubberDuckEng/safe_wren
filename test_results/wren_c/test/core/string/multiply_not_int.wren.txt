@@ -1,4 +1,4 @@
 Expected runtime error "Count must be a non-negative integer." and got:
-MethodNotFound
+NumberRequired(String("abc"))
 Expected stack trace and got:
 

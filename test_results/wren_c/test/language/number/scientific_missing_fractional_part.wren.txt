@@ -1,4 +1,4 @@
 Expected runtime error "Num does not implement 'e'." and got:
-MethodNotFound
+MethodNotFound("e")
 Expected stack trace and got:
 

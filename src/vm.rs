@@ -72,7 +72,7 @@ pub enum RuntimeError {
     // TooManyVariablesDefined,
     // VariableUsedBeforeDefinition,
     NumberRequired(Value),
-    MethodNotFound,
+    MethodNotFound(String),
 }
 
 impl Value {
@@ -161,20 +161,35 @@ impl WrenVM {
                     self.push(Value::Null);
                 }
                 Ops::Call(signature) => {
-                    if signature.name.eq("+") {
+                    if signature.full_name.eq("+(_)") {
                         let other = self.pop()?.try_into_num()?;
                         let this = self.pop()?.try_into_num()?;
                         self.push(Value::Num(this + other));
-                    } else if signature.name.eq("<") {
+                    } else if signature.full_name.eq("-(_)") {
+                        let other = self.pop()?.try_into_num()?;
+                        let this = self.pop()?.try_into_num()?;
+                        self.push(Value::Num(this - other));
+                    } else if signature.full_name.eq("-") {
+                        let this = self.pop()?.try_into_num()?;
+                        self.push(Value::Num(-this));
+                    } else if signature.full_name.eq("*(_)") {
+                        let other = self.pop()?.try_into_num()?;
+                        let this = self.pop()?.try_into_num()?;
+                        self.push(Value::Num(this * other));
+                    } else if signature.full_name.eq("/(_)") {
+                        let other = self.pop()?.try_into_num()?;
+                        let this = self.pop()?.try_into_num()?;
+                        self.push(Value::Num(this / other));
+                    } else if signature.full_name.eq("<(_)") {
                         let other = self.pop()?.try_into_num()?;
                         let this = self.pop()?.try_into_num()?;
                         self.push(Value::Boolean(this < other));
-                    } else if signature.name.eq("print") {
+                    } else if signature.full_name.eq("print(_)") {
                         let value = self.pop()?;
                         self.pop()?; // this value.
                         self.push(prim_system_print(value));
                     } else {
-                        return Err(RuntimeError::MethodNotFound);
+                        return Err(RuntimeError::MethodNotFound(signature.full_name.clone()));
                     }
                     // Get symbol # from signature?
                     // Args are on the stack.  Grab a slice?

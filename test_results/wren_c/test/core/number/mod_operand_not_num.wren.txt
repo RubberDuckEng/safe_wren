@@ -1,4 +1,4 @@
 Expected runtime error "Right operand must be a number." and got:
-MethodNotFound
+MethodNotFound("%(_)")
 Expected stack trace and got:
 

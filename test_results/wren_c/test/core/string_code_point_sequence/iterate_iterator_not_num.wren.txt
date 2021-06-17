@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be a number." and got:
-MethodNotFound
+MethodNotFound("codePoints")
 Expected stack trace and got:
 

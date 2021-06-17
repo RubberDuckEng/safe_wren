@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("atan")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("atan")
 
 Missing expected output "0" on line 1.
 Missing expected output "0.78539816339745" on line 2.

@@ -1,9 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound
-Expected return code 0 and got 70. Stderr:
-MethodNotFound
-
-Missing expected output "2" on line 2.
-Missing expected output "2.86" on line 3.
-Missing expected output "0" on line 4.
-Missing expected output "-3" on line 8.
+Expected output "2.86" on line 3 and got "2.8600000000000003".

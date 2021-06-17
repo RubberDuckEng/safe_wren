@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("sqrt")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("sqrt")
 
 Missing expected output "2" on line 1.
 Missing expected output "1000" on line 2.

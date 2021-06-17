@@ -1,4 +1,4 @@
 Expected runtime error "Start must be an integer." and got:
-MethodNotFound
+MethodNotFound("indexOf(_,_)")
 Expected stack trace and got:
 

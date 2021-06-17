@@ -1,4 +1,4 @@
 Expected runtime error "Start out of bounds." and got:
-MethodNotFound
+MethodNotFound("indexOf(_,_)")
 Expected stack trace and got:
 

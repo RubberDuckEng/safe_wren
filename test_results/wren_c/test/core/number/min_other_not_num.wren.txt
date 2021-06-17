@@ -1,4 +1,4 @@
 Expected runtime error "Other value must be a number." and got:
-MethodNotFound
+MethodNotFound("min(_)")
 Expected stack trace and got:
 

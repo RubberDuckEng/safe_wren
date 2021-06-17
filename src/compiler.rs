@@ -611,13 +611,41 @@ fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
 enum SignatureType {
     Getter,
     Method,
+    Setter,
+    Subscript,
+    SubscriptSetter,
+    Initializer,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct Signature {
-    pub name: String,
+    // full_name includes arity in the string.
+    pub full_name: String,
+    // Not sure either of these are needed once the full name is compiled
+    // It's possible this struct can go away.
     call_type: SignatureType,
     arity: u8,
+}
+
+impl Signature {
+    fn full_name(call_type: &SignatureType, name: &str, arity: u8) -> String {
+        let args = (0..arity).map(|_| "_").collect::<Vec<&str>>().join(",");
+        match call_type {
+            SignatureType::Getter => name.into(),
+            SignatureType::Setter => format!("{}={}", name, args),
+            SignatureType::Method => format!("{}({})", name, args),
+            SignatureType::Subscript => format!("{}[{}]", name, args),
+            SignatureType::SubscriptSetter => format!("{}[{}]=({})", name, args, args),
+            SignatureType::Initializer => format!("init {}({})", name, args),
+        }
+    }
+    fn from_bare_name(call_type: SignatureType, name: &str, arity: u8) -> Signature {
+        Signature {
+            full_name: Signature::full_name(&call_type, name, arity),
+            call_type: call_type,
+            arity: arity,
+        }
+    }
 }
 
 fn infix_op(parser: &mut Parser) -> Result<(), WrenError> {
@@ -631,21 +659,17 @@ fn infix_op(parser: &mut Parser) -> Result<(), WrenError> {
     parser.parse_precendence(rule.precedence.one_higher())?;
 
     // Call the operator method on the left-hand side.
-    let signature = Signature {
-        name: name,
-        call_type: SignatureType::Method,
-        arity: 1,
-    };
+    let signature = Signature::from_bare_name(SignatureType::Method, &name, 1);
     parser.compiler.emit_call(signature);
     Ok(())
 }
 
 // Compiles a method call with [numArgs] for a method with [name] with [length].
-fn call_method(parser: &mut Parser, arity: u8, name: String) {
-    parser.vm.ensure_method_symbol(&name);
+fn call_method(parser: &mut Parser, arity: u8, full_name: &str) {
+    parser.vm.ensure_method_symbol(name);
     let signature = Signature {
-        name: name,
         call_type: SignatureType::Method,
+        full_name: full_name.into(),
         arity: arity,
     };
     parser.compiler.emit_call(signature);
@@ -661,7 +685,7 @@ fn unary_op(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     // Compile the argument.
     parser.parse_precendence(Precedence::Unary.one_higher())?;
     // Call the operator method on the left-hand side.
-    call_method(parser, 0, name);
+    call_method(parser, 0, &name);
     Ok(())
 }
 
@@ -687,27 +711,25 @@ fn finish_arguments_list(parser: &mut Parser) -> Result<u8, WrenError> {
 fn method_call(parser: &mut Parser) -> Result<(), WrenError> {
     // Grab name from previous token.
     let name = match &parser.previous.token {
-        Token::Name(n) => Ok(n),
+        Token::Name(n) => Ok(n.clone()),
         _ => Err(parser.parse_error(ParserError::Grammar(
             "named_call previous token not name".into(),
         ))),
     }?;
-    let mut signature = Signature {
-        name: name.into(),
-        call_type: SignatureType::Getter,
-        arity: 0,
-    };
+    let mut call_type = SignatureType::Getter;
+    let mut arity = 0;
 
     let found_left_paren = parser.match_current(Token::LeftParen)?;
     if found_left_paren {
         ignore_newlines(parser)?;
-        signature.call_type = SignatureType::Method;
+        call_type = SignatureType::Method;
         if parser.current.token != Token::RightParen {
-            signature.arity = finish_arguments_list(parser)?;
+            arity = finish_arguments_list(parser)?;
         }
         parser.consume_expecting(Token::RightParen)?;
     }
 
+    let signature = Signature::from_bare_name(call_type, &name, arity);
     parser.compiler.emit_call(signature);
 
     Ok(())

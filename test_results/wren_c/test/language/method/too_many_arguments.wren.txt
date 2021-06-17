@@ -1,4 +1,6 @@
+Unexpected output on stderr:
+MethodNotFound("print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)")
 Missing expected error on line 1.
-Expected return code 65 and got 0. Stderr:
+Expected return code 65 and got 70. Stderr:
+MethodNotFound("print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)")
 
-Got output "17" when none was expected.

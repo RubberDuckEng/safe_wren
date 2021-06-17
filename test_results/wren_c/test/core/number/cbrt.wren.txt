@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("cbrt")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("cbrt")
 
 Missing expected output "2" on line 1.
 Missing expected output "100" on line 2.

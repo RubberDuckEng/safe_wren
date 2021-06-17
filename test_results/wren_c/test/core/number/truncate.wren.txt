@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("truncate")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("truncate")
 
 Missing expected output "123" on line 1.
 Missing expected output "-123" on line 2.

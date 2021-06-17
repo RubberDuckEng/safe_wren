@@ -1,4 +1,4 @@
 Expected runtime error "Min value must be a number." and got:
-MethodNotFound
+MethodNotFound("clamp(_,_)")
 Expected stack trace and got:
 

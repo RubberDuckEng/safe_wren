@@ -1,4 +1,4 @@
 Expected runtime error "Num does not implement 'iterate(_)'." and got:
-MethodNotFound
+MethodNotFound("writeAll(_)")
 Expected stack trace and got:
 

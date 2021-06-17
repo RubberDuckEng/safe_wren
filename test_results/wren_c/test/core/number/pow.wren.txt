@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound
+MethodNotFound("pow(_)")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound
+MethodNotFound("pow(_)")
 
 Missing expected output "16" on line 1.
 Missing expected output "1024" on line 2.
