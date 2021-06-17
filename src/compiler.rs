@@ -666,7 +666,7 @@ fn infix_op(parser: &mut Parser) -> Result<(), WrenError> {
 
 // Compiles a method call with [numArgs] for a method with [name] with [length].
 fn call_method(parser: &mut Parser, arity: u8, full_name: &str) {
-    parser.vm.ensure_method_symbol(name);
+    parser.vm.ensure_method_symbol(full_name);
     let signature = Signature {
         call_type: SignatureType::Method,
         full_name: full_name.into(),
