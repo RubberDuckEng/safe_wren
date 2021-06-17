@@ -184,6 +184,10 @@ impl WrenVM {
                         let other = self.pop()?.try_into_num()?;
                         let this = self.pop()?.try_into_num()?;
                         self.push(Value::Boolean(this < other));
+                    } else if signature.full_name.eq(">(_)") {
+                        let other = self.pop()?.try_into_num()?;
+                        let this = self.pop()?.try_into_num()?;
+                        self.push(Value::Boolean(this > other));
                     } else if signature.full_name.eq("print(_)") {
                         let value = self.pop()?;
                         self.pop()?; // this value.
