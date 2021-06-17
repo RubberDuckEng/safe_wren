@@ -2,7 +2,7 @@ Expected runtime error "Index 0 out of bounds." and got:
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 1] Error Lexer(UnexpectedChar('['))
+[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 11..12, token: LeftSquareBracket, line: 1 }")
 
 Missing expected output "[3, 1, 2, 0, 4]" on line 4.
 Missing expected output "[3, 1, 4, 0, 2]" on line 7.

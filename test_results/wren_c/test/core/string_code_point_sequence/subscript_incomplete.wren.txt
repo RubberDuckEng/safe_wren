@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 2] Error Lexer(UnexpectedChar('['))
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Lexer(UnexpectedChar('['))
+Unexpected output on stderr:
+MethodNotFound("codePoints")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("codePoints")
 
 Missing expected output "-1" on line 2.
 Missing expected output "-1" on line 5.

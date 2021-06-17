@@ -1,4 +1,4 @@
 Unexpected error:
-[dummy_module line 1] Error Lexer(UnexpectedChar('['))
+[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 11..12, token: LeftSquareBracket, line: 1 }")
 Missing expected error on line 2.
 Missing expected error on line 3.

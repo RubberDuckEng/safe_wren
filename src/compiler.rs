@@ -16,6 +16,8 @@ pub enum Token {
     RightParen,
     LeftCurlyBrace,
     RightCurlyBrace,
+    LeftSquareBracket,
+    RightSquareBracket,
     Minus,
     Plus,
     OpFactor(char),
@@ -306,6 +308,8 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             b')' => return Ok(input.make_token(Token::RightParen)),
             b'{' => return Ok(input.make_token(Token::LeftCurlyBrace)),
             b'}' => return Ok(input.make_token(Token::RightCurlyBrace)),
+            b'[' => return Ok(input.make_token(Token::LeftSquareBracket)),
+            b']' => return Ok(input.make_token(Token::RightSquareBracket)),
             b' ' | b'\t' | b'\r' => {
                 while is_whitespace(input.peek()) {
                     input.next();
@@ -595,7 +599,7 @@ struct Parser<'a> {
 // Following the Pratt parser example:
 // https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
 type PrefixParslet = fn(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError>;
-type InfixParslet = fn(parser: &mut Parser) -> Result<(), WrenError>;
+type InfixParslet = fn(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError>;
 
 fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
@@ -613,9 +617,9 @@ fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
 enum SignatureType {
     Getter,
     Method,
-    Setter,
     Subscript,
     SubscriptSetter,
+    Setter,
     Initializer,
 }
 
@@ -650,7 +654,7 @@ impl Signature {
     }
 }
 
-fn infix_op(parser: &mut Parser) -> Result<(), WrenError> {
+fn infix_op(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     let rule = parser.previous.token.grammar_rule();
     let name = parser
         .previous
@@ -737,10 +741,31 @@ fn method_call(parser: &mut Parser) -> Result<(), WrenError> {
     Ok(())
 }
 
-fn call(parser: &mut Parser) -> Result<(), WrenError> {
+fn call(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(parser)?;
     parser.consume_expecting_name()?;
     method_call(parser)?; // namedCall in the original
+    Ok(())
+}
+
+// Subscript or "array indexing" operator like `foo[bar]`.
+fn subscript(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError> {
+    let mut arity = finish_arguments_list(parser)?;
+    // Isn't arity always 1 here?
+    parser.consume_expecting(Token::RightSquareBracket)?;
+    allow_line_before_dot(parser)?;
+
+    let mut call_type = SignatureType::Subscript;
+    if can_assign && parser.match_current(Token::Equals)? {
+        call_type = SignatureType::SubscriptSetter;
+        arity += 1; // Why? I guess the value being set?
+                    // Compile the assigned value.
+                    // Validate # of parameters.
+        expression(parser)?;
+    }
+    // Name is always empty for Subscripts, I think?
+    let signature = Signature::from_bare_name(call_type, "", arity);
+    parser.compiler.emit_call(signature);
     Ok(())
 }
 
@@ -1126,6 +1151,8 @@ impl Token {
             Token::RightParen => "right paren",
             Token::LeftCurlyBrace => "left curly brace",
             Token::RightCurlyBrace => "right curly brace",
+            Token::LeftSquareBracket => "left square bracket",
+            Token::RightSquareBracket => "right square bracket",
             Token::Plus => "plus sign",
             Token::Minus => "minus sign",
             Token::OpFactor(_) => "operator * or / or %",
@@ -1154,8 +1181,14 @@ impl Token {
             Token::LeftParen => GrammarRule::prefix(grouping),
             Token::RightParen => GrammarRule::unused(),
             // Unclear if subscriptSignature is needed?
-            Token::LeftCurlyBrace => GrammarRule::unused(), // WRONG
+            Token::LeftCurlyBrace => GrammarRule::unused(), // WRONG, should be prefix(map)
             Token::RightCurlyBrace => GrammarRule::unused(),
+            Token::RightSquareBracket => GrammarRule::unused(),
+            Token::LeftSquareBracket => GrammarRule {
+                prefix: None, // FIXME: prefix: Some(list),
+                infix: Some(subscript),
+                precedence: Precedence::Call,
+            },
             Token::Minus => GrammarRule {
                 prefix: Some(unary_op),
                 infix: Some(infix_op),
@@ -1321,7 +1354,7 @@ impl<'a> Parser<'a> {
                 .grammar_rule()
                 .infix
                 .expect("Invalid token");
-            infix_parser(self)?;
+            infix_parser(self, can_assign)?;
         }
         Ok(())
     }

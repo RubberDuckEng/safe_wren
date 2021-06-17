@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 3] Error Lexer(UnexpectedChar('['))
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Lexer(UnexpectedChar('['))
+Unexpected output on stderr:
+MethodNotFound("bytes")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("bytes")
 
 Missing expected output "0" on line 3.
 Missing expected output "18" on line 4.

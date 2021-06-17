@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Lexer(UnexpectedChar('['))
+[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 33..34, token: LeftSquareBracket, line: 2 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Lexer(UnexpectedChar('['))
+[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 33..34, token: LeftSquareBracket, line: 2 }")
 
 Missing expected output "a" on line 3.
 Missing expected output "b" on line 4.

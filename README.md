@@ -25,7 +25,7 @@ e.g. we might throw a lexer error even though the test is expecting
 a grammar error, but the harness doesn't distinguish and thus passes.)
 
 
-78 tests passed. 795 tests failed.
+81 tests passed. 792 tests failed.
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/plus.wren
@@ -60,11 +60,14 @@ wren_c/test/language/interpolation/unterminated.wren
 wren_c/test/language/list/duplicate_comma.wren
 wren_c/test/language/list/duplicate_trailing_comma.wren
 wren_c/test/language/list/empty_list_with_comma.wren
+wren_c/test/language/list/newline_before_comma.wren
 wren_c/test/language/map/bad_key_precedence.wren
 wren_c/test/language/map/duplicate_comma.wren
 wren_c/test/language/map/duplicate_trailing_comma.wren
 wren_c/test/language/map/eof_after_colon.wren
 wren_c/test/language/map/eof_after_key.wren
+wren_c/test/language/method/subscript_setter_too_many_arguments.wren
+wren_c/test/language/method/subscript_too_many_arguments.wren
 wren_c/test/language/module/missing_for.wren
 wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
