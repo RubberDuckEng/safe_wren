@@ -1,6 +1,4 @@
 Expected runtime error "Range start out of bounds." and got:
-
+MethodNotFound("[_]")
 Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected name")
 

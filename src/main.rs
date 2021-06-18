@@ -6,6 +6,7 @@ extern crate num_derive;
 extern crate num_traits;
 
 mod compiler;
+mod core;
 mod vm;
 
 use crate::compiler::{compile, lex, InputManager};
@@ -81,8 +82,21 @@ fn input_from_source_or_path(source_or_path: &String) -> InputManager {
 
 fn print_tokens(source_or_path: &String) {
     let mut input = input_from_source_or_path(source_or_path);
-    let tokens = lex(&mut input);
-    println!("{:?}", tokens);
+    let result = lex(&mut input);
+
+    if let Ok(tokens) = result {
+        let mut as_string = Vec::new();
+        for token in tokens {
+            as_string.push(format!(
+                "{:?} '{}'",
+                token.token,
+                token.name(&input).expect("input")
+            ));
+        }
+        println!("  Stack: [{}]", as_string.join(", "));
+    } else {
+        println!("{:?}", result);
+    }
 }
 
 fn print_bytecode(source_or_path: &String) {

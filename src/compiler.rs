@@ -23,6 +23,8 @@ pub enum Token {
     OpFactor(char),
     Num(f64),
     Dot,
+    DotDot,
+    DotDotDot,
     Comma,
     LessThan,
     GreaterThan,
@@ -40,13 +42,13 @@ pub enum Token {
 
 #[derive(Debug)]
 pub struct ParseToken {
-    bytes_range: Range<usize>,
-    token: Token,
-    line: usize,
+    pub bytes_range: Range<usize>,
+    pub token: Token,
+    pub line: usize,
 }
 
 impl ParseToken {
-    fn name(&self, input: &InputManager) -> Result<String, LexError> {
+    pub fn name(&self, input: &InputManager) -> Result<String, LexError> {
         // There must be a nicer way to do this into-error on a single line?
         let name = String::from_utf8(input.source[self.bytes_range.clone()].into())?;
         Ok(name)
@@ -297,7 +299,17 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                 let num = read_number(input)?;
                 return Ok(input.make_token(Token::Num(num)));
             }
-            b'.' => return Ok(input.make_token(Token::Dot)),
+            b'.' => {
+                if match_char(input, b'.') {
+                    let matched_third_dot = match_char(input, b'.');
+                    if matched_third_dot {
+                        return Ok(input.make_token(Token::DotDotDot));
+                    } else {
+                        return Ok(input.make_token(Token::DotDot));
+                    }
+                }
+                return Ok(input.make_token(Token::Dot));
+            }
             b',' => return Ok(input.make_token(Token::Comma)),
             b'+' => return Ok(input.make_token(Token::Plus)),
             b'-' => return Ok(input.make_token(Token::Minus)),
@@ -619,8 +631,8 @@ enum SignatureType {
     Method,
     Subscript,
     SubscriptSetter,
-    Setter,
-    Initializer,
+    // Setter,
+    // Initializer,
 }
 
 #[derive(Debug, PartialEq)]
@@ -630,7 +642,7 @@ pub struct Signature {
     // Not sure either of these are needed once the full name is compiled
     // It's possible this struct can go away.
     call_type: SignatureType,
-    arity: u8,
+    pub arity: u8,
 }
 
 impl Signature {
@@ -638,11 +650,11 @@ impl Signature {
         let args = (0..arity).map(|_| "_").collect::<Vec<&str>>().join(",");
         match call_type {
             SignatureType::Getter => name.into(),
-            SignatureType::Setter => format!("{}={}", name, args),
+            // SignatureType::Setter => format!("{}={}", name, args),
             SignatureType::Method => format!("{}({})", name, args),
-            SignatureType::Subscript => format!("{}[{}]", name, args),
-            SignatureType::SubscriptSetter => format!("{}[{}]=({})", name, args, args),
-            SignatureType::Initializer => format!("init {}({})", name, args),
+            SignatureType::Subscript => format!("{}[{}]", name, args), // name should always be empty
+            SignatureType::SubscriptSetter => format!("{}[{}]=({})", name, args, args), // name should always be empty.
+                                                                                        // SignatureType::Initializer => format!("init {}({})", name, args),
         }
     }
     fn from_bare_name(call_type: SignatureType, name: &str, arity: u8) -> Signature {
@@ -672,7 +684,7 @@ fn infix_op(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
 
 // Compiles a method call with [numArgs] for a method with [name] with [length].
 fn call_method(parser: &mut Parser, arity: u8, full_name: &str) {
-    parser.vm.ensure_method_symbol(full_name);
+    parser.vm.methods.ensure_method(full_name);
     let signature = Signature {
         call_type: SignatureType::Method,
         full_name: full_name.into(),
@@ -1158,7 +1170,9 @@ impl Token {
             Token::OpFactor(_) => "operator * or / or %",
             Token::Num(_) => "number literal",
             Token::String(_) => "string literal",
-            Token::Dot => "dot",
+            Token::Dot => "dot (call)",
+            Token::DotDot => "dot dot (inclusive range)",
+            Token::DotDotDot => "dot dot dot (exclusive range)",
             Token::Boolean(_) => "boolean literal",
             Token::Name(_) => "name",
             Token::Comma => "comma",
@@ -1199,6 +1213,8 @@ impl Token {
             Token::Num(_) => GrammarRule::prefix(literal),
             Token::String(_) => GrammarRule::prefix(literal),
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
+            Token::DotDot => GrammarRule::infix_operator(Precedence::Range),
+            Token::DotDotDot => GrammarRule::infix_operator(Precedence::Range),
             Token::Boolean(_) => GrammarRule::prefix(boolean),
             Token::Var => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),

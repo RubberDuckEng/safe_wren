@@ -1,7 +1,9 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 use std::str;
 
 use crate::compiler::{Ops, Scope};
+use crate::core::{prim_system_print, register_core_primitives};
 
 #[derive(Debug, Clone)]
 pub enum Value {
@@ -9,6 +11,7 @@ pub enum Value {
     Num(f64),
     Boolean(bool),
     String(Rc<String>),
+    Object(Rc<dyn Obj>),
 }
 
 impl Value {
@@ -73,14 +76,36 @@ pub enum RuntimeError {
     // VariableUsedBeforeDefinition,
     NumberRequired(Value),
     MethodNotFound(String),
+    ThisObjectHasNoClass,
 }
 
 impl Value {
-    fn try_into_num(self) -> Result<f64, RuntimeError> {
+    pub fn try_into_num(&self) -> Result<f64, RuntimeError> {
         match self {
-            Value::Num(value) => Ok(value),
-            _ => Err(RuntimeError::NumberRequired(self)),
+            Value::Num(value) => Ok(*value),
+            _ => Err(RuntimeError::NumberRequired(self.clone())),
         }
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct SymbolTable {
+    method_names: Vec<String>,
+}
+
+impl SymbolTable {
+    pub fn ensure_method(&mut self, name: &str) -> usize {
+        if let Some(index) = self.method_names.iter().position(|n| n.eq(name)) {
+            return index;
+        }
+
+        // New symbol, so add it.
+        self.method_names.push(name.into());
+        self.method_names.len() - 1
+    }
+
+    pub fn lookup(&self, name: &str) -> Option<usize> {
+        self.method_names.iter().position(|n| n.eq(name))
     }
 }
 
@@ -95,51 +120,64 @@ pub struct WrenVM {
     // Print debug information when running
     debug: bool,
     // Single global symbol table for all method names (matches wren_c)
-    pub method_names: Vec<String>,
+    // Separate Struct to allow easier passing to register_primitive
+    pub methods: SymbolTable,
     // FIXME: Missing pointers for wren_core.
+    pub(crate) bool_class: Rc<RefCell<ObjClass>>,
+    // class_class: Rc<ObjClass>,
+    // fiber_class: Rc<ObjClass>,
+    // fn_class: Rc<ObjClass>,
+    // list_class: Rc<ObjClass>,
+    // map_class: Rc<ObjClass>,
+    pub(crate) null_class: Rc<RefCell<ObjClass>>,
+    pub(crate) num_class: Rc<RefCell<ObjClass>>,
+    // object_class: Rc<ObjClass>,
+    pub(crate) range_class: Rc<RefCell<ObjClass>>,
+    pub(crate) string_class: Rc<RefCell<ObjClass>>,
+    pub(crate) system_class: Rc<RefCell<ObjClass>>,
 }
-
-// enum Method {
-//     Primitive,
-//     ForeignFunction,
-//     Closure,
-// }
 
 //   PRIMITIVE(vm->numClass, "+(_)", num_plus);
 
-// System.print is not actually in C in wren_c, but since we can't yet parse
-// classes or methods, implementing here to get unit tests working.
-fn prim_system_print(value: Value) -> Value {
-    let string = match &value {
-        Value::Null => "null".into(),
-        Value::Num(i) => format!("{}", i),
-        Value::Boolean(b) => format!("{}", b),
-        Value::String(s) => format!("{}", s),
-    };
-
-    println!("{}", string);
-    value
+pub(crate) fn wren_new_range(vm: &WrenVM, from: f64, to: f64, is_inclusive: bool) -> Rc<ObjRange> {
+    Rc::new(ObjRange {
+        class_obj: vm.range_class.clone(),
+        from: from,
+        to: to,
+        is_inclusive: is_inclusive,
+    })
 }
 
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
-        Self {
+        let mut vm = Self {
             module: Module::default(),
             stack: Vec::new(),
-            method_names: Vec::new(),
+            methods: SymbolTable::default(),
             pc: 0,
             debug: debug,
-        }
+            // These are all wrong.  They don't suport static methods yet.
+            num_class: Rc::new(RefCell::new(ObjClass::new("Num"))),
+            bool_class: Rc::new(RefCell::new(ObjClass::new("Bool"))),
+            null_class: Rc::new(RefCell::new(ObjClass::new("Null"))),
+            string_class: Rc::new(RefCell::new(ObjClass::new("String"))),
+            range_class: Rc::new(RefCell::new(ObjClass::new("Range"))),
+            system_class: Rc::new(RefCell::new(ObjClass::new("System"))),
+        };
+
+        register_core_primitives(&mut vm);
+        vm
     }
 
-    pub fn ensure_method_symbol(&mut self, name: &str) -> usize {
-        if let Some(index) = self.method_names.iter().position(|n| n.eq(name)) {
-            return index;
+    // TODO: This needs to be Option?  Root classes dont have classes?
+    fn class_obj(&self, value: &Value) -> Option<Rc<RefCell<ObjClass>>> {
+        match value {
+            Value::Null => Some(self.null_class.clone()),
+            Value::Num(_) => Some(self.num_class.clone()),
+            Value::Boolean(_) => Some(self.bool_class.clone()),
+            Value::String(_) => Some(self.string_class.clone()),
+            Value::Object(o) => o.class_obj(),
         }
-
-        // New symbol, so add it.
-        self.method_names.push(name.into());
-        self.method_names.len() - 1
     }
 
     pub fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {
@@ -161,47 +199,37 @@ impl WrenVM {
                     self.push(Value::Null);
                 }
                 Ops::Call(signature) => {
-                    if signature.full_name.eq("+(_)") {
-                        let other = self.pop()?.try_into_num()?;
-                        let this = self.pop()?.try_into_num()?;
-                        self.push(Value::Num(this + other));
-                    } else if signature.full_name.eq("-(_)") {
-                        let other = self.pop()?.try_into_num()?;
-                        let this = self.pop()?.try_into_num()?;
-                        self.push(Value::Num(this - other));
-                    } else if signature.full_name.eq("-") {
-                        let this = self.pop()?.try_into_num()?;
-                        self.push(Value::Num(-this));
-                    } else if signature.full_name.eq("*(_)") {
-                        let other = self.pop()?.try_into_num()?;
-                        let this = self.pop()?.try_into_num()?;
-                        self.push(Value::Num(this * other));
-                    } else if signature.full_name.eq("/(_)") {
-                        let other = self.pop()?.try_into_num()?;
-                        let this = self.pop()?.try_into_num()?;
-                        self.push(Value::Num(this / other));
-                    } else if signature.full_name.eq("<(_)") {
-                        let other = self.pop()?.try_into_num()?;
-                        let this = self.pop()?.try_into_num()?;
-                        self.push(Value::Boolean(this < other));
-                    } else if signature.full_name.eq(">(_)") {
-                        let other = self.pop()?.try_into_num()?;
-                        let this = self.pop()?.try_into_num()?;
-                        self.push(Value::Boolean(this > other));
-                    } else if signature.full_name.eq("print(_)") {
-                        let value = self.pop()?;
-                        self.pop()?; // this value.
-                        self.push(prim_system_print(value));
+                    // Implicit arg for this.
+                    let num_args = signature.arity as usize + 1;
+                    let this_offset = self.stack.len() - num_args;
+                    let args = self.stack.split_off(this_offset);
+
+                    if signature.full_name.eq("print(_)") {
+                        self.push(prim_system_print(self, args)?);
                     } else {
-                        return Err(RuntimeError::MethodNotFound(signature.full_name.clone()));
+                        let this_class = self
+                            .class_obj(&args[0])
+                            .ok_or(RuntimeError::ThisObjectHasNoClass)?;
+                        let symbol = self
+                            .methods
+                            .lookup(&signature.full_name)
+                            .ok_or(RuntimeError::MethodNotFound(signature.full_name.clone()))?;
+
+                        let class_obj = this_class.borrow();
+                        let method = class_obj
+                            .methods
+                            .get(symbol)
+                            .ok_or(RuntimeError::MethodNotFound(signature.full_name.clone()))?;
+
+                        match method {
+                            Method::Primitive(f) => {
+                                let result = f(self, args)?;
+                                // When do we remove args from stack?
+                                self.stack.push(result);
+                            }
+                            Method::None => unimplemented!(),
+                        }
                     }
-                    // Get symbol # from signature?
-                    // Args are on the stack.  Grab a slice?
-                    // Look up the class for the first arg.
-                    // If the class's method table doesn't include the symbol, bail.
-                    // method = &classObj->methods.data[symbol]
-                    // match on method type.
-                    // If primative, make direct call.  Expecting result on the stack.
                 }
                 Ops::Load(variable) => {
                     let value = match variable.scope {
@@ -311,4 +339,146 @@ pub fn debug_bytecode(_vm: &WrenVM, closure: &Closure) {
     ops.enumerate().for_each(|(i, op)| {
         println!("{:02}: {}", i, op.debug_string());
     })
+}
+
+// Identifies which specific type a heap-allocated object is.
+#[derive(Debug)]
+pub enum ObjType {
+    Class,
+    // Closure,
+    // Fiber,
+    // Function,
+    // Foreign,
+    // Instance,
+    // List,
+    // Map,
+    // Module,
+    Range,
+    // String,
+    // Upvalue,
+}
+
+// Base struct for all heap-allocated objects.
+pub trait Obj {
+    fn obj_type(&self) -> ObjType;
+    //   // The object's class.
+    fn class_obj(&self) -> Option<Rc<RefCell<ObjClass>>>;
+}
+
+#[derive(Debug)]
+pub(crate) struct ObjRange {
+    class_obj: Rc<RefCell<ObjClass>>,
+    // The beginning of the range.
+    from: f64,
+    // The end of the range. May be greater or less than [from].
+    to: f64,
+    // True if [to] is included in the range.
+    is_inclusive: bool,
+}
+
+impl Obj for ObjRange {
+    fn obj_type(&self) -> ObjType {
+        ObjType::Range
+    }
+    fn class_obj(&self) -> Option<Rc<RefCell<ObjClass>>> {
+        Some(self.class_obj.clone())
+    }
+}
+
+impl core::fmt::Debug for dyn Obj {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Object{:?}", self.obj_type())
+    }
+}
+
+// Unclear if this should take Vec or a slice?
+type Primitive = fn(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError>;
+
+#[derive(Clone)]
+pub(crate) enum Method {
+    // A primitive method implemented in C in the VM. Unlike foreign methods,
+    // this can directly manipulate the fiber's stack.
+    Primitive(Primitive),
+
+    // A primitive that handles .call on Fn.
+    //   FunctionCall,
+
+    // A externally-defined C method.
+    //   ForeignFunction,
+
+    // A normal user-defined method.
+    // Block
+
+    // No method for the given symbol.
+    None,
+}
+
+impl core::fmt::Debug for Method {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Method::Primitive(_) => write!(f, "Primitive"),
+            Method::None => write!(f, "None"),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ObjClass {
+    //   ObjClass* superclass;
+
+    // The number of fields needed for an instance of this class, including all
+    // of its superclass fields.
+    //   int numFields;
+
+    // The table of methods that are defined in or inherited by this class.
+    // Methods are called by symbol, and the symbol directly maps to an index in
+    // this table. This makes method calls fast at the expense of empty cells in
+    // the list for methods the class doesn't support.
+    //
+    // You can think of it as a hash table that never has collisions but has a
+    // really low load factor. Since methods are pretty small (just a type and a
+    // pointer), this should be a worthwhile trade-off.
+    methods: Vec<Method>,
+
+    // The name of the class.
+    name: String, // Should be Rc<ObjString>
+
+                  // The ClassAttribute for the class, if any
+                  //   Value attributes;
+}
+
+impl ObjClass {
+    fn new(name: &str) -> ObjClass {
+        ObjClass {
+            name: name.to_string(),
+            methods: Vec::new(),
+        }
+    }
+
+    pub(crate) fn set_method(&mut self, symbol: usize, method: Method) {
+        if symbol >= self.methods.len() {
+            self.methods.resize(symbol + 1, Method::None);
+        }
+        self.methods[symbol] = method;
+    }
+}
+
+impl Obj for ObjClass {
+    fn obj_type(&self) -> ObjType {
+        ObjType::Class
+    }
+
+    fn class_obj(&self) -> Option<Rc<RefCell<ObjClass>>> {
+        None
+    }
+}
+
+pub(crate) fn register_primitive(
+    symbols: &mut SymbolTable,
+    class: &mut ObjClass,
+    name: &str,
+    primitive: Primitive,
+) {
+    let index = symbols.ensure_method(name);
+    class.set_method(index, Method::Primitive(primitive));
 }

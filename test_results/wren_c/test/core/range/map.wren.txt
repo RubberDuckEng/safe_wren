@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected name")
+[dummy_module line 2] Error Lexer(UnexpectedChar('|'))
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected name")
+[dummy_module line 2] Error Lexer(UnexpectedChar('|'))
 
 Missing expected output "[2, 3, 4]" on line 3.

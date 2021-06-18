@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-NumberRequired(String("abc"))
+MethodNotFound("*(_)")
 Expected return code 0 and got 70. Stderr:
-NumberRequired(String("abc"))
+MethodNotFound("*(_)")
 
 Missing expected output "||" on line 1.
 Missing expected output "abc" on line 2.
