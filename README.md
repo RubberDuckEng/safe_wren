@@ -24,13 +24,12 @@
 e.g. we might throw a lexer error even though the test is expecting
 a grammar error, but the harness doesn't distinguish and thus passes.)
 
-96 tests passed. 779 tests failed.
+96 tests passed. 780 tests failed.
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/plus.wren
 wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/global.wren
-wren_c/test/language/assignment/is.wren
 wren_c/test/language/assignment/prefix_operator.wren
 wren_c/test/language/assignment/undefined.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
@@ -115,6 +114,7 @@ test/bringup/add.wren
 test/bringup/class.wren
 test/bringup/do_nothing_while.wren
 test/bringup/greater_than.wren
+test/bringup/is.wren
 test/bringup/locals.wren
 test/bringup/number_parsing.wren
 test/bringup/range.wren

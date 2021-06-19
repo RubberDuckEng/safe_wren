@@ -96,6 +96,7 @@ pub(crate) enum RuntimeError {
     // VariableUsedBeforeDefinition,
     NumberRequired(Value),
     StringRequired(Value),
+    ObjectRequired(Value),
     ClassRequired(Value),
     MethodNotFound(String),
     ThisObjectHasNoClass,
@@ -187,7 +188,7 @@ pub(crate) fn wren_new_range(
         is_inclusive: is_inclusive,
     })
 }
-fn wren_bind_superclass(_vm: &mut WrenVM, subclass: &mut ObjClass, superclass: Handle<ObjClass>) {
+fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<ObjClass>) {
     subclass.superclass = Some(superclass.clone());
     // Setup fields
     // Inherit methods
@@ -199,7 +200,7 @@ fn wren_bind_superclass(_vm: &mut WrenVM, subclass: &mut ObjClass, superclass: H
     }
 }
 
-fn wren_new_single_class(_vm: &mut WrenVM, _num_fields: usize, name: String) -> Handle<ObjClass> {
+fn wren_new_single_class(_num_fields: usize, name: String) -> Handle<ObjClass> {
     // the wren_c version does a lot more?  Unclear if this should.
     new_handle(ObjClass {
         name: name,
@@ -209,11 +210,15 @@ fn wren_new_single_class(_vm: &mut WrenVM, _num_fields: usize, name: String) -> 
     })
 }
 
-fn wren_new_class(
-    vm: &mut WrenVM,
-    superclass: Handle<ObjClass>,
+// This was made in hopes of sharing code with base_class but it turns
+// out this is an interpret time function (only creates classes)
+// and does not do any of the declaration work base_class does.
+// Keeping it for now in case it's useful later.
+fn wren_new_class_with_class_class(
+    superclass: &Handle<ObjClass>,
     num_fields: usize,
     name: Value,
+    class_class: &Handle<ObjClass>,
 ) -> Result<Handle<ObjClass>, RuntimeError> {
     // Create the metaclass.
 
@@ -221,19 +226,32 @@ fn wren_new_class(
     let metaclass_name_string = format!("{} metaclass", name_string);
     // let metaclass_name = Value::String(Rc::new(metaclass_name_string));
 
-    let class_class = vm.core.as_ref().unwrap().class.clone();
-    let metaclass = wren_new_single_class(vm, 0, metaclass_name_string);
+    let metaclass = wren_new_single_class(0, metaclass_name_string);
     metaclass.borrow_mut().class = Some(class_class.clone());
 
     // Metaclasses always inherit Class and do not parallel the non-metaclass
     // hierarchy.
-    wren_bind_superclass(vm, &mut metaclass.borrow_mut(), class_class.clone());
+    wren_bind_superclass(&mut metaclass.borrow_mut(), class_class);
 
-    let class = wren_new_single_class(vm, num_fields, name_string);
+    let class = wren_new_single_class(num_fields, name_string);
     class.borrow_mut().class = Some(metaclass);
-    wren_bind_superclass(vm, &mut class.borrow_mut(), superclass);
+    wren_bind_superclass(&mut class.borrow_mut(), superclass);
 
     Ok(class)
+}
+
+fn wren_new_class(
+    vm: &mut WrenVM,
+    superclass: &Handle<ObjClass>,
+    num_fields: usize,
+    name: Value,
+) -> Result<Handle<ObjClass>, RuntimeError> {
+    wren_new_class_with_class_class(
+        superclass,
+        num_fields,
+        name,
+        &vm.core.as_ref().unwrap().class,
+    )
 }
 
 fn as_class(value: Value) -> Handle<ObjClass> {
@@ -250,7 +268,7 @@ fn create_class(vm: &mut WrenVM, num_fields: usize) -> Result<(), RuntimeError> 
 
     //   vm->fiber->error = validateSuperclass(vm, name, superclass, numFields);
 
-    let class = wren_new_class(vm, superclass, num_fields, name)?;
+    let class = wren_new_class(vm, &superclass, num_fields, name)?;
     vm.stack.push(Value::Class(class));
     Ok(())
 }
@@ -287,6 +305,8 @@ fn wren_define_variable(module: &mut Module, name: &str, value: Value) {
     };
 }
 
+// NOTE: This is only designed for Object and Class and does not fully
+// wire up a class!
 pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> {
     let class = new_handle(ObjClass {
         name: name.into(),
@@ -299,6 +319,12 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
     class
 }
 
+// FIXME: This is a hack until we start loading a wren_core.wren
+// to define all the core classes for us.
+// NOTE: This isn't quite "wren_new_class_with_class_class"
+// since that's a interpret-time function and this function does
+// both compile time work (declare variables) as well as interpret
+// time work (create class objects).
 pub(crate) fn base_class(
     module: &mut Module,
     name: &str,
@@ -310,8 +336,11 @@ pub(crate) fn base_class(
     metaclass.borrow_mut().superclass = Some(class_class.clone());
 
     let class = define_class(module, name);
-    class.borrow_mut().class = Some(metaclass);
+    class.borrow_mut().class = Some(metaclass.clone());
     class.borrow_mut().superclass = Some(object_class.clone());
+
+    wren_bind_superclass(&mut class.borrow_mut(), object_class);
+
     class
 }
 
@@ -333,7 +362,7 @@ impl WrenVM {
     }
 
     // TODO: This needs to be Option?  Root classes dont have classes?
-    fn class_obj(&self, value: &Value) -> Option<Handle<ObjClass>> {
+    pub(crate) fn class_for_value(&self, value: &Value) -> Option<Handle<ObjClass>> {
         let core = self.core.as_ref().unwrap();
         match value {
             Value::Null => Some(core.null.clone()),
@@ -373,7 +402,7 @@ impl WrenVM {
                         self.push(prim_system_print(self, args)?);
                     } else {
                         let this_class = self
-                            .class_obj(&args[0])
+                            .class_for_value(&args[0])
                             .ok_or(RuntimeError::ThisObjectHasNoClass)?;
                         let symbol = self
                             .methods
@@ -596,7 +625,6 @@ impl core::fmt::Debug for Method {
     }
 }
 
-#[derive(Debug)]
 pub struct ObjClass {
     pub(crate) class: Option<Handle<ObjClass>>,
     pub(crate) superclass: Option<Handle<ObjClass>>,
@@ -620,6 +648,27 @@ pub struct ObjClass {
 
                              // The ClassAttribute for the class, if any
                              //   Value attributes;
+}
+
+// FIXME: This is a hack?
+impl PartialEq for ObjClass {
+    fn eq(&self, other: &ObjClass) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+
+impl core::fmt::Debug for ObjClass {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "ObjClass {{ {} ", self.name)?;
+        match &self.superclass {
+            None => write!(f, "super: None ")?,
+            // FIXME: This is another instance where having an iterator
+            // over the class hierarchy could be useful to print
+            // Bool->Object, etc.
+            Some(rc) => write!(f, "super: {:?} ", rc.borrow().name)?,
+        }
+        write!(f, "}}")
+    }
 }
 
 impl ObjClass {

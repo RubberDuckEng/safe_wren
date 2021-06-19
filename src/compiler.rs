@@ -33,6 +33,7 @@ pub enum Token {
     Var,
     While,
     Break,
+    Is,
     Equals,
     EqualsEquals,
     Boolean(bool),
@@ -418,6 +419,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "break" => Some(Token::Break),
         "null" => Some(Token::Null),
         "class" => Some(Token::Class),
+        "is" => Some(Token::Is),
         _ => None,
     }
 }
@@ -1324,6 +1326,7 @@ impl Token {
             Token::Newline => "newline",
             Token::EndOfFile => "end of file",
             Token::Var => "var",
+            Token::Is => "is",
             Token::While => "while",
             Token::Break => "break",
             Token::Equals => "equal sign",
@@ -1361,6 +1364,7 @@ impl Token {
             Token::Boolean(_) => GrammarRule::prefix(boolean),
             Token::Null => GrammarRule::prefix(null),
             Token::Var => GrammarRule::unused(),
+            Token::Is => GrammarRule::infix_operator(Precedence::Is),
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),

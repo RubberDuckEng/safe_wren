@@ -68,6 +68,35 @@ fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::from_string(string))
 }
 
+fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let expected_baseclass = args[1].try_into_class()?;
+    let mut class = vm
+        .class_for_value(&args[0])
+        .ok_or(RuntimeError::ObjectRequired(args[0].clone()))?;
+    // Should this just be an iterator?
+    // e.g. for class in object.class_chain()
+
+    loop {
+        if *expected_baseclass.borrow() == *class.borrow() {
+            return Ok(Value::Boolean(true));
+        }
+        let superclass = match &class.borrow().superclass {
+            Some(superclass) => superclass.clone(),
+            None => {
+                return Ok(Value::Boolean(false));
+            }
+        };
+        class = superclass;
+    }
+}
+
+fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let class = vm
+        .class_for_value(&args[0])
+        .ok_or(RuntimeError::ObjectRequired(args[0].clone()))?;
+    Ok(Value::Class(class))
+}
+
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
         let index = $vm.methods.ensure_method($sig);
@@ -86,6 +115,8 @@ pub(crate) fn init_core_classes(vm: &mut WrenVM) {
     // Define the root Object class. This has to be done a little specially
     // because it has no superclass.
     let object = define_class(&mut vm.module, "Object");
+    primitive!(vm, object, "is(_)", object_is);
+    primitive!(vm, object, "type(_)", object_type);
 
     // PRIMITIVE(vm->objectClass, "!", object_not);
     // PRIMITIVE(vm->objectClass, "==(_)", object_eqeq);
