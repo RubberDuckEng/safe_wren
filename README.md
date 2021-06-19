@@ -24,8 +24,7 @@
 e.g. we might throw a lexer error even though the test is expecting
 a grammar error, but the harness doesn't distinguish and thus passes.)
 
-
-82 tests passed. 792 tests failed.
+84 tests passed. 790 tests failed.
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/plus.wren
@@ -74,6 +73,7 @@ wren_c/test/language/module/module_dir/something/module.wren
 wren_c/test/language/module/name_collision.wren
 wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
 wren_c/test/language/no_trailing_newline.wren
+wren_c/test/language/null/literal.wren
 wren_c/test/language/number/scientific_floating_exponent.wren
 wren_c/test/language/number/scientific_float_missing_exponent.wren
 wren_c/test/language/number/scientific_missing_exponent.wren
@@ -93,6 +93,7 @@ wren_c/test/language/variable/global_without_initializer.wren
 wren_c/test/language/variable/local_in_initializer.wren
 wren_c/test/language/variable/newline_after_equals.wren
 wren_c/test/language/variable/use_false_as_var.wren
+wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/many_globals.wren

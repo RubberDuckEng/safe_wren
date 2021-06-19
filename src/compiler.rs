@@ -28,6 +28,7 @@ pub enum Token {
     Comma,
     LessThan,
     GreaterThan,
+    Null,
     Var,
     While,
     Break,
@@ -414,6 +415,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "var" => Some(Token::Var),
         "while" => Some(Token::While),
         "break" => Some(Token::Break),
+        "null" => Some(Token::Null),
         _ => None,
     }
 }
@@ -547,24 +549,16 @@ impl Compiler {
         self.code.push(Ops::Boolean(value));
     }
 
-    fn emit_null(&mut self) {
-        self.code.push(Ops::Null);
-    }
-
     fn emit_call(&mut self, signature: Signature) {
         self.code.push(Ops::Call(signature));
     }
 
-    fn emit_pop(&mut self) {
-        self.code.push(Ops::Pop);
+    fn emit(&mut self, op: Ops) {
+        self.code.push(op);
     }
 
     fn emit_loop(&mut self, backwards_by: u16) {
         self.code.push(Ops::Loop(backwards_by))
-    }
-
-    fn emit_end(&mut self) {
-        self.code.push(Ops::End);
     }
 
     fn emit_store(&mut self, variable: Variable) {
@@ -1028,14 +1022,14 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
         fn finish(p: &mut Parser) -> Result<(), WrenError> {
             if finish_block(p)? {
                 // Block was an expression, so discard it.
-                p.compiler.emit_pop();
+                p.compiler.emit(Ops::Pop);
             }
             Ok(())
         }
         auto_scope(parser, finish)?;
     } else {
         expression(parser)?;
-        parser.compiler.emit_pop();
+        parser.compiler.emit(Ops::Pop);
     }
     Ok(())
 }
@@ -1070,7 +1064,7 @@ fn variable_definition(parser: &mut Parser) -> Result<(), WrenError> {
         expression(parser)?;
     } else {
         // Default initialize it to null.
-        parser.compiler.emit_null();
+        parser.compiler.emit(Ops::Null);
     }
 
     // Now put it in scope.
@@ -1105,6 +1099,10 @@ fn boolean(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
+fn null(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
+    parser.compiler.emit(Ops::Null);
+    Ok(())
+}
 // How many states are needed here?
 // Could this just be an enum?
 // enum Grammar {
@@ -1176,6 +1174,7 @@ impl Token {
             Token::Boolean(_) => "boolean literal",
             Token::Name(_) => "name",
             Token::Comma => "comma",
+            Token::Null => "null",
             Token::LessThan => "less than",
             Token::GreaterThan => "greater than",
             Token::Newline => "newline",
@@ -1216,6 +1215,7 @@ impl Token {
             Token::DotDot => GrammarRule::infix_operator(Precedence::Range),
             Token::DotDotDot => GrammarRule::infix_operator(Precedence::Range),
             Token::Boolean(_) => GrammarRule::prefix(boolean),
+            Token::Null => GrammarRule::prefix(null),
             Token::Var => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
@@ -1438,7 +1438,7 @@ pub fn compile<'a>(
     // FIXME: Check for undefined implicit variables and throw errors.
 
     // FIXME: Missing lots of "endCompiler" cleanup here.
-    parser.compiler.emit_end();
+    parser.compiler.emit(Ops::End);
     Ok(Closure {
         function: Function {
             code: parser.compiler.code,
