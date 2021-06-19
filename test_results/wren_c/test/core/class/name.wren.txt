@@ -1,9 +1,8 @@
 Unexpected output on stderr:
-MethodNotFound("name")
+MethodNotFound("type")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("name")
+MethodNotFound("type")
 
-Missing expected output "Foo" on line 3.
 Missing expected output "Foo metaclass" on line 4.
 Missing expected output "Object" on line 7.
 Missing expected output "Bool" on line 8.

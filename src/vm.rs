@@ -3,9 +3,9 @@ use std::rc::Rc;
 use std::str;
 
 use crate::compiler::{Ops, Scope};
-use crate::core::{prim_system_print, register_core_primitives};
+use crate::core::{init_core_classes, prim_system_print, register_core_primitives};
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub(crate) enum Value {
     Null,
     Num(f64),
@@ -16,7 +16,24 @@ pub(crate) enum Value {
     // Object(Handle<dyn Obj>),
 }
 
+impl core::fmt::Debug for Value {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Value::Null => write!(f, "Null"),
+            Value::Num(n) => write!(f, "Num({})", n),
+            Value::Boolean(b) => write!(f, "Boolean({})", b),
+            Value::String(s) => write!(f, "String(\"{}\")", s),
+            Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
+            Value::Range(r) => write!(f, "Range({:?})", r),
+        }
+    }
+}
+
 impl Value {
+    pub(crate) fn from_string(string: String) -> Value {
+        Value::String(Rc::new(string))
+    }
+
     // In Wren false and null are false, everything else is true.
     fn is_truthy(&self) -> bool {
         match self {
@@ -79,6 +96,7 @@ pub(crate) enum RuntimeError {
     // VariableUsedBeforeDefinition,
     NumberRequired(Value),
     StringRequired(Value),
+    ClassRequired(Value),
     MethodNotFound(String),
     ThisObjectHasNoClass,
 }
@@ -95,6 +113,13 @@ impl Value {
         match self {
             Value::String(string) => Ok(string.as_ref().clone()),
             _ => Err(RuntimeError::StringRequired(self.clone())),
+        }
+    }
+
+    pub fn try_into_class(&self) -> Result<Handle<ObjClass>, RuntimeError> {
+        match self {
+            Value::Class(c) => Ok(c.clone()),
+            _ => Err(RuntimeError::ClassRequired(self.clone())),
         }
     }
 }
@@ -120,7 +145,6 @@ impl SymbolTable {
     }
 }
 
-#[derive(Debug)]
 pub struct WrenVM {
     // Current executing module (only module currently)
     pub(crate) module: Module, // No support for multiple modules yet.
@@ -136,7 +160,19 @@ pub struct WrenVM {
     pub(crate) core: Option<CoreClasses>,
 }
 
-//   PRIMITIVE(vm->numClass, "+(_)", num_plus);
+impl core::fmt::Debug for WrenVM {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "WrenVM {{ ")?;
+        write!(
+            f,
+            "stack: (len {}, top {:?}), ",
+            self.stack.len(),
+            self.stack.last()
+        )?;
+        write!(f, "methods: (len {}) ", self.methods.method_names.len())?;
+        write!(f, "}}")
+    }
+}
 
 pub(crate) fn wren_new_range(
     vm: &WrenVM,
@@ -151,30 +187,32 @@ pub(crate) fn wren_new_range(
         is_inclusive: is_inclusive,
     })
 }
+fn wren_bind_superclass(_vm: &mut WrenVM, subclass: &mut ObjClass, superclass: Handle<ObjClass>) {
+    subclass.superclass = Some(superclass.clone());
+    // Setup fields
+    // Inherit methods
 
-// fn wren_bind_superclass(
-//     vm: &mut WrenVM,
-//     subclass: Handle<ObjClass>,
-//     superclass: Handle<ObjClass>,
-// ) {
-//     subclass.borrow_mut().superclass = superclass;
-//     // Setup fields
-//     // Inherit methods
-// }
+    // Inherit methods from its superclass.
+    // FIXME: Should this be in reverse order (to minimize # of resizes?)
+    for (symbol, method) in superclass.borrow().methods.iter().enumerate() {
+        subclass.set_method(symbol, method.clone());
+    }
+}
 
-// fn wren_new_single_class(
-//     _vm: &mut WrenVM,
-//     _num_fields: usize,
-//     name: &str,
-// ) -> Handle<ObjClass> {
-//     // the wren_c version does a lot more?  Unclear if this should.
-//     Rc::new(RefCell::new(ObjClass::new(name)))
-// }
+fn wren_new_single_class(_vm: &mut WrenVM, _num_fields: usize, name: String) -> Handle<ObjClass> {
+    // the wren_c version does a lot more?  Unclear if this should.
+    new_handle(ObjClass {
+        name: name,
+        methods: Vec::new(),
+        class: None,
+        superclass: None,
+    })
+}
 
 fn wren_new_class(
     vm: &mut WrenVM,
     superclass: Handle<ObjClass>,
-    _num_fields: usize,
+    num_fields: usize,
     name: Value,
 ) -> Result<Handle<ObjClass>, RuntimeError> {
     // Create the metaclass.
@@ -184,31 +222,16 @@ fn wren_new_class(
     // let metaclass_name = Value::String(Rc::new(metaclass_name_string));
 
     let class_class = vm.core.as_ref().unwrap().class.clone();
-    let metaclass = new_handle(ObjClass {
-        name: metaclass_name_string,
-        methods: Vec::new(),
-        class: Some(class_class.clone()),
-        superclass: Some(class_class),
-    });
-
-    // let metaclass = wren_new_single_class(vm, 0, &metaclass_name_string);
-    // metaclass.borrow_mut().class = vm.class_class;
+    let metaclass = wren_new_single_class(vm, 0, metaclass_name_string);
+    metaclass.borrow_mut().class = Some(class_class.clone());
 
     // Metaclasses always inherit Class and do not parallel the non-metaclass
     // hierarchy.
-    // wren_bind_superclass(vm, metaclass, vm.class_class);
+    wren_bind_superclass(vm, &mut metaclass.borrow_mut(), class_class.clone());
 
-    // let class = wren_new_single_class(vm, num_fields, &name_string);
-
-    let class = new_handle(ObjClass {
-        name: name_string,
-        methods: Vec::new(),
-        class: Some(metaclass),
-        superclass: Some(superclass),
-    });
-
-    // class.borrow_mut().class = metaclass;
-    // wren_bind_superclass(vm, class, superclass);
+    let class = wren_new_single_class(vm, num_fields, name_string);
+    class.borrow_mut().class = Some(metaclass);
+    wren_bind_superclass(vm, &mut class.borrow_mut(), superclass);
 
     Ok(class)
 }
@@ -264,7 +287,7 @@ fn wren_define_variable(module: &mut Module, name: &str, value: Value) {
     };
 }
 
-fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> {
+pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> {
     let class = new_handle(ObjClass {
         name: name.into(),
         methods: Vec::new(),
@@ -276,7 +299,7 @@ fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> {
     class
 }
 
-fn base_class(
+pub(crate) fn base_class(
     module: &mut Module,
     name: &str,
     object_class: &Handle<ObjClass>,
@@ -290,48 +313,6 @@ fn base_class(
     class.borrow_mut().class = Some(metaclass);
     class.borrow_mut().superclass = Some(object_class.clone());
     class
-}
-
-fn init_core_classes(vm: &mut WrenVM) {
-    // wren_c makes a core module, which it then imports
-    // into every module when running.  For now we're just
-    // "importing" core directly into the one module we ever have.
-
-    // FIXME: Store core_module in module map.
-    // Define the root Object class. This has to be done a little specially
-    // because it has no superclass.
-    let object = define_class(&mut vm.module, "Object");
-    // PRIMITIVE(vm->objectClass, "!", object_not);
-    // PRIMITIVE(vm->objectClass, "==(_)", object_eqeq);
-    // PRIMITIVE(vm->objectClass, "!=(_)", object_bangeq);
-    // PRIMITIVE(vm->objectClass, "is(_)", object_is);
-    // PRIMITIVE(vm->objectClass, "toString", object_toString);
-    // PRIMITIVE(vm->objectClass, "type", object_type);
-    // Now we can define Class, which is a subclass of Object.
-    let class = define_class(&mut vm.module, "Class");
-    class.borrow_mut().superclass = Some(object.clone());
-    // PRIMITIVE(vm->classClass, "name", class_name);
-    // PRIMITIVE(vm->classClass, "supertype", class_supertype);
-    // PRIMITIVE(vm->classClass, "toString", class_toString);
-    // PRIMITIVE(vm->classClass, "attributes", class_attributes);
-    // Finally, we can define Object's metaclass which is a subclass of Class.
-    let object_metaclass = define_class(&mut vm.module, "Object metaclass");
-    // Wire up the metaclass relationships now that all three classes are built.
-    object.borrow_mut().class = Some(object_metaclass.clone());
-    object_metaclass.borrow_mut().class = Some(class.clone());
-    class.borrow_mut().class = Some(class.clone());
-    object_metaclass.borrow_mut().superclass = Some(class.clone());
-    // PRIMITIVE(objectMetaclass, "same(_,_)", object_same);
-
-    vm.core = Some(CoreClasses {
-        bool_class: base_class(&mut vm.module, "Bool", &object, &class),
-        num: base_class(&mut vm.module, "Num", &object, &class),
-        string: base_class(&mut vm.module, "String", &object, &class),
-        system: base_class(&mut vm.module, "System", &object, &class),
-        null: base_class(&mut vm.module, "Null", &object, &class),
-        range: base_class(&mut vm.module, "Range", &object, &class),
-        class: class,
-    });
 }
 
 impl WrenVM {
@@ -617,8 +598,8 @@ impl core::fmt::Debug for Method {
 
 #[derive(Debug)]
 pub struct ObjClass {
-    class: Option<Handle<ObjClass>>,
-    superclass: Option<Handle<ObjClass>>,
+    pub(crate) class: Option<Handle<ObjClass>>,
+    pub(crate) superclass: Option<Handle<ObjClass>>,
 
     // The number of fields needed for an instance of this class, including all
     // of its superclass fields.
@@ -635,10 +616,10 @@ pub struct ObjClass {
     methods: Vec<Method>,
 
     // The name of the class.
-    name: String, // Should be Rc<ObjString>
+    pub(crate) name: String, // Should be Rc<ObjString>?
 
-                  // The ClassAttribute for the class, if any
-                  //   Value attributes;
+                             // The ClassAttribute for the class, if any
+                             //   Value attributes;
 }
 
 impl ObjClass {
