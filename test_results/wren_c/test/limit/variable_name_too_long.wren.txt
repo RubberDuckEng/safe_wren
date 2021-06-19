@@ -1,1 +1,4 @@
 Missing expected error on line 1.
+Missing expected error on line 2.
+Expected return code 65 and got 0. Stderr:
+

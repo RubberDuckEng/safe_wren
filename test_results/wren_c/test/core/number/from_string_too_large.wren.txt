@@ -1,6 +1,4 @@
 Expected runtime error "Number literal is too large." and got:
-
+MethodNotFound("fromString(_)")
 Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Undeclared variable \'Num\'")
 

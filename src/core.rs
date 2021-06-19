@@ -9,7 +9,9 @@ pub(crate) fn prim_system_print(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Va
         Value::Num(i) => format!("{}", i),
         Value::Boolean(b) => format!("{}", b),
         Value::String(s) => format!("{}", s),
-        Value::Object(o) => format!("{:?}", o),
+        Value::Class(o) => format!("{:?}", o),
+        Value::Range(o) => format!("{:?}", o),
+        // Value::Object(o) => format!("{:?}", o),
     };
 
     println!("{}", string);
@@ -52,12 +54,12 @@ fn num_gt(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
 fn num_range_inclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let start = args[0].try_into_num()?;
     let end = args[1].try_into_num()?;
-    Ok(Value::Object(wren_new_range(vm, start, end, true)))
+    Ok(Value::Range(wren_new_range(vm, start, end, true)))
 }
 fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let start = args[0].try_into_num()?;
     let end = args[1].try_into_num()?;
-    Ok(Value::Object(wren_new_range(vm, start, end, false)))
+    Ok(Value::Range(wren_new_range(vm, start, end, false)))
 }
 
 macro_rules! primitive {
@@ -69,13 +71,14 @@ macro_rules! primitive {
     };
 }
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
-    primitive!(vm, vm.num_class, "+(_)", num_plus);
-    primitive!(vm, vm.num_class, "-(_)", num_minus);
-    primitive!(vm, vm.num_class, "-", num_unary_minus);
-    primitive!(vm, vm.num_class, "*(_)", num_mult);
-    primitive!(vm, vm.num_class, "/(_)", num_divide);
-    primitive!(vm, vm.num_class, "<(_)", num_lt);
-    primitive!(vm, vm.num_class, ">(_)", num_gt);
-    primitive!(vm, vm.num_class, "..(_)", num_range_inclusive);
-    primitive!(vm, vm.num_class, "...(_)", num_range_exclusive);
+    let core = vm.core.as_ref().unwrap();
+    primitive!(vm, core.num, "+(_)", num_plus);
+    primitive!(vm, core.num, "-(_)", num_minus);
+    primitive!(vm, core.num, "-", num_unary_minus);
+    primitive!(vm, core.num, "*(_)", num_mult);
+    primitive!(vm, core.num, "/(_)", num_divide);
+    primitive!(vm, core.num, "<(_)", num_lt);
+    primitive!(vm, core.num, ">(_)", num_gt);
+    primitive!(vm, core.num, "..(_)", num_range_inclusive);
+    primitive!(vm, core.num, "...(_)", num_range_exclusive);
 }

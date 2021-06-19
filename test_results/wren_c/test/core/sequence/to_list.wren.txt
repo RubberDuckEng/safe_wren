@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 1] Error Grammar("Expected left curly brace")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 1] Error Grammar("Expected left curly brace")
 
 Missing expected output "[1, 2, 3]" on line 13.

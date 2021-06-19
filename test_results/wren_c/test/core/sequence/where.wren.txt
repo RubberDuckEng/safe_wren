@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 3] Error Grammar("Expected newline")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 3] Error Grammar("Expected newline")
 
 Missing expected output "true" on line 32.
 Missing expected output "instance of WhereSequence" on line 33.

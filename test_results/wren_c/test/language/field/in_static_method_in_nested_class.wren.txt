@@ -1,3 +1,3 @@
 Unexpected error:
-[dummy_module line 6] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 8] Error Grammar("Expected newline")
 Missing expected error on line 10.

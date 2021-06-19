@@ -1,3 +1,0 @@
-Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
-Missing expected error on line 2.

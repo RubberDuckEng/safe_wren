@@ -2,7 +2,7 @@ Expected runtime error "Cannot call root fiber." and got:
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 2] Error Grammar("Expected newline")
 
 Missing expected output "begin root" on line 4.
 Missing expected output "in new fiber" on line 7.

@@ -6,12 +6,14 @@ use crate::compiler::{Ops, Scope};
 use crate::core::{prim_system_print, register_core_primitives};
 
 #[derive(Debug, Clone)]
-pub enum Value {
+pub(crate) enum Value {
     Null,
     Num(f64),
     Boolean(bool),
     String(Rc<String>),
-    Object(Rc<dyn Obj>),
+    Class(Handle<ObjClass>),
+    Range(Handle<ObjRange>),
+    // Object(Handle<dyn Obj>),
 }
 
 impl Value {
@@ -30,7 +32,7 @@ impl Value {
 }
 
 #[derive(Default, Debug)]
-pub struct Module {
+pub(crate) struct Module {
     // Missing some pointer to the actual code?
 
     // Should this just be a map?  wren_utils.h suggests so?
@@ -51,30 +53,32 @@ impl Module {
         self.variable_names.iter().position(|e| e.eq(name))
     }
 
-    pub fn define_variable(&mut self, name: &str, value: Value) {
+    pub fn define_variable(&mut self, name: &str, value: Value) -> usize {
         self.variable_names.push(name.into());
         self.variables.push(value);
+        self.variable_names.len() - 1
     }
 }
 
 #[derive(Debug)]
-pub struct Function {
+pub(crate) struct Function {
     pub constants: Vec<Value>,
     pub code: Vec<Ops>,
 }
 
 #[derive(Debug)]
-pub struct Closure {
+pub(crate) struct Closure {
     pub function: Function,
 }
 
 #[derive(Debug)]
-pub enum RuntimeError {
+pub(crate) enum RuntimeError {
     StackUnderflow,
     // VariableAlreadyDefined,
     // TooManyVariablesDefined,
     // VariableUsedBeforeDefinition,
     NumberRequired(Value),
+    StringRequired(Value),
     MethodNotFound(String),
     ThisObjectHasNoClass,
 }
@@ -84,6 +88,13 @@ impl Value {
         match self {
             Value::Num(value) => Ok(*value),
             _ => Err(RuntimeError::NumberRequired(self.clone())),
+        }
+    }
+
+    pub fn try_into_string(&self) -> Result<String, RuntimeError> {
+        match self {
+            Value::String(string) => Ok(string.as_ref().clone()),
+            _ => Err(RuntimeError::StringRequired(self.clone())),
         }
     }
 }
@@ -112,9 +123,9 @@ impl SymbolTable {
 #[derive(Debug)]
 pub struct WrenVM {
     // Current executing module (only module currently)
-    pub module: Module, // No support for multiple modules yet.
+    pub(crate) module: Module, // No support for multiple modules yet.
     // Stack for this executing VM
-    pub stack: Vec<Value>,
+    pub(crate) stack: Vec<Value>,
     // Program counter (offset into current code block)
     pc: usize,
     // Print debug information when running
@@ -122,65 +133,238 @@ pub struct WrenVM {
     // Single global symbol table for all method names (matches wren_c)
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
-    // FIXME: Missing pointers for wren_core.
-    pub(crate) bool_class: Rc<RefCell<ObjClass>>,
-    // class_class: Rc<ObjClass>,
-    // fiber_class: Rc<ObjClass>,
-    // fn_class: Rc<ObjClass>,
-    // list_class: Rc<ObjClass>,
-    // map_class: Rc<ObjClass>,
-    pub(crate) null_class: Rc<RefCell<ObjClass>>,
-    pub(crate) num_class: Rc<RefCell<ObjClass>>,
-    // object_class: Rc<ObjClass>,
-    pub(crate) range_class: Rc<RefCell<ObjClass>>,
-    pub(crate) string_class: Rc<RefCell<ObjClass>>,
-    pub(crate) system_class: Rc<RefCell<ObjClass>>,
+    pub(crate) core: Option<CoreClasses>,
 }
 
 //   PRIMITIVE(vm->numClass, "+(_)", num_plus);
 
-pub(crate) fn wren_new_range(vm: &WrenVM, from: f64, to: f64, is_inclusive: bool) -> Rc<ObjRange> {
-    Rc::new(ObjRange {
-        class_obj: vm.range_class.clone(),
+pub(crate) fn wren_new_range(
+    vm: &WrenVM,
+    from: f64,
+    to: f64,
+    is_inclusive: bool,
+) -> Handle<ObjRange> {
+    new_handle(ObjRange {
+        class_obj: vm.core.as_ref().unwrap().range.clone(),
         from: from,
         to: to,
         is_inclusive: is_inclusive,
     })
 }
 
+// fn wren_bind_superclass(
+//     vm: &mut WrenVM,
+//     subclass: Handle<ObjClass>,
+//     superclass: Handle<ObjClass>,
+// ) {
+//     subclass.borrow_mut().superclass = superclass;
+//     // Setup fields
+//     // Inherit methods
+// }
+
+// fn wren_new_single_class(
+//     _vm: &mut WrenVM,
+//     _num_fields: usize,
+//     name: &str,
+// ) -> Handle<ObjClass> {
+//     // the wren_c version does a lot more?  Unclear if this should.
+//     Rc::new(RefCell::new(ObjClass::new(name)))
+// }
+
+fn wren_new_class(
+    vm: &mut WrenVM,
+    superclass: Handle<ObjClass>,
+    _num_fields: usize,
+    name: Value,
+) -> Result<Handle<ObjClass>, RuntimeError> {
+    // Create the metaclass.
+
+    let name_string = name.try_into_string()?;
+    let metaclass_name_string = format!("{} metaclass", name_string);
+    // let metaclass_name = Value::String(Rc::new(metaclass_name_string));
+
+    let class_class = vm.core.as_ref().unwrap().class.clone();
+    let metaclass = new_handle(ObjClass {
+        name: metaclass_name_string,
+        methods: Vec::new(),
+        class: Some(class_class.clone()),
+        superclass: Some(class_class),
+    });
+
+    // let metaclass = wren_new_single_class(vm, 0, &metaclass_name_string);
+    // metaclass.borrow_mut().class = vm.class_class;
+
+    // Metaclasses always inherit Class and do not parallel the non-metaclass
+    // hierarchy.
+    // wren_bind_superclass(vm, metaclass, vm.class_class);
+
+    // let class = wren_new_single_class(vm, num_fields, &name_string);
+
+    let class = new_handle(ObjClass {
+        name: name_string,
+        methods: Vec::new(),
+        class: Some(metaclass),
+        superclass: Some(superclass),
+    });
+
+    // class.borrow_mut().class = metaclass;
+    // wren_bind_superclass(vm, class, superclass);
+
+    Ok(class)
+}
+
+fn as_class(value: Value) -> Handle<ObjClass> {
+    match value {
+        Value::Class(o) => o,
+        _ => panic!(),
+    }
+}
+
+fn create_class(vm: &mut WrenVM, num_fields: usize) -> Result<(), RuntimeError> {
+    // Pull the name and superclass off the stack.
+    let superclass = as_class(vm.pop()?);
+    let name = vm.pop()?;
+
+    //   vm->fiber->error = validateSuperclass(vm, name, superclass, numFields);
+
+    let class = wren_new_class(vm, superclass, num_fields, name)?;
+    vm.stack.push(Value::Class(class));
+    Ok(())
+}
+
+type Handle<T> = Rc<RefCell<T>>;
+
+fn new_handle<T>(t: T) -> Handle<T> {
+    Rc::new(RefCell::new(t))
+}
+
+#[derive(Debug)]
+pub(crate) struct CoreClasses {
+    pub(crate) num: Handle<ObjClass>,
+    pub(crate) bool_class: Handle<ObjClass>,
+    pub(crate) null: Handle<ObjClass>,
+    pub(crate) string: Handle<ObjClass>,
+    pub(crate) class: Handle<ObjClass>,
+    pub(crate) range: Handle<ObjClass>,
+    // Probably not needed (not in wren_c):
+    pub(crate) system: Handle<ObjClass>,
+}
+
+fn wren_define_variable(module: &mut Module, name: &str, value: Value) {
+    // See if the variable is already explicitly or implicitly declared.
+    match module.lookup_symbol(name) {
+        None => {
+            // New variable!
+            module.define_variable(name, value);
+        }
+        Some(_) => {
+            // FIXME: Handle fixing implicit variables.
+            // Which are currently their line numer?
+        }
+    };
+}
+
+fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> {
+    let class = new_handle(ObjClass {
+        name: name.into(),
+        methods: Vec::new(),
+        class: None,
+        superclass: None,
+    });
+
+    wren_define_variable(module, name, Value::Class(class.clone()));
+    class
+}
+
+fn base_class(
+    module: &mut Module,
+    name: &str,
+    object_class: &Handle<ObjClass>,
+    class_class: &Handle<ObjClass>,
+) -> Handle<ObjClass> {
+    let metaclass = define_class(module, &format!("{} metaclass", name)); // FIXME
+    metaclass.borrow_mut().class = Some(class_class.clone());
+    metaclass.borrow_mut().superclass = Some(class_class.clone());
+
+    let class = define_class(module, name);
+    class.borrow_mut().class = Some(metaclass);
+    class.borrow_mut().superclass = Some(object_class.clone());
+    class
+}
+
+fn init_core_classes(vm: &mut WrenVM) {
+    // wren_c makes a core module, which it then imports
+    // into every module when running.  For now we're just
+    // "importing" core directly into the one module we ever have.
+
+    // FIXME: Store core_module in module map.
+    // Define the root Object class. This has to be done a little specially
+    // because it has no superclass.
+    let object = define_class(&mut vm.module, "Object");
+    // PRIMITIVE(vm->objectClass, "!", object_not);
+    // PRIMITIVE(vm->objectClass, "==(_)", object_eqeq);
+    // PRIMITIVE(vm->objectClass, "!=(_)", object_bangeq);
+    // PRIMITIVE(vm->objectClass, "is(_)", object_is);
+    // PRIMITIVE(vm->objectClass, "toString", object_toString);
+    // PRIMITIVE(vm->objectClass, "type", object_type);
+    // Now we can define Class, which is a subclass of Object.
+    let class = define_class(&mut vm.module, "Class");
+    class.borrow_mut().superclass = Some(object.clone());
+    // PRIMITIVE(vm->classClass, "name", class_name);
+    // PRIMITIVE(vm->classClass, "supertype", class_supertype);
+    // PRIMITIVE(vm->classClass, "toString", class_toString);
+    // PRIMITIVE(vm->classClass, "attributes", class_attributes);
+    // Finally, we can define Object's metaclass which is a subclass of Class.
+    let object_metaclass = define_class(&mut vm.module, "Object metaclass");
+    // Wire up the metaclass relationships now that all three classes are built.
+    object.borrow_mut().class = Some(object_metaclass.clone());
+    object_metaclass.borrow_mut().class = Some(class.clone());
+    class.borrow_mut().class = Some(class.clone());
+    object_metaclass.borrow_mut().superclass = Some(class.clone());
+    // PRIMITIVE(objectMetaclass, "same(_,_)", object_same);
+
+    vm.core = Some(CoreClasses {
+        bool_class: base_class(&mut vm.module, "Bool", &object, &class),
+        num: base_class(&mut vm.module, "Num", &object, &class),
+        string: base_class(&mut vm.module, "String", &object, &class),
+        system: base_class(&mut vm.module, "System", &object, &class),
+        null: base_class(&mut vm.module, "Null", &object, &class),
+        range: base_class(&mut vm.module, "Range", &object, &class),
+        class: class,
+    });
+}
+
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
         let mut vm = Self {
-            module: Module::default(),
+            // dummy_module to avoid changing test results (for now)
+            module: Module::with_name("dummy_module"),
             stack: Vec::new(),
             methods: SymbolTable::default(),
             pc: 0,
             debug: debug,
-            // These are all wrong.  They don't suport static methods yet.
-            num_class: Rc::new(RefCell::new(ObjClass::new("Num"))),
-            bool_class: Rc::new(RefCell::new(ObjClass::new("Bool"))),
-            null_class: Rc::new(RefCell::new(ObjClass::new("Null"))),
-            string_class: Rc::new(RefCell::new(ObjClass::new("String"))),
-            range_class: Rc::new(RefCell::new(ObjClass::new("Range"))),
-            system_class: Rc::new(RefCell::new(ObjClass::new("System"))),
+            core: None,
         };
 
+        init_core_classes(&mut vm);
         register_core_primitives(&mut vm);
         vm
     }
 
     // TODO: This needs to be Option?  Root classes dont have classes?
-    fn class_obj(&self, value: &Value) -> Option<Rc<RefCell<ObjClass>>> {
+    fn class_obj(&self, value: &Value) -> Option<Handle<ObjClass>> {
+        let core = self.core.as_ref().unwrap();
         match value {
-            Value::Null => Some(self.null_class.clone()),
-            Value::Num(_) => Some(self.num_class.clone()),
-            Value::Boolean(_) => Some(self.bool_class.clone()),
-            Value::String(_) => Some(self.string_class.clone()),
-            Value::Object(o) => o.class_obj(),
+            Value::Null => Some(core.null.clone()),
+            Value::Num(_) => Some(core.num.clone()),
+            Value::Boolean(_) => Some(core.bool_class.clone()),
+            Value::String(_) => Some(core.string.clone()),
+            Value::Class(o) => o.borrow().class_obj(),
+            Value::Range(o) => o.borrow().class_obj(),
         }
     }
 
-    pub fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {
+    pub(crate) fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {
         loop {
             let op = &closure.function.code[self.pc];
             self.pc += 1;
@@ -231,6 +415,10 @@ impl WrenVM {
                         }
                     }
                 }
+                Ops::Class(num_fields) => {
+                    // FIXME: Pass module?
+                    create_class(self, *num_fields)?;
+                }
                 Ops::Load(variable) => {
                     let value = match variable.scope {
                         Scope::Module => self.module.variables[variable.index].clone(),
@@ -263,6 +451,7 @@ impl WrenVM {
                         self.pc += *offset_forward as usize;
                     }
                 }
+                Ops::ClassPlaceholder => unimplemented!(),
                 Ops::JumpIfFalsePlaceholder => unimplemented!(),
                 Ops::JumpPlaceholder => unimplemented!(),
             }
@@ -294,6 +483,8 @@ impl WrenVM {
             Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
             Ops::JumpIfFalse(_) => format!("{:?}", op),
             Ops::JumpPlaceholder => format!("{:?}", op),
+            Ops::ClassPlaceholder => format!("{:?}", op),
+            Ops::Class(_) => format!("{:?}", op),
             Ops::Jump(_) => format!("{:?}", op),
             Ops::Loop(_) => format!("{:?}", op),
             Ops::Pop => format!("{:?}", op),
@@ -325,6 +516,8 @@ impl Ops {
             Ops::JumpIfFalsePlaceholder => format!("{:?}", self),
             Ops::JumpIfFalse(_) => format!("{:?}", self),
             Ops::JumpPlaceholder => format!("{:?}", self),
+            Ops::ClassPlaceholder => format!("{:?}", self),
+            Ops::Class(_) => format!("{:?}", self),
             Ops::Jump(_) => format!("{:?}", self),
             Ops::Loop(_) => format!("{:?}", self),
             Ops::Pop => format!("{:?}", self),
@@ -333,7 +526,7 @@ impl Ops {
     }
 }
 
-pub fn debug_bytecode(_vm: &WrenVM, closure: &Closure) {
+pub(crate) fn debug_bytecode(_vm: &WrenVM, closure: &Closure) {
     println!("{:?}", closure);
     let ops = closure.function.code.iter();
     ops.enumerate().for_each(|(i, op)| {
@@ -362,12 +555,12 @@ pub enum ObjType {
 pub trait Obj {
     fn obj_type(&self) -> ObjType;
     //   // The object's class.
-    fn class_obj(&self) -> Option<Rc<RefCell<ObjClass>>>;
+    fn class_obj(&self) -> Option<Handle<ObjClass>>;
 }
 
 #[derive(Debug)]
 pub(crate) struct ObjRange {
-    class_obj: Rc<RefCell<ObjClass>>,
+    class_obj: Handle<ObjClass>,
     // The beginning of the range.
     from: f64,
     // The end of the range. May be greater or less than [from].
@@ -380,7 +573,7 @@ impl Obj for ObjRange {
     fn obj_type(&self) -> ObjType {
         ObjType::Range
     }
-    fn class_obj(&self) -> Option<Rc<RefCell<ObjClass>>> {
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
         Some(self.class_obj.clone())
     }
 }
@@ -424,7 +617,8 @@ impl core::fmt::Debug for Method {
 
 #[derive(Debug)]
 pub struct ObjClass {
-    //   ObjClass* superclass;
+    class: Option<Handle<ObjClass>>,
+    superclass: Option<Handle<ObjClass>>,
 
     // The number of fields needed for an instance of this class, including all
     // of its superclass fields.
@@ -448,13 +642,6 @@ pub struct ObjClass {
 }
 
 impl ObjClass {
-    fn new(name: &str) -> ObjClass {
-        ObjClass {
-            name: name.to_string(),
-            methods: Vec::new(),
-        }
-    }
-
     pub(crate) fn set_method(&mut self, symbol: usize, method: Method) {
         if symbol >= self.methods.len() {
             self.methods.resize(symbol + 1, Method::None);
@@ -468,7 +655,7 @@ impl Obj for ObjClass {
         ObjType::Class
     }
 
-    fn class_obj(&self) -> Option<Rc<RefCell<ObjClass>>> {
-        None
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
+        self.class.clone()
     }
 }

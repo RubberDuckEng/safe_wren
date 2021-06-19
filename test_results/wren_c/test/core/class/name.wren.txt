@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
+Unexpected output on stderr:
+MethodNotFound("name")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("name")
 
 Missing expected output "Foo" on line 3.
 Missing expected output "Foo metaclass" on line 4.

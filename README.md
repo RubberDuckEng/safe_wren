@@ -24,7 +24,7 @@
 e.g. we might throw a lexer error even though the test is expecting
 a grammar error, but the harness doesn't distinguish and thus passes.)
 
-84 tests passed. 790 tests failed.
+95 tests passed. 780 tests failed.
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/plus.wren
@@ -49,9 +49,17 @@ wren_c/test/language/conditional/missing_condition.wren
 wren_c/test/language/conditional/missing_else.wren
 wren_c/test/language/conditional/missing_question.wren
 wren_c/test/language/conditional/missing_then.wren
+wren_c/test/language/constructor/cannot_be_infix.wren
+wren_c/test/language/constructor/cannot_be_minus.wren
+wren_c/test/language/constructor/cannot_be_setter.wren
+wren_c/test/language/constructor/cannot_be_subscript.wren
+wren_c/test/language/constructor/cannot_be_unary.wren
+wren_c/test/language/constructor/no_parameter_list.wren
 wren_c/test/language/empty_file.wren
 wren_c/test/language/field/outside_class.wren
 wren_c/test/language/for/newline_before_in.wren
+wren_c/test/language/foreign/foreign_after_static.wren
+wren_c/test/language/foreign/foreign_method_with_body.wren
 wren_c/test/language/function/newline_in_expression_block.wren
 wren_c/test/language/function/no_parameters.wren
 wren_c/test/language/if/newline_after_else.wren
@@ -65,8 +73,10 @@ wren_c/test/language/map/duplicate_comma.wren
 wren_c/test/language/map/duplicate_trailing_comma.wren
 wren_c/test/language/map/eof_after_colon.wren
 wren_c/test/language/map/eof_after_key.wren
+wren_c/test/language/method/empty_subscript_definition.wren
 wren_c/test/language/method/subscript_setter_too_many_arguments.wren
 wren_c/test/language/method/subscript_too_many_arguments.wren
+wren_c/test/language/method/too_many_parameters.wren
 wren_c/test/language/module/missing_for.wren
 wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
@@ -96,6 +106,7 @@ wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/whitespace.wren
+wren_c/test/limit/long_variable_name.wren
 wren_c/test/limit/many_globals.wren
 wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren

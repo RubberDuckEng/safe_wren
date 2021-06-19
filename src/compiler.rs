@@ -6,7 +6,7 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
-use crate::vm::{Closure, Function, Module, Value, WrenVM};
+use crate::vm::{Closure, Function, Value, WrenVM};
 
 // Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
@@ -26,6 +26,7 @@ pub enum Token {
     DotDot,
     DotDotDot,
     Comma,
+    Class,
     LessThan,
     GreaterThan,
     Null,
@@ -416,6 +417,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "while" => Some(Token::While),
         "break" => Some(Token::Break),
         "null" => Some(Token::Null),
+        "class" => Some(Token::Class),
         _ => None,
     }
 }
@@ -512,6 +514,8 @@ pub enum Ops {
     Call(Signature),
     Load(Variable),
     Store(Variable),
+    ClassPlaceholder,
+    Class(usize),
     JumpIfFalsePlaceholder,
     JumpIfFalse(u16), // Pop stack, if truthy, Jump forward relative offset.
     JumpPlaceholder,
@@ -534,6 +538,7 @@ pub struct Compiler {
     constants: Vec<Value>,
     locals: Vec<Local>, // A fixed size array in wren_c
     code: Vec<Ops>,
+    // Should probably be an enum?  Either Module or Local(level)?
     scope_depth: usize,      // Not fully wired up.
     loops: Vec<LoopOffsets>, // wren_c uses stack-allocated objects instead.
 }
@@ -553,8 +558,9 @@ impl Compiler {
         self.code.push(Ops::Call(signature));
     }
 
-    fn emit(&mut self, op: Ops) {
+    fn emit(&mut self, op: Ops) -> usize {
         self.code.push(op);
+        self.code.len() - 1
     }
 
     fn emit_loop(&mut self, backwards_by: u16) {
@@ -563,16 +569,6 @@ impl Compiler {
 
     fn emit_store(&mut self, variable: Variable) {
         self.code.push(Ops::Store(variable))
-    }
-
-    fn emit_jump_if_placeholder(&mut self) -> usize {
-        self.code.push(Ops::JumpIfFalsePlaceholder);
-        self.code.len() - 1
-    }
-
-    fn emit_break_placeholder(&mut self) -> usize {
-        self.code.push(Ops::JumpPlaceholder);
-        self.code.len() - 1
     }
 
     fn emit_load(&mut self, variable: Variable) {
@@ -941,10 +937,17 @@ fn while_statement(parser: &mut Parser) -> Result<(), WrenError> {
     parser.consume_expecting(Token::RightParen)?;
 
     parser.compiler.loops.last_mut().unwrap().exit_jump =
-        parser.compiler.emit_jump_if_placeholder();
+        parser.compiler.emit(Ops::JumpIfFalsePlaceholder);
     loop_body(parser)?;
     parser.compiler.end_loop();
     Ok(())
+}
+
+// Consumes the current token. Emits an error if it is not a newline. Then
+// discards any duplicate newlines following it.
+fn consume_at_least_one_line(parser: &mut Parser) -> Result<(), WrenError> {
+    parser.consume_expecting(Token::Newline)?;
+    ignore_newlines(parser)
 }
 
 // Parses a block body, after the initial "{" has been consumed.
@@ -974,7 +977,7 @@ fn finish_block(parser: &mut Parser) -> Result<bool, WrenError> {
     // Compile the definition list.
     loop {
         definition(parser)?;
-        parser.consume_expecting(Token::Newline)?;
+        consume_at_least_one_line(parser)?;
         if parser.current.token == Token::RightCurlyBrace
             || parser.current.token != Token::EndOfFile
         {
@@ -1014,7 +1017,7 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
 
         // Emit a placeholder instruction for the jump to the end of the body.
         // We'll fix these up with real Jumps at the end of compiling this loop.
-        parser.compiler.emit_break_placeholder();
+        parser.compiler.emit(Ops::JumpPlaceholder); // Break placeholder
     } else if parser.match_current(Token::While)? {
         while_statement(parser)?;
     } else if parser.match_current(Token::LeftCurlyBrace)? {
@@ -1036,17 +1039,28 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
 
 // Create a new local variable with [name]. Assumes the current scope is local
 // and the name is unique.
-fn add_local(parser: &mut Parser, name: &str) {
-    parser.compiler.locals.push(Local { name: name.into() });
+fn add_local(parser: &mut Parser, name: String) -> usize {
+    parser.compiler.locals.push(Local { name: name });
+    parser.compiler.locals.len() - 1
 }
 
-fn declare_variable(parser: &mut Parser, name: &str) -> Result<(), WrenError> {
+fn declare_variable(parser: &mut Parser, name: String) -> Result<usize, WrenError> {
     // TODO: Check variable name max length.
     // TODO: Handle top level scope?
     // TODO: Check to see if another local with the same name exists
     // TODO: Enforce max number of local variables.
-    add_local(parser, name);
-    Ok(())
+    Ok(add_local(parser, name))
+}
+
+// Parses a name token and declares a variable in the current scope with that
+// name. Returns its slot.
+fn declare_named_variable(parser: &mut Parser) -> Result<usize, WrenError> {
+    parser.consume_expecting_name()?;
+    let name = parser
+        .previous
+        .name(&parser.input)
+        .map_err(|e| parser.parse_error(e.into()))?;
+    declare_variable(parser, name)
 }
 
 fn variable_definition(parser: &mut Parser) -> Result<(), WrenError> {
@@ -1068,14 +1082,143 @@ fn variable_definition(parser: &mut Parser) -> Result<(), WrenError> {
     }
 
     // Now put it in scope.
-    declare_variable(parser, &name)?;
+    declare_variable(parser, name)?;
     // TODO: Add define_variable in non-local case.
+    Ok(())
+}
+
+// FIXME: This is probably not needed?  All it really adds is an assert?
+fn load_core_variable(parser: &mut Parser, name: &str) {
+    let symbol = parser.vm.module.lookup_symbol(name).unwrap();
+    parser.compiler.emit_load(Variable {
+        scope: Scope::Module,
+        index: symbol,
+    });
+}
+
+fn define_variable(parser: &mut Parser, variable: Variable) {
+    match variable.scope {
+        Scope::Local => {
+            // Store the variable. If it's a local, the result of the initializer is
+            // in the correct slot on the stack already so we're done.
+            return;
+        }
+        Scope::Module => {
+            // It's a module-level variable, so store the value in the module slot and
+            // then discard the temporary for the initializer.
+            parser.compiler.emit_load(variable);
+            parser.compiler.emit(Ops::Pop);
+        }
+    }
+}
+
+// TODO: is_foreign should probably be an enum.
+fn class_definition(parser: &mut Parser, _is_foreign: bool) -> Result<(), WrenError> {
+    // Create a variable to store the class in.
+    let class_variable = Variable {
+        scope: Scope::Module, // Local not supported yet.
+        index: declare_named_variable(parser)?,
+    };
+
+    // FIXME: Should declare_named_variable return the name too?
+    let name = parser
+        .previous
+        .name(&parser.input)
+        .map_err(|e| parser.parse_error(e.into()))?;
+
+    let class_name = Value::String(Rc::new(name));
+
+    // Make a string constant for the name.
+    parser.compiler.emit_constant(class_name);
+    // FIXME: Handle superclasses, TOKEN_IS
+
+    // Implicitly inherit from Object.
+    load_core_variable(parser, "Object");
+
+    // Store a placeholder for the number of fields argument. We don't know the
+    // count until we've compiled all the methods to see which fields are used.
+    let class_instruction = parser.compiler.emit(Ops::ClassPlaceholder);
+
+    // Store it in its name. (in the module case)
+    define_variable(parser, class_variable);
+
+    // Push a local variable scope. Static fields in a class body are hoisted out
+    // into local variables declared in this scope. Methods that use them will
+    // have upvalues referencing them.
+
+    fn finish_class(parser: &mut Parser) -> Result<(), WrenError> {
+        //   ClassInfo classInfo;
+        //   classInfo.isForeign = isForeign;
+        //   classInfo.name = className;
+
+        //   // Allocate attribute maps if necessary.
+        //   // A method will allocate the methods one if needed
+        //   classInfo.classAttributes = compiler->attributes->count > 0
+        //         ? wrenNewMap(compiler->parser->vm)
+        //         : NULL;
+        //   classInfo.methodAttributes = NULL;
+        //   // Copy any existing attributes into the class
+        //   copyAttributes(compiler, classInfo.classAttributes);
+
+        //   // Set up a symbol table for the class's fields. We'll initially compile
+        //   // them to slots starting at zero. When the method is bound to the class, the
+        //   // bytecode will be adjusted by [wrenBindMethod] to take inherited fields
+        //   // into account.
+        //   wrenSymbolTableInit(&classInfo.fields);
+
+        //   // Set up symbol buffers to track duplicate static and instance methods.
+        //   wrenIntBufferInit(&classInfo.methods);
+        //   wrenIntBufferInit(&classInfo.staticMethods);
+        //   compiler->enclosingClass = &classInfo;
+
+        // Compile the method definitions.
+        parser.consume_expecting(Token::LeftCurlyBrace)?;
+        parser.match_at_least_one_line()?;
+
+        while !parser.match_current(Token::RightCurlyBrace)? {
+            // FIXME: No method suport yet!
+            // if (!method(compiler, classVariable)) break;
+
+            // Don't require a newline after the last definition.
+            if parser.match_current(Token::RightCurlyBrace)? {
+                break;
+            }
+
+            consume_at_least_one_line(parser)?;
+        }
+
+        //   // If any attributes are present,
+        //   // instantiate a ClassAttributes instance for the class
+        //   // and send it over to CODE_END_CLASS
+        //   bool hasAttr = classInfo.classAttributes != NULL ||
+        //                  classInfo.methodAttributes != NULL;
+        //   if(hasAttr) {
+        //     emitClassAttributes(compiler, &classInfo);
+        //     loadVariable(compiler, classVariable);
+        //     // At the moment, we don't have other uses for CODE_END_CLASS,
+        //     // so we put it inside this condition. Later, we can always
+        //     // emit it and use it as needed.
+        //     emitOp(compiler, CODE_END_CLASS);
+        //   }
+
+        // FIXME::Clear symbol tables for tracking field and method names.
+        Ok(())
+    }
+    auto_scope(parser, finish_class)?;
+
+    let num_fields = 0; // FIXME
+    parser.compiler.code[class_instruction] = Ops::Class(num_fields);
     Ok(())
 }
 
 // Class definitions, imports, etc.
 fn definition(parser: &mut Parser) -> Result<(), WrenError> {
     // We don't handle class definitions, etc. yet.
+
+    if parser.match_current(Token::Class)? {
+        return class_definition(parser, false);
+    }
+
     // Fall through to the "statement" case.
     if parser.match_current(Token::Var)? {
         variable_definition(parser)
@@ -1175,6 +1318,7 @@ impl Token {
             Token::Name(_) => "name",
             Token::Comma => "comma",
             Token::Null => "null",
+            Token::Class => "class",
             Token::LessThan => "less than",
             Token::GreaterThan => "greater than",
             Token::Newline => "newline",
@@ -1217,6 +1361,7 @@ impl Token {
             Token::Boolean(_) => GrammarRule::prefix(boolean),
             Token::Null => GrammarRule::prefix(null),
             Token::Var => GrammarRule::unused(),
+            Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
             Token::LessThan => GrammarRule::infix_operator(Precedence::Comparison),
@@ -1381,10 +1526,10 @@ fn ignore_newlines(parser: &mut Parser) -> Result<(), WrenError> {
     Ok(())
 }
 
-pub fn compile<'a>(
+pub(crate) fn compile<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
-    module_name: &str,
+    _module_name: &str,
 ) -> Result<Closure, WrenError> {
     // TODO: We should create one per module_name instead.
 
@@ -1400,10 +1545,8 @@ pub fn compile<'a>(
     //                      coreModule->variables.data[i], NULL);
     // }
 
-    vm.module = Module::with_name(module_name);
-
-    // Initailize the fake "core" module.
-    vm.module.define_variable("System", Value::Num(1.0));
+    // If we init the module we need to copy over the core stuff.
+    // vm.module = Module::with_name(module_name);
 
     // Init the parser & compiler
     let mut parser = Parser {

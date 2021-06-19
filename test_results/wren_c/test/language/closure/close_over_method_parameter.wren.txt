@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 4] Error Grammar("Expected newline")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 4] Error Grammar("Expected newline")
 
 Missing expected output "param" on line 14.

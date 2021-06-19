@@ -2,6 +2,6 @@ Expected runtime error "Foo does not implement 'new()'." and got:
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'class\'")
+[dummy_module line 2] Error Grammar("Expected newline")
 
 Missing expected output "ok" on line 7.

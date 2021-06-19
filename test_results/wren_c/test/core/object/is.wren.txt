@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Num\'")
+[dummy_module line 1] Error Grammar("Expected right paren")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Num\'")
+[dummy_module line 1] Error Grammar("Expected right paren")
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.
