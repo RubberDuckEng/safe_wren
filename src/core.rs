@@ -62,7 +62,10 @@ fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeEr
 
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
-        register_primitive(&mut $vm.methods, &mut $class.borrow_mut(), $sig, $func);
+        let index = $vm.methods.ensure_method($sig);
+        $class
+            .borrow_mut()
+            .set_method(index, Method::Primitive($func));
     };
 }
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {

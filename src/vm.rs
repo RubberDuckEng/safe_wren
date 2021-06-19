@@ -472,13 +472,3 @@ impl Obj for ObjClass {
         None
     }
 }
-
-pub(crate) fn register_primitive(
-    symbols: &mut SymbolTable,
-    class: &mut ObjClass,
-    name: &str,
-    primitive: Primitive,
-) {
-    let index = symbols.ensure_method(name);
-    class.set_method(index, Method::Primitive(primitive));
-}
