@@ -60,60 +60,19 @@ fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeEr
     Ok(Value::Object(wren_new_range(vm, start, end, false)))
 }
 
+macro_rules! primitive {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        register_primitive(&mut $vm.methods, &mut $class.borrow_mut(), $sig, $func);
+    };
+}
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
-    // FIXME: This is TOO VERBOSE.  Fix this with macros maybe?
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "+(_)",
-        num_plus,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "-(_)",
-        num_minus,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "-",
-        num_unary_minus,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "*(_)",
-        num_mult,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "/(_)",
-        num_divide,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "<(_)",
-        num_lt,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        ">(_)",
-        num_gt,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "..(_)",
-        num_range_inclusive,
-    );
-    register_primitive(
-        &mut vm.methods,
-        &mut vm.num_class.borrow_mut(),
-        "...(_)",
-        num_range_exclusive,
-    );
+    primitive!(vm, vm.num_class, "+(_)", num_plus);
+    primitive!(vm, vm.num_class, "-(_)", num_minus);
+    primitive!(vm, vm.num_class, "-", num_unary_minus);
+    primitive!(vm, vm.num_class, "*(_)", num_mult);
+    primitive!(vm, vm.num_class, "/(_)", num_divide);
+    primitive!(vm, vm.num_class, "<(_)", num_lt);
+    primitive!(vm, vm.num_class, ">(_)", num_gt);
+    primitive!(vm, vm.num_class, "..(_)", num_range_inclusive);
+    primitive!(vm, vm.num_class, "...(_)", num_range_exclusive);
 }
