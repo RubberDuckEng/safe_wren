@@ -1,13 +1,13 @@
-Unexpected error:
-[dummy_module line 3] Error Grammar("Undeclared variable \'if\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Undeclared variable \'if\'")
+Unexpected output on stderr:
+NumberRequired(Boolean(false))
+Expected return code 0 and got 70. Stderr:
+NumberRequired(Boolean(false))
 
-Missing expected output "outer 0" on line 11.
-Missing expected output "inner 0" on line 12.
-Missing expected output "inner 1" on line 13.
-Missing expected output "inner 2" on line 14.
-Missing expected output "outer 1" on line 15.
+Expected output "outer 0" on line 11 and got "outer %(i)".
+Expected output "inner 0" on line 12 and got "inner %(j)".
+Expected output "inner 1" on line 13 and got "inner %(j)".
+Expected output "inner 2" on line 14 and got "inner %(j)".
+Expected output "outer 1" on line 15 and got "outer %(i)".
 Missing expected output "inner 0" on line 16.
 Missing expected output "inner 1" on line 17.
 Missing expected output "inner 2" on line 18.

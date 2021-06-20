@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 7] Error Grammar("Undeclared variable \'if\'")
+[dummy_module line 7] Error Grammar("Undeclared variable \'Fn\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 7] Error Grammar("Undeclared variable \'if\'")
+[dummy_module line 7] Error Grammar("Undeclared variable \'Fn\'")
 
 Missing expected output "ok" on line 11.

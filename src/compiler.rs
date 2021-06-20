@@ -36,13 +36,15 @@ pub enum Token {
     For,
     In,
     Is,
+    If,
+    Else,
     Equals,
     EqualsEquals,
     Boolean(bool),
     Name(String),
     String(String),
     Newline,
-    EndOfFile, // Does this belong here or as an Err?
+    EndOfFile,
 }
 
 #[derive(Debug)]
@@ -430,6 +432,8 @@ fn keyword_token(name: &str) -> Option<Token> {
         "is" => Some(Token::Is),
         "for" => Some(Token::For),
         "in" => Some(Token::In),
+        "if" => Some(Token::If),
+        "else" => Some(Token::Else),
         _ => None,
     }
 }
@@ -981,17 +985,23 @@ impl Compiler {
         // Measures from *after* start and doesn't include this Loop, so +2.
         self.emit_loop(self.offset_to_current_pc_from_after(offsets.start) + 2);
         // Load up the exitLoop instruction and patch it to the current code offset.
-        self.code[offsets.exit_jump] =
-            Ops::JumpIfFalse(self.offset_to_current_pc_from_after(offsets.exit_jump));
+        self.patch_jump(offsets.exit_jump);
 
         // Find any break placeholders and make them real jumps.
         for i in offsets.body..self.code.len() {
-            if self.code[i] == Ops::JumpPlaceholder {
-                self.code[i] = Ops::Jump(self.offset_to_current_pc_from_after(i))
+            if self.code[i] == Ops::JumpPlaceholder || self.code[i] == Ops::JumpIfFalsePlaceholder {
+                self.patch_jump(i)
             }
-            if self.code[i] == Ops::JumpIfFalsePlaceholder {
-                self.code[i] = Ops::JumpIfFalse(self.offset_to_current_pc_from_after(i))
+        }
+    }
+
+    fn patch_jump(&mut self, index: usize) {
+        self.code[index] = match self.code[index] {
+            Ops::JumpIfFalsePlaceholder => {
+                Ops::JumpIfFalse(self.offset_to_current_pc_from_after(index))
             }
+            Ops::JumpPlaceholder => Ops::Jump(self.offset_to_current_pc_from_after(index)),
+            _ => panic!("Token to patch is not a jump! {:?}", self.code[index]),
         }
     }
 }
@@ -1099,6 +1109,29 @@ fn for_statement(parser: &mut Parser) -> Result<(), WrenError> {
 
     // Create a scope for the hidden local variables used for the iterator.
     auto_scope(parser, for_hidden_variable_scope)
+}
+
+fn if_statement(parser: &mut Parser) -> Result<(), WrenError> {
+    // Compile the condition.
+    parser.consume_expecting(Token::LeftParen)?;
+    expression(parser)?;
+    parser.consume_expecting(Token::RightParen)?;
+    // Jump to the else branch if the condition is false.
+    let if_jump = parser.compiler.emit(Ops::JumpIfFalsePlaceholder);
+    // Compile the then branch.
+    statement(parser)?;
+    // Compile the else branch if there is one.
+    if parser.match_current(Token::Else)? {
+        // Jump over the else branch when the if branch is taken.
+        let else_jump = parser.compiler.emit(Ops::JumpPlaceholder);
+        parser.compiler.patch_jump(if_jump);
+        statement(parser)?;
+        // Patch the jump over the else.
+        parser.compiler.patch_jump(else_jump);
+    } else {
+        parser.compiler.patch_jump(if_jump);
+    }
+    Ok(())
 }
 
 fn while_statement(parser: &mut Parser) -> Result<(), WrenError> {
@@ -1216,6 +1249,8 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
         // Emit a placeholder instruction for the jump to the end of the body.
         // We'll fix these up with real Jumps at the end of compiling this loop.
         parser.compiler.emit(Ops::JumpPlaceholder); // Break placeholder
+    } else if parser.match_current(Token::If)? {
+        if_statement(parser)?;
     } else if parser.match_current(Token::For)? {
         for_statement(parser)?;
     } else if parser.match_current(Token::While)? {
@@ -1539,6 +1574,8 @@ impl Token {
             Token::EndOfFile => "end of file",
             Token::Var => "var",
             Token::Is => "is",
+            Token::If => "if",
+            Token::Else => "else",
             Token::While => "while",
             Token::Break => "break",
             Token::Equals => "equal sign",
@@ -1579,6 +1616,8 @@ impl Token {
             Token::Is => GrammarRule::infix_operator(Precedence::Is),
             Token::For => GrammarRule::unused(),
             Token::In => GrammarRule::unused(),
+            Token::If => GrammarRule::unused(),
+            Token::Else => GrammarRule::unused(),
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),

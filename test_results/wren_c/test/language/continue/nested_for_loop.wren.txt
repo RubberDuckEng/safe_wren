@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Undeclared variable \'if\'")
+[dummy_module line 3] Error Grammar("Expected right paren, found: EqualsEquals")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Undeclared variable \'if\'")
+[dummy_module line 3] Error Grammar("Expected right paren, found: EqualsEquals")
 
 Missing expected output "outer 0" on line 11.
 Missing expected output "inner 0" on line 12.

@@ -1,5 +1,5 @@
-Unexpected error:
-[dummy_module line 26] Error Grammar("Undeclared variable \'if\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 26] Error Grammar("Undeclared variable \'if\'")
+Unexpected output on stderr:
+MethodNotFound("write(_)")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("write(_)")
 

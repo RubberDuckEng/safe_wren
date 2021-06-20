@@ -1,8 +1,0 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Undeclared variable \'if\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Undeclared variable \'if\'")
-
-Missing expected output "good" on line 2.
-Missing expected output "good" on line 3.
-Missing expected output "block" on line 6.

@@ -2,6 +2,7 @@ test/bringup/add.wren
 test/bringup/class.wren
 test/bringup/do_nothing_while.wren
 test/bringup/greater_than.wren
+test/bringup/if.wren
 test/bringup/is.wren
 test/bringup/locals.wren
 test/bringup/number_parsing.wren
@@ -18,6 +19,7 @@ wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/global.wren
 wren_c/test/language/assignment/prefix_operator.wren
 wren_c/test/language/assignment/undefined.wren
+wren_c/test/language/break/in_while_loop.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
 wren_c/test/language/class/missing_class_after_foreign.wren
 wren_c/test/language/comments/block.wren
@@ -40,13 +42,17 @@ wren_c/test/language/constructor/cannot_be_setter.wren
 wren_c/test/language/constructor/cannot_be_subscript.wren
 wren_c/test/language/constructor/cannot_be_unary.wren
 wren_c/test/language/constructor/no_parameter_list.wren
+wren_c/test/language/empty_block.wren
 wren_c/test/language/empty_file.wren
 wren_c/test/language/field/outside_class.wren
 wren_c/test/language/foreign/foreign_after_static.wren
 wren_c/test/language/foreign/foreign_method_with_body.wren
 wren_c/test/language/function/newline_in_expression_block.wren
 wren_c/test/language/function/no_parameters.wren
-wren_c/test/language/if/newline_after_else.wren
+wren_c/test/language/if/dangling_else.wren
+wren_c/test/language/if/else.wren
+wren_c/test/language/if/if.wren
+wren_c/test/language/if/truth.wren
 wren_c/test/language/interpolation/unterminated.wren
 wren_c/test/language/list/duplicate_comma.wren
 wren_c/test/language/list/duplicate_trailing_comma.wren
@@ -90,6 +96,7 @@ wren_c/test/language/variable/local_without_initializer.wren
 wren_c/test/language/variable/many_locals.wren
 wren_c/test/language/variable/many_nonsimultaneous_locals.wren
 wren_c/test/language/variable/newline_after_equals.wren
+wren_c/test/language/variable/scope_if.wren
 wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
