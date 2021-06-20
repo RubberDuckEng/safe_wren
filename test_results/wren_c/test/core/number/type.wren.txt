@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 4] Error Grammar("Expected right paren")
+[dummy_module line 4] Error Grammar("Expected right paren, found: EqualsEquals")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expected right paren")
+[dummy_module line 4] Error Grammar("Expected right paren, found: EqualsEquals")
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

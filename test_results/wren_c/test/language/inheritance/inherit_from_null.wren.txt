@@ -2,5 +2,5 @@ Expected runtime error "Class 'Foo' cannot inherit from a non-class object." and
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Expected left curly brace")
+[dummy_module line 1] Error Grammar("Expected left curly brace, found: Is")
 

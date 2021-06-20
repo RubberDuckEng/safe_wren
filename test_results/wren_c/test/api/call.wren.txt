@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline")
+[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"static\")")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline")
+[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"static\")")
 
 Missing expected output "noParams" on line 42.
 Missing expected output "zero" on line 43.

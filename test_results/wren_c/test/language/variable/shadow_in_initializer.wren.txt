@@ -1,6 +1,6 @@
-Unexpected error:
-[dummy_module line 4] Error Grammar("Expected right curly brace")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expected right curly brace")
+Unexpected output on stderr:
+MethodNotFound("+(_)")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("+(_)")
 
 Missing expected output "outer inner" on line 5.

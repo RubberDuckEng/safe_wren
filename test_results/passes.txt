@@ -85,10 +85,15 @@ wren_c/test/language/unexpected_character.wren
 wren_c/test/language/variable/global_in_initializer.wren
 wren_c/test/language/variable/global_without_initializer.wren
 wren_c/test/language/variable/local_in_initializer.wren
+wren_c/test/language/variable/local_in_nested_block.wren
+wren_c/test/language/variable/local_without_initializer.wren
+wren_c/test/language/variable/many_locals.wren
+wren_c/test/language/variable/many_nonsimultaneous_locals.wren
 wren_c/test/language/variable/newline_after_equals.wren
 wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
+wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/long_variable_name.wren
 wren_c/test/limit/many_globals.wren

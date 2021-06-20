@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Expected end of file")
+[dummy_module line 3] Error Grammar("Expected end of file, found: Name(\"xFF\")")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Expected end of file")
+[dummy_module line 3] Error Grammar("Expected end of file, found: Name(\"xFF\")")
 
 Missing expected output "255" on line 3.
 Missing expected output "256" on line 4.

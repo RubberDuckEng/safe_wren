@@ -1,0 +1,5 @@
+Unexpected output on stderr:
+NumberRequired(Boolean(false))
+Expected return code 0 and got 70. Stderr:
+NumberRequired(Boolean(false))
+

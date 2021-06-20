@@ -2,5 +2,5 @@ Expected runtime error "Bar metaclass does not implement 'methodOnFoo'." and got
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline")
+[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"static\")")
 

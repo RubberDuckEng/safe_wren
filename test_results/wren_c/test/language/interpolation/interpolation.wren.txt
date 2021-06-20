@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 8] Error Grammar("Expected right paren")
+[dummy_module line 8] Error Grammar("Expected right paren, found: LeftCurlyBrace")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 8] Error Grammar("Expected right paren")
+[dummy_module line 8] Error Grammar("Expected right paren, found: LeftCurlyBrace")
 
 Missing expected output "3" on line 2.
 Missing expected output "str3(7%11" on line 5.

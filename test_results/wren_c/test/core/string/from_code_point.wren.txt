@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Expected right paren")
+[dummy_module line 5] Error Grammar("Expected right paren, found: Name(\"x254b\")")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Expected right paren")
+[dummy_module line 5] Error Grammar("Expected right paren, found: Name(\"x254b\")")
 
 Missing expected output "A" on line 1.
 Missing expected output "¤" on line 2.

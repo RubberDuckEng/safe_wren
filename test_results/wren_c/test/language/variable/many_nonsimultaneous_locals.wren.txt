@@ -1,7 +1,0 @@
-Unexpected error:
-[dummy_module line 8] Error Grammar("Expected right curly brace")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 8] Error Grammar("Expected right curly brace")
-
-Missing expected output "value a" on line 262.
-Missing expected output "value b" on line 522.

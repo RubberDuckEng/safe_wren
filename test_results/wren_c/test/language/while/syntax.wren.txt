@@ -1,11 +1,8 @@
-Unexpected error:
-[dummy_module line 12] Error Grammar("Expected right curly brace")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 12] Error Grammar("Expected right curly brace")
+Unexpected output on stderr:
+MethodNotFound("<(_)")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("<(_)")
 
-Missing expected output "1" on line 4.
-Missing expected output "2" on line 5.
-Missing expected output "3" on line 6.
 Missing expected output "0" on line 14.
 Missing expected output "1" on line 15.
 Missing expected output "2" on line 16.

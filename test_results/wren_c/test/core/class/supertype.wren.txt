@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Expected left curly brace")
+[dummy_module line 3] Error Grammar("Expected left curly brace, found: Is")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Expected left curly brace")
+[dummy_module line 3] Error Grammar("Expected left curly brace, found: Is")
 
 Missing expected output "true" on line 8.
 Missing expected output "true" on line 11.

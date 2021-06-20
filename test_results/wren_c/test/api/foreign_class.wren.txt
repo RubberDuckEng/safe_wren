@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline")
+[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"foreign\")")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline")
+[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"foreign\")")
 
 Missing expected output "0" on line 13.
 Missing expected output "3.1" on line 15.

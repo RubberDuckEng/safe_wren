@@ -1151,7 +1151,7 @@ fn finish_block(parser: &mut Parser) -> Result<bool, WrenError> {
         definition(parser)?;
         consume_at_least_one_line(parser)?;
         if parser.current.token == Token::RightCurlyBrace
-            || parser.current.token != Token::EndOfFile
+            || parser.current.token == Token::EndOfFile
         {
             break;
         }
@@ -1699,9 +1699,10 @@ impl<'a> Parser<'a> {
         self.consume()?;
         let name_for_error = token.error_message_name(); // Can we avoid this?
         if self.previous.token != token {
-            return Err(
-                self.parse_error(ParserError::Grammar(format!("Expected {}", name_for_error)))
-            );
+            return Err(self.parse_error(ParserError::Grammar(format!(
+                "Expected {}, found: {:?}",
+                name_for_error, self.previous.token
+            ))));
         }
         Ok(())
     }

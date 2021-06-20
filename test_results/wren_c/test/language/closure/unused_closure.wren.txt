@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 7] Error Grammar("Expected right curly brace")
+[dummy_module line 7] Error Grammar("Undeclared variable \'if\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 7] Error Grammar("Expected right curly brace")
+[dummy_module line 7] Error Grammar("Undeclared variable \'if\'")
 
 Missing expected output "ok" on line 11.

@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 13] Error Grammar("Expected right curly brace")
+[dummy_module line 14] Error Grammar("Undeclared variable \'Fn\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 13] Error Grammar("Expected right curly brace")
+[dummy_module line 14] Error Grammar("Undeclared variable \'Fn\'")
 
 Missing expected output "a" on line 18.
