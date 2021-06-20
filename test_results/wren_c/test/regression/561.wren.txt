@@ -1,3 +1,3 @@
 Unexpected error:
-[dummy_module line 6] Error Grammar("Expected Expression: ParseToken { bytes_range: 137..138, token: LeftSquareBracket, line: 5 }")
+[dummy_module line 6] Error Grammar("Expected Expression: ParseToken { bytes_range: 133..134, token: LeftSquareBracket, line: 5 }")
 Missing expected error on line 91.

@@ -318,8 +318,14 @@ def color_text(text, color):
 
 
 def green(text): return color_text(text, '\033[32m')
+
+
 def pink(text): return color_text(text, '\033[91m')
+
+
 def red(text): return color_text(text, '\033[31m')
+
+
 def yellow(text): return color_text(text, '\033[33m')
 
 
@@ -449,7 +455,9 @@ else:
 for key in sorted(skipped.keys()):
     print('Skipped ' + yellow(skipped[key]) + ' tests: ' + key)
 
-print('\n'.join(passes))
+output_path = join(RESULTS_DIR, "passes.txt")
+pass_file = open(output_path, mode="w")
+pass_file.write('\n'.join(sorted(passes)))
 
 if failed != 0:
     sys.exit(1)

@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 76..77, token: Equals, line: 4 }")
+[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 73..74, token: Equals, line: 4 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 76..77, token: Equals, line: 4 }")
+[dummy_module line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 73..74, token: Equals, line: 4 }")
 
 Missing expected output "outer" on line 7.
