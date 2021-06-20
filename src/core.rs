@@ -90,6 +90,46 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     }
 }
 
+fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let range_cell = args[0].try_into_range()?;
+    let range = range_cell.borrow();
+
+    // Special case: empty range.
+    if range.from == range.to && !range.is_inclusive {
+        return Ok(Value::Boolean(false)); // No more elements.
+    }
+    // Start the iteration.
+    if args[1].is_null() {
+        return Ok(Value::Num(range.from));
+    }
+
+    let mut iterator = args[1].try_into_num()?;
+
+    // Iterate towards [to] from [from].
+    if range.from < range.to {
+        iterator += 1.0;
+        if iterator > range.to {
+            return Ok(Value::Boolean(false));
+        }
+    } else {
+        iterator -= 1.0;
+        if iterator < range.to {
+            return Ok(Value::Boolean(false));
+        }
+    }
+
+    if !range.is_inclusive && iterator == range.to {
+        return Ok(Value::Boolean(false));
+    }
+
+    Ok(Value::Num(iterator))
+}
+
+fn range_iterator_value(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+    // Assuming args[1] is a number.
+    Ok(args.pop().unwrap())
+}
+
 fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let class = vm
         .class_for_value(&args[0])
@@ -164,4 +204,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, ">(_)", num_gt);
     primitive!(vm, core.num, "..(_)", num_range_inclusive);
     primitive!(vm, core.num, "...(_)", num_range_exclusive);
+
+    primitive!(vm, core.range, "iterate(_)", range_iterate);
+    primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
 }

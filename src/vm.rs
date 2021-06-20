@@ -46,6 +46,13 @@ impl Value {
     fn is_falsey(&self) -> bool {
         !self.is_truthy()
     }
+
+    pub(crate) fn is_null(&self) -> bool {
+        match self {
+            Value::Null => true,
+            _ => false,
+        }
+    }
 }
 
 #[derive(Default, Debug)]
@@ -98,6 +105,7 @@ pub(crate) enum RuntimeError {
     StringRequired(Value),
     ObjectRequired(Value),
     ClassRequired(Value),
+    RangeRequired(Value),
     MethodNotFound(String),
     ThisObjectHasNoClass,
 }
@@ -121,6 +129,13 @@ impl Value {
         match self {
             Value::Class(c) => Ok(c.clone()),
             _ => Err(RuntimeError::ClassRequired(self.clone())),
+        }
+    }
+
+    pub fn try_into_range(&self) -> Result<Handle<ObjRange>, RuntimeError> {
+        match self {
+            Value::Range(r) => Ok(r.clone()),
+            _ => Err(RuntimeError::RangeRequired(self.clone())),
         }
     }
 }
@@ -291,18 +306,28 @@ pub(crate) struct CoreClasses {
     pub(crate) system: Handle<ObjClass>,
 }
 
-fn wren_define_variable(module: &mut Module, name: &str, value: Value) {
+#[derive(Debug)]
+pub enum ModuleError {
+    VariableAlreadyDefined,
+}
+
+pub(crate) fn wren_define_variable(
+    module: &mut Module,
+    name: &str,
+    value: Value,
+) -> Result<usize, ModuleError> {
     // See if the variable is already explicitly or implicitly declared.
     match module.lookup_symbol(name) {
         None => {
             // New variable!
-            module.define_variable(name, value);
+            Ok(module.define_variable(name, value))
         }
         Some(_) => {
+            Err(ModuleError::VariableAlreadyDefined)
             // FIXME: Handle fixing implicit variables.
             // Which are currently their line numer?
         }
-    };
+    }
 }
 
 // NOTE: This is only designed for Object and Class and does not fully
@@ -315,7 +340,7 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
         superclass: None,
     });
 
-    wren_define_variable(module, name, Value::Class(class.clone()));
+    wren_define_variable(module, name, Value::Class(class.clone())).expect("defined");
     class
 }
 
@@ -488,7 +513,17 @@ impl WrenVM {
             Ops::Boolean(b) => format!("Boolean {}", b),
             Ops::Null => format!("{:?}", op),
             Ops::Call(_) => format!("{:?}", op),
-            Ops::Load(v) => format!("Load {:?} {}: {:?}", v.scope, v.index, self.stack[v.index]),
+            Ops::Load(v) => match v.scope {
+                Scope::Local => {
+                    format!("Load Local {}: {:?}", v.index, self.stack[v.index])
+                }
+                Scope::Module => {
+                    format!(
+                        "Load Module {}: {:?}",
+                        v.index, self.module.variables[v.index]
+                    )
+                }
+            },
             Ops::Store(_) => format!("{:?}", op),
             Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
             Ops::JumpIfFalse(_) => format!("{:?}", op),
@@ -568,15 +603,21 @@ pub trait Obj {
     fn class_obj(&self) -> Option<Handle<ObjClass>>;
 }
 
-#[derive(Debug)]
 pub(crate) struct ObjRange {
     class_obj: Handle<ObjClass>,
     // The beginning of the range.
-    from: f64,
+    pub(crate) from: f64,
     // The end of the range. May be greater or less than [from].
-    to: f64,
+    pub(crate) to: f64,
     // True if [to] is included in the range.
-    is_inclusive: bool,
+    pub(crate) is_inclusive: bool,
+}
+
+impl core::fmt::Debug for ObjRange {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let op_string = if self.is_inclusive { ".." } else { "..." };
+        write!(f, "{}{}{}", self.from, op_string, self.to)
+    }
 }
 
 impl Obj for ObjRange {

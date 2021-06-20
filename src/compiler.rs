@@ -6,7 +6,7 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
-use crate::vm::{Closure, Function, Value, WrenVM};
+use crate::vm::{Closure, Function, ModuleError, Value, WrenVM};
 
 // Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
@@ -33,6 +33,8 @@ pub enum Token {
     Var,
     While,
     Break,
+    For,
+    In,
     Is,
     Equals,
     EqualsEquals,
@@ -164,6 +166,12 @@ impl InputManager {
 
     fn is_at_end(&self) -> bool {
         self.offset >= self.source.len()
+    }
+}
+
+impl From<ModuleError> for ParserError {
+    fn from(err: ModuleError) -> ParserError {
+        ParserError::Module(err)
     }
 }
 
@@ -420,6 +428,8 @@ fn keyword_token(name: &str) -> Option<Token> {
         "null" => Some(Token::Null),
         "class" => Some(Token::Class),
         "is" => Some(Token::Is),
+        "for" => Some(Token::For),
+        "in" => Some(Token::In),
         _ => None,
     }
 }
@@ -530,22 +540,49 @@ pub enum Ops {
 #[derive(Debug)]
 struct Local {
     name: String,
-    //   depth: i8,
+    // depth: usize,
+}
+
+#[derive(Copy, Clone, PartialEq)]
+enum ScopeDepth {
+    Module,
+    Local(usize),
 }
 
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
-#[derive(Default)]
 pub struct Compiler {
     constants: Vec<Value>,
     locals: Vec<Local>, // A fixed size array in wren_c
     code: Vec<Ops>,
-    // Should probably be an enum?  Either Module or Local(level)?
-    scope_depth: usize,      // Not fully wired up.
+    scope_depth: ScopeDepth,
     loops: Vec<LoopOffsets>, // wren_c uses stack-allocated objects instead.
+
+                             // The current number of slots (locals and temporaries) in use.
+                             //
+                             // We use this and maxSlots to track the maximum number of additional slots
+                             // a function may need while executing. When the function is called, the
+                             // fiber will check to ensure its stack has enough room to cover that worst
+                             // case and grow the stack if needed.
+                             //
+                             // This value here doesn't include parameters to the function. Since those
+                             // are already pushed onto the stack by the caller and tracked there, we
+                             // don't need to double count them here.
+                             // num_slots: usize,
 }
 
 impl Compiler {
+    fn new() -> Compiler {
+        Compiler {
+            constants: Vec::new(),
+            locals: Vec::new(),
+            code: Vec::new(),
+            scope_depth: ScopeDepth::Module,
+            loops: Vec::new(),
+            // num_slots: 0,
+        }
+    }
+
     fn emit_constant(&mut self, value: Value) {
         let index = self.constants.len();
         self.constants.push(value);
@@ -576,6 +613,35 @@ impl Compiler {
     fn emit_load(&mut self, variable: Variable) {
         self.code.push(Ops::Load(variable))
     }
+
+    fn push_scope(&mut self) {
+        self.scope_depth = match self.scope_depth {
+            ScopeDepth::Module => ScopeDepth::Local(0),
+            ScopeDepth::Local(i) => ScopeDepth::Local(i + 1),
+        }
+    }
+    fn pop_scope(&mut self) {
+        // let popped = discard_locals(self, self.scope_depth);
+        // self.num_slots -= popped;
+
+        self.scope_depth = match self.scope_depth {
+            ScopeDepth::Module => panic!("Can't pop from module scope!"),
+            ScopeDepth::Local(i) => {
+                if i == 0 {
+                    ScopeDepth::Module
+                } else {
+                    ScopeDepth::Local(i - 1)
+                }
+            }
+        }
+    }
+
+    // fn nested_local_scope_count(&self) -> usize {
+    //     match self.scope_depth {
+    //         ScopeDepth::Module => panic!("No local scopes."),
+    //         ScopeDepth::Local(i) => i,
+    //     }
+    // }
 }
 
 impl fmt::Debug for Compiler {
@@ -930,6 +996,111 @@ impl Compiler {
     }
 }
 
+fn load_local(parser: &mut Parser, index: usize) {
+    parser.compiler.emit_load(Variable {
+        scope: Scope::Local,
+        index: index,
+    })
+}
+
+fn test_exit_loop(compiler: &mut Compiler) {
+    compiler.loops.last_mut().unwrap().exit_jump = compiler.emit(Ops::JumpIfFalsePlaceholder);
+}
+
+fn for_hidden_variable_scope(parser: &mut Parser) -> Result<(), WrenError> {
+    parser.consume_expecting(Token::LeftParen)?;
+    parser.consume_expecting_name()?;
+
+    // Remember the name of the loop variable.
+    let name = parser
+        .previous
+        .name(&parser.input)
+        .map_err(|e| parser.parse_error(e.into()))?;
+
+    parser.consume_expecting(Token::In)?;
+    ignore_newlines(parser)?;
+
+    // Evaluate the sequence expression and store it in a hidden local variable.
+    // The space in the variable name ensures it won't collide with a user-defined
+    // variable.
+    expression(parser)?;
+
+    // FIXME: Ensure there is enough local space.
+
+    let seq_slot = add_local(parser, "seq ".into());
+
+    // Create another hidden local for the iterator object.
+    null(parser, false)?;
+    let iter_slot = add_local(parser, "iter ".into());
+
+    parser.consume_expecting(Token::RightParen)?;
+
+    parser.compiler.start_loop();
+
+    // Advance the iterator by calling the ".iterate" method on the sequence.
+    load_local(parser, seq_slot);
+    load_local(parser, iter_slot);
+
+    // Update and test the iterator.
+    call_method(parser, 1, "iterate(_)");
+    parser.compiler.emit_store(Variable {
+        scope: Scope::Local,
+        index: iter_slot,
+    });
+    test_exit_loop(&mut parser.compiler);
+
+    // Get the current value in the sequence by calling ".iteratorValue".
+    load_local(parser, seq_slot);
+    load_local(parser, iter_slot);
+    call_method(parser, 1, "iteratorValue(_)");
+
+    // Bind the loop variable in its own scope. This ensures we get a fresh
+    // variable each iteration so that closures for it don't all see the same one.
+    parser.compiler.push_scope();
+    add_local(parser, name);
+
+    loop_body(parser)?;
+
+    // Loop variable.
+    parser.compiler.pop_scope();
+
+    parser.compiler.end_loop();
+    Ok(())
+}
+
+fn for_statement(parser: &mut Parser) -> Result<(), WrenError> {
+    // A for statement like:
+    //
+    //     for (i in sequence.expression) {
+    //       System.print(i)
+    //     }
+    //
+    // Is compiled to bytecode almost as if the source looked like this:
+    //
+    //     {
+    //       var seq_ = sequence.expression
+    //       var iter_
+    //       while (iter_ = seq_.iterate(iter_)) {
+    //         var i = seq_.iteratorValue(iter_)
+    //         System.print(i)
+    //       }
+    //     }
+    //
+    // It's not exactly this, because the synthetic variables `seq_` and `iter_`
+    // actually get names that aren't valid Wren identfiers, but that's the basic
+    // idea.
+    //
+    // The important parts are:
+    // - The sequence expression is only evaluated once.
+    // - The .iterate() method is used to advance the iterator and determine if
+    //   it should exit the loop.
+    // - The .iteratorValue() method is used to get the value at the current
+    //   iterator position.
+
+    // Create a scope for the hidden local variables used for the iterator.
+    auto_scope(parser, for_hidden_variable_scope)
+}
+
 fn while_statement(parser: &mut Parser) -> Result<(), WrenError> {
     parser.compiler.start_loop();
 
@@ -938,8 +1109,7 @@ fn while_statement(parser: &mut Parser) -> Result<(), WrenError> {
     expression(parser)?;
     parser.consume_expecting(Token::RightParen)?;
 
-    parser.compiler.loops.last_mut().unwrap().exit_jump =
-        parser.compiler.emit(Ops::JumpIfFalsePlaceholder);
+    test_exit_loop(&mut parser.compiler);
     loop_body(parser)?;
     parser.compiler.end_loop();
     Ok(())
@@ -995,11 +1165,37 @@ fn auto_scope(
     parser: &mut Parser,
     f: fn(&mut Parser) -> Result<(), WrenError>,
 ) -> Result<(), WrenError> {
-    parser.compiler.scope_depth += 1;
+    parser.compiler.push_scope();
     let v = f(parser);
-    parser.compiler.scope_depth -= 1;
+    parser.compiler.pop_scope();
     return v;
 }
+
+// Generates code to discard local variables at [depth] or greater. Does *not*
+// actually undeclare variables or pop any scopes, though. This is called
+// directly when compiling "break" statements to ditch the local variables
+// before jumping out of the loop even though they are still in scope *past*
+// the break instruction.
+//
+// Returns the number of local variables that were eliminated.
+// fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
+//     let depth = match scope_depth {
+//         ScopeDepth::Module => panic!("Can't discard locals at module level."),
+//         ScopeDepth::Local(i) => i,
+//     };
+
+//     let starting_locals_len = compiler.locals.len();
+//     while let Some(local) = compiler.locals.last() {
+//         if local.depth < depth {
+//             break;
+//         }
+//         // FIXME: Handle upvalues.
+//         compiler.emit(Ops::Pop);
+//         compiler.locals.pop();
+//     }
+
+//     return starting_locals_len - compiler.locals.len();
+// }
 
 // Break, continue, if, for, while, blocks, etc.
 // Unlike expression, does not leave something on the stack.
@@ -1020,6 +1216,8 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
         // Emit a placeholder instruction for the jump to the end of the body.
         // We'll fix these up with real Jumps at the end of compiling this loop.
         parser.compiler.emit(Ops::JumpPlaceholder); // Break placeholder
+    } else if parser.match_current(Token::For)? {
+        for_statement(parser)?;
     } else if parser.match_current(Token::While)? {
         while_statement(parser)?;
     } else if parser.match_current(Token::LeftCurlyBrace)? {
@@ -1042,13 +1240,25 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
 // Create a new local variable with [name]. Assumes the current scope is local
 // and the name is unique.
 fn add_local(parser: &mut Parser, name: String) -> usize {
-    parser.compiler.locals.push(Local { name: name });
+    parser.compiler.locals.push(Local {
+        name: name,
+        // depth: parser.compiler.nested_local_scope_count(),
+    });
     parser.compiler.locals.len() - 1
 }
 
 fn declare_variable(parser: &mut Parser, name: String) -> Result<usize, WrenError> {
     // TODO: Check variable name max length.
-    // TODO: Handle top level scope?
+
+    // Top-level module scope.
+    // if parser.compiler.scope_depth == ScopeDepth::Module {
+    //     // Error handling missing.
+    //     // Error handling should occur inside wren_define_variable, no?
+    //     let result = wren_define_variable(&mut parser.vm.module, &name, Value::Null);
+    //     let symbol = result.map_err(|e| parser.parse_error(ParserError::Module(e)))?;
+    //     return Ok(symbol);
+    // }
+
     // TODO: Check to see if another local with the same name exists
     // TODO: Enforce max number of local variables.
     Ok(add_local(parser, name))
@@ -1319,6 +1529,8 @@ impl Token {
             Token::Boolean(_) => "boolean literal",
             Token::Name(_) => "name",
             Token::Comma => "comma",
+            Token::For => "for",
+            Token::In => "in",
             Token::Null => "null",
             Token::Class => "class",
             Token::LessThan => "less than",
@@ -1365,6 +1577,8 @@ impl Token {
             Token::Null => GrammarRule::prefix(null),
             Token::Var => GrammarRule::unused(),
             Token::Is => GrammarRule::infix_operator(Precedence::Is),
+            Token::For => GrammarRule::unused(),
+            Token::In => GrammarRule::unused(),
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
@@ -1384,6 +1598,7 @@ impl Token {
 pub enum ParserError {
     Lexer(LexError),
     Grammar(String),
+    Module(ModuleError),
 }
 
 impl fmt::Display for ParserError {
@@ -1391,6 +1606,7 @@ impl fmt::Display for ParserError {
         match *self {
             ParserError::Lexer(..) => write!(f, "Lex failure"),
             ParserError::Grammar(..) => write!(f, "Grammer failure"),
+            ParserError::Module(..) => write!(f, "Module failure"),
         }
     }
 }
@@ -1400,6 +1616,7 @@ impl error::Error for ParserError {
         match *self {
             ParserError::Lexer(ref e) => Some(e),
             ParserError::Grammar(..) => None,
+            ParserError::Module(..) => None,
         }
     }
 }
@@ -1558,11 +1775,13 @@ pub(crate) fn compile<'a>(
         previous: ParseToken::before_file(),
         current: ParseToken::before_file(),
         next: ParseToken::before_file(),
-        compiler: Compiler::default(),
+        compiler: Compiler::new(),
         vm: vm,
     };
     parser.consume()?; // Fill next
     parser.consume()?; // Move next -> current
+
+    // Make a new compiler!
 
     ignore_newlines(&mut parser)?;
     loop {

@@ -110,7 +110,7 @@ fn print_bytecode(source_or_path: &String) {
 }
 
 fn interpret_and_print_vm(source_or_path: &String) {
-    let mut vm = WrenVM::new(false);
+    let mut vm = WrenVM::new(true);
     let input = input_from_source_or_path(source_or_path);
     let closure = compile(&mut vm, input, "dummy_module").expect("compile");
     vm.run(closure).expect("runtime");
