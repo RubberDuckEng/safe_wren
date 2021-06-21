@@ -137,6 +137,18 @@ fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Class(class))
 }
 
+fn object_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::Boolean(false))
+}
+
+fn bool_not(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::Boolean(!args[0].equals_true()))
+}
+
+fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::Boolean(true))
+}
+
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
         let index = $vm.methods.ensure_method($sig);
@@ -155,6 +167,7 @@ pub(crate) fn init_core_classes(vm: &mut WrenVM) {
     // Define the root Object class. This has to be done a little specially
     // because it has no superclass.
     let object = define_class(&mut vm.module, "Object");
+    primitive!(vm, object, "!", object_not);
     primitive!(vm, object, "is(_)", object_is);
     primitive!(vm, object, "type(_)", object_type);
 
@@ -207,4 +220,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
+
+    primitive!(vm, core.bool_class, "!", bool_not);
+
+    primitive!(vm, core.null, "!", null_not);
 }

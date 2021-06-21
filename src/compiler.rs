@@ -22,6 +22,8 @@ pub enum Token {
     Plus,
     OpFactor(char),
     Num(f64),
+    Bang,
+    BangEquals,
     Dot,
     DotDot,
     DotDotDot,
@@ -305,6 +307,22 @@ fn is_whitespace(maybe_b: Option<u8>) -> bool {
     return false;
 }
 
+fn two_char_token(
+    input: &mut InputManager,
+    second_byte: u8,
+    two_token: Token,
+    one_token: Token,
+) -> ParseToken {
+    let token = match input.peek() {
+        Some(byte) if byte == second_byte => {
+            input.next();
+            two_token
+        }
+        _ => one_token,
+    };
+    input.make_token(token)
+}
+
 // Probably belongs on the InputManager/Tokenizer?
 fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
     while !input.is_at_end() {
@@ -328,6 +346,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                 return Ok(input.make_token(Token::Dot));
             }
             b',' => return Ok(input.make_token(Token::Comma)),
+            b'!' => return Ok(two_char_token(input, b'=', Token::BangEquals, Token::Bang)),
             b'+' => return Ok(input.make_token(Token::Plus)),
             b'-' => return Ok(input.make_token(Token::Minus)),
             b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
@@ -356,14 +375,12 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                 return Ok(input.make_token(Token::OpFactor('/')));
             }
             b'=' => {
-                let token = match input.peek() {
-                    Some(b'=') => {
-                        input.next();
-                        Token::EqualsEquals
-                    }
-                    _ => Token::Equals,
-                };
-                return Ok(input.make_token(token));
+                return Ok(two_char_token(
+                    input,
+                    b'=',
+                    Token::EqualsEquals,
+                    Token::Equals,
+                ))
             }
             b'"' => return read_string(input),
             // TODO: How can we share code with is_name above?
@@ -1529,6 +1546,13 @@ impl GrammarRule {
         }
     }
 
+    fn prefix_operator() -> GrammarRule {
+        GrammarRule {
+            prefix: Some(unary_op),
+            infix: None,
+            precedence: Precedence::None,
+        }
+    }
     fn infix(precedence: Precedence, infix_parselet: InfixParslet) -> GrammarRule {
         GrammarRule {
             prefix: None,
@@ -1559,6 +1583,8 @@ impl Token {
             Token::RightSquareBracket => "right square bracket",
             Token::Plus => "plus sign",
             Token::Minus => "minus sign",
+            Token::Bang => "bang / unary not",
+            Token::BangEquals => "not equals",
             Token::OpFactor(_) => "operator * or / or %",
             Token::Num(_) => "number literal",
             Token::String(_) => "string literal",
@@ -1609,6 +1635,8 @@ impl Token {
             },
             Token::Plus => GrammarRule::infix_operator(Precedence::Term),
             Token::OpFactor(_) => GrammarRule::infix_operator(Precedence::Factor),
+            Token::Bang => GrammarRule::prefix_operator(),
+            Token::BangEquals => GrammarRule::infix_operator(Precedence::Equality),
             Token::Num(_) => GrammarRule::prefix(literal),
             Token::String(_) => GrammarRule::prefix(literal),
             Token::Dot => GrammarRule::infix(Precedence::Call, call),
@@ -1631,8 +1659,8 @@ impl Token {
             Token::Newline => GrammarRule::unused(),
             Token::EndOfFile => GrammarRule::unused(),
             Token::Equals => GrammarRule::unused(),
-            Token::EqualsEquals => GrammarRule::unused(), // Wrong!
-            Token::Name(_) => GrammarRule::prefix(name),  // TODO: Also wrong.
+            Token::EqualsEquals => GrammarRule::infix_operator(Precedence::Equality),
+            Token::Name(_) => GrammarRule::prefix(name), // TODO: Also wrong.
         }
     }
 }

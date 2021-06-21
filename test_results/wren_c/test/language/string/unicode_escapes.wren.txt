@@ -1,16 +1,16 @@
-Unexpected error:
-[dummy_module line 20] Error Grammar("Expected right paren, found: EqualsEquals")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 20] Error Grammar("Expected right paren, found: EqualsEquals")
+Unexpected output on stderr:
+MethodNotFound("==(_)")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("==(_)")
 
-Missing expected output "A" on line 2.
-Missing expected output "~" on line 3.
-Missing expected output "¶" on line 6.
-Missing expected output "Þ" on line 7.
-Missing expected output "ॐ" on line 10.
-Missing expected output "ஃ" on line 11.
-Missing expected output "¶" on line 14.
-Missing expected output "Þ" on line 15.
+Expected output "A" on line 2 and got "\u0041".
+Expected output "~" on line 3 and got "\u007e".
+Expected output "¶" on line 6 and got "\u00b6".
+Expected output "Þ" on line 7 and got "\u00de".
+Expected output "ॐ" on line 10 and got "\u0950".
+Expected output "ஃ" on line 11 and got "\u0b83".
+Expected output "¶" on line 14 and got "\u00B6".
+Expected output "Þ" on line 15 and got "\u00DE".
 Missing expected output "true" on line 20.
 Missing expected output "<🙊>" on line 22.
 Missing expected output "<🚀>" on line 23.

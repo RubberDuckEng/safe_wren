@@ -34,6 +34,15 @@ impl Value {
         Value::String(Rc::new(string))
     }
 
+    // Different from "is truthy" used by "as_bool" in wren_c
+    // Unclear if this is only ever called on a known-bool?
+    pub(crate) fn equals_true(&self) -> bool {
+        match self {
+            Value::Boolean(b) => *b == true,
+            _ => false,
+        }
+    }
+
     // In Wren false and null are false, everything else is true.
     fn is_truthy(&self) -> bool {
         match self {

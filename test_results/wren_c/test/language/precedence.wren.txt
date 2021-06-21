@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 14] Error Grammar("Expected right paren, found: EqualsEquals")
+[dummy_module line 20] Error Grammar("Expected Expression: ParseToken { bytes_range: 520..521, token: Equals, line: 20 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 14] Error Grammar("Expected right paren, found: EqualsEquals")
+[dummy_module line 20] Error Grammar("Expected Expression: ParseToken { bytes_range: 520..521, token: Equals, line: 20 }")
 
 Missing expected output "14" on line 2.
 Missing expected output "8" on line 5.
