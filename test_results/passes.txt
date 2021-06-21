@@ -24,7 +24,6 @@ wren_c/test/language/assignment/global.wren
 wren_c/test/language/assignment/undefined.wren
 wren_c/test/language/break/in_method_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren
-wren_c/test/language/class/attributes/invalid_toplevel.wren
 wren_c/test/language/class/missing_class_after_foreign.wren
 wren_c/test/language/comments/block.wren
 wren_c/test/language/comments/block_at_eof.wren
@@ -85,6 +84,7 @@ wren_c/test/language/number/scientific_missing_exponent.wren
 wren_c/test/language/number/scientific_multiple_exponants.wren
 wren_c/test/language/number/scientific_multiple_exponent_signs.wren
 wren_c/test/language/semicolon.wren
+wren_c/test/language/shebang/shebang_at_eof.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
 wren_c/test/language/shebang/shebang_invalid.wren
 wren_c/test/language/static_field/outside_class.wren

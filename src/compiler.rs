@@ -22,6 +22,7 @@ pub enum Token {
     Plus,
     OpFactor(char),
     Num(f64),
+    Hash,
     Bang,
     BangEquals,
     Dot,
@@ -126,12 +127,12 @@ impl InputManager {
         }
     }
 
-    // fn peek_next_is(&self, expected: u8) -> bool {
-    //     match self.peek_next() {
-    //         Some(c) => c == expected,
-    //         None => false,
-    //     }
-    // }
+    fn peek_next_is(&self, expected: u8) -> bool {
+        match self.peek_next() {
+            Some(c) => c == expected,
+            None => false,
+        }
+    }
 
     fn peek_next_is_fn(&self, precicate: fn(u8) -> bool) -> bool {
         match self.peek_next() {
@@ -373,6 +374,15 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                     continue;
                 }
                 return Ok(input.make_token(Token::OpFactor('/')));
+            }
+            b'#' => {
+                // Ignore shebang on the first line.
+                if input.line_number == 1 && input.peek_is(b'!') && input.peek_next_is(b'/') {
+                    skip_line_comment(input);
+                    break;
+                }
+                // Otherwise we treat it as a token
+                return Ok(input.make_token(Token::Hash));
             }
             b'=' => {
                 return Ok(two_char_token(
@@ -1583,6 +1593,7 @@ impl Token {
             Token::RightSquareBracket => "right square bracket",
             Token::Plus => "plus sign",
             Token::Minus => "minus sign",
+            Token::Hash => "hash (attributes)",
             Token::Bang => "bang / unary not",
             Token::BangEquals => "not equals",
             Token::OpFactor(_) => "operator * or / or %",
@@ -1644,6 +1655,7 @@ impl Token {
             Token::DotDotDot => GrammarRule::infix_operator(Precedence::Range),
             Token::Boolean(_) => GrammarRule::prefix(boolean),
             Token::Null => GrammarRule::prefix(null),
+            Token::Hash => GrammarRule::unused(),
             Token::Var => GrammarRule::unused(),
             Token::Is => GrammarRule::infix_operator(Precedence::Is),
             Token::For => GrammarRule::unused(),
