@@ -23,6 +23,10 @@ pub enum Token {
     OpFactor(char),
     Num(f64),
     Hash,
+    Pipe,
+    PipePipe,
+    Amp,
+    AmpAmp,
     Bang,
     BangEquals,
     Dot,
@@ -348,6 +352,8 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             }
             b',' => return Ok(input.make_token(Token::Comma)),
             b'!' => return Ok(two_char_token(input, b'=', Token::BangEquals, Token::Bang)),
+            b'|' => return Ok(two_char_token(input, b'|', Token::PipePipe, Token::Pipe)),
+            b'&' => return Ok(two_char_token(input, b'&', Token::AmpAmp, Token::Amp)),
             b'+' => return Ok(input.make_token(Token::Plus)),
             b'-' => return Ok(input.make_token(Token::Minus)),
             b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
@@ -563,10 +569,22 @@ pub enum Ops {
     Store(Variable),
     ClassPlaceholder,
     Class(usize),
-    JumpIfFalsePlaceholder,
+
+    // If the top of the stack is false, jump [arg] forward. Otherwise, pop and
+    // continue.
+    And(u16),
+    AndPlaceholder,
+
+    // If the top of the stack is non-false, jump [arg] forward. Otherwise, pop
+    // and continue.
+    Or(u16),
+    OrPlaceholder,
+
     JumpIfFalse(u16), // Pop stack, if truthy, Jump forward relative offset.
-    JumpPlaceholder,
+    JumpIfFalsePlaceholder,
     Jump(u16), // Jump forward relative offset.
+    JumpPlaceholder,
+
     Loop(u16), // Jump backwards relative offset.
     Pop,
     End,
@@ -853,6 +871,26 @@ fn call(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
+fn or_(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
+    ignore_newlines(parser)?;
+
+    // Skip the right argument if the left is true.
+    let jump = parser.compiler.emit(Ops::OrPlaceholder);
+    parser.parse_precendence(Precedence::LogicalOr)?;
+    parser.compiler.patch_jump(jump);
+    Ok(())
+}
+
+fn and_(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
+    ignore_newlines(parser)?;
+
+    // Skip the right argument if the left is true.
+    let jump = parser.compiler.emit(Ops::AndPlaceholder);
+    parser.parse_precendence(Precedence::LogicalAnd)?;
+    parser.compiler.patch_jump(jump);
+    Ok(())
+}
+
 // Subscript or "array indexing" operator like `foo[bar]`.
 fn subscript(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError> {
     let mut arity = finish_arguments_list(parser)?;
@@ -1027,11 +1065,12 @@ impl Compiler {
     }
 
     fn patch_jump(&mut self, index: usize) {
+        let offset_forward = self.offset_to_current_pc_from_after(index);
         self.code[index] = match self.code[index] {
-            Ops::JumpIfFalsePlaceholder => {
-                Ops::JumpIfFalse(self.offset_to_current_pc_from_after(index))
-            }
-            Ops::JumpPlaceholder => Ops::Jump(self.offset_to_current_pc_from_after(index)),
+            Ops::JumpIfFalsePlaceholder => Ops::JumpIfFalse(offset_forward),
+            Ops::JumpPlaceholder => Ops::Jump(offset_forward),
+            Ops::OrPlaceholder => Ops::Or(offset_forward),
+            Ops::AndPlaceholder => Ops::And(offset_forward),
             _ => panic!("Token to patch is not a jump! {:?}", self.code[index]),
         }
     }
@@ -1594,6 +1633,10 @@ impl Token {
             Token::Plus => "plus sign",
             Token::Minus => "minus sign",
             Token::Hash => "hash (attributes)",
+            Token::Pipe => "bitwise or",
+            Token::PipePipe => "logical or",
+            Token::Amp => "bitwise and",
+            Token::AmpAmp => "logical and",
             Token::Bang => "bang / unary not",
             Token::BangEquals => "not equals",
             Token::OpFactor(_) => "operator * or / or %",
@@ -1658,6 +1701,10 @@ impl Token {
             Token::Hash => GrammarRule::unused(),
             Token::Var => GrammarRule::unused(),
             Token::Is => GrammarRule::infix_operator(Precedence::Is),
+            Token::Pipe => GrammarRule::infix_operator(Precedence::BitwiseOr),
+            Token::PipePipe => GrammarRule::infix(Precedence::LogicalOr, or_),
+            Token::Amp => GrammarRule::infix_operator(Precedence::BitwiseAnd),
+            Token::AmpAmp => GrammarRule::infix(Precedence::LogicalOr, and_),
             Token::For => GrammarRule::unused(),
             Token::In => GrammarRule::unused(),
             Token::If => GrammarRule::unused(),

@@ -495,9 +495,28 @@ impl WrenVM {
                         self.pc += *offset_forward as usize;
                     }
                 }
+                Ops::And(offset_forward) => {
+                    // This differs from JumpIfFalse in whether it pops
+                    let value = self.peek()?;
+                    if value.is_falsey() {
+                        self.pc += *offset_forward as usize;
+                    } else {
+                        self.pop()?;
+                    }
+                }
+                Ops::Or(offset_forward) => {
+                    let value = self.peek()?;
+                    if !value.is_falsey() {
+                        self.pc += *offset_forward as usize;
+                    } else {
+                        self.pop()?;
+                    }
+                }
                 Ops::ClassPlaceholder => unimplemented!(),
                 Ops::JumpIfFalsePlaceholder => unimplemented!(),
                 Ops::JumpPlaceholder => unimplemented!(),
+                Ops::OrPlaceholder => unimplemented!(),
+                Ops::AndPlaceholder => unimplemented!(),
             }
         }
     }
@@ -537,6 +556,10 @@ impl WrenVM {
             Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
             Ops::JumpIfFalse(_) => format!("{:?}", op),
             Ops::JumpPlaceholder => format!("{:?}", op),
+            Ops::And(_) => format!("{:?}", op),
+            Ops::AndPlaceholder => format!("{:?}", op),
+            Ops::Or(_) => format!("{:?}", op),
+            Ops::OrPlaceholder => format!("{:?}", op),
             Ops::ClassPlaceholder => format!("{:?}", op),
             Ops::Class(_) => format!("{:?}", op),
             Ops::Jump(_) => format!("{:?}", op),
@@ -576,6 +599,10 @@ impl Ops {
             Ops::Loop(_) => format!("{:?}", self),
             Ops::Pop => format!("{:?}", self),
             Ops::End => format!("{:?}", self),
+            Ops::And(_) => format!("{:?}", self),
+            Ops::AndPlaceholder => format!("{:?}", self),
+            Ops::Or(_) => format!("{:?}", self),
+            Ops::OrPlaceholder => format!("{:?}", self),
         }
     }
 }

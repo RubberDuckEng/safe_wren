@@ -62,6 +62,10 @@ wren_c/test/language/list/duplicate_comma.wren
 wren_c/test/language/list/duplicate_trailing_comma.wren
 wren_c/test/language/list/empty_list_with_comma.wren
 wren_c/test/language/list/newline_before_comma.wren
+wren_c/test/language/logical_operator/and.wren
+wren_c/test/language/logical_operator/and_truth.wren
+wren_c/test/language/logical_operator/or.wren
+wren_c/test/language/logical_operator/or_truth.wren
 wren_c/test/language/map/bad_key_precedence.wren
 wren_c/test/language/map/duplicate_comma.wren
 wren_c/test/language/map/duplicate_trailing_comma.wren

@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Lexer(UnexpectedChar('|'))
+[dummy_module line 3] Error Grammar("Expected right paren, found: LeftCurlyBrace")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Lexer(UnexpectedChar('|'))
+[dummy_module line 3] Error Grammar("Expected right paren, found: LeftCurlyBrace")
 
 Missing expected output "55" on line 3.
 Missing expected output "1" on line 4.
