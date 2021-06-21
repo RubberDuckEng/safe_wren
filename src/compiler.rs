@@ -83,13 +83,17 @@ pub struct InputManager {
 
 impl InputManager {
     pub fn from_string(source: String) -> InputManager {
+        InputManager::from_bytes(source.as_bytes().to_vec())
+    }
+    pub fn from_bytes(source: Vec<u8>) -> InputManager {
         InputManager {
-            source: source.as_bytes().to_vec(),
+            source: source,
             offset: 0,
             line_number: 1,
             token_start_offset: 0,
         }
     }
+
     fn peek(&self) -> Option<u8> {
         if self.offset < self.source.len() {
             Some(self.source[self.offset])

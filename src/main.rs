@@ -46,9 +46,18 @@ fn run_file(path: &String) {
         eprintln!("Could not find file \"{}\".", path);
         exit(ExitCode::NoInput);
     });
+    // Hack to avoid \r adjusting printed byte-ranges for ParseTokens
+    // on windows:
+    let no_crs = source
+        .as_bytes()
+        .to_vec()
+        .into_iter()
+        .filter(|i| *i != b'\r')
+        .collect::<Vec<u8>>();
+
     // handle module setup.
     let mut vm = WrenVM::new(false);
-    let input = InputManager::from_string(source);
+    let input = InputManager::from_bytes(no_crs);
     let module_name = "dummy_module";
     let closure = compile(&mut vm, input, module_name).unwrap_or_else(|e| {
         // Matching test.c output:
