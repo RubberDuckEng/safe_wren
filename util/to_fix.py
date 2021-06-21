@@ -18,9 +18,12 @@ def collect_lines(file_name):
     with open(file_name, encoding="utf-8") as results_file:
         for line in results_file:
             line = line.strip()
-            if line == "" or line.startswith('Expected') or line.startswith('Unexpected'):
+            if line == "" or line.startswith('Expected') or line.startswith('Unexpected') or line.startswith('Missing expected'):
                 continue
             line = re.sub(r'\[.*?\] ', '', line)
+            line = re.sub(r'\d+\.\.\d+', '', line)
+            line = re.sub(r'line: \d+', '', line)
+            line = re.sub(r'line \d+', '', line)
             count = word_counts.get(line, 0)
             word_counts[line] = count + 1
 
