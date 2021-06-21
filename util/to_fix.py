@@ -1,5 +1,6 @@
-from os import listdir, makedirs, remove, environ
-from os.path import abspath, basename, dirname, isdir, isfile, join, realpath, relpath, splitext
+import re
+from os import listdir
+from os.path import abspath, dirname, isdir, join, realpath
 
 
 word_counts = {}
@@ -14,8 +15,12 @@ def collect_words(file_name):
 
 
 def collect_lines(file_name):
-    with open(file_name) as results_file:
+    with open(file_name, encoding="utf-8") as results_file:
         for line in results_file:
+            line = line.strip()
+            if line == "" or line.startswith('Expected') or line.startswith('Unexpected'):
+                continue
+            line = re.sub(r'\[.*?\] ', '', line)
             count = word_counts.get(line, 0)
             word_counts[line] = count + 1
 
@@ -43,8 +48,10 @@ TEST_RESULTS_DIR = join(WREN_RUST_DIR, "test_results")
 
 walk(join(WREN_RUST_DIR, 'test_results'), collect_lines)
 
-items = list(reversed(sorted(word_counts.items(), key=lambda item: item[1])))
+items = list(sorted(word_counts.items(), key=lambda item: item[1]))
 
-words = map(lambda item: f"{item[0]}: {item[1]}", items[:30])
+words = map(lambda item: f"{item[1]} : {item[0]}", items[-30:])
 
+print("Most common errors seen in test_results/**:")
+print("occurances : error text")
 print('\n'.join(words))
