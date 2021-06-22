@@ -1,7 +1,0 @@
-Unexpected error:
-[dummy_module line 2] Error Lexer(UnexpectedChar('?'))
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Lexer(UnexpectedChar('?'))
-
-Missing expected output "yes" on line 3.
-Missing expected output "no" on line 7.

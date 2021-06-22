@@ -34,6 +34,9 @@ pub enum Token {
     DotDotDot,
     Comma,
     Caret,
+    Colon,
+    Tilde,
+    Question,
     Class,
     GreaterThan,
     GreaterThanGreaterThan,
@@ -371,6 +374,9 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             b'+' => return Ok(input.make_token(Token::Plus)),
             b'-' => return Ok(input.make_token(Token::Minus)),
             b'^' => return Ok(input.make_token(Token::Caret)),
+            b'~' => return Ok(input.make_token(Token::Tilde)),
+            b':' => return Ok(input.make_token(Token::Colon)),
+            b'?' => return Ok(input.make_token(Token::Question)),
             b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
             b'<' => {
                 return Ok(if match_char(input, b'<') {
@@ -792,6 +798,32 @@ fn literal(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
             .emit_constant(Value::String(Rc::new(s.clone()))),
         _ => panic!("invalid literal"),
     }
+    Ok(())
+}
+
+fn conditional(parser: &mut Parser, _can_assign: bool) -> Result<(), WrenError> {
+    // Ignore newline after '?'.
+    ignore_newlines(parser)?;
+
+    // Jump to the else branch if the condition is false.
+    let if_jump = parser.compiler.emit(Ops::JumpIfFalsePlaceholder);
+
+    // Compile the then branch.
+    parser.parse_precendence(Precedence::Conditional)?;
+
+    parser.consume_expecting(Token::Colon)?;
+    ignore_newlines(parser)?;
+
+    // Jump over the else branch when the if branch is taken.
+    let else_jump = parser.compiler.emit(Ops::JumpPlaceholder);
+
+    // Compile the else branch.
+    parser.compiler.patch_jump(if_jump);
+
+    parser.parse_precendence(Precedence::Assignment)?;
+
+    // Patch the jump over the else.
+    parser.compiler.patch_jump(else_jump);
     Ok(())
 }
 
@@ -1735,6 +1767,9 @@ impl Token {
             Token::RightCurlyBrace => "right curly brace",
             Token::LeftSquareBracket => "left square bracket",
             Token::RightSquareBracket => "right square bracket",
+            Token::Tilde => "tilde",
+            Token::Colon => "colon",
+            Token::Question => "question mark",
             Token::Plus => "plus sign",
             Token::Minus => "minus sign",
             Token::Hash => "hash (attributes)",
@@ -1799,6 +1834,9 @@ impl Token {
                 precedence: Precedence::Term,
             },
             Token::Plus => GrammarRule::infix_operator(Precedence::Term),
+            Token::Tilde => GrammarRule::prefix_operator(),
+            Token::Colon => GrammarRule::unused(),
+            Token::Question => GrammarRule::infix(Precedence::Assignment, conditional),
             Token::OpFactor(_) => GrammarRule::infix_operator(Precedence::Factor),
             Token::Bang => GrammarRule::prefix_operator(),
             Token::BangEquals => GrammarRule::infix_operator(Precedence::Equality),

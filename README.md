@@ -16,7 +16,7 @@ with error text from any failed tests.  `test.py` will also update
 
 
 ## Ordered goals?
-* Have to_fix.py write out to a file.
+* Add a very basic wren_core.wren
 * Fix MethodNotFound to include this.type.
 * Object.==(_)
 * function parsing
