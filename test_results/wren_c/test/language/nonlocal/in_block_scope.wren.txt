@@ -1,1 +1,1 @@
-Expected output "inner" on line 5 and got "outer".
+Expected output "outer" on line 8 and got "inner".

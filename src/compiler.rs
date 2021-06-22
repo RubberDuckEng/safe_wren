@@ -6,7 +6,7 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
-use crate::vm::{Closure, Function, ModuleError, Value, WrenVM};
+use crate::vm::{wren_define_variable, Closure, Function, ModuleError, Value, WrenVM};
 
 // Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
@@ -596,7 +596,7 @@ struct Local {
     // depth: usize,
 }
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 enum ScopeDepth {
     Module,
     Local(usize),
@@ -689,12 +689,12 @@ impl Compiler {
         }
     }
 
-    // fn nested_local_scope_count(&self) -> usize {
-    //     match self.scope_depth {
-    //         ScopeDepth::Module => panic!("No local scopes."),
-    //         ScopeDepth::Local(i) => i,
-    //     }
-    // }
+    fn nested_local_scope_count(&self) -> usize {
+        match self.scope_depth {
+            ScopeDepth::Module => panic!("No local scopes."),
+            ScopeDepth::Local(i) => i,
+        }
+    }
 }
 
 impl fmt::Debug for Compiler {
@@ -915,7 +915,7 @@ fn subscript(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError> {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Scope {
     Local,
-    // Upvalue,
+    Upvalue,
     Module,
 }
 
@@ -923,6 +923,32 @@ pub enum Scope {
 pub struct Variable {
     pub scope: Scope,
     pub index: usize,
+}
+
+impl Variable {
+    // symbols are passed around as to match wren_c limits
+    // but stored (for now) as usize for easy use on the VM size
+    // for vector lookups.  Not sure if this is right.
+    fn module(symbol: u16) -> Variable {
+        Variable {
+            scope: Scope::Module,
+            index: symbol as usize,
+        }
+    }
+
+    fn upvalue(symbol: u16) -> Variable {
+        Variable {
+            scope: Scope::Upvalue,
+            index: symbol as usize,
+        }
+    }
+
+    fn local(symbol: u16) -> Variable {
+        Variable {
+            scope: Scope::Local,
+            index: symbol as usize,
+        }
+    }
 }
 
 fn allow_line_before_dot(parser: &mut Parser) -> Result<(), WrenError> {
@@ -947,12 +973,28 @@ fn bare_name(parser: &mut Parser, can_assign: bool, variable: Variable) -> Resul
     Ok(())
 }
 
+// Attempts to look up [name] in the functions enclosing the one being compiled
+// by [compiler]. If found, it adds an upvalue for it to this compiler's list
+// of upvalues (unless it's already in there) and returns its index. If not
+// found, returns -1.
+//
+// If the name is found outside of the immediately enclosing function, this
+// will flatten the closure and add upvalues to all of the intermediate
+// functions so that it gets walked down to this one.
+//
+// If it reaches a method boundary, this stops and returns -1 since methods do
+// not close over local variables.
+fn find_upvalue(_parser: &Parser, _name: &str) -> Option<u16> {
+    // We can't support this until we support having a stack of compilers.
+    None
+}
+
 fn resolve_non_module(parser: &Parser, name: &str) -> Option<Variable> {
     if let Some(index) = parser.compiler.locals.iter().position(|l| l.name.eq(name)) {
-        return Some(Variable {
-            scope: Scope::Local,
-            index: index,
-        });
+        return Some(Variable::local(index as u16));
+    }
+    if let Some(index) = find_upvalue(parser, name) {
+        return Some(Variable::upvalue(index));
     }
 
     None
@@ -974,32 +1016,25 @@ fn name(parser: &mut Parser, can_assign: bool) -> Result<(), WrenError> {
     // Otherwise if in module scope handle module case:
 
     let maybe_index = parser.vm.module.lookup_symbol(&name);
-    match maybe_index {
-        Some(index) => {
-            parser.compiler.emit_load(Variable {
-                scope: Scope::Module,
-                index: index,
-            });
+    let symbol = match maybe_index {
+        None => {
+            // Otherwise define a variable and hope it's filled in later (by what?)
+            //     // Implicitly define a module-level variable in
+            // // the hopes that we get a real definition later.
+            // variable.index = wrenDeclareVariable(compiler->parser->vm,
+            //     compiler->parser->module,
+            //     token->start, token->length,
+            //     token->line);
+            // loadVariable(compiler, variable);
+            Err(parser.parse_error(ParserError::Grammar(format!(
+                "Undeclared variable '{}'",
+                name
+            ))))?
         }
-        None => Err(parser.parse_error(ParserError::Grammar(format!(
-            "Undeclared variable '{}'",
-            name
-        ))))?,
-    }
+        Some(index) => index,
+    };
 
-    // variable.scope = SCOPE_MODULE;
-    // variable.index = wrenSymbolTableFind(&compiler->parser->module->variableNames,
-    //                                      token->start, token->length);
-
-    // Otherwise define a variable and hope it's filled in later (by what?)
-    //     // Implicitly define a module-level variable in
-    // // the hopes that we get a real definition later.
-    // variable.index = wrenDeclareVariable(compiler->parser->vm,
-    //     compiler->parser->module,
-    //     token->start, token->length,
-    //     token->line);
-    // loadVariable(compiler, variable);
-    Ok(())
+    bare_name(parser, can_assign, Variable::module(symbol))
 }
 
 fn expression(parser: &mut Parser) -> Result<(), WrenError> {
@@ -1076,11 +1111,8 @@ impl Compiler {
     }
 }
 
-fn load_local(parser: &mut Parser, index: usize) {
-    parser.compiler.emit_load(Variable {
-        scope: Scope::Local,
-        index: index,
-    })
+fn load_local(parser: &mut Parser, index: u16) {
+    parser.compiler.emit_load(Variable::local(index))
 }
 
 fn test_exit_loop(compiler: &mut Compiler) {
@@ -1123,10 +1155,7 @@ fn for_hidden_variable_scope(parser: &mut Parser) -> Result<(), WrenError> {
 
     // Update and test the iterator.
     call_method(parser, 1, "iterate(_)");
-    parser.compiler.emit_store(Variable {
-        scope: Scope::Local,
-        index: iter_slot,
-    });
+    parser.compiler.emit_store(Variable::local(iter_slot));
     test_exit_loop(&mut parser.compiler);
 
     // Get the current value in the sequence by calling ".iteratorValue".
@@ -1344,25 +1373,25 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
 
 // Create a new local variable with [name]. Assumes the current scope is local
 // and the name is unique.
-fn add_local(parser: &mut Parser, name: String) -> usize {
+fn add_local(parser: &mut Parser, name: String) -> u16 {
     parser.compiler.locals.push(Local {
         name: name,
         // depth: parser.compiler.nested_local_scope_count(),
     });
-    parser.compiler.locals.len() - 1
+    (parser.compiler.locals.len() - 1) as u16
 }
 
-fn declare_variable(parser: &mut Parser, name: String) -> Result<usize, WrenError> {
+fn declare_variable(parser: &mut Parser, name: String) -> Result<u16, WrenError> {
     // TODO: Check variable name max length.
 
     // Top-level module scope.
-    // if parser.compiler.scope_depth == ScopeDepth::Module {
-    //     // Error handling missing.
-    //     // Error handling should occur inside wren_define_variable, no?
-    //     let result = wren_define_variable(&mut parser.vm.module, &name, Value::Null);
-    //     let symbol = result.map_err(|e| parser.parse_error(ParserError::Module(e)))?;
-    //     return Ok(symbol);
-    // }
+    if parser.compiler.scope_depth == ScopeDepth::Module {
+        // Error handling missing.
+        // Error handling should occur inside wren_define_variable, no?
+        let result = wren_define_variable(&mut parser.vm.module, &name, Value::Null);
+        let symbol = result.map_err(|e| parser.parse_error(ParserError::Module(e)))?;
+        return Ok(symbol as u16);
+    }
 
     // TODO: Check to see if another local with the same name exists
     // TODO: Enforce max number of local variables.
@@ -1371,7 +1400,7 @@ fn declare_variable(parser: &mut Parser, name: String) -> Result<usize, WrenErro
 
 // Parses a name token and declares a variable in the current scope with that
 // name. Returns its slot.
-fn declare_named_variable(parser: &mut Parser) -> Result<usize, WrenError> {
+fn declare_named_variable(parser: &mut Parser) -> Result<u16, WrenError> {
     parser.consume_expecting_name()?;
     let name = parser
         .previous
@@ -1399,43 +1428,44 @@ fn variable_definition(parser: &mut Parser) -> Result<(), WrenError> {
     }
 
     // Now put it in scope.
-    declare_variable(parser, name)?;
-    // TODO: Add define_variable in non-local case.
+    let symbol = declare_variable(parser, name)?;
+    define_variable(parser, symbol);
     Ok(())
 }
 
 // FIXME: This is probably not needed?  All it really adds is an assert?
 fn load_core_variable(parser: &mut Parser, name: &str) {
     let symbol = parser.vm.module.lookup_symbol(name).unwrap();
-    parser.compiler.emit_load(Variable {
-        scope: Scope::Module,
-        index: symbol,
-    });
+    parser.compiler.emit_load(Variable::module(symbol));
 }
 
-fn define_variable(parser: &mut Parser, variable: Variable) {
-    match variable.scope {
-        Scope::Local => {
+fn define_variable(parser: &mut Parser, symbol: u16) {
+    match parser.compiler.scope_depth {
+        ScopeDepth::Local(_) => {
             // Store the variable. If it's a local, the result of the initializer is
             // in the correct slot on the stack already so we're done.
             return;
         }
-        Scope::Module => {
+        ScopeDepth::Module => {
             // It's a module-level variable, so store the value in the module slot and
             // then discard the temporary for the initializer.
-            parser.compiler.emit_load(variable);
+            parser.compiler.emit_store(Variable::module(symbol));
             parser.compiler.emit(Ops::Pop);
         }
     }
 }
 
+// fn scope_for_definitions(parser: &Parser) -> Scope {
+//     match parser.compiler.scope_depth {
+//         ScopeDepth::Local(_) => Scope::Local,
+//         ScopeDepth::Module => Scope::Module,
+//     }
+// }
+
 // TODO: is_foreign should probably be an enum.
 fn class_definition(parser: &mut Parser, _is_foreign: bool) -> Result<(), WrenError> {
     // Create a variable to store the class in.
-    let class_variable = Variable {
-        scope: Scope::Module, // Local not supported yet.
-        index: declare_named_variable(parser)?,
-    };
+    let class_symbol = declare_named_variable(parser)?;
 
     // FIXME: Should declare_named_variable return the name too?
     let name = parser
@@ -1457,7 +1487,7 @@ fn class_definition(parser: &mut Parser, _is_foreign: bool) -> Result<(), WrenEr
     let class_instruction = parser.compiler.emit(Ops::ClassPlaceholder);
 
     // Store it in its name. (in the module case)
-    define_variable(parser, class_variable);
+    define_variable(parser, class_symbol);
 
     // Push a local variable scope. Static fields in a class body are hoisted out
     // into local variables declared in this scope. Methods that use them will

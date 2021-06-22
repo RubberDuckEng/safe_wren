@@ -1,1 +1,1 @@
-Got output "1" when none was expected.
+Expected output "1" on line 5 and got "2".

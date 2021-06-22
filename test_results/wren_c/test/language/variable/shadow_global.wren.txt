@@ -1,1 +1,1 @@
-Expected output "shadow" on line 4 and got "global".
+Expected output "global" on line 6 and got "shadow".

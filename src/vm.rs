@@ -82,8 +82,11 @@ impl Module {
         }
     }
 
-    pub fn lookup_symbol(&self, name: &str) -> Option<usize> {
-        self.variable_names.iter().position(|e| e.eq(name))
+    pub fn lookup_symbol(&self, name: &str) -> Option<u16> {
+        self.variable_names
+            .iter()
+            .position(|e| e.eq(name))
+            .map(|s| s as u16)
     }
 
     pub fn define_variable(&mut self, name: &str, value: Value) -> usize {
@@ -466,6 +469,7 @@ impl WrenVM {
                 Ops::Load(variable) => {
                     let value = match variable.scope {
                         Scope::Module => self.module.variables[variable.index].clone(),
+                        Scope::Upvalue => unimplemented!("load upvalue"),
                         Scope::Local => self.stack[variable.index].clone(),
                     };
                     self.push(value);
@@ -474,6 +478,7 @@ impl WrenVM {
                     let value = self.peek()?;
                     match variable.scope {
                         Scope::Module => self.module.variables[variable.index] = value.clone(),
+                        Scope::Upvalue => unimplemented!("store upvalue"),
                         Scope::Local => self.stack[variable.index] = value.clone(),
                     };
                 }
@@ -545,6 +550,7 @@ impl WrenVM {
                 Scope::Local => {
                     format!("Load Local {}: {:?}", v.index, self.stack[v.index])
                 }
+                Scope::Upvalue => unimplemented!("dump load upvalue"),
                 Scope::Module => {
                     format!(
                         "Load Module {}: {:?}",

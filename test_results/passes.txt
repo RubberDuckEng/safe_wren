@@ -21,6 +21,7 @@ wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/string/not.wren
 wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/global.wren
+wren_c/test/language/assignment/syntax.wren
 wren_c/test/language/assignment/undefined.wren
 wren_c/test/language/break/in_method_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren
@@ -105,10 +106,10 @@ wren_c/test/language/variable/local_without_initializer.wren
 wren_c/test/language/variable/many_locals.wren
 wren_c/test/language/variable/many_nonsimultaneous_locals.wren
 wren_c/test/language/variable/newline_after_equals.wren
-wren_c/test/language/variable/scope_if.wren
 wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
+wren_c/test/language/while/syntax.wren
 wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/long_variable_name.wren
