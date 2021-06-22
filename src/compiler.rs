@@ -1936,7 +1936,7 @@ impl<'a> Parser<'a> {
 
     fn parse_error(&self, error: ParserError) -> WrenError {
         WrenError {
-            line: self.input.line_number,
+            line: self.previous.line,
             module: self.vm.module.name.clone(),
             error: error,
         }

@@ -102,7 +102,7 @@ fn print_tokens(source_or_path: &String) {
                 token.name(&input).expect("input")
             ));
         }
-        println!("  Stack: [{}]", as_string.join(", "));
+        println!("Tokens: [{}]", as_string.join(", "));
     } else {
         println!("{:?}", result);
     }

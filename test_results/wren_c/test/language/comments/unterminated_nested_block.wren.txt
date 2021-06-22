@@ -1,0 +1,3 @@
+Unexpected error:
+[dummy_module line 2] Error Lexer(UnterminatedBlockComment)
+Missing expected error on line 4.

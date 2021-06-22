@@ -1,0 +1,3 @@
+Unexpected error:
+[dummy_module line 1] Error Lexer(UnterminatedString)
+Missing expected error on line 2.

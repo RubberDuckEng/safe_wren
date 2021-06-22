@@ -1,0 +1,3 @@
+Unexpected error:
+[dummy_module line 4] Error Grammar("Expected newline, found: Name(\"method\")")
+Missing expected error on line 5.

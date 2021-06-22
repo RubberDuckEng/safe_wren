@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Expected newline, found: Name(\"foo\")")
+[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"foo\")")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Expected newline, found: Name(\"foo\")")
+[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"foo\")")
 
 Missing expected output "C.foo" on line 19.
 Missing expected output "A.foo" on line 20.

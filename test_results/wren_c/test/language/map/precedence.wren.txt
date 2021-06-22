@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 30..31, token: LeftCurlyBrace, line: 3 }")
+[dummy_module line 3] Error Grammar("Expected Expression: ParseToken { bytes_range: 30..31, token: LeftCurlyBrace, line: 3 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 30..31, token: LeftCurlyBrace, line: 3 }")
+[dummy_module line 3] Error Grammar("Expected Expression: ParseToken { bytes_range: 30..31, token: LeftCurlyBrace, line: 3 }")
 
 Missing expected output "value" on line 20.
 Missing expected output "true" on line 21.

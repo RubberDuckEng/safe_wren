@@ -1,3 +1,0 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Cannot use \'continue\' outside of a loop.")
-Missing expected error on line 1.
