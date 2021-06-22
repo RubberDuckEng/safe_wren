@@ -42,8 +42,8 @@ fn exit(code: ExitCode) -> ! {
 }
 
 fn run_file(path: &String) {
-    let source = fs::read_to_string(path).unwrap_or_else(|_| {
-        eprintln!("Could not find file \"{}\".", path);
+    let source = fs::read_to_string(path).unwrap_or_else(|e| {
+        eprintln!("Failed to open file \"{}\": {}", path, e);
         exit(ExitCode::NoInput);
     });
     // Hack to avoid \r adjusting printed byte-ranges for ParseTokens

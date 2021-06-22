@@ -15,28 +15,31 @@ with error text from any failed tests.  `test.py` will also update
 `test_results/passes.txt` with the list of passing tests.
 
 
-## Next goals?
-* wren_core.wren parsing?
-* static functions
-* function parsing
-* lists
-* Logical operators
-* Object.==(_)
-* object construction
-* subclasses
-* continue
+## Ordered goals?
+* Have to_fix.py write out to a file.
 * Fix MethodNotFound to include this.type.
-
-## Longer off
-* Garbage Collection
-* C API
-* Closures / Upvalues
+* Object.==(_)
+* function parsing
+* static functions
+* Logical operators
+* objects
+* object fields
+* object construction
+* lists
+* list literals
+* maps
+* map literals
+* subclasses
+* Upvalues
+* Closures (Fn)
+* foreign functions
+* attributes
+* wren_core.wren parsing
 * Limit tests
 * Fibers
 * imports
-* Maps / map literals
-* foreign functions
-* attributes
+* C API
+* Garbage Collection
 
 
 ### Leads to pursue

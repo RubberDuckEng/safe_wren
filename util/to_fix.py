@@ -18,8 +18,13 @@ def collect_lines(file_name):
     with open(file_name, encoding="utf-8") as results_file:
         for line in results_file:
             line = line.strip()
+            # Remove error boilerplate
             if line == "" or line.startswith('Expected') or line.startswith('Unexpected') or line.startswith('Missing expected'):
                 continue
+            # Remove path lines (from imports?)
+            if (line.startswith("wren_c/") or line.startswith("test")) and line.endswith(".wren"):
+                continue
+            # Remove variants of line-numbers:
             line = re.sub(r'\[.*?\] ', '', line)
             line = re.sub(r'\d+\.\.\d+', '', line)
             line = re.sub(r'line: \d+', '', line)
@@ -51,10 +56,14 @@ TEST_RESULTS_DIR = join(WREN_RUST_DIR, "test_results")
 
 walk(join(WREN_RUST_DIR, 'test_results'), collect_lines)
 
-items = list(sorted(word_counts.items(), key=lambda item: item[1]))
+items = list(reversed(sorted(word_counts.items(), key=lambda item: item[1])))
 
-words = map(lambda item: f"{item[1]} : {item[0]}", items[-30:])
+words = map(lambda item: f"{item[1]} : {item[0]}", items)
 
-print("Most common errors seen in test_results/**:")
-print("occurances : error text")
-print('\n'.join(words))
+
+to_fix_path = join(WREN_RUST_DIR, 'common_test_errors.txt')
+
+with open(to_fix_path, 'w') as to_fix_file:
+    to_fix_file.write("Most common errors seen in test_results/**:")
+    to_fix_file.write("occurances : error text")
+    to_fix_file.write('\n'.join(words))
