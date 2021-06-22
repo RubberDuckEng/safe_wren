@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("codePoints")
+MethodNotFound("codePoints" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("codePoints")
+MethodNotFound("codePoints" on "String")
 
 Missing expected output "0" on line 1.
 Missing expected output "8" on line 2.

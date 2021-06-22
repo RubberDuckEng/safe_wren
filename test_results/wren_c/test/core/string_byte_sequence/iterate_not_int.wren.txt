@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be an integer." and got:
-MethodNotFound("bytes")
+MethodNotFound("bytes" on "String")
 Expected stack trace and got:
 

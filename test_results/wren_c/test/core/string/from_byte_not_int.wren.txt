@@ -1,4 +1,4 @@
 Expected runtime error "Byte must be an integer." and got:
-MethodNotFound("fromByte(_)")
+MethodNotFound("fromByte(_)" on "String metaclass")
 Expected stack trace and got:
 

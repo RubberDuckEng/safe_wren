@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("==(_)")
+MethodNotFound("==(_)" on "Bool")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("==(_)")
+MethodNotFound("==(_)" on "Bool")
 
 Missing expected output "true" on line 14.
 Missing expected output "true" on line 17.

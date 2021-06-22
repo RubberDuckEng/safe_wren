@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("type")
+MethodNotFound("type" on "Null")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("type")
+MethodNotFound("type" on "Null")
 
 Missing expected output "true" on line 4.

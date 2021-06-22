@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("smallest")
+MethodNotFound("smallest" on "Num metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("smallest")
+MethodNotFound("smallest" on "Num metaclass")
 
 Missing expected output "2.2250738585072e-308" on line 1.

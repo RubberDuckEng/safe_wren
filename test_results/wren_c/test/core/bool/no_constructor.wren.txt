@@ -1,4 +1,4 @@
 Expected runtime error "Bool metaclass does not implement 'new()'." and got:
-MethodNotFound("new()")
+MethodNotFound("new()" on "Bool metaclass")
 Expected stack trace and got:
 

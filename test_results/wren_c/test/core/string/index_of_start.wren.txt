@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("indexOf(_,_)")
+MethodNotFound("indexOf(_,_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("indexOf(_,_)")
+MethodNotFound("indexOf(_,_)" on "String")
 
 Missing expected output "0" on line 2.
 Missing expected output "1" on line 3.

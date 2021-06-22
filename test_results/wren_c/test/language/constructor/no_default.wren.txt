@@ -1,4 +1,4 @@
 Expected runtime error "Foo metaclass does not implement 'new()'." and got:
-MethodNotFound("new()")
+MethodNotFound("new()" on "Foo metaclass")
 Expected stack trace and got:
 

@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("largest")
+MethodNotFound("largest" on "Num metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("largest")
+MethodNotFound("largest" on "Num metaclass")
 
 Missing expected output "1.7976931348623e+308" on line 1.

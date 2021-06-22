@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("isInteger")
+MethodNotFound("isInteger" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("isInteger")
+MethodNotFound("isInteger" on "Num")
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

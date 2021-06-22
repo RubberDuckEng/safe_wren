@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("attributes")
+MethodNotFound("attributes" on "Without metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("attributes")
+MethodNotFound("attributes" on "Without metaclass")
 
 Missing expected output "true" on line 4.

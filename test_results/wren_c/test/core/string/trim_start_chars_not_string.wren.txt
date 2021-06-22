@@ -1,4 +1,4 @@
 Expected runtime error "Characters must be a string." and got:
-MethodNotFound("trimStart(_)")
+MethodNotFound("trimStart(_)" on "String")
 Expected stack trace and got:
 

@@ -1,4 +1,4 @@
 Expected runtime error "Argument must be a string." and got:
-MethodNotFound("fromString(_)")
+MethodNotFound("fromString(_)" on "Num metaclass")
 Expected stack trace and got:
 

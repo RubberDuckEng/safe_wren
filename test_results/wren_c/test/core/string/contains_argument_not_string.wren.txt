@@ -1,4 +1,4 @@
 Expected runtime error "Argument must be a string." and got:
-MethodNotFound("contains(_)")
+MethodNotFound("contains(_)" on "String")
 Expected stack trace and got:
 

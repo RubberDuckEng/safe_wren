@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("exp")
+MethodNotFound("exp" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("exp")
+MethodNotFound("exp" on "Num")
 
 Missing expected output "148.41315910258" on line 1.
 Missing expected output "22026.465794807" on line 2.

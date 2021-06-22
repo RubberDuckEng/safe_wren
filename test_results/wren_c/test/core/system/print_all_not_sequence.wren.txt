@@ -1,4 +1,4 @@
 Expected runtime error "Num does not implement 'iterate(_)'." and got:
-MethodNotFound("printAll(_)")
+MethodNotFound("printAll(_)" on "System metaclass")
 Expected stack trace and got:
 

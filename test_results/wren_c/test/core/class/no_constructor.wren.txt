@@ -1,4 +1,4 @@
 Expected runtime error "Class does not implement 'new()'." and got:
-MethodNotFound("new()")
+MethodNotFound("new()" on "Class")
 Expected stack trace and got:
 

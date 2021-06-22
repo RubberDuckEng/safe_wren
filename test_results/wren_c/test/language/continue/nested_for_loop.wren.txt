@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("==(_)")
+MethodNotFound("==(_)" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("==(_)")
+MethodNotFound("==(_)" on "Num")
 
 Expected output "outer 0" on line 11 and got "outer %(i)".
 Missing expected output "inner 0" on line 12.

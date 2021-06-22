@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("fromByte(_)")
+MethodNotFound("fromByte(_)" on "String metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("fromByte(_)")
+MethodNotFound("fromByte(_)" on "String metaclass")
 
 Missing expected output "A" on line 1.
 Missing expected output "0" on line 2.

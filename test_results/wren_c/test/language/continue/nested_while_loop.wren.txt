@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("<=(_)")
+MethodNotFound("<=(_)" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("<=(_)")
+MethodNotFound("<=(_)" on "Num")
 
 Missing expected output "outer 1" on line 17.
 Missing expected output "inner 1" on line 18.

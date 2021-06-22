@@ -1,4 +1,4 @@
 Expected runtime error "Range end must be an integer." and got:
-MethodNotFound("[_]")
+MethodNotFound("[_]" on "String")
 Expected stack trace and got:
 

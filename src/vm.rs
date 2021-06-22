@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::str;
 
-use crate::compiler::{Ops, Scope};
+use crate::compiler::{Ops, Scope, Signature};
 use crate::core::{init_core_classes, prim_system_print, register_core_primitives};
 
 #[derive(Clone)]
@@ -108,6 +108,11 @@ pub(crate) struct Closure {
 }
 
 #[derive(Debug)]
+pub(crate) struct MissingMethod {
+    this_class: String,
+    name: String,
+}
+
 pub(crate) enum RuntimeError {
     StackUnderflow,
     // VariableAlreadyDefined,
@@ -118,8 +123,25 @@ pub(crate) enum RuntimeError {
     ObjectRequired(Value),
     ClassRequired(Value),
     RangeRequired(Value),
-    MethodNotFound(String),
+    MethodNotFound(MissingMethod),
     ThisObjectHasNoClass,
+}
+
+impl core::fmt::Debug for RuntimeError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            RuntimeError::StackUnderflow => write!(f, "StackUnderflow"),
+            RuntimeError::NumberRequired(v) => write!(f, "NumberRequired({:?})", v),
+            RuntimeError::StringRequired(v) => write!(f, "StringRequired({:?})", v),
+            RuntimeError::ObjectRequired(v) => write!(f, "ObjectRequired({:?})", v),
+            RuntimeError::ClassRequired(v) => write!(f, "ClassRequired({:?})", v),
+            RuntimeError::RangeRequired(v) => write!(f, "RangeRequired({:?})", v),
+            RuntimeError::MethodNotFound(m) => {
+                write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)
+            }
+            RuntimeError::ThisObjectHasNoClass => write!(f, "ThisObjectHasNoClass"),
+        }
+    }
 }
 
 impl Value {
@@ -381,6 +403,13 @@ pub(crate) fn base_class(
     class
 }
 
+fn method_not_found(class: &ObjClass, signature: &Signature) -> RuntimeError {
+    RuntimeError::MethodNotFound(MissingMethod {
+        this_class: class.name.clone(),
+        name: signature.full_name.clone(),
+    })
+}
+
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
         let mut vm = Self {
@@ -441,16 +470,17 @@ impl WrenVM {
                         let this_class = self
                             .class_for_value(&args[0])
                             .ok_or(RuntimeError::ThisObjectHasNoClass)?;
+                        let class_obj = this_class.borrow();
+
                         let symbol = self
                             .methods
                             .lookup(&signature.full_name)
-                            .ok_or(RuntimeError::MethodNotFound(signature.full_name.clone()))?;
+                            .ok_or(method_not_found(&class_obj, signature))?;
 
-                        let class_obj = this_class.borrow();
                         let method = class_obj
                             .methods
                             .get(symbol)
-                            .ok_or(RuntimeError::MethodNotFound(signature.full_name.clone()))?;
+                            .ok_or(method_not_found(&class_obj, signature))?;
 
                         match method {
                             Method::Primitive(f) => {

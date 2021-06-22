@@ -1,4 +1,4 @@
 Expected runtime error "Subscript must be a number or a range." and got:
-MethodNotFound("[_]")
+MethodNotFound("[_]" on "String")
 Expected stack trace and got:
 

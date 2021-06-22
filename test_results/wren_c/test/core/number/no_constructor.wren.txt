@@ -1,4 +1,4 @@
 Expected runtime error "Num metaclass does not implement 'new()'." and got:
-MethodNotFound("new()")
+MethodNotFound("new()" on "Num metaclass")
 Expected stack trace and got:
 

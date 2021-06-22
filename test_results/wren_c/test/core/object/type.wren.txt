@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("is(_)")
+MethodNotFound("is(_)" on "Object metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("is(_)")
+MethodNotFound("is(_)" on "Object metaclass")
 
 Missing expected output "true" on line 4.
 Missing expected output "true" on line 7.

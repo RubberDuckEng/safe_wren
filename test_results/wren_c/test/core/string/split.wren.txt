@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("split(_)")
+MethodNotFound("split(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("split(_)")
+MethodNotFound("split(_)" on "String")
 
 Missing expected output "[so, ing]" on line 1.
 Missing expected output "[, thing]" on line 2.

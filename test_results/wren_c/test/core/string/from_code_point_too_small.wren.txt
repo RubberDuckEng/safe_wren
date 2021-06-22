@@ -1,4 +1,4 @@
 Expected runtime error "Code point cannot be negative." and got:
-MethodNotFound("fromCodePoint(_)")
+MethodNotFound("fromCodePoint(_)" on "String metaclass")
 Expected stack trace and got:
 

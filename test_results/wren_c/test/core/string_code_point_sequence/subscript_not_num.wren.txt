@@ -1,4 +1,4 @@
 Expected runtime error "Index must be a number." and got:
-MethodNotFound("codePoints")
+MethodNotFound("codePoints" on "String")
 Expected stack trace and got:
 

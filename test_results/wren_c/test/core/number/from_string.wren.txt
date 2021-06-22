@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("fromString(_)")
+MethodNotFound("fromString(_)" on "Num metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("fromString(_)")
+MethodNotFound("fromString(_)" on "Num metaclass")
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

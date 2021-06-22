@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("max(_)")
+MethodNotFound("max(_)" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("max(_)")
+MethodNotFound("max(_)" on "Num")
 
 Missing expected output "6" on line 4.
 Missing expected output "4" on line 5.

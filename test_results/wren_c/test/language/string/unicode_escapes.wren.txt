@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("==(_)")
+MethodNotFound("==(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("==(_)")
+MethodNotFound("==(_)" on "String")
 
 Expected output "A" on line 2 and got "\u0041".
 Expected output "~" on line 3 and got "\u007e".

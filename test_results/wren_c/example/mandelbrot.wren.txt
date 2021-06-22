@@ -1,5 +1,5 @@
 Unexpected output on stderr:
-MethodNotFound("write(_)")
+MethodNotFound("write(_)" on "System metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("write(_)")
+MethodNotFound("write(_)" on "System metaclass")
 

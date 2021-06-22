@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("log2")
+MethodNotFound("log2" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("log2")
+MethodNotFound("log2" on "Num")
 
 Missing expected output "10" on line 1.
 Missing expected output "11" on line 2.

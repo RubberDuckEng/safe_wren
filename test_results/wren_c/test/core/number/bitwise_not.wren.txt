@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("~")
+MethodNotFound("~" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("~")
+MethodNotFound("~" on "Num")
 
 Missing expected output "4294967295" on line 1.
 Missing expected output "4294967294" on line 2.
