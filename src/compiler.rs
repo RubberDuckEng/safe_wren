@@ -45,6 +45,7 @@ pub enum Token {
     Var,
     While,
     Break,
+    Continue,
     For,
     In,
     Is,
@@ -517,6 +518,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "var" => Some(Token::Var),
         "while" => Some(Token::While),
         "break" => Some(Token::Break),
+        "continue" => Some(Token::Continue),
         "null" => Some(Token::Null),
         "class" => Some(Token::Class),
         "is" => Some(Token::Is),
@@ -708,7 +710,11 @@ impl Compiler {
         self.code.len() - 1
     }
 
-    fn emit_loop(&mut self, backwards_by: u16) {
+    fn emit_loop(&mut self, offsets: &LoopOffsets) {
+        // Emit a loop instruction which jumps to start of current loop.
+        // Measures from *after* start and doesn't include this Loop, so +2.
+        let backwards_by = self.offset_to_current_pc_from_after(offsets.start) + 2;
+
         self.code.push(Ops::Loop(backwards_by))
     }
 
@@ -1138,9 +1144,7 @@ impl Compiler {
 
     fn end_loop(&mut self) {
         let offsets = self.loops.pop().expect("end_loop called with no loop!");
-        // Emit a loop instruction which jumps to start of current loop.
-        // Measures from *after* start and doesn't include this Loop, so +2.
-        self.emit_loop(self.offset_to_current_pc_from_after(offsets.start) + 2);
+        self.emit_loop(&offsets);
         // Load up the exitLoop instruction and patch it to the current code offset.
         self.patch_jump(offsets.exit_jump);
 
@@ -1388,19 +1392,37 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
     // TODO: Many more statements to implement!
 
     if parser.match_current(Token::Break)? {
-        if parser.compiler.loops.is_empty() {
-            return Err(parser.parse_error(ParserError::Grammar(
+        // let offsets =
+        parser
+            .compiler
+            .loops
+            .last()
+            .ok_or(parser.parse_error(ParserError::Grammar(
                 "Cannot use 'break' outside of a loop.".into(),
-            )));
-        }
+            )))?;
 
         // Since we will be jumping out of the scope, make sure any locals in it
         // are discarded first.
-        //   discardLocals(compiler, compiler->loop->scopeDepth + 1);
+        // discard_locals(compiler, offsets.scope_depth + 1);
 
         // Emit a placeholder instruction for the jump to the end of the body.
         // We'll fix these up with real Jumps at the end of compiling this loop.
         parser.compiler.emit(Ops::JumpPlaceholder); // Break placeholder
+    } else if parser.match_current(Token::Continue)? {
+        let offsets =
+            *parser
+                .compiler
+                .loops
+                .last()
+                .ok_or(parser.parse_error(ParserError::Grammar(
+                    "Cannot use 'continue' outside of a loop.".into(),
+                )))?;
+
+        // Since we will be jumping out of the scope, make sure any locals in it
+        // are discarded first.
+        // discard_locals(compiler, offsets.scope_depth + 1);
+
+        parser.compiler.emit_loop(&offsets);
     } else if parser.match_current(Token::If)? {
         if_statement(parser)?;
     } else if parser.match_current(Token::For)? {
@@ -1750,6 +1772,7 @@ impl Token {
             Token::Else => "else",
             Token::While => "while",
             Token::Break => "break",
+            Token::Continue => "continue",
             Token::Equals => "equal sign",
             Token::EqualsEquals => "==",
         }
@@ -1801,6 +1824,7 @@ impl Token {
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
+            Token::Continue => GrammarRule::unused(),
             Token::LessThanLessThan => GrammarRule::infix_operator(Precedence::BitwiseShift),
             Token::GreaterThanGreaterThan => GrammarRule::infix_operator(Precedence::BitwiseShift),
             Token::LessThan => GrammarRule::infix_operator(Precedence::Comparison),

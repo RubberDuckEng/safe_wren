@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 8] Error Grammar("Undeclared variable \'continue\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 8] Error Grammar("Undeclared variable \'continue\'")
+Unexpected output on stderr:
+MethodNotFound("<=(_)")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("<=(_)")
 
 Missing expected output "outer 1" on line 17.
 Missing expected output "inner 1" on line 18.

@@ -26,6 +26,7 @@ with error text from any failed tests.  `test.py` will also update
 * subclasses
 * continue
 * Fix MethodNotFound to include this.type.
+* Investigate off-by-one line errors (e.g. continue/outside_loop.wren)
 
 ## Longer off
 * Garbage Collection
