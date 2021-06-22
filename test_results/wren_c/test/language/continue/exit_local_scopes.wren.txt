@@ -1,10 +1,5 @@
-Unexpected output on stderr:
-MethodNotFound("==(_)" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("==(_)" on "Num")
-
-Missing expected output "0" on line 16.
-Missing expected output "2" on line 17.
-Missing expected output "3" on line 18.
-Missing expected output "4" on line 19.
-Missing expected output "5" on line 20.
+Expected output "2" on line 17 and got "0".
+Expected output "3" on line 18 and got "0".
+Expected output "4" on line 19 and got "0".
+Expected output "5" on line 20 and got "0".
+Got output "0" when none was expected.

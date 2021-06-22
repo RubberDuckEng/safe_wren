@@ -68,6 +68,14 @@ fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::from_string(string))
 }
 
+fn object_eqeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::Boolean(args[0].eq(&args[1])))
+}
+
+fn object_bangeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::Boolean(args[0].ne(&args[1])))
+}
+
 fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let expected_baseclass = args[1].try_into_class()?;
     let mut class = vm
@@ -168,6 +176,8 @@ pub(crate) fn init_core_classes(vm: &mut WrenVM) {
     // because it has no superclass.
     let object = define_class(&mut vm.module, "Object");
     primitive!(vm, object, "!", object_not);
+    primitive!(vm, object, "==(_)", object_eqeq);
+    primitive!(vm, object, "!=(_)", object_bangeq);
     primitive!(vm, object, "is(_)", object_is);
     primitive!(vm, object, "type(_)", object_type);
 

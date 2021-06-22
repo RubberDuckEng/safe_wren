@@ -16,6 +16,24 @@ pub(crate) enum Value {
     // Object(Handle<dyn Obj>),
 }
 
+impl PartialEq for Value {
+    fn eq(&self, rhs: &Value) -> bool {
+        match (self, rhs) {
+            (Value::Null, Value::Null) => return true,
+            (Value::Num(a), Value::Num(b)) => return a == b,
+            (Value::Boolean(a), Value::Boolean(b)) => return a == b,
+            (Value::Class(a), Value::Class(b)) => return a == b,
+            (Value::Range(a_range), Value::Range(b_range)) => {
+                let a = a_range.borrow();
+                let b = b_range.borrow();
+                return a.from == b.from && a.to == b.to && a.is_inclusive == b.is_inclusive;
+            }
+            (Value::String(a_string), Value::String(b_string)) => return a_string.eq(&b_string),
+            _ => return false,
+        }
+    }
+}
+
 impl core::fmt::Debug for Value {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
