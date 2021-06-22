@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 64..65, token: Equals, line: 5 }")
+[dummy_module line 6] Error Grammar("Undeclared variable \'continue\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 64..65, token: Equals, line: 5 }")
+[dummy_module line 6] Error Grammar("Undeclared variable \'continue\'")
 
 Missing expected output "1" on line 9.
 Missing expected output "2" on line 10.

@@ -16,14 +16,18 @@ with error text from any failed tests.  `test.py` will also update
 
 
 ## Next goals?
-* make wren_c/examples all parse?
 * wren_core.wren parsing?
-* more tests passing?
 * static functions
-* if
 * function parsing
 * lists
 * Logical operators
+* Object.==(_)
+* object construction
+* subclasses
+* hex numbers
+* continue
+* Investigate "NumberRequired(Boolean(false))"
+* Fix MethodNotFound to include this.type.
 
 ## Longer off
 * Garbage Collection
@@ -31,6 +35,10 @@ with error text from any failed tests.  `test.py` will also update
 * Closures / Upvalues
 * Limit tests
 * Fibers
+* imports
+* Maps / map literals
+* foreign functions
+* attributes
 
 
 ### Leads to pursue

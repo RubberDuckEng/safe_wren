@@ -33,9 +33,14 @@ pub enum Token {
     DotDot,
     DotDotDot,
     Comma,
+    Caret,
     Class,
-    LessThan,
     GreaterThan,
+    GreaterThanGreaterThan,
+    LessThan,
+    LessThanLessThan,
+    GreaterThanEquals,
+    LessThanEquals,
     Null,
     Var,
     While,
@@ -356,9 +361,22 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             b'&' => return Ok(two_char_token(input, b'&', Token::AmpAmp, Token::Amp)),
             b'+' => return Ok(input.make_token(Token::Plus)),
             b'-' => return Ok(input.make_token(Token::Minus)),
+            b'^' => return Ok(input.make_token(Token::Caret)),
             b'*' | b'%' => return Ok(input.make_token(Token::OpFactor(c.into()))),
-            b'<' => return Ok(input.make_token(Token::LessThan)),
-            b'>' => return Ok(input.make_token(Token::GreaterThan)),
+            b'<' => {
+                return Ok(if match_char(input, b'<') {
+                    input.make_token(Token::LessThanLessThan)
+                } else {
+                    two_char_token(input, b'=', Token::LessThanEquals, Token::LessThan)
+                });
+            }
+            b'>' => {
+                return Ok(if match_char(input, b'>') {
+                    input.make_token(Token::GreaterThanGreaterThan)
+                } else {
+                    two_char_token(input, b'=', Token::GreaterThanEquals, Token::GreaterThan)
+                });
+            }
             b'(' => return Ok(input.make_token(Token::LeftParen)),
             b')' => return Ok(input.make_token(Token::RightParen)),
             b'{' => return Ok(input.make_token(Token::LeftCurlyBrace)),
@@ -689,12 +707,12 @@ impl Compiler {
         }
     }
 
-    fn nested_local_scope_count(&self) -> usize {
-        match self.scope_depth {
-            ScopeDepth::Module => panic!("No local scopes."),
-            ScopeDepth::Local(i) => i,
-        }
-    }
+    // fn nested_local_scope_count(&self) -> usize {
+    //     match self.scope_depth {
+    //         ScopeDepth::Module => panic!("No local scopes."),
+    //         ScopeDepth::Local(i) => i,
+    //     }
+    // }
 }
 
 impl fmt::Debug for Compiler {
@@ -1663,6 +1681,7 @@ impl Token {
             Token::Plus => "plus sign",
             Token::Minus => "minus sign",
             Token::Hash => "hash (attributes)",
+            Token::Caret => "bitwise xor",
             Token::Pipe => "bitwise or",
             Token::PipePipe => "logical or",
             Token::Amp => "bitwise and",
@@ -1682,8 +1701,12 @@ impl Token {
             Token::In => "in",
             Token::Null => "null",
             Token::Class => "class",
+            Token::LessThanLessThan => "bit-shift left",
+            Token::GreaterThanGreaterThan => "bit-shift right",
             Token::LessThan => "less than",
             Token::GreaterThan => "greater than",
+            Token::LessThanEquals => "less than or equal to",
+            Token::GreaterThanEquals => "greater than or equal to",
             Token::Newline => "newline",
             Token::EndOfFile => "end of file",
             Token::Var => "var",
@@ -1731,6 +1754,7 @@ impl Token {
             Token::Hash => GrammarRule::unused(),
             Token::Var => GrammarRule::unused(),
             Token::Is => GrammarRule::infix_operator(Precedence::Is),
+            Token::Caret => GrammarRule::infix_operator(Precedence::BitwiseXor),
             Token::Pipe => GrammarRule::infix_operator(Precedence::BitwiseOr),
             Token::PipePipe => GrammarRule::infix(Precedence::LogicalOr, or_),
             Token::Amp => GrammarRule::infix_operator(Precedence::BitwiseAnd),
@@ -1742,8 +1766,12 @@ impl Token {
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
+            Token::LessThanLessThan => GrammarRule::infix_operator(Precedence::BitwiseShift),
+            Token::GreaterThanGreaterThan => GrammarRule::infix_operator(Precedence::BitwiseShift),
             Token::LessThan => GrammarRule::infix_operator(Precedence::Comparison),
             Token::GreaterThan => GrammarRule::infix_operator(Precedence::Comparison),
+            Token::LessThanEquals => GrammarRule::infix_operator(Precedence::Comparison),
+            Token::GreaterThanEquals => GrammarRule::infix_operator(Precedence::Comparison),
             Token::Comma => GrammarRule::unused(),
             Token::Newline => GrammarRule::unused(),
             Token::EndOfFile => GrammarRule::unused(),

@@ -97,7 +97,6 @@ wren_c/test/language/string/incomplete_byte_escape_at_eof.wren
 wren_c/test/language/string/incomplete_unicode_escape_at_eof.wren
 wren_c/test/language/string/unterminated.wren
 wren_c/test/language/string/unterminated_raw.wren
-wren_c/test/language/unexpected_character.wren
 wren_c/test/language/variable/global_in_initializer.wren
 wren_c/test/language/variable/global_without_initializer.wren
 wren_c/test/language/variable/local_in_initializer.wren
