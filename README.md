@@ -24,9 +24,7 @@ with error text from any failed tests.  `test.py` will also update
 * Object.==(_)
 * object construction
 * subclasses
-* hex numbers
 * continue
-* Investigate "NumberRequired(Boolean(false))"
 * Fix MethodNotFound to include this.type.
 
 ## Longer off

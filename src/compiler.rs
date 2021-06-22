@@ -340,9 +340,17 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
         input.token_start_offset = input.offset;
         let c = input.next();
         match c {
-            b'0'..=b'9' => {
-                let num = read_number(input)?;
-                return Ok(input.make_token(Token::Num(num)));
+            b'0' => {
+                let value = if input.peek_is(b'x') {
+                    read_hex_number(input)?
+                } else {
+                    read_number(input)?
+                };
+                return Ok(input.make_token(Token::Num(value)));
+            }
+            b'1'..=b'9' => {
+                let value = read_number(input)?;
+                return Ok(input.make_token(Token::Num(value)));
             }
             b'.' => {
                 if match_char(input, b'.') {
@@ -435,12 +443,39 @@ fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
         .map_err(|e| LexError::SliceDecoderError(e))?;
 
     let result = if is_hex {
-        i32::from_str_radix(name, 16).map_err(|e| LexError::IntegerParsingError(e))? as f64
+        let without_prefix = name.trim_start_matches("0x");
+        u32::from_str_radix(without_prefix, 16).map_err(|e| LexError::IntegerParsingError(e))?
+            as f64
     } else {
         name.parse::<f64>()
             .map_err(|e| LexError::FloatParsingError(e))?
     };
     Ok(result)
+}
+
+// Reads the next character, which should be a hex digit (0-9, a-f, or A-F) and
+// returns its numeric value. If the character isn't a hex digit, returns -1.
+fn read_hex_digit(input: &mut InputManager) -> Option<u8> {
+    match input.peek() {
+        Some(b) => match b {
+            b'0'..=b'9' => Some(input.next() - b'0'),
+            b'a'..=b'f' => Some(input.next() - b'a' + 10),
+            b'A'..=b'F' => Some(input.next() - b'A' + 10),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+// Finishes lexing a hexadecimal number literal.
+fn read_hex_number(input: &mut InputManager) -> Result<f64, LexError> {
+    // Skip past the `x` used to denote a hexadecimal literal.
+    input.next();
+
+    // Iterate over all the valid hexadecimal digits found.
+    while let Some(_) = read_hex_digit(input) {}
+
+    make_number(input, true)
 }
 
 // Knows how to advance to the end of something that looks like a number

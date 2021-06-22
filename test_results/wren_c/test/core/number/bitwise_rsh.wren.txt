@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 5] Error Grammar("Expected right paren, found: Name(\"xaaaaaaaa\")")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Expected right paren, found: Name(\"xaaaaaaaa\")")
+Unexpected output on stderr:
+MethodNotFound(">>(_)")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound(">>(_)")
 
 Missing expected output "0" on line 1.
 Missing expected output "1" on line 2.

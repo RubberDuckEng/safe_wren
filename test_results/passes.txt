@@ -83,6 +83,7 @@ wren_c/test/language/module/name_collision.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
 wren_c/test/language/null/literal.wren
+wren_c/test/language/number/hex_too_large.wren
 wren_c/test/language/number/scientific_float_missing_exponent.wren
 wren_c/test/language/number/scientific_floating_exponent.wren
 wren_c/test/language/number/scientific_missing_exponent.wren
