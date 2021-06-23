@@ -1,12 +1,15 @@
 test/bringup/add.wren
 test/bringup/class.wren
 test/bringup/do_nothing_while.wren
+test/bringup/for.wren
+test/bringup/for_nested.wren
 test/bringup/greater_than.wren
 test/bringup/if.wren
 test/bringup/is.wren
 test/bringup/locals.wren
 test/bringup/number_parsing.wren
 test/bringup/range.wren
+test/bringup/scopes.wren
 test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
 wren_c/example/hello.wren
@@ -23,6 +26,7 @@ wren_c/test/core/number/not.wren
 wren_c/test/core/number/plus.wren
 wren_c/test/core/range/equality.wren
 wren_c/test/core/range/iterate.wren
+wren_c/test/core/range/iterate_from_float.wren
 wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/string/equality.wren
 wren_c/test/core/string/not.wren
@@ -34,6 +38,7 @@ wren_c/test/language/assignment/is.wren
 wren_c/test/language/assignment/prefix_operator.wren
 wren_c/test/language/assignment/syntax.wren
 wren_c/test/language/assignment/undefined.wren
+wren_c/test/language/break/exit_local_scopes.wren
 wren_c/test/language/break/in_while_loop.wren
 wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
@@ -97,6 +102,7 @@ wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
 wren_c/test/language/module/name_collision.wren
 wren_c/test/language/no_trailing_newline.wren
+wren_c/test/language/nonlocal/in_block_scope.wren
 wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
 wren_c/test/language/null/literal.wren
 wren_c/test/language/number/hex_literals.wren
@@ -122,6 +128,10 @@ wren_c/test/language/variable/many_locals.wren
 wren_c/test/language/variable/many_nonsimultaneous_locals.wren
 wren_c/test/language/variable/newline_after_equals.wren
 wren_c/test/language/variable/newline_after_var.wren
+wren_c/test/language/variable/scope_if.wren
+wren_c/test/language/variable/scope_reuse_in_different_blocks.wren
+wren_c/test/language/variable/scope_while.wren
+wren_c/test/language/variable/shadow_global.wren
 wren_c/test/language/variable/undefined_global.wren
 wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren

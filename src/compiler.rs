@@ -656,7 +656,7 @@ pub enum Ops {
 #[derive(Debug)]
 struct Local {
     name: String,
-    // depth: usize,
+    depth: usize,
 }
 
 #[derive(Copy, Clone, PartialEq, Debug)]
@@ -741,7 +741,8 @@ impl Compiler {
         }
     }
     fn pop_scope(&mut self) {
-        // let popped = discard_locals(self, self.scope_depth);
+        // let popped =
+        discard_locals(self, self.scope_depth);
         // self.num_slots -= popped;
 
         self.scope_depth = match self.scope_depth {
@@ -756,12 +757,12 @@ impl Compiler {
         }
     }
 
-    // fn nested_local_scope_count(&self) -> usize {
-    //     match self.scope_depth {
-    //         ScopeDepth::Module => panic!("No local scopes."),
-    //         ScopeDepth::Local(i) => i,
-    //     }
-    // }
+    fn nested_local_scope_count(&self) -> usize {
+        match self.scope_depth {
+            ScopeDepth::Module => panic!("No local scopes."),
+            ScopeDepth::Local(i) => i,
+        }
+    }
 }
 
 impl fmt::Debug for Compiler {
@@ -1401,24 +1402,24 @@ fn auto_scope(
 // the break instruction.
 //
 // Returns the number of local variables that were eliminated.
-// fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
-//     let depth = match scope_depth {
-//         ScopeDepth::Module => panic!("Can't discard locals at module level."),
-//         ScopeDepth::Local(i) => i,
-//     };
+fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
+    let depth = match scope_depth {
+        ScopeDepth::Module => panic!("Can't discard locals at module level."),
+        ScopeDepth::Local(i) => i,
+    };
 
-//     let starting_locals_len = compiler.locals.len();
-//     while let Some(local) = compiler.locals.last() {
-//         if local.depth < depth {
-//             break;
-//         }
-//         // FIXME: Handle upvalues.
-//         compiler.emit(Ops::Pop);
-//         compiler.locals.pop();
-//     }
+    let starting_locals_len = compiler.locals.len();
+    while let Some(local) = compiler.locals.last() {
+        if local.depth < depth {
+            break;
+        }
+        // FIXME: Handle upvalues.
+        compiler.emit(Ops::Pop);
+        compiler.locals.pop();
+    }
 
-//     return starting_locals_len - compiler.locals.len();
-// }
+    return starting_locals_len - compiler.locals.len();
+}
 
 // Break, continue, if, for, while, blocks, etc.
 // Unlike expression, does not leave something on the stack.
@@ -1485,7 +1486,7 @@ fn statement(parser: &mut Parser) -> Result<(), WrenError> {
 fn add_local(parser: &mut Parser, name: String) -> u16 {
     parser.compiler.locals.push(Local {
         name: name,
-        // depth: parser.compiler.nested_local_scope_count(),
+        depth: parser.compiler.nested_local_scope_count(),
     });
     (parser.compiler.locals.len() - 1) as u16
 }

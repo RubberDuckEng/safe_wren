@@ -1,2 +1,0 @@
-Expected output "out" on line 6 and got "in".
-Expected output "out" on line 13 and got "in".

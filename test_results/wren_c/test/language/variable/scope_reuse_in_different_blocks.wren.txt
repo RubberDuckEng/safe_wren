@@ -1,1 +1,0 @@
-Expected output "second" on line 8 and got "first".
