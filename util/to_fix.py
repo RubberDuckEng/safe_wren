@@ -1,4 +1,3 @@
-from posixpath import relpath
 import re
 from os import listdir
 from pathlib import Path
@@ -59,7 +58,8 @@ SCRIPT_PATH = Path(__file__).as_posix()
 
 walk(join(WREN_RUST_DIR, 'test_results'), collect_lines)
 
-items = list(reversed(sorted(word_counts.items(), key=lambda item: item[1])))
+items = list(
+    sorted(word_counts.items(), key=lambda x: (-x[1], x[0])))
 
 words = map(lambda item: f"{item[1]} : {item[0]}", items)
 
