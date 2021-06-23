@@ -1,12 +1,7 @@
-Unexpected output on stderr:
-MethodNotFound("<=(_)" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("<=(_)" on "Num")
-
-Missing expected output "outer 1" on line 17.
-Missing expected output "inner 1" on line 18.
-Missing expected output "inner 3" on line 19.
-Missing expected output "outer 2" on line 20.
+Expected output "outer 1" on line 17 and got "outer %(i)".
+Expected output "inner 1" on line 18 and got "inner %(j)".
+Expected output "inner 3" on line 19 and got "outer %(i)".
+Expected output "outer 2" on line 20 and got "outer %(i)".
 Missing expected output "outer 3" on line 21.
 Missing expected output "inner 1" on line 22.
 Missing expected output "inner 3" on line 23.

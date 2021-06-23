@@ -1,4 +1,5 @@
 use crate::vm::*;
+use std::ops::*;
 
 // System.print is not actually in C in wren_c, but since we can't yet parse
 // classes or methods, implementing here to get unit tests working.
@@ -18,38 +19,27 @@ pub(crate) fn prim_system_print(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Va
     Ok(value)
 }
 
-fn num_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    Ok(Value::Num(
-        args[0].try_into_num()? + args[1].try_into_num()?,
-    ))
+macro_rules! infix_num_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+            Ok(Value::$return_type(
+                args[0].try_into_num()?.$method(&args[1].try_into_num()?),
+            ))
+        }
+    };
 }
-fn num_minus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    Ok(Value::Num(
-        args[0].try_into_num()? - args[1].try_into_num()?,
-    ))
-}
+
+infix_num_op!(num_plus, add, Num);
+infix_num_op!(num_minus, sub, Num);
+infix_num_op!(num_mult, mul, Num);
+infix_num_op!(num_divide, div, Num);
+infix_num_op!(num_lt, lt, Boolean);
+infix_num_op!(num_gt, gt, Boolean);
+infix_num_op!(num_lte, le, Boolean);
+infix_num_op!(num_gte, ge, Boolean);
+
 fn num_unary_minus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Num(-args[0].try_into_num()?))
-}
-fn num_mult(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    Ok(Value::Num(
-        args[0].try_into_num()? * args[1].try_into_num()?,
-    ))
-}
-fn num_divide(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    Ok(Value::Num(
-        args[0].try_into_num()? / args[1].try_into_num()?,
-    ))
-}
-fn num_lt(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    Ok(Value::Boolean(
-        args[0].try_into_num()? < args[1].try_into_num()?,
-    ))
-}
-fn num_gt(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    Ok(Value::Boolean(
-        args[0].try_into_num()? > args[1].try_into_num()?,
-    ))
 }
 fn num_range_inclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let start = args[0].try_into_num()?;
@@ -224,7 +214,9 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, "*(_)", num_mult);
     primitive!(vm, core.num, "/(_)", num_divide);
     primitive!(vm, core.num, "<(_)", num_lt);
+    primitive!(vm, core.num, "<=(_)", num_lte);
     primitive!(vm, core.num, ">(_)", num_gt);
+    primitive!(vm, core.num, ">=(_)", num_gte);
     primitive!(vm, core.num, "..(_)", num_range_inclusive);
     primitive!(vm, core.num, "...(_)", num_range_exclusive);
 

@@ -1,6 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("<=(_)" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("<=(_)" on "Num")
-
-Missing expected output "outer" on line 7.
+Expected output "outer" on line 7 and got "1".

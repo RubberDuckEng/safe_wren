@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("<=(_)" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("<=(_)" on "Num")
-
-Missing expected output "2" on line 10.
-Missing expected output "3" on line 11.
-Missing expected output "3" on line 12.

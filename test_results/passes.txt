@@ -13,6 +13,7 @@ wren_c/example/hello.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/not.wren
 wren_c/test/core/null/not.wren
+wren_c/test/core/number/comparison.wren
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/equality.wren
 wren_c/test/core/number/invalid_hex_literal.wren
@@ -57,6 +58,7 @@ wren_c/test/language/constructor/cannot_be_setter.wren
 wren_c/test/language/constructor/cannot_be_subscript.wren
 wren_c/test/language/constructor/cannot_be_unary.wren
 wren_c/test/language/constructor/no_parameter_list.wren
+wren_c/test/language/continue/in_while_loop.wren
 wren_c/test/language/continue/outside_loop.wren
 wren_c/test/language/empty_block.wren
 wren_c/test/language/empty_file.wren
