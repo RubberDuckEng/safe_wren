@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"construct\")")
+[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"construct\")")
+[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
 
 Missing expected output "a" on line 6.
 Missing expected output "a b" on line 8.

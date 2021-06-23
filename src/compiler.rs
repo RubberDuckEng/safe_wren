@@ -54,6 +54,7 @@ pub enum Token {
     Is,
     If,
     Else,
+    Construct,
     Equals,
     EqualsEquals,
     Boolean(bool),
@@ -532,6 +533,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "in" => Some(Token::In),
         "if" => Some(Token::If),
         "else" => Some(Token::Else),
+        "construct" => Some(Token::Construct),
         _ => None,
     }
 }
@@ -1792,6 +1794,7 @@ impl Token {
             Token::For => "for",
             Token::In => "in",
             Token::Null => "null",
+            Token::Construct => "construct",
             Token::Class => "class",
             Token::LessThanLessThan => "bit-shift left",
             Token::GreaterThanGreaterThan => "bit-shift right",
@@ -1859,6 +1862,7 @@ impl Token {
             Token::In => GrammarRule::unused(),
             Token::If => GrammarRule::unused(),
             Token::Else => GrammarRule::unused(),
+            Token::Construct => GrammarRule::unused(), // FIXME: Wrong.
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),

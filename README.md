@@ -39,6 +39,10 @@ with error text from any failed tests.  `test.py` will also update
 * C API
 * Garbage Collection
 
+## Most failing tests
+* Maps/map lookup, but requires object allocation
+* "construct" keyword, missing function declarations.
+
 
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?

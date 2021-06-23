@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 4] Error Grammar("Expected newline, found: Name(\"construct\")")
+[dummy_module line 4] Error Grammar("Expected newline, found: Construct")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expected newline, found: Name(\"construct\")")
+[dummy_module line 4] Error Grammar("Expected newline, found: Construct")
 
 Missing expected output "param" on line 14.
