@@ -2,8 +2,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::str;
 
-use crate::compiler::{Ops, Scope, Signature};
-use crate::core::{init_core_classes, prim_system_print, register_core_primitives};
+use crate::compiler::{compile, InputManager, Ops, Scope, Signature};
+use crate::core::{init_base_classes, prim_system_print, register_core_primitives};
 
 #[derive(Clone)]
 pub(crate) enum Value {
@@ -112,6 +112,16 @@ impl Module {
         self.variables.push(value);
         self.variable_names.len() - 1
     }
+}
+
+pub(crate) fn find_core_class(vm: &WrenVM, name: &str) -> Handle<ObjClass> {
+    let symbol = vm
+        .module
+        .lookup_symbol(name)
+        .expect(&format!("find_core_class failed to load {}", name));
+    vm.module.variables[symbol as usize]
+        .try_into_class()
+        .expect(&format!("find_core_class failed to load {}", name))
 }
 
 #[derive(Debug)]
@@ -225,6 +235,7 @@ pub struct WrenVM {
     // Single global symbol table for all method names (matches wren_c)
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
+    pub(crate) class_class: Option<Handle<ObjClass>>,
     pub(crate) core: Option<CoreClasses>,
 }
 
@@ -255,7 +266,7 @@ pub(crate) fn wren_new_range(
         is_inclusive: is_inclusive,
     })
 }
-fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<ObjClass>) {
+pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<ObjClass>) {
     subclass.superclass = Some(superclass.clone());
     // Setup fields
     // Inherit methods
@@ -317,7 +328,7 @@ fn wren_new_class(
         superclass,
         num_fields,
         name,
-        &vm.core.as_ref().unwrap().class,
+        &vm.class_class.as_ref().unwrap(),
     )
 }
 
@@ -352,10 +363,7 @@ pub(crate) struct CoreClasses {
     pub(crate) bool_class: Handle<ObjClass>,
     pub(crate) null: Handle<ObjClass>,
     pub(crate) string: Handle<ObjClass>,
-    pub(crate) class: Handle<ObjClass>,
     pub(crate) range: Handle<ObjClass>,
-    // Probably not needed (not in wren_c):
-    pub(crate) system: Handle<ObjClass>,
 }
 
 #[derive(Debug)]
@@ -396,36 +404,24 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
     class
 }
 
-// FIXME: This is a hack until we start loading a wren_core.wren
-// to define all the core classes for us.
-// NOTE: This isn't quite "wren_new_class_with_class_class"
-// since that's a interpret-time function and this function does
-// both compile time work (declare variables) as well as interpret
-// time work (create class objects).
-pub(crate) fn base_class(
-    module: &mut Module,
-    name: &str,
-    object_class: &Handle<ObjClass>,
-    class_class: &Handle<ObjClass>,
-) -> Handle<ObjClass> {
-    let metaclass = define_class(module, &format!("{} metaclass", name)); // FIXME
-    metaclass.borrow_mut().class = Some(class_class.clone());
-    metaclass.borrow_mut().superclass = Some(class_class.clone());
-
-    let class = define_class(module, name);
-    class.borrow_mut().class = Some(metaclass.clone());
-    class.borrow_mut().superclass = Some(object_class.clone());
-
-    wren_bind_superclass(&mut class.borrow_mut(), object_class);
-
-    class
-}
-
 fn method_not_found(class: &ObjClass, signature: &Signature) -> RuntimeError {
     RuntimeError::MethodNotFound(MissingMethod {
         this_class: class.name.clone(),
         name: signature.full_name.clone(),
     })
+}
+
+pub(crate) fn load_wren_core(vm: &mut WrenVM) {
+    use std::fs;
+    // hacks upon hacks.
+    let path = "stub_wren_core.wren";
+    let source = fs::read_to_string(path).unwrap_or_else(|e| {
+        panic!("Failed to open file \"{}\": {}", path, e);
+    });
+
+    let input = InputManager::from_string(source);
+    let closure = compile(vm, input, "core".into()).expect("compile wren_core");
+    vm.run(closure).expect("run wren_core");
 }
 
 impl WrenVM {
@@ -438,9 +434,15 @@ impl WrenVM {
             pc: 0,
             debug: debug,
             core: None,
+            class_class: None,
         };
 
-        init_core_classes(&mut vm);
+        init_base_classes(&mut vm);
+        load_wren_core(&mut vm);
+        // HACK: Reset the VM manually (until we have fibers)
+        // wren_c just discards the fiber used for core compilation.
+        vm.stack = Vec::new();
+        vm.pc = 0;
         register_core_primitives(&mut vm);
         vm
     }

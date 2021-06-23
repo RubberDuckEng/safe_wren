@@ -1,12 +1,8 @@
 Unexpected output on stderr:
-thread 'main' panicked at 'not implemented', src/vm.rs:509:45
-Unexpected output on stderr:
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-Expected return code 0 and got 101. Stderr:
-thread 'main' panicked at 'not implemented', src/vm.rs:509:45
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+MethodNotFound("type" on "Foo metaclass")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("type" on "Foo metaclass")
 
-Missing expected output "true" on line 4.
 Missing expected output "true" on line 7.
 Missing expected output "true" on line 10.
 Missing expected output "true" on line 13.

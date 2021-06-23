@@ -1,6 +1,7 @@
 from posixpath import relpath
 import re
 from os import listdir
+from pathlib import Path
 from os.path import abspath, dirname, isdir, join, realpath
 
 
@@ -54,7 +55,7 @@ def walk(dir, callback, ignored=None):
 
 WREN_RUST_DIR = dirname(dirname(realpath(__file__)))
 TEST_RESULTS_DIR = join(WREN_RUST_DIR, "test_results")
-SCRIPT_PATH = __file__
+SCRIPT_PATH = Path(__file__).as_posix()
 
 walk(join(WREN_RUST_DIR, 'test_results'), collect_lines)
 

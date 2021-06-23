@@ -16,7 +16,7 @@ with error text from any failed tests.  `test.py` will also update
 
 
 ## Ordered goals?
-* Add a very basic wren_core.wren
+* Multiple Compiler objects
 * function parsing
 * static functions
 * Logical operators
@@ -32,7 +32,7 @@ with error text from any failed tests.  `test.py` will also update
 * Closures (Fn)
 * foreign functions
 * attributes
-* wren_core.wren parsing
+* Full wren_core.wren parsing
 * Limit tests
 * Fibers
 * imports

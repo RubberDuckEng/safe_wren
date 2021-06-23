@@ -156,7 +156,7 @@ macro_rules! primitive {
     };
 }
 
-pub(crate) fn init_core_classes(vm: &mut WrenVM) {
+pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     // wren_c makes a core module, which it then imports
     // into every module when running.  For now we're just
     // "importing" core directly into the one module we ever have.
@@ -174,7 +174,7 @@ pub(crate) fn init_core_classes(vm: &mut WrenVM) {
 
     // Now we can define Class, which is a subclass of Object.
     let class = define_class(&mut vm.module, "Class");
-    class.borrow_mut().superclass = Some(object.clone());
+    wren_bind_superclass(&mut class.borrow_mut(), &object);
     primitive!(vm, class, "name", class_name);
     // PRIMITIVE(vm->classClass, "supertype", class_supertype);
     // PRIMITIVE(vm->classClass, "toString", class_toString);
@@ -186,22 +186,19 @@ pub(crate) fn init_core_classes(vm: &mut WrenVM) {
     object.borrow_mut().class = Some(object_metaclass.clone());
     object_metaclass.borrow_mut().class = Some(class.clone());
     class.borrow_mut().class = Some(class.clone());
-    object_metaclass.borrow_mut().superclass = Some(class.clone());
+    wren_bind_superclass(&mut object_metaclass.borrow_mut(), &class);
     // PRIMITIVE(objectMetaclass, "same(_,_)", object_same);
-
-    vm.core = Some(CoreClasses {
-        bool_class: base_class(&mut vm.module, "Bool", &object, &class),
-        num: base_class(&mut vm.module, "Num", &object, &class),
-        string: base_class(&mut vm.module, "String", &object, &class),
-        system: base_class(&mut vm.module, "System", &object, &class),
-        null: base_class(&mut vm.module, "Null", &object, &class),
-        range: base_class(&mut vm.module, "Range", &object, &class),
-        class: class,
-    });
+    vm.class_class = Some(class);
 }
 
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
-    let core = vm.core.as_ref().unwrap();
+    let core = CoreClasses {
+        bool_class: find_core_class(vm, "Bool"),
+        num: find_core_class(vm, "Num"),
+        string: find_core_class(vm, "String"),
+        null: find_core_class(vm, "Null"),
+        range: find_core_class(vm, "Range"),
+    };
     primitive!(vm, core.num, "+(_)", num_plus);
     primitive!(vm, core.num, "-(_)", num_minus);
     primitive!(vm, core.num, "-", num_unary_minus);
@@ -220,4 +217,5 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.bool_class, "!", bool_not);
 
     primitive!(vm, core.null, "!", null_not);
+    vm.core = Some(core);
 }

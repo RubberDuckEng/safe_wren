@@ -12,6 +12,7 @@ test/bringup/trailing_newlines.wren
 wren_c/example/hello.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/not.wren
+wren_c/test/core/class/equality.wren
 wren_c/test/core/null/not.wren
 wren_c/test/core/number/comparison.wren
 wren_c/test/core/number/decimal_point_at_eof.wren
