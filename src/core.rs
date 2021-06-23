@@ -169,23 +169,17 @@ pub(crate) fn init_core_classes(vm: &mut WrenVM) {
     primitive!(vm, object, "==(_)", object_eqeq);
     primitive!(vm, object, "!=(_)", object_bangeq);
     primitive!(vm, object, "is(_)", object_is);
+    // PRIMITIVE(vm->objectClass, "toString", object_toString);
     primitive!(vm, object, "type(_)", object_type);
 
-    // PRIMITIVE(vm->objectClass, "!", object_not);
-    // PRIMITIVE(vm->objectClass, "==(_)", object_eqeq);
-    // PRIMITIVE(vm->objectClass, "!=(_)", object_bangeq);
-    // PRIMITIVE(vm->objectClass, "is(_)", object_is);
-    // PRIMITIVE(vm->objectClass, "toString", object_toString);
-    // PRIMITIVE(vm->objectClass, "type", object_type);
     // Now we can define Class, which is a subclass of Object.
     let class = define_class(&mut vm.module, "Class");
     class.borrow_mut().superclass = Some(object.clone());
     primitive!(vm, class, "name", class_name);
-
-    // PRIMITIVE(vm->classClass, "name", class_name);
     // PRIMITIVE(vm->classClass, "supertype", class_supertype);
     // PRIMITIVE(vm->classClass, "toString", class_toString);
     // PRIMITIVE(vm->classClass, "attributes", class_attributes);
+
     // Finally, we can define Object's metaclass which is a subclass of Class.
     let object_metaclass = define_class(&mut vm.module, "Object metaclass");
     // Wire up the metaclass relationships now that all three classes are built.
