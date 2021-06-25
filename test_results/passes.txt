@@ -17,6 +17,11 @@ wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/not.wren
 wren_c/test/core/class/equality.wren
 wren_c/test/core/null/not.wren
+wren_c/test/core/number/bitwise_and.wren
+wren_c/test/core/number/bitwise_lsh.wren
+wren_c/test/core/number/bitwise_or.wren
+wren_c/test/core/number/bitwise_rsh.wren
+wren_c/test/core/number/bitwise_xor.wren
 wren_c/test/core/number/comparison.wren
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/equality.wren
@@ -37,6 +42,7 @@ wren_c/test/language/assignment/is.wren
 wren_c/test/language/assignment/prefix_operator.wren
 wren_c/test/language/assignment/syntax.wren
 wren_c/test/language/assignment/undefined.wren
+wren_c/test/language/bitwise_precedence.wren
 wren_c/test/language/break/exit_local_scopes.wren
 wren_c/test/language/break/in_function_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren

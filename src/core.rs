@@ -40,6 +40,22 @@ infix_num_op!(num_gt, gt, Boolean);
 infix_num_op!(num_lte, le, Boolean);
 infix_num_op!(num_gte, ge, Boolean);
 
+macro_rules! bitwise_num_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+            let a = args[0].try_into_num()? as u32;
+            let b = args[1].try_into_num()? as u32;
+            Ok(Value::$return_type(a.$method(&b) as f64))
+        }
+    };
+}
+
+bitwise_num_op!(num_bitwise_and, bitand, Num);
+bitwise_num_op!(num_bitwise_or, bitor, Num);
+bitwise_num_op!(num_bitwise_xor, bitxor, Num);
+bitwise_num_op!(num_bitwise_shl, shl, Num);
+bitwise_num_op!(num_bitwise_shr, shr, Num);
+
 fn num_unary_minus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Num(-args[0].try_into_num()?))
 }
@@ -219,6 +235,11 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, ">=(_)", num_gte);
     primitive!(vm, core.num, "..(_)", num_range_inclusive);
     primitive!(vm, core.num, "...(_)", num_range_exclusive);
+    primitive!(vm, core.num, "&(_)", num_bitwise_and);
+    primitive!(vm, core.num, "|(_)", num_bitwise_or);
+    primitive!(vm, core.num, "^(_)", num_bitwise_xor);
+    primitive!(vm, core.num, "<<(_)", num_bitwise_shl);
+    primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);

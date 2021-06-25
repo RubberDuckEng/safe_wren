@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("&(_)" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("&(_)" on "Num")
-
-Missing expected output "0" on line 1.
-Missing expected output "0" on line 2.
-Missing expected output "808464432" on line 3.
-Missing expected output "4294967295" on line 6.

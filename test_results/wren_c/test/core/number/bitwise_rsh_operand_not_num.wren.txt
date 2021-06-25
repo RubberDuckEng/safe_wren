@@ -1,4 +1,4 @@
 Expected runtime error "Right operand must be a number." and got:
-MethodNotFound(">>(_)" on "Num")
+NumberRequired(Boolean(false))
 Expected stack trace and got:
 
