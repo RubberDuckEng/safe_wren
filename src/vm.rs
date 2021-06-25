@@ -412,6 +412,8 @@ fn method_not_found(class: &ObjClass, signature: &Signature) -> RuntimeError {
 }
 
 pub(crate) fn load_wren_core(vm: &mut WrenVM) {
+    let had_debug = vm.debug;
+    vm.debug = false;
     use std::fs;
     // hacks upon hacks.
     let path = "stub_wren_core.wren";
@@ -422,6 +424,7 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM) {
     let input = InputManager::from_string(source);
     let closure = compile(vm, input, "core".into()).expect("compile wren_core");
     vm.run(closure).expect("run wren_core");
+    vm.debug = had_debug;
 }
 
 impl WrenVM {

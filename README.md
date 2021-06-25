@@ -16,7 +16,8 @@ with error text from any failed tests.  `test.py` will also update
 
 
 ## Ordered goals?
-* Multiple Compiler objects
+* Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
+* Multiple Compiler objects (required for function parsing)
 * function parsing
 * static functions
 * Logical operators
