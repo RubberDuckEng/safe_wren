@@ -113,7 +113,7 @@ fn print_bytecode(source_or_path: &String) {
     let input = input_from_source_or_path(source_or_path);
     let result = compile(&mut vm, input, "dummy_module");
     match result {
-        Ok(closure) => debug_bytecode(&vm, &closure),
+        Ok(closure) => debug_bytecode(&vm, &closure.borrow()),
         Err(e) => eprintln!("{:?}", e),
     }
 }

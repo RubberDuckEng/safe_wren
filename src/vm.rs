@@ -135,10 +135,6 @@ pub(crate) struct Function {
     pub code: Vec<Ops>,
 }
 
-pub(crate) struct Closure {
-    pub(crate) fn_obj: Handle<ObjFn>,
-}
-
 #[derive(Debug)]
 pub(crate) struct MissingMethod {
     this_class: String,
@@ -243,13 +239,36 @@ impl SymbolTable {
     }
 }
 
+pub struct CallFrame {
+    // Program counter (offset into current code block)
+    pc: usize,
+    // The closure being executed.
+    closure: Handle<ObjClosure>,
+}
+
+pub struct Fiber {
+    // Stack for this executing Fiber
+    pub(crate) stack: Vec<Value>,
+    frame: CallFrame,
+}
+
+impl Fiber {
+    fn new(closure: Handle<ObjClosure>) -> Fiber {
+        Fiber {
+            stack: Vec::new(),
+            frame: CallFrame {
+                pc: 0,
+                closure: closure,
+            },
+        }
+    }
+}
+
 pub struct WrenVM {
     // Current executing module (only module currently)
     pub(crate) module: Module, // No support for multiple modules yet.
-    // Stack for this executing VM
-    pub(crate) stack: Vec<Value>,
-    // Program counter (offset into current code block)
-    pc: usize,
+    // Current executing Fiber (should eventually be a list?)
+    last_fiber: Option<Fiber>,
     // Print debug information when running
     debug: bool,
     // Single global symbol table for all method names (matches wren_c)
@@ -263,11 +282,12 @@ pub struct WrenVM {
 impl core::fmt::Debug for WrenVM {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "WrenVM {{ ")?;
+        let fiber = self.last_fiber.as_ref().unwrap();
         write!(
             f,
             "stack: (len {}, top {:?}), ",
-            self.stack.len(),
-            self.stack.last()
+            fiber.stack.len(),
+            fiber.stack.last()
         )?;
         write!(f, "methods: (len {}) ", self.methods.method_names.len())?;
         write!(f, "}}")
@@ -340,7 +360,7 @@ fn wren_new_class_with_class_class(
 }
 
 pub(crate) fn wren_new_class(
-    vm: &mut WrenVM,
+    vm: &WrenVM,
     superclass: &Handle<ObjClass>,
     num_fields: usize,
     name: Value,
@@ -360,15 +380,15 @@ fn as_class(value: Value) -> Handle<ObjClass> {
     }
 }
 
-fn create_class(vm: &mut WrenVM, num_fields: usize) -> Result<(), RuntimeError> {
+fn create_class(vm: &WrenVM, fiber: &mut Fiber, num_fields: usize) -> Result<(), RuntimeError> {
     // Pull the name and superclass off the stack.
-    let superclass = as_class(vm.pop()?);
-    let name = vm.pop()?;
+    let superclass = as_class(fiber.pop()?);
+    let name = fiber.pop()?;
 
     //   vm->fiber->error = validateSuperclass(vm, name, superclass, numFields);
 
     let class = wren_new_class(vm, &superclass, num_fields, name)?;
-    vm.stack.push(Value::Class(class));
+    fiber.push(Value::Class(class));
     Ok(())
 }
 
@@ -453,9 +473,8 @@ impl WrenVM {
         let mut vm = Self {
             // dummy_module to avoid changing test results (for now)
             module: Module::with_name("dummy_module"),
-            stack: Vec::new(),
             methods: SymbolTable::default(),
-            pc: 0,
+            last_fiber: None,
             debug: debug,
             core: None,
             class_class: None,
@@ -464,10 +483,6 @@ impl WrenVM {
 
         init_base_classes(&mut vm);
         load_wren_core(&mut vm);
-        // HACK: Reset the VM manually (until we have fibers)
-        // wren_c just discards the fiber used for core compilation.
-        vm.stack = Vec::new();
-        vm.pc = 0;
         register_core_primitives(&mut vm);
         vm
     }
@@ -501,29 +516,38 @@ impl WrenVM {
         }
     }
 
-    pub(crate) fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {
+    pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<(), RuntimeError> {
+        let mut fiber = Fiber::new(closure);
+        let result = self.run_fiber(&mut fiber);
+        self.last_fiber = Some(fiber);
+        result
+    }
+
+    pub(crate) fn run_fiber(&mut self, fiber: &mut Fiber) -> Result<(), RuntimeError> {
+        let fn_obj = fiber.frame.closure.borrow().fn_obj.clone();
+        let mut pc = fiber.frame.pc;
         loop {
-            let op = &closure.fn_obj.borrow().function.code[self.pc];
-            self.pc += 1;
+            let op = &fn_obj.borrow().function.code[pc];
+            pc += 1;
             if self.debug {
-                self.dump_stack();
-                self.dump_instruction(&closure, op);
+                fiber.dump_stack();
+                fiber.dump_instruction(&self.module, &fiber.frame.closure.borrow(), op);
             }
             match op {
                 Ops::Constant(index) => {
-                    self.push(closure.fn_obj.borrow().function.constants[*index].clone());
+                    fiber.push(fn_obj.borrow().function.constants[*index].clone());
                 }
                 Ops::Boolean(value) => {
-                    self.push(Value::Boolean(*value));
+                    fiber.push(Value::Boolean(*value));
                 }
                 Ops::Null => {
-                    self.push(Value::Null);
+                    fiber.push(Value::Null);
                 }
                 Ops::Call(signature) => {
                     // Implicit arg for this.
                     let num_args = signature.arity as usize + 1;
-                    let this_offset = self.stack.len() - num_args;
-                    let args = self.stack.split_off(this_offset);
+                    let this_offset = fiber.stack.len() - num_args;
+                    let args = fiber.stack.split_off(this_offset);
 
                     let this_class = self
                         .class_for_value(&args[0])
@@ -533,87 +557,86 @@ impl WrenVM {
                     let symbol = self
                         .methods
                         .lookup(&signature.full_name)
-                        .ok_or(method_not_found(&class_obj, signature))?;
+                        .ok_or(method_not_found(&class_obj, &signature))?;
 
                     let method = class_obj
                         .methods
                         .get(symbol)
-                        .ok_or(method_not_found(&class_obj, signature))?;
+                        .ok_or(method_not_found(&class_obj, &signature))?;
 
                     match method {
                         Method::Primitive(f) => {
                             let result = f(self, args)?;
                             // When do we remove args from stack?
-                            self.stack.push(result);
+                            fiber.push(result);
                         }
                         Method::None => unimplemented!(),
                     }
                 }
                 Ops::Closure(constant_index, _upvalues) => {
-                    let fn_value =
-                        closure.fn_obj.borrow().function.constants[*constant_index].clone();
+                    let fn_value = fn_obj.borrow().function.constants[*constant_index].clone();
                     let fn_obj = fn_value.try_into_fn()?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
-                    self.push(Value::Closure(closure));
+                    fiber.push(Value::Closure(closure));
                     // FIXME: Handle upvalues.
                 }
                 Ops::Return => {
                     // HACK!
-                    self.push(Value::Num(42.0));
+                    fiber.push(Value::Num(42.0));
                 }
                 Ops::Class(num_fields) => {
                     // FIXME: Pass module?
-                    create_class(self, *num_fields)?;
+                    create_class(self, fiber, *num_fields)?;
                 }
                 Ops::Load(variable) => {
                     let value = match variable.scope {
                         Scope::Module => self.module.variables[variable.index].clone(),
                         Scope::Upvalue => unimplemented!("load upvalue"),
-                        Scope::Local => self.stack[variable.index].clone(),
+                        Scope::Local => fiber.stack[variable.index].clone(),
                     };
-                    self.push(value);
+                    fiber.push(value);
                 }
                 Ops::Store(variable) => {
-                    let value = self.peek()?;
+                    let value = fiber.peek()?;
                     match variable.scope {
                         Scope::Module => self.module.variables[variable.index] = value.clone(),
                         Scope::Upvalue => unimplemented!("store upvalue"),
-                        Scope::Local => self.stack[variable.index] = value.clone(),
+                        Scope::Local => fiber.stack[variable.index] = value.clone(),
                     };
                 }
                 Ops::Pop => {
-                    self.pop()?;
+                    fiber.pop()?;
                 }
                 Ops::End => {
                     return Ok(());
                 }
                 Ops::Loop(offset_backwards) => {
-                    self.pc -= *offset_backwards as usize;
+                    pc -= *offset_backwards as usize;
                 }
                 Ops::Jump(offset_forward) => {
-                    self.pc += *offset_forward as usize;
+                    pc += *offset_forward as usize;
                 }
                 Ops::JumpIfFalse(offset_forward) => {
-                    let value = self.pop()?;
+                    let value = fiber.pop()?;
                     if value.is_falsey() {
-                        self.pc += *offset_forward as usize;
+                        pc += *offset_forward as usize;
                     }
                 }
                 Ops::And(offset_forward) => {
                     // This differs from JumpIfFalse in whether it pops
-                    let value = self.peek()?;
+                    let value = fiber.peek()?;
                     if value.is_falsey() {
-                        self.pc += *offset_forward as usize;
+                        pc += *offset_forward as usize;
                     } else {
-                        self.pop()?;
+                        fiber.pop()?;
                     }
                 }
                 Ops::Or(offset_forward) => {
-                    let value = self.peek()?;
+                    let value = fiber.peek()?;
                     if !value.is_falsey() {
-                        self.pc += *offset_forward as usize;
+                        pc += *offset_forward as usize;
                     } else {
-                        self.pop()?;
+                        fiber.pop()?;
                     }
                 }
                 Ops::ClassPlaceholder => unimplemented!(),
@@ -626,7 +649,7 @@ impl WrenVM {
     }
 }
 
-impl WrenVM {
+impl Fiber {
     fn push(&mut self, value: Value) {
         self.stack.push(value);
     }
@@ -639,7 +662,7 @@ impl WrenVM {
         self.stack.last().ok_or(RuntimeError::StackUnderflow)
     }
 
-    fn dump_instruction(&self, closure: &Closure, op: &Ops) {
+    fn dump_instruction(&self, module: &Module, closure: &ObjClosure, op: &Ops) {
         let string = match op {
             Ops::Constant(i) => format!(
                 "Constant ({}: {:?})",
@@ -655,10 +678,7 @@ impl WrenVM {
                 }
                 Scope::Upvalue => unimplemented!("dump load upvalue"),
                 Scope::Module => {
-                    format!(
-                        "Load Module {}: {:?}",
-                        v.index, self.module.variables[v.index]
-                    )
+                    format!("Load Module {}: {:?}", v.index, module.variables[v.index])
                 }
             },
             Ops::Store(_) => format!("{:?}", op),
@@ -720,7 +740,7 @@ impl Ops {
     }
 }
 
-pub(crate) fn debug_bytecode(_vm: &WrenVM, closure: &Closure) {
+pub(crate) fn debug_bytecode(_vm: &WrenVM, closure: &ObjClosure) {
     let func = &closure.fn_obj.borrow().function;
     println!("{:?}", func);
     let ops = func.code.iter();

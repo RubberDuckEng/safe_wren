@@ -8,7 +8,7 @@ use std::str;
 use num_traits::FromPrimitive;
 
 use crate::vm::{
-    new_handle, wren_define_variable, Closure, Function, ModuleError, ObjFn, Value, WrenVM,
+    new_handle, wren_define_variable, Function, ModuleError, ObjClosure, ObjFn, Value, WrenVM,
 };
 
 // Token lifetimes should be tied to the Parser or InputManager.
@@ -2285,7 +2285,7 @@ pub(crate) fn compile<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
     _module_name: &str,
-) -> Result<Closure, WrenError> {
+) -> Result<Handle<ObjClosure>, WrenError> {
     // TODO: We should create one per module_name instead.
 
     // When compiling, we create a module and register it.
@@ -2343,6 +2343,6 @@ pub(crate) fn compile<'a>(
     scope.ctx.compiler_mut().emit(Ops::End);
     let compiler = scope.pop();
     let fn_obj = end_compiler(scope.ctx, compiler, 0);
-    let closure = Closure { fn_obj: fn_obj };
+    let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
     Ok(closure)
 }
