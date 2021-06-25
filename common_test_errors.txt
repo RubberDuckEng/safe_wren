@@ -117,6 +117,8 @@ occurances : error text
 2 : MethodNotFound("maxSafeInteger" on "Num metaclass")
 2 : MethodNotFound("min" on "Range")
 2 : MethodNotFound("minSafeInteger" on "Num metaclass")
+2 : MethodNotFound("print(_)" on "Num")
+2 : MethodNotFound("print(_)" on "String")
 2 : MethodNotFound("print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "System metaclass")
 2 : MethodNotFound("reduce(_)" on "Fn")
 2 : MethodNotFound("round" on "Num")

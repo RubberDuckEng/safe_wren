@@ -31,7 +31,6 @@ wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/string/equality.wren
 wren_c/test/core/string/not.wren
 wren_c/test/language/assignment/associativity.wren
-wren_c/test/language/assignment/global.wren
 wren_c/test/language/assignment/grouping.wren
 wren_c/test/language/assignment/infix_operator.wren
 wren_c/test/language/assignment/is.wren
@@ -143,7 +142,6 @@ wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/while/newline_after_while.wren
-wren_c/test/language/while/syntax.wren
 wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/long_variable_name.wren

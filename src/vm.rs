@@ -3,7 +3,7 @@ use std::rc::Rc;
 use std::str;
 
 use crate::compiler::{compile, InputManager, Ops, Scope, Signature};
-use crate::core::{init_base_classes, prim_system_print, register_core_primitives};
+use crate::core::{init_base_classes, register_core_primitives};
 
 #[derive(Clone)]
 pub(crate) enum Value {
@@ -492,32 +492,28 @@ impl WrenVM {
                     let this_offset = self.stack.len() - num_args;
                     let args = self.stack.split_off(this_offset);
 
-                    if signature.full_name.eq("print(_)") {
-                        self.push(prim_system_print(self, args)?);
-                    } else {
-                        let this_class = self
-                            .class_for_value(&args[0])
-                            .ok_or(RuntimeError::ThisObjectHasNoClass)?;
-                        let class_obj = this_class.borrow();
+                    let this_class = self
+                        .class_for_value(&args[0])
+                        .ok_or(RuntimeError::ThisObjectHasNoClass)?;
+                    let class_obj = this_class.borrow();
 
-                        let symbol = self
-                            .methods
-                            .lookup(&signature.full_name)
-                            .ok_or(method_not_found(&class_obj, signature))?;
+                    let symbol = self
+                        .methods
+                        .lookup(&signature.full_name)
+                        .ok_or(method_not_found(&class_obj, signature))?;
 
-                        let method = class_obj
-                            .methods
-                            .get(symbol)
-                            .ok_or(method_not_found(&class_obj, signature))?;
+                    let method = class_obj
+                        .methods
+                        .get(symbol)
+                        .ok_or(method_not_found(&class_obj, signature))?;
 
-                        match method {
-                            Method::Primitive(f) => {
-                                let result = f(self, args)?;
-                                // When do we remove args from stack?
-                                self.stack.push(result);
-                            }
-                            Method::None => unimplemented!(),
+                    match method {
+                        Method::Primitive(f) => {
+                            let result = f(self, args)?;
+                            // When do we remove args from stack?
+                            self.stack.push(result);
                         }
+                        Method::None => unimplemented!(),
                     }
                 }
                 Ops::Closure(constant_index, _upvalues) => {

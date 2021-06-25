@@ -226,5 +226,12 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.bool_class, "!", bool_not);
 
     primitive!(vm, core.null, "!", null_not);
+
+    primitive!(
+        vm,
+        find_core_class(vm, "System").borrow().class_obj().unwrap(),
+        "print(_)",
+        prim_system_print
+    );
     vm.core = Some(core);
 }

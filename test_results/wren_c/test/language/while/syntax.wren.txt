@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+MethodNotFound("print(_)" on "Num")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("print(_)" on "Num")
+
+Missing expected output "1" on line 4.
+Missing expected output "2" on line 5.
+Missing expected output "3" on line 6.
+Missing expected output "0" on line 14.
+Missing expected output "1" on line 15.
+Missing expected output "2" on line 16.
