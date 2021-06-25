@@ -29,7 +29,6 @@ occurances : error text
 5 : Error Grammar("Expected newline, found: Name(\"method\")")
 5 : Error Lexer(UnterminatedString)
 5 : MethodNotFound("*(_)" on "String")
-5 : MethodNotFound("+(_)" on "String")
 5 : MethodNotFound("replace(_,_)" on "String")
 4 : Error Grammar("Expected newline, found: Name(\"callSuperToString\")")
 4 : Error Grammar("Undeclared variable \'i\'")
@@ -160,4 +159,5 @@ occurances : error text
 1 : MethodNotFound("trimStart(_)" on "String")
 1 : MethodNotFound("writeAll(_)" on "System metaclass")
 1 : NumberRequired(String(""))
+1 : StringRequired(Num(123))
 1 : Timed out.

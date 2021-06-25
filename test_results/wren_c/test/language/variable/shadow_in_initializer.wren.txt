@@ -1,6 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("+(_)" on "String")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("+(_)" on "String")
-
-Missing expected output "outer inner" on line 5.
+Expected output "outer inner" on line 5 and got "outer".

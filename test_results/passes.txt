@@ -33,6 +33,7 @@ wren_c/test/core/range/equality.wren
 wren_c/test/core/range/iterate.wren
 wren_c/test/core/range/iterate_from_float.wren
 wren_c/test/core/range/iterator_value.wren
+wren_c/test/core/string/concatenation.wren
 wren_c/test/core/string/equality.wren
 wren_c/test/core/string/not.wren
 wren_c/test/language/assignment/associativity.wren

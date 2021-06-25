@@ -165,6 +165,13 @@ fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Boolean(true))
 }
 
+fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let a = args[0].try_into_string()?;
+    let b = args[1].try_into_string()?;
+
+    Ok(Value::String(Rc::new(a + &b)))
+}
+
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
         let index = $vm.methods.ensure_method($sig);
@@ -240,6 +247,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, "^(_)", num_bitwise_xor);
     primitive!(vm, core.num, "<<(_)", num_bitwise_shl);
     primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
+
+    primitive!(vm, core.string, "+(_)", string_plus);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
