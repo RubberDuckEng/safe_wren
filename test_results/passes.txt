@@ -16,6 +16,7 @@ wren_c/example/hello.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/not.wren
 wren_c/test/core/class/equality.wren
+wren_c/test/core/function/arity.wren
 wren_c/test/core/null/not.wren
 wren_c/test/core/number/bitwise_and.wren
 wren_c/test/core/number/bitwise_lsh.wren
@@ -29,6 +30,7 @@ wren_c/test/core/number/invalid_hex_literal.wren
 wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/not.wren
 wren_c/test/core/number/plus.wren
+wren_c/test/core/object/is.wren
 wren_c/test/core/range/equality.wren
 wren_c/test/core/range/iterate.wren
 wren_c/test/core/range/iterate_from_float.wren

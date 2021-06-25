@@ -14,6 +14,7 @@ pub(crate) fn prim_system_print(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Va
         Value::Class(o) => format!("{:?}", o),
         Value::Range(o) => format!("{:?}", o),
         Value::Fn(_) => format!("Fn {{..}}"),
+        Value::Closure(_) => format!("Closure {{..}}"),
         // Value::Object(o) => format!("{:?}", o),
     };
 
@@ -172,6 +173,17 @@ fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::String(Rc::new(a + &b)))
 }
 
+fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let closure = args[1].try_into_closure()?;
+    Ok(Value::Closure(closure))
+}
+
+fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let closure = args[0].try_into_closure()?;
+    let arity = closure.borrow().fn_obj.borrow().arity as f64;
+    Ok(Value::Num(arity))
+}
+
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
         let index = $vm.methods.ensure_method($sig);
@@ -220,10 +232,15 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     // manually initialize Fn class before compiling wren_core.wren.
     let fn_class =
         wren_new_class(vm, &object, 0, Value::String(Rc::new("Fn".into()))).expect("creating Fn");
-    vm.fn_class = Some(fn_class);
+    vm.fn_class = Some(fn_class.clone());
+    wren_define_variable(&mut vm.module, "Fn", Value::Class(fn_class)).expect("defining Fn");
 }
 
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
+    // Note: All of these methods are bound *after* setup from
+    // superclass, so any classes added to a superclass
+    // WOULD NOT end up inherited into wren_core.wren subclasses.
+
     let core = CoreClasses {
         bool_class: find_core_class(vm, "Bool"),
         num: find_core_class(vm, "Num"),
@@ -257,6 +274,11 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     primitive!(vm, core.null, "!", null_not);
 
+    let fn_class = vm.fn_class.as_ref().unwrap();
+    let fn_meta_class = fn_class.borrow_mut().class_obj().unwrap();
+    primitive!(vm, fn_meta_class, "new(_)", fn_new);
+    primitive!(vm, fn_class, "arity", fn_arity);
+
     primitive!(
         vm,
         find_core_class(vm, "System").borrow().class_obj().unwrap(),
@@ -264,4 +286,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
         prim_system_print
     );
     vm.core = Some(core);
+
+    // wren_c walks *all* String objects here to bind a class pointer
+    // to them.  We don't currently need to do that, but may need
+    // to do that eventually for other types.
 }

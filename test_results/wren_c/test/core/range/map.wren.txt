@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("map(_)" on "Fn")
+MethodNotFound("map(_)" on "Range")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("map(_)" on "Fn")
+MethodNotFound("map(_)" on "Range")
 
 Missing expected output "[2, 3, 4]" on line 3.

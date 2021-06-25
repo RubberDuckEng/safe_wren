@@ -15,6 +15,7 @@ pub(crate) enum Value {
     Class(Handle<ObjClass>),
     Range(Handle<ObjRange>),
     Fn(Handle<ObjFn>),
+    Closure(Handle<ObjClosure>),
     // Object(Handle<dyn Obj>),
 }
 
@@ -46,6 +47,7 @@ impl core::fmt::Debug for Value {
             Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
             Value::Range(r) => write!(f, "Range({:?})", r),
             Value::Fn(_) => write!(f, "Fn()"),
+            Value::Closure(_) => write!(f, "Closure()"),
         }
     }
 }
@@ -153,6 +155,7 @@ pub(crate) enum RuntimeError {
     ObjectRequired(Value),
     ClassRequired(Value),
     RangeRequired(Value),
+    ClosureRequired(Value),
     MethodNotFound(MissingMethod),
     ThisObjectHasNoClass,
 }
@@ -166,6 +169,7 @@ impl core::fmt::Debug for RuntimeError {
             RuntimeError::ObjectRequired(v) => write!(f, "ObjectRequired({:?})", v),
             RuntimeError::ClassRequired(v) => write!(f, "ClassRequired({:?})", v),
             RuntimeError::RangeRequired(v) => write!(f, "RangeRequired({:?})", v),
+            RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
             RuntimeError::MethodNotFound(m) => {
                 write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)
             }
@@ -200,6 +204,20 @@ impl Value {
         match self {
             Value::Range(r) => Ok(r.clone()),
             _ => Err(RuntimeError::RangeRequired(self.clone())),
+        }
+    }
+
+    pub fn try_into_fn(&self) -> Result<Handle<ObjFn>, RuntimeError> {
+        match self {
+            Value::Fn(c) => Ok(c.clone()),
+            _ => Err(RuntimeError::ClosureRequired(self.clone())),
+        }
+    }
+
+    pub fn try_into_closure(&self) -> Result<Handle<ObjClosure>, RuntimeError> {
+        match self {
+            Value::Closure(c) => Ok(c.clone()),
+            _ => Err(RuntimeError::ClosureRequired(self.clone())),
         }
     }
 }
@@ -465,6 +483,21 @@ impl WrenVM {
             Value::Class(o) => o.borrow().class_obj(),
             Value::Range(o) => o.borrow().class_obj(),
             Value::Fn(o) => o.borrow().class_obj(),
+            Value::Closure(o) => o.borrow().class_obj(),
+        }
+    }
+
+    #[allow(dead_code)]
+    fn print_methods(&self, class: &ObjClass) {
+        println!("{:?} has:", class);
+        for (symbol, method) in class.methods.iter().enumerate() {
+            match method {
+                Method::None => (),
+                _ => {
+                    let name = &self.methods.method_names[symbol];
+                    println!("{} ({}) => {:?}", name, symbol, method);
+                }
+            }
         }
     }
 
@@ -517,8 +550,11 @@ impl WrenVM {
                     }
                 }
                 Ops::Closure(constant_index, _upvalues) => {
-                    // FIXME: Should wrap the constant Function in a closure.
-                    self.push(closure.fn_obj.borrow().function.constants[*constant_index].clone());
+                    let fn_value =
+                        closure.fn_obj.borrow().function.constants[*constant_index].clone();
+                    let fn_obj = fn_value.try_into_fn()?;
+                    let closure = new_handle(ObjClosure::new(self, fn_obj));
+                    self.push(Value::Closure(closure));
                     // FIXME: Handle upvalues.
                 }
                 Ops::Return => {
@@ -727,32 +763,43 @@ pub(crate) struct ObjRange {
     pub(crate) is_inclusive: bool,
 }
 
-// pub(crate) struct ObjClosure {
-//     class_obj: Handle<ObjClass>,
-//     fn_obj: Handle<ObjFn>,
-// }
+pub(crate) struct ObjClosure {
+    class_obj: Handle<ObjClass>,
+    pub(crate) fn_obj: Handle<ObjFn>,
+}
 
-// impl ObjClosure {
-//     pub(crate) fn new(vm: &WrenVM, fn_obj: Handle<ObjFn>) -> ObjClosure {
-//         // FIXME: Is this really supposed to also be class = fn?
-//         ObjClosure {
-//             class_obj: vm.core.as_ref().unwrap().fn_class.clone(),
-//             fn_obj: fn_obj,
-//         }
-//     }
-// }
+impl ObjClosure {
+    pub(crate) fn new(vm: &WrenVM, fn_obj: Handle<ObjFn>) -> ObjClosure {
+        // FIXME: Is this really supposed to also be class = fn?
+        ObjClosure {
+            class_obj: vm.fn_class.as_ref().unwrap().clone(),
+            fn_obj: fn_obj,
+        }
+    }
+}
+
+impl Obj for ObjClosure {
+    // fn obj_type(&self) -> ObjType {
+    //     ObjType::Fn
+    // }
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
+        Some(self.class_obj.clone())
+    }
+}
 
 pub(crate) struct ObjFn {
     class_obj: Handle<ObjClass>,
+    pub(crate) arity: u8,
     // Flatten this into ObjFn later?
     pub(crate) function: Function,
 }
 
 impl ObjFn {
-    pub(crate) fn new(vm: &WrenVM, function: Function) -> ObjFn {
+    pub(crate) fn new(vm: &WrenVM, function: Function, arity: u8) -> ObjFn {
         ObjFn {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
             function: function,
+            arity: arity,
         }
     }
 }
@@ -860,6 +907,10 @@ impl core::fmt::Debug for ObjClass {
             // over the class hierarchy could be useful to print
             // Bool->Object, etc.
             Some(rc) => write!(f, "super: {:?} ", rc.borrow().name)?,
+        }
+        match &self.class {
+            None => write!(f, "meta: None ")?,
+            Some(rc) => write!(f, "meta: {:?} ", rc.borrow().name)?,
         }
         write!(f, "}}")
     }

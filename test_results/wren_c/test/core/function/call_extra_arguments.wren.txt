@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("new(_)" on "Fn")
+MethodNotFound("call(_)" on "Fn")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("new(_)" on "Fn")
+MethodNotFound("call(_)" on "Fn")
 
 Missing expected output "zero" on line 6.
 Missing expected output "zero" on line 7.

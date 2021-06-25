@@ -721,11 +721,16 @@ impl Compiler {
         }
     }
 
-    fn emit_constant(&mut self, value: Value) -> usize {
+    fn ensure_constant(&mut self, value: Value) -> usize {
+        // FIXME: This should check if we already have this value stored!
         let index = self.constants.len();
         self.constants.push(value);
-        self.code.push(Ops::Constant(index));
         index
+    }
+
+    fn emit_constant(&mut self, value: Value) {
+        let index = self.ensure_constant(value);
+        self.code.push(Ops::Constant(index));
     }
 
     fn emit_boolean(&mut self, value: bool) {
@@ -1026,7 +1031,7 @@ type Handle<T> = Rc<RefCell<T>>;
 // Finishes [compiler], which is compiling a function, method, or chunk of top
 // level code. If there is a parent compiler, then this emits code in the
 // parent compiler to load the resulting function.
-fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>) -> Handle<ObjFn> {
+fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>, arity: u8) -> Handle<ObjFn> {
     let mut compiler = ending;
     // Mark the end of the bytecode. Since it may contain multiple early returns,
     // we can't rely on CODE_RETURN to tell us we're at the end.
@@ -1040,7 +1045,7 @@ fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>) -> Handle<ObjFn> 
         code: compiler.code,
         constants: compiler.constants,
     };
-    let fn_obj = new_handle(ObjFn::new(ctx.vm, function));
+    let fn_obj = new_handle(ObjFn::new(ctx.vm, function, arity));
 
     // If this was not the top-compiler, load the compile function into
     // the parent code.
@@ -1050,7 +1055,9 @@ fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>) -> Handle<ObjFn> 
         // makes creating a function a little slower, but makes invoking them
         // faster. Given that functions are invoked more often than they are
         // created, this is a win.
-        let constant = ctx.compiler_mut().emit_constant(Value::Fn(fn_obj.clone()));
+        let constant = ctx
+            .compiler_mut()
+            .ensure_constant(Value::Fn(fn_obj.clone()));
         ctx.compiler_mut()
             .emit(Ops::Closure(constant, compiler.upvalues));
     }
@@ -1172,8 +1179,6 @@ fn method_call(ctx: &mut ParseContext) -> Result<(), WrenError> {
             consume_expecting(scope.ctx, Token::Pipe)?;
         }
 
-        // fnCompiler.fn->arity = fnSignature.arity;
-
         finish_body(scope.ctx)?;
 
         // Name the function based on the method its passed to.
@@ -1183,7 +1188,7 @@ fn method_call(ctx: &mut ParseContext) -> Result<(), WrenError> {
         // memmove(blockName + blockLength, " block argument", 16);
 
         let compiler = scope.pop();
-        end_compiler(scope.ctx, compiler);
+        end_compiler(scope.ctx, compiler, fn_signature.arity);
     }
 
     // Handle SIG_INITIALIZER?
@@ -2337,7 +2342,7 @@ pub(crate) fn compile<'a>(
 
     scope.ctx.compiler_mut().emit(Ops::End);
     let compiler = scope.pop();
-    let fn_obj = end_compiler(scope.ctx, compiler);
+    let fn_obj = end_compiler(scope.ctx, compiler, 0);
     let closure = Closure { fn_obj: fn_obj };
     Ok(closure)
 }

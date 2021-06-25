@@ -1,4 +1,4 @@
 Expected runtime error "Function expects more arguments." and got:
-MethodNotFound("new(_)" on "Fn")
+MethodNotFound("call(_)" on "Fn")
 Expected stack trace and got:
 
