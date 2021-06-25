@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Undeclared variable \'Fn\'")
+[dummy_module line 5] Error Grammar("Undeclared variable \'foo\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Undeclared variable \'Fn\'")
+[dummy_module line 5] Error Grammar("Undeclared variable \'foo\'")
 
 Missing expected output "closure" on line 5.
 Missing expected output "shadow" on line 7.

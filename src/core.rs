@@ -1,5 +1,6 @@
 use crate::vm::*;
 use std::ops::*;
+use std::rc::Rc;
 
 // System.print is not actually in C in wren_c, but since we can't yet parse
 // classes or methods, implementing here to get unit tests working.
@@ -12,6 +13,7 @@ pub(crate) fn prim_system_print(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Va
         Value::String(s) => format!("{}", s),
         Value::Class(o) => format!("{:?}", o),
         Value::Range(o) => format!("{:?}", o),
+        Value::Fn(_) => format!("Fn {{..}}"),
         // Value::Object(o) => format!("{:?}", o),
     };
 
@@ -189,6 +191,13 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     wren_bind_superclass(&mut object_metaclass.borrow_mut(), &class);
     // PRIMITIVE(objectMetaclass, "same(_,_)", object_same);
     vm.class_class = Some(class);
+
+    // Hack.  AFAICT, functions/closures inside wren_core.wren are compiled
+    // by wren_c and have a null class!  Rust won't allow us to do that so
+    // manually initialize Fn class before compiling wren_core.wren.
+    let fn_class =
+        wren_new_class(vm, &object, 0, Value::String(Rc::new("Fn".into()))).expect("creating Fn");
+    vm.fn_class = Some(fn_class);
 }
 
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {

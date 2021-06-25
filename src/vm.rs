@@ -11,8 +11,10 @@ pub(crate) enum Value {
     Num(f64),
     Boolean(bool),
     String(Rc<String>),
+    // Split these off and replace with Object(Handle<dyn Obj>)
     Class(Handle<ObjClass>),
     Range(Handle<ObjRange>),
+    Fn(Handle<ObjFn>),
     // Object(Handle<dyn Obj>),
 }
 
@@ -43,6 +45,7 @@ impl core::fmt::Debug for Value {
             Value::String(s) => write!(f, "String(\"{}\")", s),
             Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
             Value::Range(r) => write!(f, "Range({:?})", r),
+            Value::Fn(_) => write!(f, "Fn()"),
         }
     }
 }
@@ -130,9 +133,8 @@ pub(crate) struct Function {
     pub code: Vec<Ops>,
 }
 
-#[derive(Debug)]
 pub(crate) struct Closure {
-    pub function: Function,
+    pub(crate) fn_obj: Handle<ObjFn>,
 }
 
 #[derive(Debug)]
@@ -236,6 +238,7 @@ pub struct WrenVM {
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
     pub(crate) class_class: Option<Handle<ObjClass>>,
+    pub(crate) fn_class: Option<Handle<ObjClass>>,
     pub(crate) core: Option<CoreClasses>,
 }
 
@@ -318,7 +321,7 @@ fn wren_new_class_with_class_class(
     Ok(class)
 }
 
-fn wren_new_class(
+pub(crate) fn wren_new_class(
     vm: &mut WrenVM,
     superclass: &Handle<ObjClass>,
     num_fields: usize,
@@ -353,7 +356,7 @@ fn create_class(vm: &mut WrenVM, num_fields: usize) -> Result<(), RuntimeError> 
 
 type Handle<T> = Rc<RefCell<T>>;
 
-fn new_handle<T>(t: T) -> Handle<T> {
+pub(crate) fn new_handle<T>(t: T) -> Handle<T> {
     Rc::new(RefCell::new(t))
 }
 
@@ -438,6 +441,7 @@ impl WrenVM {
             debug: debug,
             core: None,
             class_class: None,
+            fn_class: None,
         };
 
         init_base_classes(&mut vm);
@@ -460,12 +464,13 @@ impl WrenVM {
             Value::String(_) => Some(core.string.clone()),
             Value::Class(o) => o.borrow().class_obj(),
             Value::Range(o) => o.borrow().class_obj(),
+            Value::Fn(o) => o.borrow().class_obj(),
         }
     }
 
     pub(crate) fn run(&mut self, closure: Closure) -> Result<(), RuntimeError> {
         loop {
-            let op = &closure.function.code[self.pc];
+            let op = &closure.fn_obj.borrow().function.code[self.pc];
             self.pc += 1;
             if self.debug {
                 self.dump_stack();
@@ -473,7 +478,7 @@ impl WrenVM {
             }
             match op {
                 Ops::Constant(index) => {
-                    self.push(closure.function.constants[*index].clone());
+                    self.push(closure.fn_obj.borrow().function.constants[*index].clone());
                 }
                 Ops::Boolean(value) => {
                     self.push(Value::Boolean(*value));
@@ -514,6 +519,15 @@ impl WrenVM {
                             Method::None => unimplemented!(),
                         }
                     }
+                }
+                Ops::Closure(constant_index, _upvalues) => {
+                    // FIXME: Should wrap the constant Function in a closure.
+                    self.push(closure.fn_obj.borrow().function.constants[*constant_index].clone());
+                    // FIXME: Handle upvalues.
+                }
+                Ops::Return => {
+                    // HACK!
+                    self.push(Value::Num(42.0));
                 }
                 Ops::Class(num_fields) => {
                     // FIXME: Pass module?
@@ -595,7 +609,11 @@ impl WrenVM {
 
     fn dump_instruction(&self, closure: &Closure, op: &Ops) {
         let string = match op {
-            Ops::Constant(i) => format!("Constant ({}: {:?})", i, closure.function.constants[*i]),
+            Ops::Constant(i) => format!(
+                "Constant ({}: {:?})",
+                i,
+                closure.fn_obj.borrow().function.constants[*i]
+            ),
             Ops::Boolean(b) => format!("Boolean {}", b),
             Ops::Null => format!("{:?}", op),
             Ops::Call(_) => format!("{:?}", op),
@@ -620,10 +638,12 @@ impl WrenVM {
             Ops::Or(_) => format!("{:?}", op),
             Ops::OrPlaceholder => format!("{:?}", op),
             Ops::ClassPlaceholder => format!("{:?}", op),
+            Ops::Closure(_, _) => format!("{:?}", op),
             Ops::Class(_) => format!("{:?}", op),
             Ops::Jump(_) => format!("{:?}", op),
             Ops::Loop(_) => format!("{:?}", op),
             Ops::Pop => format!("{:?}", op),
+            Ops::Return => format!("{:?}", op),
             Ops::End => format!("{:?}", op),
         };
         println!("{}", string);
@@ -654,9 +674,11 @@ impl Ops {
             Ops::JumpPlaceholder => format!("{:?}", self),
             Ops::ClassPlaceholder => format!("{:?}", self),
             Ops::Class(_) => format!("{:?}", self),
+            Ops::Closure(_, _) => format!("{:?}", self),
             Ops::Jump(_) => format!("{:?}", self),
             Ops::Loop(_) => format!("{:?}", self),
             Ops::Pop => format!("{:?}", self),
+            Ops::Return => format!("{:?}", self),
             Ops::End => format!("{:?}", self),
             Ops::And(_) => format!("{:?}", self),
             Ops::AndPlaceholder => format!("{:?}", self),
@@ -667,33 +689,34 @@ impl Ops {
 }
 
 pub(crate) fn debug_bytecode(_vm: &WrenVM, closure: &Closure) {
-    println!("{:?}", closure);
-    let ops = closure.function.code.iter();
+    let func = &closure.fn_obj.borrow().function;
+    println!("{:?}", func);
+    let ops = func.code.iter();
     ops.enumerate().for_each(|(i, op)| {
         println!("{:02}: {}", i, op.debug_string());
     })
 }
 
-// Identifies which specific type a heap-allocated object is.
-#[derive(Debug)]
-pub enum ObjType {
-    Class,
-    // Closure,
-    // Fiber,
-    // Function,
-    // Foreign,
-    // Instance,
-    // List,
-    // Map,
-    // Module,
-    Range,
-    // String,
-    // Upvalue,
-}
+// // Identifies which specific type a heap-allocated object is.
+// #[derive(Debug)]
+// pub enum ObjType {
+//     Class,
+//     // Closure,
+//     // Fiber,
+//     // Function,
+//     // Foreign,
+//     // Instance,
+//     // List,
+//     // Map,
+//     // Module,
+//     Range,
+//     // String,
+//     // Upvalue,
+// }
 
 // Base struct for all heap-allocated objects.
 pub trait Obj {
-    fn obj_type(&self) -> ObjType;
+    // fn obj_type(&self) -> ObjType;
     //   // The object's class.
     fn class_obj(&self) -> Option<Handle<ObjClass>>;
 }
@@ -708,6 +731,45 @@ pub(crate) struct ObjRange {
     pub(crate) is_inclusive: bool,
 }
 
+// pub(crate) struct ObjClosure {
+//     class_obj: Handle<ObjClass>,
+//     fn_obj: Handle<ObjFn>,
+// }
+
+// impl ObjClosure {
+//     pub(crate) fn new(vm: &WrenVM, fn_obj: Handle<ObjFn>) -> ObjClosure {
+//         // FIXME: Is this really supposed to also be class = fn?
+//         ObjClosure {
+//             class_obj: vm.core.as_ref().unwrap().fn_class.clone(),
+//             fn_obj: fn_obj,
+//         }
+//     }
+// }
+
+pub(crate) struct ObjFn {
+    class_obj: Handle<ObjClass>,
+    // Flatten this into ObjFn later?
+    pub(crate) function: Function,
+}
+
+impl ObjFn {
+    pub(crate) fn new(vm: &WrenVM, function: Function) -> ObjFn {
+        ObjFn {
+            class_obj: vm.fn_class.as_ref().unwrap().clone(),
+            function: function,
+        }
+    }
+}
+
+impl Obj for ObjFn {
+    // fn obj_type(&self) -> ObjType {
+    //     ObjType::Fn
+    // }
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
+        Some(self.class_obj.clone())
+    }
+}
+
 impl core::fmt::Debug for ObjRange {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let op_string = if self.is_inclusive { ".." } else { "..." };
@@ -716,19 +778,19 @@ impl core::fmt::Debug for ObjRange {
 }
 
 impl Obj for ObjRange {
-    fn obj_type(&self) -> ObjType {
-        ObjType::Range
-    }
+    // fn obj_type(&self) -> ObjType {
+    //     ObjType::Range
+    // }
     fn class_obj(&self) -> Option<Handle<ObjClass>> {
         Some(self.class_obj.clone())
     }
 }
 
-impl core::fmt::Debug for dyn Obj {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "Object{:?}", self.obj_type())
-    }
-}
+// impl core::fmt::Debug for dyn Obj {
+//     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+//         write!(f, "Object{:?}", self.obj_type())
+//     }
+// }
 
 // Unclear if this should take Vec or a slice?
 type Primitive = fn(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError>;
@@ -817,9 +879,9 @@ impl ObjClass {
 }
 
 impl Obj for ObjClass {
-    fn obj_type(&self) -> ObjType {
-        ObjType::Class
-    }
+    // fn obj_type(&self) -> ObjType {
+    //     ObjType::Class
+    // }
 
     fn class_obj(&self) -> Option<Handle<ObjClass>> {
         self.class.clone()

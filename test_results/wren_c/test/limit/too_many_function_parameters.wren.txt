@@ -1,6 +1,6 @@
 Unexpected output on stderr:
 MethodNotFound("new(_)" on "Fn")
-Expected return code 0 and got 70. Stderr:
+Missing expected error on line 1.
+Expected return code 65 and got 70. Stderr:
 MethodNotFound("new(_)" on "Fn")
 
-Missing expected output "<fn>" on line 1.

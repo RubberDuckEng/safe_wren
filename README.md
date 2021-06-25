@@ -14,10 +14,15 @@ Options:
 with error text from any failed tests.  `test.py` will also update
 `test_results/passes.txt` with the list of passing tests.
 
+## Ideas
+* ParseContext owns the whole stack of Compilers.  Compiler have Option<Compiler> and own their parent.
+* use Drop for auto-scope
+* Split Value into Value<Object> and TypedObject which can be returned from Obj trait.
+* Pull the module off the VM and hand it to the parser during parsing.
+* pull the symbol table off the vm durign compile?
 
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
-* Multiple Compiler objects (required for function parsing)
 * function parsing
 * static functions
 * Logical operators
@@ -45,7 +50,16 @@ with error text from any failed tests.  `test.py` will also update
 * "construct" keyword, missing function declarations.
 
 
+## Future bugs
+* Push/Pop of scopes does not work with Result pattern.
+* Fn is defined twice once in code and once in wren_core.wren
+* Object/Class are not set as global variables?
+
+
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?
 * https://docs.rs/once_cell/1.8.0/once_cell/
 * https://docs.rs/anyhow/1.0.41/anyhow/
+
+### wren_c bugs
+* closures/functions defined in wren_core.wren end up with a null class pointer?

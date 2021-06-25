@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::error;
 use std::fmt;
 use std::ops::Range;
@@ -6,7 +7,9 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
-use crate::vm::{wren_define_variable, Closure, Function, ModuleError, Value, WrenVM};
+use crate::vm::{
+    new_handle, wren_define_variable, Closure, Function, ModuleError, ObjFn, Value, WrenVM,
+};
 
 // Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
@@ -622,8 +625,8 @@ impl Precedence {
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum Ops {
+#[derive(Debug)]
+pub(crate) enum Ops {
     Constant(usize),
     Boolean(bool), // Unclear if needed, could be constant?
     Null,          // Unclear if needed, could be constant?
@@ -632,6 +635,7 @@ pub enum Ops {
     Store(Variable),
     ClassPlaceholder,
     Class(usize),
+    Closure(usize, Vec<Upvalue>),
 
     // If the top of the stack is false, jump [arg] forward. Otherwise, pop and
     // continue.
@@ -650,6 +654,7 @@ pub enum Ops {
 
     Loop(u16), // Jump backwards relative offset.
     Pop,
+    Return, // FIXME: Never actually used.
     End,
 }
 
@@ -665,44 +670,62 @@ enum ScopeDepth {
     Local(usize),
 }
 
+#[derive(Debug)]
+pub(crate) struct Upvalue {
+    // True if this upvalue is capturing a local variable from the enclosing
+    // function. False if it's capturing an upvalue.
+    is_local: bool,
+
+    // The index of the local or upvalue being captured in the enclosing function.
+    index: usize,
+}
+
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
-pub struct Compiler {
+pub(crate) struct Compiler {
     constants: Vec<Value>,
     locals: Vec<Local>, // A fixed size array in wren_c
     code: Vec<Ops>,
     scope_depth: ScopeDepth,
     loops: Vec<LoopOffsets>, // wren_c uses stack-allocated objects instead.
 
-                             // The current number of slots (locals and temporaries) in use.
-                             //
-                             // We use this and maxSlots to track the maximum number of additional slots
-                             // a function may need while executing. When the function is called, the
-                             // fiber will check to ensure its stack has enough room to cover that worst
-                             // case and grow the stack if needed.
-                             //
-                             // This value here doesn't include parameters to the function. Since those
-                             // are already pushed onto the stack by the caller and tracked there, we
-                             // don't need to double count them here.
-                             // num_slots: usize,
+    upvalues: Vec<Upvalue>,
+    parent: Option<Box<Compiler>>,
+    // The current number of slots (locals and temporaries) in use.
+    //
+    // We use this and maxSlots to track the maximum number of additional slots
+    // a function may need while executing. When the function is called, the
+    // fiber will check to ensure its stack has enough room to cover that worst
+    // case and grow the stack if needed.
+    //
+    // This value here doesn't include parameters to the function. Since those
+    // are already pushed onto the stack by the caller and tracked there, we
+    // don't need to double count them here.
+    // num_slots: usize,
 }
 
 impl Compiler {
-    fn new() -> Compiler {
+    fn with_parent(parent: Option<Box<Compiler>>) -> Compiler {
         Compiler {
             constants: Vec::new(),
             locals: Vec::new(),
             code: Vec::new(),
-            scope_depth: ScopeDepth::Module,
+            scope_depth: match parent {
+                None => ScopeDepth::Module,
+                Some(_) => ScopeDepth::Local(0),
+            },
             loops: Vec::new(),
             // num_slots: 0,
+            parent: parent,
+            upvalues: Vec::new(),
         }
     }
 
-    fn emit_constant(&mut self, value: Value) {
+    fn emit_constant(&mut self, value: Value) -> usize {
         let index = self.constants.len();
         self.constants.push(value);
         self.code.push(Ops::Constant(index));
+        index
     }
 
     fn emit_boolean(&mut self, value: bool) {
@@ -763,6 +786,25 @@ impl Compiler {
             ScopeDepth::Local(i) => i,
         }
     }
+
+    // Adds an upvalue to [compiler]'s function with the given properties. Does not
+    // add one if an upvalue for that variable is already in the list. Returns the
+    // index of the upvalue.
+    // fn add_upvalue(&mut self, is_local: bool, index: usize) -> usize {
+    //     // Look for an existing one.
+    //     for (i, upvalue) in self.upvalues.iter().enumerate() {
+    //         if upvalue.is_local == is_local && upvalue.index == index {
+    //             return i;
+    //         }
+    //     }
+
+    //     // If we got here, it's a new upvalue.
+    //     self.upvalues.push(Upvalue {
+    //         is_local: is_local,
+    //         index: index,
+    //     });
+    //     self.upvalues.len() - 1
+    // }
 }
 
 impl fmt::Debug for Compiler {
@@ -786,8 +828,8 @@ struct Parser {
 }
 
 struct ParseContext<'a> {
-    parser: &'a mut Parser,
-    compiler: &'a mut Compiler,
+    parser: Parser,
+    _compiler: Option<Box<Compiler>>,
     vm: &'a mut WrenVM,
 }
 
@@ -799,6 +841,21 @@ impl<'a> ParseContext<'a> {
             error: error,
         }
     }
+
+    fn compiler(&self) -> &Compiler {
+        self._compiler.as_ref().unwrap().as_ref()
+    }
+
+    fn compiler_mut(&mut self) -> &mut Compiler {
+        self._compiler.as_mut().unwrap().as_mut()
+    }
+
+    fn have_compiler(&self) -> bool {
+        match self._compiler {
+            None => false,
+            Some(_) => true,
+        }
+    }
 }
 
 // Following the Pratt parser example:
@@ -808,13 +865,12 @@ type InfixParslet = fn(ctx: &mut ParseContext, can_assign: bool) -> Result<(), W
 
 fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
-    match &ctx.parser.previous.token {
-        Token::Num(n) => ctx.compiler.emit_constant(Value::Num(*n)),
-        Token::String(s) => ctx
-            .compiler
-            .emit_constant(Value::String(Rc::new(s.clone()))),
+    let value = match &ctx.parser.previous.token {
+        Token::Num(n) => Value::Num(*n),
+        Token::String(s) => Value::String(Rc::new(s.clone())),
         _ => panic!("invalid literal"),
-    }
+    };
+    ctx.compiler_mut().emit_constant(value);
     Ok(())
 }
 
@@ -823,7 +879,7 @@ fn conditional(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenErro
     ignore_newlines(ctx)?;
 
     // Jump to the else branch if the condition is false.
-    let if_jump = ctx.compiler.emit(Ops::JumpIfFalsePlaceholder);
+    let if_jump = ctx.compiler_mut().emit(Ops::JumpIfFalsePlaceholder);
 
     // Compile the then branch.
     parse_precendence(ctx, Precedence::Conditional)?;
@@ -832,15 +888,15 @@ fn conditional(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenErro
     ignore_newlines(ctx)?;
 
     // Jump over the else branch when the if branch is taken.
-    let else_jump = ctx.compiler.emit(Ops::JumpPlaceholder);
+    let else_jump = ctx.compiler_mut().emit(Ops::JumpPlaceholder);
 
     // Compile the else branch.
-    ctx.compiler.patch_jump(if_jump);
+    ctx.compiler_mut().patch_jump(if_jump);
 
     parse_precendence(ctx, Precedence::Assignment)?;
 
     // Patch the jump over the else.
-    ctx.compiler.patch_jump(else_jump);
+    ctx.compiler_mut().patch_jump(else_jump);
     Ok(())
 }
 
@@ -898,7 +954,7 @@ fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
 
     // Call the operator method on the left-hand side.
     let signature = Signature::from_bare_name(SignatureType::Method, &name, 1);
-    ctx.compiler.emit_call(signature);
+    ctx.compiler_mut().emit_call(signature);
     Ok(())
 }
 
@@ -910,7 +966,7 @@ fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
         full_name: full_name.into(),
         arity: arity,
     };
-    ctx.compiler.emit_call(signature);
+    ctx.compiler_mut().emit_call(signature);
 }
 
 fn unary_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
@@ -945,6 +1001,138 @@ fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
     Ok(arg_count)
 }
 
+// Parses the rest of a comma-separated parameter list after the opening
+// delimeter. Updates `arity` in [signature] with the number of parameters.
+fn finish_parameter_list(
+    ctx: &mut ParseContext,
+    signature: &mut Signature,
+) -> Result<(), WrenError> {
+    loop {
+        ignore_newlines(ctx)?;
+        signature.arity += 1;
+        // FIXME: Parameter limits.
+
+        // Define a local variable in the method for the parameter.
+        declare_named_variable(ctx)?;
+        if !match_current(ctx, Token::Comma)? {
+            break;
+        }
+    }
+    Ok(())
+}
+
+type Handle<T> = Rc<RefCell<T>>;
+
+// Finishes [compiler], which is compiling a function, method, or chunk of top
+// level code. If there is a parent compiler, then this emits code in the
+// parent compiler to load the resulting function.
+fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>) -> Handle<ObjFn> {
+    let mut compiler = ending;
+    // Mark the end of the bytecode. Since it may contain multiple early returns,
+    // we can't rely on CODE_RETURN to tell us we're at the end.
+    compiler.emit(Ops::End);
+
+    // FIXME: Set debug name?
+
+    // We're done with the compiler, take out its parts.
+    // let upvalues = compiler.upvalues;\
+    let function = Function {
+        code: compiler.code,
+        constants: compiler.constants,
+    };
+    let fn_obj = new_handle(ObjFn::new(ctx.vm, function));
+
+    // If this was not the top-compiler, load the compile function into
+    // the parent code.
+    if ctx.have_compiler() {
+        // Wrap the function in a closure. We do this even if it has no upvalues so
+        // that the VM can uniformly assume all called objects are closures. This
+        // makes creating a function a little slower, but makes invoking them
+        // faster. Given that functions are invoked more often than they are
+        // created, this is a win.
+        let constant = ctx.compiler_mut().emit_constant(Value::Fn(fn_obj.clone()));
+        ctx.compiler_mut()
+            .emit(Ops::Closure(constant, compiler.upvalues));
+    }
+
+    fn_obj
+}
+
+// Parses a method or function body, after the initial "{" has been consumed.
+//
+// If [Compiler->isInitializer] is `true`, this is the body of a constructor
+// initializer. In that case, this adds the code to ensure it returns `this`.
+fn finish_body(ctx: &mut ParseContext) -> Result<(), WrenError> {
+    let is_expression_body = finish_block(ctx)?;
+
+    //   if (compiler->isInitializer)
+    //   {
+    //     // If the initializer body evaluates to a value, discard it.
+    //     if (isExpressionBody) emitOp(compiler, CODE_POP);
+
+    //     // The receiver is always stored in the first local slot.
+    //     emitOp(compiler, CODE_LOAD_LOCAL_0);
+    //   }
+    //   else
+    if !is_expression_body {
+        // Implicitly return null in statement bodies.
+        ctx.compiler_mut().emit(Ops::Null);
+    }
+
+    ctx.compiler_mut().emit(Ops::Return);
+    Ok(())
+}
+
+struct PushCompiler<'a, 'b> {
+    ctx: &'a mut ParseContext<'b>,
+    did_pop: bool,
+}
+
+impl<'a, 'b> PushCompiler<'a, 'b> {
+    fn push_root(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
+        let current = ctx._compiler.take();
+        match current {
+            None => (),
+            Some(_) => panic!(),
+        }
+        ctx._compiler = Some(Box::new(Compiler::with_parent(current)));
+        PushCompiler {
+            ctx: ctx,
+            did_pop: false,
+        }
+    }
+
+    fn push(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
+        let current = ctx._compiler.take();
+        match current {
+            None => panic!(),
+            Some(_) => (),
+        }
+        ctx._compiler = Some(Box::new(Compiler::with_parent(current)));
+        PushCompiler {
+            ctx: ctx,
+            did_pop: false,
+        }
+    }
+
+    fn pop(&mut self) -> Box<Compiler> {
+        assert_eq!(self.did_pop, false);
+        let mut compiler = self.ctx._compiler.take().unwrap();
+        self.ctx._compiler = compiler.parent.take();
+        self.did_pop = true;
+        compiler
+    }
+}
+
+impl<'a, 'b> Drop for PushCompiler<'a, 'b> {
+    fn drop(&mut self) {
+        if !self.did_pop {
+            // Pop this compiler off the stack.
+            self.pop();
+        }
+    }
+}
+
 // // Compiles an (optional) argument list for a method call with [methodSignature]
 // // and then calls it.
 fn method_call(ctx: &mut ParseContext) -> Result<(), WrenError> {
@@ -968,42 +1156,40 @@ fn method_call(ctx: &mut ParseContext) -> Result<(), WrenError> {
     }
 
     // Parse the block argument, if any.
-    //   if match_current(ctx,Token::LeftCurlyBrace)
-    //   {
-    //     // Include the block argument in the arity.
-    //     call_type = SignatureType::Method;
-    //     arity += 1;
+    if match_current(ctx, Token::LeftCurlyBrace)? {
+        // Include the block argument in the arity.
+        call_type = SignatureType::Method;
+        arity += 1;
 
-    //     Compiler fnCompiler;
-    //     initCompiler(&fnCompiler, compiler->parser, compiler, false);
+        let mut scope = PushCompiler::push(ctx);
 
-    //     // Make a dummy signature to track the arity.
-    //     Signature fnSignature = { "", 0, SIG_METHOD, 0 };
+        // Make a dummy signature to track the arity.
+        let mut fn_signature = Signature::from_bare_name(SignatureType::Method, "", 0);
 
-    //     // Parse the parameter list, if any.
-    //     if match_current(ctx,Token::Pipe)
-    //     {
-    //       finishParameterList(&fnCompiler, &fnSignature);
-    //       consume(compiler, TOKEN_PIPE, "Expect '|' after function parameters.");
-    //     }
+        // Parse the parameter list, if any.
+        if match_current(scope.ctx, Token::Pipe)? {
+            finish_parameter_list(scope.ctx, &mut fn_signature)?;
+            consume_expecting(scope.ctx, Token::Pipe)?;
+        }
 
-    //     fnCompiler.fn->arity = fnSignature.arity;
+        // fnCompiler.fn->arity = fnSignature.arity;
 
-    //     finishBody(&fnCompiler);
+        finish_body(scope.ctx)?;
 
-    //     // Name the function based on the method its passed to.
-    //     char blockName[MAX_METHOD_SIGNATURE + 15];
-    //     int blockLength;
-    //     signatureToString(&called, blockName, &blockLength);
-    //     memmove(blockName + blockLength, " block argument", 16);
+        // Name the function based on the method its passed to.
+        // char blockName[MAX_METHOD_SIGNATURE + 15];
+        // int blockLength;
+        // signatureToString(&called, blockName, &blockLength);
+        // memmove(blockName + blockLength, " block argument", 16);
 
-    //     endCompiler(&fnCompiler, blockName, blockLength + 15);
-    //   }
+        let compiler = scope.pop();
+        end_compiler(scope.ctx, compiler);
+    }
 
     // Handle SIG_INITIALIZER?
 
     let signature = Signature::from_bare_name(call_type, &name, arity);
-    ctx.compiler.emit_call(signature);
+    ctx.compiler_mut().emit_call(signature);
 
     Ok(())
 }
@@ -1019,9 +1205,9 @@ fn or_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
 
     // Skip the right argument if the left is true.
-    let jump = ctx.compiler.emit(Ops::OrPlaceholder);
+    let jump = ctx.compiler_mut().emit(Ops::OrPlaceholder);
     parse_precendence(ctx, Precedence::LogicalOr)?;
-    ctx.compiler.patch_jump(jump);
+    ctx.compiler_mut().patch_jump(jump);
     Ok(())
 }
 
@@ -1029,9 +1215,9 @@ fn and_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
 
     // Skip the right argument if the left is true.
-    let jump = ctx.compiler.emit(Ops::AndPlaceholder);
+    let jump = ctx.compiler_mut().emit(Ops::AndPlaceholder);
     parse_precendence(ctx, Precedence::LogicalAnd)?;
-    ctx.compiler.patch_jump(jump);
+    ctx.compiler_mut().patch_jump(jump);
     Ok(())
 }
 
@@ -1052,7 +1238,7 @@ fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> 
     }
     // Name is always empty for Subscripts, I think?
     let signature = Signature::from_bare_name(call_type, "", arity);
-    ctx.compiler.emit_call(signature);
+    ctx.compiler_mut().emit_call(signature);
     Ok(())
 }
 
@@ -1112,10 +1298,10 @@ fn bare_name(
     if can_assign && match_current(ctx, Token::Equals)? {
         // Compile the right-hand side.
         expression(ctx)?;
-        ctx.compiler.emit_store(variable.clone());
+        ctx.compiler_mut().emit_store(variable.clone());
     }
 
-    ctx.compiler.emit_load(variable);
+    ctx.compiler_mut().emit_load(variable);
 
     allow_line_before_dot(ctx)?;
     Ok(())
@@ -1138,7 +1324,7 @@ fn find_upvalue(_ctx: &ParseContext, _name: &str) -> Option<u16> {
 }
 
 fn resolve_non_module(ctx: &ParseContext, name: &str) -> Option<Variable> {
-    if let Some(index) = ctx.compiler.locals.iter().position(|l| l.name.eq(name)) {
+    if let Some(index) = ctx.compiler().locals.iter().position(|l| l.name.eq(name)) {
         return Some(Variable::local(index as u16));
     }
     if let Some(index) = find_upvalue(ctx, name) {
@@ -1191,7 +1377,7 @@ fn expression(ctx: &mut ParseContext) -> Result<(), WrenError> {
 }
 
 // Bookkeeping information for the current loop being compiled.
-#[derive(Default, Copy, Clone)]
+#[derive(Default, Copy, Clone, Debug)]
 struct LoopOffsets {
     // Index of the instruction that the loop should jump back to.
     start: usize,
@@ -1218,11 +1404,11 @@ impl Compiler {
 }
 
 fn loop_body(ctx: &mut ParseContext) -> Result<(), WrenError> {
-    ctx.compiler.loops.last_mut().unwrap().body = ctx.compiler.code.len();
+    ctx.compiler_mut().loops.last_mut().unwrap().body = ctx.compiler().code.len();
     statement(ctx)
 }
 
-impl Compiler {
+impl<'a, 'b> Compiler {
     fn offset_to_current_pc_from_after(&self, offset: usize) -> u16 {
         // We are commonly passed in the instruction offset
         // we're about to fix.  However our output is used
@@ -1240,8 +1426,9 @@ impl Compiler {
 
         // Find any break placeholders and make them real jumps.
         for i in offsets.body..self.code.len() {
-            if self.code[i] == Ops::JumpPlaceholder || self.code[i] == Ops::JumpIfFalsePlaceholder {
-                self.patch_jump(i)
+            match self.code[i] {
+                Ops::JumpIfFalsePlaceholder | Ops::JumpPlaceholder => self.patch_jump(i),
+                _ => (),
             }
         }
     }
@@ -1259,7 +1446,7 @@ impl Compiler {
 }
 
 fn load_local(ctx: &mut ParseContext, index: u16) {
-    ctx.compiler.emit_load(Variable::local(index))
+    ctx.compiler_mut().emit_load(Variable::local(index))
 }
 
 fn test_exit_loop(compiler: &mut Compiler) {
@@ -1295,7 +1482,7 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
     consume_expecting(ctx, Token::RightParen)?;
 
-    ctx.compiler.start_loop();
+    ctx.compiler_mut().start_loop();
 
     // Advance the iterator by calling the ".iterate" method on the sequence.
     load_local(ctx, seq_slot);
@@ -1303,8 +1490,8 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
     // Update and test the iterator.
     call_method(ctx, 1, "iterate(_)");
-    ctx.compiler.emit_store(Variable::local(iter_slot));
-    test_exit_loop(&mut ctx.compiler);
+    ctx.compiler_mut().emit_store(Variable::local(iter_slot));
+    test_exit_loop(ctx.compiler_mut());
 
     // Get the current value in the sequence by calling ".iteratorValue".
     load_local(ctx, seq_slot);
@@ -1313,15 +1500,15 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
     // Bind the loop variable in its own scope. This ensures we get a fresh
     // variable each iteration so that closures for it don't all see the same one.
-    ctx.compiler.push_scope();
+    ctx.compiler_mut().push_scope();
     add_local(ctx, name);
 
     loop_body(ctx)?;
 
     // Loop variable.
-    ctx.compiler.pop_scope();
+    ctx.compiler_mut().pop_scope();
 
-    ctx.compiler.end_loop();
+    ctx.compiler_mut().end_loop();
     Ok(())
 }
 
@@ -1364,34 +1551,34 @@ fn if_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
     expression(ctx)?;
     consume_expecting(ctx, Token::RightParen)?;
     // Jump to the else branch if the condition is false.
-    let if_jump = ctx.compiler.emit(Ops::JumpIfFalsePlaceholder);
+    let if_jump = ctx.compiler_mut().emit(Ops::JumpIfFalsePlaceholder);
     // Compile the then branch.
     statement(ctx)?;
     // Compile the else branch if there is one.
     if match_current(ctx, Token::Else)? {
         // Jump over the else branch when the if branch is taken.
-        let else_jump = ctx.compiler.emit(Ops::JumpPlaceholder);
-        ctx.compiler.patch_jump(if_jump);
+        let else_jump = ctx.compiler_mut().emit(Ops::JumpPlaceholder);
+        ctx.compiler_mut().patch_jump(if_jump);
         statement(ctx)?;
         // Patch the jump over the else.
-        ctx.compiler.patch_jump(else_jump);
+        ctx.compiler_mut().patch_jump(else_jump);
     } else {
-        ctx.compiler.patch_jump(if_jump);
+        ctx.compiler_mut().patch_jump(if_jump);
     }
     Ok(())
 }
 
 fn while_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
-    ctx.compiler.start_loop();
+    ctx.compiler_mut().start_loop();
 
     // Compile the condition.
     consume_expecting(ctx, Token::LeftParen)?;
     expression(ctx)?;
     consume_expecting(ctx, Token::RightParen)?;
 
-    test_exit_loop(&mut ctx.compiler);
+    test_exit_loop(ctx.compiler_mut());
     loop_body(ctx)?;
-    ctx.compiler.end_loop();
+    ctx.compiler_mut().end_loop();
     Ok(())
 }
 
@@ -1445,9 +1632,9 @@ fn auto_scope(
     ctx: &mut ParseContext,
     f: fn(&mut ParseContext) -> Result<(), WrenError>,
 ) -> Result<(), WrenError> {
-    ctx.compiler.push_scope();
+    ctx.compiler_mut().push_scope();
     let v = f(ctx);
-    ctx.compiler.pop_scope();
+    ctx.compiler_mut().pop_scope();
     return v;
 }
 
@@ -1484,7 +1671,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
     if match_current(ctx, Token::Break)? {
         // let offsets =
-        ctx.compiler
+        ctx.compiler()
             .loops
             .last()
             .ok_or(ctx.parse_error(ParserError::Grammar(
@@ -1497,10 +1684,10 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
         // Emit a placeholder instruction for the jump to the end of the body.
         // We'll fix these up with real Jumps at the end of compiling this loop.
-        ctx.compiler.emit(Ops::JumpPlaceholder); // Break placeholder
+        ctx.compiler_mut().emit(Ops::JumpPlaceholder); // Break placeholder
     } else if match_current(ctx, Token::Continue)? {
         let offsets = *ctx
-            .compiler
+            .compiler()
             .loops
             .last()
             .ok_or(ctx.parse_error(ParserError::Grammar(
@@ -1511,7 +1698,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
         // are discarded first.
         // discard_locals(compiler, offsets.scope_depth + 1);
 
-        ctx.compiler.emit_loop(&offsets);
+        ctx.compiler_mut().emit_loop(&offsets);
     } else if match_current(ctx, Token::If)? {
         if_statement(ctx)?;
     } else if match_current(ctx, Token::For)? {
@@ -1523,14 +1710,14 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
         fn finish(p: &mut ParseContext) -> Result<(), WrenError> {
             if finish_block(p)? {
                 // Block was an expression, so discard it.
-                p.compiler.emit(Ops::Pop);
+                p.compiler_mut().emit(Ops::Pop);
             }
             Ok(())
         }
         auto_scope(ctx, finish)?;
     } else {
         expression(ctx)?;
-        ctx.compiler.emit(Ops::Pop);
+        ctx.compiler_mut().emit(Ops::Pop);
     }
     Ok(())
 }
@@ -1538,18 +1725,19 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 // Create a new local variable with [name]. Assumes the current scope is local
 // and the name is unique.
 fn add_local(ctx: &mut ParseContext, name: String) -> u16 {
-    ctx.compiler.locals.push(Local {
+    let local = Local {
         name: name,
-        depth: ctx.compiler.nested_local_scope_count(),
-    });
-    (ctx.compiler.locals.len() - 1) as u16
+        depth: ctx.compiler().nested_local_scope_count(),
+    };
+    ctx.compiler_mut().locals.push(local);
+    (ctx.compiler().locals.len() - 1) as u16
 }
 
 fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenError> {
     // TODO: Check variable name max length.
 
     // Top-level module scope.
-    if ctx.compiler.scope_depth == ScopeDepth::Module {
+    if ctx.compiler().scope_depth == ScopeDepth::Module {
         // Error handling missing.
         // Error handling should occur inside wren_define_variable, no?
         let result = wren_define_variable(&mut ctx.vm.module, &name, Value::Null);
@@ -1590,7 +1778,7 @@ fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
         expression(ctx)?;
     } else {
         // Default initialize it to null.
-        ctx.compiler.emit(Ops::Null);
+        ctx.compiler_mut().emit(Ops::Null);
     }
 
     // Now put it in scope.
@@ -1602,11 +1790,11 @@ fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
 // FIXME: This is probably not needed?  All it really adds is an assert?
 fn load_core_variable(ctx: &mut ParseContext, name: &str) {
     let symbol = ctx.vm.module.lookup_symbol(name).unwrap();
-    ctx.compiler.emit_load(Variable::module(symbol));
+    ctx.compiler_mut().emit_load(Variable::module(symbol));
 }
 
 fn define_variable(ctx: &mut ParseContext, symbol: u16) {
-    match ctx.compiler.scope_depth {
+    match ctx.compiler().scope_depth {
         ScopeDepth::Local(_) => {
             // Store the variable. If it's a local, the result of the initializer is
             // in the correct slot on the stack already so we're done.
@@ -1615,14 +1803,14 @@ fn define_variable(ctx: &mut ParseContext, symbol: u16) {
         ScopeDepth::Module => {
             // It's a module-level variable, so store the value in the module slot and
             // then discard the temporary for the initializer.
-            ctx.compiler.emit_store(Variable::module(symbol));
-            ctx.compiler.emit(Ops::Pop);
+            ctx.compiler_mut().emit_store(Variable::module(symbol));
+            ctx.compiler_mut().emit(Ops::Pop);
         }
     }
 }
 
 // fn scope_for_definitions(parser: &Parser) -> Scope {
-//     match ctx.compiler.scope_depth {
+//     match ctx.compiler().scope_depth {
 //         ScopeDepth::Local(_) => Scope::Local,
 //         ScopeDepth::Module => Scope::Module,
 //     }
@@ -1643,7 +1831,7 @@ fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), Wre
     let class_name = Value::String(Rc::new(name));
 
     // Make a string constant for the name.
-    ctx.compiler.emit_constant(class_name);
+    ctx.compiler_mut().emit_constant(class_name);
     // FIXME: Handle superclasses, TOKEN_IS
 
     // Implicitly inherit from Object.
@@ -1651,7 +1839,7 @@ fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), Wre
 
     // Store a placeholder for the number of fields argument. We don't know the
     // count until we've compiled all the methods to see which fields are used.
-    let class_instruction = ctx.compiler.emit(Ops::ClassPlaceholder);
+    let class_instruction = ctx.compiler_mut().emit(Ops::ClassPlaceholder);
 
     // Store it in its name. (in the module case)
     define_variable(ctx, class_symbol);
@@ -1721,7 +1909,7 @@ fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), Wre
     auto_scope(ctx, finish_class)?;
 
     let num_fields = 0; // FIXME
-    ctx.compiler.code[class_instruction] = Ops::Class(num_fields);
+    ctx.compiler_mut().code[class_instruction] = Ops::Class(num_fields);
     Ok(())
 }
 
@@ -1749,7 +1937,7 @@ fn grouping(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
 
 fn boolean(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     if let Token::Boolean(b) = ctx.parser.previous.token {
-        ctx.compiler.emit_boolean(b);
+        ctx.compiler_mut().emit_boolean(b);
     } else {
         panic!("boolean called w/o boolean token");
     }
@@ -1757,7 +1945,7 @@ fn boolean(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 }
 
 fn null(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
-    ctx.compiler.emit(Ops::Null);
+    ctx.compiler_mut().emit(Ops::Null);
     Ok(())
 }
 // How many states are needed here?
@@ -1999,6 +2187,7 @@ impl error::Error for WrenError {
     }
 }
 
+// This is called nextToken in wren_c, and consume_expecting is consume.
 fn consume(ctx: &mut ParseContext) -> Result<(), WrenError> {
     std::mem::swap(&mut ctx.parser.previous, &mut ctx.parser.current);
     std::mem::swap(&mut ctx.parser.current, &mut ctx.parser.next);
@@ -2086,6 +2275,7 @@ fn ignore_newlines(ctx: &mut ParseContext) -> Result<(), WrenError> {
     Ok(())
 }
 
+// Called wrenCompile in wren_c
 pub(crate) fn compile<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
@@ -2109,38 +2299,34 @@ pub(crate) fn compile<'a>(
     // vm.module = Module::with_name(module_name);
 
     // Init the parser & compiler
-    let mut parser = Parser {
-        input: input,
-        previous: ParseToken::before_file(),
-        current: ParseToken::before_file(),
-        next: ParseToken::before_file(),
-    };
-    let mut compiler = Compiler::new();
     let mut parse_context = ParseContext {
-        parser: &mut parser,
-        compiler: &mut compiler,
+        parser: Parser {
+            input: input,
+            previous: ParseToken::before_file(),
+            current: ParseToken::before_file(),
+            next: ParseToken::before_file(),
+        },
+        _compiler: None,
         vm: vm,
     };
 
-    let ctx = &mut parse_context;
+    let mut scope = PushCompiler::push_root(&mut parse_context);
 
-    consume(ctx)?; // Fill next
-    consume(ctx)?; // Move next -> current
+    consume(scope.ctx)?; // Fill next
+    consume(scope.ctx)?; // Move next -> current
 
-    // Make a new compiler!
-
-    ignore_newlines(ctx)?;
+    ignore_newlines(scope.ctx)?;
     loop {
-        let found_eof = match_current(ctx, Token::EndOfFile)?;
+        let found_eof = match_current(scope.ctx, Token::EndOfFile)?;
         if found_eof {
             break;
         }
-        definition(ctx)?;
+        definition(scope.ctx)?;
 
-        let found_newline = match_at_least_one_line(ctx)?;
+        let found_newline = match_at_least_one_line(scope.ctx)?;
         // If there is no newline we must be EOF?
         if !found_newline {
-            consume_expecting(ctx, Token::EndOfFile)?;
+            consume_expecting(scope.ctx, Token::EndOfFile)?;
             break;
         }
     }
@@ -2149,12 +2335,9 @@ pub(crate) fn compile<'a>(
 
     // FIXME: Check for undefined implicit variables and throw errors.
 
-    // FIXME: Missing lots of "endCompiler" cleanup here.
-    ctx.compiler.emit(Ops::End);
-    Ok(Closure {
-        function: Function {
-            code: compiler.code,
-            constants: compiler.constants,
-        },
-    })
+    scope.ctx.compiler_mut().emit(Ops::End);
+    let compiler = scope.pop();
+    let fn_obj = end_compiler(scope.ctx, compiler);
+    let closure = Closure { fn_obj: fn_obj };
+    Ok(closure)
 }

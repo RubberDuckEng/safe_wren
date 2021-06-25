@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Undeclared variable \'Fn\'")
+[dummy_module line 6] Error Grammar("Undeclared variable \'local\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Undeclared variable \'Fn\'")
+[dummy_module line 6] Error Grammar("Undeclared variable \'local\'")
 
 Missing expected output "local" on line 10.

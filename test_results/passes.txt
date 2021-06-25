@@ -39,6 +39,7 @@ wren_c/test/language/assignment/prefix_operator.wren
 wren_c/test/language/assignment/syntax.wren
 wren_c/test/language/assignment/undefined.wren
 wren_c/test/language/break/exit_local_scopes.wren
+wren_c/test/language/break/in_function_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren
 wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
@@ -64,6 +65,7 @@ wren_c/test/language/constructor/cannot_be_setter.wren
 wren_c/test/language/constructor/cannot_be_subscript.wren
 wren_c/test/language/constructor/cannot_be_unary.wren
 wren_c/test/language/constructor/no_parameter_list.wren
+wren_c/test/language/continue/in_function_in_loop.wren
 wren_c/test/language/continue/in_while_loop.wren
 wren_c/test/language/continue/outside_loop.wren
 wren_c/test/language/empty_block.wren
@@ -74,6 +76,7 @@ wren_c/test/language/for/newline_before_in.wren
 wren_c/test/language/foreign/foreign_after_static.wren
 wren_c/test/language/foreign/foreign_method_with_body.wren
 wren_c/test/language/function/newline_in_expression_block.wren
+wren_c/test/language/function/no_newline_before_close.wren
 wren_c/test/language/function/no_parameters.wren
 wren_c/test/language/if/dangling_else.wren
 wren_c/test/language/if/else.wren
@@ -117,7 +120,9 @@ wren_c/test/language/shebang/shebang_at_eof.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
 wren_c/test/language/shebang/shebang_invalid.wren
 wren_c/test/language/static_field/outside_class.wren
+wren_c/test/language/super/super_in_top_level_function.wren
 wren_c/test/language/this/this_at_top_level.wren
+wren_c/test/language/this/this_in_top_level_function.wren
 wren_c/test/language/unexpected_character.wren
 wren_c/test/language/variable/global_in_initializer.wren
 wren_c/test/language/variable/global_without_initializer.wren
@@ -133,6 +138,7 @@ wren_c/test/language/variable/scope_reuse_in_different_blocks.wren
 wren_c/test/language/variable/scope_while.wren
 wren_c/test/language/variable/shadow_global.wren
 wren_c/test/language/variable/undefined_global.wren
+wren_c/test/language/variable/undefined_local.wren
 wren_c/test/language/variable/use_false_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
@@ -142,6 +148,5 @@ wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/long_variable_name.wren
 wren_c/test/limit/many_globals.wren
-wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
 wren_c/test/regression/429.wren

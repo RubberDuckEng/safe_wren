@@ -1,6 +1,6 @@
-Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Fn\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Fn\'")
+Unexpected output on stderr:
+MethodNotFound("new(_)" on "Fn")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("new(_)" on "Fn")
 
 Missing expected output "65536" on line 65540.

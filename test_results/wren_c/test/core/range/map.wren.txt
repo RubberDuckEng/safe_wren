@@ -1,6 +1,6 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expected end of file, found: LeftCurlyBrace")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected end of file, found: LeftCurlyBrace")
+Unexpected output on stderr:
+MethodNotFound("map(_)" on "Fn")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("map(_)" on "Fn")
 
 Missing expected output "[2, 3, 4]" on line 3.
