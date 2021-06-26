@@ -1,9 +1,8 @@
 Unexpected output on stderr:
-MethodNotFound("call()" on "Fn")
+MethodNotFound("print(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("call()" on "Fn")
+MethodNotFound("print(_)" on "String")
 
-Missing expected output "before" on line 3.
-Missing expected output "after" on line 6.
+Expected output "before" on line 3 and got "Closure {..}".
 Missing expected output "arg" on line 8.
 Missing expected output "arg" on line 9.

@@ -1,6 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("call()" on "Fn")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("call()" on "Fn")
-
 Missing expected output "null" on line 2.

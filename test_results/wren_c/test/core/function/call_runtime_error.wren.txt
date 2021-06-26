@@ -1,4 +1,4 @@
 Expected runtime error "Bool does not implement '+(_)'." and got:
-MethodNotFound("call(_,_)" on "Fn")
+MethodNotFound("+(_)" on "Fn")
 Expected stack trace and got:
 

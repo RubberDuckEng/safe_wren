@@ -279,6 +279,19 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, fn_meta_class, "new(_)", fn_new);
     primitive!(vm, fn_class, "arity", fn_arity);
 
+    for arity in 0..16 {
+        let name = if arity == 0 {
+            format!("call()")
+        } else {
+            // arity=1 -> "call(_)", arity=2 -> "call(_,_)", etc.
+            format!("call({}{})", "_,".repeat(arity - 1), "_")
+        };
+        let symbol = vm.methods.ensure_method(&name);
+        fn_class
+            .borrow_mut()
+            .set_method(symbol, Method::FunctionCall);
+    }
+
     primitive!(
         vm,
         find_core_class(vm, "System").borrow().class_obj().unwrap(),

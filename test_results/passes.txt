@@ -115,6 +115,7 @@ wren_c/test/language/module/name_collision.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/nonlocal/in_block_scope.wren
 wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
+wren_c/test/language/nonlocal/use_in_function.wren
 wren_c/test/language/null/literal.wren
 wren_c/test/language/number/hex_literals.wren
 wren_c/test/language/number/hex_too_large.wren
@@ -153,7 +154,10 @@ wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/while/newline_after_while.wren
 wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
+wren_c/test/limit/long_function.wren
 wren_c/test/limit/long_variable_name.wren
+wren_c/test/limit/many_constants.wren
 wren_c/test/limit/many_globals.wren
+wren_c/test/limit/reuse_constants.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
 wren_c/test/regression/429.wren

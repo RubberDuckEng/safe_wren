@@ -1,8 +1,3 @@
-Unexpected output on stderr:
-MethodNotFound("call()" on "Fn")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("call()" on "Fn")
-
 Missing expected output "0" on line 2.
 Missing expected output "1" on line 5.
 Missing expected output "3" on line 8.

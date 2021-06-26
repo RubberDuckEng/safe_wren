@@ -244,23 +244,49 @@ pub struct CallFrame {
     pc: usize,
     // The closure being executed.
     closure: Handle<ObjClosure>,
+    stack: Vec<Value>,
+}
+
+impl CallFrame {
+    fn new(closure: Handle<ObjClosure>) -> CallFrame {
+        CallFrame {
+            pc: 0,
+            closure: closure,
+            stack: Vec::new(),
+        }
+    }
+}
+
+impl core::fmt::Debug for CallFrame {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "stack: (len {}, top {:?}), ",
+            self.stack.len(),
+            self.stack.last()
+        )
+    }
 }
 
 pub struct Fiber {
-    // Stack for this executing Fiber
-    pub(crate) stack: Vec<Value>,
-    frame: CallFrame,
+    call_stack: Vec<CallFrame>,
 }
 
 impl Fiber {
     fn new(closure: Handle<ObjClosure>) -> Fiber {
         Fiber {
-            stack: Vec::new(),
-            frame: CallFrame {
-                pc: 0,
-                closure: closure,
-            },
+            call_stack: vec![CallFrame::new(closure)],
         }
+    }
+}
+impl core::fmt::Debug for Fiber {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "call_stack: (len {}, top {:?}), ",
+            self.call_stack.len(),
+            self.call_stack.last()
+        )
     }
 }
 
@@ -282,13 +308,9 @@ pub struct WrenVM {
 impl core::fmt::Debug for WrenVM {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "WrenVM {{ ")?;
-        let fiber = self.last_fiber.as_ref().unwrap();
-        write!(
-            f,
-            "stack: (len {}, top {:?}), ",
-            fiber.stack.len(),
-            fiber.stack.last()
-        )?;
+        if let Some(fiber) = &self.last_fiber {
+            write!(f, "stack: {:?}, ", fiber)?;
+        }
         write!(f, "methods: (len {}) ", self.methods.method_names.len())?;
         write!(f, "}}")
     }
@@ -380,15 +402,15 @@ fn as_class(value: Value) -> Handle<ObjClass> {
     }
 }
 
-fn create_class(vm: &WrenVM, fiber: &mut Fiber, num_fields: usize) -> Result<(), RuntimeError> {
+fn create_class(vm: &WrenVM, frame: &mut CallFrame, num_fields: usize) -> Result<(), RuntimeError> {
     // Pull the name and superclass off the stack.
-    let superclass = as_class(fiber.pop()?);
-    let name = fiber.pop()?;
+    let superclass = as_class(frame.pop()?);
+    let name = frame.pop()?;
 
     //   vm->fiber->error = validateSuperclass(vm, name, superclass, numFields);
 
     let class = wren_new_class(vm, &superclass, num_fields, name)?;
-    fiber.push(Value::Class(class));
+    frame.push(Value::Class(class));
     Ok(())
 }
 
@@ -468,6 +490,12 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM) {
     vm.debug = had_debug;
 }
 
+enum RunNext {
+    FunctionCall(CallFrame),
+    FunctionReturn(Value),
+    Done,
+}
+
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
         let mut vm = Self {
@@ -516,99 +544,151 @@ impl WrenVM {
         }
     }
 
-    pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<(), RuntimeError> {
+    pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
         let mut fiber = Fiber::new(closure);
-        let result = self.run_fiber(&mut fiber);
-        self.last_fiber = Some(fiber);
-        result
+        loop {
+            let mut frame = fiber.call_stack.pop().unwrap();
+            // This is all to avoid run_fiber needing to call itself
+            // recursively, or the run_fiber main loop needing to pull
+            // the frame on every iteration.  Maybe not worth it?
+            match self.run_frame_in_fiber(&mut frame, &fiber) {
+                Ok(RunNext::FunctionCall(new_frame)) => fiber.call_stack.push(new_frame),
+                Ok(RunNext::FunctionReturn(value)) => {
+                    if fiber.call_stack.is_empty() {
+                        return Ok(value);
+                    } else {
+                        // Take the return value and push it onto the calling stack.
+                        fiber.call_stack.last_mut().unwrap().push(value);
+                    }
+                }
+                Ok(RunNext::Done) => {
+                    // FIXME: Is this an error now that FunctionReturn is implemented?
+                    self.last_fiber = Some(fiber);
+                    return Ok(Value::Null);
+                }
+                Err(e) => {
+                    self.last_fiber = Some(fiber);
+                    return Err(e);
+                }
+            }
+        }
     }
 
-    pub(crate) fn run_fiber(&mut self, fiber: &mut Fiber) -> Result<(), RuntimeError> {
-        let fn_obj = fiber.frame.closure.borrow().fn_obj.clone();
-        let mut pc = fiber.frame.pc;
+    fn run_frame_in_fiber(
+        &mut self,
+        frame: &mut CallFrame,
+        _fiber: &Fiber,
+    ) -> Result<RunNext, RuntimeError> {
+        let fn_obj = frame.closure.borrow().fn_obj.clone();
+        let mut pc = frame.pc;
         loop {
             let op = &fn_obj.borrow().function.code[pc];
             pc += 1;
             if self.debug {
-                fiber.dump_stack();
-                fiber.dump_instruction(&self.module, &fiber.frame.closure.borrow(), op);
+                frame.dump_stack();
+                frame.dump_instruction(&self.module, &frame.closure.borrow(), op);
             }
             match op {
                 Ops::Constant(index) => {
-                    fiber.push(fn_obj.borrow().function.constants[*index].clone());
+                    frame.push(fn_obj.borrow().function.constants[*index].clone());
                 }
                 Ops::Boolean(value) => {
-                    fiber.push(Value::Boolean(*value));
+                    frame.push(Value::Boolean(*value));
                 }
                 Ops::Null => {
-                    fiber.push(Value::Null);
+                    frame.push(Value::Null);
                 }
                 Ops::Call(signature) => {
                     // Implicit arg for this.
                     let num_args = signature.arity as usize + 1;
-                    let this_offset = fiber.stack.len() - num_args;
-                    let args = fiber.stack.split_off(this_offset);
+                    let this_offset = frame.stack.len() - num_args;
+                    // Unlike wren_c, we remove the args from the stack
+                    // and pass them to the function.
+                    let args = frame.stack.split_off(this_offset);
 
                     let this_class = self
                         .class_for_value(&args[0])
                         .ok_or(RuntimeError::ThisObjectHasNoClass)?;
                     let class_obj = this_class.borrow();
 
+                    // Get the global usize for this function name
                     let symbol = self
                         .methods
                         .lookup(&signature.full_name)
                         .ok_or(method_not_found(&class_obj, &signature))?;
 
+                    // Get the Method record for this class for this symbol.
+                    // This could return None instead of MethodNone?
                     let method = class_obj
                         .methods
                         .get(symbol)
                         .ok_or(method_not_found(&class_obj, &signature))?;
 
+                    // Even if we got a Method doesn't mean *this* class
+                    // implements it.
                     match method {
                         Method::Primitive(f) => {
                             let result = f(self, args)?;
-                            // When do we remove args from stack?
-                            fiber.push(result);
+                            frame.push(result);
                         }
-                        Method::None => unimplemented!(),
+                        Method::FunctionCall => {
+                            // Pushes a new stack frame.
+                            // wren_rust (currently) keeps a separate stack
+                            // per CallFrame, so underflows are caught on a
+                            // per-function call basis.
+                            return Ok(RunNext::FunctionCall(CallFrame {
+                                pc: 0,
+                                closure: args[0].try_into_closure()?,
+                                stack: args,
+                            }));
+                        }
+                        Method::None => {
+                            // This is the case where the methods vector was
+                            // large enough to have the symbol (because the
+                            // class supports a larger symbol), but this symbol
+                            // is Method::None (not implemented).
+                            return Err(method_not_found(&class_obj, &signature));
+                        }
                     }
                 }
                 Ops::Closure(constant_index, _upvalues) => {
                     let fn_value = fn_obj.borrow().function.constants[*constant_index].clone();
                     let fn_obj = fn_value.try_into_fn()?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
-                    fiber.push(Value::Closure(closure));
+                    frame.push(Value::Closure(closure));
                     // FIXME: Handle upvalues.
                 }
                 Ops::Return => {
-                    // HACK!
-                    fiber.push(Value::Num(42.0));
+                    // The top of our stack is returned and then the caller of
+                    // this rust function will push the return onto the stack of
+                    // the calling wren function CallFrame.
+                    return Ok(RunNext::FunctionReturn(frame.pop()?));
                 }
                 Ops::Class(num_fields) => {
                     // FIXME: Pass module?
-                    create_class(self, fiber, *num_fields)?;
+                    create_class(self, frame, *num_fields)?;
                 }
                 Ops::Load(variable) => {
                     let value = match variable.scope {
                         Scope::Module => self.module.variables[variable.index].clone(),
                         Scope::Upvalue => unimplemented!("load upvalue"),
-                        Scope::Local => fiber.stack[variable.index].clone(),
+                        Scope::Local => frame.stack[variable.index].clone(),
                     };
-                    fiber.push(value);
+                    frame.push(value);
                 }
                 Ops::Store(variable) => {
-                    let value = fiber.peek()?;
+                    let value = frame.peek()?;
                     match variable.scope {
                         Scope::Module => self.module.variables[variable.index] = value.clone(),
                         Scope::Upvalue => unimplemented!("store upvalue"),
-                        Scope::Local => fiber.stack[variable.index] = value.clone(),
+                        Scope::Local => frame.stack[variable.index] = value.clone(),
                     };
                 }
                 Ops::Pop => {
-                    fiber.pop()?;
+                    frame.pop()?;
                 }
                 Ops::End => {
-                    return Ok(());
+                    return Ok(RunNext::Done);
                 }
                 Ops::Loop(offset_backwards) => {
                     pc -= *offset_backwards as usize;
@@ -617,26 +697,26 @@ impl WrenVM {
                     pc += *offset_forward as usize;
                 }
                 Ops::JumpIfFalse(offset_forward) => {
-                    let value = fiber.pop()?;
+                    let value = frame.pop()?;
                     if value.is_falsey() {
                         pc += *offset_forward as usize;
                     }
                 }
                 Ops::And(offset_forward) => {
                     // This differs from JumpIfFalse in whether it pops
-                    let value = fiber.peek()?;
+                    let value = frame.peek()?;
                     if value.is_falsey() {
                         pc += *offset_forward as usize;
                     } else {
-                        fiber.pop()?;
+                        frame.pop()?;
                     }
                 }
                 Ops::Or(offset_forward) => {
-                    let value = fiber.peek()?;
+                    let value = frame.peek()?;
                     if !value.is_falsey() {
                         pc += *offset_forward as usize;
                     } else {
-                        fiber.pop()?;
+                        frame.pop()?;
                     }
                 }
                 Ops::ClassPlaceholder => unimplemented!(),
@@ -649,7 +729,7 @@ impl WrenVM {
     }
 }
 
-impl Fiber {
+impl CallFrame {
     fn push(&mut self, value: Value) {
         self.stack.push(value);
     }
@@ -865,7 +945,7 @@ pub(crate) enum Method {
     Primitive(Primitive),
 
     // A primitive that handles .call on Fn.
-    //   FunctionCall,
+    FunctionCall,
 
     // A externally-defined C method.
     //   ForeignFunction,
@@ -881,6 +961,7 @@ impl core::fmt::Debug for Method {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             Method::Primitive(_) => write!(f, "Primitive"),
+            Method::FunctionCall => write!(f, "FunctionCall"),
             Method::None => write!(f, "None"),
         }
     }

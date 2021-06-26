@@ -12,7 +12,6 @@ occurances : error text
 20 : Error Grammar("Undeclared variable \'return\'")
 20 : MethodNotFound("bytes" on "String")
 19 : Error Grammar("Expected newline, found: Name(\"foreign\")")
-18 : MethodNotFound("call()" on "Fn")
 16 : MethodNotFound("[_]" on "String")
 13 : NumberRequired(Boolean(false))
 12 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: Hash,  }")
@@ -36,13 +35,13 @@ occurances : error text
 4 : MethodNotFound("count" on "String")
 4 : MethodNotFound("fromString(_)" on "Num metaclass")
 4 : MethodNotFound("iterate(_)" on "String")
+4 : MethodNotFound("print(_)" on "String")
 4 : MethodNotFound("split(_)" on "String")
 4 : MethodNotFound("type" on "Foo metaclass")
 3 : Error Grammar("Undeclared variable \'Sequence\'")
 3 : Error Grammar("Undeclared variable \'foreign\'")
 3 : MethodNotFound("%(_)" on "Num")
 3 : MethodNotFound("atan(_)" on "Num")
-3 : MethodNotFound("call(_)" on "Fn")
 3 : MethodNotFound("contains(_)" on "String")
 3 : MethodNotFound("endsWith(_)" on "String")
 3 : MethodNotFound("indexOf(_)" on "String")
@@ -86,6 +85,7 @@ occurances : error text
 2 : Failed to open file "wren_c/test/regression/442-000357.wren": stream did not contain valid UTF-8
 2 : Failed to open file "wren_c/test/regression/442-000440.wren": stream did not contain valid UTF-8
 2 : Failed to open file "wren_c/test/regression/442-000665.wren": stream did not contain valid UTF-8
+2 : MethodNotFound("+(_)" on "Fn")
 2 : MethodNotFound("abs" on "Num")
 2 : MethodNotFound("acos" on "Num")
 2 : MethodNotFound("asin" on "Num")
@@ -113,7 +113,6 @@ occurances : error text
 2 : MethodNotFound("min" on "Range")
 2 : MethodNotFound("minSafeInteger" on "Num metaclass")
 2 : MethodNotFound("print(_)" on "Num")
-2 : MethodNotFound("print(_)" on "String")
 2 : MethodNotFound("print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "System metaclass")
 2 : MethodNotFound("reduce(_)" on "Range")
 2 : MethodNotFound("round" on "Num")
@@ -144,7 +143,6 @@ occurances : error text
 1 : Got output "%(123.badMethod)" when none was expected.
 1 : Got output "ok" when none was expected.
 1 : MethodNotFound("bar" on "Foo metaclass")
-1 : MethodNotFound("call(_,_)" on "Fn")
 1 : MethodNotFound("e" on "Num")
 1 : MethodNotFound("join(_)" on "Range")
 1 : MethodNotFound("min(_)" on "Num")

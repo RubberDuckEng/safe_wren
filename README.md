@@ -23,7 +23,6 @@ with error text from any failed tests.  `test.py` will also update
 
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
-* function parsing
 * static functions
 * Logical operators
 * objects
@@ -49,12 +48,11 @@ with error text from any failed tests.  `test.py` will also update
 * Maps/map lookup, but requires object allocation
 * "construct" keyword, missing function declarations.
 
-
 ## Future bugs
 * Push/Pop of scopes does not work with Result pattern.
 * Fn is defined twice once in code and once in wren_core.wren
 * Object/Class are not set as global variables?
-
+* call_runtime_error is seeing Fn as this rather than Bool, why?
 
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?
