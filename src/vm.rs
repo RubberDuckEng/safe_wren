@@ -551,8 +551,14 @@ impl WrenVM {
             // This is all to avoid run_fiber needing to call itself
             // recursively, or the run_fiber main loop needing to pull
             // the frame on every iteration.  Maybe not worth it?
-            match self.run_frame_in_fiber(&mut frame, &fiber) {
-                Ok(RunNext::FunctionCall(new_frame)) => fiber.call_stack.push(new_frame),
+            let result = self.run_frame_in_fiber(&mut frame, &fiber);
+            match result {
+                Ok(RunNext::FunctionCall(new_frame)) => {
+                    // call_stack does not contain "frame", restore it.
+                    fiber.call_stack.push(frame);
+                    // Now push our new frame!
+                    fiber.call_stack.push(new_frame);
+                }
                 Ok(RunNext::FunctionReturn(value)) => {
                     if fiber.call_stack.is_empty() {
                         return Ok(value);
@@ -580,10 +586,10 @@ impl WrenVM {
         _fiber: &Fiber,
     ) -> Result<RunNext, RuntimeError> {
         let fn_obj = frame.closure.borrow().fn_obj.clone();
-        let mut pc = frame.pc;
+        frame.pc;
         loop {
-            let op = &fn_obj.borrow().function.code[pc];
-            pc += 1;
+            let op = &fn_obj.borrow().function.code[frame.pc];
+            frame.pc += 1;
             if self.debug {
                 frame.dump_stack();
                 frame.dump_instruction(&self.module, &frame.closure.borrow(), op);
@@ -691,22 +697,22 @@ impl WrenVM {
                     return Ok(RunNext::Done);
                 }
                 Ops::Loop(offset_backwards) => {
-                    pc -= *offset_backwards as usize;
+                    frame.pc -= *offset_backwards as usize;
                 }
                 Ops::Jump(offset_forward) => {
-                    pc += *offset_forward as usize;
+                    frame.pc += *offset_forward as usize;
                 }
                 Ops::JumpIfFalse(offset_forward) => {
                     let value = frame.pop()?;
                     if value.is_falsey() {
-                        pc += *offset_forward as usize;
+                        frame.pc += *offset_forward as usize;
                     }
                 }
                 Ops::And(offset_forward) => {
                     // This differs from JumpIfFalse in whether it pops
                     let value = frame.peek()?;
                     if value.is_falsey() {
-                        pc += *offset_forward as usize;
+                        frame.pc += *offset_forward as usize;
                     } else {
                         frame.pop()?;
                     }
@@ -714,7 +720,7 @@ impl WrenVM {
                 Ops::Or(offset_forward) => {
                     let value = frame.peek()?;
                     if !value.is_falsey() {
-                        pc += *offset_forward as usize;
+                        frame.pc += *offset_forward as usize;
                     } else {
                         frame.pop()?;
                     }

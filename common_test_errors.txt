@@ -31,6 +31,7 @@ occurances : error text
 5 : MethodNotFound("replace(_,_)" on "String")
 4 : Error Grammar("Expected newline, found: Name(\"callSuperToString\")")
 4 : Error Grammar("Undeclared variable \'i\'")
+4 : MethodNotFound("+(_)" on "Fn")
 4 : MethodNotFound("clamp(_,_)" on "Num")
 4 : MethodNotFound("count" on "String")
 4 : MethodNotFound("fromString(_)" on "Num metaclass")
@@ -85,7 +86,6 @@ occurances : error text
 2 : Failed to open file "wren_c/test/regression/442-000357.wren": stream did not contain valid UTF-8
 2 : Failed to open file "wren_c/test/regression/442-000440.wren": stream did not contain valid UTF-8
 2 : Failed to open file "wren_c/test/regression/442-000665.wren": stream did not contain valid UTF-8
-2 : MethodNotFound("+(_)" on "Fn")
 2 : MethodNotFound("abs" on "Num")
 2 : MethodNotFound("acos" on "Num")
 2 : MethodNotFound("asin" on "Num")

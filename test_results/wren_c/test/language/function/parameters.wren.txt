@@ -1,5 +1,9 @@
-Missing expected output "0" on line 2.
-Missing expected output "1" on line 5.
+Unexpected output on stderr:
+MethodNotFound("+(_)" on "Fn")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("+(_)" on "Fn")
+
+Expected output "1" on line 5 and got "Closure {..}".
 Missing expected output "3" on line 8.
 Missing expected output "6" on line 11.
 Missing expected output "10" on line 14.

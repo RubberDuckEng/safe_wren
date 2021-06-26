@@ -1,5 +1,0 @@
-Missing expected output "ok" on line 6.
-Missing expected output "1" on line 11.
-Missing expected output "2" on line 12.
-Missing expected output "1" on line 19.
-Missing expected output "2" on line 22.

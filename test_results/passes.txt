@@ -83,9 +83,12 @@ wren_c/test/language/for/newline_after_for.wren
 wren_c/test/language/for/newline_before_in.wren
 wren_c/test/language/foreign/foreign_after_static.wren
 wren_c/test/language/foreign/foreign_method_with_body.wren
+wren_c/test/language/function/empty_body.wren
+wren_c/test/language/function/newline_body.wren
 wren_c/test/language/function/newline_in_expression_block.wren
 wren_c/test/language/function/no_newline_before_close.wren
 wren_c/test/language/function/no_parameters.wren
+wren_c/test/language/function/syntax.wren
 wren_c/test/language/if/dangling_else.wren
 wren_c/test/language/if/else.wren
 wren_c/test/language/if/if.wren
