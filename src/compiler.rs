@@ -117,7 +117,7 @@ impl InputManager {
             source: source,
             offset: start_offset,
             line_number: 1,
-            token_start_offset: 0,
+            token_start_offset: start_offset,
         }
     }
 
