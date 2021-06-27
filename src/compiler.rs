@@ -52,6 +52,7 @@ pub enum Token {
     While,
     Break,
     Continue,
+    Return,
     For,
     In,
     Is,
@@ -529,6 +530,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "while" => Some(Token::While),
         "break" => Some(Token::Break),
         "continue" => Some(Token::Continue),
+        "return" => Some(Token::Return),
         "null" => Some(Token::Null),
         "class" => Some(Token::Class),
         "is" => Some(Token::Is),
@@ -691,6 +693,9 @@ pub(crate) struct Compiler {
 
     upvalues: Vec<Upvalue>,
     parent: Option<Box<Compiler>>,
+
+    // Unclear if this will be used?
+    is_initializer: bool,
     // The current number of slots (locals and temporaries) in use.
     //
     // We use this and maxSlots to track the maximum number of additional slots
@@ -718,6 +723,7 @@ impl Compiler {
             // num_slots: 0,
             parent: parent,
             upvalues: Vec::new(),
+            is_initializer: false, // Should this be tracked here?
         }
     }
 
@@ -1704,6 +1710,25 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
         // discard_locals(compiler, offsets.scope_depth + 1);
 
         ctx.compiler_mut().emit_loop(&offsets);
+    } else if match_current(ctx, Token::Return)? {
+        // Compile the return value.
+        if match_current(ctx, Token::Newline)? {
+            // If there's no expression after return, initializers should
+            // return 'this' and regular methods should return null
+            if ctx.compiler().is_initializer {
+                ctx.compiler_mut().emit_load(Variable::local(0));
+            } else {
+                ctx.compiler_mut().emit(Ops::Null);
+            }
+        } else {
+            if ctx.compiler().is_initializer {
+                return Err(ctx.parse_error(ParserError::Grammar(
+                    "A constructor cannot return a value.".into(),
+                )));
+            }
+            expression(ctx)?;
+        }
+        ctx.compiler_mut().emit(Ops::Return);
     } else if match_current(ctx, Token::If)? {
         if_statement(ctx)?;
     } else if match_current(ctx, Token::For)? {
@@ -2060,6 +2085,7 @@ impl Token {
             Token::If => "if",
             Token::Else => "else",
             Token::While => "while",
+            Token::Return => "return",
             Token::Break => "break",
             Token::Continue => "continue",
             Token::Equals => "equal sign",
@@ -2116,6 +2142,7 @@ impl Token {
             Token::Construct => GrammarRule::unused(), // FIXME: Wrong.
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
+            Token::Return => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
             Token::Continue => GrammarRule::unused(),
             Token::LessThanLessThan => GrammarRule::infix_operator(Precedence::BitwiseShift),

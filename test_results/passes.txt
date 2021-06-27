@@ -115,6 +115,7 @@ wren_c/test/language/module/missing_for.wren
 wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
 wren_c/test/language/module/name_collision.wren
+wren_c/test/language/module/returns/return_value.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/nonlocal/in_block_scope.wren
 wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
@@ -127,6 +128,10 @@ wren_c/test/language/number/scientific_floating_exponent.wren
 wren_c/test/language/number/scientific_missing_exponent.wren
 wren_c/test/language/number/scientific_multiple_exponants.wren
 wren_c/test/language/number/scientific_multiple_exponent_signs.wren
+wren_c/test/language/return/after_else.wren
+wren_c/test/language/return/after_if.wren
+wren_c/test/language/return/after_while.wren
+wren_c/test/language/return/in_function.wren
 wren_c/test/language/semicolon.wren
 wren_c/test/language/shebang/shebang_at_eof.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
