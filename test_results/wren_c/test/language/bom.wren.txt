@@ -1,6 +1,0 @@
-Unexpected error:
-[dummy_module line 0] Error Lexer(UnexpectedChar('ï'))
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 0] Error Lexer(UnexpectedChar('ï'))
-
-Missing expected output "ok" on line 2.

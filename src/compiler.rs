@@ -107,9 +107,15 @@ impl InputManager {
         InputManager::from_bytes(source.as_bytes().to_vec())
     }
     pub fn from_bytes(source: Vec<u8>) -> InputManager {
+        let start_offset = if source.starts_with(&[0xEF, 0xBB, 0xBF]) {
+            3
+        } else {
+            0
+        };
+
         InputManager {
             source: source,
-            offset: 0,
+            offset: start_offset,
             line_number: 1,
             token_start_offset: 0,
         }

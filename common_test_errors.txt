@@ -68,7 +68,6 @@ occurances : error text
 2 : Error Grammar("Undeclared variable \'foo\'")
 2 : Error Grammar("Undeclared variable \'param\'")
 2 : Error Lexer(UnexpectedChar('\\'))
-2 : Error Lexer(UnexpectedChar('ï'))
 2 : Error Lexer(UnterminatedBlockComment)
 2 : Failed to open file "wren_c/test/regression/442-000005.wren": stream did not contain valid UTF-8
 2 : Failed to open file "wren_c/test/regression/442-000007.wren": stream did not contain valid UTF-8
