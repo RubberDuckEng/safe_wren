@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"toString\")")
+[dummy_module line 5] Error Grammar("Expected left curly brace, found: Is")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"toString\")")
+[dummy_module line 5] Error Grammar("Expected left curly brace, found: Is")
 
 Missing expected output "Base" on line 12.

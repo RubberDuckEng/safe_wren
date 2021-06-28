@@ -53,6 +53,7 @@ pub enum Token {
     Break,
     Continue,
     Return,
+    Static,
     For,
     In,
     Is,
@@ -644,6 +645,8 @@ pub(crate) enum Ops {
     ClassPlaceholder,
     Class(usize),
     Closure(usize, Vec<Upvalue>),
+    Construct,
+    Method(bool, usize), // METHOD_STATIC and METHOD_INSTANCE from wren_c
 
     // If the top of the stack is false, jump [arg] forward. Otherwise, pop and
     // continue.
@@ -688,6 +691,46 @@ pub(crate) struct Upvalue {
     index: usize,
 }
 
+// Bookkeeping information for compiling a class definition.
+#[derive(Default)]
+struct ClassInfo {
+    // The name of the class.
+    // name: String,
+    //   // Attributes for the class itself
+    //   ObjMap* classAttributes;
+    //   // Attributes for methods in this class
+    //   ObjMap* methodAttributes;
+
+    // // Symbol table for the fields of the class.
+    // fields: Vec<String>,
+
+    // // Symbols for the methods defined by the class. Used to detect duplicate
+    // // method definitions.
+    // methods: Vec<usize>,
+    // static_methods: Vec<usize>,
+
+    // True if the class being compiled is a foreign class.
+    // is_foreign_class: bool,
+
+    // // True if the current method being compiled is static.
+    in_static_method: bool,
+    // The signature of the method being compiled.
+    //   Signature* signature;
+}
+
+impl ClassInfo {
+    fn new(_name: &str, _is_foreign_class: bool) -> ClassInfo {
+        ClassInfo {
+            // name: name.into(),
+            // fields: Vec::new(),
+            // methods: Vec::new(),
+            // static_methods: Vec::new(),
+            // is_foreign_class: is_foreign_class,
+            in_static_method: false,
+        }
+    }
+}
+
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
 pub(crate) struct Compiler {
@@ -699,6 +742,9 @@ pub(crate) struct Compiler {
 
     upvalues: Vec<Upvalue>,
     parent: Option<Box<Compiler>>,
+
+    // Probably should be Option<ClassInfo>?
+    enclosing_class: ClassInfo,
 
     // Unclear if this will be used?
     is_initializer: bool,
@@ -716,9 +762,13 @@ pub(crate) struct Compiler {
 }
 
 impl Compiler {
-    fn with_parent(parent: Option<Box<Compiler>>) -> Compiler {
+    fn _with_parent_and_arg0_name(parent: Option<Box<Compiler>>, _arg0_name: &str) -> Compiler {
         Compiler {
             constants: Vec::new(),
+            // locals: vec![Local {
+            //     name: arg0_name.into(),
+            //     depth: 0, // wren_c uses -1 for this, unclear if needed?
+            // }],
             locals: Vec::new(),
             code: Vec::new(),
             scope_depth: match parent {
@@ -727,10 +777,20 @@ impl Compiler {
             },
             loops: Vec::new(),
             // num_slots: 0,
+            enclosing_class: ClassInfo::default(),
             parent: parent,
             upvalues: Vec::new(),
             is_initializer: false, // Should this be tracked here?
         }
+    }
+
+    fn block(parent: Option<Box<Compiler>>) -> Compiler {
+        Compiler::_with_parent_and_arg0_name(parent, "")
+    }
+
+    // Parent isn't actually optional.
+    fn method(parent: Option<Box<Compiler>>) -> Compiler {
+        Compiler::_with_parent_and_arg0_name(parent, "this")
     }
 
     fn ensure_constant(&mut self, value: Value) -> usize {
@@ -859,6 +919,14 @@ impl<'a> ParseContext<'a> {
         }
     }
 
+    fn grammar_error(&self, message: &str) -> WrenError {
+        WrenError {
+            line: self.parser.previous.line,
+            module: self.vm.module.name.clone(),
+            error: ParserError::Grammar(message.into()),
+        }
+    }
+
     fn compiler(&self) -> &Compiler {
         self._compiler.as_ref().unwrap().as_ref()
     }
@@ -879,6 +947,8 @@ impl<'a> ParseContext<'a> {
 // https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
 type PrefixParslet = fn(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError>;
 type InfixParslet = fn(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError>;
+type MethodSignatureParslet =
+    fn(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError>;
 
 fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
@@ -923,8 +993,8 @@ enum SignatureType {
     Method,
     Subscript,
     SubscriptSetter,
-    // Setter,
-    // Initializer,
+    Setter,
+    Initializer,
 }
 
 #[derive(Debug, PartialEq)]
@@ -938,12 +1008,14 @@ pub struct Signature {
 }
 
 impl Signature {
+    // This is called signatureToString in wren_c
     fn full_name(call_type: &SignatureType, name: &str, arity: u8) -> String {
         let args = (0..arity).map(|_| "_").collect::<Vec<&str>>().join(",");
         match call_type {
             SignatureType::Getter => name.into(),
-            // SignatureType::Setter => format!("{}={}", name, args),
+            SignatureType::Setter => format!("{}={}", name, args),
             SignatureType::Method => format!("{}({})", name, args),
+            SignatureType::Initializer => format!("init {}({})", name, args),
             SignatureType::Subscript => format!("{}[{}]", name, args), // name should always be empty
             SignatureType::SubscriptSetter => format!("{}[{}]=({})", name, args, args), // name should always be empty.
                                                                                         // SignatureType::Initializer => format!("init {}({})", name, args),
@@ -970,6 +1042,7 @@ fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
     parse_precendence(ctx, rule.precedence.one_higher())?;
 
     // Call the operator method on the left-hand side.
+    // FIXME: Should this use signature_from_token?
     let signature = Signature::from_bare_name(SignatureType::Method, &name, 1);
     ctx.compiler_mut().emit_call(signature);
     Ok(())
@@ -999,6 +1072,28 @@ fn unary_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
     // Call the operator method on the left-hand side.
     call_method(ctx, 0, &name);
     Ok(())
+}
+
+// Returns a signature with [type] whose name is from the last consumed token.
+fn signature_from_token(
+    ctx: &ParseContext,
+    call_type: SignatureType,
+) -> Result<Signature, WrenError> {
+    let name = ctx
+        .parser
+        .previous
+        .name(&ctx.parser.input)
+        .map_err(|e| ctx.parse_error(e.into()))?;
+
+    // FIXME: Handle method name limits.
+
+    Ok(Signature::from_bare_name(call_type, &name, 0))
+}
+
+// This isn't needed, just here for ease of code porting.
+fn signature_symbol(ctx: &mut ParseContext, signature: &Signature) -> usize {
+    // Signature already does "signatureToString"
+    ctx.vm.methods.ensure_method(&signature.full_name)
 }
 
 fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
@@ -1114,20 +1209,36 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
             None => (),
             Some(_) => panic!(),
         }
-        ctx._compiler = Some(Box::new(Compiler::with_parent(current)));
+        // Maybe Compiler::root that doesn't take a parent?
+        ctx._compiler = Some(Box::new(Compiler::block(current)));
         PushCompiler {
             ctx: ctx,
             did_pop: false,
         }
     }
 
-    fn push(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
+    fn push_block(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
         let current = ctx._compiler.take();
         match current {
             None => panic!(),
             Some(_) => (),
         }
-        ctx._compiler = Some(Box::new(Compiler::with_parent(current)));
+        let compiler = Compiler::block(current);
+        ctx._compiler = Some(Box::new(compiler));
+        PushCompiler {
+            ctx: ctx,
+            did_pop: false,
+        }
+    }
+
+    fn push_method(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
+        let current = ctx._compiler.take();
+        match current {
+            None => panic!(),
+            Some(_) => (),
+        }
+        let compiler = Compiler::method(current);
+        ctx._compiler = Some(Box::new(compiler));
         PushCompiler {
             ctx: ctx,
             did_pop: false,
@@ -1180,7 +1291,7 @@ fn method_call(ctx: &mut ParseContext) -> Result<(), WrenError> {
         call_type = SignatureType::Method;
         arity += 1;
 
-        let mut scope = PushCompiler::push(ctx);
+        let mut scope = PushCompiler::push_block(ctx);
 
         // Make a dummy signature to track the arity.
         let mut fn_signature = Signature::from_bare_name(SignatureType::Method, "", 0);
@@ -1655,6 +1766,36 @@ fn auto_scope(
     return v;
 }
 
+struct ScopePusher<'a, 'b> {
+    ctx: &'a mut ParseContext<'b>,
+    did_pop: bool,
+}
+
+impl<'a, 'b> ScopePusher<'a, 'b> {
+    fn push(ctx: &'a mut ParseContext<'b>) -> ScopePusher<'a, 'b> {
+        ctx.compiler_mut().push_scope();
+        ScopePusher {
+            ctx: ctx,
+            did_pop: false,
+        }
+    }
+
+    fn pop(&mut self) {
+        assert_eq!(self.did_pop, false);
+        self.ctx.compiler_mut().pop_scope();
+        self.did_pop = true;
+    }
+}
+
+impl<'a, 'b> Drop for ScopePusher<'a, 'b> {
+    fn drop(&mut self) {
+        if !self.did_pop {
+            // Pop the scope
+            self.pop();
+        }
+    }
+}
+
 // Generates code to discard local variables at [depth] or greater. Does *not*
 // actually undeclare variables or pop any scopes, though. This is called
 // directly when compiling "break" statements to ditch the local variables
@@ -1662,6 +1803,7 @@ fn auto_scope(
 // the break instruction.
 //
 // Returns the number of local variables that were eliminated.
+// FIXME: Is discard_locals needed with each CallFrame having a separate stack?
 fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
     let depth = match scope_depth {
         ScopeDepth::Module => panic!("Can't discard locals at module level."),
@@ -1758,6 +1900,75 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
     Ok(())
 }
 
+// Creates a matching constructor method for an initializer with [signature]
+// and [initializerSymbol].
+//
+// Construction is a two-stage process in Wren that involves two separate
+// methods. There is a static method that allocates a new instance of the class.
+// It then invokes an initializer method on the new instance, forwarding all of
+// the constructor arguments to it.
+//
+// The allocator method always has a fixed implementation:
+//
+//     CODE_CONSTRUCT - Replace the class in slot 0 with a new instance of it.
+//     CODE_CALL      - Invoke the initializer on the new instance.
+//
+// This creates that method and calls the initializer with [initializerSymbol].
+fn create_constructor(
+    ctx: &mut ParseContext,
+    signature: Signature,
+    _initializer_symbol: usize, // Isn't this the same as signature?
+) -> Result<(), WrenError> {
+    let mut scope = PushCompiler::push_method(ctx);
+
+    // Allocate the instance.
+    // FIXME: handle foreign
+    scope.ctx.compiler_mut().emit(Ops::Construct);
+
+    // Run its initializer.
+    scope.ctx.compiler_mut().emit_call(signature);
+    // emitShortArg(&methodCompiler, (Code)(CODE_CALL_0 + signature->arity),
+    // initializerSymbol);
+
+    // Return the instance.
+    scope.ctx.compiler_mut().emit(Ops::Return);
+
+    let compiler = scope.pop();
+    // FIXME: Where does this closure get put?
+    end_compiler(scope.ctx, compiler, 0);
+    Ok(())
+}
+
+// Loads the enclosing class onto the stack and then binds the function already
+// on the stack as a method on that class.
+fn define_method(
+    ctx: &mut ParseContext,
+    class_variable: Variable,
+    is_static: bool,
+    method_symbol: usize,
+) {
+    // Load the class. We have to do this for each method because we can't
+    // keep the class on top of the stack. If there are static fields, they
+    // will be locals above the initial variable slot for the class on the
+    // stack. To skip past those, we just load the class each time right before
+    // defining a method.
+    ctx.compiler_mut().emit_load(class_variable);
+
+    // Define the method.
+    ctx.compiler_mut()
+        .emit(Ops::Method(is_static, method_symbol));
+}
+
+// Declares a method in the enclosing class with [signature].
+//
+// Reports an error if a method with that signature is already declared.
+// Returns the symbol for the method.
+fn declare_method(ctx: &mut ParseContext, signature: &Signature) -> Result<usize, WrenError> {
+    let symbol = signature_symbol(ctx, signature);
+    // FIXME: Ensure this method isn't a duplicate.
+    Ok(symbol)
+}
+
 // Create a new local variable with [name]. Assumes the current scope is local
 // and the name is unique.
 fn add_local(ctx: &mut ParseContext, name: String) -> u16 {
@@ -1845,18 +2056,196 @@ fn define_variable(ctx: &mut ParseContext, symbol: u16) {
     }
 }
 
-// fn scope_for_definitions(parser: &Parser) -> Scope {
-//     match ctx.compiler().scope_depth {
-//         ScopeDepth::Local(_) => Scope::Local,
-//         ScopeDepth::Module => Scope::Module,
-//     }
-// }
+fn scope_for_definitions(ctx: &ParseContext) -> Scope {
+    match ctx.compiler().scope_depth {
+        ScopeDepth::Local(_) => Scope::Local,
+        ScopeDepth::Module => Scope::Module,
+    }
+}
+
+// Compiles an optional setter parameter in a method [signature].
+//
+// Returns `true` if it was a setter.
+fn maybe_setter(ctx: &mut ParseContext, signature: &mut Signature) -> Result<bool, WrenError> {
+    // See if it's a setter.
+    if !match_current(ctx, Token::Equals)? {
+        return Ok(false);
+    }
+
+    // It's a setter.
+    signature.call_type = if signature.call_type == SignatureType::Subscript {
+        SignatureType::SubscriptSetter
+    } else {
+        SignatureType::Setter
+    };
+
+    // Parse the value parameter.
+    consume_expecting(ctx, Token::LeftParen)?;
+    declare_named_variable(ctx)?;
+    consume_expecting(ctx, Token::RightParen)?;
+
+    signature.arity += 1;
+
+    Ok(true)
+}
+
+// Compiles a method signature for a subscript operator.
+fn subscript_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
+    signature.call_type = SignatureType::Subscript;
+    // FIXME: Do we need to reset name to empty here?
+
+    // Parse the parameters inside the subscript.
+    finish_parameter_list(ctx, signature)?;
+    consume_expecting(ctx, Token::RightSquareBracket)?;
+
+    maybe_setter(ctx, signature)?;
+    Ok(())
+}
+
+// Parses an optional parenthesized parameter list. Updates `type` and `arity`
+// in [signature] to match what was parsed.
+fn parameter_list(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
+    // The parameter list is optional.
+    if !match_current(ctx, Token::LeftParen)? {
+        return Ok(());
+    }
+
+    signature.call_type = SignatureType::Method;
+
+    // Allow new line before an empty argument list
+    ignore_newlines(ctx)?;
+
+    // Allow an empty parameter list.
+    if match_current(ctx, Token::RightParen)? {
+        return Ok(());
+    }
+
+    finish_parameter_list(ctx, signature)?;
+    consume_expecting(ctx, Token::RightParen)
+}
+// Compiles a method signature for a named method or setter.
+fn named_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
+    signature.call_type = SignatureType::Getter;
+
+    // If it's a setter, it can't also have a parameter list.
+    if maybe_setter(ctx, signature)? {
+        return Ok(());
+    }
+
+    // Regular named method with an optional parameter list.
+    parameter_list(ctx, signature)
+}
+
+// Compiles a method signature for a constructor.
+fn constructor_signature(
+    ctx: &mut ParseContext,
+    signature: &mut Signature,
+) -> Result<(), WrenError> {
+    consume_expecting_name_msg(ctx, "Expect constructor name after 'construct'.")?;
+    // HACK(from wren_c) Capture the name.
+    signature.full_name = signature_from_token(ctx, SignatureType::Initializer)?.full_name;
+
+    if match_current(ctx, Token::Equals)? {
+        return Err(ctx.grammar_error("A constructor cannot be a setter."));
+    }
+
+    // Isn't this just consume_expecting_msg?
+    if !match_current(ctx, Token::LeftParen)? {
+        return Err(ctx.grammar_error("A constructor cannot be a getter."));
+    }
+    // Allow an empty parameter list.
+    if match_current(ctx, Token::RightParen)? {
+        return Ok(());
+    }
+    finish_parameter_list(ctx, signature)?;
+
+    consume_expecting_msg(ctx, Token::RightParen, "Expect ')' after parameters.")
+}
+
+// Compiles a method definition inside a class body.
+//
+// Returns `true` if it compiled successfully, or `false` if the method couldn't
+// be parsed.
+fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, WrenError> {
+    // Parse any attributes before the method and store them
+    //   if (matchAttribute(compiler))
+    //   {
+    //     return method(compiler, classVariable);
+    //   }
+
+    // TODO: What about foreign constructors?
+    //   let is_foreign = match_current(ctx, Token::Foreign);
+    let is_static = match_current(ctx, Token::Static)?;
+    ctx.compiler_mut().enclosing_class.in_static_method = is_static;
+
+    let maybe_signature_fn = ctx.parser.current.token.method_signature();
+    consume(ctx)?;
+
+    let signature_fn = maybe_signature_fn.ok_or(ctx.grammar_error("Expect method definition."))?;
+
+    // Build the method signature.
+    let mut signature = signature_from_token(ctx, SignatureType::Getter)?;
+    //   compiler->enclosingClass->signature = &signature;
+
+    let mut scope = PushCompiler::push_method(ctx);
+
+    // Compile the method signature.
+    signature_fn(scope.ctx, &mut signature)?;
+
+    scope.ctx.compiler_mut().is_initializer = signature.call_type == SignatureType::Initializer;
+
+    if is_static && signature.call_type == SignatureType::Initializer {
+        scope.ctx.grammar_error("A constructor cannot be static.");
+    }
+
+    // Include the full signature in debug messages in stack traces.
+    //   signatureToString(&signature, fullSignature, &length);
+
+    // Copy any attributes the compiler collected into the enclosing class
+    //   copyMethodAttributes(compiler, isForeign, isStatic, fullSignature, length);
+
+    // Check for duplicate methods. Doesn't matter that it's already been
+    // defined, error will discard bytecode anyway.
+    // Check if the method table already contains this symbol
+    let method_symbol = declare_method(scope.ctx, &signature)?;
+
+    // FIXME: handle foreign.
+
+    consume_expecting_msg(
+        scope.ctx,
+        Token::LeftCurlyBrace,
+        "Expect '{' to begin method body.",
+    )?;
+    finish_body(scope.ctx)?;
+    let compiler = scope.pop();
+    // FIXME: Where does the closure go?
+    end_compiler(scope.ctx, compiler, signature.arity);
+
+    // Define the method. For a constructor, this defines the instance
+    // initializer method.
+    define_method(scope.ctx, class_variable.clone(), is_static, method_symbol);
+
+    if signature.call_type == SignatureType::Initializer {
+        // Also define a matching constructor method on the metaclass.
+        signature.call_type = SignatureType::Method;
+        let constructor_symbol = signature_symbol(scope.ctx, &signature);
+
+        create_constructor(scope.ctx, signature, method_symbol)?;
+        define_method(scope.ctx, class_variable.clone(), true, constructor_symbol);
+    }
+
+    Ok(true)
+}
 
 // TODO: is_foreign should probably be an enum.
-fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), WrenError> {
+fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), WrenError> {
     // Create a variable to store the class in.
-    let class_symbol = declare_named_variable(ctx)?;
 
+    let class_symbol = declare_named_variable(ctx)?;
+    let class_variable = Variable {
+        scope: scope_for_definitions(ctx),
+        index: class_symbol as usize,
+    };
     // FIXME: Should declare_named_variable return the name too?
     let name = ctx
         .parser
@@ -1864,7 +2253,8 @@ fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), Wre
         .name(&ctx.parser.input)
         .map_err(|e| ctx.parse_error(e.into()))?;
 
-    let class_name = Value::String(Rc::new(name));
+    // FIXME: Clone shouldn't be needed.
+    let class_name = Value::String(Rc::new(name.clone()));
 
     // Make a string constant for the name.
     ctx.compiler_mut().emit_constant(class_name);
@@ -1883,20 +2273,10 @@ fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), Wre
     // Push a local variable scope. Static fields in a class body are hoisted out
     // into local variables declared in this scope. Methods that use them will
     // have upvalues referencing them.
-
-    fn finish_class(ctx: &mut ParseContext) -> Result<(), WrenError> {
-        //   ClassInfo classInfo;
-        //   classInfo.isForeign = isForeign;
-        //   classInfo.name = className;
-
-        //   // Allocate attribute maps if necessary.
-        //   // A method will allocate the methods one if needed
-        //   classInfo.classAttributes = compiler->attributes->count > 0
-        //         ? wrenNewMap(compiler->parser->vm)
-        //         : NULL;
-        //   classInfo.methodAttributes = NULL;
-        //   // Copy any existing attributes into the class
-        //   copyAttributes(compiler, classInfo.classAttributes);
+    {
+        let mut scope = ScopePusher::push(ctx);
+        let class_info = ClassInfo::new(&name, is_foreign);
+        // FIXME: Handle attributes.
 
         //   // Set up a symbol table for the class's fields. We'll initially compile
         //   // them to slots starting at zero. When the method is bound to the class, the
@@ -1907,22 +2287,24 @@ fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), Wre
         //   // Set up symbol buffers to track duplicate static and instance methods.
         //   wrenIntBufferInit(&classInfo.methods);
         //   wrenIntBufferInit(&classInfo.staticMethods);
-        //   compiler->enclosingClass = &classInfo;
+        // Is this the right compiler?
+        scope.ctx.compiler_mut().enclosing_class = class_info;
 
         // Compile the method definitions.
-        consume_expecting(ctx, Token::LeftCurlyBrace)?;
-        match_at_least_one_line(ctx)?;
+        consume_expecting(scope.ctx, Token::LeftCurlyBrace)?;
+        match_at_least_one_line(scope.ctx)?;
 
-        while !match_current(ctx, Token::RightCurlyBrace)? {
-            // FIXME: No method suport yet!
-            // if (!method(compiler, classVariable)) break;
-
-            // Don't require a newline after the last definition.
-            if match_current(ctx, Token::RightCurlyBrace)? {
+        while !match_current(scope.ctx, Token::RightCurlyBrace)? {
+            if !method(scope.ctx, &class_variable)? {
                 break;
             }
 
-            consume_at_least_one_line(ctx)?;
+            // Don't require a newline after the last definition.
+            if match_current(scope.ctx, Token::RightCurlyBrace)? {
+                break;
+            }
+
+            consume_at_least_one_line(scope.ctx)?;
         }
 
         //   // If any attributes are present,
@@ -1940,9 +2322,8 @@ fn class_definition(ctx: &mut ParseContext, _is_foreign: bool) -> Result<(), Wre
         //   }
 
         // FIXME::Clear symbol tables for tracking field and method names.
-        Ok(())
+        scope.pop(); // Making explicit what the block is about to do.
     }
-    auto_scope(ctx, finish_class)?;
 
     let num_fields = 0; // FIXME
     ctx.compiler_mut().code[class_instruction] = Ops::Class(num_fields);
@@ -1984,6 +2365,7 @@ fn null(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     ctx.compiler_mut().emit(Ops::Null);
     Ok(())
 }
+
 // How many states are needed here?
 // Could this just be an enum?
 // enum Grammar {
@@ -1994,8 +2376,6 @@ fn null(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 struct GrammarRule {
     prefix: Option<PrefixParslet>,
     infix: Option<InfixParslet>,
-    // Eventually signature_function for generating correct method names
-    // from operator tokens.
     precedence: Precedence,
 }
 
@@ -2076,6 +2456,7 @@ impl Token {
             Token::For => "for",
             Token::In => "in",
             Token::Null => "null",
+            Token::Static => "static",
             Token::Construct => "construct",
             Token::Class => "class",
             Token::LessThanLessThan => "bit-shift left",
@@ -2096,6 +2477,17 @@ impl Token {
             Token::Continue => "continue",
             Token::Equals => "equal sign",
             Token::EqualsEquals => "==",
+        }
+    }
+
+    // wren_c embeds this in the GrammarRules array, but it only affects 3
+    // token types, so that seems a bit silly?
+    fn method_signature(&self) -> Option<MethodSignatureParslet> {
+        match self {
+            Token::LeftSquareBracket => Some(subscript_signature),
+            Token::Construct => Some(constructor_signature),
+            Token::Name(_) => Some(named_signature),
+            _ => None,
         }
     }
 
@@ -2145,7 +2537,8 @@ impl Token {
             Token::In => GrammarRule::unused(),
             Token::If => GrammarRule::unused(),
             Token::Else => GrammarRule::unused(),
-            Token::Construct => GrammarRule::unused(), // FIXME: Wrong.
+            Token::Construct => GrammarRule::unused(),
+            Token::Static => GrammarRule::unused(),
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::Return => GrammarRule::unused(),
@@ -2259,6 +2652,18 @@ fn consume_expecting_name(ctx: &mut ParseContext) -> Result<(), WrenError> {
     }
 }
 
+// FIXME: Replace all existing instances of consume_expecting_name with this.
+fn consume_expecting_name_msg(
+    ctx: &mut ParseContext,
+    error_message: &str,
+) -> Result<(), WrenError> {
+    consume(ctx)?;
+    match ctx.parser.previous.token {
+        Token::Name(_) => Ok(()),
+        _ => Err(ctx.grammar_error(error_message)),
+    }
+}
+
 fn consume_expecting(ctx: &mut ParseContext, token: Token) -> Result<(), WrenError> {
     consume(ctx)?;
     let name_for_error = token.error_message_name(); // Can we avoid this?
@@ -2267,6 +2672,19 @@ fn consume_expecting(ctx: &mut ParseContext, token: Token) -> Result<(), WrenErr
             "Expected {}, found: {:?}",
             name_for_error, ctx.parser.previous.token
         ))));
+    }
+    Ok(())
+}
+
+// FIXME: Replace all existing instances of consume_expecting with this.
+fn consume_expecting_msg(
+    ctx: &mut ParseContext,
+    token: Token,
+    error_message: &str,
+) -> Result<(), WrenError> {
+    consume(ctx)?;
+    if ctx.parser.previous.token != token {
+        return Err(ctx.grammar_error(error_message));
     }
     Ok(())
 }

@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"static\")")
+[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"static\")")
+[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
 
 Missing expected output "null" on line 5.

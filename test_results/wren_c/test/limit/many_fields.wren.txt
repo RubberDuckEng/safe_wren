@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 3] Error Grammar("Undeclared variable \'_field1\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 3] Error Grammar("Undeclared variable \'_field1\'")
 
 Missing expected output "255" on line 262.

@@ -1,3 +1,6 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"bar\")")
+Unexpected output on stderr:
+ClassRequired(Closure())
 Missing expected error on line 4.
+Expected return code 65 and got 70. Stderr:
+ClassRequired(Closure())
+

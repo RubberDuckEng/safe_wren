@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 10] Error Grammar("Undeclared variable \'foo\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 10] Error Grammar("Undeclared variable \'foo\'")
 
 Missing expected output "method" on line 20.
 Missing expected output "class method" on line 21.

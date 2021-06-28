@@ -1,6 +1,6 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
+Unexpected output on stderr:
+ClassRequired(Closure())
+Expected return code 0 and got 70. Stderr:
+ClassRequired(Closure())
 
 Missing expected output "[invalid toString]!" on line 7.

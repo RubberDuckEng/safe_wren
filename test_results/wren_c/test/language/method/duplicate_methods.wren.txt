@@ -1,4 +1,4 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 6] Error Grammar("Expect \'{\' to begin method body.")
 Missing expected error on line 4.
 Missing expected error on line 7.

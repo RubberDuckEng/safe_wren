@@ -224,6 +224,7 @@ pub struct SymbolTable {
 }
 
 impl SymbolTable {
+    // This is called methodSymbol or wrenSymbolTableEnsure in wren_c
     pub fn ensure_method(&mut self, name: &str) -> usize {
         if let Some(index) = self.method_names.iter().position(|n| n.eq(name)) {
             return index;
@@ -496,6 +497,69 @@ enum RunNext {
     Done,
 }
 
+fn wren_new_instance(_vm: &mut WrenVM, _class: Handle<ObjClass>) -> Value {
+    //   ObjInstance* instance = ALLOCATE_FLEX(vm, ObjInstance,
+    //                                         Value, classObj->numFields);
+    //   initObj(vm, &instance->obj, OBJ_INSTANCE, classObj);
+
+    //   // Initialize fields to null.
+    //   for (int i = 0; i < classObj->numFields; i++)
+    //   {
+    //     instance->fields[i] = NULL_VAL;
+    //   }
+
+    //   return OBJ_VAL(instance);
+    Value::Null
+}
+
+// Defines [methodValue] as a method on [classObj].
+//
+// Handles both foreign methods where [methodValue] is a string containing the
+// method's signature and Wren methods where [methodValue] is a function.
+//
+// Aborts the current fiber if the method is a foreign method that could not be
+// found.
+// fn bind_method(
+//     _vm: &mut WrenVM,
+//     is_static: bool,
+//     symbol: usize,
+//     module: &mut Module,
+//     class: &ObjClass,
+//     method_value: Value,
+// ) {
+//     let class_name = class.name;
+// if (methodType == CODE_METHOD_STATIC) classObj = classObj->obj.classObj;
+
+// Method method;
+// if (IS_STRING(methodValue))
+// {
+// const char* name = AS_CSTRING(methodValue);
+// method.type = METHOD_FOREIGN;
+// method.as.foreign = findForeignMethod(vm, module->name->value,
+//                        className,
+//                        methodType == CODE_METHOD_STATIC,
+//                        name);
+
+// if (method.as.foreign == NULL)
+// {
+// vm->fiber->error = wrenStringFormat(vm,
+// "Could not find foreign method '@' for class $ in module '$'.",
+// methodValue, classObj->name->value, module->name->value);
+// return;
+// }
+// }
+// else
+// {
+// method.as.closure = AS_CLOSURE(methodValue);
+// method.type = METHOD_BLOCK;
+
+// // Patch up the bytecode now that we know the superclass.
+// wrenBindMethodCode(classObj, method.as.closure->fn);
+// }
+
+// wrenBindMethod(vm, classObj, symbol, method);
+// }
+
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
         let mut vm = Self {
@@ -657,6 +721,12 @@ impl WrenVM {
                         }
                     }
                 }
+                Ops::Construct => {
+                    let this = frame.pop()?;
+                    let class = this.try_into_class()?;
+                    let instance = wren_new_instance(self, class);
+                    frame.push(instance);
+                }
                 Ops::Closure(constant_index, _upvalues) => {
                     let fn_value = fn_obj.borrow().function.constants[*constant_index].clone();
                     let fn_obj = fn_value.try_into_fn()?;
@@ -692,6 +762,11 @@ impl WrenVM {
                 }
                 Ops::Pop => {
                     frame.pop()?;
+                }
+                Ops::Method(_is_static, _symbol) => {
+                    let _method = frame.pop()?;
+                    let _class = frame.pop()?.try_into_class()?;
+                    // bindMethod(vm, instruction, symbol, fn->module, classObj, method);
                 }
                 Ops::End => {
                     return Ok(RunNext::Done);
@@ -776,6 +851,8 @@ impl CallFrame {
             Ops::Or(_) => format!("{:?}", op),
             Ops::OrPlaceholder => format!("{:?}", op),
             Ops::ClassPlaceholder => format!("{:?}", op),
+            Ops::Construct => format!("{:?}", op),
+            Ops::Method(_, _) => format!("{:?}", op),
             Ops::Closure(_, _) => format!("{:?}", op),
             Ops::Class(_) => format!("{:?}", op),
             Ops::Jump(_) => format!("{:?}", op),
@@ -813,6 +890,8 @@ impl Ops {
             Ops::ClassPlaceholder => format!("{:?}", self),
             Ops::Class(_) => format!("{:?}", self),
             Ops::Closure(_, _) => format!("{:?}", self),
+            Ops::Construct => format!("{:?}", self),
+            Ops::Method(_, _) => format!("{:?}", self),
             Ops::Jump(_) => format!("{:?}", self),
             Ops::Loop(_) => format!("{:?}", self),
             Ops::Pop => format!("{:?}", self),

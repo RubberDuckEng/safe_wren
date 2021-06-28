@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 4] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 8] Error Grammar("Undeclared variable \'param\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 8] Error Grammar("Undeclared variable \'param\'")
 
 Missing expected output "param" on line 14.

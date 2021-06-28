@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"callSuperToString\")")
+[dummy_module line 3] Error Grammar("Undeclared variable \'super\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"callSuperToString\")")
+[dummy_module line 3] Error Grammar("Undeclared variable \'super\'")
 
 Missing expected output "instance of B" on line 13.

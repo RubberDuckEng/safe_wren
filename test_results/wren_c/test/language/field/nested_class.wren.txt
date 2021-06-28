@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 5] Error Grammar("Undeclared variable \'_field\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 5] Error Grammar("Undeclared variable \'_field\'")
 
 Missing expected output "outer" on line 6.
 Missing expected output "inner" on line 13.

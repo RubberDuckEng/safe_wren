@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"foreign\")")
+[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected newline, found: Name(\"foreign\")")
+[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
 
 Missing expected output "true" on line 7.
 Missing expected output "true" on line 8.

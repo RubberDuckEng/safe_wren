@@ -1,5 +1,5 @@
 Unexpected error:
-[dummy_module line 10] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 15] Error Grammar("Undeclared variable \'variables\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 10] Error Grammar("Expected newline, found: Construct")
+[dummy_module line 15] Error Grammar("Undeclared variable \'variables\'")
 

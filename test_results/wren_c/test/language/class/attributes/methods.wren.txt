@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 4] Error Grammar("Expected newline, found: Hash")
+[dummy_module line 4] Error Grammar("Expect method definition.")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expected newline, found: Hash")
+[dummy_module line 4] Error Grammar("Expect method definition.")
 
 Missing expected output "{null: {getter: [null]}}" on line 26.
 Missing expected output "null" on line 27.

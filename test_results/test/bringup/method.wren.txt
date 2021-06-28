@@ -1,0 +1,8 @@
+Unexpected output on stderr:
+ClassRequired(Closure())
+Expected return code 0 and got 70. Stderr:
+ClassRequired(Closure())
+
+Missing expected output "foo" on line 9.
+Missing expected output "bar" on line 10.
+Missing expected output "baz" on line 11.

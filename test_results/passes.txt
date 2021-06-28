@@ -50,6 +50,7 @@ wren_c/test/language/bitwise_precedence.wren
 wren_c/test/language/bom.wren
 wren_c/test/language/break/exit_local_scopes.wren
 wren_c/test/language/break/in_function_in_loop.wren
+wren_c/test/language/break/in_method_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren
 wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
@@ -76,6 +77,7 @@ wren_c/test/language/constructor/cannot_be_subscript.wren
 wren_c/test/language/constructor/cannot_be_unary.wren
 wren_c/test/language/constructor/no_parameter_list.wren
 wren_c/test/language/continue/in_function_in_loop.wren
+wren_c/test/language/continue/in_method_in_loop.wren
 wren_c/test/language/continue/in_while_loop.wren
 wren_c/test/language/continue/outside_loop.wren
 wren_c/test/language/empty_block.wren
@@ -111,8 +113,6 @@ wren_c/test/language/map/empty_map_with_comma.wren
 wren_c/test/language/map/eof_after_colon.wren
 wren_c/test/language/map/eof_after_key.wren
 wren_c/test/language/method/empty_subscript_definition.wren
-wren_c/test/language/method/name_too_long.wren
-wren_c/test/language/method/too_many_parameters.wren
 wren_c/test/language/module/missing_for.wren
 wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
@@ -135,6 +135,10 @@ wren_c/test/language/return/after_if.wren
 wren_c/test/language/return/after_while.wren
 wren_c/test/language/return/in_function.wren
 wren_c/test/language/semicolon.wren
+wren_c/test/language/setter/grouping.wren
+wren_c/test/language/setter/infix_operator.wren
+wren_c/test/language/setter/is.wren
+wren_c/test/language/setter/prefix_operator.wren
 wren_c/test/language/shebang/shebang_at_eof.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
 wren_c/test/language/shebang/shebang_invalid.wren

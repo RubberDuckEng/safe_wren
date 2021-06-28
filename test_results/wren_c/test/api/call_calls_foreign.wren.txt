@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 7] Error Grammar("Expected newline, found: Name(\"foreign\")")
+[dummy_module line 7] Error Grammar("Expect \'{\' to begin method body.")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 7] Error Grammar("Expected newline, found: Name(\"foreign\")")
+[dummy_module line 7] Error Grammar("Expect \'{\' to begin method body.")
 
 Missing expected output "slots before 2" on line 11.
 Missing expected output "[1, 2, 3, 4, 5, 6, 7, 8, 9]" on line 12.
