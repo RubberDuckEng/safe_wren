@@ -656,7 +656,13 @@ impl WrenVM {
             frame.pc += 1;
             if self.debug {
                 frame.dump_stack();
-                frame.dump_instruction(&self.module, &frame.closure.borrow(), op);
+                dump_instruction(
+                    op,
+                    &self.module,
+                    &self.methods,
+                    &frame.closure.borrow(),
+                    Some(frame),
+                );
             }
             match op {
                 Ops::Constant(index) => {
@@ -823,47 +829,6 @@ impl CallFrame {
         self.stack.last().ok_or(RuntimeError::StackUnderflow)
     }
 
-    fn dump_instruction(&self, module: &Module, closure: &ObjClosure, op: &Ops) {
-        let string = match op {
-            Ops::Constant(i) => format!(
-                "Constant ({}: {:?})",
-                i,
-                closure.fn_obj.borrow().function.constants[*i]
-            ),
-            Ops::Boolean(b) => format!("Boolean {}", b),
-            Ops::Null => format!("{:?}", op),
-            Ops::Call(_) => format!("{:?}", op),
-            Ops::Load(v) => match v.scope {
-                Scope::Local => {
-                    format!("Load Local {}: {:?}", v.index, self.stack[v.index])
-                }
-                Scope::Upvalue => unimplemented!("dump load upvalue"),
-                Scope::Module => {
-                    format!("Load Module {}: {:?}", v.index, module.variables[v.index])
-                }
-            },
-            Ops::Store(_) => format!("{:?}", op),
-            Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
-            Ops::JumpIfFalse(_) => format!("{:?}", op),
-            Ops::JumpPlaceholder => format!("{:?}", op),
-            Ops::And(_) => format!("{:?}", op),
-            Ops::AndPlaceholder => format!("{:?}", op),
-            Ops::Or(_) => format!("{:?}", op),
-            Ops::OrPlaceholder => format!("{:?}", op),
-            Ops::ClassPlaceholder => format!("{:?}", op),
-            Ops::Construct => format!("{:?}", op),
-            Ops::Method(_, _) => format!("{:?}", op),
-            Ops::Closure(_, _) => format!("{:?}", op),
-            Ops::Class(_) => format!("{:?}", op),
-            Ops::Jump(_) => format!("{:?}", op),
-            Ops::Loop(_) => format!("{:?}", op),
-            Ops::Pop => format!("{:?}", op),
-            Ops::Return => format!("{:?}", op),
-            Ops::End => format!("{:?}", op),
-        };
-        println!("{}", string);
-    }
-
     fn dump_stack(&self) {
         // Print the stack left (top) to right (bottom)
         let mut as_string = Vec::new();
@@ -875,42 +840,83 @@ impl CallFrame {
     }
 }
 
-impl Ops {
-    fn debug_string(&self) -> String {
-        match self {
-            Ops::Constant(_) => format!("{:?}", self),
-            Ops::Boolean(_) => format!("{:?}", self),
-            Ops::Null => format!("{:?}", self),
-            Ops::Call(_) => format!("{:?}", self),
-            Ops::Load(_) => format!("{:?}", self),
-            Ops::Store(_) => format!("{:?}", self),
-            Ops::JumpIfFalsePlaceholder => format!("{:?}", self),
-            Ops::JumpIfFalse(_) => format!("{:?}", self),
-            Ops::JumpPlaceholder => format!("{:?}", self),
-            Ops::ClassPlaceholder => format!("{:?}", self),
-            Ops::Class(_) => format!("{:?}", self),
-            Ops::Closure(_, _) => format!("{:?}", self),
-            Ops::Construct => format!("{:?}", self),
-            Ops::Method(_, _) => format!("{:?}", self),
-            Ops::Jump(_) => format!("{:?}", self),
-            Ops::Loop(_) => format!("{:?}", self),
-            Ops::Pop => format!("{:?}", self),
-            Ops::Return => format!("{:?}", self),
-            Ops::End => format!("{:?}", self),
-            Ops::And(_) => format!("{:?}", self),
-            Ops::AndPlaceholder => format!("{:?}", self),
-            Ops::Or(_) => format!("{:?}", self),
-            Ops::OrPlaceholder => format!("{:?}", self),
+fn dump_instruction(
+    op: &Ops,
+    module: &Module,
+    methods: &SymbolTable,
+    closure: &ObjClosure,
+    frame: Option<&CallFrame>,
+) {
+    println!("{}", op_debug_string(op, module, methods, closure, frame));
+}
+
+fn op_debug_string(
+    op: &Ops,
+    module: &Module,
+    methods: &SymbolTable,
+    closure: &ObjClosure,
+    frame: Option<&CallFrame>,
+) -> String {
+    match op {
+        Ops::Constant(i) => format!(
+            "Constant({}: {:?})",
+            i,
+            closure.fn_obj.borrow().function.constants[*i]
+        ),
+        Ops::Boolean(b) => format!("Boolean {}", b),
+        Ops::Null => format!("{:?}", op),
+        Ops::Call(sig) => format!("Call({:?}: {})", sig.call_type, sig.full_name),
+        Ops::Load(v) => match v.scope {
+            Scope::Local => match frame {
+                Some(f) => format!("Load(Local {}: {:?})", v.index, f.stack[v.index]),
+                None => format!("Load(Local {})", v.index),
+            },
+            Scope::Upvalue => unimplemented!("dump load upvalue"),
+            Scope::Module => {
+                format!("Load(Module {}: {:?})", v.index, module.variables[v.index])
+            }
+        },
+        Ops::Store(v) => match v.scope {
+            Scope::Local => format!("Store(Local {})", v.index),
+            Scope::Upvalue => unimplemented!("dump store upvalue"),
+            Scope::Module => format!("Store(Module {})", v.index),
+        },
+        Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
+        Ops::JumpIfFalse(_) => format!("{:?}", op),
+        Ops::JumpPlaceholder => format!("{:?}", op),
+        Ops::And(_) => format!("{:?}", op),
+        Ops::AndPlaceholder => format!("{:?}", op),
+        Ops::Or(_) => format!("{:?}", op),
+        Ops::OrPlaceholder => format!("{:?}", op),
+        Ops::ClassPlaceholder => format!("{:?}", op),
+        Ops::Construct => format!("{:?}", op),
+        Ops::Method(is_static, symbol) => {
+            let dispatch = if *is_static { "static" } else { "instance" };
+            format!(
+                "Method({} {}: {})",
+                dispatch, symbol, methods.method_names[*symbol]
+            )
         }
+        Ops::Closure(_, _) => format!("{:?}", op),
+        Ops::Class(num_fields) => format!("Class({} fields)", num_fields),
+        Ops::Jump(_) => format!("{:?}", op),
+        Ops::Loop(_) => format!("{:?}", op),
+        Ops::Pop => format!("{:?}", op),
+        Ops::Return => format!("{:?}", op),
+        Ops::End => format!("{:?}", op),
     }
 }
 
-pub(crate) fn debug_bytecode(_vm: &WrenVM, closure: &ObjClosure) {
+pub(crate) fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     let func = &closure.fn_obj.borrow().function;
     println!("{:?}", func);
     let ops = func.code.iter();
     ops.enumerate().for_each(|(i, op)| {
-        println!("{:02}: {}", i, op.debug_string());
+        println!(
+            "{:02}: {}",
+            i,
+            op_debug_string(op, &vm.module, &vm.methods, closure, None)
+        )
     })
 }
 

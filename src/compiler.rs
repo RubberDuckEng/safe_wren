@@ -988,7 +988,7 @@ fn conditional(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenErro
 }
 
 #[derive(Debug, PartialEq)]
-enum SignatureType {
+pub(crate) enum SignatureType {
     Getter,
     Method,
     Subscript,
@@ -998,13 +998,13 @@ enum SignatureType {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct Signature {
+pub(crate) struct Signature {
     // full_name includes arity in the string.
-    pub full_name: String,
+    pub(crate) full_name: String,
     // Not sure either of these are needed once the full name is compiled
     // It's possible this struct can go away.
-    call_type: SignatureType,
-    pub arity: u8,
+    pub(crate) call_type: SignatureType,
+    pub(crate) arity: u8,
 }
 
 impl Signature {

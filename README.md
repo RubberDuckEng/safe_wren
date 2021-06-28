@@ -15,7 +15,6 @@ with error text from any failed tests.  `test.py` will also update
 `test_results/passes.txt` with the list of passing tests.
 
 ## Ideas
-* ParseContext owns the whole stack of Compilers.  Compiler have Option<Compiler> and own their parent.
 * use Drop for auto-scope
 * Split Value into Value<Object> and TypedObject which can be returned from Obj trait.
 * Pull the module off the VM and hand it to the parser during parsing.
