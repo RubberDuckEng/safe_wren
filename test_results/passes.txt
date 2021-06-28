@@ -14,6 +14,7 @@ test/bringup/scopes.wren
 test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
 wren_c/example/hello.wren
+wren_c/example/import_module/cthulu.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/not.wren
 wren_c/test/core/class/equality.wren
@@ -56,6 +57,7 @@ wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
 wren_c/test/language/class/missing_class_after_foreign.wren
 wren_c/test/language/class/newline_after_class.wren
+wren_c/test/language/class/syntax.wren
 wren_c/test/language/comments/block.wren
 wren_c/test/language/comments/block_at_eof.wren
 wren_c/test/language/comments/line_at_eof.wren

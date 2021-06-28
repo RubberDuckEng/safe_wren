@@ -151,6 +151,7 @@ pub(crate) enum RuntimeError {
     ObjectRequired(Value),
     ClassRequired(Value),
     RangeRequired(Value),
+    FnRequired(Value),
     ClosureRequired(Value),
     MethodNotFound(MissingMethod),
     ThisObjectHasNoClass,
@@ -165,6 +166,7 @@ impl core::fmt::Debug for RuntimeError {
             RuntimeError::ObjectRequired(v) => write!(f, "ObjectRequired({:?})", v),
             RuntimeError::ClassRequired(v) => write!(f, "ClassRequired({:?})", v),
             RuntimeError::RangeRequired(v) => write!(f, "RangeRequired({:?})", v),
+            RuntimeError::FnRequired(v) => write!(f, "FnRequired({:?})", v),
             RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
             RuntimeError::MethodNotFound(m) => {
                 write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)
@@ -206,7 +208,7 @@ impl Value {
     pub fn try_into_fn(&self) -> Result<Handle<ObjFn>, RuntimeError> {
         match self {
             Value::Fn(c) => Ok(c.clone()),
-            _ => Err(RuntimeError::ClosureRequired(self.clone())),
+            _ => Err(RuntimeError::FnRequired(self.clone())),
         }
     }
 
@@ -770,8 +772,8 @@ impl WrenVM {
                     frame.pop()?;
                 }
                 Ops::Method(_is_static, _symbol) => {
-                    let _method = frame.pop()?;
                     let _class = frame.pop()?.try_into_class()?;
+                    let _method = frame.pop()?;
                     // bindMethod(vm, instruction, symbol, fn->module, classObj, method);
                 }
                 Ops::End => {

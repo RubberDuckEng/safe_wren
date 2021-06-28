@@ -1,5 +1,5 @@
 Expected runtime error "Foo does not implement 'new()'." and got:
-ClassRequired(Closure())
+MethodNotFound("new()" on "Foo metaclass")
 Expected stack trace and got:
 
 Missing expected output "ok" on line 7.

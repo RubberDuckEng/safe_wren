@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-ClassRequired(Closure())
+MethodNotFound("new()" on "BadToString metaclass")
 Expected return code 0 and got 70. Stderr:
-ClassRequired(Closure())
+MethodNotFound("new()" on "BadToString metaclass")
 
 Missing expected output "[invalid toString]!" on line 7.

@@ -1,6 +1,3 @@
-Unexpected output on stderr:
-ClassRequired(Closure())
 Missing expected error on line 4.
-Expected return code 65 and got 70. Stderr:
-ClassRequired(Closure())
+Expected return code 65 and got 0. Stderr:
 

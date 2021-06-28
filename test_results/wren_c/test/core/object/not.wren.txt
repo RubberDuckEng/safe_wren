@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-ClassRequired(Closure())
+MethodNotFound("new()" on "Foo metaclass")
 Expected return code 0 and got 70. Stderr:
-ClassRequired(Closure())
+MethodNotFound("new()" on "Foo metaclass")
 
 Missing expected output "false" on line 4.

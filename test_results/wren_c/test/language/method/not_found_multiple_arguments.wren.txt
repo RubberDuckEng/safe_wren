@@ -1,4 +1,4 @@
 Expected runtime error "Foo does not implement 'someUnknownMethod(_,_)'." and got:
-ClassRequired(Closure())
+MethodNotFound("new()" on "Foo metaclass")
 Expected stack trace and got:
 
