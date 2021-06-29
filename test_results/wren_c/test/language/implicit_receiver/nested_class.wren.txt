@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 17] Error Grammar("Undeclared variable \'getter\'")
+[dummy_module line 17] Error Grammar("Could not resolve \'this\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 17] Error Grammar("Undeclared variable \'getter\'")
+[dummy_module line 17] Error Grammar("Could not resolve \'this\'")
 
 Missing expected output "outer getter" on line 17.
 Missing expected output "outer setter" on line 18.

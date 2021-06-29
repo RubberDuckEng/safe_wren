@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Undeclared variable \'super\'")
+[dummy_module line 2] Error Grammar("Could not resolve \'this\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Undeclared variable \'super\'")
+[dummy_module line 2] Error Grammar("Could not resolve \'this\'")
 
 Missing expected output "instance of B" on line 11.

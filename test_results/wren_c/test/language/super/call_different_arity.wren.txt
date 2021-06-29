@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 12] Error Grammar("Undeclared variable \'super\'")
+[dummy_module line 12] Error Grammar("Could not resolve \'this\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 12] Error Grammar("Undeclared variable \'super\'")
+[dummy_module line 12] Error Grammar("Could not resolve \'this\'")
 
 Missing expected output "Derived.bar(a)" on line 19.
 Missing expected output "Base.foo" on line 20.

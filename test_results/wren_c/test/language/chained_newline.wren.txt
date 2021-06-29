@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Undeclared variable \'this\'")
+[dummy_module line 5] Error Grammar("Could not resolve \'this\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Undeclared variable \'this\'")
+[dummy_module line 5] Error Grammar("Could not resolve \'this\'")
 
 Missing expected output "test0" on line 30.
 Missing expected output "test1" on line 31.

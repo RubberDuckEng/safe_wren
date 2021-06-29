@@ -936,10 +936,18 @@ impl<'a> ParseContext<'a> {
     }
 
     fn have_compiler(&self) -> bool {
-        match self._compiler {
-            None => false,
-            Some(_) => true,
+        self._compiler.is_some()
+    }
+
+    fn inside_class_definition(&self) -> bool {
+        let mut maybe_compiler = &self._compiler;
+        while let Some(compiler) = maybe_compiler {
+            if compiler.enclosing_class.is_some() {
+                return true;
+            }
+            maybe_compiler = &compiler.parent;
         }
+        return false;
     }
 }
 
@@ -1476,22 +1484,22 @@ fn resolve_non_module(ctx: &ParseContext, name: &str) -> Option<Variable> {
 }
 
 // wren_c just checks if the first byte is lowercase.
-// fn wren_is_local_name(name: &String) -> bool {
-//     matches!(name.bytes().nth(0).unwrap(), b'a'..=b'z')
-// }
+fn wren_is_local_name(name: &String) -> bool {
+    matches!(name.bytes().nth(0).unwrap(), b'a'..=b'z')
+}
 
 // Loads the receiver of the currently enclosing method. Correctly handles
 // functions defined inside methods.
-// fn load_this(ctx: &mut ParseContext) -> Result<(), WrenError> {
-//     let var = resolve_non_module(ctx, "this");
-//     match var {
-//         None => Err(ctx.grammar_error("Could not resolve 'this'".into()))?,
-//         Some(var) => {
-//             ctx.compiler_mut().emit_load(var);
-//             Ok(())
-//         }
-//     }
-// }
+fn load_this(ctx: &mut ParseContext) -> Result<(), WrenError> {
+    let var = resolve_non_module(ctx, "this");
+    match var {
+        None => Err(ctx.grammar_error("Could not resolve 'this'".into()))?,
+        Some(var) => {
+            ctx.compiler_mut().emit_load(var);
+            Ok(())
+        }
+    }
+}
 
 // Compiles a call whose name is the previously consumed token. This includes
 // getters, method calls with arguments, and setter calls.
@@ -1532,10 +1540,10 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
 
     // If we're inside a method and the name is lowercase, treat it as a method
     // on this.
-    // if wren_is_local_name(&name) && !ctx.compiler().enclosing_class.is_none() {
-    //     load_this(ctx)?;
-    //     return named_call(ctx, can_assign);
-    // }
+    if wren_is_local_name(&name) && ctx.inside_class_definition() {
+        load_this(ctx)?;
+        return named_call(ctx, can_assign);
+    }
 
     // Otherwise if in module scope handle module case:
 

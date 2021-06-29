@@ -3,5 +3,5 @@ Unexpected error:
 Expected return code 0 and got 65. Stderr:
 [dummy_module line 4] Error Grammar("Could not resolve \'this\'")
 
-Missing expected output "Foo.name" on line 3.
-Missing expected output "Foo" on line 4.
+Missing expected output "foo" on line 9.
+Missing expected output "foo" on line 10.

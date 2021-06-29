@@ -1,2 +1,7 @@
-Expected output "static foo method" on line 16 and got "RefCell { value: ObjClass { foo super: "Object" meta: "foo metaclass" } }".
-Expected output "instance foo method" on line 17 and got "RefCell { value: ObjClass { foo super: "Object" meta: "foo metaclass" } }".
+Unexpected error:
+[dummy_module line 5] Error Grammar("Could not resolve \'this\'")
+Expected return code 0 and got 65. Stderr:
+[dummy_module line 5] Error Grammar("Could not resolve \'this\'")
+
+Missing expected output "static foo method" on line 16.
+Missing expected output "instance foo method" on line 17.

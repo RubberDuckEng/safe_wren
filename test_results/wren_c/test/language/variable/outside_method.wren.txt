@@ -1,2 +1,7 @@
-Expected output "method" on line 19 and got "variable".
-Expected output "class method" on line 20 and got "variable".
+Unexpected error:
+[dummy_module line 9] Error Grammar("Could not resolve \'this\'")
+Expected return code 0 and got 65. Stderr:
+[dummy_module line 9] Error Grammar("Could not resolve \'this\'")
+
+Missing expected output "method" on line 19.
+Missing expected output "class method" on line 20.
