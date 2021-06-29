@@ -639,7 +639,7 @@ pub(crate) enum Ops {
     Constant(usize),
     Boolean(bool), // Unclear if needed, could be constant?
     Null,          // Unclear if needed, could be constant?
-    Call(Signature),
+    Call(Signature, usize),
     Load(Variable),
     Store(Variable),
     ClassPlaceholder,
@@ -809,8 +809,8 @@ impl Compiler {
         self.code.push(Ops::Boolean(value));
     }
 
-    fn emit_call(&mut self, signature: Signature) {
-        self.code.push(Ops::Call(signature));
+    fn emit_call(&mut self, signature: Signature, symbol: usize) {
+        self.code.push(Ops::Call(signature, symbol));
     }
 
     fn emit(&mut self, op: Ops) -> usize {
@@ -999,8 +999,7 @@ pub(crate) enum SignatureType {
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct Signature {
-    // full_name includes arity in the string.
-    pub(crate) full_name: String,
+    pub(crate) bare_name: String,
     // Not sure either of these are needed once the full name is compiled
     // It's possible this struct can go away.
     pub(crate) call_type: SignatureType,
@@ -1009,21 +1008,26 @@ pub(crate) struct Signature {
 
 impl Signature {
     // This is called signatureToString in wren_c
-    fn full_name(call_type: &SignatureType, name: &str, arity: u8) -> String {
-        let args = (0..arity).map(|_| "_").collect::<Vec<&str>>().join(",");
-        match call_type {
-            SignatureType::Getter => name.into(),
-            SignatureType::Setter => format!("{}={}", name, args),
-            SignatureType::Method => format!("{}({})", name, args),
-            SignatureType::Initializer => format!("init {}({})", name, args),
-            SignatureType::Subscript => format!("{}[{}]", name, args), // name should always be empty
-            SignatureType::SubscriptSetter => format!("{}[{}]=({})", name, args, args), // name should always be empty.
-                                                                                        // SignatureType::Initializer => format!("init {}({})", name, args),
+    // This is intentionally not pub(crate), the vm
+    // should never call this, but rather lookup the
+    // name from the symbol.
+    fn full_name(&self) -> String {
+        let args = (0..self.arity)
+            .map(|_| "_")
+            .collect::<Vec<&str>>()
+            .join(",");
+        match self.call_type {
+            SignatureType::Getter => self.bare_name.clone(),
+            SignatureType::Setter => format!("{}={}", self.bare_name, args),
+            SignatureType::Method => format!("{}({})", self.bare_name, args),
+            SignatureType::Initializer => format!("init {}({})", self.bare_name, args),
+            SignatureType::Subscript => format!("{}[{}]", self.bare_name, args), // name should always be empty
+            SignatureType::SubscriptSetter => format!("{}[{}]=({})", self.bare_name, args, args), // name should always be empty.
         }
     }
-    fn from_bare_name(call_type: SignatureType, name: &str, arity: u8) -> Signature {
+    fn from_bare_name(call_type: SignatureType, bare_name: &str, arity: u8) -> Signature {
         Signature {
-            full_name: Signature::full_name(&call_type, name, arity),
+            bare_name: bare_name.into(),
             call_type: call_type,
             arity: arity,
         }
@@ -1044,19 +1048,26 @@ fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
     // Call the operator method on the left-hand side.
     // FIXME: Should this use signature_from_token?
     let signature = Signature::from_bare_name(SignatureType::Method, &name, 1);
-    ctx.compiler_mut().emit_call(signature);
+    call_signature(ctx, signature);
     Ok(())
+}
+
+// Compiles a method call with [signature] using [instruction].
+fn call_signature(ctx: &mut ParseContext, signature: Signature) {
+    let symbol = signature_symbol(ctx, &signature);
+    ctx.compiler_mut().emit_call(signature, symbol);
+    // FIXME: Handle superclass calls.
 }
 
 // Compiles a method call with [numArgs] for a method with [name] with [length].
 fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
-    ctx.vm.methods.ensure_method(full_name);
+    let symbol = ctx.vm.methods.ensure_method(full_name);
     let signature = Signature {
         call_type: SignatureType::Method,
-        full_name: full_name.into(),
+        bare_name: full_name.into(), // FIXME: Wrong.
         arity: arity,
     };
-    ctx.compiler_mut().emit_call(signature);
+    ctx.compiler_mut().emit_call(signature, symbol);
 }
 
 fn unary_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
@@ -1092,8 +1103,8 @@ fn signature_from_token(
 
 // This isn't needed, just here for ease of code porting.
 fn signature_symbol(ctx: &mut ParseContext, signature: &Signature) -> usize {
-    // Signature already does "signatureToString"
-    ctx.vm.methods.ensure_method(&signature.full_name)
+    // Signature.full_name() is "signatureToString"
+    ctx.vm.methods.ensure_method(&signature.full_name())
 }
 
 fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
@@ -1316,8 +1327,8 @@ fn method_call(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
     // Handle SIG_INITIALIZER?
 
-    let signature = Signature::from_bare_name(call_type, &name, arity);
-    ctx.compiler_mut().emit_call(signature);
+    let called = Signature::from_bare_name(call_type, &name, arity);
+    call_signature(ctx, called);
 
     Ok(())
 }
@@ -1366,7 +1377,7 @@ fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> 
     }
     // Name is always empty for Subscripts, I think?
     let signature = Signature::from_bare_name(call_type, "", arity);
-    ctx.compiler_mut().emit_call(signature);
+    call_signature(ctx, signature);
     Ok(())
 }
 
@@ -1917,7 +1928,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 fn create_constructor(
     ctx: &mut ParseContext,
     signature: Signature,
-    _initializer_symbol: usize, // Isn't this the same as signature?
+    initializer_symbol: usize, // Isn't this the same as signature?
 ) -> Result<(), WrenError> {
     let mut scope = PushCompiler::push_method(ctx);
 
@@ -1926,9 +1937,10 @@ fn create_constructor(
     scope.ctx.compiler_mut().emit(Ops::Construct);
 
     // Run its initializer.
-    scope.ctx.compiler_mut().emit_call(signature);
-    // emitShortArg(&methodCompiler, (Code)(CODE_CALL_0 + signature->arity),
-    // initializerSymbol);
+    scope
+        .ctx
+        .compiler_mut()
+        .emit_call(signature, initializer_symbol);
 
     // Return the instance.
     scope.ctx.compiler_mut().emit(Ops::Return);
@@ -2143,7 +2155,8 @@ fn constructor_signature(
 ) -> Result<(), WrenError> {
     consume_expecting_name_msg(ctx, "Expect constructor name after 'construct'.")?;
     // HACK(from wren_c) Capture the name.
-    signature.full_name = signature_from_token(ctx, SignatureType::Initializer)?.full_name;
+    signature.bare_name = signature_from_token(ctx, SignatureType::Initializer)?.bare_name;
+    signature.call_type = SignatureType::Initializer;
 
     if match_current(ctx, Token::Equals)? {
         return Err(ctx.grammar_error("A constructor cannot be a setter."));

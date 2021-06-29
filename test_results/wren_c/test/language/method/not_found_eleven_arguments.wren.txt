@@ -1,4 +1,4 @@
 Expected runtime error "Foo does not implement 'someUnknownMethod(_,_,_,_,_,_,_,_,_,_,_)'." and got:
-MethodNotFound("new()" on "Foo metaclass")
+MethodNotFound("init new()" on "Null")
 Expected stack trace and got:
 

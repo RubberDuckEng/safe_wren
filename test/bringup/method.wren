@@ -3,7 +3,6 @@ class Foo {
     foo() { "foo" }
     bar { "bar" }
     baz(ignored) { "baz" }
-
 }
 var foo = Foo.new()
 System.print(foo.foo()) // expect: foo

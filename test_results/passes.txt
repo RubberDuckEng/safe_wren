@@ -77,6 +77,7 @@ wren_c/test/language/constructor/cannot_be_minus.wren
 wren_c/test/language/constructor/cannot_be_setter.wren
 wren_c/test/language/constructor/cannot_be_subscript.wren
 wren_c/test/language/constructor/cannot_be_unary.wren
+wren_c/test/language/constructor/cannot_return_value.wren
 wren_c/test/language/constructor/no_parameter_list.wren
 wren_c/test/language/continue/in_function_in_loop.wren
 wren_c/test/language/continue/in_method_in_loop.wren

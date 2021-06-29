@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("new()" on "Foo metaclass")
+MethodNotFound("init new()" on "Null")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("new()" on "Foo metaclass")
+MethodNotFound("init new()" on "Null")
 
 Missing expected output "a" on line 6.
 Missing expected output "a b" on line 8.

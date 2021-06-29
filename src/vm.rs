@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::str;
 
-use crate::compiler::{compile, InputManager, Ops, Scope, Signature};
+use crate::compiler::{compile, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, register_core_primitives};
 
 #[derive(Clone)]
@@ -237,8 +237,11 @@ impl SymbolTable {
         self.method_names.len() - 1
     }
 
-    pub fn lookup(&self, name: &str) -> Option<usize> {
-        self.method_names.iter().position(|n| n.eq(name))
+    pub fn lookup_symbol(&self, symbol: usize) -> String {
+        match self.method_names.get(symbol) {
+            None => "<not found>".into(),
+            Some(name) => name.clone(),
+        }
     }
 }
 
@@ -470,13 +473,6 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
     class
 }
 
-fn method_not_found(class: &ObjClass, signature: &Signature) -> RuntimeError {
-    RuntimeError::MethodNotFound(MissingMethod {
-        this_class: class.name.clone(),
-        name: signature.full_name.clone(),
-    })
-}
-
 pub(crate) fn load_wren_core(vm: &mut WrenVM) {
     let had_debug = vm.debug;
     vm.debug = false;
@@ -521,46 +517,30 @@ fn wren_new_instance(_vm: &mut WrenVM, _class: Handle<ObjClass>) -> Value {
 //
 // Aborts the current fiber if the method is a foreign method that could not be
 // found.
-// fn bind_method(
-//     _vm: &mut WrenVM,
-//     is_static: bool,
-//     symbol: usize,
-//     module: &mut Module,
-//     class: &ObjClass,
-//     method_value: Value,
-// ) {
-//     let class_name = class.name;
-// if (methodType == CODE_METHOD_STATIC) classObj = classObj->obj.classObj;
+fn bind_method(
+    _vm: &mut WrenVM,
+    is_static: bool,
+    symbol: usize,
+    class: &mut ObjClass,
+    method_value: Value,
+) -> Result<(), RuntimeError> {
+    let method = Method::Block(method_value.try_into_closure()?);
 
-// Method method;
-// if (IS_STRING(methodValue))
-// {
-// const char* name = AS_CSTRING(methodValue);
-// method.type = METHOD_FOREIGN;
-// method.as.foreign = findForeignMethod(vm, module->name->value,
-//                        className,
-//                        methodType == CODE_METHOD_STATIC,
-//                        name);
+    // FIXME: Need to patch the closure code!
+    // Patch up the bytecode now that we know the superclass.
+    // wrenBindMethodCode(classObj, method.as.closure->fn);
 
-// if (method.as.foreign == NULL)
-// {
-// vm->fiber->error = wrenStringFormat(vm,
-// "Could not find foreign method '@' for class $ in module '$'.",
-// methodValue, classObj->name->value, module->name->value);
-// return;
-// }
-// }
-// else
-// {
-// method.as.closure = AS_CLOSURE(methodValue);
-// method.type = METHOD_BLOCK;
-
-// // Patch up the bytecode now that we know the superclass.
-// wrenBindMethodCode(classObj, method.as.closure->fn);
-// }
-
-// wrenBindMethod(vm, classObj, symbol, method);
-// }
+    if is_static {
+        class
+            .class_obj()
+            .unwrap()
+            .borrow_mut()
+            .set_method(symbol, method);
+    } else {
+        class.set_method(symbol, method);
+    };
+    Ok(())
+}
 
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
@@ -610,6 +590,14 @@ impl WrenVM {
         }
     }
 
+    fn method_not_found(&self, class: &ObjClass, symbol: usize) -> RuntimeError {
+        let name = self.methods.lookup_symbol(symbol);
+        RuntimeError::MethodNotFound(MissingMethod {
+            this_class: class.name.clone(),
+            name: name,
+        })
+    }
+
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
         let mut fiber = Fiber::new(closure);
         loop {
@@ -655,10 +643,10 @@ impl WrenVM {
         frame.pc;
         loop {
             let op = &fn_obj.borrow().function.code[frame.pc];
-            frame.pc += 1;
             if self.debug {
                 frame.dump_stack();
                 dump_instruction(
+                    frame.pc,
                     op,
                     &self.module,
                     &self.methods,
@@ -666,6 +654,7 @@ impl WrenVM {
                     Some(frame),
                 );
             }
+            frame.pc += 1;
             match op {
                 Ops::Constant(index) => {
                     frame.push(fn_obj.borrow().function.constants[*index].clone());
@@ -676,7 +665,7 @@ impl WrenVM {
                 Ops::Null => {
                     frame.push(Value::Null);
                 }
-                Ops::Call(signature) => {
+                Ops::Call(signature, symbol) => {
                     // Implicit arg for this.
                     let num_args = signature.arity as usize + 1;
                     let this_offset = frame.stack.len() - num_args;
@@ -688,19 +677,12 @@ impl WrenVM {
                         .class_for_value(&args[0])
                         .ok_or(RuntimeError::ThisObjectHasNoClass)?;
                     let class_obj = this_class.borrow();
-
-                    // Get the global usize for this function name
-                    let symbol = self
-                        .methods
-                        .lookup(&signature.full_name)
-                        .ok_or(method_not_found(&class_obj, &signature))?;
-
                     // Get the Method record for this class for this symbol.
                     // This could return None instead of MethodNone?
                     let method = class_obj
                         .methods
-                        .get(symbol)
-                        .ok_or(method_not_found(&class_obj, &signature))?;
+                        .get(*symbol)
+                        .ok_or(self.method_not_found(&class_obj, *symbol))?;
 
                     // Even if we got a Method doesn't mean *this* class
                     // implements it.
@@ -720,12 +702,24 @@ impl WrenVM {
                                 stack: args,
                             }));
                         }
+                        Method::Block(closure) => {
+                            // Pushes a new stack frame.
+                            // wren_rust (currently) keeps a separate stack
+                            // per CallFrame, so underflows are caught on a
+                            // per-function call basis.
+                            return Ok(RunNext::FunctionCall(CallFrame {
+                                pc: 0,
+                                closure: closure.clone(),
+                                stack: args,
+                            }));
+                        }
+                        // FIXME: This should use Option<Method> instead.
                         Method::None => {
                             // This is the case where the methods vector was
                             // large enough to have the symbol (because the
                             // class supports a larger symbol), but this symbol
                             // is Method::None (not implemented).
-                            return Err(method_not_found(&class_obj, &signature));
+                            return Err(self.method_not_found(&class_obj, *symbol));
                         }
                     }
                 }
@@ -771,10 +765,10 @@ impl WrenVM {
                 Ops::Pop => {
                     frame.pop()?;
                 }
-                Ops::Method(_is_static, _symbol) => {
-                    let _class = frame.pop()?.try_into_class()?;
-                    let _method = frame.pop()?;
-                    // bindMethod(vm, instruction, symbol, fn->module, classObj, method);
+                Ops::Method(is_static, symbol) => {
+                    let class = frame.pop()?.try_into_class()?;
+                    let method = frame.pop()?;
+                    bind_method(self, *is_static, *symbol, &mut class.borrow_mut(), method)?;
                 }
                 Ops::End => {
                     return Ok(RunNext::Done);
@@ -843,13 +837,18 @@ impl CallFrame {
 }
 
 fn dump_instruction(
+    pc: usize,
     op: &Ops,
     module: &Module,
     methods: &SymbolTable,
     closure: &ObjClosure,
     frame: Option<&CallFrame>,
 ) {
-    println!("{}", op_debug_string(op, module, methods, closure, frame));
+    println!(
+        "{:02}: {}",
+        pc,
+        op_debug_string(op, module, methods, closure, frame)
+    );
 }
 
 fn op_debug_string(
@@ -867,7 +866,14 @@ fn op_debug_string(
         ),
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
-        Ops::Call(sig) => format!("Call({:?}: {})", sig.call_type, sig.full_name),
+        Ops::Call(sig, symbol) => {
+            format!(
+                "Call({:?}: {} {})",
+                sig.call_type,
+                methods.lookup_symbol(*symbol),
+                symbol
+            )
+        }
         Ops::Load(v) => match v.scope {
             Scope::Local => match frame {
                 Some(f) => format!("Load(Local {}: {:?})", v.index, f.stack[v.index]),
@@ -913,13 +919,8 @@ pub(crate) fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     let func = &closure.fn_obj.borrow().function;
     println!("{:?}", func);
     let ops = func.code.iter();
-    ops.enumerate().for_each(|(i, op)| {
-        println!(
-            "{:02}: {}",
-            i,
-            op_debug_string(op, &vm.module, &vm.methods, closure, None)
-        )
-    })
+    ops.enumerate()
+        .for_each(|(pc, op)| dump_instruction(pc, op, &vm.module, &vm.methods, closure, None))
 }
 
 // // Identifies which specific type a heap-allocated object is.
@@ -1041,10 +1042,10 @@ pub(crate) enum Method {
     FunctionCall,
 
     // A externally-defined C method.
-    //   ForeignFunction,
+    //   ForeignFunction(String),
 
     // A normal user-defined method.
-    // Block
+    Block(Handle<ObjClosure>),
 
     // No method for the given symbol.
     None,
@@ -1055,6 +1056,7 @@ impl core::fmt::Debug for Method {
         match self {
             Method::Primitive(_) => write!(f, "Primitive"),
             Method::FunctionCall => write!(f, "FunctionCall"),
+            Method::Block(_) => write!(f, "Block"),
             Method::None => write!(f, "None"),
         }
     }
