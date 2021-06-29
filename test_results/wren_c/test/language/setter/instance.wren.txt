@@ -1,6 +1,1 @@
-Unexpected error:
-[dummy_module line 10] Error Grammar("Expected end of file, found: Equals")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 10] Error Grammar("Expected end of file, found: Equals")
-
-Missing expected output "value" on line 10.
+Expected output "value" on line 10 and got "Instance {..}".

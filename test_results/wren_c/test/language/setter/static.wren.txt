@@ -1,6 +1,1 @@
-Unexpected error:
-[dummy_module line 7] Error Grammar("Expected end of file, found: Equals")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 7] Error Grammar("Expected end of file, found: Equals")
-
-Missing expected output "value" on line 7.
+Expected output "value" on line 7 and got "RefCell { value: ObjClass { Foo super: "Object" meta: "Foo metaclass" } }".
