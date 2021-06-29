@@ -1,5 +1,4 @@
 Expected runtime error "Foo does not implement 'new()'." and got:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("new()" on "Foo")
 Expected stack trace and got:
 
-Missing expected output "ok" on line 7.

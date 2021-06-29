@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("init new()" on "Null")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("init new()" on "Null")
-
-Missing expected output "foo" on line 8.
-Missing expected output "bar" on line 9.
-Missing expected output "baz" on line 10.

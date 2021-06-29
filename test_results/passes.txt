@@ -8,6 +8,7 @@ test/bringup/greater_than.wren
 test/bringup/if.wren
 test/bringup/is.wren
 test/bringup/locals.wren
+test/bringup/method.wren
 test/bringup/number_parsing.wren
 test/bringup/range.wren
 test/bringup/scopes.wren
@@ -33,6 +34,7 @@ wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/not.wren
 wren_c/test/core/number/plus.wren
 wren_c/test/core/object/is.wren
+wren_c/test/core/object/not.wren
 wren_c/test/core/range/equality.wren
 wren_c/test/core/range/iterate.wren
 wren_c/test/core/range/iterate_from_float.wren
@@ -115,7 +117,10 @@ wren_c/test/language/map/duplicate_trailing_comma.wren
 wren_c/test/language/map/empty_map_with_comma.wren
 wren_c/test/language/map/eof_after_colon.wren
 wren_c/test/language/map/eof_after_key.wren
+wren_c/test/language/method/empty_block.wren
 wren_c/test/language/method/empty_subscript_definition.wren
+wren_c/test/language/method/long_name.wren
+wren_c/test/language/method/many_methods.wren
 wren_c/test/language/module/missing_for.wren
 wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
@@ -137,6 +142,7 @@ wren_c/test/language/return/after_else.wren
 wren_c/test/language/return/after_if.wren
 wren_c/test/language/return/after_while.wren
 wren_c/test/language/return/in_function.wren
+wren_c/test/language/return/in_method.wren
 wren_c/test/language/semicolon.wren
 wren_c/test/language/setter/grouping.wren
 wren_c/test/language/setter/infix_operator.wren

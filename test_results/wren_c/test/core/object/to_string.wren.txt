@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("toString" on "Foo")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("toString" on "Foo")
 
 Missing expected output "true" on line 4.

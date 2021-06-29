@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("write(_)" on "System metaclass")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("write(_)" on "System metaclass")
 
 Missing expected output "[invalid toString]!" on line 7.

@@ -1,6 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("init new()" on "Null")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("init new()" on "Null")
-
-Missing expected output "[invalid toString]" on line 6.
+Expected output "[invalid toString]" on line 6 and got "Instance {..}".

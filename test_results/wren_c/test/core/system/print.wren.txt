@@ -1,8 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("init new()" on "Null")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("init new()" on "Null")
-
-Missing expected output "Foo.toString" on line 8.
-Missing expected output "1" on line 11.
-Missing expected output "true" on line 12.
+Expected output "Foo.toString" on line 8 and got "Instance {..}".

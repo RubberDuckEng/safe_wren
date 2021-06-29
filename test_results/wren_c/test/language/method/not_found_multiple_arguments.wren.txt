@@ -1,4 +1,4 @@
 Expected runtime error "Foo does not implement 'someUnknownMethod(_,_)'." and got:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("someUnknownMethod(_,_)" on "Foo")
 Expected stack trace and got:
 

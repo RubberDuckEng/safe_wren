@@ -1190,16 +1190,18 @@ fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>, arity: u8) -> Han
 fn finish_body(ctx: &mut ParseContext) -> Result<(), WrenError> {
     let is_expression_body = finish_block(ctx)?;
 
-    //   if (compiler->isInitializer)
-    //   {
-    //     // If the initializer body evaluates to a value, discard it.
-    //     if (isExpressionBody) emitOp(compiler, CODE_POP);
+    if ctx.compiler().is_initializer {
+        // If the initializer body evaluates to a value, discard it.
+        if is_expression_body {
+            ctx.compiler_mut().emit(Ops::Pop);
+        }
 
-    //     // The receiver is always stored in the first local slot.
-    //     emitOp(compiler, CODE_LOAD_LOCAL_0);
-    //   }
-    //   else
-    if !is_expression_body {
+        // The receiver is always stored in the first local slot.
+        ctx.compiler_mut().emit_load(Variable {
+            scope: Scope::Local,
+            index: 0,
+        });
+    } else if !is_expression_body {
         // Implicitly return null in statement bodies.
         ctx.compiler_mut().emit(Ops::Null);
     }

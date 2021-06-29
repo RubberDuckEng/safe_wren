@@ -16,7 +16,7 @@ pub(crate) enum Value {
     Range(Handle<ObjRange>),
     Fn(Handle<ObjFn>),
     Closure(Handle<ObjClosure>),
-    // Object(Handle<dyn Obj>),
+    Instance(Handle<ObjInstance>),
 }
 
 impl PartialEq for Value {
@@ -48,6 +48,12 @@ impl core::fmt::Debug for Value {
             Value::Range(r) => write!(f, "Range({:?})", r),
             Value::Fn(_) => write!(f, "Fn()"),
             Value::Closure(_) => write!(f, "Closure()"),
+            Value::Instance(o) => write!(
+                f,
+                "Instance({})",
+                // FIXME: Probably needs a helper on ObjInstance?
+                o.borrow().class_obj().unwrap().borrow().name
+            ),
         }
     }
 }
@@ -354,6 +360,7 @@ fn wren_new_single_class(_num_fields: usize, name: String) -> Handle<ObjClass> {
         methods: Vec::new(),
         class: None,
         superclass: None,
+        // num_fields: num_fields,
     })
 }
 
@@ -467,6 +474,7 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
         methods: Vec::new(),
         class: None,
         superclass: None,
+        // num_fields: 0,
     });
 
     wren_define_variable(module, name, Value::Class(class.clone())).expect("defined");
@@ -495,19 +503,8 @@ enum RunNext {
     Done,
 }
 
-fn wren_new_instance(_vm: &mut WrenVM, _class: Handle<ObjClass>) -> Value {
-    //   ObjInstance* instance = ALLOCATE_FLEX(vm, ObjInstance,
-    //                                         Value, classObj->numFields);
-    //   initObj(vm, &instance->obj, OBJ_INSTANCE, classObj);
-
-    //   // Initialize fields to null.
-    //   for (int i = 0; i < classObj->numFields; i++)
-    //   {
-    //     instance->fields[i] = NULL_VAL;
-    //   }
-
-    //   return OBJ_VAL(instance);
-    Value::Null
+fn wren_new_instance(_vm: &mut WrenVM, class: Handle<ObjClass>) -> Value {
+    Value::Instance(new_handle(ObjInstance::new(class)))
 }
 
 // Defines [methodValue] as a method on [classObj].
@@ -573,6 +570,7 @@ impl WrenVM {
             Value::Range(o) => o.borrow().class_obj(),
             Value::Fn(o) => o.borrow().class_obj(),
             Value::Closure(o) => o.borrow().class_obj(),
+            Value::Instance(o) => o.borrow().class_obj(),
         }
     }
 
@@ -923,27 +921,8 @@ pub(crate) fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
         .for_each(|(pc, op)| dump_instruction(pc, op, &vm.module, &vm.methods, closure, None))
 }
 
-// // Identifies which specific type a heap-allocated object is.
-// #[derive(Debug)]
-// pub enum ObjType {
-//     Class,
-//     // Closure,
-//     // Fiber,
-//     // Function,
-//     // Foreign,
-//     // Instance,
-//     // List,
-//     // Map,
-//     // Module,
-//     Range,
-//     // String,
-//     // Upvalue,
-// }
-
-// Base struct for all heap-allocated objects.
 pub trait Obj {
-    // fn obj_type(&self) -> ObjType;
-    //   // The object's class.
+    // The object's class.
     fn class_obj(&self) -> Option<Handle<ObjClass>>;
 }
 
@@ -973,9 +952,6 @@ impl ObjClosure {
 }
 
 impl Obj for ObjClosure {
-    // fn obj_type(&self) -> ObjType {
-    //     ObjType::Fn
-    // }
     fn class_obj(&self) -> Option<Handle<ObjClass>> {
         Some(self.class_obj.clone())
     }
@@ -999,9 +975,27 @@ impl ObjFn {
 }
 
 impl Obj for ObjFn {
-    // fn obj_type(&self) -> ObjType {
-    //     ObjType::Fn
-    // }
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
+        Some(self.class_obj.clone())
+    }
+}
+
+pub(crate) struct ObjInstance {
+    class_obj: Handle<ObjClass>,
+    // fields: Vec<Value>,
+}
+
+impl ObjInstance {
+    pub(crate) fn new(class: Handle<ObjClass>) -> ObjInstance {
+        // let fields = vec![Value::Null; class.borrow().num_fields];
+        ObjInstance {
+            class_obj: class,
+            // fields: fields,
+        }
+    }
+}
+
+impl Obj for ObjInstance {
     fn class_obj(&self) -> Option<Handle<ObjClass>> {
         Some(self.class_obj.clone())
     }
@@ -1015,9 +1009,6 @@ impl core::fmt::Debug for ObjRange {
 }
 
 impl Obj for ObjRange {
-    // fn obj_type(&self) -> ObjType {
-    //     ObjType::Range
-    // }
     fn class_obj(&self) -> Option<Handle<ObjClass>> {
         Some(self.class_obj.clone())
     }
@@ -1068,7 +1059,7 @@ pub struct ObjClass {
 
     // The number of fields needed for an instance of this class, including all
     // of its superclass fields.
-    //   int numFields;
+    // num_fields: usize,
 
     // The table of methods that are defined in or inherited by this class.
     // Methods are called by symbol, and the symbol directly maps to an index in
@@ -1122,10 +1113,6 @@ impl ObjClass {
 }
 
 impl Obj for ObjClass {
-    // fn obj_type(&self) -> ObjType {
-    //     ObjType::Class
-    // }
-
     fn class_obj(&self) -> Option<Handle<ObjClass>> {
         self.class.clone()
     }

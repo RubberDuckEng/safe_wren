@@ -15,7 +15,7 @@ pub(crate) fn prim_system_print(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Va
         Value::Range(o) => format!("{:?}", o),
         Value::Fn(_) => format!("Fn {{..}}"),
         Value::Closure(_) => format!("Closure {{..}}"),
-        // Value::Object(o) => format!("{:?}", o),
+        Value::Instance(_) => format!("Instance {{..}}"),
     };
 
     println!("{}", string);

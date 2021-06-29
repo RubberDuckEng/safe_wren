@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("[_,_]" on "Foo")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("[_,_]" on "Foo")
 
-Missing expected output "method a b" on line 14.
+Expected output "method a b" on line 14 and got "method %(a) %(b)".
 Missing expected output "subscript a b" on line 21.

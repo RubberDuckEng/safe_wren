@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("+(_)" on "Foo")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("init new()" on "Null")
+MethodNotFound("+(_)" on "Foo")
 
-Missing expected output "a" on line 6.
+Expected output "a" on line 6 and got "Instance {..}".
 Missing expected output "a b" on line 8.
 Missing expected output "a c" on line 10.
 Missing expected output "a b d" on line 12.
