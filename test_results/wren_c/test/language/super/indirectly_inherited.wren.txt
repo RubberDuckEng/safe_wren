@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 7] Error Grammar("Expected left curly brace, found: Is")
+[dummy_module line 14] Error Grammar("Undeclared variable \'super\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 7] Error Grammar("Expected left curly brace, found: Is")
+[dummy_module line 14] Error Grammar("Undeclared variable \'super\'")
 
 Missing expected output "C.foo" on line 19.
 Missing expected output "A.foo" on line 20.

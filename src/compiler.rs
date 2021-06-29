@@ -2276,8 +2276,13 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     ctx.compiler_mut().emit_constant(class_name);
     // FIXME: Handle superclasses, TOKEN_IS
 
-    // Implicitly inherit from Object.
-    load_core_variable(ctx, "Object");
+    // Load the superclass (if there is one).
+    if match_current(ctx, Token::Is)? {
+        parse_precendence(ctx, Precedence::Call)?;
+    } else {
+        // Implicitly inherit from Object.
+        load_core_variable(ctx, "Object");
+    }
 
     // Store a placeholder for the number of fields argument. We don't know the
     // count until we've compiled all the methods to see which fields are used.

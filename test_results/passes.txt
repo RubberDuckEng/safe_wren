@@ -81,6 +81,7 @@ wren_c/test/language/constructor/cannot_be_subscript.wren
 wren_c/test/language/constructor/cannot_be_unary.wren
 wren_c/test/language/constructor/cannot_return_value.wren
 wren_c/test/language/constructor/no_parameter_list.wren
+wren_c/test/language/constructor/super_must_have_args.wren
 wren_c/test/language/continue/in_function_in_loop.wren
 wren_c/test/language/continue/in_method_in_loop.wren
 wren_c/test/language/continue/in_while_loop.wren
@@ -108,6 +109,8 @@ wren_c/test/language/if/newline_after_else.wren
 wren_c/test/language/if/newline_after_if.wren
 wren_c/test/language/if/truth.wren
 wren_c/test/language/ignore_carriage_returns.wren
+wren_c/test/language/inheritance/inherit_methods.wren
+wren_c/test/language/inheritance/is.wren
 wren_c/test/language/list/duplicate_comma.wren
 wren_c/test/language/list/duplicate_trailing_comma.wren
 wren_c/test/language/list/empty_list_with_comma.wren

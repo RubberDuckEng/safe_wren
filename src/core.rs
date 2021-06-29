@@ -230,8 +230,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     // Hack.  AFAICT, functions/closures inside wren_core.wren are compiled
     // by wren_c and have a null class!  Rust won't allow us to do that so
     // manually initialize Fn class before compiling wren_core.wren.
-    let fn_class =
-        wren_new_class(vm, &object, 0, Value::String(Rc::new("Fn".into()))).expect("creating Fn");
+    let fn_class = wren_new_class(vm, &object, 0, "Fn".into()).expect("creating Fn");
     vm.fn_class = Some(fn_class.clone());
     wren_define_variable(&mut vm.module, "Fn", Value::Class(fn_class)).expect("defining Fn");
 }

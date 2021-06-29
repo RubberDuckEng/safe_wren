@@ -1,3 +1,0 @@
-Unexpected error:
-[dummy_module line 3] Error Grammar("Expected left curly brace, found: Is")
-Missing expected error on line 5.

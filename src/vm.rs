@@ -160,6 +160,7 @@ pub(crate) enum RuntimeError {
     FnRequired(Value),
     ClosureRequired(Value),
     MethodNotFound(MissingMethod),
+    CannotInheritFromNonClassObject(String, Value),
     ThisObjectHasNoClass,
 }
 
@@ -176,6 +177,9 @@ impl core::fmt::Debug for RuntimeError {
             RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
             RuntimeError::MethodNotFound(m) => {
                 write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)
+            }
+            RuntimeError::CannotInheritFromNonClassObject(n, _) => {
+                write!(f, "Class '{}' cannot inherit from a non-class object.", n)
             }
             RuntimeError::ThisObjectHasNoClass => write!(f, "ThisObjectHasNoClass"),
         }
@@ -371,12 +375,11 @@ fn wren_new_single_class(_num_fields: usize, name: String) -> Handle<ObjClass> {
 fn wren_new_class_with_class_class(
     superclass: &Handle<ObjClass>,
     num_fields: usize,
-    name: Value,
+    name_string: String,
     class_class: &Handle<ObjClass>,
 ) -> Result<Handle<ObjClass>, RuntimeError> {
     // Create the metaclass.
 
-    let name_string = name.try_into_string()?;
     let metaclass_name_string = format!("{} metaclass", name_string);
     // let metaclass_name = Value::String(Rc::new(metaclass_name_string));
 
@@ -398,7 +401,7 @@ pub(crate) fn wren_new_class(
     vm: &WrenVM,
     superclass: &Handle<ObjClass>,
     num_fields: usize,
-    name: Value,
+    name: String,
 ) -> Result<Handle<ObjClass>, RuntimeError> {
     wren_new_class_with_class_class(
         superclass,
@@ -408,19 +411,67 @@ pub(crate) fn wren_new_class(
     )
 }
 
-fn as_class(value: Value) -> Handle<ObjClass> {
-    match value {
-        Value::Class(o) => o,
-        _ => panic!(),
-    }
+fn validate_superclass(
+    name: &str,
+    superclass_value: Value,
+) -> Result<Handle<ObjClass>, RuntimeError> {
+    // Make sure the superclass is a class.
+    let superclass = superclass_value.try_into_class().map_err(|_| {
+        RuntimeError::CannotInheritFromNonClassObject(name.into(), superclass_value)
+    })?;
+
+    // FIXME: Unclear if this is required in wren_rust or not?
+    // Make sure it doesn't inherit from a sealed built-in type. Primitive methods
+    // on these classes assume the instance is one of the other Obj___ types and
+    // will fail horribly if it's actually an ObjInstance.
+    //   ObjClass* superclass = AS_CLASS(superclassValue);
+    //   if (superclass == vm->classClass ||
+    //       superclass == vm->fiberClass ||
+    //       superclass == vm->fnClass || // Includes OBJ_CLOSURE.
+    //       superclass == vm->listClass ||
+    //       superclass == vm->mapClass ||
+    //       superclass == vm->rangeClass ||
+    //       superclass == vm->stringClass ||
+    //       superclass == vm->boolClass ||
+    //       superclass == vm->nullClass ||
+    //       superclass == vm->numClass)
+    //   {
+    //     return wrenStringFormat(vm,
+    //         "Class '@' cannot inherit from built-in class '@'.",
+    //         name, OBJ_VAL(superclass->name));
+    //   }
+
+    //   if (superclass->numFields == -1)
+    //   {
+    //     return wrenStringFormat(vm,
+    //         "Class '@' cannot inherit from foreign class '@'.",
+    //         name, OBJ_VAL(superclass->name));
+    //   }
+
+    //   if (numFields == -1 && superclass->numFields > 0)
+    //   {
+    //     return wrenStringFormat(vm,
+    //         "Foreign class '@' may not inherit from a class with fields.",
+    //         name);
+    //   }
+
+    //   if (superclass->numFields + numFields > MAX_FIELDS)
+    //   {
+    //     return wrenStringFormat(vm,
+    //         "Class '@' may not have more than 255 fields, including inherited "
+    //         "ones.", name);
+    //   }
+
+    Ok(superclass)
 }
 
 fn create_class(vm: &WrenVM, frame: &mut CallFrame, num_fields: usize) -> Result<(), RuntimeError> {
     // Pull the name and superclass off the stack.
-    let superclass = as_class(frame.pop()?);
-    let name = frame.pop()?;
+    let superclass_value = frame.pop()?;
+    let name_value = frame.pop()?;
 
-    //   vm->fiber->error = validateSuperclass(vm, name, superclass, numFields);
+    let name = name_value.try_into_string()?;
+    let superclass = validate_superclass(&name, superclass_value)?;
 
     let class = wren_new_class(vm, &superclass, num_fields, name)?;
     frame.push(Value::Class(class));

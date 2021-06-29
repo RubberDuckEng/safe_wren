@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 17] Error Grammar("Expected left curly brace, found: Is")
+[dummy_module line 21] Error Grammar("Undeclared variable \'getter\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 17] Error Grammar("Expected left curly brace, found: Is")
+[dummy_module line 21] Error Grammar("Undeclared variable \'getter\'")
 
 Missing expected output "getter" on line 21.
 Missing expected output "setter" on line 22.
