@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
+[dummy_module line 2] Error Grammar("Expect method definition.")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
+[dummy_module line 2] Error Grammar("Expect method definition.")
 
 Missing expected output "infix Foo + a" on line 29.
 Missing expected output "infix Foo - a" on line 30.

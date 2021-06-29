@@ -2,5 +2,5 @@ Expected runtime error "Bar metaclass does not implement 'methodOnFoo'." and got
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
+[dummy_module line 5] Error Grammar("Expected left curly brace, found: Is")
 

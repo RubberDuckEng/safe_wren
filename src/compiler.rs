@@ -546,6 +546,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "if" => Some(Token::If),
         "else" => Some(Token::Else),
         "construct" => Some(Token::Construct),
+        "static" => Some(Token::Static),
         _ => None,
     }
 }
@@ -2189,7 +2190,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
     //   }
 
     // TODO: What about foreign constructors?
-    //   let is_foreign = match_current(ctx, Token::Foreign);
+    // let is_foreign = match_current(ctx, Token::Foreign);
     let is_static = match_current(ctx, Token::Static)?;
     ctx.compiler_mut().enclosing_class.in_static_method = is_static;
 

@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Expect \'{\' to begin method body.")
+[dummy_module line 10] Error Grammar("Expected Expression: ParseToken { bytes_range: 197..198, token: LeftSquareBracket, line: 10 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Expect \'{\' to begin method body.")
+[dummy_module line 10] Error Grammar("Expected Expression: ParseToken { bytes_range: 197..198, token: LeftSquareBracket, line: 10 }")
 
 Missing expected output "1" on line 8.
 Missing expected output "1" on line 9.

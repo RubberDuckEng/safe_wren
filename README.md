@@ -22,10 +22,7 @@ with error text from any failed tests.  `test.py` will also update
 
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
-* static functions
-* objects
 * object fields
-* object construction
 * lists
 * list literals
 * maps

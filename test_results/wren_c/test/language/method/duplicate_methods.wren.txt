@@ -1,4 +1,4 @@
-Unexpected error:
-[dummy_module line 6] Error Grammar("Expect \'{\' to begin method body.")
 Missing expected error on line 4.
 Missing expected error on line 7.
+Expected return code 65 and got 0. Stderr:
+

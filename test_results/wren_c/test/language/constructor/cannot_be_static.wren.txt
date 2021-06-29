@@ -1,1 +1,1 @@
-Missing expected error on line 3.
+Missing expected error on line 2.

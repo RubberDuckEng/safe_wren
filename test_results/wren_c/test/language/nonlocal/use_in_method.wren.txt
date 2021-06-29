@@ -1,7 +1,0 @@
-Unexpected error:
-[dummy_module line 10] Error Grammar("Expect \'{\' to begin method body.")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 10] Error Grammar("Expect \'{\' to begin method body.")
-
-Missing expected output "global" on line 15.
-Missing expected output "global" on line 16.

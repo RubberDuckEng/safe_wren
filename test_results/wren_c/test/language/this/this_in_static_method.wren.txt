@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
+[dummy_module line 3] Error Grammar("Undeclared variable \'this\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
+[dummy_module line 3] Error Grammar("Undeclared variable \'this\'")
 
 Missing expected output "true" on line 3.
 Missing expected output "bar" on line 4.

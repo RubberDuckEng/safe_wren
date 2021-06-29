@@ -1,7 +1,2 @@
-Unexpected error:
-[dummy_module line 12] Error Grammar("Expect \'{\' to begin method body.")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 12] Error Grammar("Expect \'{\' to begin method body.")
-
-Missing expected output "method" on line 19.
-Missing expected output "class method" on line 20.
+Expected output "method" on line 19 and got "variable".
+Expected output "class method" on line 20 and got "variable".

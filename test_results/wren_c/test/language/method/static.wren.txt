@@ -1,9 +1,2 @@
-Unexpected error:
-[dummy_module line 4] Error Grammar("Expect \'{\' to begin method body.")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expect \'{\' to begin method body.")
-
-Missing expected output "on instance" on line 10.
-Missing expected output "on metaclass" on line 11.
-Missing expected output "on instance arg" on line 12.
-Missing expected output "on metaclass arg" on line 13.
+Expected output "on instance arg" on line 12 and got "on instance %(arg)".
+Expected output "on metaclass arg" on line 13 and got "on metaclass %(arg)".

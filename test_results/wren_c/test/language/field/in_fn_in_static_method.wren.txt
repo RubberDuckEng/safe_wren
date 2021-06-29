@@ -1,3 +1,0 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expect \'{\' to begin method body.")
-Missing expected error on line 3.
