@@ -1,1 +1,67 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Sequence\'") }
+Constants:
+00: String("TestSequence")
+01: Fn()
+02: Fn()
+03: Fn()
+04: Fn()
+05: Num(3)
+06: Num(0)
+07: Num(1)
+08: Num(4)
+Code:
+00: Constant(0: String("TestSequence"))
+01: Load(Module, Class("Sequence"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new())
+11: Closure(3, [])
+12: Load(Module, Null)
+13: Method(instance, iterate(_))
+14: Closure(4, [])
+15: Load(Module, Null)
+16: Method(instance, iteratorValue(_))
+17: Load(Module, Null)
+18: Call(Method, new())
+19: Constant(5: Num(3))
+20: Call(Method, take(_))
+21: Store(Module)
+22: Pop
+23: Load(Module, Class("System"))
+24: Load(Module, Null)
+25: Load(Module, Class("Sequence"))
+26: Call(Method, is(_))
+27: Call(Method, print(_))
+28: Pop
+29: Load(Module, Class("System"))
+30: Load(Module, Null)
+31: Call(Method, print(_))
+32: Pop
+33: Load(Module, Class("System"))
+34: Load(Module, Null)
+35: Constant(6: Num(0))
+36: Call(Method, take(_))
+37: Call(Getter, isEmpty)
+38: Call(Method, print(_))
+39: Pop
+40: Load(Module, Class("System"))
+41: Load(Module, Null)
+42: Constant(7: Num(1))
+43: Call(Method, take(_))
+44: Call(Getter, toList)
+45: Call(Method, print(_))
+46: Pop
+47: Load(Module, Class("System"))
+48: Load(Module, Null)
+49: Constant(8: Num(4))
+50: Call(Method, take(_))
+51: Call(Getter, toList)
+52: Call(Method, print(_))
+53: Pop
+54: End
+55: End

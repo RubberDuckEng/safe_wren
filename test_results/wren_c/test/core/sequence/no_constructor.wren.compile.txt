@@ -1,1 +1,7 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Sequence\'") }
+Constants:
+Code:
+00: Load(Module, Class("Sequence"))
+01: Call(Method, new())
+02: Pop
+03: End
+04: End

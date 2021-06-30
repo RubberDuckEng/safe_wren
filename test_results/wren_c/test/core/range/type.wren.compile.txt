@@ -1,1 +1,42 @@
-WrenError { module: "dummy_module", line: 4, error: Grammar("Undeclared variable \'Sequence\'") }
+Constants:
+00: Num(2)
+01: Num(5)
+Code:
+00: Constant(0: Num(2))
+01: Constant(1: Num(5))
+02: Call(Method, ..(_))
+03: Store(Module)
+04: Pop
+05: Load(Module, Class("System"))
+06: Load(Module, Null)
+07: Load(Module, Class("Range"))
+08: Call(Method, is(_))
+09: Call(Method, print(_))
+10: Pop
+11: Load(Module, Class("System"))
+12: Load(Module, Null)
+13: Load(Module, Class("Sequence"))
+14: Call(Method, is(_))
+15: Call(Method, print(_))
+16: Pop
+17: Load(Module, Class("System"))
+18: Load(Module, Null)
+19: Load(Module, Class("Object"))
+20: Call(Method, is(_))
+21: Call(Method, print(_))
+22: Pop
+23: Load(Module, Class("System"))
+24: Load(Module, Null)
+25: Load(Module, Class("String"))
+26: Call(Method, is(_))
+27: Call(Method, print(_))
+28: Pop
+29: Load(Module, Class("System"))
+30: Load(Module, Null)
+31: Call(Getter, type)
+32: Load(Module, Class("Range"))
+33: Call(Method, ==(_))
+34: Call(Method, print(_))
+35: Pop
+36: End
+37: End

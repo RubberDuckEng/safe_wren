@@ -1,1 +1,32 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Sequence\'") }
+Constants:
+00: String("TestSequence")
+01: Fn()
+02: Fn()
+03: Fn()
+04: Fn()
+Code:
+00: Constant(0: String("TestSequence"))
+01: Load(Module, Class("Sequence"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new())
+11: Closure(3, [])
+12: Load(Module, Null)
+13: Method(instance, iterate(_))
+14: Closure(4, [])
+15: Load(Module, Null)
+16: Method(instance, iteratorValue(_))
+17: Load(Module, Class("System"))
+18: Load(Module, Null)
+19: Call(Method, new())
+20: Call(Getter, toList)
+21: Call(Method, print(_))
+22: Pop
+23: End
+24: End

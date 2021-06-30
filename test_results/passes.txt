@@ -43,6 +43,7 @@ wren_c/test/core/range/iterate.wren
 wren_c/test/core/range/iterate_from_float.wren
 wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/range/to_string.wren
+wren_c/test/core/sequence/count.wren
 wren_c/test/core/string/concatenation.wren
 wren_c/test/core/string/equality.wren
 wren_c/test/core/string/not.wren
