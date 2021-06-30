@@ -9,7 +9,7 @@ Code:
 04: Pop
 05: Closure(1, [])
 06: Load(Module 10: Null)
-07: Method(static 5: name)
+07: Method(static name)
 08: Load(Module 10: Null)
 09: Call(Getter: name)
 10: Pop

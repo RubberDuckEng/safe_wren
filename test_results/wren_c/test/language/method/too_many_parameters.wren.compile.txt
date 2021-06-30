@@ -9,6 +9,6 @@ Code:
 04: Pop
 05: Closure(1, [])
 06: Load(Module 10: Null)
-07: Method(instance 43: method(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
+07: Method(instance method(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 08: End
 09: End

@@ -948,10 +948,9 @@ fn op_debug_string(
         Ops::Construct => format!("{:?}", op),
         Ops::Method(is_static, symbol) => {
             let dispatch = if *is_static { "static" } else { "instance" };
-            format!(
-                "Method({} {}: {})",
-                dispatch, symbol, methods.method_names[*symbol]
-            )
+            // Do not print symbol to avoid rebaselining every compile.txt
+            // any time we edit wren_core.wren.
+            format!("Method({} {})", dispatch, methods.method_names[*symbol])
         }
         Ops::Closure(_, _) => format!("{:?}", op),
         Ops::Class(num_fields) => format!("Class({} fields)", num_fields),

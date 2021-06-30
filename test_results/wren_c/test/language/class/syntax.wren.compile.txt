@@ -21,6 +21,6 @@ Code:
 14: Pop
 15: Closure(3, [])
 16: Load(Module 12: Null)
-17: Method(instance 43: method)
+17: Method(instance method)
 18: End
 19: End

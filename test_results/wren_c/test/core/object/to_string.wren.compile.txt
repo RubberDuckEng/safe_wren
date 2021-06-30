@@ -11,10 +11,10 @@ Code:
 04: Pop
 05: Closure(1, [])
 06: Load(Module 10: Null)
-07: Method(instance 43: init new())
+07: Method(instance init new())
 08: Closure(2, [])
 09: Load(Module 10: Null)
-10: Method(static 44: new())
+10: Method(static new())
 11: Load(Module 9: Class("System"))
 12: Load(Module 10: Null)
 13: Call(Method: new())

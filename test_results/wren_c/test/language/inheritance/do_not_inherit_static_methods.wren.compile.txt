@@ -10,7 +10,7 @@ Code:
 04: Pop
 05: Closure(1, [])
 06: Load(Module 10: Null)
-07: Method(static 43: methodOnFoo)
+07: Method(static methodOnFoo)
 08: Constant(2: String("Bar"))
 09: Load(Module 10: Null)
 10: Class(0 fields)

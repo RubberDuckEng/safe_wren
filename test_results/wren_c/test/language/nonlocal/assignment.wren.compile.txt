@@ -27,7 +27,7 @@ Code:
 19: Pop
 20: Closure(3, [])
 21: Load(Module 11: Null)
-22: Method(static 43: method)
+22: Method(static method)
 23: Load(Module 11: Null)
 24: Call(Getter: method)
 25: Pop

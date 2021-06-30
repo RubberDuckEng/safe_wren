@@ -10,10 +10,10 @@ Code:
 04: Pop
 05: Closure(1, [])
 06: Load(Module 10: Null)
-07: Method(static 43: test)
+07: Method(static test)
 08: Closure(2, [])
 09: Load(Module 10: Null)
-10: Method(static 44: bar)
+10: Method(static bar)
 11: Load(Module 10: Null)
 12: Call(Getter: test)
 13: Pop

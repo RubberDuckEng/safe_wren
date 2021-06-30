@@ -16,9 +16,9 @@ Code:
 09: Pop
 10: Closure(2, [])
 11: Load(Module 11: Null)
-12: Method(instance 43: init new())
+12: Method(instance init new())
 13: Closure(3, [])
 14: Load(Module 11: Null)
-15: Method(static 45: new())
+15: Method(static new())
 16: End
 17: End
