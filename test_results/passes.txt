@@ -18,8 +18,10 @@ wren_c/example/hello.wren
 wren_c/example/import_module/cthulu.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/not.wren
+wren_c/test/core/bool/to_string.wren
 wren_c/test/core/class/equality.wren
 wren_c/test/core/function/arity.wren
+wren_c/test/core/function/to_string.wren
 wren_c/test/core/null/not.wren
 wren_c/test/core/number/bitwise_and.wren
 wren_c/test/core/number/bitwise_lsh.wren
@@ -33,15 +35,20 @@ wren_c/test/core/number/invalid_hex_literal.wren
 wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/not.wren
 wren_c/test/core/number/plus.wren
+wren_c/test/core/number/to_string.wren
 wren_c/test/core/object/is.wren
 wren_c/test/core/object/not.wren
 wren_c/test/core/range/equality.wren
 wren_c/test/core/range/iterate.wren
 wren_c/test/core/range/iterate_from_float.wren
 wren_c/test/core/range/iterator_value.wren
+wren_c/test/core/range/to_string.wren
 wren_c/test/core/string/concatenation.wren
 wren_c/test/core/string/equality.wren
 wren_c/test/core/string/not.wren
+wren_c/test/core/string/to_string.wren
+wren_c/test/core/system/print.wren
+wren_c/test/core/system/print_bad_to_string.wren
 wren_c/test/core/system/write_bad_to_string.wren
 wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/grouping.wren
@@ -60,6 +67,7 @@ wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
 wren_c/test/language/class/lowercase_name_inside_body.wren
 wren_c/test/language/class/missing_class_after_foreign.wren
+wren_c/test/language/class/name_inside_body.wren
 wren_c/test/language/class/newline_after_class.wren
 wren_c/test/language/class/syntax.wren
 wren_c/test/language/comments/block.wren
@@ -150,6 +158,7 @@ wren_c/test/language/nonlocal/use_in_method.wren
 wren_c/test/language/null/literal.wren
 wren_c/test/language/number/hex_literals.wren
 wren_c/test/language/number/hex_too_large.wren
+wren_c/test/language/number/literals.wren
 wren_c/test/language/number/scientific_float_missing_exponent.wren
 wren_c/test/language/number/scientific_floating_exponent.wren
 wren_c/test/language/number/scientific_missing_exponent.wren

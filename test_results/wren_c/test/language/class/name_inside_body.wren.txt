@@ -1,2 +1,0 @@
-Expected output "Foo!" on line 15 and got "RefCell { value: ObjClass { Foo super: "Object" meta: "Foo metaclass" } }".
-Expected output "Foo!" on line 16 and got "RefCell { value: ObjClass { Foo super: "Object" meta: "Foo metaclass" } }".

@@ -1,9 +1,1 @@
 Expected output "-30.85" on line 2 and got "-30.849999999999998".
-Expected output "infinity" on line 5 and got "inf".
-Expected output "-infinity" on line 6 and got "-inf".
-Expected output "nan" on line 7 and got "NaN".
-Expected output "nan" on line 8 and got "NaN".
-Expected output "-infinity" on line 9 and got "-inf".
-Expected output "infinity" on line 10 and got "inf".
-Expected output "nan" on line 11 and got "NaN".
-Expected output "nan" on line 12 and got "NaN".

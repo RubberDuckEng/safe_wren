@@ -63,6 +63,10 @@ impl Value {
         Value::String(Rc::new(string))
     }
 
+    pub(crate) fn from_str(string: &str) -> Value {
+        Self::from_string(string.into())
+    }
+
     // Different from "is truthy" used by "as_bool" in wren_c
     // Unclear if this is only ever called on a known-bool?
     pub(crate) fn equals_true(&self) -> bool {
@@ -378,7 +382,7 @@ fn wren_new_class_with_class_class(
     // Create the metaclass.
 
     let metaclass_name_string = format!("{} metaclass", name_string);
-    // let metaclass_name = Value::String(Rc::new(metaclass_name_string));
+    // let metaclass_name = Value::from_string(metaclass_name_string);
 
     let metaclass = wren_new_single_class(0, metaclass_name_string);
     metaclass.borrow_mut().class = Some(class_class.clone());

@@ -1,7 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("toString" on "Bool")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("toString" on "Bool")
-
-Missing expected output "true" on line 1.
-Missing expected output "false" on line 2.

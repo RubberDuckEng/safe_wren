@@ -967,7 +967,7 @@ fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
     let value = match &ctx.parser.previous.token {
         Token::Num(n) => Value::Num(*n),
-        Token::String(s) => Value::String(Rc::new(s.clone())),
+        Token::String(s) => Value::from_str(s),
         _ => panic!("invalid literal"),
     };
     ctx.compiler_mut().emit_constant(value);

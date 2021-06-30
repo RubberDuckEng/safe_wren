@@ -1,1 +1,0 @@
-Expected output "Foo.toString" on line 8 and got "Instance {..}".

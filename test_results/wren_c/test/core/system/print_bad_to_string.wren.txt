@@ -1,1 +1,0 @@
-Expected output "[invalid toString]" on line 6 and got "Instance {..}".

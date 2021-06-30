@@ -13,11 +13,11 @@ class System {
     writeString_("\n")
   }
 
-//   static print(obj) {
-//     writeObject_(obj)
-//     writeString_("\n")
-//     return obj
-//   }
+  static print(obj) {
+    writeObject_(obj)
+    writeString_("\n")
+    return obj
+  }
 
   static printAll(sequence) {
     for (object in sequence) writeObject_(object)

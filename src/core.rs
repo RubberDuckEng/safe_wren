@@ -1,26 +1,6 @@
 use crate::vm::*;
+use std::collections::VecDeque;
 use std::ops::*;
-use std::rc::Rc;
-
-// System.print is not actually in C in wren_c, but since we can't yet parse
-// classes or methods, implementing here to get unit tests working.
-pub(crate) fn prim_system_print(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let value = args.pop().unwrap();
-    let string = match &value {
-        Value::Null => "null".into(),
-        Value::Num(i) => format!("{}", i),
-        Value::Boolean(b) => format!("{}", b),
-        Value::String(s) => format!("{}", s),
-        Value::Class(o) => format!("{:?}", o),
-        Value::Range(o) => format!("{:?}", o),
-        Value::Fn(_) => format!("Fn {{..}}"),
-        Value::Closure(_) => format!("Closure {{..}}"),
-        Value::Instance(_) => format!("Instance {{..}}"),
-    };
-
-    println!("{}", string);
-    Ok(value)
-}
 
 macro_rules! infix_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
@@ -69,6 +49,35 @@ fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeEr
     let start = args[0].try_into_num()?;
     let end = args[1].try_into_num()?;
     Ok(Value::Range(wren_new_range(vm, start, end, false)))
+}
+
+fn wren_num_to_string(num: f64) -> String {
+    // Wren prints nan vs NaN and inifity vs inf.
+    if num.is_nan() {
+        return "nan".into();
+    }
+    if num.is_infinite() {
+        if num.is_sign_positive() {
+            return "infinity".into();
+        } else {
+            return "-infinity".into();
+        }
+    }
+    // Wren prints -0 differently from 0.
+    if num == -0.0 && num.is_sign_negative() {
+        return "-0".into();
+    }
+
+    // wren_c uses sprintf(buffer, "%.14g", value)
+    // It's not clear how to set a maximum precision without also
+    // forcing rust to use that precision always.
+    // e.g. "{:.14}" would always print 14 digits.
+    format!("{}", num)
+}
+
+fn num_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let string = wren_num_to_string(args[0].try_into_num()?);
+    Ok(Value::from_string(string))
 }
 
 fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -142,9 +151,19 @@ fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> 
     Ok(Value::Num(iterator))
 }
 
-fn range_iterator_value(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn range_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     // Assuming args[1] is a number.
-    Ok(args.pop().unwrap())
+    Ok(args[1].clone())
+}
+
+fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let range_ref = args[0].try_into_range()?;
+    let range = range_ref.borrow();
+
+    let from = wren_num_to_string(range.from);
+    let to = wren_num_to_string(range.to);
+    let op = if range.is_inclusive { ".." } else { "..." };
+    Ok(Value::from_string(format!("{}{}{}", from, op, to)))
 }
 
 fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -162,15 +181,27 @@ fn bool_not(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Boolean(!args[0].equals_true()))
 }
 
+fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    if args[0].equals_true() {
+        Ok(Value::from_str("true"))
+    } else {
+        Ok(Value::from_str("false"))
+    }
+}
+
 fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Boolean(true))
+}
+
+fn null_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::from_str("null"))
 }
 
 fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let a = args[0].try_into_string()?;
     let b = args[1].try_into_string()?;
 
-    Ok(Value::String(Rc::new(a + &b)))
+    Ok(Value::from_string(a + &b))
 }
 
 fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -189,10 +220,44 @@ fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Num(arity))
 }
 
+fn fn_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::from_str("<fn>"))
+}
+
+// Modeled after https://github.com/saghm/unescape-rs
+fn unescape(s: &str) -> String {
+    let mut queue: VecDeque<_> = String::from(s).chars().collect();
+    let mut s = String::new();
+
+    while let Some(c) = queue.pop_front() {
+        if c != '\\' {
+            s.push(c);
+            continue;
+        }
+
+        match queue.pop_front() {
+            Some('n') => s.push('\n'),
+            // Wren seems to intentionally handle \0 as a string terminator?
+            Some('0') => return s,
+            // Handle other escapes here if necessary.
+            Some(c) => {
+                s.push('\\');
+                s.push(c);
+            }
+            None => {
+                s.push('\\');
+                return s;
+            }
+        };
+    }
+    s
+}
+
 fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let string = args[1].try_into_string()?;
+    let result = unescape(&string);
     // FIXME: This should be an API call to the embedder.
-    print!("{}", string);
+    print!("{}", result);
     Ok(args[1].clone())
 }
 
@@ -275,21 +340,26 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, "^(_)", num_bitwise_xor);
     primitive!(vm, core.num, "<<(_)", num_bitwise_shl);
     primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
+    primitive!(vm, core.num, "toString", num_to_string);
 
     primitive!(vm, core.string, "+(_)", string_plus);
     primitive!(vm, core.string, "toString", string_to_string);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
+    primitive!(vm, core.range, "toString", range_to_string);
 
     primitive!(vm, core.bool_class, "!", bool_not);
+    primitive!(vm, core.bool_class, "toString", bool_to_string);
 
     primitive!(vm, core.null, "!", null_not);
+    primitive!(vm, core.null, "toString", null_to_string);
 
     let fn_class = vm.fn_class.as_ref().unwrap();
     let fn_meta_class = fn_class.borrow_mut().class_obj().unwrap();
     primitive!(vm, fn_meta_class, "new(_)", fn_new);
     primitive!(vm, fn_class, "arity", fn_arity);
+    primitive!(vm, fn_class, "toString", fn_to_string);
 
     for arity in 0..16 {
         let name = if arity == 0 {
@@ -303,14 +373,6 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
             .borrow_mut()
             .set_method(symbol, Method::FunctionCall);
     }
-
-    // String.print is not supposed to be a primitive, remove!
-    primitive!(
-        vm,
-        find_core_class(vm, "System").borrow().class_obj().unwrap(),
-        "print(_)",
-        prim_system_print
-    );
 
     primitive!(
         vm,
