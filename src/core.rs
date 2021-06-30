@@ -2,6 +2,23 @@ use crate::vm::*;
 use std::collections::VecDeque;
 use std::ops::*;
 
+macro_rules! num_constant {
+    ($func:ident, $value:expr) => {
+        fn $func(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+            Ok(Value::Num($value))
+        }
+    };
+}
+
+num_constant!(num_infinity, f64::INFINITY);
+num_constant!(num_nan, f64::NAN);
+num_constant!(num_pi, 3.14159265358979323846264338327950288);
+num_constant!(num_tau, 6.28318530717958647692528676655900577);
+num_constant!(num_largest, f64::MAX);
+num_constant!(num_smallest, f64::MIN);
+num_constant!(num_max_safe_integer, 9007199254740991.0);
+num_constant!(num_min_safe_integer, -9007199254740991.0);
+
 macro_rules! infix_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -270,6 +287,18 @@ macro_rules! primitive {
     };
 }
 
+macro_rules! primitive_static {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        let index = $vm.methods.ensure_method($sig);
+        $class
+            .borrow_mut()
+            .class_obj()
+            .unwrap()
+            .borrow_mut()
+            .set_method(index, Method::Primitive($func));
+    };
+}
+
 pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     // wren_c makes a core module, which it then imports
     // into every module when running.  For now we're just
@@ -324,22 +353,31 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
         null: find_core_class(vm, "Null"),
         range: find_core_class(vm, "Range"),
     };
-    primitive!(vm, core.num, "+(_)", num_plus);
+    // primitive!(vm, core.num, "fromString(_)", num_from_string);
+    primitive_static!(vm, core.num, "infinity", num_infinity);
+    primitive_static!(vm, core.num, "nan", num_nan);
+    primitive_static!(vm, core.num, "pi", num_pi);
+    primitive_static!(vm, core.num, "tau", num_tau);
+    primitive_static!(vm, core.num, "largest", num_largest);
+    primitive_static!(vm, core.num, "smallest", num_smallest);
+    primitive_static!(vm, core.num, "maxSafeInteger", num_max_safe_integer);
+    primitive_static!(vm, core.num, "minSafeInteger", num_min_safe_integer);
     primitive!(vm, core.num, "-(_)", num_minus);
-    primitive!(vm, core.num, "-", num_unary_minus);
+    primitive!(vm, core.num, "+(_)", num_plus);
     primitive!(vm, core.num, "*(_)", num_mult);
     primitive!(vm, core.num, "/(_)", num_divide);
     primitive!(vm, core.num, "<(_)", num_lt);
-    primitive!(vm, core.num, "<=(_)", num_lte);
     primitive!(vm, core.num, ">(_)", num_gt);
+    primitive!(vm, core.num, "<=(_)", num_lte);
     primitive!(vm, core.num, ">=(_)", num_gte);
-    primitive!(vm, core.num, "..(_)", num_range_inclusive);
-    primitive!(vm, core.num, "...(_)", num_range_exclusive);
     primitive!(vm, core.num, "&(_)", num_bitwise_and);
     primitive!(vm, core.num, "|(_)", num_bitwise_or);
     primitive!(vm, core.num, "^(_)", num_bitwise_xor);
     primitive!(vm, core.num, "<<(_)", num_bitwise_shl);
     primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
+    primitive!(vm, core.num, "-", num_unary_minus);
+    primitive!(vm, core.num, "..(_)", num_range_inclusive);
+    primitive!(vm, core.num, "...(_)", num_range_exclusive);
     primitive!(vm, core.num, "toString", num_to_string);
 
     primitive!(vm, core.string, "+(_)", string_plus);
@@ -356,8 +394,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.null, "toString", null_to_string);
 
     let fn_class = vm.fn_class.as_ref().unwrap();
-    let fn_meta_class = fn_class.borrow_mut().class_obj().unwrap();
-    primitive!(vm, fn_meta_class, "new(_)", fn_new);
+    primitive_static!(vm, fn_class, "new(_)", fn_new);
     primitive!(vm, fn_class, "arity", fn_arity);
     primitive!(vm, fn_class, "toString", fn_to_string);
 
@@ -374,12 +411,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
             .set_method(symbol, Method::FunctionCall);
     }
 
-    primitive!(
-        vm,
-        find_core_class(vm, "System").borrow().class_obj().unwrap(),
-        "writeString_(_)",
-        system_write_string
-    );
+    let system = find_core_class(vm, "System");
+    primitive_static!(vm, system, "writeString_(_)", system_write_string);
 
     vm.core = Some(core);
 

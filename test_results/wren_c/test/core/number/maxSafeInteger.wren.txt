@@ -1,6 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("maxSafeInteger" on "Num metaclass")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("maxSafeInteger" on "Num metaclass")
-
-Missing expected output "9.007199254741e+15" on line 1.
+Expected output "9.007199254741e+15" on line 1 and got "9007199254740991".
