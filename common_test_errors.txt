@@ -135,7 +135,6 @@ occurances : error text
 2 : MethodNotFound("toString" on "Bool")
 2 : MethodNotFound("toString" on "Foo")
 2 : MethodNotFound("toString" on "Num")
-2 : MethodNotFound("toString" on "String")
 2 : MethodNotFound("trim()" on "String")
 2 : MethodNotFound("trimEnd()" on "String")
 2 : MethodNotFound("trimStart()" on "String")
