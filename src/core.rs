@@ -206,6 +206,19 @@ fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError>
     }
 }
 
+fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let is_abort = !args[1].is_null();
+    // wren_c just records the error string and continues?
+    // vm->fiber->error = args[1];
+    if is_abort {
+        Err(RuntimeError::FiberAbort(args[1].clone()))
+    } else {
+        // I guess Fiber.abort(null) clears the error?
+        // wren_c: If the error is explicitly null, it's not really an abort.
+        Ok(Value::Boolean(args[1].is_null()))
+    }
+}
+
 fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Boolean(true))
 }
@@ -353,6 +366,13 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
         null: find_core_class(vm, "Null"),
         range: find_core_class(vm, "Range"),
     };
+
+    primitive!(vm, core.bool_class, "!", bool_not);
+    primitive!(vm, core.bool_class, "toString", bool_to_string);
+
+    let fiber = find_core_class(vm, "Fiber");
+    primitive_static!(vm, fiber, "abort(_)", fiber_abort);
+
     // primitive!(vm, core.num, "fromString(_)", num_from_string);
     primitive_static!(vm, core.num, "infinity", num_infinity);
     primitive_static!(vm, core.num, "nan", num_nan);
@@ -386,9 +406,6 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
     primitive!(vm, core.range, "toString", range_to_string);
-
-    primitive!(vm, core.bool_class, "!", bool_not);
-    primitive!(vm, core.bool_class, "toString", bool_to_string);
 
     primitive!(vm, core.null, "!", null_not);
     primitive!(vm, core.null, "toString", null_to_string);

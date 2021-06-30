@@ -159,6 +159,7 @@ pub(crate) enum RuntimeError {
     ClosureRequired(Value),
     MethodNotFound(MissingMethod),
     CannotInheritFromNonClassObject(String, Value),
+    FiberAbort(Value),
     ThisObjectHasNoClass,
 }
 
@@ -172,6 +173,7 @@ impl core::fmt::Debug for RuntimeError {
             RuntimeError::ClassRequired(v) => write!(f, "ClassRequired({:?})", v),
             RuntimeError::RangeRequired(v) => write!(f, "RangeRequired({:?})", v),
             RuntimeError::FnRequired(v) => write!(f, "FnRequired({:?})", v),
+            RuntimeError::FiberAbort(v) => write!(f, "FiberAbort({:?})", v),
             RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
             RuntimeError::MethodNotFound(m) => {
                 write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)

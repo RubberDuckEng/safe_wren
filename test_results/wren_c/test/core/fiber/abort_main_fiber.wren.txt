@@ -1,4 +1,4 @@
 Expected runtime error "Abort!" and got:
-MethodNotFound("abort(_)" on "Fiber metaclass")
+FiberAbort(String("Abort!"))
 Expected stack trace and got:
 

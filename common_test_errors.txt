@@ -148,10 +148,10 @@ occurances : error text
 2 : NumberRequired(String("s"))
 1 : ClassRequired(Boolean(false))
 1 : ClosureRequired(Num(3))
+1 : FiberAbort(String("Abort!"))
 1 : Got output "%(123.badMethod)" when none was expected.
 1 : Got output "ok" when none was expected.
 1 : MethodNotFound("+(_)" on "Bool")
-1 : MethodNotFound("abort(_)" on "Fiber metaclass")
 1 : MethodNotFound("bar" on "Foo metaclass")
 1 : MethodNotFound("base()" on "Bar metaclass")
 1 : MethodNotFound("e" on "Num")
