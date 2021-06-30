@@ -1,6 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("write(_)" on "System metaclass")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("write(_)" on "System metaclass")
-
-Missing expected output "[invalid toString]!" on line 7.

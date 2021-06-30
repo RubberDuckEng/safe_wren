@@ -42,6 +42,7 @@ wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/string/concatenation.wren
 wren_c/test/core/string/equality.wren
 wren_c/test/core/string/not.wren
+wren_c/test/core/system/write_bad_to_string.wren
 wren_c/test/language/assignment/associativity.wren
 wren_c/test/language/assignment/grouping.wren
 wren_c/test/language/assignment/infix_operator.wren

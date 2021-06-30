@@ -189,6 +189,13 @@ fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Num(arity))
 }
 
+fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let string = args[1].try_into_string()?;
+    // FIXME: This should be an API call to the embedder.
+    print!("{}", string);
+    Ok(args[1].clone())
+}
+
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
         let index = $vm.methods.ensure_method($sig);
@@ -297,12 +304,21 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
             .set_method(symbol, Method::FunctionCall);
     }
 
+    // String.print is not supposed to be a primitive, remove!
     primitive!(
         vm,
         find_core_class(vm, "System").borrow().class_obj().unwrap(),
         "print(_)",
         prim_system_print
     );
+
+    primitive!(
+        vm,
+        find_core_class(vm, "System").borrow().class_obj().unwrap(),
+        "writeString_(_)",
+        system_write_string
+    );
+
     vm.core = Some(core);
 
     // wren_c walks *all* String objects here to bind a class pointer
