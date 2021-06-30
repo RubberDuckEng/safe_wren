@@ -1,0 +1,71 @@
+Function { constants: [Fn(), Fn(), Fn(), Fn(), String("a"), String("a"), String("b"), String("a"), String("b"), String("a"), String("b"), String("c"), String("a"), String("b"), String("c"), String("a"), String("b"), String("c"), String("d"), String("a"), String("b"), String("c"), String("d"), String("a"), String("b"), String("c"), String("d"), String("e")], code: [Load(Variable { scope: Module, index: 3 }), Closure(0, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 3 }), Closure(1, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 3 }), Closure(2, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Store(Variable { scope: Module, index: 12 }), Pop, Load(Variable { scope: Module, index: 3 }), Closure(3, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Store(Variable { scope: Module, index: 13 }), Pop, Load(Variable { scope: Module, index: 10 }), Constant(4), Call(Signature { bare_name: "call", call_type: Method, arity: 1 }, 27), Pop, Load(Variable { scope: Module, index: 10 }), Constant(5), Constant(6), Call(Signature { bare_name: "call", call_type: Method, arity: 2 }, 28), Pop, Load(Variable { scope: Module, index: 11 }), Constant(7), Constant(8), Call(Signature { bare_name: "call", call_type: Method, arity: 2 }, 28), Pop, Load(Variable { scope: Module, index: 11 }), Constant(9), Constant(10), Constant(11), Call(Signature { bare_name: "call", call_type: Method, arity: 3 }, 29), Pop, Load(Variable { scope: Module, index: 12 }), Constant(12), Constant(13), Constant(14), Call(Signature { bare_name: "call", call_type: Method, arity: 3 }, 29), Pop, Load(Variable { scope: Module, index: 12 }), Constant(15), Constant(16), Constant(17), Constant(18), Call(Signature { bare_name: "call", call_type: Method, arity: 4 }, 30), Pop, Load(Variable { scope: Module, index: 13 }), Constant(19), Constant(20), Constant(21), Constant(22), Call(Signature { bare_name: "call", call_type: Method, arity: 4 }, 30), Pop, Load(Variable { scope: Module, index: 13 }), Constant(23), Constant(24), Constant(25), Constant(26), Constant(27), Call(Signature { bare_name: "call", call_type: Method, arity: 5 }, 31), Pop, End, End] }
+00: Load(Module 3: Class("Fn"))
+01: Closure(0, [])
+02: Call(Method: new(_) 24)
+03: Store(Module 10)
+04: Pop
+05: Load(Module 3: Class("Fn"))
+06: Closure(1, [])
+07: Call(Method: new(_) 24)
+08: Store(Module 11)
+09: Pop
+10: Load(Module 3: Class("Fn"))
+11: Closure(2, [])
+12: Call(Method: new(_) 24)
+13: Store(Module 12)
+14: Pop
+15: Load(Module 3: Class("Fn"))
+16: Closure(3, [])
+17: Call(Method: new(_) 24)
+18: Store(Module 13)
+19: Pop
+20: Load(Module 10: Null)
+21: Constant(4: String("a"))
+22: Call(Method: call(_) 27)
+23: Pop
+24: Load(Module 10: Null)
+25: Constant(5: String("a"))
+26: Constant(6: String("b"))
+27: Call(Method: call(_,_) 28)
+28: Pop
+29: Load(Module 11: Null)
+30: Constant(7: String("a"))
+31: Constant(8: String("b"))
+32: Call(Method: call(_,_) 28)
+33: Pop
+34: Load(Module 11: Null)
+35: Constant(9: String("a"))
+36: Constant(10: String("b"))
+37: Constant(11: String("c"))
+38: Call(Method: call(_,_,_) 29)
+39: Pop
+40: Load(Module 12: Null)
+41: Constant(12: String("a"))
+42: Constant(13: String("b"))
+43: Constant(14: String("c"))
+44: Call(Method: call(_,_,_) 29)
+45: Pop
+46: Load(Module 12: Null)
+47: Constant(15: String("a"))
+48: Constant(16: String("b"))
+49: Constant(17: String("c"))
+50: Constant(18: String("d"))
+51: Call(Method: call(_,_,_,_) 30)
+52: Pop
+53: Load(Module 13: Null)
+54: Constant(19: String("a"))
+55: Constant(20: String("b"))
+56: Constant(21: String("c"))
+57: Constant(22: String("d"))
+58: Call(Method: call(_,_,_,_) 30)
+59: Pop
+60: Load(Module 13: Null)
+61: Constant(23: String("a"))
+62: Constant(24: String("b"))
+63: Constant(25: String("c"))
+64: Constant(26: String("d"))
+65: Constant(27: String("e"))
+66: Call(Method: call(_,_,_,_,_) 31)
+67: Pop
+68: End
+69: End

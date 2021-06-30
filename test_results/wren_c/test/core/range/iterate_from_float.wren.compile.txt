@@ -1,0 +1,63 @@
+Function { constants: [Num(1.3), Num(4.5), Num(1.3), Num(4.5), Num(1.3), Num(4.3)], code: [Constant(0), Constant(1), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Null, Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iterate(_)", call_type: Method, arity: 1 }, 22), Store(Variable { scope: Local, index: 1 }), JumpIfFalse(9), Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iteratorValue(_)", call_type: Method, arity: 1 }, 23), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 2 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Loop(14), Pop, Pop, Constant(2), Constant(3), Call(Signature { bare_name: "...", call_type: Method, arity: 1 }, 16), Null, Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iterate(_)", call_type: Method, arity: 1 }, 22), Store(Variable { scope: Local, index: 1 }), JumpIfFalse(9), Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iteratorValue(_)", call_type: Method, arity: 1 }, 23), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 2 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Loop(14), Pop, Pop, Constant(4), Constant(5), Call(Signature { bare_name: "...", call_type: Method, arity: 1 }, 16), Null, Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iterate(_)", call_type: Method, arity: 1 }, 22), Store(Variable { scope: Local, index: 1 }), JumpIfFalse(9), Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iteratorValue(_)", call_type: Method, arity: 1 }, 23), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 2 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Loop(14), Pop, Pop, End, End] }
+00: Constant(0: Num(1.3))
+01: Constant(1: Num(4.5))
+02: Call(Method: ..(_) 15)
+03: Null
+04: Load(Local 0)
+05: Load(Local 1)
+06: Call(Method: iterate(_) 22)
+07: Store(Local 1)
+08: JumpIfFalse(9)
+09: Load(Local 0)
+10: Load(Local 1)
+11: Call(Method: iteratorValue(_) 23)
+12: Load(Module 9: Class("System"))
+13: Load(Local 2)
+14: Call(Method: print(_) 42)
+15: Pop
+16: Pop
+17: Loop(14)
+18: Pop
+19: Pop
+20: Constant(2: Num(1.3))
+21: Constant(3: Num(4.5))
+22: Call(Method: ...(_) 16)
+23: Null
+24: Load(Local 0)
+25: Load(Local 1)
+26: Call(Method: iterate(_) 22)
+27: Store(Local 1)
+28: JumpIfFalse(9)
+29: Load(Local 0)
+30: Load(Local 1)
+31: Call(Method: iteratorValue(_) 23)
+32: Load(Module 9: Class("System"))
+33: Load(Local 2)
+34: Call(Method: print(_) 42)
+35: Pop
+36: Pop
+37: Loop(14)
+38: Pop
+39: Pop
+40: Constant(4: Num(1.3))
+41: Constant(5: Num(4.3))
+42: Call(Method: ...(_) 16)
+43: Null
+44: Load(Local 0)
+45: Load(Local 1)
+46: Call(Method: iterate(_) 22)
+47: Store(Local 1)
+48: JumpIfFalse(9)
+49: Load(Local 0)
+50: Load(Local 1)
+51: Call(Method: iteratorValue(_) 23)
+52: Load(Module 9: Class("System"))
+53: Load(Local 2)
+54: Call(Method: print(_) 42)
+55: Pop
+56: Pop
+57: Loop(14)
+58: Pop
+59: Pop
+60: End
+61: End

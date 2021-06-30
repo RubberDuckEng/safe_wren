@@ -1,0 +1,28 @@
+Function { constants: [Num(0), Num(1), Num(2)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Boolean(true), JumpIfFalse(20), Load(Variable { scope: Module, index: 10 }), Constant(1), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: ">", call_type: Method, arity: 1 }, 13), JumpIfFalse(1), Jump(5), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Loop(22), End, End] }
+00: Constant(0: Num(0))
+01: Store(Module 10)
+02: Pop
+03: Boolean true
+04: JumpIfFalse(20)
+05: Load(Module 10: Null)
+06: Constant(1: Num(1))
+07: Call(Method: +(_) 6)
+08: Store(Module 10)
+09: Load(Module 10: Null)
+10: Pop
+11: Load(Module 9: Class("System"))
+12: Load(Module 10: Null)
+13: Call(Method: print(_) 42)
+14: Pop
+15: Load(Module 10: Null)
+16: Constant(2: Num(2))
+17: Call(Method: >(_) 13)
+18: JumpIfFalse(1)
+19: Jump(5)
+20: Load(Module 9: Class("System"))
+21: Load(Module 10: Null)
+22: Call(Method: print(_) 42)
+23: Pop
+24: Loop(22)
+25: End
+26: End

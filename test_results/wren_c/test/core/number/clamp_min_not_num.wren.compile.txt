@@ -1,0 +1,8 @@
+Function { constants: [Num(1), Num(2)], code: [Constant(0), Boolean(false), Constant(1), Call(Signature { bare_name: "clamp", call_type: Method, arity: 2 }, 43), Pop, End, End] }
+00: Constant(0: Num(1))
+01: Boolean false
+02: Constant(1: Num(2))
+03: Call(Method: clamp(_,_) 43)
+04: Pop
+05: End
+06: End

@@ -1,0 +1,42 @@
+Function { constants: [String("before"), String("after"), String("Foo"), Fn(), Fn()], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(1), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(2), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 11 }), Pop, Closure(3, []), Load(Variable { scope: Module, index: 11 }), Method(true, 43), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "method", call_type: Getter, arity: 0 }, 43), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 3 }), Closure(4, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: String("before"))
+01: Store(Module 10)
+02: Pop
+03: Load(Module 9: Class("System"))
+04: Load(Module 10: Null)
+05: Call(Method: print(_) 42)
+06: Pop
+07: Constant(1: String("after"))
+08: Store(Module 10)
+09: Load(Module 10: Null)
+10: Pop
+11: Load(Module 9: Class("System"))
+12: Load(Module 10: Null)
+13: Call(Method: print(_) 42)
+14: Pop
+15: Constant(2: String("Foo"))
+16: Load(Module 0: Class("Object"))
+17: Class(0 fields)
+18: Store(Module 11)
+19: Pop
+20: Closure(3, [])
+21: Load(Module 11: Null)
+22: Method(static 43: method)
+23: Load(Module 11: Null)
+24: Call(Getter: method 43)
+25: Pop
+26: Load(Module 9: Class("System"))
+27: Load(Module 10: Null)
+28: Call(Method: print(_) 42)
+29: Pop
+30: Load(Module 3: Class("Fn"))
+31: Closure(4, [])
+32: Call(Method: new(_) 24)
+33: Call(Method: call() 26)
+34: Pop
+35: Load(Module 9: Class("System"))
+36: Load(Module 10: Null)
+37: Call(Method: print(_) 42)
+38: Pop
+39: End
+40: End

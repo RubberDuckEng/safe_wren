@@ -1,0 +1,55 @@
+Function { constants: [Num(1), Num(1)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Or(1), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(1), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(3), Boolean(false), Or(1), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(1), Boolean(false), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(3), Boolean(false), Or(1), Boolean(false), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Or(7), Load(Variable { scope: Module, index: 9 }), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Or(3), Load(Variable { scope: Module, index: 9 }), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Or(1), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: Num(1))
+02: Or(1)
+03: Boolean true
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Boolean false
+08: Or(1)
+09: Constant(1: Num(1))
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Boolean false
+14: Or(3)
+15: Boolean false
+16: Or(1)
+17: Boolean true
+18: Call(Method: print(_) 42)
+19: Pop
+20: Load(Module 9: Class("System"))
+21: Boolean false
+22: Or(1)
+23: Boolean false
+24: Call(Method: print(_) 42)
+25: Pop
+26: Load(Module 9: Class("System"))
+27: Boolean false
+28: Or(3)
+29: Boolean false
+30: Or(1)
+31: Boolean false
+32: Call(Method: print(_) 42)
+33: Pop
+34: Load(Module 9: Class("System"))
+35: Boolean false
+36: Call(Method: print(_) 42)
+37: Or(7)
+38: Load(Module 9: Class("System"))
+39: Boolean true
+40: Call(Method: print(_) 42)
+41: Or(3)
+42: Load(Module 9: Class("System"))
+43: Boolean true
+44: Call(Method: print(_) 42)
+45: Pop
+46: Load(Module 9: Class("System"))
+47: Boolean true
+48: Or(1)
+49: Boolean true
+50: Call(Method: print(_) 42)
+51: Pop
+52: End
+53: End

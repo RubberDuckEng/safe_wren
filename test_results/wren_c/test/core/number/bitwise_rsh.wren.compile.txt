@@ -1,0 +1,45 @@
+Function { constants: [Num(0), Num(0), Num(1), Num(0), Num(0), Num(1), Num(1), Num(1), Num(2863311530), Num(1), Num(4042322160), Num(1), Num(4294967295), Num(1)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Call(Signature { bare_name: ">>", call_type: Method, arity: 1 }, 21), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Constant(3), Call(Signature { bare_name: ">>", call_type: Method, arity: 1 }, 21), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Constant(5), Call(Signature { bare_name: ">>", call_type: Method, arity: 1 }, 21), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Constant(7), Call(Signature { bare_name: ">>", call_type: Method, arity: 1 }, 21), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Constant(9), Call(Signature { bare_name: ">>", call_type: Method, arity: 1 }, 21), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(10), Constant(11), Call(Signature { bare_name: ">>", call_type: Method, arity: 1 }, 21), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(12), Constant(13), Call(Signature { bare_name: ">>", call_type: Method, arity: 1 }, 21), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: Num(0))
+02: Constant(1: Num(0))
+03: Call(Method: >>(_) 21)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Constant(2: Num(1))
+08: Constant(3: Num(0))
+09: Call(Method: >>(_) 21)
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Constant(4: Num(0))
+14: Constant(5: Num(1))
+15: Call(Method: >>(_) 21)
+16: Call(Method: print(_) 42)
+17: Pop
+18: Load(Module 9: Class("System"))
+19: Constant(6: Num(1))
+20: Constant(7: Num(1))
+21: Call(Method: >>(_) 21)
+22: Call(Method: print(_) 42)
+23: Pop
+24: Load(Module 9: Class("System"))
+25: Constant(8: Num(2863311530))
+26: Constant(9: Num(1))
+27: Call(Method: >>(_) 21)
+28: Call(Method: print(_) 42)
+29: Pop
+30: Load(Module 9: Class("System"))
+31: Constant(10: Num(4042322160))
+32: Constant(11: Num(1))
+33: Call(Method: >>(_) 21)
+34: Call(Method: print(_) 42)
+35: Pop
+36: Load(Module 9: Class("System"))
+37: Constant(12: Num(4294967295))
+38: Constant(13: Num(1))
+39: Call(Method: >>(_) 21)
+40: Call(Method: print(_) 42)
+41: Pop
+42: End
+43: End

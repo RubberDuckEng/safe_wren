@@ -1,0 +1,6 @@
+Function { constants: [], code: [Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "new", call_type: Method, arity: 0 }, 43), Pop, End, End] }
+00: Load(Module 0: Class("Object"))
+01: Call(Method: new() 43)
+02: Pop
+03: End
+04: End

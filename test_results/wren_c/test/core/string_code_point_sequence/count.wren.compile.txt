@@ -1,0 +1,53 @@
+Function { constants: [String(""), String("a string"), String("\0"), String("a\0b"), String("\0c"), String("a\0b"), String("\0c"), String("søméஃthîng"), String("\xefok\xf7")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(5), Constant(6), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(7), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String(""))
+02: Call(Getter: codePoints 43)
+03: Call(Getter: count 44)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Constant(1: String("a string"))
+08: Call(Getter: codePoints 43)
+09: Call(Getter: count 44)
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Constant(2: String("\0"))
+14: Call(Getter: codePoints 43)
+15: Call(Getter: count 44)
+16: Call(Method: print(_) 42)
+17: Pop
+18: Load(Module 9: Class("System"))
+19: Constant(3: String("a\0b"))
+20: Call(Getter: codePoints 43)
+21: Call(Getter: count 44)
+22: Call(Method: print(_) 42)
+23: Pop
+24: Load(Module 9: Class("System"))
+25: Constant(4: String("\0c"))
+26: Call(Getter: codePoints 43)
+27: Call(Getter: count 44)
+28: Call(Method: print(_) 42)
+29: Pop
+30: Load(Module 9: Class("System"))
+31: Constant(5: String("a\0b"))
+32: Constant(6: String("\0c"))
+33: Call(Method: +(_) 6)
+34: Call(Getter: codePoints 43)
+35: Call(Getter: count 44)
+36: Call(Method: print(_) 42)
+37: Pop
+38: Load(Module 9: Class("System"))
+39: Constant(7: String("søméஃthîng"))
+40: Call(Getter: codePoints 43)
+41: Call(Getter: count 44)
+42: Call(Method: print(_) 42)
+43: Pop
+44: Load(Module 9: Class("System"))
+45: Constant(8: String("\xefok\xf7"))
+46: Call(Getter: codePoints 43)
+47: Call(Getter: count 44)
+48: Call(Method: print(_) 42)
+49: Pop
+50: End
+51: End

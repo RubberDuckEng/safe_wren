@@ -1,0 +1,1 @@
+WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'__field\'") }

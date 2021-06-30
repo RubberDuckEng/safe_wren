@@ -1,0 +1,34 @@
+Function { constants: [String("good"), String("bad"), String("bad"), String("good"), String("block")], code: [Boolean(true), JumpIfFalse(5), Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(4), Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Boolean(false), JumpIfFalse(5), Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(4), Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Boolean(false), JumpIfFalse(3), Null, Pop, Jump(4), Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Boolean true
+01: JumpIfFalse(5)
+02: Load(Module 9: Class("System"))
+03: Constant(0: String("good"))
+04: Call(Method: print(_) 42)
+05: Pop
+06: Jump(4)
+07: Load(Module 9: Class("System"))
+08: Constant(1: String("bad"))
+09: Call(Method: print(_) 42)
+10: Pop
+11: Boolean false
+12: JumpIfFalse(5)
+13: Load(Module 9: Class("System"))
+14: Constant(2: String("bad"))
+15: Call(Method: print(_) 42)
+16: Pop
+17: Jump(4)
+18: Load(Module 9: Class("System"))
+19: Constant(3: String("good"))
+20: Call(Method: print(_) 42)
+21: Pop
+22: Boolean false
+23: JumpIfFalse(3)
+24: Null
+25: Pop
+26: Jump(4)
+27: Load(Module 9: Class("System"))
+28: Constant(4: String("block"))
+29: Call(Method: print(_) 42)
+30: Pop
+31: End
+32: End

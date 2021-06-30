@@ -1,0 +1,1 @@
+WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 0..1, token: Hash, line: 1 }") }

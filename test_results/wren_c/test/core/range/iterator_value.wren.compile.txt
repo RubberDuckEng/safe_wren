@@ -1,0 +1,45 @@
+Function { constants: [Num(1), Num(3), Num(1), Num(2), Num(3), Num(2), Num(5), String("s")], code: [Constant(0), Constant(1), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(3), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(4), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(5), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(6), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(7), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: Num(1))
+01: Constant(1: Num(3))
+02: Call(Method: ..(_) 15)
+03: Store(Module 10)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Load(Module 10: Null)
+07: Constant(2: Num(1))
+08: Call(Method: iteratorValue(_) 23)
+09: Call(Method: print(_) 42)
+10: Pop
+11: Load(Module 9: Class("System"))
+12: Load(Module 10: Null)
+13: Constant(3: Num(2))
+14: Call(Method: iteratorValue(_) 23)
+15: Call(Method: print(_) 42)
+16: Pop
+17: Load(Module 9: Class("System"))
+18: Load(Module 10: Null)
+19: Constant(4: Num(3))
+20: Call(Method: iteratorValue(_) 23)
+21: Call(Method: print(_) 42)
+22: Pop
+23: Load(Module 9: Class("System"))
+24: Load(Module 10: Null)
+25: Constant(5: Num(2))
+26: Call(Method: - 8)
+27: Call(Method: iteratorValue(_) 23)
+28: Call(Method: print(_) 42)
+29: Pop
+30: Load(Module 9: Class("System"))
+31: Load(Module 10: Null)
+32: Constant(6: Num(5))
+33: Call(Method: iteratorValue(_) 23)
+34: Call(Method: print(_) 42)
+35: Pop
+36: Load(Module 9: Class("System"))
+37: Load(Module 10: Null)
+38: Constant(7: String("s"))
+39: Call(Method: iteratorValue(_) 23)
+40: Call(Method: print(_) 42)
+41: Pop
+42: End
+43: End

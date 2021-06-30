@@ -1,0 +1,12 @@
+Function { constants: [Num(1), Num(2)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Constant(1), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: Num(1))
+01: Store(Module 10)
+02: Pop
+03: Constant(1: Num(2))
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Load(Module 10: Null)
+07: Call(Method: print(_) 42)
+08: Pop
+09: End
+10: End

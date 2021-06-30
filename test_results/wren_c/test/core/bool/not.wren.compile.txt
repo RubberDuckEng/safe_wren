@@ -1,0 +1,19 @@
+Function { constants: [], code: [Load(Variable { scope: Module, index: 9 }), Boolean(true), Call(Signature { bare_name: "!", call_type: Method, arity: 0 }, 0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Call(Signature { bare_name: "!", call_type: Method, arity: 0 }, 0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Call(Signature { bare_name: "!", call_type: Method, arity: 0 }, 0), Call(Signature { bare_name: "!", call_type: Method, arity: 0 }, 0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Boolean true
+02: Call(Method: ! 0)
+03: Call(Method: print(_) 42)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Boolean false
+07: Call(Method: ! 0)
+08: Call(Method: print(_) 42)
+09: Pop
+10: Load(Module 9: Class("System"))
+11: Boolean true
+12: Call(Method: ! 0)
+13: Call(Method: ! 0)
+14: Call(Method: print(_) 42)
+15: Pop
+16: End
+17: End

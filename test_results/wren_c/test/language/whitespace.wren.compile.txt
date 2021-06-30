@@ -1,0 +1,39 @@
+Function { constants: [String("ok"), String("ok"), String("ok"), String("ok"), String("ok"), String("ok"), String("ok"), String("ok"), String("ok")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(5), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(7), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String("ok"))
+02: Call(Method: print(_) 42)
+03: Pop
+04: Load(Module 9: Class("System"))
+05: Constant(1: String("ok"))
+06: Call(Method: print(_) 42)
+07: Pop
+08: Load(Module 9: Class("System"))
+09: Constant(2: String("ok"))
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Constant(3: String("ok"))
+14: Call(Method: print(_) 42)
+15: Pop
+16: Load(Module 9: Class("System"))
+17: Constant(4: String("ok"))
+18: Call(Method: print(_) 42)
+19: Pop
+20: Load(Module 9: Class("System"))
+21: Constant(5: String("ok"))
+22: Call(Method: print(_) 42)
+23: Pop
+24: Load(Module 9: Class("System"))
+25: Constant(6: String("ok"))
+26: Call(Method: print(_) 42)
+27: Pop
+28: Load(Module 9: Class("System"))
+29: Constant(7: String("ok"))
+30: Call(Method: print(_) 42)
+31: Pop
+32: Load(Module 9: Class("System"))
+33: Constant(8: String("ok"))
+34: Call(Method: print(_) 42)
+35: Pop
+36: End
+37: End

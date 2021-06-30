@@ -1,0 +1,48 @@
+Function { constants: [Num(0), Num(2), Num(1), String("outer %(i)"), Num(2), Num(0), Num(2), Num(1), Num(2), String("inner %(j)")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 10 }), Constant(1), Call(Signature { bare_name: "<=", call_type: Method, arity: 1 }, 12), JumpIfFalse(38), Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 10 }), Constant(4), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), JumpIfFalse(1), Loop(19), Constant(5), Load(Variable { scope: Local, index: 0 }), Constant(6), Call(Signature { bare_name: "<=", call_type: Method, arity: 1 }, 12), JumpIfFalse(16), Load(Variable { scope: Local, index: 0 }), Constant(7), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 0 }), Pop, Load(Variable { scope: Local, index: 0 }), Constant(8), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), JumpIfFalse(1), Loop(15), Load(Variable { scope: Module, index: 9 }), Constant(9), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Loop(20), Pop, Loop(42), End, End] }
+00: Constant(0: Num(0))
+01: Store(Module 10)
+02: Pop
+03: Load(Module 10: Null)
+04: Constant(1: Num(2))
+05: Call(Method: <=(_) 12)
+06: JumpIfFalse(38)
+07: Load(Module 10: Null)
+08: Constant(2: Num(1))
+09: Call(Method: +(_) 6)
+10: Store(Module 10)
+11: Load(Module 10: Null)
+12: Pop
+13: Load(Module 9: Class("System"))
+14: Constant(3: String("outer %(i)"))
+15: Call(Method: print(_) 42)
+16: Pop
+17: Load(Module 10: Null)
+18: Constant(4: Num(2))
+19: Call(Method: ==(_) 1)
+20: JumpIfFalse(1)
+21: Loop(19)
+22: Constant(5: Num(0))
+23: Load(Local 0)
+24: Constant(6: Num(2))
+25: Call(Method: <=(_) 12)
+26: JumpIfFalse(16)
+27: Load(Local 0)
+28: Constant(7: Num(1))
+29: Call(Method: +(_) 6)
+30: Store(Local 0)
+31: Load(Local 0)
+32: Pop
+33: Load(Local 0)
+34: Constant(8: Num(2))
+35: Call(Method: ==(_) 1)
+36: JumpIfFalse(1)
+37: Loop(15)
+38: Load(Module 9: Class("System"))
+39: Constant(9: String("inner %(j)"))
+40: Call(Method: print(_) 42)
+41: Pop
+42: Loop(20)
+43: Pop
+44: Loop(42)
+45: End
+46: End

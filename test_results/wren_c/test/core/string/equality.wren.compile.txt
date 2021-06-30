@@ -1,0 +1,117 @@
+Function { constants: [String(""), String(""), String("abcd"), String("abcd"), String("abcd"), String("d"), String("e"), String("abcd"), String(""), String("abcd"), String("1"), Num(1), String("true"), String(""), String(""), String("abcd"), String("abcd"), String("abcd"), String("d"), String("e"), String("abcd"), String(""), String("abcd"), String("1"), Num(1), String("true"), String("vålue"), String("value"), String("vålue"), String("vålue"), String("a\0b\0c"), String("a"), String("a\0b\0c"), String("abc"), String("a\0b\0c"), String("a\0b\0c")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Constant(3), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Constant(5), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Constant(7), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Constant(9), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(10), Constant(11), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(12), Boolean(true), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(13), Constant(14), Call(Signature { bare_name: "!=", call_type: Method, arity: 1 }, 2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(15), Constant(16), Call(Signature { bare_name: "!=", call_type: Method, arity: 1 }, 2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(17), Constant(18), Call(Signature { bare_name: "!=", call_type: Method, arity: 1 }, 2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(19), Constant(20), Call(Signature { bare_name: "!=", call_type: Method, arity: 1 }, 2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(21), Constant(22), Call(Signature { bare_name: "!=", call_type: Method, arity: 1 }, 2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(23), Constant(24), Call(Signature { bare_name: "!=", call_type: Method, arity: 1 }, 2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(25), Boolean(true), Call(Signature { bare_name: "!=", call_type: Method, arity: 1 }, 2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(26), Constant(27), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(28), Constant(29), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(30), Constant(31), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(32), Constant(33), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(34), Constant(35), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String(""))
+02: Constant(1: String(""))
+03: Call(Method: ==(_) 1)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Constant(2: String("abcd"))
+08: Constant(3: String("abcd"))
+09: Call(Method: ==(_) 1)
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Constant(4: String("abcd"))
+14: Constant(5: String("d"))
+15: Call(Method: ==(_) 1)
+16: Call(Method: print(_) 42)
+17: Pop
+18: Load(Module 9: Class("System"))
+19: Constant(6: String("e"))
+20: Constant(7: String("abcd"))
+21: Call(Method: ==(_) 1)
+22: Call(Method: print(_) 42)
+23: Pop
+24: Load(Module 9: Class("System"))
+25: Constant(8: String(""))
+26: Constant(9: String("abcd"))
+27: Call(Method: ==(_) 1)
+28: Call(Method: print(_) 42)
+29: Pop
+30: Load(Module 9: Class("System"))
+31: Constant(10: String("1"))
+32: Constant(11: Num(1))
+33: Call(Method: ==(_) 1)
+34: Call(Method: print(_) 42)
+35: Pop
+36: Load(Module 9: Class("System"))
+37: Constant(12: String("true"))
+38: Boolean true
+39: Call(Method: ==(_) 1)
+40: Call(Method: print(_) 42)
+41: Pop
+42: Load(Module 9: Class("System"))
+43: Constant(13: String(""))
+44: Constant(14: String(""))
+45: Call(Method: !=(_) 2)
+46: Call(Method: print(_) 42)
+47: Pop
+48: Load(Module 9: Class("System"))
+49: Constant(15: String("abcd"))
+50: Constant(16: String("abcd"))
+51: Call(Method: !=(_) 2)
+52: Call(Method: print(_) 42)
+53: Pop
+54: Load(Module 9: Class("System"))
+55: Constant(17: String("abcd"))
+56: Constant(18: String("d"))
+57: Call(Method: !=(_) 2)
+58: Call(Method: print(_) 42)
+59: Pop
+60: Load(Module 9: Class("System"))
+61: Constant(19: String("e"))
+62: Constant(20: String("abcd"))
+63: Call(Method: !=(_) 2)
+64: Call(Method: print(_) 42)
+65: Pop
+66: Load(Module 9: Class("System"))
+67: Constant(21: String(""))
+68: Constant(22: String("abcd"))
+69: Call(Method: !=(_) 2)
+70: Call(Method: print(_) 42)
+71: Pop
+72: Load(Module 9: Class("System"))
+73: Constant(23: String("1"))
+74: Constant(24: Num(1))
+75: Call(Method: !=(_) 2)
+76: Call(Method: print(_) 42)
+77: Pop
+78: Load(Module 9: Class("System"))
+79: Constant(25: String("true"))
+80: Boolean true
+81: Call(Method: !=(_) 2)
+82: Call(Method: print(_) 42)
+83: Pop
+84: Load(Module 9: Class("System"))
+85: Constant(26: String("vålue"))
+86: Constant(27: String("value"))
+87: Call(Method: ==(_) 1)
+88: Call(Method: print(_) 42)
+89: Pop
+90: Load(Module 9: Class("System"))
+91: Constant(28: String("vålue"))
+92: Constant(29: String("vålue"))
+93: Call(Method: ==(_) 1)
+94: Call(Method: print(_) 42)
+95: Pop
+96: Load(Module 9: Class("System"))
+97: Constant(30: String("a\0b\0c"))
+98: Constant(31: String("a"))
+99: Call(Method: ==(_) 1)
+100: Call(Method: print(_) 42)
+101: Pop
+102: Load(Module 9: Class("System"))
+103: Constant(32: String("a\0b\0c"))
+104: Constant(33: String("abc"))
+105: Call(Method: ==(_) 1)
+106: Call(Method: print(_) 42)
+107: Pop
+108: Load(Module 9: Class("System"))
+109: Constant(34: String("a\0b\0c"))
+110: Constant(35: String("a\0b\0c"))
+111: Call(Method: ==(_) 1)
+112: Call(Method: print(_) 42)
+113: Pop
+114: End
+115: End

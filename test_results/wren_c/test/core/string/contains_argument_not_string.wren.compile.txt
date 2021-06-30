@@ -1,0 +1,7 @@
+Function { constants: [String("foo"), Num(1)], code: [Constant(0), Constant(1), Call(Signature { bare_name: "contains", call_type: Method, arity: 1 }, 43), Pop, End, End] }
+00: Constant(0: String("foo"))
+01: Constant(1: Num(1))
+02: Call(Method: contains(_) 43)
+03: Pop
+04: End
+05: End

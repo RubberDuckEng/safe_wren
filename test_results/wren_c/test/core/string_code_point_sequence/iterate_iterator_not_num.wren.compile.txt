@@ -1,0 +1,8 @@
+Function { constants: [String("s"), String("2")], code: [Constant(0), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Constant(1), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Pop, End, End] }
+00: Constant(0: String("s"))
+01: Call(Getter: codePoints 43)
+02: Constant(1: String("2"))
+03: Call(Method: iterate(_) 22)
+04: Pop
+05: End
+06: End

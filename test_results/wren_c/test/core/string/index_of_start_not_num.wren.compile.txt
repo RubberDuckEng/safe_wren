@@ -1,0 +1,12 @@
+Function { constants: [String("abcd"), String("bc"), String("not num"), String("after")], code: [Constant(0), Constant(1), Constant(2), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 2 }, 43), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: String("abcd"))
+01: Constant(1: String("bc"))
+02: Constant(2: String("not num"))
+03: Call(Method: indexOf(_,_) 43)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Constant(3: String("after"))
+07: Call(Method: print(_) 42)
+08: Pop
+09: End
+10: End

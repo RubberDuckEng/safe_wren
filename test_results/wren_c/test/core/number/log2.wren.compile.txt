@@ -1,0 +1,24 @@
+Function { constants: [Num(1024), Num(2048), Num(100), Num(1)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "log2", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "log2", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "log2", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "log2", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: Num(1024))
+02: Call(Getter: log2 43)
+03: Call(Method: print(_) 42)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Constant(1: Num(2048))
+07: Call(Getter: log2 43)
+08: Call(Method: print(_) 42)
+09: Pop
+10: Load(Module 9: Class("System"))
+11: Constant(2: Num(100))
+12: Call(Getter: log2 43)
+13: Call(Method: print(_) 42)
+14: Pop
+15: Load(Module 9: Class("System"))
+16: Constant(3: Num(1))
+17: Call(Method: - 8)
+18: Call(Getter: log2 43)
+19: Call(Method: print(_) 42)
+20: Pop
+21: End
+22: End

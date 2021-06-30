@@ -1,0 +1,12 @@
+Function { constants: [String("ok")], code: [Boolean(true), JumpIfFalse(0), Boolean(false), JumpIfFalse(1), Jump(0), Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Boolean true
+01: JumpIfFalse(0)
+02: Boolean false
+03: JumpIfFalse(1)
+04: Jump(0)
+05: Load(Module 9: Class("System"))
+06: Constant(0: String("ok"))
+07: Call(Method: print(_) 42)
+08: Pop
+09: End
+10: End

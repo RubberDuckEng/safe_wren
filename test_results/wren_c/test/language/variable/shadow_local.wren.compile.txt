@@ -1,0 +1,15 @@
+Function { constants: [String("local"), String("shadow")], code: [Constant(0), Constant(1), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 0 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 0 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, End, End] }
+00: Constant(0: String("local"))
+01: Constant(1: String("shadow"))
+02: Load(Module 9: Class("System"))
+03: Load(Local 0)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Pop
+07: Load(Module 9: Class("System"))
+08: Load(Local 0)
+09: Call(Method: print(_) 42)
+10: Pop
+11: Pop
+12: End
+13: End

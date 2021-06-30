@@ -1,0 +1,19 @@
+Function { constants: [String("Foo"), Fn(), String("Bar")], code: [Constant(0), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 10 }), Pop, Closure(1, []), Load(Variable { scope: Module, index: 10 }), Method(true, 43), Constant(2), Load(Variable { scope: Module, index: 10 }), Class(0), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "methodOnFoo", call_type: Getter, arity: 0 }, 43), Pop, End, End] }
+00: Constant(0: String("Foo"))
+01: Load(Module 0: Class("Object"))
+02: Class(0 fields)
+03: Store(Module 10)
+04: Pop
+05: Closure(1, [])
+06: Load(Module 10: Null)
+07: Method(static 43: methodOnFoo)
+08: Constant(2: String("Bar"))
+09: Load(Module 10: Null)
+10: Class(0 fields)
+11: Store(Module 11)
+12: Pop
+13: Load(Module 11: Null)
+14: Call(Getter: methodOnFoo 43)
+15: Pop
+16: End
+17: End

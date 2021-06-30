@@ -1,0 +1,36 @@
+Function { constants: [String(""), String(""), String("blah"), String("blah"), String("a\0b\0c"), String("a\0b\0c"), String("a\0b\0c"), String("a"), String("a\0b\0c")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "toString", call_type: Getter, arity: 0 }, 43), Constant(1), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "toString", call_type: Getter, arity: 0 }, 43), Constant(3), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "toString", call_type: Getter, arity: 0 }, 43), Constant(5), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Call(Signature { bare_name: "toString", call_type: Getter, arity: 0 }, 43), Constant(7), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Call(Signature { bare_name: "toString", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String(""))
+02: Call(Getter: toString 43)
+03: Constant(1: String(""))
+04: Call(Method: ==(_) 1)
+05: Call(Method: print(_) 42)
+06: Pop
+07: Load(Module 9: Class("System"))
+08: Constant(2: String("blah"))
+09: Call(Getter: toString 43)
+10: Constant(3: String("blah"))
+11: Call(Method: ==(_) 1)
+12: Call(Method: print(_) 42)
+13: Pop
+14: Load(Module 9: Class("System"))
+15: Constant(4: String("a\0b\0c"))
+16: Call(Getter: toString 43)
+17: Constant(5: String("a\0b\0c"))
+18: Call(Method: ==(_) 1)
+19: Call(Method: print(_) 42)
+20: Pop
+21: Load(Module 9: Class("System"))
+22: Constant(6: String("a\0b\0c"))
+23: Call(Getter: toString 43)
+24: Constant(7: String("a"))
+25: Call(Method: ==(_) 1)
+26: Call(Method: print(_) 42)
+27: Pop
+28: Load(Module 9: Class("System"))
+29: Constant(8: String("a\0b\0c"))
+30: Call(Getter: toString 43)
+31: Call(Method: print(_) 42)
+32: Pop
+33: End
+34: End

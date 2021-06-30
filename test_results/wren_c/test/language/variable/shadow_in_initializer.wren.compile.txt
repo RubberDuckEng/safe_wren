@@ -1,0 +1,13 @@
+Function { constants: [String("outer"), String(" inner")], code: [Constant(0), Load(Variable { scope: Local, index: 0 }), Constant(1), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 0 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Pop, End, End] }
+00: Constant(0: String("outer"))
+01: Load(Local 0)
+02: Constant(1: String(" inner"))
+03: Call(Method: +(_) 6)
+04: Load(Module 9: Class("System"))
+05: Load(Local 0)
+06: Call(Method: print(_) 42)
+07: Pop
+08: Pop
+09: Pop
+10: End
+11: End

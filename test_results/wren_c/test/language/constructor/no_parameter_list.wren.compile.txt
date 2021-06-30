@@ -1,0 +1,1 @@
+WrenError { module: "dummy_module", line: 2, error: Grammar("A constructor cannot be a getter.") }

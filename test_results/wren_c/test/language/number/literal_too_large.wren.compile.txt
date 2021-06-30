@@ -1,0 +1,6 @@
+Function { constants: [Num(inf)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, End, End] }
+00: Constant(0: Num(inf))
+01: Store(Module 10)
+02: Pop
+03: End
+04: End

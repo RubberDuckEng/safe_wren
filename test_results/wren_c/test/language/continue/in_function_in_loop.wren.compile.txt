@@ -1,0 +1,1 @@
+WrenError { module: "dummy_module", line: 4, error: Grammar("Cannot use \'continue\' outside of a loop.") }

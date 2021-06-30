@@ -1,0 +1,25 @@
+Function { constants: [Num(0), Num(4), Num(4)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "tan", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Call(Signature { bare_name: "pi", call_type: Getter, arity: 0 }, 44), Constant(1), Call(Signature { bare_name: "/", call_type: Method, arity: 1 }, 10), Call(Signature { bare_name: "tan", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Call(Signature { bare_name: "pi", call_type: Getter, arity: 0 }, 44), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Constant(2), Call(Signature { bare_name: "/", call_type: Method, arity: 1 }, 10), Call(Signature { bare_name: "tan", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: Num(0))
+02: Call(Getter: tan 43)
+03: Call(Method: print(_) 42)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Load(Module 6: Class("Num"))
+07: Call(Getter: pi 44)
+08: Constant(1: Num(4))
+09: Call(Method: /(_) 10)
+10: Call(Getter: tan 43)
+11: Call(Method: print(_) 42)
+12: Pop
+13: Load(Module 9: Class("System"))
+14: Load(Module 6: Class("Num"))
+15: Call(Getter: pi 44)
+16: Call(Method: - 8)
+17: Constant(2: Num(4))
+18: Call(Method: /(_) 10)
+19: Call(Getter: tan 43)
+20: Call(Method: print(_) 42)
+21: Pop
+22: End
+23: End

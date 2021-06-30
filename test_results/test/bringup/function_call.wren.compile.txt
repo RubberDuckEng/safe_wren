@@ -1,0 +1,33 @@
+Function { constants: [Fn(), Fn(), Fn()], code: [Load(Variable { scope: Module, index: 3 }), Closure(0, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 3 }), Closure(1, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 3 }), Closure(2, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Store(Variable { scope: Module, index: 12 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 12 }), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 3: Class("Fn"))
+01: Closure(0, [])
+02: Call(Method: new(_) 24)
+03: Store(Module 10)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Load(Module 10: Null)
+07: Call(Method: call() 26)
+08: Call(Method: print(_) 42)
+09: Pop
+10: Load(Module 3: Class("Fn"))
+11: Closure(1, [])
+12: Call(Method: new(_) 24)
+13: Store(Module 11)
+14: Pop
+15: Load(Module 9: Class("System"))
+16: Load(Module 11: Null)
+17: Call(Method: call() 26)
+18: Call(Method: print(_) 42)
+19: Pop
+20: Load(Module 3: Class("Fn"))
+21: Closure(2, [])
+22: Call(Method: new(_) 24)
+23: Store(Module 12)
+24: Pop
+25: Load(Module 9: Class("System"))
+26: Load(Module 12: Null)
+27: Call(Method: call() 26)
+28: Call(Method: print(_) 42)
+29: Pop
+30: End
+31: End

@@ -1,0 +1,161 @@
+Function { constants: [Fn(), Num(123), String("s"), Fn(), String("s"), Num(123), Fn(), String("s"), Num(123), Fn(), String("s"), Num(123), Num(123)], code: [Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Load(Variable { scope: Module, index: 4 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(0, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Load(Variable { scope: Module, index: 3 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Load(Variable { scope: Module, index: 6 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Null, Load(Variable { scope: Module, index: 5 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Load(Variable { scope: Module, index: 7 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Load(Variable { scope: Module, index: 4 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Null, Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Load(Variable { scope: Module, index: 3 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(3, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Load(Variable { scope: Module, index: 6 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Load(Variable { scope: Module, index: 5 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(5), Load(Variable { scope: Module, index: 7 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Null, Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(6, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(7), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Null, Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(9, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(10), Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(11), Load(Variable { scope: Module, index: 1 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(12), Load(Variable { scope: Module, index: 6 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Load(Module 6: Class("Num"))
+02: Load(Module 1: Class("Class"))
+03: Call(Method: is(_) 3)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Boolean true
+08: Load(Module 4: Class("Bool"))
+09: Call(Method: is(_) 3)
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Load(Module 3: Class("Fn"))
+14: Closure(0, [])
+15: Call(Method: new(_) 24)
+16: Load(Module 3: Class("Fn"))
+17: Call(Method: is(_) 3)
+18: Call(Method: print(_) 42)
+19: Pop
+20: Load(Module 9: Class("System"))
+21: Constant(1: Num(123))
+22: Load(Module 6: Class("Num"))
+23: Call(Method: is(_) 3)
+24: Call(Method: print(_) 42)
+25: Pop
+26: Load(Module 9: Class("System"))
+27: Null
+28: Load(Module 5: Class("Null"))
+29: Call(Method: is(_) 3)
+30: Call(Method: print(_) 42)
+31: Pop
+32: Load(Module 9: Class("System"))
+33: Constant(2: String("s"))
+34: Load(Module 7: Class("String"))
+35: Call(Method: is(_) 3)
+36: Call(Method: print(_) 42)
+37: Pop
+38: Load(Module 9: Class("System"))
+39: Load(Module 6: Class("Num"))
+40: Load(Module 4: Class("Bool"))
+41: Call(Method: is(_) 3)
+42: Call(Method: print(_) 42)
+43: Pop
+44: Load(Module 9: Class("System"))
+45: Null
+46: Load(Module 1: Class("Class"))
+47: Call(Method: is(_) 3)
+48: Call(Method: print(_) 42)
+49: Pop
+50: Load(Module 9: Class("System"))
+51: Boolean true
+52: Load(Module 3: Class("Fn"))
+53: Call(Method: is(_) 3)
+54: Call(Method: print(_) 42)
+55: Pop
+56: Load(Module 9: Class("System"))
+57: Load(Module 3: Class("Fn"))
+58: Closure(3, [])
+59: Call(Method: new(_) 24)
+60: Load(Module 6: Class("Num"))
+61: Call(Method: is(_) 3)
+62: Call(Method: print(_) 42)
+63: Pop
+64: Load(Module 9: Class("System"))
+65: Constant(4: String("s"))
+66: Load(Module 5: Class("Null"))
+67: Call(Method: is(_) 3)
+68: Call(Method: print(_) 42)
+69: Pop
+70: Load(Module 9: Class("System"))
+71: Constant(5: Num(123))
+72: Load(Module 7: Class("String"))
+73: Call(Method: is(_) 3)
+74: Call(Method: print(_) 42)
+75: Pop
+76: Load(Module 9: Class("System"))
+77: Load(Module 6: Class("Num"))
+78: Load(Module 0: Class("Object"))
+79: Call(Method: is(_) 3)
+80: Call(Method: print(_) 42)
+81: Pop
+82: Load(Module 9: Class("System"))
+83: Null
+84: Load(Module 0: Class("Object"))
+85: Call(Method: is(_) 3)
+86: Call(Method: print(_) 42)
+87: Pop
+88: Load(Module 9: Class("System"))
+89: Boolean true
+90: Load(Module 0: Class("Object"))
+91: Call(Method: is(_) 3)
+92: Call(Method: print(_) 42)
+93: Pop
+94: Load(Module 9: Class("System"))
+95: Load(Module 3: Class("Fn"))
+96: Closure(6, [])
+97: Call(Method: new(_) 24)
+98: Load(Module 0: Class("Object"))
+99: Call(Method: is(_) 3)
+100: Call(Method: print(_) 42)
+101: Pop
+102: Load(Module 9: Class("System"))
+103: Constant(7: String("s"))
+104: Load(Module 0: Class("Object"))
+105: Call(Method: is(_) 3)
+106: Call(Method: print(_) 42)
+107: Pop
+108: Load(Module 9: Class("System"))
+109: Constant(8: Num(123))
+110: Load(Module 0: Class("Object"))
+111: Call(Method: is(_) 3)
+112: Call(Method: print(_) 42)
+113: Pop
+114: Load(Module 9: Class("System"))
+115: Load(Module 6: Class("Num"))
+116: Load(Module 1: Class("Class"))
+117: Call(Method: is(_) 3)
+118: Call(Method: print(_) 42)
+119: Pop
+120: Load(Module 9: Class("System"))
+121: Null
+122: Load(Module 1: Class("Class"))
+123: Call(Method: is(_) 3)
+124: Call(Method: print(_) 42)
+125: Pop
+126: Load(Module 9: Class("System"))
+127: Boolean true
+128: Load(Module 1: Class("Class"))
+129: Call(Method: is(_) 3)
+130: Call(Method: print(_) 42)
+131: Pop
+132: Load(Module 9: Class("System"))
+133: Load(Module 3: Class("Fn"))
+134: Closure(9, [])
+135: Call(Method: new(_) 24)
+136: Load(Module 1: Class("Class"))
+137: Call(Method: is(_) 3)
+138: Call(Method: print(_) 42)
+139: Pop
+140: Load(Module 9: Class("System"))
+141: Constant(10: String("s"))
+142: Load(Module 1: Class("Class"))
+143: Call(Method: is(_) 3)
+144: Call(Method: print(_) 42)
+145: Pop
+146: Load(Module 9: Class("System"))
+147: Constant(11: Num(123))
+148: Load(Module 1: Class("Class"))
+149: Call(Method: is(_) 3)
+150: Call(Method: print(_) 42)
+151: Pop
+152: Load(Module 9: Class("System"))
+153: Constant(12: Num(123))
+154: Load(Module 6: Class("Num"))
+155: Call(Method: is(_) 3)
+156: Call(Method: print(_) 42)
+157: Pop
+158: End
+159: End

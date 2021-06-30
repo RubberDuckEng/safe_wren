@@ -1,0 +1,5 @@
+Function { constants: [String("\u00")], code: [Constant(0), Pop, End, End] }
+00: Constant(0: String("\u00"))
+01: Pop
+02: End
+03: End

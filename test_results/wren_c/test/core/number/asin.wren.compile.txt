@@ -1,0 +1,19 @@
+Function { constants: [Num(0), Num(1), Num(1)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "asin", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "asin", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "asin", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: Num(0))
+02: Call(Getter: asin 43)
+03: Call(Method: print(_) 42)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Constant(1: Num(1))
+07: Call(Getter: asin 43)
+08: Call(Method: print(_) 42)
+09: Pop
+10: Load(Module 9: Class("System"))
+11: Constant(2: Num(1))
+12: Call(Method: - 8)
+13: Call(Getter: asin 43)
+14: Call(Method: print(_) 42)
+15: Pop
+16: End
+17: End

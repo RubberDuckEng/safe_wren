@@ -1,0 +1,17 @@
+Function { constants: [String("a"), String("b"), String("a\0b"), String("\0c"), String("a\0b\0c")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Constant(3), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Constant(4), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String("a"))
+02: Constant(1: String("b"))
+03: Call(Method: +(_) 6)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Constant(2: String("a\0b"))
+08: Constant(3: String("\0c"))
+09: Call(Method: +(_) 6)
+10: Constant(4: String("a\0b\0c"))
+11: Call(Method: ==(_) 1)
+12: Call(Method: print(_) 42)
+13: Pop
+14: End
+15: End

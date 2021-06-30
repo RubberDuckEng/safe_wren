@@ -1,0 +1,24 @@
+Function { constants: [String("\xc0"), Num(0), String("\xe0"), Num(0), String("\xe0\xae"), Num(0)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Constant(1), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Constant(3), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Constant(5), Call(Signature { bare_name: "iteratorValue", call_type: Method, arity: 1 }, 23), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String("\xc0"))
+02: Call(Getter: codePoints 43)
+03: Constant(1: Num(0))
+04: Call(Method: iteratorValue(_) 23)
+05: Call(Method: print(_) 42)
+06: Pop
+07: Load(Module 9: Class("System"))
+08: Constant(2: String("\xe0"))
+09: Call(Getter: codePoints 43)
+10: Constant(3: Num(0))
+11: Call(Method: iteratorValue(_) 23)
+12: Call(Method: print(_) 42)
+13: Pop
+14: Load(Module 9: Class("System"))
+15: Constant(4: String("\xe0\xae"))
+16: Call(Getter: codePoints 43)
+17: Constant(5: Num(0))
+18: Call(Method: iteratorValue(_) 23)
+19: Call(Method: print(_) 42)
+20: Pop
+21: End
+22: End

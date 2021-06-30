@@ -1,0 +1,1 @@
+WrenError { module: "dummy_module", line: 3, error: Grammar("Expected end of file, found: Equals") }

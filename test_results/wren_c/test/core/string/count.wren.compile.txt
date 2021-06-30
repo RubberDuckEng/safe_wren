@@ -1,0 +1,45 @@
+Function { constants: [String(""), String("a string"), String("\0"), String("a\0b"), String("\0c"), String("a\0b"), String("\0c"), String("søméஃthîng"), String("\xefok\xf7")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(5), Constant(6), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(7), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Call(Signature { bare_name: "count", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String(""))
+02: Call(Getter: count 43)
+03: Call(Method: print(_) 42)
+04: Pop
+05: Load(Module 9: Class("System"))
+06: Constant(1: String("a string"))
+07: Call(Getter: count 43)
+08: Call(Method: print(_) 42)
+09: Pop
+10: Load(Module 9: Class("System"))
+11: Constant(2: String("\0"))
+12: Call(Getter: count 43)
+13: Call(Method: print(_) 42)
+14: Pop
+15: Load(Module 9: Class("System"))
+16: Constant(3: String("a\0b"))
+17: Call(Getter: count 43)
+18: Call(Method: print(_) 42)
+19: Pop
+20: Load(Module 9: Class("System"))
+21: Constant(4: String("\0c"))
+22: Call(Getter: count 43)
+23: Call(Method: print(_) 42)
+24: Pop
+25: Load(Module 9: Class("System"))
+26: Constant(5: String("a\0b"))
+27: Constant(6: String("\0c"))
+28: Call(Method: +(_) 6)
+29: Call(Getter: count 43)
+30: Call(Method: print(_) 42)
+31: Pop
+32: Load(Module 9: Class("System"))
+33: Constant(7: String("søméஃthîng"))
+34: Call(Getter: count 43)
+35: Call(Method: print(_) 42)
+36: Pop
+37: Load(Module 9: Class("System"))
+38: Constant(8: String("\xefok\xf7"))
+39: Call(Getter: count 43)
+40: Call(Method: print(_) 42)
+41: Pop
+42: End
+43: End

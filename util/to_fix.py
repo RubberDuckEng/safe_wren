@@ -8,6 +8,8 @@ word_counts = {}
 
 
 def collect_words(file_name):
+    if not file_name.endswith(".wren.txt"):
+        return
     with open(file_name) as results_file:
         for line in results_file:
             for word in line.split():
@@ -16,6 +18,8 @@ def collect_words(file_name):
 
 
 def collect_lines(file_name):
+    if not file_name.endswith(".wren.txt"):
+        return
     with open(file_name, encoding="utf-8") as results_file:
         for line in results_file:
             line = line.strip()

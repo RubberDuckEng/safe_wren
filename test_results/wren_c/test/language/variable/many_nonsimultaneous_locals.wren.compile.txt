@@ -1,0 +1,1031 @@
+Function { constants: [String("value a"), String("value b")], code: [Constant(0), Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Load(Variable { scope: Local, index: 2 }), Load(Variable { scope: Local, index: 3 }), Load(Variable { scope: Local, index: 4 }), Load(Variable { scope: Local, index: 5 }), Load(Variable { scope: Local, index: 6 }), Load(Variable { scope: Local, index: 7 }), Load(Variable { scope: Local, index: 8 }), Load(Variable { scope: Local, index: 9 }), Load(Variable { scope: Local, index: 10 }), Load(Variable { scope: Local, index: 11 }), Load(Variable { scope: Local, index: 12 }), Load(Variable { scope: Local, index: 13 }), Load(Variable { scope: Local, index: 14 }), Load(Variable { scope: Local, index: 15 }), Load(Variable { scope: Local, index: 16 }), Load(Variable { scope: Local, index: 17 }), Load(Variable { scope: Local, index: 18 }), Load(Variable { scope: Local, index: 19 }), Load(Variable { scope: Local, index: 20 }), Load(Variable { scope: Local, index: 21 }), Load(Variable { scope: Local, index: 22 }), Load(Variable { scope: Local, index: 23 }), Load(Variable { scope: Local, index: 24 }), Load(Variable { scope: Local, index: 25 }), Load(Variable { scope: Local, index: 26 }), Load(Variable { scope: Local, index: 27 }), Load(Variable { scope: Local, index: 28 }), Load(Variable { scope: Local, index: 29 }), Load(Variable { scope: Local, index: 30 }), Load(Variable { scope: Local, index: 31 }), Load(Variable { scope: Local, index: 32 }), Load(Variable { scope: Local, index: 33 }), Load(Variable { scope: Local, index: 34 }), Load(Variable { scope: Local, index: 35 }), Load(Variable { scope: Local, index: 36 }), Load(Variable { scope: Local, index: 37 }), Load(Variable { scope: Local, index: 38 }), Load(Variable { scope: Local, index: 39 }), Load(Variable { scope: Local, index: 40 }), Load(Variable { scope: Local, index: 41 }), Load(Variable { scope: Local, index: 42 }), Load(Variable { scope: Local, index: 43 }), Load(Variable { scope: Local, index: 44 }), Load(Variable { scope: Local, index: 45 }), Load(Variable { scope: Local, index: 46 }), Load(Variable { scope: Local, index: 47 }), Load(Variable { scope: Local, index: 48 }), Load(Variable { scope: Local, index: 49 }), Load(Variable { scope: Local, index: 50 }), Load(Variable { scope: Local, index: 51 }), Load(Variable { scope: Local, index: 52 }), Load(Variable { scope: Local, index: 53 }), Load(Variable { scope: Local, index: 54 }), Load(Variable { scope: Local, index: 55 }), Load(Variable { scope: Local, index: 56 }), Load(Variable { scope: Local, index: 57 }), Load(Variable { scope: Local, index: 58 }), Load(Variable { scope: Local, index: 59 }), Load(Variable { scope: Local, index: 60 }), Load(Variable { scope: Local, index: 61 }), Load(Variable { scope: Local, index: 62 }), Load(Variable { scope: Local, index: 63 }), Load(Variable { scope: Local, index: 64 }), Load(Variable { scope: Local, index: 65 }), Load(Variable { scope: Local, index: 66 }), Load(Variable { scope: Local, index: 67 }), Load(Variable { scope: Local, index: 68 }), Load(Variable { scope: Local, index: 69 }), Load(Variable { scope: Local, index: 70 }), Load(Variable { scope: Local, index: 71 }), Load(Variable { scope: Local, index: 72 }), Load(Variable { scope: Local, index: 73 }), Load(Variable { scope: Local, index: 74 }), Load(Variable { scope: Local, index: 75 }), Load(Variable { scope: Local, index: 76 }), Load(Variable { scope: Local, index: 77 }), Load(Variable { scope: Local, index: 78 }), Load(Variable { scope: Local, index: 79 }), Load(Variable { scope: Local, index: 80 }), Load(Variable { scope: Local, index: 81 }), Load(Variable { scope: Local, index: 82 }), Load(Variable { scope: Local, index: 83 }), Load(Variable { scope: Local, index: 84 }), Load(Variable { scope: Local, index: 85 }), Load(Variable { scope: Local, index: 86 }), Load(Variable { scope: Local, index: 87 }), Load(Variable { scope: Local, index: 88 }), Load(Variable { scope: Local, index: 89 }), Load(Variable { scope: Local, index: 90 }), Load(Variable { scope: Local, index: 91 }), Load(Variable { scope: Local, index: 92 }), Load(Variable { scope: Local, index: 93 }), Load(Variable { scope: Local, index: 94 }), Load(Variable { scope: Local, index: 95 }), Load(Variable { scope: Local, index: 96 }), Load(Variable { scope: Local, index: 97 }), Load(Variable { scope: Local, index: 98 }), Load(Variable { scope: Local, index: 99 }), Load(Variable { scope: Local, index: 100 }), Load(Variable { scope: Local, index: 101 }), Load(Variable { scope: Local, index: 102 }), Load(Variable { scope: Local, index: 103 }), Load(Variable { scope: Local, index: 104 }), Load(Variable { scope: Local, index: 105 }), Load(Variable { scope: Local, index: 106 }), Load(Variable { scope: Local, index: 107 }), Load(Variable { scope: Local, index: 108 }), Load(Variable { scope: Local, index: 109 }), Load(Variable { scope: Local, index: 110 }), Load(Variable { scope: Local, index: 111 }), Load(Variable { scope: Local, index: 112 }), Load(Variable { scope: Local, index: 113 }), Load(Variable { scope: Local, index: 114 }), Load(Variable { scope: Local, index: 115 }), Load(Variable { scope: Local, index: 116 }), Load(Variable { scope: Local, index: 117 }), Load(Variable { scope: Local, index: 118 }), Load(Variable { scope: Local, index: 119 }), Load(Variable { scope: Local, index: 120 }), Load(Variable { scope: Local, index: 121 }), Load(Variable { scope: Local, index: 122 }), Load(Variable { scope: Local, index: 123 }), Load(Variable { scope: Local, index: 124 }), Load(Variable { scope: Local, index: 125 }), Load(Variable { scope: Local, index: 126 }), Load(Variable { scope: Local, index: 127 }), Load(Variable { scope: Local, index: 128 }), Load(Variable { scope: Local, index: 129 }), Load(Variable { scope: Local, index: 130 }), Load(Variable { scope: Local, index: 131 }), Load(Variable { scope: Local, index: 132 }), Load(Variable { scope: Local, index: 133 }), Load(Variable { scope: Local, index: 134 }), Load(Variable { scope: Local, index: 135 }), Load(Variable { scope: Local, index: 136 }), Load(Variable { scope: Local, index: 137 }), Load(Variable { scope: Local, index: 138 }), Load(Variable { scope: Local, index: 139 }), Load(Variable { scope: Local, index: 140 }), Load(Variable { scope: Local, index: 141 }), Load(Variable { scope: Local, index: 142 }), Load(Variable { scope: Local, index: 143 }), Load(Variable { scope: Local, index: 144 }), Load(Variable { scope: Local, index: 145 }), Load(Variable { scope: Local, index: 146 }), Load(Variable { scope: Local, index: 147 }), Load(Variable { scope: Local, index: 148 }), Load(Variable { scope: Local, index: 149 }), Load(Variable { scope: Local, index: 150 }), Load(Variable { scope: Local, index: 151 }), Load(Variable { scope: Local, index: 152 }), Load(Variable { scope: Local, index: 153 }), Load(Variable { scope: Local, index: 154 }), Load(Variable { scope: Local, index: 155 }), Load(Variable { scope: Local, index: 156 }), Load(Variable { scope: Local, index: 157 }), Load(Variable { scope: Local, index: 158 }), Load(Variable { scope: Local, index: 159 }), Load(Variable { scope: Local, index: 160 }), Load(Variable { scope: Local, index: 161 }), Load(Variable { scope: Local, index: 162 }), Load(Variable { scope: Local, index: 163 }), Load(Variable { scope: Local, index: 164 }), Load(Variable { scope: Local, index: 165 }), Load(Variable { scope: Local, index: 166 }), Load(Variable { scope: Local, index: 167 }), Load(Variable { scope: Local, index: 168 }), Load(Variable { scope: Local, index: 169 }), Load(Variable { scope: Local, index: 170 }), Load(Variable { scope: Local, index: 171 }), Load(Variable { scope: Local, index: 172 }), Load(Variable { scope: Local, index: 173 }), Load(Variable { scope: Local, index: 174 }), Load(Variable { scope: Local, index: 175 }), Load(Variable { scope: Local, index: 176 }), Load(Variable { scope: Local, index: 177 }), Load(Variable { scope: Local, index: 178 }), Load(Variable { scope: Local, index: 179 }), Load(Variable { scope: Local, index: 180 }), Load(Variable { scope: Local, index: 181 }), Load(Variable { scope: Local, index: 182 }), Load(Variable { scope: Local, index: 183 }), Load(Variable { scope: Local, index: 184 }), Load(Variable { scope: Local, index: 185 }), Load(Variable { scope: Local, index: 186 }), Load(Variable { scope: Local, index: 187 }), Load(Variable { scope: Local, index: 188 }), Load(Variable { scope: Local, index: 189 }), Load(Variable { scope: Local, index: 190 }), Load(Variable { scope: Local, index: 191 }), Load(Variable { scope: Local, index: 192 }), Load(Variable { scope: Local, index: 193 }), Load(Variable { scope: Local, index: 194 }), Load(Variable { scope: Local, index: 195 }), Load(Variable { scope: Local, index: 196 }), Load(Variable { scope: Local, index: 197 }), Load(Variable { scope: Local, index: 198 }), Load(Variable { scope: Local, index: 199 }), Load(Variable { scope: Local, index: 200 }), Load(Variable { scope: Local, index: 201 }), Load(Variable { scope: Local, index: 202 }), Load(Variable { scope: Local, index: 203 }), Load(Variable { scope: Local, index: 204 }), Load(Variable { scope: Local, index: 205 }), Load(Variable { scope: Local, index: 206 }), Load(Variable { scope: Local, index: 207 }), Load(Variable { scope: Local, index: 208 }), Load(Variable { scope: Local, index: 209 }), Load(Variable { scope: Local, index: 210 }), Load(Variable { scope: Local, index: 211 }), Load(Variable { scope: Local, index: 212 }), Load(Variable { scope: Local, index: 213 }), Load(Variable { scope: Local, index: 214 }), Load(Variable { scope: Local, index: 215 }), Load(Variable { scope: Local, index: 216 }), Load(Variable { scope: Local, index: 217 }), Load(Variable { scope: Local, index: 218 }), Load(Variable { scope: Local, index: 219 }), Load(Variable { scope: Local, index: 220 }), Load(Variable { scope: Local, index: 221 }), Load(Variable { scope: Local, index: 222 }), Load(Variable { scope: Local, index: 223 }), Load(Variable { scope: Local, index: 224 }), Load(Variable { scope: Local, index: 225 }), Load(Variable { scope: Local, index: 226 }), Load(Variable { scope: Local, index: 227 }), Load(Variable { scope: Local, index: 228 }), Load(Variable { scope: Local, index: 229 }), Load(Variable { scope: Local, index: 230 }), Load(Variable { scope: Local, index: 231 }), Load(Variable { scope: Local, index: 232 }), Load(Variable { scope: Local, index: 233 }), Load(Variable { scope: Local, index: 234 }), Load(Variable { scope: Local, index: 235 }), Load(Variable { scope: Local, index: 236 }), Load(Variable { scope: Local, index: 237 }), Load(Variable { scope: Local, index: 238 }), Load(Variable { scope: Local, index: 239 }), Load(Variable { scope: Local, index: 240 }), Load(Variable { scope: Local, index: 241 }), Load(Variable { scope: Local, index: 242 }), Load(Variable { scope: Local, index: 243 }), Load(Variable { scope: Local, index: 244 }), Load(Variable { scope: Local, index: 245 }), Load(Variable { scope: Local, index: 246 }), Load(Variable { scope: Local, index: 247 }), Load(Variable { scope: Local, index: 248 }), Load(Variable { scope: Local, index: 249 }), Load(Variable { scope: Local, index: 250 }), Load(Variable { scope: Local, index: 251 }), Load(Variable { scope: Local, index: 252 }), Load(Variable { scope: Local, index: 253 }), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 254 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Constant(1), Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Load(Variable { scope: Local, index: 2 }), Load(Variable { scope: Local, index: 3 }), Load(Variable { scope: Local, index: 4 }), Load(Variable { scope: Local, index: 5 }), Load(Variable { scope: Local, index: 6 }), Load(Variable { scope: Local, index: 7 }), Load(Variable { scope: Local, index: 8 }), Load(Variable { scope: Local, index: 9 }), Load(Variable { scope: Local, index: 10 }), Load(Variable { scope: Local, index: 11 }), Load(Variable { scope: Local, index: 12 }), Load(Variable { scope: Local, index: 13 }), Load(Variable { scope: Local, index: 14 }), Load(Variable { scope: Local, index: 15 }), Load(Variable { scope: Local, index: 16 }), Load(Variable { scope: Local, index: 17 }), Load(Variable { scope: Local, index: 18 }), Load(Variable { scope: Local, index: 19 }), Load(Variable { scope: Local, index: 20 }), Load(Variable { scope: Local, index: 21 }), Load(Variable { scope: Local, index: 22 }), Load(Variable { scope: Local, index: 23 }), Load(Variable { scope: Local, index: 24 }), Load(Variable { scope: Local, index: 25 }), Load(Variable { scope: Local, index: 26 }), Load(Variable { scope: Local, index: 27 }), Load(Variable { scope: Local, index: 28 }), Load(Variable { scope: Local, index: 29 }), Load(Variable { scope: Local, index: 30 }), Load(Variable { scope: Local, index: 31 }), Load(Variable { scope: Local, index: 32 }), Load(Variable { scope: Local, index: 33 }), Load(Variable { scope: Local, index: 34 }), Load(Variable { scope: Local, index: 35 }), Load(Variable { scope: Local, index: 36 }), Load(Variable { scope: Local, index: 37 }), Load(Variable { scope: Local, index: 38 }), Load(Variable { scope: Local, index: 39 }), Load(Variable { scope: Local, index: 40 }), Load(Variable { scope: Local, index: 41 }), Load(Variable { scope: Local, index: 42 }), Load(Variable { scope: Local, index: 43 }), Load(Variable { scope: Local, index: 44 }), Load(Variable { scope: Local, index: 45 }), Load(Variable { scope: Local, index: 46 }), Load(Variable { scope: Local, index: 47 }), Load(Variable { scope: Local, index: 48 }), Load(Variable { scope: Local, index: 49 }), Load(Variable { scope: Local, index: 50 }), Load(Variable { scope: Local, index: 51 }), Load(Variable { scope: Local, index: 52 }), Load(Variable { scope: Local, index: 53 }), Load(Variable { scope: Local, index: 54 }), Load(Variable { scope: Local, index: 55 }), Load(Variable { scope: Local, index: 56 }), Load(Variable { scope: Local, index: 57 }), Load(Variable { scope: Local, index: 58 }), Load(Variable { scope: Local, index: 59 }), Load(Variable { scope: Local, index: 60 }), Load(Variable { scope: Local, index: 61 }), Load(Variable { scope: Local, index: 62 }), Load(Variable { scope: Local, index: 63 }), Load(Variable { scope: Local, index: 64 }), Load(Variable { scope: Local, index: 65 }), Load(Variable { scope: Local, index: 66 }), Load(Variable { scope: Local, index: 67 }), Load(Variable { scope: Local, index: 68 }), Load(Variable { scope: Local, index: 69 }), Load(Variable { scope: Local, index: 70 }), Load(Variable { scope: Local, index: 71 }), Load(Variable { scope: Local, index: 72 }), Load(Variable { scope: Local, index: 73 }), Load(Variable { scope: Local, index: 74 }), Load(Variable { scope: Local, index: 75 }), Load(Variable { scope: Local, index: 76 }), Load(Variable { scope: Local, index: 77 }), Load(Variable { scope: Local, index: 78 }), Load(Variable { scope: Local, index: 79 }), Load(Variable { scope: Local, index: 80 }), Load(Variable { scope: Local, index: 81 }), Load(Variable { scope: Local, index: 82 }), Load(Variable { scope: Local, index: 83 }), Load(Variable { scope: Local, index: 84 }), Load(Variable { scope: Local, index: 85 }), Load(Variable { scope: Local, index: 86 }), Load(Variable { scope: Local, index: 87 }), Load(Variable { scope: Local, index: 88 }), Load(Variable { scope: Local, index: 89 }), Load(Variable { scope: Local, index: 90 }), Load(Variable { scope: Local, index: 91 }), Load(Variable { scope: Local, index: 92 }), Load(Variable { scope: Local, index: 93 }), Load(Variable { scope: Local, index: 94 }), Load(Variable { scope: Local, index: 95 }), Load(Variable { scope: Local, index: 96 }), Load(Variable { scope: Local, index: 97 }), Load(Variable { scope: Local, index: 98 }), Load(Variable { scope: Local, index: 99 }), Load(Variable { scope: Local, index: 100 }), Load(Variable { scope: Local, index: 101 }), Load(Variable { scope: Local, index: 102 }), Load(Variable { scope: Local, index: 103 }), Load(Variable { scope: Local, index: 104 }), Load(Variable { scope: Local, index: 105 }), Load(Variable { scope: Local, index: 106 }), Load(Variable { scope: Local, index: 107 }), Load(Variable { scope: Local, index: 108 }), Load(Variable { scope: Local, index: 109 }), Load(Variable { scope: Local, index: 110 }), Load(Variable { scope: Local, index: 111 }), Load(Variable { scope: Local, index: 112 }), Load(Variable { scope: Local, index: 113 }), Load(Variable { scope: Local, index: 114 }), Load(Variable { scope: Local, index: 115 }), Load(Variable { scope: Local, index: 116 }), Load(Variable { scope: Local, index: 117 }), Load(Variable { scope: Local, index: 118 }), Load(Variable { scope: Local, index: 119 }), Load(Variable { scope: Local, index: 120 }), Load(Variable { scope: Local, index: 121 }), Load(Variable { scope: Local, index: 122 }), Load(Variable { scope: Local, index: 123 }), Load(Variable { scope: Local, index: 124 }), Load(Variable { scope: Local, index: 125 }), Load(Variable { scope: Local, index: 126 }), Load(Variable { scope: Local, index: 127 }), Load(Variable { scope: Local, index: 128 }), Load(Variable { scope: Local, index: 129 }), Load(Variable { scope: Local, index: 130 }), Load(Variable { scope: Local, index: 131 }), Load(Variable { scope: Local, index: 132 }), Load(Variable { scope: Local, index: 133 }), Load(Variable { scope: Local, index: 134 }), Load(Variable { scope: Local, index: 135 }), Load(Variable { scope: Local, index: 136 }), Load(Variable { scope: Local, index: 137 }), Load(Variable { scope: Local, index: 138 }), Load(Variable { scope: Local, index: 139 }), Load(Variable { scope: Local, index: 140 }), Load(Variable { scope: Local, index: 141 }), Load(Variable { scope: Local, index: 142 }), Load(Variable { scope: Local, index: 143 }), Load(Variable { scope: Local, index: 144 }), Load(Variable { scope: Local, index: 145 }), Load(Variable { scope: Local, index: 146 }), Load(Variable { scope: Local, index: 147 }), Load(Variable { scope: Local, index: 148 }), Load(Variable { scope: Local, index: 149 }), Load(Variable { scope: Local, index: 150 }), Load(Variable { scope: Local, index: 151 }), Load(Variable { scope: Local, index: 152 }), Load(Variable { scope: Local, index: 153 }), Load(Variable { scope: Local, index: 154 }), Load(Variable { scope: Local, index: 155 }), Load(Variable { scope: Local, index: 156 }), Load(Variable { scope: Local, index: 157 }), Load(Variable { scope: Local, index: 158 }), Load(Variable { scope: Local, index: 159 }), Load(Variable { scope: Local, index: 160 }), Load(Variable { scope: Local, index: 161 }), Load(Variable { scope: Local, index: 162 }), Load(Variable { scope: Local, index: 163 }), Load(Variable { scope: Local, index: 164 }), Load(Variable { scope: Local, index: 165 }), Load(Variable { scope: Local, index: 166 }), Load(Variable { scope: Local, index: 167 }), Load(Variable { scope: Local, index: 168 }), Load(Variable { scope: Local, index: 169 }), Load(Variable { scope: Local, index: 170 }), Load(Variable { scope: Local, index: 171 }), Load(Variable { scope: Local, index: 172 }), Load(Variable { scope: Local, index: 173 }), Load(Variable { scope: Local, index: 174 }), Load(Variable { scope: Local, index: 175 }), Load(Variable { scope: Local, index: 176 }), Load(Variable { scope: Local, index: 177 }), Load(Variable { scope: Local, index: 178 }), Load(Variable { scope: Local, index: 179 }), Load(Variable { scope: Local, index: 180 }), Load(Variable { scope: Local, index: 181 }), Load(Variable { scope: Local, index: 182 }), Load(Variable { scope: Local, index: 183 }), Load(Variable { scope: Local, index: 184 }), Load(Variable { scope: Local, index: 185 }), Load(Variable { scope: Local, index: 186 }), Load(Variable { scope: Local, index: 187 }), Load(Variable { scope: Local, index: 188 }), Load(Variable { scope: Local, index: 189 }), Load(Variable { scope: Local, index: 190 }), Load(Variable { scope: Local, index: 191 }), Load(Variable { scope: Local, index: 192 }), Load(Variable { scope: Local, index: 193 }), Load(Variable { scope: Local, index: 194 }), Load(Variable { scope: Local, index: 195 }), Load(Variable { scope: Local, index: 196 }), Load(Variable { scope: Local, index: 197 }), Load(Variable { scope: Local, index: 198 }), Load(Variable { scope: Local, index: 199 }), Load(Variable { scope: Local, index: 200 }), Load(Variable { scope: Local, index: 201 }), Load(Variable { scope: Local, index: 202 }), Load(Variable { scope: Local, index: 203 }), Load(Variable { scope: Local, index: 204 }), Load(Variable { scope: Local, index: 205 }), Load(Variable { scope: Local, index: 206 }), Load(Variable { scope: Local, index: 207 }), Load(Variable { scope: Local, index: 208 }), Load(Variable { scope: Local, index: 209 }), Load(Variable { scope: Local, index: 210 }), Load(Variable { scope: Local, index: 211 }), Load(Variable { scope: Local, index: 212 }), Load(Variable { scope: Local, index: 213 }), Load(Variable { scope: Local, index: 214 }), Load(Variable { scope: Local, index: 215 }), Load(Variable { scope: Local, index: 216 }), Load(Variable { scope: Local, index: 217 }), Load(Variable { scope: Local, index: 218 }), Load(Variable { scope: Local, index: 219 }), Load(Variable { scope: Local, index: 220 }), Load(Variable { scope: Local, index: 221 }), Load(Variable { scope: Local, index: 222 }), Load(Variable { scope: Local, index: 223 }), Load(Variable { scope: Local, index: 224 }), Load(Variable { scope: Local, index: 225 }), Load(Variable { scope: Local, index: 226 }), Load(Variable { scope: Local, index: 227 }), Load(Variable { scope: Local, index: 228 }), Load(Variable { scope: Local, index: 229 }), Load(Variable { scope: Local, index: 230 }), Load(Variable { scope: Local, index: 231 }), Load(Variable { scope: Local, index: 232 }), Load(Variable { scope: Local, index: 233 }), Load(Variable { scope: Local, index: 234 }), Load(Variable { scope: Local, index: 235 }), Load(Variable { scope: Local, index: 236 }), Load(Variable { scope: Local, index: 237 }), Load(Variable { scope: Local, index: 238 }), Load(Variable { scope: Local, index: 239 }), Load(Variable { scope: Local, index: 240 }), Load(Variable { scope: Local, index: 241 }), Load(Variable { scope: Local, index: 242 }), Load(Variable { scope: Local, index: 243 }), Load(Variable { scope: Local, index: 244 }), Load(Variable { scope: Local, index: 245 }), Load(Variable { scope: Local, index: 246 }), Load(Variable { scope: Local, index: 247 }), Load(Variable { scope: Local, index: 248 }), Load(Variable { scope: Local, index: 249 }), Load(Variable { scope: Local, index: 250 }), Load(Variable { scope: Local, index: 251 }), Load(Variable { scope: Local, index: 252 }), Load(Variable { scope: Local, index: 253 }), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 254 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, Pop, End, End] }
+00: Constant(0: String("value a"))
+01: Load(Local 0)
+02: Load(Local 1)
+03: Load(Local 2)
+04: Load(Local 3)
+05: Load(Local 4)
+06: Load(Local 5)
+07: Load(Local 6)
+08: Load(Local 7)
+09: Load(Local 8)
+10: Load(Local 9)
+11: Load(Local 10)
+12: Load(Local 11)
+13: Load(Local 12)
+14: Load(Local 13)
+15: Load(Local 14)
+16: Load(Local 15)
+17: Load(Local 16)
+18: Load(Local 17)
+19: Load(Local 18)
+20: Load(Local 19)
+21: Load(Local 20)
+22: Load(Local 21)
+23: Load(Local 22)
+24: Load(Local 23)
+25: Load(Local 24)
+26: Load(Local 25)
+27: Load(Local 26)
+28: Load(Local 27)
+29: Load(Local 28)
+30: Load(Local 29)
+31: Load(Local 30)
+32: Load(Local 31)
+33: Load(Local 32)
+34: Load(Local 33)
+35: Load(Local 34)
+36: Load(Local 35)
+37: Load(Local 36)
+38: Load(Local 37)
+39: Load(Local 38)
+40: Load(Local 39)
+41: Load(Local 40)
+42: Load(Local 41)
+43: Load(Local 42)
+44: Load(Local 43)
+45: Load(Local 44)
+46: Load(Local 45)
+47: Load(Local 46)
+48: Load(Local 47)
+49: Load(Local 48)
+50: Load(Local 49)
+51: Load(Local 50)
+52: Load(Local 51)
+53: Load(Local 52)
+54: Load(Local 53)
+55: Load(Local 54)
+56: Load(Local 55)
+57: Load(Local 56)
+58: Load(Local 57)
+59: Load(Local 58)
+60: Load(Local 59)
+61: Load(Local 60)
+62: Load(Local 61)
+63: Load(Local 62)
+64: Load(Local 63)
+65: Load(Local 64)
+66: Load(Local 65)
+67: Load(Local 66)
+68: Load(Local 67)
+69: Load(Local 68)
+70: Load(Local 69)
+71: Load(Local 70)
+72: Load(Local 71)
+73: Load(Local 72)
+74: Load(Local 73)
+75: Load(Local 74)
+76: Load(Local 75)
+77: Load(Local 76)
+78: Load(Local 77)
+79: Load(Local 78)
+80: Load(Local 79)
+81: Load(Local 80)
+82: Load(Local 81)
+83: Load(Local 82)
+84: Load(Local 83)
+85: Load(Local 84)
+86: Load(Local 85)
+87: Load(Local 86)
+88: Load(Local 87)
+89: Load(Local 88)
+90: Load(Local 89)
+91: Load(Local 90)
+92: Load(Local 91)
+93: Load(Local 92)
+94: Load(Local 93)
+95: Load(Local 94)
+96: Load(Local 95)
+97: Load(Local 96)
+98: Load(Local 97)
+99: Load(Local 98)
+100: Load(Local 99)
+101: Load(Local 100)
+102: Load(Local 101)
+103: Load(Local 102)
+104: Load(Local 103)
+105: Load(Local 104)
+106: Load(Local 105)
+107: Load(Local 106)
+108: Load(Local 107)
+109: Load(Local 108)
+110: Load(Local 109)
+111: Load(Local 110)
+112: Load(Local 111)
+113: Load(Local 112)
+114: Load(Local 113)
+115: Load(Local 114)
+116: Load(Local 115)
+117: Load(Local 116)
+118: Load(Local 117)
+119: Load(Local 118)
+120: Load(Local 119)
+121: Load(Local 120)
+122: Load(Local 121)
+123: Load(Local 122)
+124: Load(Local 123)
+125: Load(Local 124)
+126: Load(Local 125)
+127: Load(Local 126)
+128: Load(Local 127)
+129: Load(Local 128)
+130: Load(Local 129)
+131: Load(Local 130)
+132: Load(Local 131)
+133: Load(Local 132)
+134: Load(Local 133)
+135: Load(Local 134)
+136: Load(Local 135)
+137: Load(Local 136)
+138: Load(Local 137)
+139: Load(Local 138)
+140: Load(Local 139)
+141: Load(Local 140)
+142: Load(Local 141)
+143: Load(Local 142)
+144: Load(Local 143)
+145: Load(Local 144)
+146: Load(Local 145)
+147: Load(Local 146)
+148: Load(Local 147)
+149: Load(Local 148)
+150: Load(Local 149)
+151: Load(Local 150)
+152: Load(Local 151)
+153: Load(Local 152)
+154: Load(Local 153)
+155: Load(Local 154)
+156: Load(Local 155)
+157: Load(Local 156)
+158: Load(Local 157)
+159: Load(Local 158)
+160: Load(Local 159)
+161: Load(Local 160)
+162: Load(Local 161)
+163: Load(Local 162)
+164: Load(Local 163)
+165: Load(Local 164)
+166: Load(Local 165)
+167: Load(Local 166)
+168: Load(Local 167)
+169: Load(Local 168)
+170: Load(Local 169)
+171: Load(Local 170)
+172: Load(Local 171)
+173: Load(Local 172)
+174: Load(Local 173)
+175: Load(Local 174)
+176: Load(Local 175)
+177: Load(Local 176)
+178: Load(Local 177)
+179: Load(Local 178)
+180: Load(Local 179)
+181: Load(Local 180)
+182: Load(Local 181)
+183: Load(Local 182)
+184: Load(Local 183)
+185: Load(Local 184)
+186: Load(Local 185)
+187: Load(Local 186)
+188: Load(Local 187)
+189: Load(Local 188)
+190: Load(Local 189)
+191: Load(Local 190)
+192: Load(Local 191)
+193: Load(Local 192)
+194: Load(Local 193)
+195: Load(Local 194)
+196: Load(Local 195)
+197: Load(Local 196)
+198: Load(Local 197)
+199: Load(Local 198)
+200: Load(Local 199)
+201: Load(Local 200)
+202: Load(Local 201)
+203: Load(Local 202)
+204: Load(Local 203)
+205: Load(Local 204)
+206: Load(Local 205)
+207: Load(Local 206)
+208: Load(Local 207)
+209: Load(Local 208)
+210: Load(Local 209)
+211: Load(Local 210)
+212: Load(Local 211)
+213: Load(Local 212)
+214: Load(Local 213)
+215: Load(Local 214)
+216: Load(Local 215)
+217: Load(Local 216)
+218: Load(Local 217)
+219: Load(Local 218)
+220: Load(Local 219)
+221: Load(Local 220)
+222: Load(Local 221)
+223: Load(Local 222)
+224: Load(Local 223)
+225: Load(Local 224)
+226: Load(Local 225)
+227: Load(Local 226)
+228: Load(Local 227)
+229: Load(Local 228)
+230: Load(Local 229)
+231: Load(Local 230)
+232: Load(Local 231)
+233: Load(Local 232)
+234: Load(Local 233)
+235: Load(Local 234)
+236: Load(Local 235)
+237: Load(Local 236)
+238: Load(Local 237)
+239: Load(Local 238)
+240: Load(Local 239)
+241: Load(Local 240)
+242: Load(Local 241)
+243: Load(Local 242)
+244: Load(Local 243)
+245: Load(Local 244)
+246: Load(Local 245)
+247: Load(Local 246)
+248: Load(Local 247)
+249: Load(Local 248)
+250: Load(Local 249)
+251: Load(Local 250)
+252: Load(Local 251)
+253: Load(Local 252)
+254: Load(Local 253)
+255: Load(Module 9: Class("System"))
+256: Load(Local 254)
+257: Call(Method: print(_) 42)
+258: Pop
+259: Pop
+260: Pop
+261: Pop
+262: Pop
+263: Pop
+264: Pop
+265: Pop
+266: Pop
+267: Pop
+268: Pop
+269: Pop
+270: Pop
+271: Pop
+272: Pop
+273: Pop
+274: Pop
+275: Pop
+276: Pop
+277: Pop
+278: Pop
+279: Pop
+280: Pop
+281: Pop
+282: Pop
+283: Pop
+284: Pop
+285: Pop
+286: Pop
+287: Pop
+288: Pop
+289: Pop
+290: Pop
+291: Pop
+292: Pop
+293: Pop
+294: Pop
+295: Pop
+296: Pop
+297: Pop
+298: Pop
+299: Pop
+300: Pop
+301: Pop
+302: Pop
+303: Pop
+304: Pop
+305: Pop
+306: Pop
+307: Pop
+308: Pop
+309: Pop
+310: Pop
+311: Pop
+312: Pop
+313: Pop
+314: Pop
+315: Pop
+316: Pop
+317: Pop
+318: Pop
+319: Pop
+320: Pop
+321: Pop
+322: Pop
+323: Pop
+324: Pop
+325: Pop
+326: Pop
+327: Pop
+328: Pop
+329: Pop
+330: Pop
+331: Pop
+332: Pop
+333: Pop
+334: Pop
+335: Pop
+336: Pop
+337: Pop
+338: Pop
+339: Pop
+340: Pop
+341: Pop
+342: Pop
+343: Pop
+344: Pop
+345: Pop
+346: Pop
+347: Pop
+348: Pop
+349: Pop
+350: Pop
+351: Pop
+352: Pop
+353: Pop
+354: Pop
+355: Pop
+356: Pop
+357: Pop
+358: Pop
+359: Pop
+360: Pop
+361: Pop
+362: Pop
+363: Pop
+364: Pop
+365: Pop
+366: Pop
+367: Pop
+368: Pop
+369: Pop
+370: Pop
+371: Pop
+372: Pop
+373: Pop
+374: Pop
+375: Pop
+376: Pop
+377: Pop
+378: Pop
+379: Pop
+380: Pop
+381: Pop
+382: Pop
+383: Pop
+384: Pop
+385: Pop
+386: Pop
+387: Pop
+388: Pop
+389: Pop
+390: Pop
+391: Pop
+392: Pop
+393: Pop
+394: Pop
+395: Pop
+396: Pop
+397: Pop
+398: Pop
+399: Pop
+400: Pop
+401: Pop
+402: Pop
+403: Pop
+404: Pop
+405: Pop
+406: Pop
+407: Pop
+408: Pop
+409: Pop
+410: Pop
+411: Pop
+412: Pop
+413: Pop
+414: Pop
+415: Pop
+416: Pop
+417: Pop
+418: Pop
+419: Pop
+420: Pop
+421: Pop
+422: Pop
+423: Pop
+424: Pop
+425: Pop
+426: Pop
+427: Pop
+428: Pop
+429: Pop
+430: Pop
+431: Pop
+432: Pop
+433: Pop
+434: Pop
+435: Pop
+436: Pop
+437: Pop
+438: Pop
+439: Pop
+440: Pop
+441: Pop
+442: Pop
+443: Pop
+444: Pop
+445: Pop
+446: Pop
+447: Pop
+448: Pop
+449: Pop
+450: Pop
+451: Pop
+452: Pop
+453: Pop
+454: Pop
+455: Pop
+456: Pop
+457: Pop
+458: Pop
+459: Pop
+460: Pop
+461: Pop
+462: Pop
+463: Pop
+464: Pop
+465: Pop
+466: Pop
+467: Pop
+468: Pop
+469: Pop
+470: Pop
+471: Pop
+472: Pop
+473: Pop
+474: Pop
+475: Pop
+476: Pop
+477: Pop
+478: Pop
+479: Pop
+480: Pop
+481: Pop
+482: Pop
+483: Pop
+484: Pop
+485: Pop
+486: Pop
+487: Pop
+488: Pop
+489: Pop
+490: Pop
+491: Pop
+492: Pop
+493: Pop
+494: Pop
+495: Pop
+496: Pop
+497: Pop
+498: Pop
+499: Pop
+500: Pop
+501: Pop
+502: Pop
+503: Pop
+504: Pop
+505: Pop
+506: Pop
+507: Pop
+508: Pop
+509: Pop
+510: Pop
+511: Pop
+512: Pop
+513: Pop
+514: Constant(1: String("value b"))
+515: Load(Local 0)
+516: Load(Local 1)
+517: Load(Local 2)
+518: Load(Local 3)
+519: Load(Local 4)
+520: Load(Local 5)
+521: Load(Local 6)
+522: Load(Local 7)
+523: Load(Local 8)
+524: Load(Local 9)
+525: Load(Local 10)
+526: Load(Local 11)
+527: Load(Local 12)
+528: Load(Local 13)
+529: Load(Local 14)
+530: Load(Local 15)
+531: Load(Local 16)
+532: Load(Local 17)
+533: Load(Local 18)
+534: Load(Local 19)
+535: Load(Local 20)
+536: Load(Local 21)
+537: Load(Local 22)
+538: Load(Local 23)
+539: Load(Local 24)
+540: Load(Local 25)
+541: Load(Local 26)
+542: Load(Local 27)
+543: Load(Local 28)
+544: Load(Local 29)
+545: Load(Local 30)
+546: Load(Local 31)
+547: Load(Local 32)
+548: Load(Local 33)
+549: Load(Local 34)
+550: Load(Local 35)
+551: Load(Local 36)
+552: Load(Local 37)
+553: Load(Local 38)
+554: Load(Local 39)
+555: Load(Local 40)
+556: Load(Local 41)
+557: Load(Local 42)
+558: Load(Local 43)
+559: Load(Local 44)
+560: Load(Local 45)
+561: Load(Local 46)
+562: Load(Local 47)
+563: Load(Local 48)
+564: Load(Local 49)
+565: Load(Local 50)
+566: Load(Local 51)
+567: Load(Local 52)
+568: Load(Local 53)
+569: Load(Local 54)
+570: Load(Local 55)
+571: Load(Local 56)
+572: Load(Local 57)
+573: Load(Local 58)
+574: Load(Local 59)
+575: Load(Local 60)
+576: Load(Local 61)
+577: Load(Local 62)
+578: Load(Local 63)
+579: Load(Local 64)
+580: Load(Local 65)
+581: Load(Local 66)
+582: Load(Local 67)
+583: Load(Local 68)
+584: Load(Local 69)
+585: Load(Local 70)
+586: Load(Local 71)
+587: Load(Local 72)
+588: Load(Local 73)
+589: Load(Local 74)
+590: Load(Local 75)
+591: Load(Local 76)
+592: Load(Local 77)
+593: Load(Local 78)
+594: Load(Local 79)
+595: Load(Local 80)
+596: Load(Local 81)
+597: Load(Local 82)
+598: Load(Local 83)
+599: Load(Local 84)
+600: Load(Local 85)
+601: Load(Local 86)
+602: Load(Local 87)
+603: Load(Local 88)
+604: Load(Local 89)
+605: Load(Local 90)
+606: Load(Local 91)
+607: Load(Local 92)
+608: Load(Local 93)
+609: Load(Local 94)
+610: Load(Local 95)
+611: Load(Local 96)
+612: Load(Local 97)
+613: Load(Local 98)
+614: Load(Local 99)
+615: Load(Local 100)
+616: Load(Local 101)
+617: Load(Local 102)
+618: Load(Local 103)
+619: Load(Local 104)
+620: Load(Local 105)
+621: Load(Local 106)
+622: Load(Local 107)
+623: Load(Local 108)
+624: Load(Local 109)
+625: Load(Local 110)
+626: Load(Local 111)
+627: Load(Local 112)
+628: Load(Local 113)
+629: Load(Local 114)
+630: Load(Local 115)
+631: Load(Local 116)
+632: Load(Local 117)
+633: Load(Local 118)
+634: Load(Local 119)
+635: Load(Local 120)
+636: Load(Local 121)
+637: Load(Local 122)
+638: Load(Local 123)
+639: Load(Local 124)
+640: Load(Local 125)
+641: Load(Local 126)
+642: Load(Local 127)
+643: Load(Local 128)
+644: Load(Local 129)
+645: Load(Local 130)
+646: Load(Local 131)
+647: Load(Local 132)
+648: Load(Local 133)
+649: Load(Local 134)
+650: Load(Local 135)
+651: Load(Local 136)
+652: Load(Local 137)
+653: Load(Local 138)
+654: Load(Local 139)
+655: Load(Local 140)
+656: Load(Local 141)
+657: Load(Local 142)
+658: Load(Local 143)
+659: Load(Local 144)
+660: Load(Local 145)
+661: Load(Local 146)
+662: Load(Local 147)
+663: Load(Local 148)
+664: Load(Local 149)
+665: Load(Local 150)
+666: Load(Local 151)
+667: Load(Local 152)
+668: Load(Local 153)
+669: Load(Local 154)
+670: Load(Local 155)
+671: Load(Local 156)
+672: Load(Local 157)
+673: Load(Local 158)
+674: Load(Local 159)
+675: Load(Local 160)
+676: Load(Local 161)
+677: Load(Local 162)
+678: Load(Local 163)
+679: Load(Local 164)
+680: Load(Local 165)
+681: Load(Local 166)
+682: Load(Local 167)
+683: Load(Local 168)
+684: Load(Local 169)
+685: Load(Local 170)
+686: Load(Local 171)
+687: Load(Local 172)
+688: Load(Local 173)
+689: Load(Local 174)
+690: Load(Local 175)
+691: Load(Local 176)
+692: Load(Local 177)
+693: Load(Local 178)
+694: Load(Local 179)
+695: Load(Local 180)
+696: Load(Local 181)
+697: Load(Local 182)
+698: Load(Local 183)
+699: Load(Local 184)
+700: Load(Local 185)
+701: Load(Local 186)
+702: Load(Local 187)
+703: Load(Local 188)
+704: Load(Local 189)
+705: Load(Local 190)
+706: Load(Local 191)
+707: Load(Local 192)
+708: Load(Local 193)
+709: Load(Local 194)
+710: Load(Local 195)
+711: Load(Local 196)
+712: Load(Local 197)
+713: Load(Local 198)
+714: Load(Local 199)
+715: Load(Local 200)
+716: Load(Local 201)
+717: Load(Local 202)
+718: Load(Local 203)
+719: Load(Local 204)
+720: Load(Local 205)
+721: Load(Local 206)
+722: Load(Local 207)
+723: Load(Local 208)
+724: Load(Local 209)
+725: Load(Local 210)
+726: Load(Local 211)
+727: Load(Local 212)
+728: Load(Local 213)
+729: Load(Local 214)
+730: Load(Local 215)
+731: Load(Local 216)
+732: Load(Local 217)
+733: Load(Local 218)
+734: Load(Local 219)
+735: Load(Local 220)
+736: Load(Local 221)
+737: Load(Local 222)
+738: Load(Local 223)
+739: Load(Local 224)
+740: Load(Local 225)
+741: Load(Local 226)
+742: Load(Local 227)
+743: Load(Local 228)
+744: Load(Local 229)
+745: Load(Local 230)
+746: Load(Local 231)
+747: Load(Local 232)
+748: Load(Local 233)
+749: Load(Local 234)
+750: Load(Local 235)
+751: Load(Local 236)
+752: Load(Local 237)
+753: Load(Local 238)
+754: Load(Local 239)
+755: Load(Local 240)
+756: Load(Local 241)
+757: Load(Local 242)
+758: Load(Local 243)
+759: Load(Local 244)
+760: Load(Local 245)
+761: Load(Local 246)
+762: Load(Local 247)
+763: Load(Local 248)
+764: Load(Local 249)
+765: Load(Local 250)
+766: Load(Local 251)
+767: Load(Local 252)
+768: Load(Local 253)
+769: Load(Module 9: Class("System"))
+770: Load(Local 254)
+771: Call(Method: print(_) 42)
+772: Pop
+773: Pop
+774: Pop
+775: Pop
+776: Pop
+777: Pop
+778: Pop
+779: Pop
+780: Pop
+781: Pop
+782: Pop
+783: Pop
+784: Pop
+785: Pop
+786: Pop
+787: Pop
+788: Pop
+789: Pop
+790: Pop
+791: Pop
+792: Pop
+793: Pop
+794: Pop
+795: Pop
+796: Pop
+797: Pop
+798: Pop
+799: Pop
+800: Pop
+801: Pop
+802: Pop
+803: Pop
+804: Pop
+805: Pop
+806: Pop
+807: Pop
+808: Pop
+809: Pop
+810: Pop
+811: Pop
+812: Pop
+813: Pop
+814: Pop
+815: Pop
+816: Pop
+817: Pop
+818: Pop
+819: Pop
+820: Pop
+821: Pop
+822: Pop
+823: Pop
+824: Pop
+825: Pop
+826: Pop
+827: Pop
+828: Pop
+829: Pop
+830: Pop
+831: Pop
+832: Pop
+833: Pop
+834: Pop
+835: Pop
+836: Pop
+837: Pop
+838: Pop
+839: Pop
+840: Pop
+841: Pop
+842: Pop
+843: Pop
+844: Pop
+845: Pop
+846: Pop
+847: Pop
+848: Pop
+849: Pop
+850: Pop
+851: Pop
+852: Pop
+853: Pop
+854: Pop
+855: Pop
+856: Pop
+857: Pop
+858: Pop
+859: Pop
+860: Pop
+861: Pop
+862: Pop
+863: Pop
+864: Pop
+865: Pop
+866: Pop
+867: Pop
+868: Pop
+869: Pop
+870: Pop
+871: Pop
+872: Pop
+873: Pop
+874: Pop
+875: Pop
+876: Pop
+877: Pop
+878: Pop
+879: Pop
+880: Pop
+881: Pop
+882: Pop
+883: Pop
+884: Pop
+885: Pop
+886: Pop
+887: Pop
+888: Pop
+889: Pop
+890: Pop
+891: Pop
+892: Pop
+893: Pop
+894: Pop
+895: Pop
+896: Pop
+897: Pop
+898: Pop
+899: Pop
+900: Pop
+901: Pop
+902: Pop
+903: Pop
+904: Pop
+905: Pop
+906: Pop
+907: Pop
+908: Pop
+909: Pop
+910: Pop
+911: Pop
+912: Pop
+913: Pop
+914: Pop
+915: Pop
+916: Pop
+917: Pop
+918: Pop
+919: Pop
+920: Pop
+921: Pop
+922: Pop
+923: Pop
+924: Pop
+925: Pop
+926: Pop
+927: Pop
+928: Pop
+929: Pop
+930: Pop
+931: Pop
+932: Pop
+933: Pop
+934: Pop
+935: Pop
+936: Pop
+937: Pop
+938: Pop
+939: Pop
+940: Pop
+941: Pop
+942: Pop
+943: Pop
+944: Pop
+945: Pop
+946: Pop
+947: Pop
+948: Pop
+949: Pop
+950: Pop
+951: Pop
+952: Pop
+953: Pop
+954: Pop
+955: Pop
+956: Pop
+957: Pop
+958: Pop
+959: Pop
+960: Pop
+961: Pop
+962: Pop
+963: Pop
+964: Pop
+965: Pop
+966: Pop
+967: Pop
+968: Pop
+969: Pop
+970: Pop
+971: Pop
+972: Pop
+973: Pop
+974: Pop
+975: Pop
+976: Pop
+977: Pop
+978: Pop
+979: Pop
+980: Pop
+981: Pop
+982: Pop
+983: Pop
+984: Pop
+985: Pop
+986: Pop
+987: Pop
+988: Pop
+989: Pop
+990: Pop
+991: Pop
+992: Pop
+993: Pop
+994: Pop
+995: Pop
+996: Pop
+997: Pop
+998: Pop
+999: Pop
+1000: Pop
+1001: Pop
+1002: Pop
+1003: Pop
+1004: Pop
+1005: Pop
+1006: Pop
+1007: Pop
+1008: Pop
+1009: Pop
+1010: Pop
+1011: Pop
+1012: Pop
+1013: Pop
+1014: Pop
+1015: Pop
+1016: Pop
+1017: Pop
+1018: Pop
+1019: Pop
+1020: Pop
+1021: Pop
+1022: Pop
+1023: Pop
+1024: Pop
+1025: Pop
+1026: Pop
+1027: Pop
+1028: End
+1029: End

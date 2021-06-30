@@ -1,0 +1,28 @@
+Function { constants: [String("before"), String("after"), String("arg")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(1), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: String("before"))
+01: Store(Module 10)
+02: Pop
+03: Load(Module 9: Class("System"))
+04: Load(Module 10: Null)
+05: Call(Method: print(_) 42)
+06: Pop
+07: Constant(1: String("after"))
+08: Store(Module 10)
+09: Load(Module 10: Null)
+10: Pop
+11: Load(Module 9: Class("System"))
+12: Load(Module 10: Null)
+13: Call(Method: print(_) 42)
+14: Pop
+15: Load(Module 9: Class("System"))
+16: Constant(2: String("arg"))
+17: Store(Module 10)
+18: Load(Module 10: Null)
+19: Call(Method: print(_) 42)
+20: Pop
+21: Load(Module 9: Class("System"))
+22: Load(Module 10: Null)
+23: Call(Method: print(_) 42)
+24: Pop
+25: End
+26: End

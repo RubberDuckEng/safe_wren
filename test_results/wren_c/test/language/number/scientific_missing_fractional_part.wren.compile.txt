@@ -1,0 +1,7 @@
+Function { constants: [Num(1)], code: [Constant(0), Call(Signature { bare_name: "e", call_type: Getter, arity: 0 }, 43), Store(Variable { scope: Module, index: 10 }), Pop, End, End] }
+00: Constant(0: Num(1))
+01: Call(Getter: e 43)
+02: Store(Module 10)
+03: Pop
+04: End
+05: End

@@ -1,0 +1,63 @@
+Function { constants: [String("something"), String("meth"), String("something"), String("some"), String("something"), String("ing"), String("something"), String("math"), String("somethingsomething"), String("meth"), String("abc abc abc"), String(" "), String("abcabcabc"), String("abc"), String("søméthîng"), String("méth"), String("søméthîng"), String("meth"), String("a\0b\0c"), String("\0")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Constant(3), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Constant(5), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Constant(7), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Constant(9), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(10), Constant(11), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(12), Constant(13), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(14), Constant(15), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(16), Constant(17), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(18), Constant(19), Call(Signature { bare_name: "split", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String("something"))
+02: Constant(1: String("meth"))
+03: Call(Method: split(_) 43)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Constant(2: String("something"))
+08: Constant(3: String("some"))
+09: Call(Method: split(_) 43)
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Constant(4: String("something"))
+14: Constant(5: String("ing"))
+15: Call(Method: split(_) 43)
+16: Call(Method: print(_) 42)
+17: Pop
+18: Load(Module 9: Class("System"))
+19: Constant(6: String("something"))
+20: Constant(7: String("math"))
+21: Call(Method: split(_) 43)
+22: Call(Method: print(_) 42)
+23: Pop
+24: Load(Module 9: Class("System"))
+25: Constant(8: String("somethingsomething"))
+26: Constant(9: String("meth"))
+27: Call(Method: split(_) 43)
+28: Call(Method: print(_) 42)
+29: Pop
+30: Load(Module 9: Class("System"))
+31: Constant(10: String("abc abc abc"))
+32: Constant(11: String(" "))
+33: Call(Method: split(_) 43)
+34: Call(Method: print(_) 42)
+35: Pop
+36: Load(Module 9: Class("System"))
+37: Constant(12: String("abcabcabc"))
+38: Constant(13: String("abc"))
+39: Call(Method: split(_) 43)
+40: Call(Method: print(_) 42)
+41: Pop
+42: Load(Module 9: Class("System"))
+43: Constant(14: String("søméthîng"))
+44: Constant(15: String("méth"))
+45: Call(Method: split(_) 43)
+46: Call(Method: print(_) 42)
+47: Pop
+48: Load(Module 9: Class("System"))
+49: Constant(16: String("søméthîng"))
+50: Constant(17: String("meth"))
+51: Call(Method: split(_) 43)
+52: Call(Method: print(_) 42)
+53: Pop
+54: Load(Module 9: Class("System"))
+55: Constant(18: String("a\0b\0c"))
+56: Constant(19: String("\0"))
+57: Call(Method: split(_) 43)
+58: Call(Method: print(_) 42)
+59: Pop
+60: End
+61: End

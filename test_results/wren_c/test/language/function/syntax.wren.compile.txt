@@ -1,0 +1,23 @@
+Function { constants: [Fn(), Fn(), Fn(), Fn()], code: [Load(Variable { scope: Module, index: 3 }), Closure(0, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, Load(Variable { scope: Module, index: 3 }), Closure(1, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, Load(Variable { scope: Module, index: 3 }), Closure(2, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, Load(Variable { scope: Module, index: 3 }), Closure(3, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, End, End] }
+00: Load(Module 3: Class("Fn"))
+01: Closure(0, [])
+02: Call(Method: new(_) 24)
+03: Call(Method: call() 26)
+04: Pop
+05: Load(Module 3: Class("Fn"))
+06: Closure(1, [])
+07: Call(Method: new(_) 24)
+08: Call(Method: call() 26)
+09: Pop
+10: Load(Module 3: Class("Fn"))
+11: Closure(2, [])
+12: Call(Method: new(_) 24)
+13: Call(Method: call() 26)
+14: Pop
+15: Load(Module 3: Class("Fn"))
+16: Closure(3, [])
+17: Call(Method: new(_) 24)
+18: Call(Method: call() 26)
+19: Pop
+20: End
+21: End

@@ -1,0 +1,17 @@
+Function { constants: [String("Cthulu"), Fn(), Fn(), Fn()], code: [Constant(0), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 10 }), Pop, Closure(1, []), Load(Variable { scope: Module, index: 10 }), Method(false, 43), Closure(2, []), Load(Variable { scope: Module, index: 10 }), Method(true, 44), Closure(3, []), Load(Variable { scope: Module, index: 10 }), Method(false, 45), End, End] }
+00: Constant(0: String("Cthulu"))
+01: Load(Module 0: Class("Object"))
+02: Class(0 fields)
+03: Store(Module 10)
+04: Pop
+05: Closure(1, [])
+06: Load(Module 10: Null)
+07: Method(instance 43: init new())
+08: Closure(2, [])
+09: Load(Module 10: Null)
+10: Method(static 44: new())
+11: Closure(3, [])
+12: Load(Module 10: Null)
+13: Method(instance 45: message)
+14: End
+15: End

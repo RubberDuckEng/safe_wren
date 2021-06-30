@@ -1,0 +1,48 @@
+Function { constants: [Num(0), Num(0), Num(1), Num(0), Num(1), Num(1)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Constant(1), Constant(2), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Null, Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iterate(_)", call_type: Method, arity: 1 }, 22), Store(Variable { scope: Local, index: 1 }), JumpIfFalse(31), Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iteratorValue(_)", call_type: Method, arity: 1 }, 23), Constant(3), Constant(4), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Null, Load(Variable { scope: Local, index: 3 }), Load(Variable { scope: Local, index: 4 }), Call(Signature { bare_name: "iterate(_)", call_type: Method, arity: 1 }, 22), Store(Variable { scope: Local, index: 4 }), JumpIfFalse(15), Load(Variable { scope: Local, index: 3 }), Load(Variable { scope: Local, index: 4 }), Call(Signature { bare_name: "iteratorValue(_)", call_type: Method, arity: 1 }, 23), Load(Variable { scope: Module, index: 10 }), Constant(5), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Loop(20), Pop, Pop, Pop, Loop(36), Pop, Pop, End, End] }
+00: Constant(0: Num(0))
+01: Store(Module 10)
+02: Pop
+03: Constant(1: Num(0))
+04: Constant(2: Num(1))
+05: Call(Method: ..(_) 15)
+06: Null
+07: Load(Local 0)
+08: Load(Local 1)
+09: Call(Method: iterate(_) 22)
+10: Store(Local 1)
+11: JumpIfFalse(31)
+12: Load(Local 0)
+13: Load(Local 1)
+14: Call(Method: iteratorValue(_) 23)
+15: Constant(3: Num(0))
+16: Constant(4: Num(1))
+17: Call(Method: ..(_) 15)
+18: Null
+19: Load(Local 3)
+20: Load(Local 4)
+21: Call(Method: iterate(_) 22)
+22: Store(Local 4)
+23: JumpIfFalse(15)
+24: Load(Local 3)
+25: Load(Local 4)
+26: Call(Method: iteratorValue(_) 23)
+27: Load(Module 10: Null)
+28: Constant(5: Num(1))
+29: Call(Method: +(_) 6)
+30: Store(Module 10)
+31: Load(Module 10: Null)
+32: Pop
+33: Load(Module 9: Class("System"))
+34: Load(Module 10: Null)
+35: Call(Method: print(_) 42)
+36: Pop
+37: Pop
+38: Loop(20)
+39: Pop
+40: Pop
+41: Pop
+42: Loop(36)
+43: Pop
+44: Pop
+45: End
+46: End

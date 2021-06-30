@@ -1,0 +1,9 @@
+Function { constants: [Fn()], code: [Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(0, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Load(Module 3: Class("Fn"))
+02: Closure(0, [])
+03: Call(Method: new(_) 24)
+04: Call(Method: print(_) 42)
+05: Pop
+06: End
+07: End

@@ -1,0 +1,21 @@
+Function { constants: [Num(0), Num(2), Num(1)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 10 }), Constant(1), Call(Signature { bare_name: "<", call_type: Method, arity: 1 }, 11), JumpIfFalse(7), Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Loop(11), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: Num(0))
+01: Store(Module 10)
+02: Pop
+03: Load(Module 10: Null)
+04: Constant(1: Num(2))
+05: Call(Method: <(_) 11)
+06: JumpIfFalse(7)
+07: Load(Module 10: Null)
+08: Constant(2: Num(1))
+09: Call(Method: +(_) 6)
+10: Store(Module 10)
+11: Load(Module 10: Null)
+12: Pop
+13: Loop(11)
+14: Load(Module 9: Class("System"))
+15: Load(Module 10: Null)
+16: Call(Method: print(_) 42)
+17: Pop
+18: End
+19: End

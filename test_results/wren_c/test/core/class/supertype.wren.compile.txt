@@ -1,0 +1,44 @@
+Function { constants: [String("Foo"), String("Bar"), String("Baz")], code: [Constant(0), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 10 }), Pop, Constant(1), Load(Variable { scope: Module, index: 10 }), Class(0), Store(Variable { scope: Module, index: 11 }), Pop, Constant(2), Load(Variable { scope: Module, index: 11 }), Class(0), Store(Variable { scope: Module, index: 12 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "supertype", call_type: Getter, arity: 0 }, 43), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "supertype", call_type: Getter, arity: 0 }, 43), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 12 }), Call(Signature { bare_name: "supertype", call_type: Getter, arity: 0 }, 43), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "supertype", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: String("Foo"))
+01: Load(Module 0: Class("Object"))
+02: Class(0 fields)
+03: Store(Module 10)
+04: Pop
+05: Constant(1: String("Bar"))
+06: Load(Module 10: Null)
+07: Class(0 fields)
+08: Store(Module 11)
+09: Pop
+10: Constant(2: String("Baz"))
+11: Load(Module 11: Null)
+12: Class(0 fields)
+13: Store(Module 12)
+14: Pop
+15: Load(Module 9: Class("System"))
+16: Load(Module 10: Null)
+17: Call(Getter: supertype 43)
+18: Load(Module 0: Class("Object"))
+19: Call(Method: ==(_) 1)
+20: Call(Method: print(_) 42)
+21: Pop
+22: Load(Module 9: Class("System"))
+23: Load(Module 11: Null)
+24: Call(Getter: supertype 43)
+25: Load(Module 10: Null)
+26: Call(Method: ==(_) 1)
+27: Call(Method: print(_) 42)
+28: Pop
+29: Load(Module 9: Class("System"))
+30: Load(Module 12: Null)
+31: Call(Getter: supertype 43)
+32: Load(Module 11: Null)
+33: Call(Method: ==(_) 1)
+34: Call(Method: print(_) 42)
+35: Pop
+36: Load(Module 9: Class("System"))
+37: Load(Module 0: Class("Object"))
+38: Call(Getter: supertype 43)
+39: Call(Method: print(_) 42)
+40: Pop
+41: End
+42: End

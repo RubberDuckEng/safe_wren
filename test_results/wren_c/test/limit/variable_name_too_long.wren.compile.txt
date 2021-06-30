@@ -1,0 +1,11 @@
+Function { constants: [String("value"), String("c234567890c234567890c234567890c234567890c234567890c234567890c2345")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Constant(1), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 11 }), Pop, End, End] }
+00: Constant(0: String("value"))
+01: Store(Module 10)
+02: Pop
+03: Constant(1: String("c234567890c234567890c234567890c234567890c234567890c234567890c2345"))
+04: Load(Module 0: Class("Object"))
+05: Class(0 fields)
+06: Store(Module 11)
+07: Pop
+08: End
+09: End

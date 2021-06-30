@@ -1,0 +1,53 @@
+Function { constants: [Num(0), Num(2), String("outer %(i)"), Num(1), Num(0), Num(2), String("inner %(j)"), Num(1)], code: [Constant(0), Constant(1), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Null, Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iterate(_)", call_type: Method, arity: 1 }, 22), Store(Variable { scope: Local, index: 1 }), JumpIfFalse(39), Load(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 1 }), Call(Signature { bare_name: "iteratorValue(_)", call_type: Method, arity: 1 }, 23), Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Local, index: 2 }), Constant(3), Call(Signature { bare_name: ">", call_type: Method, arity: 1 }, 13), JumpIfFalse(1), Jump(27), Constant(4), Constant(5), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Null, Load(Variable { scope: Local, index: 3 }), Load(Variable { scope: Local, index: 4 }), Call(Signature { bare_name: "iterate(_)", call_type: Method, arity: 1 }, 22), Store(Variable { scope: Local, index: 4 }), JumpIfFalse(14), Load(Variable { scope: Local, index: 3 }), Load(Variable { scope: Local, index: 4 }), Call(Signature { bare_name: "iteratorValue(_)", call_type: Method, arity: 1 }, 23), Load(Variable { scope: Module, index: 9 }), Constant(6), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Local, index: 5 }), Constant(7), Call(Signature { bare_name: ">", call_type: Method, arity: 1 }, 13), JumpIfFalse(1), Jump(2), Pop, Loop(19), Pop, Pop, Pop, Loop(44), Pop, Pop, End, End] }
+00: Constant(0: Num(0))
+01: Constant(1: Num(2))
+02: Call(Method: ..(_) 15)
+03: Null
+04: Load(Local 0)
+05: Load(Local 1)
+06: Call(Method: iterate(_) 22)
+07: Store(Local 1)
+08: JumpIfFalse(39)
+09: Load(Local 0)
+10: Load(Local 1)
+11: Call(Method: iteratorValue(_) 23)
+12: Load(Module 9: Class("System"))
+13: Constant(2: String("outer %(i)"))
+14: Call(Method: print(_) 42)
+15: Pop
+16: Load(Local 2)
+17: Constant(3: Num(1))
+18: Call(Method: >(_) 13)
+19: JumpIfFalse(1)
+20: Jump(27)
+21: Constant(4: Num(0))
+22: Constant(5: Num(2))
+23: Call(Method: ..(_) 15)
+24: Null
+25: Load(Local 3)
+26: Load(Local 4)
+27: Call(Method: iterate(_) 22)
+28: Store(Local 4)
+29: JumpIfFalse(14)
+30: Load(Local 3)
+31: Load(Local 4)
+32: Call(Method: iteratorValue(_) 23)
+33: Load(Module 9: Class("System"))
+34: Constant(6: String("inner %(j)"))
+35: Call(Method: print(_) 42)
+36: Pop
+37: Load(Local 5)
+38: Constant(7: Num(1))
+39: Call(Method: >(_) 13)
+40: JumpIfFalse(1)
+41: Jump(2)
+42: Pop
+43: Loop(19)
+44: Pop
+45: Pop
+46: Pop
+47: Loop(44)
+48: Pop
+49: Pop
+50: End
+51: End

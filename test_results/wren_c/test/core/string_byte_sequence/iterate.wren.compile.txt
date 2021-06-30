@@ -1,0 +1,87 @@
+Function { constants: [String("søméஃ"), String(""), Num(0), Num(1), Num(2), Num(3), Num(4), Num(5), Num(6), Num(7), Num(8), Num(123), Num(1)], code: [Constant(0), Call(Signature { bare_name: "bytes", call_type: Getter, arity: 0 }, 43), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Null, Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "bytes", call_type: Getter, arity: 0 }, 43), Null, Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(3), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(4), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(5), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(6), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(7), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(8), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(9), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(10), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(11), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(12), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: String("søméஃ"))
+01: Call(Getter: bytes 43)
+02: Store(Module 10)
+03: Pop
+04: Load(Module 9: Class("System"))
+05: Load(Module 10: Null)
+06: Null
+07: Call(Method: iterate(_) 22)
+08: Call(Method: print(_) 42)
+09: Pop
+10: Load(Module 9: Class("System"))
+11: Constant(1: String(""))
+12: Call(Getter: bytes 43)
+13: Null
+14: Call(Method: iterate(_) 22)
+15: Call(Method: print(_) 42)
+16: Pop
+17: Load(Module 9: Class("System"))
+18: Load(Module 10: Null)
+19: Constant(2: Num(0))
+20: Call(Method: iterate(_) 22)
+21: Call(Method: print(_) 42)
+22: Pop
+23: Load(Module 9: Class("System"))
+24: Load(Module 10: Null)
+25: Constant(3: Num(1))
+26: Call(Method: iterate(_) 22)
+27: Call(Method: print(_) 42)
+28: Pop
+29: Load(Module 9: Class("System"))
+30: Load(Module 10: Null)
+31: Constant(4: Num(2))
+32: Call(Method: iterate(_) 22)
+33: Call(Method: print(_) 42)
+34: Pop
+35: Load(Module 9: Class("System"))
+36: Load(Module 10: Null)
+37: Constant(5: Num(3))
+38: Call(Method: iterate(_) 22)
+39: Call(Method: print(_) 42)
+40: Pop
+41: Load(Module 9: Class("System"))
+42: Load(Module 10: Null)
+43: Constant(6: Num(4))
+44: Call(Method: iterate(_) 22)
+45: Call(Method: print(_) 42)
+46: Pop
+47: Load(Module 9: Class("System"))
+48: Load(Module 10: Null)
+49: Constant(7: Num(5))
+50: Call(Method: iterate(_) 22)
+51: Call(Method: print(_) 42)
+52: Pop
+53: Load(Module 9: Class("System"))
+54: Load(Module 10: Null)
+55: Constant(8: Num(6))
+56: Call(Method: iterate(_) 22)
+57: Call(Method: print(_) 42)
+58: Pop
+59: Load(Module 9: Class("System"))
+60: Load(Module 10: Null)
+61: Constant(9: Num(7))
+62: Call(Method: iterate(_) 22)
+63: Call(Method: print(_) 42)
+64: Pop
+65: Load(Module 9: Class("System"))
+66: Load(Module 10: Null)
+67: Constant(10: Num(8))
+68: Call(Method: iterate(_) 22)
+69: Call(Method: print(_) 42)
+70: Pop
+71: Load(Module 9: Class("System"))
+72: Load(Module 10: Null)
+73: Constant(11: Num(123))
+74: Call(Method: iterate(_) 22)
+75: Call(Method: print(_) 42)
+76: Pop
+77: Load(Module 9: Class("System"))
+78: Load(Module 10: Null)
+79: Constant(12: Num(1))
+80: Call(Method: - 8)
+81: Call(Method: iterate(_) 22)
+82: Call(Method: print(_) 42)
+83: Pop
+84: End
+85: End

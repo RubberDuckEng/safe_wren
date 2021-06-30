@@ -1,0 +1,28 @@
+Function { constants: [String("out"), String("in"), String("out"), String("dummy"), String("in")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Boolean(true), JumpIfFalse(2), Constant(1), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(2), Store(Variable { scope: Module, index: 11 }), Pop, Boolean(false), JumpIfFalse(3), Constant(3), Pop, Jump(2), Constant(4), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: String("out"))
+01: Store(Module 10)
+02: Pop
+03: Boolean true
+04: JumpIfFalse(2)
+05: Constant(1: String("in"))
+06: Pop
+07: Load(Module 9: Class("System"))
+08: Load(Module 10: Null)
+09: Call(Method: print(_) 42)
+10: Pop
+11: Constant(2: String("out"))
+12: Store(Module 11)
+13: Pop
+14: Boolean false
+15: JumpIfFalse(3)
+16: Constant(3: String("dummy"))
+17: Pop
+18: Jump(2)
+19: Constant(4: String("in"))
+20: Pop
+21: Load(Module 9: Class("System"))
+22: Load(Module 11: Null)
+23: Call(Method: print(_) 42)
+24: Pop
+25: End
+26: End

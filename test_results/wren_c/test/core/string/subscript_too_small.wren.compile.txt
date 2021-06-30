@@ -1,0 +1,11 @@
+Function { constants: [String("123"), Num(5)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 10 }), Constant(1), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "", call_type: Subscript, arity: 1 }, 43), Pop, End, End] }
+00: Constant(0: String("123"))
+01: Store(Module 10)
+02: Pop
+03: Load(Module 10: Null)
+04: Constant(1: Num(5))
+05: Call(Method: - 8)
+06: Call(Subscript: [_] 43)
+07: Pop
+08: End
+09: End

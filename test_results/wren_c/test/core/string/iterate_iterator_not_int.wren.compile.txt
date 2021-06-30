@@ -1,0 +1,7 @@
+Function { constants: [String("s"), Num(1.5)], code: [Constant(0), Constant(1), Call(Signature { bare_name: "iterate", call_type: Method, arity: 1 }, 22), Pop, End, End] }
+00: Constant(0: String("s"))
+01: Constant(1: Num(1.5))
+02: Call(Method: iterate(_) 22)
+03: Pop
+04: End
+05: End

@@ -1,0 +1,5 @@
+Function { constants: [String("not a \m real escape")], code: [Constant(0), Pop, End, End] }
+00: Constant(0: String("not a \m real escape"))
+01: Pop
+02: End
+03: End

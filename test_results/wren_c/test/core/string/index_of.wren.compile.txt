@@ -1,0 +1,111 @@
+Function { constants: [String("abcd"), String(""), String("abcd"), String("cd"), String("abcd"), String("a"), String("abcd"), String("abcd"), String("abcd"), String("abcde"), String("abab"), String("ab"), String("abcdefabcdefg"), String("defg"), String("abcdabcdabcd"), String("dab"), String("abcdabcdabcdabcd"), String("dabcdabc"), String("abcdefg"), String("abcdef!"), String("søméஃthîng"), String("e"), String("søméஃthîng"), String("m"), String("søméஃthîng"), String("thî"), String("a\0b\0c"), String("\0"), String("a\0b\0c"), String("a"), String("a\0b\0c"), String("b\0c"), String("a\0b\0c"), String("a\0b\0c\0d"), String("a\0b\0a\0b"), String("a\0b")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Constant(3), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Constant(5), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Constant(7), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(8), Constant(9), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(10), Constant(11), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(12), Constant(13), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(14), Constant(15), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(16), Constant(17), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(18), Constant(19), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(20), Constant(21), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(22), Constant(23), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(24), Constant(25), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(26), Constant(27), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(28), Constant(29), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(30), Constant(31), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(32), Constant(33), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(34), Constant(35), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Load(Module 9: Class("System"))
+01: Constant(0: String("abcd"))
+02: Constant(1: String(""))
+03: Call(Method: indexOf(_) 43)
+04: Call(Method: print(_) 42)
+05: Pop
+06: Load(Module 9: Class("System"))
+07: Constant(2: String("abcd"))
+08: Constant(3: String("cd"))
+09: Call(Method: indexOf(_) 43)
+10: Call(Method: print(_) 42)
+11: Pop
+12: Load(Module 9: Class("System"))
+13: Constant(4: String("abcd"))
+14: Constant(5: String("a"))
+15: Call(Method: indexOf(_) 43)
+16: Call(Method: print(_) 42)
+17: Pop
+18: Load(Module 9: Class("System"))
+19: Constant(6: String("abcd"))
+20: Constant(7: String("abcd"))
+21: Call(Method: indexOf(_) 43)
+22: Call(Method: print(_) 42)
+23: Pop
+24: Load(Module 9: Class("System"))
+25: Constant(8: String("abcd"))
+26: Constant(9: String("abcde"))
+27: Call(Method: indexOf(_) 43)
+28: Call(Method: print(_) 42)
+29: Pop
+30: Load(Module 9: Class("System"))
+31: Constant(10: String("abab"))
+32: Constant(11: String("ab"))
+33: Call(Method: indexOf(_) 43)
+34: Call(Method: print(_) 42)
+35: Pop
+36: Load(Module 9: Class("System"))
+37: Constant(12: String("abcdefabcdefg"))
+38: Constant(13: String("defg"))
+39: Call(Method: indexOf(_) 43)
+40: Call(Method: print(_) 42)
+41: Pop
+42: Load(Module 9: Class("System"))
+43: Constant(14: String("abcdabcdabcd"))
+44: Constant(15: String("dab"))
+45: Call(Method: indexOf(_) 43)
+46: Call(Method: print(_) 42)
+47: Pop
+48: Load(Module 9: Class("System"))
+49: Constant(16: String("abcdabcdabcdabcd"))
+50: Constant(17: String("dabcdabc"))
+51: Call(Method: indexOf(_) 43)
+52: Call(Method: print(_) 42)
+53: Pop
+54: Load(Module 9: Class("System"))
+55: Constant(18: String("abcdefg"))
+56: Constant(19: String("abcdef!"))
+57: Call(Method: indexOf(_) 43)
+58: Call(Method: print(_) 42)
+59: Pop
+60: Load(Module 9: Class("System"))
+61: Constant(20: String("søméஃthîng"))
+62: Constant(21: String("e"))
+63: Call(Method: indexOf(_) 43)
+64: Call(Method: print(_) 42)
+65: Pop
+66: Load(Module 9: Class("System"))
+67: Constant(22: String("søméஃthîng"))
+68: Constant(23: String("m"))
+69: Call(Method: indexOf(_) 43)
+70: Call(Method: print(_) 42)
+71: Pop
+72: Load(Module 9: Class("System"))
+73: Constant(24: String("søméஃthîng"))
+74: Constant(25: String("thî"))
+75: Call(Method: indexOf(_) 43)
+76: Call(Method: print(_) 42)
+77: Pop
+78: Load(Module 9: Class("System"))
+79: Constant(26: String("a\0b\0c"))
+80: Constant(27: String("\0"))
+81: Call(Method: indexOf(_) 43)
+82: Call(Method: print(_) 42)
+83: Pop
+84: Load(Module 9: Class("System"))
+85: Constant(28: String("a\0b\0c"))
+86: Constant(29: String("a"))
+87: Call(Method: indexOf(_) 43)
+88: Call(Method: print(_) 42)
+89: Pop
+90: Load(Module 9: Class("System"))
+91: Constant(30: String("a\0b\0c"))
+92: Constant(31: String("b\0c"))
+93: Call(Method: indexOf(_) 43)
+94: Call(Method: print(_) 42)
+95: Pop
+96: Load(Module 9: Class("System"))
+97: Constant(32: String("a\0b\0c"))
+98: Constant(33: String("a\0b\0c\0d"))
+99: Call(Method: indexOf(_) 43)
+100: Call(Method: print(_) 42)
+101: Pop
+102: Load(Module 9: Class("System"))
+103: Constant(34: String("a\0b\0a\0b"))
+104: Constant(35: String("a\0b"))
+105: Call(Method: indexOf(_) 43)
+106: Call(Method: print(_) 42)
+107: Pop
+108: End
+109: End

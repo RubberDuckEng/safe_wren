@@ -52,6 +52,9 @@ SKIP_PATTERN = re.compile(r'// skip: (.*)')
 NONTEST_PATTERN = re.compile(r'// nontest')
 
 
+EXIT_CODE_COMPILE_ERROR = 65
+
+
 def supports_colored_text():
     return (sys.platform != 'win32' or
             'ANSICON' in environ or
@@ -114,7 +117,7 @@ class Test:
                     self.compile_errors.add(line_num)
 
                     # If we expect a compile error, it should exit with WREN_EX_DATAERR.
-                    self.exit_code = 65
+                    self.exit_code = EXIT_CODE_COMPILE_ERROR
                     expectations += 1
 
                 match = EXPECT_ERROR_LINE_PATTERN.search(line)
@@ -122,7 +125,7 @@ class Test:
                     self.compile_errors.add(int(match.group(1)))
 
                     # If we expect a compile error, it should exit with WREN_EX_DATAERR.
-                    self.exit_code = 65
+                    self.exit_code = EXIT_CODE_COMPILE_ERROR
                     expectations += 1
 
                 match = EXPECT_RUNTIME_ERROR_PATTERN.search(line)
@@ -157,6 +160,19 @@ class Test:
 
         # If we got here, it's a valid test.
         return True
+
+    def compile_bytecode(self, app):
+        test_arg = self.path
+        proc = Popen([app, '--compile', test_arg],
+                     stdin=PIPE, stdout=PIPE, stderr=PIPE)
+
+        out, err = proc.communicate(self.input_bytes)
+        try:
+            out = out.decode("utf-8").replace('\r\n', '\n')
+            err = err.decode("utf-8").replace('\r\n', '\n')
+        except:
+            self.fail('Error decoding compiler output.')
+        return out + err
 
     def run(self, app, type):
         # Invoke wren and run the test.
@@ -393,10 +409,12 @@ def run_script(app, path, type):
 
     test_dir_path = dirname(path)
     test_filename = basename(path)
+    compile_filename = test_filename + ".compile.txt"
     output_filename = test_filename + ".txt"
     output_dir = join(RESULTS_DIR, test_dir_path)
     makedirs(output_dir, exist_ok=True)
     output_path = join(output_dir, output_filename)
+    compile_path = join(output_dir, compile_filename)
 
     # Display the results.
     if len(test.failures) == 0:
@@ -416,6 +434,9 @@ def run_script(app, path, type):
             fail_file.write(failure.encode("utf8"))
             fail_file.write("\n".encode("utf8"))
         print('')
+
+    compile_file = open(compile_path, mode="wb")
+    compile_file.write(test.compile_bytecode(app).encode("utf8"))
 
 
 def run_test(path, example=False):

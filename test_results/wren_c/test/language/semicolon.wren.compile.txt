@@ -1,0 +1,1 @@
+WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar(';')) }

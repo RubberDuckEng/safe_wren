@@ -1,0 +1,27 @@
+Function { constants: [String("Foo"), Fn(), Fn(), Fn(), String("value")], code: [Constant(0), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 10 }), Pop, Closure(1, []), Load(Variable { scope: Module, index: 10 }), Method(false, 43), Closure(2, []), Load(Variable { scope: Module, index: 10 }), Method(true, 44), Closure(3, []), Load(Variable { scope: Module, index: 10 }), Method(false, 45), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "new", call_type: Method, arity: 0 }, 44), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Constant(4), Call(Signature { bare_name: "bar", call_type: Setter, arity: 1 }, 45), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+00: Constant(0: String("Foo"))
+01: Load(Module 0: Class("Object"))
+02: Class(0 fields)
+03: Store(Module 10)
+04: Pop
+05: Closure(1, [])
+06: Load(Module 10: Null)
+07: Method(instance 43: init new())
+08: Closure(2, [])
+09: Load(Module 10: Null)
+10: Method(static 44: new())
+11: Closure(3, [])
+12: Load(Module 10: Null)
+13: Method(instance 45: bar=_)
+14: Load(Module 10: Null)
+15: Call(Method: new() 44)
+16: Store(Module 11)
+17: Pop
+18: Load(Module 9: Class("System"))
+19: Load(Module 11: Null)
+20: Constant(4: String("value"))
+21: Call(Setter: bar=_ 45)
+22: Call(Method: print(_) 42)
+23: Pop
+24: End
+25: End
