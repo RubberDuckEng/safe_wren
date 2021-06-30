@@ -12,23 +12,23 @@ Code:
 01: Constant(0: String("|"))
 02: Constant(1: String("abc"))
 03: Constant(2: Num(0))
-04: Call(Method: *(_) 9)
-05: Call(Method: +(_) 6)
+04: Call(Method: *(_))
+05: Call(Method: +(_))
 06: Constant(3: String("|"))
-07: Call(Method: +(_) 6)
-08: Call(Method: print(_) 42)
+07: Call(Method: +(_))
+08: Call(Method: print(_))
 09: Pop
 10: Load(Module 9: Class("System"))
 11: Constant(4: String("abc"))
 12: Constant(5: Num(1))
-13: Call(Method: *(_) 9)
-14: Call(Method: print(_) 42)
+13: Call(Method: *(_))
+14: Call(Method: print(_))
 15: Pop
 16: Load(Module 9: Class("System"))
 17: Constant(6: String("abc"))
 18: Constant(7: Num(4))
-19: Call(Method: *(_) 9)
-20: Call(Method: print(_) 42)
+19: Call(Method: *(_))
+20: Call(Method: print(_))
 21: Pop
 22: End
 23: End

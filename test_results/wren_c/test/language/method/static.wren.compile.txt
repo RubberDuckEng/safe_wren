@@ -34,27 +34,27 @@ Code:
 22: Method(static 46: bar(_))
 23: Load(Module 9: Class("System"))
 24: Load(Module 10: Null)
-25: Call(Method: new() 44)
-26: Call(Getter: bar 45)
-27: Call(Method: print(_) 42)
+25: Call(Method: new())
+26: Call(Getter: bar)
+27: Call(Method: print(_))
 28: Pop
 29: Load(Module 9: Class("System"))
 30: Load(Module 10: Null)
-31: Call(Getter: bar 45)
-32: Call(Method: print(_) 42)
+31: Call(Getter: bar)
+32: Call(Method: print(_))
 33: Pop
 34: Load(Module 9: Class("System"))
 35: Load(Module 10: Null)
-36: Call(Method: new() 44)
+36: Call(Method: new())
 37: Constant(7: String("arg"))
-38: Call(Method: bar(_) 46)
-39: Call(Method: print(_) 42)
+38: Call(Method: bar(_))
+39: Call(Method: print(_))
 40: Pop
 41: Load(Module 9: Class("System"))
 42: Load(Module 10: Null)
 43: Constant(8: String("arg"))
-44: Call(Method: bar(_) 46)
-45: Call(Method: print(_) 42)
+44: Call(Method: bar(_))
+45: Call(Method: print(_))
 46: Pop
 47: End
 48: End

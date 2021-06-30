@@ -3,7 +3,7 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(123))
-02: Call(Method: writeAll(_) 43)
+02: Call(Method: writeAll(_))
 03: Pop
 04: End
 05: End

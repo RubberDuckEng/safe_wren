@@ -13,7 +13,7 @@ Code:
 07: Method(static 43: bar=_)
 08: Load(Module 10: Null)
 09: Constant(2: String("value"))
-10: Call(Setter: bar=_ 43)
+10: Call(Setter: bar=_)
 11: Pop
 12: End
 13: End

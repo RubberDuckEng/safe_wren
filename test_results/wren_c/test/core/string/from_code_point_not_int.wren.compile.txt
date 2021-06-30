@@ -4,8 +4,8 @@ Code:
 00: Load(Module 9: Class("System"))
 01: Load(Module 7: Class("String"))
 02: Constant(0: Num(12.34))
-03: Call(Method: fromCodePoint(_) 43)
-04: Call(Method: print(_) 42)
+03: Call(Method: fromCodePoint(_))
+04: Call(Method: print(_))
 05: Pop
 06: End
 07: End

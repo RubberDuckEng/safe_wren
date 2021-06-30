@@ -5,7 +5,7 @@ Code:
 00: Constant(0: Num(1))
 01: Constant(1: Num(0))
 02: Boolean false
-03: Call(Method: clamp(_,_) 43)
+03: Call(Method: clamp(_,_))
 04: Pop
 05: End
 06: End

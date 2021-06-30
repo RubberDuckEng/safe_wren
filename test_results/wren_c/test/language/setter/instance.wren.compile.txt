@@ -20,12 +20,12 @@ Code:
 12: Load(Module 10: Null)
 13: Method(instance 45: bar=_)
 14: Load(Module 10: Null)
-15: Call(Method: new() 44)
+15: Call(Method: new())
 16: Store(Module 11)
 17: Pop
 18: Load(Module 11: Null)
 19: Constant(4: String("value"))
-20: Call(Setter: bar=_ 45)
+20: Call(Setter: bar=_)
 21: Pop
 22: End
 23: End

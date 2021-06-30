@@ -17,7 +17,7 @@ Code:
 11: Store(Module 11)
 12: Pop
 13: Load(Module 11: Null)
-14: Call(Getter: methodOnFoo 43)
+14: Call(Getter: methodOnFoo)
 15: Pop
 16: End
 17: End

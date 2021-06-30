@@ -10,22 +10,22 @@ Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(1))
 02: Constant(1: Num(2))
-03: Call(Method: +(_) 6)
-04: Call(Method: print(_) 42)
+03: Call(Method: +(_))
+04: Call(Method: print(_))
 05: Pop
 06: Load(Module 9: Class("System"))
 07: Constant(2: Num(12.34))
 08: Constant(3: Num(0.13))
-09: Call(Method: +(_) 6)
-10: Call(Method: print(_) 42)
+09: Call(Method: +(_))
+10: Call(Method: print(_))
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Constant(4: Num(3))
 14: Constant(5: Num(5))
-15: Call(Method: +(_) 6)
+15: Call(Method: +(_))
 16: Constant(6: Num(2))
-17: Call(Method: +(_) 6)
-18: Call(Method: print(_) 42)
+17: Call(Method: +(_))
+18: Call(Method: print(_))
 19: Pop
 20: End
 21: End

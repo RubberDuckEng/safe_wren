@@ -3,7 +3,7 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("ok"))
-02: Call(Method: print(_) 42)
+02: Call(Method: print(_))
 03: Pop
 04: End
 05: End

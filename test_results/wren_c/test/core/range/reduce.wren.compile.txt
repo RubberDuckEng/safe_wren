@@ -7,21 +7,21 @@ Constants:
 Code:
 00: Constant(0: Num(1))
 01: Constant(1: Num(10))
-02: Call(Method: ..(_) 15)
+02: Call(Method: ..(_))
 03: Store(Module 10)
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Load(Module 10: Null)
 07: Closure(2, [])
-08: Call(Method: reduce(_) 43)
-09: Call(Method: print(_) 42)
+08: Call(Method: reduce(_))
+09: Call(Method: print(_))
 10: Pop
 11: Load(Module 9: Class("System"))
 12: Load(Module 10: Null)
 13: Constant(3: Num(100))
 14: Closure(4, [])
-15: Call(Method: reduce(_,_) 44)
-16: Call(Method: print(_) 42)
+15: Call(Method: reduce(_,_))
+16: Call(Method: print(_))
 17: Pop
 18: End
 19: End

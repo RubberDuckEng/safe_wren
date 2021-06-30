@@ -4,12 +4,12 @@ Constants:
 Code:
 00: Load(Module 3: Class("Fn"))
 01: Closure(0, [])
-02: Call(Method: new(_) 24)
+02: Call(Method: new(_))
 03: Store(Module 10)
 04: Pop
 05: Load(Module 10: Null)
 06: Constant(1: String("a"))
-07: Call(Method: call(_) 27)
+07: Call(Method: call(_))
 08: Pop
 09: End
 10: End

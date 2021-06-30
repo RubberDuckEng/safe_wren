@@ -23,11 +23,11 @@ Code:
 15: Load(Module 10: Null)
 16: Method(instance 26: call())
 17: Load(Module 10: Null)
-18: Call(Method: call() 26)
+18: Call(Method: call())
 19: Pop
 20: Load(Module 10: Null)
-21: Call(Method: new() 44)
-22: Call(Method: call() 26)
+21: Call(Method: new())
+22: Call(Method: call())
 23: Pop
 24: End
 25: End

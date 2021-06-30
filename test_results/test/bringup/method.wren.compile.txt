@@ -28,24 +28,24 @@ Code:
 18: Load(Module 10: Null)
 19: Method(instance 47: baz(_))
 20: Load(Module 10: Null)
-21: Call(Method: new() 44)
+21: Call(Method: new())
 22: Store(Module 11)
 23: Pop
 24: Load(Module 9: Class("System"))
 25: Load(Module 11: Null)
-26: Call(Method: foo() 45)
-27: Call(Method: print(_) 42)
+26: Call(Method: foo())
+27: Call(Method: print(_))
 28: Pop
 29: Load(Module 9: Class("System"))
 30: Load(Module 11: Null)
-31: Call(Getter: bar 46)
-32: Call(Method: print(_) 42)
+31: Call(Getter: bar)
+32: Call(Method: print(_))
 33: Pop
 34: Load(Module 9: Class("System"))
 35: Load(Module 11: Null)
 36: Constant(6: Num(1))
-37: Call(Method: baz(_) 47)
-38: Call(Method: print(_) 42)
+37: Call(Method: baz(_))
+38: Call(Method: print(_))
 39: Pop
 40: End
 41: End

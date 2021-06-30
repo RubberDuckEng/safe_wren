@@ -14,7 +14,7 @@ Code:
 06: Pop
 07: Load(Module 9: Class("System"))
 08: Load(Module 10: Null)
-09: Call(Method: print(_) 42)
+09: Call(Method: print(_))
 10: Pop
 11: Constant(2: String("out"))
 12: Store(Module 11)
@@ -28,7 +28,7 @@ Code:
 20: Pop
 21: Load(Module 9: Class("System"))
 22: Load(Module 11: Null)
-23: Call(Method: print(_) 42)
+23: Call(Method: print(_))
 24: Pop
 25: End
 26: End

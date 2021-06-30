@@ -23,18 +23,18 @@ Code:
 15: Load(Module 10: Null)
 16: Method(instance 46: foo())
 17: Load(Module 10: Null)
-18: Call(Method: new() 44)
+18: Call(Method: new())
 19: Store(Module 11)
 20: Pop
 21: Load(Module 9: Class("System"))
 22: Load(Module 11: Null)
-23: Call(Getter: bar 45)
-24: Call(Method: print(_) 42)
+23: Call(Getter: bar)
+24: Call(Method: print(_))
 25: Pop
 26: Load(Module 9: Class("System"))
 27: Load(Module 11: Null)
-28: Call(Method: foo() 46)
-29: Call(Method: print(_) 42)
+28: Call(Method: foo())
+29: Call(Method: print(_))
 30: Pop
 31: End
 32: End

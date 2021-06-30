@@ -63,39 +63,39 @@ Code:
 38: Load(Module 11: Null)
 39: Method(instance 46: override)
 40: Load(Module 11: Null)
-41: Call(Method: new() 48)
+41: Call(Method: new())
 42: Store(Module 12)
 43: Pop
 44: Load(Module 12: Null)
-45: Call(Getter: methodOnFoo 43)
+45: Call(Getter: methodOnFoo)
 46: Pop
 47: Load(Module 12: Null)
-48: Call(Getter: methodOnBar 49)
+48: Call(Getter: methodOnBar)
 49: Pop
 50: Load(Module 12: Null)
 51: Constant(12: Num(1))
-52: Call(Method: method(_) 44)
+52: Call(Method: method(_))
 53: Pop
 54: Load(Module 12: Null)
 55: Constant(13: Num(1))
 56: Constant(14: Num(2))
-57: Call(Method: method(_,_) 50)
+57: Call(Method: method(_,_))
 58: Pop
 59: Load(Module 12: Null)
 60: Constant(15: Num(1))
 61: Constant(16: Num(2))
 62: Constant(17: Num(3))
-63: Call(Method: method(_,_,_) 45)
+63: Call(Method: method(_,_,_))
 64: Pop
 65: Load(Module 12: Null)
 66: Constant(18: Num(1))
 67: Constant(19: Num(2))
 68: Constant(20: Num(3))
 69: Constant(21: Num(4))
-70: Call(Method: method(_,_,_,_) 51)
+70: Call(Method: method(_,_,_,_))
 71: Pop
 72: Load(Module 12: Null)
-73: Call(Getter: override 46)
+73: Call(Getter: override)
 74: Pop
 75: End
 76: End

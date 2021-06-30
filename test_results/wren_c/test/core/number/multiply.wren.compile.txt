@@ -7,14 +7,14 @@ Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(5))
 02: Constant(1: Num(3))
-03: Call(Method: *(_) 9)
-04: Call(Method: print(_) 42)
+03: Call(Method: *(_))
+04: Call(Method: print(_))
 05: Pop
 06: Load(Module 9: Class("System"))
 07: Constant(2: Num(12.34))
 08: Constant(3: Num(0.3))
-09: Call(Method: *(_) 9)
-10: Call(Method: print(_) 42)
+09: Call(Method: *(_))
+10: Call(Method: print(_))
 11: Pop
 12: End
 13: End

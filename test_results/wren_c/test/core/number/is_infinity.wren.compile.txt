@@ -7,23 +7,23 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(123))
-02: Call(Getter: isInfinity 43)
-03: Call(Method: print(_) 42)
+02: Call(Getter: isInfinity)
+03: Call(Method: print(_))
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Constant(1: Num(1))
 07: Constant(2: Num(0))
-08: Call(Method: /(_) 10)
-09: Call(Getter: isInfinity 43)
-10: Call(Method: print(_) 42)
+08: Call(Method: /(_))
+09: Call(Getter: isInfinity)
+10: Call(Method: print(_))
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Constant(3: Num(10))
-14: Call(Method: - 8)
+14: Call(Method: -)
 15: Constant(4: Num(0))
-16: Call(Method: /(_) 10)
-17: Call(Getter: isInfinity 43)
-18: Call(Method: print(_) 42)
+16: Call(Method: /(_))
+17: Call(Getter: isInfinity)
+18: Call(Method: print(_))
 19: Pop
 20: End
 21: End

@@ -21,7 +21,7 @@ Code:
 14: Store(Module 11)
 15: Pop
 16: Load(Module 11: Null)
-17: Call(Method: base() 44)
+17: Call(Method: base())
 18: Pop
 19: End
 20: End

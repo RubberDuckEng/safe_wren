@@ -7,11 +7,11 @@ Code:
 00: Constant(0: String("abcd"))
 01: Constant(1: String("bc"))
 02: Constant(2: String("not num"))
-03: Call(Method: indexOf(_,_) 43)
+03: Call(Method: indexOf(_,_))
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Constant(3: String("after"))
-07: Call(Method: print(_) 42)
+07: Call(Method: print(_))
 08: Pop
 09: End
 10: End

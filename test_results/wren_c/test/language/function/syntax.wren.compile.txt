@@ -6,23 +6,23 @@ Constants:
 Code:
 00: Load(Module 3: Class("Fn"))
 01: Closure(0, [])
-02: Call(Method: new(_) 24)
-03: Call(Method: call() 26)
+02: Call(Method: new(_))
+03: Call(Method: call())
 04: Pop
 05: Load(Module 3: Class("Fn"))
 06: Closure(1, [])
-07: Call(Method: new(_) 24)
-08: Call(Method: call() 26)
+07: Call(Method: new(_))
+08: Call(Method: call())
 09: Pop
 10: Load(Module 3: Class("Fn"))
 11: Closure(2, [])
-12: Call(Method: new(_) 24)
-13: Call(Method: call() 26)
+12: Call(Method: new(_))
+13: Call(Method: call())
 14: Pop
 15: Load(Module 3: Class("Fn"))
 16: Closure(3, [])
-17: Call(Method: new(_) 24)
-18: Call(Method: call() 26)
+17: Call(Method: new(_))
+18: Call(Method: call())
 19: Pop
 20: End
 21: End

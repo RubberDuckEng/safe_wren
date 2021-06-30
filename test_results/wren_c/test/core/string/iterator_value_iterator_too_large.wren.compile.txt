@@ -4,7 +4,7 @@ Constants:
 Code:
 00: Constant(0: String("123"))
 01: Constant(1: Num(4))
-02: Call(Method: iteratorValue(_) 23)
+02: Call(Method: iteratorValue(_))
 03: Pop
 04: End
 05: End

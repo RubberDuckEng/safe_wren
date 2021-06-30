@@ -8,12 +8,12 @@ Code:
 03: Constant(1: String("shadow"))
 04: Load(Module 9: Class("System"))
 05: Load(Local 1)
-06: Call(Method: print(_) 42)
+06: Call(Method: print(_))
 07: Pop
 08: Pop
 09: Load(Module 9: Class("System"))
 10: Load(Module 10: Null)
-11: Call(Method: print(_) 42)
+11: Call(Method: print(_))
 12: Pop
 13: End
 14: End

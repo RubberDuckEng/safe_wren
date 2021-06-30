@@ -8,10 +8,10 @@ Code:
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Load(Module 10: Null)
-07: Call(Getter: attributes 43)
+07: Call(Getter: attributes)
 08: Null
-09: Call(Method: ==(_) 1)
-10: Call(Method: print(_) 42)
+09: Call(Method: ==(_))
+10: Call(Method: print(_))
 11: Pop
 12: End
 13: End

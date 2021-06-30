@@ -19,8 +19,8 @@ Code:
 12: Load(Module 10: Null)
 13: Method(instance 45: bar)
 14: Load(Module 10: Null)
-15: Call(Method: new() 44)
-16: Call(Getter: bar 45)
+15: Call(Method: new())
+16: Call(Getter: bar)
 17: Pop
 18: End
 19: End

@@ -12,41 +12,41 @@ Code:
 01: JumpIfFalse(5)
 02: Load(Module 9: Class("System"))
 03: Constant(0: String("bad"))
-04: Call(Method: print(_) 42)
+04: Call(Method: print(_))
 05: Pop
 06: Jump(4)
 07: Load(Module 9: Class("System"))
 08: Constant(1: String("false"))
-09: Call(Method: print(_) 42)
+09: Call(Method: print(_))
 10: Pop
 11: Null
 12: JumpIfFalse(5)
 13: Load(Module 9: Class("System"))
 14: Constant(2: String("bad"))
-15: Call(Method: print(_) 42)
+15: Call(Method: print(_))
 16: Pop
 17: Jump(4)
 18: Load(Module 9: Class("System"))
 19: Constant(3: String("null"))
-20: Call(Method: print(_) 42)
+20: Call(Method: print(_))
 21: Pop
 22: Boolean true
 23: JumpIfFalse(4)
 24: Load(Module 9: Class("System"))
 25: Boolean true
-26: Call(Method: print(_) 42)
+26: Call(Method: print(_))
 27: Pop
 28: Constant(4: Num(0))
 29: JumpIfFalse(4)
 30: Load(Module 9: Class("System"))
 31: Constant(5: Num(0))
-32: Call(Method: print(_) 42)
+32: Call(Method: print(_))
 33: Pop
 34: Constant(6: String(""))
 35: JumpIfFalse(4)
 36: Load(Module 9: Class("System"))
 37: Constant(7: String("empty"))
-38: Call(Method: print(_) 42)
+38: Call(Method: print(_))
 39: Pop
 40: End
 41: End

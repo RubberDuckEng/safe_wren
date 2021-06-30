@@ -11,7 +11,7 @@ Code:
 01: JumpIfFalse(6)
 02: Load(Module 9: Class("System"))
 03: Constant(0: String("bad"))
-04: Call(Method: print(_) 42)
+04: Call(Method: print(_))
 05: Pop
 06: Jump(1)
 07: Loop(8)
@@ -19,7 +19,7 @@ Code:
 09: JumpIfFalse(6)
 10: Load(Module 9: Class("System"))
 11: Constant(1: String("bad"))
-12: Call(Method: print(_) 42)
+12: Call(Method: print(_))
 13: Pop
 14: Jump(1)
 15: Loop(8)
@@ -27,7 +27,7 @@ Code:
 17: JumpIfFalse(6)
 18: Load(Module 9: Class("System"))
 19: Constant(2: String("true"))
-20: Call(Method: print(_) 42)
+20: Call(Method: print(_))
 21: Pop
 22: Jump(1)
 23: Loop(8)
@@ -35,7 +35,7 @@ Code:
 25: JumpIfFalse(6)
 26: Load(Module 9: Class("System"))
 27: Constant(4: Num(0))
-28: Call(Method: print(_) 42)
+28: Call(Method: print(_))
 29: Pop
 30: Jump(1)
 31: Loop(8)
@@ -43,7 +43,7 @@ Code:
 33: JumpIfFalse(6)
 34: Load(Module 9: Class("System"))
 35: Constant(6: String("string"))
-36: Call(Method: print(_) 42)
+36: Call(Method: print(_))
 37: Pop
 38: Jump(1)
 39: Loop(8)

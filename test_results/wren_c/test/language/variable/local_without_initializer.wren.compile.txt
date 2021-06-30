@@ -3,7 +3,7 @@ Code:
 00: Null
 01: Load(Module 9: Class("System"))
 02: Load(Local 1)
-03: Call(Method: print(_) 42)
+03: Call(Method: print(_))
 04: Pop
 05: Pop
 06: End

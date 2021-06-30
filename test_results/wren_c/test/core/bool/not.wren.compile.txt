@@ -2,19 +2,19 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Boolean true
-02: Call(Method: ! 0)
-03: Call(Method: print(_) 42)
+02: Call(Method: !)
+03: Call(Method: print(_))
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Boolean false
-07: Call(Method: ! 0)
-08: Call(Method: print(_) 42)
+07: Call(Method: !)
+08: Call(Method: print(_))
 09: Pop
 10: Load(Module 9: Class("System"))
 11: Boolean true
-12: Call(Method: ! 0)
-13: Call(Method: ! 0)
-14: Call(Method: print(_) 42)
+12: Call(Method: !)
+13: Call(Method: !)
+14: Call(Method: print(_))
 15: Pop
 16: End
 17: End

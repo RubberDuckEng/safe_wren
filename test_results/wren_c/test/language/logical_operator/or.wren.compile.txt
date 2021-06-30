@@ -6,13 +6,13 @@ Code:
 01: Constant(0: Num(1))
 02: Or(1)
 03: Boolean true
-04: Call(Method: print(_) 42)
+04: Call(Method: print(_))
 05: Pop
 06: Load(Module 9: Class("System"))
 07: Boolean false
 08: Or(1)
 09: Constant(1: Num(1))
-10: Call(Method: print(_) 42)
+10: Call(Method: print(_))
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Boolean false
@@ -20,13 +20,13 @@ Code:
 15: Boolean false
 16: Or(1)
 17: Boolean true
-18: Call(Method: print(_) 42)
+18: Call(Method: print(_))
 19: Pop
 20: Load(Module 9: Class("System"))
 21: Boolean false
 22: Or(1)
 23: Boolean false
-24: Call(Method: print(_) 42)
+24: Call(Method: print(_))
 25: Pop
 26: Load(Module 9: Class("System"))
 27: Boolean false
@@ -34,25 +34,25 @@ Code:
 29: Boolean false
 30: Or(1)
 31: Boolean false
-32: Call(Method: print(_) 42)
+32: Call(Method: print(_))
 33: Pop
 34: Load(Module 9: Class("System"))
 35: Boolean false
-36: Call(Method: print(_) 42)
+36: Call(Method: print(_))
 37: Or(7)
 38: Load(Module 9: Class("System"))
 39: Boolean true
-40: Call(Method: print(_) 42)
+40: Call(Method: print(_))
 41: Or(3)
 42: Load(Module 9: Class("System"))
 43: Boolean true
-44: Call(Method: print(_) 42)
+44: Call(Method: print(_))
 45: Pop
 46: Load(Module 9: Class("System"))
 47: Boolean true
 48: Or(1)
 49: Boolean true
-50: Call(Method: print(_) 42)
+50: Call(Method: print(_))
 51: Pop
 52: End
 53: End

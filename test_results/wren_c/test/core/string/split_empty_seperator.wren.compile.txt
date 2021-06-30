@@ -4,7 +4,7 @@ Constants:
 Code:
 00: Constant(0: String("foo"))
 01: Constant(1: String(""))
-02: Call(Method: split(_) 43)
+02: Call(Method: split(_))
 03: Pop
 04: End
 05: End

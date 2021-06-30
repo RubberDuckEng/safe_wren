@@ -9,8 +9,8 @@ Code:
 03: Load(Module 10: Null)
 04: Constant(1: Num(1))
 05: Constant(2: Num(3))
-06: Call(Method: ..(_) 15)
-07: Call(Subscript: [_] 43)
+06: Call(Method: ..(_))
+07: Call(Subscript: [_])
 08: Pop
 09: End
 10: End

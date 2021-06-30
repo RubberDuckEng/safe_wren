@@ -5,19 +5,19 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(0))
-02: Call(Getter: asin 43)
-03: Call(Method: print(_) 42)
+02: Call(Getter: asin)
+03: Call(Method: print(_))
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Constant(1: Num(1))
-07: Call(Getter: asin 43)
-08: Call(Method: print(_) 42)
+07: Call(Getter: asin)
+08: Call(Method: print(_))
 09: Pop
 10: Load(Module 9: Class("System"))
 11: Constant(2: Num(1))
-12: Call(Method: - 8)
-13: Call(Getter: asin 43)
-14: Call(Method: print(_) 42)
+12: Call(Method: -)
+13: Call(Getter: asin)
+14: Call(Method: print(_))
 15: Pop
 16: End
 17: End

@@ -15,8 +15,8 @@ Code:
 09: Load(Module 10: Null)
 10: Method(static 44: new())
 11: Load(Module 10: Null)
-12: Call(Method: new() 44)
-13: Call(Getter: someUnknownMethod 45)
+12: Call(Method: new())
+13: Call(Getter: someUnknownMethod)
 14: Pop
 15: End
 16: End

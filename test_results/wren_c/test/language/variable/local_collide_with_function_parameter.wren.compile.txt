@@ -3,7 +3,7 @@ Constants:
 Code:
 00: Load(Module 3: Class("Fn"))
 01: Closure(0, [])
-02: Call(Method: new(_) 24)
+02: Call(Method: new(_))
 03: Pop
 04: End
 05: End

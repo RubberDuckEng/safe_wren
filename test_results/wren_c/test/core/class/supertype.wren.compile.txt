@@ -20,29 +20,29 @@ Code:
 14: Pop
 15: Load(Module 9: Class("System"))
 16: Load(Module 10: Null)
-17: Call(Getter: supertype 43)
+17: Call(Getter: supertype)
 18: Load(Module 0: Class("Object"))
-19: Call(Method: ==(_) 1)
-20: Call(Method: print(_) 42)
+19: Call(Method: ==(_))
+20: Call(Method: print(_))
 21: Pop
 22: Load(Module 9: Class("System"))
 23: Load(Module 11: Null)
-24: Call(Getter: supertype 43)
+24: Call(Getter: supertype)
 25: Load(Module 10: Null)
-26: Call(Method: ==(_) 1)
-27: Call(Method: print(_) 42)
+26: Call(Method: ==(_))
+27: Call(Method: print(_))
 28: Pop
 29: Load(Module 9: Class("System"))
 30: Load(Module 12: Null)
-31: Call(Getter: supertype 43)
+31: Call(Getter: supertype)
 32: Load(Module 11: Null)
-33: Call(Method: ==(_) 1)
-34: Call(Method: print(_) 42)
+33: Call(Method: ==(_))
+34: Call(Method: print(_))
 35: Pop
 36: Load(Module 9: Class("System"))
 37: Load(Module 0: Class("Object"))
-38: Call(Getter: supertype 43)
-39: Call(Method: print(_) 42)
+38: Call(Getter: supertype)
+39: Call(Method: print(_))
 40: Pop
 41: End
 42: End

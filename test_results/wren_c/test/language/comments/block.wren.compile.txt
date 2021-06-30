@@ -4,11 +4,11 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("ok"))
-02: Call(Method: print(_) 42)
+02: Call(Method: print(_))
 03: Pop
 04: Load(Module 9: Class("System"))
 05: Constant(1: String("ok"))
-06: Call(Method: print(_) 42)
+06: Call(Method: print(_))
 07: Pop
 08: End
 09: End

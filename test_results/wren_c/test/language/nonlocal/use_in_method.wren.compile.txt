@@ -27,11 +27,11 @@ Code:
 18: Load(Module 11: Null)
 19: Method(static 46: classMethod)
 20: Load(Module 11: Null)
-21: Call(Method: new() 44)
-22: Call(Getter: method 45)
+21: Call(Method: new())
+22: Call(Getter: method)
 23: Pop
 24: Load(Module 11: Null)
-25: Call(Getter: classMethod 46)
+25: Call(Getter: classMethod)
 26: Pop
 27: End
 28: End

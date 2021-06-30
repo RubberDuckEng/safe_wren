@@ -35,8 +35,8 @@ Code:
 25: Load(Module 12: Null)
 26: Method(instance 43: foo)
 27: Load(Module 12: Null)
-28: Call(Method: new() 45)
-29: Call(Getter: foo 43)
+28: Call(Method: new())
+29: Call(Getter: foo)
 30: Pop
 31: End
 32: End

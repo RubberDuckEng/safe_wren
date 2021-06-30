@@ -11,26 +11,26 @@ Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(0))
 02: Constant(1: Num(0))
-03: Call(Method: &(_) 17)
-04: Call(Method: print(_) 42)
+03: Call(Method: &(_))
+04: Call(Method: print(_))
 05: Pop
 06: Load(Module 9: Class("System"))
 07: Constant(2: Num(2863311530))
 08: Constant(3: Num(1431655765))
-09: Call(Method: &(_) 17)
-10: Call(Method: print(_) 42)
+09: Call(Method: &(_))
+10: Call(Method: print(_))
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Constant(4: Num(4042322160))
 14: Constant(5: Num(1010580540))
-15: Call(Method: &(_) 17)
-16: Call(Method: print(_) 42)
+15: Call(Method: &(_))
+16: Call(Method: print(_))
 17: Pop
 18: Load(Module 9: Class("System"))
 19: Constant(6: Num(4294967295))
 20: Constant(7: Num(4294967295))
-21: Call(Method: &(_) 17)
-22: Call(Method: print(_) 42)
+21: Call(Method: &(_))
+22: Call(Method: print(_))
 23: Pop
 24: End
 25: End

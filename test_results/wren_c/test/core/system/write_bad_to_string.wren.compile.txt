@@ -21,12 +21,12 @@ Code:
 13: Method(instance 45: toString)
 14: Load(Module 9: Class("System"))
 15: Load(Module 10: Null)
-16: Call(Method: new() 44)
-17: Call(Method: write(_) 46)
+16: Call(Method: new())
+17: Call(Method: write(_))
 18: Pop
 19: Load(Module 9: Class("System"))
 20: Constant(4: String("!"))
-21: Call(Method: print(_) 42)
+21: Call(Method: print(_))
 22: Pop
 23: End
 24: End

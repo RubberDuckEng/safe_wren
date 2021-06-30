@@ -5,19 +5,19 @@ Constants:
 Code:
 00: Constant(0: Num(1))
 01: Constant(1: Num(3))
-02: Call(Method: ..(_) 15)
+02: Call(Method: ..(_))
 03: Store(Module 10)
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Load(Module 10: Null)
-07: Call(Method: join() 43)
-08: Call(Method: print(_) 42)
+07: Call(Method: join())
+08: Call(Method: print(_))
 09: Pop
 10: Load(Module 9: Class("System"))
 11: Load(Module 10: Null)
 12: Constant(2: String(", "))
-13: Call(Method: join(_) 44)
-14: Call(Method: print(_) 42)
+13: Call(Method: join(_))
+14: Call(Method: print(_))
 15: Pop
 16: End
 17: End

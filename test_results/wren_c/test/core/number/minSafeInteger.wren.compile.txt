@@ -2,8 +2,8 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Load(Module 6: Class("Num"))
-02: Call(Getter: minSafeInteger 43)
-03: Call(Method: print(_) 42)
+02: Call(Getter: minSafeInteger)
+03: Call(Method: print(_))
 04: Pop
 05: End
 06: End

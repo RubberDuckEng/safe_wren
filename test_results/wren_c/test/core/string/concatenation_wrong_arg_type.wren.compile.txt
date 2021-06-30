@@ -5,8 +5,8 @@ Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("a"))
 02: Constant(1: Num(123))
-03: Call(Method: +(_) 6)
-04: Call(Method: print(_) 42)
+03: Call(Method: +(_))
+04: Call(Method: print(_))
 05: Pop
 06: End
 07: End

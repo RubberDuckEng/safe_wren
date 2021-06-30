@@ -8,24 +8,24 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("\xc0"))
-02: Call(Getter: codePoints 43)
+02: Call(Getter: codePoints)
 03: Constant(1: Num(0))
-04: Call(Subscript: [_] 44)
-05: Call(Method: print(_) 42)
+04: Call(Subscript: [_])
+05: Call(Method: print(_))
 06: Pop
 07: Load(Module 9: Class("System"))
 08: Constant(2: String("\xe0"))
-09: Call(Getter: codePoints 43)
+09: Call(Getter: codePoints)
 10: Constant(3: Num(0))
-11: Call(Subscript: [_] 44)
-12: Call(Method: print(_) 42)
+11: Call(Subscript: [_])
+12: Call(Method: print(_))
 13: Pop
 14: Load(Module 9: Class("System"))
 15: Constant(4: String("\xe0\xae"))
-16: Call(Getter: codePoints 43)
+16: Call(Getter: codePoints)
 17: Constant(5: Num(0))
-18: Call(Subscript: [_] 44)
-19: Call(Method: print(_) 42)
+18: Call(Subscript: [_])
+19: Call(Method: print(_))
 20: Pop
 21: End
 22: End

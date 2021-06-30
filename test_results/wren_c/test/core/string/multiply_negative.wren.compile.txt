@@ -4,8 +4,8 @@ Constants:
 Code:
 00: Constant(0: String("abc"))
 01: Constant(1: Num(3))
-02: Call(Method: - 8)
-03: Call(Method: *(_) 9)
+02: Call(Method: -)
+03: Call(Method: *(_))
 04: Pop
 05: End
 06: End

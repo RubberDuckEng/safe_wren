@@ -5,25 +5,25 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(0))
-02: Call(Getter: tan 43)
-03: Call(Method: print(_) 42)
+02: Call(Getter: tan)
+03: Call(Method: print(_))
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Load(Module 6: Class("Num"))
-07: Call(Getter: pi 44)
+07: Call(Getter: pi)
 08: Constant(1: Num(4))
-09: Call(Method: /(_) 10)
-10: Call(Getter: tan 43)
-11: Call(Method: print(_) 42)
+09: Call(Method: /(_))
+10: Call(Getter: tan)
+11: Call(Method: print(_))
 12: Pop
 13: Load(Module 9: Class("System"))
 14: Load(Module 6: Class("Num"))
-15: Call(Getter: pi 44)
-16: Call(Method: - 8)
+15: Call(Getter: pi)
+16: Call(Method: -)
 17: Constant(2: Num(4))
-18: Call(Method: /(_) 10)
-19: Call(Getter: tan 43)
-20: Call(Method: print(_) 42)
+18: Call(Method: /(_))
+19: Call(Getter: tan)
+20: Call(Method: print(_))
 21: Pop
 22: End
 23: End

@@ -8,21 +8,21 @@ Code:
 01: JumpIfFalse(4)
 02: Load(Module 9: Class("System"))
 03: Constant(0: String("ok"))
-04: Call(Method: print(_) 42)
+04: Call(Method: print(_))
 05: Jump(3)
 06: Load(Module 9: Class("System"))
 07: Constant(1: String("no"))
-08: Call(Method: print(_) 42)
+08: Call(Method: print(_))
 09: Pop
 10: Boolean false
 11: JumpIfFalse(4)
 12: Load(Module 9: Class("System"))
 13: Constant(2: String("no"))
-14: Call(Method: print(_) 42)
+14: Call(Method: print(_))
 15: Jump(3)
 16: Load(Module 9: Class("System"))
 17: Constant(3: String("ok"))
-18: Call(Method: print(_) 42)
+18: Call(Method: print(_))
 19: Pop
 20: End
 21: End

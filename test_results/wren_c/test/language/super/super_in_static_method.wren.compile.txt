@@ -11,7 +11,7 @@ Code:
 06: Load(Module 10: Null)
 07: Method(static 5: name)
 08: Load(Module 10: Null)
-09: Call(Getter: name 5)
+09: Call(Getter: name)
 10: Pop
 11: End
 12: End

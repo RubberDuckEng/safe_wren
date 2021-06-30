@@ -31,11 +31,11 @@ Code:
 21: Load(Module 10: Null)
 22: Method(static 46: foo)
 23: Load(Module 10: Null)
-24: Call(Getter: callFoo 45)
+24: Call(Getter: callFoo)
 25: Pop
 26: Load(Module 10: Null)
-27: Call(Method: new() 44)
-28: Call(Getter: callFoo 45)
+27: Call(Method: new())
+28: Call(Getter: callFoo)
 29: Pop
 30: End
 31: End

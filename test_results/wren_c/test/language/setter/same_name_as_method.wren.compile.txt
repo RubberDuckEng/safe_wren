@@ -24,15 +24,15 @@ Code:
 15: Load(Module 10: Null)
 16: Method(instance 46: bar)
 17: Load(Module 10: Null)
-18: Call(Method: new() 44)
+18: Call(Method: new())
 19: Store(Module 11)
 20: Pop
 21: Load(Module 11: Null)
 22: Constant(5: String("value"))
-23: Call(Setter: bar=_ 45)
+23: Call(Setter: bar=_)
 24: Pop
 25: Load(Module 11: Null)
-26: Call(Getter: bar 46)
+26: Call(Getter: bar)
 27: Pop
 28: End
 29: End

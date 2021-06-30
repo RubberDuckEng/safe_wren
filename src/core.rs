@@ -173,6 +173,11 @@ fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::String(Rc::new(a + &b)))
 }
 
+// fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+//     // Do we need to confirm args[0] is a string?  wren_c does not.
+//     Ok(args[0].clone())
+// }
+
 fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let closure = args[1].try_into_closure()?;
     Ok(Value::Closure(closure))
@@ -265,6 +270,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
 
     primitive!(vm, core.string, "+(_)", string_plus);
+    // primitive!(vm, core.string, "toString", string_to_string);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);

@@ -7,7 +7,7 @@ Code:
 02: Pop
 03: Load(Module 10: Null)
 04: Constant(1: String("2"))
-05: Call(Subscript: [_] 43)
+05: Call(Subscript: [_])
 06: Pop
 07: End
 08: End

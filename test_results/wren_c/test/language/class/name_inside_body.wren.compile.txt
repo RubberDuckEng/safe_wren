@@ -27,11 +27,11 @@ Code:
 18: Load(Module 10: Null)
 19: Method(static 46: toString)
 20: Load(Module 10: Null)
-21: Call(Getter: sayName 45)
+21: Call(Getter: sayName)
 22: Pop
 23: Load(Module 10: Null)
-24: Call(Method: new() 44)
-25: Call(Getter: sayName 45)
+24: Call(Method: new())
+25: Call(Getter: sayName)
 26: Pop
 27: End
 28: End

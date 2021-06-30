@@ -3,27 +3,27 @@ Code:
 00: Load(Module 9: Class("System"))
 01: Boolean true
 02: Load(Module 4: Class("Bool"))
-03: Call(Method: is(_) 3)
-04: Call(Method: print(_) 42)
+03: Call(Method: is(_))
+04: Call(Method: print(_))
 05: Pop
 06: Load(Module 9: Class("System"))
 07: Boolean true
 08: Load(Module 0: Class("Object"))
-09: Call(Method: is(_) 3)
-10: Call(Method: print(_) 42)
+09: Call(Method: is(_))
+10: Call(Method: print(_))
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Boolean true
 14: Load(Module 6: Class("Num"))
-15: Call(Method: is(_) 3)
-16: Call(Method: print(_) 42)
+15: Call(Method: is(_))
+16: Call(Method: print(_))
 17: Pop
 18: Load(Module 9: Class("System"))
 19: Boolean true
-20: Call(Getter: type 43)
+20: Call(Getter: type)
 21: Load(Module 4: Class("Bool"))
-22: Call(Method: ==(_) 1)
-23: Call(Method: print(_) 42)
+22: Call(Method: ==(_))
+23: Call(Method: print(_))
 24: Pop
 25: End
 26: End

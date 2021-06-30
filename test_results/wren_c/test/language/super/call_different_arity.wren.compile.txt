@@ -38,9 +38,9 @@ Code:
 26: Load(Module 11: Null)
 27: Method(instance 44: foo(_))
 28: Load(Module 11: Null)
-29: Call(Method: new() 47)
+29: Call(Method: new())
 30: Constant(8: Num(1))
-31: Call(Method: foo(_) 44)
+31: Call(Method: foo(_))
 32: Pop
 33: End
 34: End

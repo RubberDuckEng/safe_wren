@@ -15,7 +15,7 @@ Code:
 09: Load(Module 10: Null)
 10: Method(static 44: bar)
 11: Load(Module 10: Null)
-12: Call(Getter: test 43)
+12: Call(Getter: test)
 13: Pop
 14: End
 15: End

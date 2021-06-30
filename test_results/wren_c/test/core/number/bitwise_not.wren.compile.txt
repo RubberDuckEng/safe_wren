@@ -9,38 +9,38 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(0))
-02: Call(Method: ~ 43)
-03: Call(Method: print(_) 42)
+02: Call(Method: ~)
+03: Call(Method: print(_))
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Constant(1: Num(1))
-07: Call(Method: ~ 43)
-08: Call(Method: print(_) 42)
+07: Call(Method: ~)
+08: Call(Method: print(_))
 09: Pop
 10: Load(Module 9: Class("System"))
 11: Constant(2: Num(23))
-12: Call(Method: ~ 43)
-13: Call(Method: print(_) 42)
+12: Call(Method: ~)
+13: Call(Method: print(_))
 14: Pop
 15: Load(Module 9: Class("System"))
 16: Constant(3: Num(4294967295))
-17: Call(Method: ~ 43)
-18: Call(Method: print(_) 42)
+17: Call(Method: ~)
+18: Call(Method: print(_))
 19: Pop
 20: Load(Module 9: Class("System"))
 21: Constant(4: Num(1.23))
-22: Call(Method: ~ 43)
-23: Call(Method: print(_) 42)
+22: Call(Method: ~)
+23: Call(Method: print(_))
 24: Pop
 25: Load(Module 9: Class("System"))
 26: Constant(5: Num(0.00123))
-27: Call(Method: ~ 43)
-28: Call(Method: print(_) 42)
+27: Call(Method: ~)
+28: Call(Method: print(_))
 29: Pop
 30: Load(Module 9: Class("System"))
 31: Constant(6: Num(345.67))
-32: Call(Method: ~ 43)
-33: Call(Method: print(_) 42)
+32: Call(Method: ~)
+33: Call(Method: print(_))
 34: Pop
 35: End
 36: End

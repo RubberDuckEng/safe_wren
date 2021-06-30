@@ -7,8 +7,8 @@ Code:
 02: Pop
 03: Load(Module 3: Class("Fn"))
 04: Closure(1, [])
-05: Call(Method: new(_) 24)
-06: Call(Method: call() 26)
+05: Call(Method: new(_))
+06: Call(Method: call())
 07: Pop
 08: End
 09: End

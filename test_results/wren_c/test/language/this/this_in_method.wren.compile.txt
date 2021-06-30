@@ -24,10 +24,10 @@ Code:
 16: Method(instance 46: baz)
 17: Load(Module 9: Class("System"))
 18: Load(Module 10: Null)
-19: Call(Method: new() 44)
-20: Call(Getter: bar 45)
-21: Call(Getter: baz 46)
-22: Call(Method: print(_) 42)
+19: Call(Method: new())
+20: Call(Getter: bar)
+21: Call(Getter: baz)
+22: Call(Method: print(_))
 23: Pop
 24: End
 25: End

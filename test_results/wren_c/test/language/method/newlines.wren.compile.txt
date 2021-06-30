@@ -27,22 +27,22 @@ Code:
 15: Load(Module 10: Null)
 16: Method(instance 46: [[_,_])
 17: Load(Module 10: Null)
-18: Call(Method: new() 44)
+18: Call(Method: new())
 19: Store(Module 11)
 20: Pop
 21: Load(Module 9: Class("System"))
 22: Load(Module 11: Null)
 23: Constant(5: String("a"))
 24: Constant(6: String("b"))
-25: Call(Method: method(_,_) 45)
-26: Call(Method: print(_) 42)
+25: Call(Method: method(_,_))
+26: Call(Method: print(_))
 27: Pop
 28: Load(Module 9: Class("System"))
 29: Load(Module 11: Null)
 30: Constant(7: String("a"))
 31: Constant(8: String("b"))
-32: Call(Subscript: [_,_] 47)
-33: Call(Method: print(_) 42)
+32: Call(Subscript: [_,_])
+33: Call(Method: print(_))
 34: Pop
 35: End
 36: End

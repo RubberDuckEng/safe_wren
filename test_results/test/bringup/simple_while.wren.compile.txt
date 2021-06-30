@@ -8,18 +8,18 @@ Code:
 02: Pop
 03: Load(Module 10: Null)
 04: Constant(1: Num(2))
-05: Call(Method: <(_) 11)
+05: Call(Method: <(_))
 06: JumpIfFalse(7)
 07: Load(Module 10: Null)
 08: Constant(2: Num(1))
-09: Call(Method: +(_) 6)
+09: Call(Method: +(_))
 10: Store(Module 10)
 11: Load(Module 10: Null)
 12: Pop
 13: Loop(11)
 14: Load(Module 9: Class("System"))
 15: Load(Module 10: Null)
-16: Call(Method: print(_) 42)
+16: Call(Method: print(_))
 17: Pop
 18: End
 19: End

@@ -15,11 +15,11 @@ Code:
 09: Load(Module 10: Null)
 10: Method(static 44: new())
 11: Load(Module 10: Null)
-12: Call(Method: new() 44)
+12: Call(Method: new())
 13: Store(Module 11)
 14: Pop
 15: Load(Module 11: Null)
-16: Call(Method: new() 44)
+16: Call(Method: new())
 17: Pop
 18: End
 19: End

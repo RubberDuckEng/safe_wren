@@ -258,7 +258,7 @@ Code:
 254: Load(Local 254)
 255: Load(Module 9: Class("System"))
 256: Load(Local 255)
-257: Call(Method: print(_) 42)
+257: Call(Method: print(_))
 258: Pop
 259: Pop
 260: Pop

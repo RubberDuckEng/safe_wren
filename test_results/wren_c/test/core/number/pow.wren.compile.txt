@@ -9,20 +9,20 @@ Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(2))
 02: Constant(1: Num(4))
-03: Call(Method: pow(_) 43)
-04: Call(Method: print(_) 42)
+03: Call(Method: pow(_))
+04: Call(Method: print(_))
 05: Pop
 06: Load(Module 9: Class("System"))
 07: Constant(2: Num(2))
 08: Constant(3: Num(10))
-09: Call(Method: pow(_) 43)
-10: Call(Method: print(_) 42)
+09: Call(Method: pow(_))
+10: Call(Method: print(_))
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Constant(4: Num(1))
 14: Constant(5: Num(0))
-15: Call(Method: pow(_) 43)
-16: Call(Method: print(_) 42)
+15: Call(Method: pow(_))
+16: Call(Method: print(_))
 17: Pop
 18: End
 19: End

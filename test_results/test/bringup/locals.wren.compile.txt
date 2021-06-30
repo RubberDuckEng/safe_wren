@@ -8,20 +8,20 @@ Code:
 02: Pop
 03: Load(Module 9: Class("System"))
 04: Load(Module 10: Null)
-05: Call(Method: print(_) 42)
+05: Call(Method: print(_))
 06: Pop
 07: Load(Module 9: Class("System"))
 08: Load(Module 10: Null)
 09: Constant(1: Num(1))
-10: Call(Method: +(_) 6)
-11: Call(Method: print(_) 42)
+10: Call(Method: +(_))
+11: Call(Method: print(_))
 12: Pop
 13: Null
 14: Store(Module 11)
 15: Pop
 16: Load(Module 9: Class("System"))
 17: Load(Module 11: Null)
-18: Call(Method: print(_) 42)
+18: Call(Method: print(_))
 19: Pop
 20: Constant(2: Num(2))
 21: Store(Module 12)
@@ -29,8 +29,8 @@ Code:
 23: Load(Module 9: Class("System"))
 24: Load(Module 10: Null)
 25: Load(Module 12: Null)
-26: Call(Method: +(_) 6)
-27: Call(Method: print(_) 42)
+26: Call(Method: +(_))
+27: Call(Method: print(_))
 28: Pop
 29: End
 30: End

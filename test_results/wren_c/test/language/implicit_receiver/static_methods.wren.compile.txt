@@ -23,7 +23,7 @@ Code:
 15: Load(Module 10: Null)
 16: Method(static 46: test)
 17: Load(Module 10: Null)
-18: Call(Getter: test 46)
+18: Call(Getter: test)
 19: Pop
 20: End
 21: End

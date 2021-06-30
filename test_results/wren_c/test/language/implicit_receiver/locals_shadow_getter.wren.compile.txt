@@ -23,8 +23,8 @@ Code:
 15: Load(Module 10: Null)
 16: Method(instance 46: test)
 17: Load(Module 10: Null)
-18: Call(Method: new() 44)
-19: Call(Getter: test 46)
+18: Call(Method: new())
+19: Call(Getter: test)
 20: Pop
 21: End
 22: End

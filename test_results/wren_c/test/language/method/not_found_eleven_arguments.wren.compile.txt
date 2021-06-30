@@ -26,7 +26,7 @@ Code:
 09: Load(Module 10: Null)
 10: Method(static 44: new())
 11: Load(Module 10: Null)
-12: Call(Method: new() 44)
+12: Call(Method: new())
 13: Constant(3: Num(1))
 14: Constant(4: Num(2))
 15: Constant(5: Num(3))
@@ -38,7 +38,7 @@ Code:
 21: Constant(11: Num(9))
 22: Constant(12: Num(10))
 23: Constant(13: Num(11))
-24: Call(Method: someUnknownMethod(_,_,_,_,_,_,_,_,_,_,_) 45)
+24: Call(Method: someUnknownMethod(_,_,_,_,_,_,_,_,_,_,_))
 25: Pop
 26: End
 27: End

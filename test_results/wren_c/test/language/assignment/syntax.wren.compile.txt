@@ -18,11 +18,11 @@ Code:
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Load(Module 10: Null)
-14: Call(Method: print(_) 42)
+14: Call(Method: print(_))
 15: Pop
 16: Load(Module 9: Class("System"))
 17: Load(Module 11: Null)
-18: Call(Method: print(_) 42)
+18: Call(Method: print(_))
 19: Pop
 20: Constant(3: String("var"))
 21: Store(Module 10)
@@ -31,11 +31,11 @@ Code:
 24: Pop
 25: Load(Module 9: Class("System"))
 26: Load(Module 10: Null)
-27: Call(Method: print(_) 42)
+27: Call(Method: print(_))
 28: Pop
 29: Load(Module 9: Class("System"))
 30: Load(Module 12: Null)
-31: Call(Method: print(_) 42)
+31: Call(Method: print(_))
 32: Pop
 33: End
 34: End

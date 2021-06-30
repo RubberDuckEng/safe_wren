@@ -10,7 +10,7 @@ Code:
 03: Constant(0: String("yes"))
 04: Jump(1)
 05: Constant(1: String("no"))
-06: Call(Method: print(_) 42)
+06: Call(Method: print(_))
 07: Pop
 08: Load(Module 9: Class("System"))
 09: Boolean false
@@ -18,7 +18,7 @@ Code:
 11: Constant(2: String("yes"))
 12: Jump(1)
 13: Constant(3: String("no"))
-14: Call(Method: print(_) 42)
+14: Call(Method: print(_))
 15: Pop
 16: End
 17: End

@@ -5,9 +5,9 @@ Constants:
 Code:
 00: Constant(0: Num(1))
 01: Constant(1: Num(3))
-02: Call(Method: ..(_) 15)
+02: Call(Method: ..(_))
 03: Constant(2: String(""))
-04: Call(Method: iterate(_) 22)
+04: Call(Method: iterate(_))
 05: Pop
 06: End
 07: End

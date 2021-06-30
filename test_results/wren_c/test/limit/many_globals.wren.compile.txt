@@ -16386,7 +16386,7 @@ Code:
 12287: Pop
 12288: Load(Module 9: Class("System"))
 12289: Load(Module 4105: Null)
-12290: Call(Method: print(_) 42)
+12290: Call(Method: print(_))
 12291: Pop
 12292: End
 12293: End

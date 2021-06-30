@@ -6,24 +6,24 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(1024))
-02: Call(Getter: log2 43)
-03: Call(Method: print(_) 42)
+02: Call(Getter: log2)
+03: Call(Method: print(_))
 04: Pop
 05: Load(Module 9: Class("System"))
 06: Constant(1: Num(2048))
-07: Call(Getter: log2 43)
-08: Call(Method: print(_) 42)
+07: Call(Getter: log2)
+08: Call(Method: print(_))
 09: Pop
 10: Load(Module 9: Class("System"))
 11: Constant(2: Num(100))
-12: Call(Getter: log2 43)
-13: Call(Method: print(_) 42)
+12: Call(Getter: log2)
+13: Call(Method: print(_))
 14: Pop
 15: Load(Module 9: Class("System"))
 16: Constant(3: Num(1))
-17: Call(Method: - 8)
-18: Call(Getter: log2 43)
-19: Call(Method: print(_) 42)
+17: Call(Method: -)
+18: Call(Getter: log2)
+19: Call(Method: print(_))
 20: Pop
 21: End
 22: End

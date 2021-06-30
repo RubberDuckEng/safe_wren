@@ -20,15 +20,15 @@ Code:
 14: Pop
 15: Load(Module 9: Class("System"))
 16: Load(Module 10: Null)
-17: Call(Method: print(_) 42)
+17: Call(Method: print(_))
 18: Pop
 19: Load(Module 9: Class("System"))
 20: Load(Module 11: Null)
-21: Call(Method: print(_) 42)
+21: Call(Method: print(_))
 22: Pop
 23: Load(Module 9: Class("System"))
 24: Load(Module 12: Null)
-25: Call(Method: print(_) 42)
+25: Call(Method: print(_))
 26: Pop
 27: End
 28: End

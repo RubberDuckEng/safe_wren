@@ -11,14 +11,14 @@ Code:
 06: Load(Module 9: Class("System"))
 07: Load(Module 10: Null)
 08: Load(Module 11: Null)
-09: Call(Method: max(_) 43)
-10: Call(Method: print(_) 42)
+09: Call(Method: max(_))
+10: Call(Method: print(_))
 11: Pop
 12: Load(Module 9: Class("System"))
 13: Load(Module 10: Null)
 14: Load(Module 11: Null)
-15: Call(Method: min(_) 44)
-16: Call(Method: print(_) 42)
+15: Call(Method: min(_))
+16: Call(Method: print(_))
 17: Pop
 18: End
 19: End

@@ -30,9 +30,9 @@ Code:
 21: Method(static 47: new())
 22: Load(Module 9: Class("System"))
 23: Load(Module 11: Null)
-24: Call(Method: new() 47)
-25: Call(Getter: callSuperToString 43)
-26: Call(Method: print(_) 42)
+24: Call(Method: new())
+25: Call(Getter: callSuperToString)
+26: Call(Method: print(_))
 27: Pop
 28: End
 29: End

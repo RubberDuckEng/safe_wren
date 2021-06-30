@@ -25,8 +25,8 @@ Code:
 17: Load(Module 11: Null)
 18: Method(instance 45: foo)
 19: Load(Module 11: Null)
-20: Call(Method: new() 44)
-21: Call(Getter: foo 45)
+20: Call(Method: new())
+21: Call(Getter: foo)
 22: Pop
 23: End
 24: End

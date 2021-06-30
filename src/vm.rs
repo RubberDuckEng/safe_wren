@@ -914,11 +914,12 @@ fn op_debug_string(
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
         Ops::Call(sig, symbol) => {
+            // Do not print the symbol, otherwise every time we
+            // change wren_core.wren all compile.txt files change.
             format!(
-                "Call({:?}: {} {})",
+                "Call({:?}: {})",
                 sig.call_type,
-                methods.lookup_symbol(*symbol),
-                symbol
+                methods.lookup_symbol(*symbol)
             )
         }
         Ops::Load(v) => match v.scope {

@@ -16,9 +16,9 @@ Code:
 10: Method(static 44: new())
 11: Load(Module 9: Class("System"))
 12: Load(Module 10: Null)
-13: Call(Method: new() 44)
-14: Call(Method: ! 0)
-15: Call(Method: print(_) 42)
+13: Call(Method: new())
+14: Call(Method: !)
+15: Call(Method: print(_))
 16: Pop
 17: End
 18: End

@@ -7,7 +7,7 @@ Code:
 03: Store(Module 10)
 04: Pop
 05: Load(Module 10: Null)
-06: Call(Method: new() 43)
+06: Call(Method: new())
 07: Store(Module 11)
 08: Pop
 09: End

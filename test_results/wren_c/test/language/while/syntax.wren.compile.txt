@@ -11,15 +11,15 @@ Code:
 02: Pop
 03: Load(Module 10: Null)
 04: Constant(1: Num(3))
-05: Call(Method: <(_) 11)
+05: Call(Method: <(_))
 06: JumpIfFalse(9)
 07: Load(Module 9: Class("System"))
 08: Load(Module 10: Null)
 09: Constant(2: Num(1))
-10: Call(Method: +(_) 6)
+10: Call(Method: +(_))
 11: Store(Module 10)
 12: Load(Module 10: Null)
-13: Call(Method: print(_) 42)
+13: Call(Method: print(_))
 14: Pop
 15: Loop(13)
 16: Constant(3: Num(0))
@@ -27,15 +27,15 @@ Code:
 18: Pop
 19: Load(Module 11: Null)
 20: Constant(4: Num(3))
-21: Call(Method: <(_) 11)
+21: Call(Method: <(_))
 22: JumpIfFalse(11)
 23: Load(Module 9: Class("System"))
 24: Load(Module 11: Null)
-25: Call(Method: print(_) 42)
+25: Call(Method: print(_))
 26: Pop
 27: Load(Module 11: Null)
 28: Constant(5: Num(1))
-29: Call(Method: +(_) 6)
+29: Call(Method: +(_))
 30: Store(Module 11)
 31: Load(Module 11: Null)
 32: Pop

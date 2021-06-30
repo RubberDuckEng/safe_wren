@@ -4,10 +4,10 @@ Constants:
 Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("string"))
-02: Call(Getter: codePoints 43)
+02: Call(Getter: codePoints)
 03: Constant(1: Num(12.34))
-04: Call(Subscript: [_] 44)
-05: Call(Method: print(_) 42)
+04: Call(Subscript: [_])
+05: Call(Method: print(_))
 06: Pop
 07: End
 08: End

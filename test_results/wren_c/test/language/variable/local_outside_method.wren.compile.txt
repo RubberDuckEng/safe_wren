@@ -31,11 +31,11 @@ Code:
 20: Load(Local 2)
 21: Method(static 47: classMethod)
 22: Load(Local 2)
-23: Call(Method: new() 44)
-24: Call(Getter: method 46)
+23: Call(Method: new())
+24: Call(Getter: method)
 25: Pop
 26: Load(Local 2)
-27: Call(Getter: classMethod 47)
+27: Call(Getter: classMethod)
 28: Pop
 29: Pop
 30: Pop

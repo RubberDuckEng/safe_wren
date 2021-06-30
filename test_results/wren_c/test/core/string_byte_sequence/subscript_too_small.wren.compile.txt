@@ -3,10 +3,10 @@ Constants:
 01: Num(5)
 Code:
 00: Constant(0: String("abcd"))
-01: Call(Getter: bytes 43)
+01: Call(Getter: bytes)
 02: Constant(1: Num(5))
-03: Call(Method: - 8)
-04: Call(Subscript: [_] 44)
+03: Call(Method: -)
+04: Call(Subscript: [_])
 05: Pop
 06: End
 07: End

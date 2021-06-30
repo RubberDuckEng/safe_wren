@@ -3,9 +3,9 @@ Constants:
 01: Num(12.34)
 Code:
 00: Constant(0: String("abcd"))
-01: Call(Getter: bytes 43)
+01: Call(Getter: bytes)
 02: Constant(1: Num(12.34))
-03: Call(Method: iteratorValue(_) 23)
+03: Call(Method: iteratorValue(_))
 04: Pop
 05: End
 06: End
