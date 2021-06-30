@@ -2,9 +2,9 @@ Constants:
 00: String("Subclass")
 Code:
 00: Constant(0: String("Subclass"))
-01: Load(Module 5: Class("Null"))
+01: Load(Module, Class("Null"))
 02: Class(0 fields)
-03: Store(Module 10)
+03: Store(Module)
 04: Pop
 05: End
 06: End

@@ -1,7 +1,7 @@
 Constants:
 Code:
-00: Load(Module 5: Class("Null"))
-01: Call(Method: new())
+00: Load(Module, Class("Null"))
+01: Call(Method, new())
 02: Pop
 03: End
 04: End

@@ -4,7 +4,7 @@ Code:
 00: Constant(0: String("Foo"))
 01: Null
 02: Class(0 fields)
-03: Store(Module 10)
+03: Store(Module)
 04: Pop
 05: End
 06: End

@@ -3,21 +3,21 @@ Constants:
 01: Num(100)
 02: Num(1)
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: Num(3))
-02: Call(Getter: log)
-03: Call(Method: print(_))
+02: Call(Getter, log)
+03: Call(Method, print(_))
 04: Pop
-05: Load(Module 9: Class("System"))
+05: Load(Module, Class("System"))
 06: Constant(1: Num(100))
-07: Call(Getter: log)
-08: Call(Method: print(_))
+07: Call(Getter, log)
+08: Call(Method, print(_))
 09: Pop
-10: Load(Module 9: Class("System"))
+10: Load(Module, Class("System"))
 11: Constant(2: Num(1))
-12: Call(Method: -)
-13: Call(Getter: log)
-14: Call(Method: print(_))
+12: Call(Method, -)
+13: Call(Getter, log)
+14: Call(Method, print(_))
 15: Pop
 16: End
 17: End

@@ -17,7 +17,7 @@ Constants:
 15: Num(16)
 16: Num(17)
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: Num(1))
 02: Constant(1: Num(2))
 03: Constant(2: Num(3))
@@ -35,7 +35,7 @@ Code:
 15: Constant(14: Num(15))
 16: Constant(15: Num(16))
 17: Constant(16: Num(17))
-18: Call(Method: print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
+18: Call(Method, print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 19: Pop
 20: End
 21: End

@@ -5,34 +5,34 @@ Constants:
 03: String("var")
 Code:
 00: Constant(0: String("a"))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
 03: Constant(1: String("b"))
-04: Store(Module 11)
+04: Store(Module)
 05: Pop
 06: Constant(2: String("chain"))
-07: Store(Module 11)
-08: Store(Module 10)
+07: Store(Module)
+08: Store(Module)
 09: Pop
-10: Load(Module 9: Class("System"))
-11: Load(Module 10: Null)
-12: Call(Method: print(_))
+10: Load(Module, Class("System"))
+11: Load(Module, Null)
+12: Call(Method, print(_))
 13: Pop
-14: Load(Module 9: Class("System"))
-15: Load(Module 11: Null)
-16: Call(Method: print(_))
+14: Load(Module, Class("System"))
+15: Load(Module, Null)
+16: Call(Method, print(_))
 17: Pop
 18: Constant(3: String("var"))
-19: Store(Module 10)
-20: Store(Module 12)
+19: Store(Module)
+20: Store(Module)
 21: Pop
-22: Load(Module 9: Class("System"))
-23: Load(Module 10: Null)
-24: Call(Method: print(_))
+22: Load(Module, Class("System"))
+23: Load(Module, Null)
+24: Call(Method, print(_))
 25: Pop
-26: Load(Module 9: Class("System"))
-27: Load(Module 12: Null)
-28: Call(Method: print(_))
+26: Load(Module, Class("System"))
+27: Load(Module, Null)
+28: Call(Method, print(_))
 29: Pop
 30: End
 31: End

@@ -6,18 +6,18 @@ Constants:
 04: String("in")
 Code:
 00: Constant(0: String("out"))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
 03: Boolean true
 04: JumpIfFalse(2)
 05: Constant(1: String("in"))
 06: Pop
-07: Load(Module 9: Class("System"))
-08: Load(Module 10: Null)
-09: Call(Method: print(_))
+07: Load(Module, Class("System"))
+08: Load(Module, Null)
+09: Call(Method, print(_))
 10: Pop
 11: Constant(2: String("out"))
-12: Store(Module 11)
+12: Store(Module)
 13: Pop
 14: Boolean false
 15: JumpIfFalse(3)
@@ -26,9 +26,9 @@ Code:
 18: Jump(2)
 19: Constant(4: String("in"))
 20: Pop
-21: Load(Module 9: Class("System"))
-22: Load(Module 11: Null)
-23: Call(Method: print(_))
+21: Load(Module, Class("System"))
+22: Load(Module, Null)
+23: Call(Method, print(_))
 24: Pop
 25: End
 26: End

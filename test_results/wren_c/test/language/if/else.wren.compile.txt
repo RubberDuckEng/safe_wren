@@ -7,34 +7,34 @@ Constants:
 Code:
 00: Boolean true
 01: JumpIfFalse(5)
-02: Load(Module 9: Class("System"))
+02: Load(Module, Class("System"))
 03: Constant(0: String("good"))
-04: Call(Method: print(_))
+04: Call(Method, print(_))
 05: Pop
 06: Jump(4)
-07: Load(Module 9: Class("System"))
+07: Load(Module, Class("System"))
 08: Constant(1: String("bad"))
-09: Call(Method: print(_))
+09: Call(Method, print(_))
 10: Pop
 11: Boolean false
 12: JumpIfFalse(5)
-13: Load(Module 9: Class("System"))
+13: Load(Module, Class("System"))
 14: Constant(2: String("bad"))
-15: Call(Method: print(_))
+15: Call(Method, print(_))
 16: Pop
 17: Jump(4)
-18: Load(Module 9: Class("System"))
+18: Load(Module, Class("System"))
 19: Constant(3: String("good"))
-20: Call(Method: print(_))
+20: Call(Method, print(_))
 21: Pop
 22: Boolean false
 23: JumpIfFalse(3)
 24: Null
 25: Pop
 26: Jump(4)
-27: Load(Module 9: Class("System"))
+27: Load(Module, Class("System"))
 28: Constant(4: String("block"))
-29: Call(Method: print(_))
+29: Call(Method, print(_))
 30: Pop
 31: End
 32: End

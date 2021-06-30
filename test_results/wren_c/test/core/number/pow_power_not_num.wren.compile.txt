@@ -3,7 +3,7 @@ Constants:
 Code:
 00: Constant(0: Num(1))
 01: Boolean false
-02: Call(Method: pow(_))
+02: Call(Method, pow(_))
 03: Pop
 04: End
 05: End

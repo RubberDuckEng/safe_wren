@@ -2,8 +2,8 @@ Constants:
 00: Num(0.2)
 Code:
 00: Constant(0: Num(0.2))
-01: Call(Method: -)
-02: Store(Module 10)
+01: Call(Method, -)
+02: Store(Module)
 03: Pop
 04: End
 05: End

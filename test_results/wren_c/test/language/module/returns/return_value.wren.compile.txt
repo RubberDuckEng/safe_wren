@@ -3,15 +3,15 @@ Constants:
 01: Num(42)
 02: String("bar")
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: String("foo"))
-02: Call(Method: print(_))
+02: Call(Method, print(_))
 03: Pop
 04: Constant(1: Num(42))
 05: Return
-06: Load(Module 9: Class("System"))
+06: Load(Module, Class("System"))
 07: Constant(2: String("bar"))
-08: Call(Method: print(_))
+08: Call(Method, print(_))
 09: Pop
 10: End
 11: End

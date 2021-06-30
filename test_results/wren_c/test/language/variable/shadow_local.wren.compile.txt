@@ -4,14 +4,14 @@ Constants:
 Code:
 00: Constant(0: String("local"))
 01: Constant(1: String("shadow"))
-02: Load(Module 9: Class("System"))
-03: Load(Local 1)
-04: Call(Method: print(_))
+02: Load(Module, Class("System"))
+03: Load(Local, 1)
+04: Call(Method, print(_))
 05: Pop
 06: Pop
-07: Load(Module 9: Class("System"))
-08: Load(Local 1)
-09: Call(Method: print(_))
+07: Load(Module, Class("System"))
+08: Load(Local, 1)
+09: Call(Method, print(_))
 10: Pop
 11: Pop
 12: End

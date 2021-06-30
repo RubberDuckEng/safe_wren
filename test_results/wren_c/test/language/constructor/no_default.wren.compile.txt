@@ -2,13 +2,13 @@ Constants:
 00: String("Foo")
 Code:
 00: Constant(0: String("Foo"))
-01: Load(Module 0: Class("Object"))
+01: Load(Module, Class("Object"))
 02: Class(0 fields)
-03: Store(Module 10)
+03: Store(Module)
 04: Pop
-05: Load(Module 10: Null)
-06: Call(Method: new())
-07: Store(Module 11)
+05: Load(Module, Null)
+06: Call(Method, new())
+07: Store(Module)
 08: Pop
 09: End
 10: End

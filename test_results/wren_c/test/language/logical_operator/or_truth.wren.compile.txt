@@ -7,35 +7,35 @@ Constants:
 05: String("s")
 06: String("ok")
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Boolean false
 02: Or(1)
 03: Constant(0: String("ok"))
-04: Call(Method: print(_))
+04: Call(Method, print(_))
 05: Pop
-06: Load(Module 9: Class("System"))
+06: Load(Module, Class("System"))
 07: Null
 08: Or(1)
 09: Constant(1: String("ok"))
-10: Call(Method: print(_))
+10: Call(Method, print(_))
 11: Pop
-12: Load(Module 9: Class("System"))
+12: Load(Module, Class("System"))
 13: Boolean true
 14: Or(1)
 15: Constant(2: String("ok"))
-16: Call(Method: print(_))
+16: Call(Method, print(_))
 17: Pop
-18: Load(Module 9: Class("System"))
+18: Load(Module, Class("System"))
 19: Constant(3: Num(0))
 20: Or(1)
 21: Constant(4: String("ok"))
-22: Call(Method: print(_))
+22: Call(Method, print(_))
 23: Pop
-24: Load(Module 9: Class("System"))
+24: Load(Module, Class("System"))
 25: Constant(5: String("s"))
 26: Or(1)
 27: Constant(6: String("ok"))
-28: Call(Method: print(_))
+28: Call(Method, print(_))
 29: Pop
 30: End
 31: End

@@ -3,22 +3,22 @@ Constants:
 01: Num(6)
 Code:
 00: Constant(0: Num(4))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
 03: Constant(1: Num(6))
-04: Store(Module 11)
+04: Store(Module)
 05: Pop
-06: Load(Module 9: Class("System"))
-07: Load(Module 10: Null)
-08: Load(Module 11: Null)
-09: Call(Method: max(_))
-10: Call(Method: print(_))
+06: Load(Module, Class("System"))
+07: Load(Module, Null)
+08: Load(Module, Null)
+09: Call(Method, max(_))
+10: Call(Method, print(_))
 11: Pop
-12: Load(Module 9: Class("System"))
-13: Load(Module 10: Null)
-14: Load(Module 11: Null)
-15: Call(Method: min(_))
-16: Call(Method: print(_))
+12: Load(Module, Class("System"))
+13: Load(Module, Null)
+14: Load(Module, Null)
+15: Call(Method, min(_))
+16: Call(Method, print(_))
 17: Pop
 18: End
 19: End

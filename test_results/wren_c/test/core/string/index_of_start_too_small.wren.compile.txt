@@ -6,8 +6,8 @@ Code:
 00: Constant(0: String("abcd"))
 01: Constant(1: String("bc"))
 02: Constant(2: Num(5))
-03: Call(Method: -)
-04: Call(Method: indexOf(_,_))
+03: Call(Method, -)
+04: Call(Method, indexOf(_,_))
 05: Pop
 06: End
 07: End

@@ -9,41 +9,41 @@ Constants:
 07: String("ok")
 08: String("ok")
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: String("ok"))
-02: Call(Method: print(_))
+02: Call(Method, print(_))
 03: Pop
-04: Load(Module 9: Class("System"))
+04: Load(Module, Class("System"))
 05: Constant(1: String("ok"))
-06: Call(Method: print(_))
+06: Call(Method, print(_))
 07: Pop
-08: Load(Module 9: Class("System"))
+08: Load(Module, Class("System"))
 09: Constant(2: String("ok"))
-10: Call(Method: print(_))
+10: Call(Method, print(_))
 11: Pop
-12: Load(Module 9: Class("System"))
+12: Load(Module, Class("System"))
 13: Constant(3: String("ok"))
-14: Call(Method: print(_))
+14: Call(Method, print(_))
 15: Pop
-16: Load(Module 9: Class("System"))
+16: Load(Module, Class("System"))
 17: Constant(4: String("ok"))
-18: Call(Method: print(_))
+18: Call(Method, print(_))
 19: Pop
-20: Load(Module 9: Class("System"))
+20: Load(Module, Class("System"))
 21: Constant(5: String("ok"))
-22: Call(Method: print(_))
+22: Call(Method, print(_))
 23: Pop
-24: Load(Module 9: Class("System"))
+24: Load(Module, Class("System"))
 25: Constant(6: String("ok"))
-26: Call(Method: print(_))
+26: Call(Method, print(_))
 27: Pop
-28: Load(Module 9: Class("System"))
+28: Load(Module, Class("System"))
 29: Constant(7: String("ok"))
-30: Call(Method: print(_))
+30: Call(Method, print(_))
 31: Pop
-32: Load(Module 9: Class("System"))
+32: Load(Module, Class("System"))
 33: Constant(8: String("ok"))
-34: Call(Method: print(_))
+34: Call(Method, print(_))
 35: Pop
 36: End
 37: End

@@ -3,13 +3,13 @@ Constants:
 01: Num(2)
 Code:
 00: Constant(0: Num(1))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
 03: Constant(1: Num(2))
 04: Pop
-05: Load(Module 9: Class("System"))
-06: Load(Module 10: Null)
-07: Call(Method: print(_))
+05: Load(Module, Class("System"))
+06: Load(Module, Null)
+07: Call(Method, print(_))
 08: Pop
 09: End
 10: End

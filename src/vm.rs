@@ -703,6 +703,7 @@ impl WrenVM {
                     &self.methods,
                     &frame.closure.borrow(),
                     Some(frame),
+                    DumpMode::ShowSymbols,
                 );
             }
             frame.pc += 1;
@@ -887,6 +888,11 @@ impl CallFrame {
     }
 }
 
+enum DumpMode {
+    ShowSymbols,
+    HideSymbols,
+}
+
 fn dump_instruction(
     pc: usize,
     op: &Ops,
@@ -894,11 +900,12 @@ fn dump_instruction(
     methods: &SymbolTable,
     closure: &ObjClosure,
     frame: Option<&CallFrame>,
+    mode: DumpMode,
 ) {
     println!(
         "{:02}: {}",
         pc,
-        op_debug_string(op, module, methods, closure, frame)
+        op_debug_string(op, module, methods, closure, frame, mode)
     );
 }
 
@@ -908,7 +915,19 @@ fn op_debug_string(
     methods: &SymbolTable,
     closure: &ObjClosure,
     frame: Option<&CallFrame>,
+    mode: DumpMode,
 ) -> String {
+    // If stable_output do not print the symbol, otherwise every time we
+    // change wren_core.wren all compile.txt files change.
+    let unstable_num_arrow = |symbol: usize| match mode {
+        DumpMode::HideSymbols => format!(""),
+        DumpMode::ShowSymbols => format!("{} -> ", symbol),
+    };
+    let comma_unstable_num = |symbol: usize| match mode {
+        DumpMode::HideSymbols => format!(""),
+        DumpMode::ShowSymbols => format!(" {}", symbol),
+    };
+
     match op {
         Ops::Constant(i) => format!(
             "Constant({}: {:?})",
@@ -918,28 +937,32 @@ fn op_debug_string(
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
         Ops::Call(sig, symbol) => {
-            // Do not print the symbol, otherwise every time we
-            // change wren_core.wren all compile.txt files change.
             format!(
-                "Call({:?}: {})",
+                "Call({:?}, {}{})",
                 sig.call_type,
+                unstable_num_arrow(*symbol),
                 methods.lookup_symbol(*symbol)
             )
         }
         Ops::Load(v) => match v.scope {
             Scope::Local => match frame {
-                Some(f) => format!("Load(Local {}: {:?})", v.index, f.stack[v.index]),
-                None => format!("Load(Local {})", v.index),
+                // Do not hide symbols for locals, they're stable-enough.
+                Some(f) => format!("Load(Local, {} -> {:?})", v.index, f.stack[v.index]),
+                None => format!("Load(Local, {})", v.index),
             },
             Scope::Upvalue => unimplemented!("dump load upvalue"),
             Scope::Module => {
-                format!("Load(Module {}: {:?})", v.index, module.variables[v.index])
+                format!(
+                    "Load(Module, {}{:?})",
+                    unstable_num_arrow(v.index),
+                    module.variables[v.index]
+                )
             }
         },
         Ops::Store(v) => match v.scope {
-            Scope::Local => format!("Store(Local {})", v.index),
+            Scope::Local => format!("Store(Local, {})", v.index),
             Scope::Upvalue => unimplemented!("dump store upvalue"),
-            Scope::Module => format!("Store(Module {})", v.index),
+            Scope::Module => format!("Store(Module{})", comma_unstable_num(v.index)),
         },
         Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
         Ops::JumpIfFalse(_) => format!("{:?}", op),
@@ -952,9 +975,12 @@ fn op_debug_string(
         Ops::Construct => format!("{:?}", op),
         Ops::Method(is_static, symbol) => {
             let dispatch = if *is_static { "static" } else { "instance" };
-            // Do not print symbol to avoid rebaselining every compile.txt
-            // any time we edit wren_core.wren.
-            format!("Method({} {})", dispatch, methods.method_names[*symbol])
+            format!(
+                "Method({}, {}{})",
+                dispatch,
+                unstable_num_arrow(*symbol),
+                methods.method_names[*symbol]
+            )
         }
         Ops::Closure(_, _) => format!("{:?}", op),
         Ops::Class(num_fields) => format!("Class({} fields)", num_fields),
@@ -974,7 +1000,15 @@ pub(crate) fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     }
     println!("Code:");
     for (pc, op) in func.code.iter().enumerate() {
-        dump_instruction(pc, &op, &vm.module, &vm.methods, closure, None)
+        dump_instruction(
+            pc,
+            &op,
+            &vm.module,
+            &vm.methods,
+            closure,
+            None,
+            DumpMode::HideSymbols,
+        )
     }
 }
 

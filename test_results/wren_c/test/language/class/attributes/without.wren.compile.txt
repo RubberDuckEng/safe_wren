@@ -2,16 +2,16 @@ Constants:
 00: String("Without")
 Code:
 00: Constant(0: String("Without"))
-01: Load(Module 0: Class("Object"))
+01: Load(Module, Class("Object"))
 02: Class(0 fields)
-03: Store(Module 10)
+03: Store(Module)
 04: Pop
-05: Load(Module 9: Class("System"))
-06: Load(Module 10: Null)
-07: Call(Getter: attributes)
+05: Load(Module, Class("System"))
+06: Load(Module, Null)
+07: Call(Getter, attributes)
 08: Null
-09: Call(Method: ==(_))
-10: Call(Method: print(_))
+09: Call(Method, ==(_))
+10: Call(Method, print(_))
 11: Pop
 12: End
 13: End

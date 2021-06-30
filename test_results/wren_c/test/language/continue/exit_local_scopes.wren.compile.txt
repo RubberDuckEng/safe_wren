@@ -8,30 +8,30 @@ Constants:
 Code:
 00: Constant(0: Num(0))
 01: Constant(1: Num(5))
-02: Call(Method: ..(_))
+02: Call(Method, ..(_))
 03: Null
-04: Load(Local 1)
-05: Load(Local 2)
-06: Call(Method: iterate(_))
-07: Store(Local 2)
+04: Load(Local, 1)
+05: Load(Local, 2)
+06: Call(Method, iterate(_))
+07: Store(Local, 2)
 08: JumpIfFalse(20)
-09: Load(Local 1)
-10: Load(Local 2)
-11: Call(Method: iteratorValue(_))
+09: Load(Local, 1)
+10: Load(Local, 2)
+11: Call(Method, iteratorValue(_))
 12: Constant(2: String("a"))
 13: Constant(3: String("b"))
 14: Constant(4: String("c"))
-15: Load(Local 3)
+15: Load(Local, 3)
 16: Constant(5: Num(1))
-17: Call(Method: ==(_))
+17: Call(Method, ==(_))
 18: JumpIfFalse(1)
 19: Loop(16)
 20: Pop
 21: Pop
 22: Pop
-23: Load(Module 9: Class("System"))
-24: Load(Local 3)
-25: Call(Method: print(_))
+23: Load(Module, Class("System"))
+24: Load(Local, 3)
+25: Call(Method, print(_))
 26: Pop
 27: Pop
 28: Loop(25)

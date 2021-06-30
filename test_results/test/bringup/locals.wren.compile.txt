@@ -4,33 +4,33 @@ Constants:
 02: Num(2)
 Code:
 00: Constant(0: Num(1))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
-03: Load(Module 9: Class("System"))
-04: Load(Module 10: Null)
-05: Call(Method: print(_))
+03: Load(Module, Class("System"))
+04: Load(Module, Null)
+05: Call(Method, print(_))
 06: Pop
-07: Load(Module 9: Class("System"))
-08: Load(Module 10: Null)
+07: Load(Module, Class("System"))
+08: Load(Module, Null)
 09: Constant(1: Num(1))
-10: Call(Method: +(_))
-11: Call(Method: print(_))
+10: Call(Method, +(_))
+11: Call(Method, print(_))
 12: Pop
 13: Null
-14: Store(Module 11)
+14: Store(Module)
 15: Pop
-16: Load(Module 9: Class("System"))
-17: Load(Module 11: Null)
-18: Call(Method: print(_))
+16: Load(Module, Class("System"))
+17: Load(Module, Null)
+18: Call(Method, print(_))
 19: Pop
 20: Constant(2: Num(2))
-21: Store(Module 12)
+21: Store(Module)
 22: Pop
-23: Load(Module 9: Class("System"))
-24: Load(Module 10: Null)
-25: Load(Module 12: Null)
-26: Call(Method: +(_))
-27: Call(Method: print(_))
+23: Load(Module, Class("System"))
+24: Load(Module, Null)
+25: Load(Module, Null)
+26: Call(Method, +(_))
+27: Call(Method, print(_))
 28: Pop
 29: End
 30: End

@@ -6,24 +6,24 @@ Constants:
 04: String("inner")
 Code:
 00: Constant(0: String("outer"))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
 03: Constant(1: Num(0))
-04: Store(Module 11)
+04: Store(Module)
 05: Pop
-06: Load(Module 11: Null)
+06: Load(Module, Null)
 07: Constant(2: Num(1))
-08: Call(Method: +(_))
-09: Store(Module 11)
+08: Call(Method, +(_))
+09: Store(Module)
 10: Constant(3: Num(1))
-11: Call(Method: <=(_))
+11: Call(Method, <=(_))
 12: JumpIfFalse(3)
 13: Constant(4: String("inner"))
 14: Pop
 15: Loop(10)
-16: Load(Module 9: Class("System"))
-17: Load(Module 10: Null)
-18: Call(Method: print(_))
+16: Load(Module, Class("System"))
+17: Load(Module, Null)
+18: Call(Method, print(_))
 19: Pop
 20: End
 21: End

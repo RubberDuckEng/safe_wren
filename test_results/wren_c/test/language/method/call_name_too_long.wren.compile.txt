@@ -4,7 +4,7 @@ Code:
 00: Boolean false
 01: JumpIfFalse(3)
 02: Constant(0: Num(0))
-03: Call(Getter: thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy1)
+03: Call(Getter, thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy1)
 04: Pop
 05: End
 06: End

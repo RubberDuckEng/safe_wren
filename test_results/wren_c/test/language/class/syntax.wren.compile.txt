@@ -5,22 +5,22 @@ Constants:
 03: Fn()
 Code:
 00: Constant(0: String("A"))
-01: Load(Module 0: Class("Object"))
+01: Load(Module, Class("Object"))
 02: Class(0 fields)
-03: Store(Module 10)
+03: Store(Module)
 04: Pop
 05: Constant(1: String("B"))
-06: Load(Module 0: Class("Object"))
+06: Load(Module, Class("Object"))
 07: Class(0 fields)
-08: Store(Module 11)
+08: Store(Module)
 09: Pop
 10: Constant(2: String("C"))
-11: Load(Module 0: Class("Object"))
+11: Load(Module, Class("Object"))
 12: Class(0 fields)
-13: Store(Module 12)
+13: Store(Module)
 14: Pop
 15: Closure(3, [])
-16: Load(Module 12: Null)
-17: Method(instance method)
+16: Load(Module, Null)
+17: Method(instance, method)
 18: End
 19: End

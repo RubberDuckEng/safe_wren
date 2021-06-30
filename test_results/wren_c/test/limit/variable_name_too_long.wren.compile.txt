@@ -3,12 +3,12 @@ Constants:
 01: String("c234567890c234567890c234567890c234567890c234567890c234567890c2345")
 Code:
 00: Constant(0: String("value"))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
 03: Constant(1: String("c234567890c234567890c234567890c234567890c234567890c234567890c2345"))
-04: Load(Module 0: Class("Object"))
+04: Load(Module, Class("Object"))
 05: Class(0 fields)
-06: Store(Module 11)
+06: Store(Module)
 07: Pop
 08: End
 09: End

@@ -1,10 +1,10 @@
 Constants:
 00: Fn()
 Code:
-00: Load(Module 3: Class("Fn"))
+00: Load(Module, Class("Fn"))
 01: Closure(0, [])
-02: Call(Method: new(_))
-03: Store(Module 10)
+02: Call(Method, new(_))
+03: Store(Module)
 04: Pop
 05: End
 06: End

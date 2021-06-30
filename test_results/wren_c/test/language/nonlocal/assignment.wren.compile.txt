@@ -6,42 +6,42 @@ Constants:
 04: Fn()
 Code:
 00: Constant(0: String("before"))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
-03: Load(Module 9: Class("System"))
-04: Load(Module 10: Null)
-05: Call(Method: print(_))
+03: Load(Module, Class("System"))
+04: Load(Module, Null)
+05: Call(Method, print(_))
 06: Pop
 07: Constant(1: String("after"))
-08: Store(Module 10)
+08: Store(Module)
 09: Pop
-10: Load(Module 9: Class("System"))
-11: Load(Module 10: Null)
-12: Call(Method: print(_))
+10: Load(Module, Class("System"))
+11: Load(Module, Null)
+12: Call(Method, print(_))
 13: Pop
 14: Constant(2: String("Foo"))
-15: Load(Module 0: Class("Object"))
+15: Load(Module, Class("Object"))
 16: Class(0 fields)
-17: Store(Module 11)
+17: Store(Module)
 18: Pop
 19: Closure(3, [])
-20: Load(Module 11: Null)
-21: Method(static method)
-22: Load(Module 11: Null)
-23: Call(Getter: method)
+20: Load(Module, Null)
+21: Method(static, method)
+22: Load(Module, Null)
+23: Call(Getter, method)
 24: Pop
-25: Load(Module 9: Class("System"))
-26: Load(Module 10: Null)
-27: Call(Method: print(_))
+25: Load(Module, Class("System"))
+26: Load(Module, Null)
+27: Call(Method, print(_))
 28: Pop
-29: Load(Module 3: Class("Fn"))
+29: Load(Module, Class("Fn"))
 30: Closure(4, [])
-31: Call(Method: new(_))
-32: Call(Method: call())
+31: Call(Method, new(_))
+32: Call(Method, call())
 33: Pop
-34: Load(Module 9: Class("System"))
-35: Load(Module 10: Null)
-36: Call(Method: print(_))
+34: Load(Module, Class("System"))
+35: Load(Module, Null)
+36: Call(Method, print(_))
 37: Pop
 38: End
 39: End

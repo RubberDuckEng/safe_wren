@@ -4,7 +4,7 @@ Constants:
 Code:
 00: Constant(0: String("abracadabra"))
 01: Constant(1: Num(123))
-02: Call(Method: trimStart(_))
+02: Call(Method, trimStart(_))
 03: Pop
 04: End
 05: End

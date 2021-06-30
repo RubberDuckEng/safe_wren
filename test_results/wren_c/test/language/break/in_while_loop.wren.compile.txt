@@ -4,27 +4,27 @@ Constants:
 02: Num(2)
 Code:
 00: Constant(0: Num(0))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
 03: Boolean true
 04: JumpIfFalse(19)
-05: Load(Module 10: Null)
+05: Load(Module, Null)
 06: Constant(1: Num(1))
-07: Call(Method: +(_))
-08: Store(Module 10)
+07: Call(Method, +(_))
+08: Store(Module)
 09: Pop
-10: Load(Module 9: Class("System"))
-11: Load(Module 10: Null)
-12: Call(Method: print(_))
+10: Load(Module, Class("System"))
+11: Load(Module, Null)
+12: Call(Method, print(_))
 13: Pop
-14: Load(Module 10: Null)
+14: Load(Module, Null)
 15: Constant(2: Num(2))
-16: Call(Method: >(_))
+16: Call(Method, >(_))
 17: JumpIfFalse(1)
 18: Jump(5)
-19: Load(Module 9: Class("System"))
-20: Load(Module 10: Null)
-21: Call(Method: print(_))
+19: Load(Module, Class("System"))
+20: Load(Module, Null)
+21: Call(Method, print(_))
 22: Pop
 23: Loop(21)
 24: End

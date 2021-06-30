@@ -5,20 +5,20 @@ Constants:
 03: Num(1)
 Code:
 00: Constant(0: String("Foo"))
-01: Load(Module 0: Class("Object"))
+01: Load(Module, Class("Object"))
 02: Class(0 fields)
-03: Store(Module 10)
+03: Store(Module)
 04: Pop
 05: Closure(1, [])
-06: Load(Module 10: Null)
-07: Method(instance init new())
+06: Load(Module, Null)
+07: Method(instance, init new())
 08: Closure(2, [])
-09: Load(Module 10: Null)
-10: Method(static new())
-11: Load(Module 10: Null)
-12: Call(Method: new())
+09: Load(Module, Null)
+10: Method(static, new())
+11: Load(Module, Null)
+12: Call(Method, new())
 13: Constant(3: Num(1))
-14: Call(Method: someUnknownMethod(_))
+14: Call(Method, someUnknownMethod(_))
 15: Pop
 16: End
 17: End

@@ -3,11 +3,11 @@ Constants:
 01: String("2")
 Code:
 00: Constant(0: String("123"))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
-03: Load(Module 10: Null)
+03: Load(Module, Null)
 04: Constant(1: String("2"))
-05: Call(Subscript: [_])
+05: Call(Subscript, [_])
 06: Pop
 07: End
 08: End

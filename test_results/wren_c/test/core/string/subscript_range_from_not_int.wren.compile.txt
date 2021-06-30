@@ -4,13 +4,13 @@ Constants:
 02: Num(2)
 Code:
 00: Constant(0: String("string"))
-01: Store(Module 10)
+01: Store(Module)
 02: Pop
-03: Load(Module 10: Null)
+03: Load(Module, Null)
 04: Constant(1: Num(1.5))
 05: Constant(2: Num(2))
-06: Call(Method: ..(_))
-07: Call(Subscript: [_])
+06: Call(Method, ..(_))
+07: Call(Subscript, [_])
 08: Pop
 09: End
 10: End

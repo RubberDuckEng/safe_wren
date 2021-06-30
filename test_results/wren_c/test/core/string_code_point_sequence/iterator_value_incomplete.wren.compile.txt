@@ -6,26 +6,26 @@ Constants:
 04: String("\xe0\xae")
 05: Num(0)
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: String("\xc0"))
-02: Call(Getter: codePoints)
+02: Call(Getter, codePoints)
 03: Constant(1: Num(0))
-04: Call(Method: iteratorValue(_))
-05: Call(Method: print(_))
+04: Call(Method, iteratorValue(_))
+05: Call(Method, print(_))
 06: Pop
-07: Load(Module 9: Class("System"))
+07: Load(Module, Class("System"))
 08: Constant(2: String("\xe0"))
-09: Call(Getter: codePoints)
+09: Call(Getter, codePoints)
 10: Constant(3: Num(0))
-11: Call(Method: iteratorValue(_))
-12: Call(Method: print(_))
+11: Call(Method, iteratorValue(_))
+12: Call(Method, print(_))
 13: Pop
-14: Load(Module 9: Class("System"))
+14: Load(Module, Class("System"))
 15: Constant(4: String("\xe0\xae"))
-16: Call(Getter: codePoints)
+16: Call(Getter, codePoints)
 17: Constant(5: Num(0))
-18: Call(Method: iteratorValue(_))
-19: Call(Method: print(_))
+18: Call(Method, iteratorValue(_))
+19: Call(Method, print(_))
 20: Pop
 21: End
 22: End

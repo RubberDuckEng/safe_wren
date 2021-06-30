@@ -6,7 +6,7 @@ Code:
 00: Constant(0: String("foo"))
 01: Constant(1: String(""))
 02: Constant(2: String("f"))
-03: Call(Method: replace(_,_))
+03: Call(Method, replace(_,_))
 04: Pop
 05: End
 06: End

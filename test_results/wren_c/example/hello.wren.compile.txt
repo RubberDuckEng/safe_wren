@@ -1,9 +1,9 @@
 Constants:
 00: String("Hello, world!")
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: String("Hello, world!"))
-02: Call(Method: print(_))
+02: Call(Method, print(_))
 03: Pop
 04: End
 05: End

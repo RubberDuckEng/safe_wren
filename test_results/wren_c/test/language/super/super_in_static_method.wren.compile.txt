@@ -3,15 +3,15 @@ Constants:
 01: Fn()
 Code:
 00: Constant(0: String("Foo"))
-01: Load(Module 0: Class("Object"))
+01: Load(Module, Class("Object"))
 02: Class(0 fields)
-03: Store(Module 10)
+03: Store(Module)
 04: Pop
 05: Closure(1, [])
-06: Load(Module 10: Null)
-07: Method(static name)
-08: Load(Module 10: Null)
-09: Call(Getter: name)
+06: Load(Module, Null)
+07: Method(static, name)
+08: Load(Module, Null)
+09: Call(Getter, name)
 10: Pop
 11: End
 12: End

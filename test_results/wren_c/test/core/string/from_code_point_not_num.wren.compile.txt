@@ -1,11 +1,11 @@
 Constants:
 00: String("not num")
 Code:
-00: Load(Module 9: Class("System"))
-01: Load(Module 7: Class("String"))
+00: Load(Module, Class("System"))
+01: Load(Module, Class("String"))
 02: Constant(0: String("not num"))
-03: Call(Method: fromCodePoint(_))
-04: Call(Method: print(_))
+03: Call(Method, fromCodePoint(_))
+04: Call(Method, print(_))
 05: Pop
 06: End
 07: End

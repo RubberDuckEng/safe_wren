@@ -1,10 +1,10 @@
 Constants:
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Boolean false
-02: Load(Module 4: Class("Bool"))
-03: Call(Method: is(_))
-04: Call(Method: print(_))
+02: Load(Module, Class("Bool"))
+03: Call(Method, is(_))
+04: Call(Method, print(_))
 05: Pop
 06: End
 07: End

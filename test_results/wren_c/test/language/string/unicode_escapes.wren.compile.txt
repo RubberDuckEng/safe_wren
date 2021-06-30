@@ -13,61 +13,61 @@ Constants:
 11: String("<\U0001F680>")
 12: String("<\U00010318>")
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: String("\u0041"))
-02: Call(Method: print(_))
+02: Call(Method, print(_))
 03: Pop
-04: Load(Module 9: Class("System"))
+04: Load(Module, Class("System"))
 05: Constant(1: String("\u007e"))
-06: Call(Method: print(_))
+06: Call(Method, print(_))
 07: Pop
-08: Load(Module 9: Class("System"))
+08: Load(Module, Class("System"))
 09: Constant(2: String("\u00b6"))
-10: Call(Method: print(_))
+10: Call(Method, print(_))
 11: Pop
-12: Load(Module 9: Class("System"))
+12: Load(Module, Class("System"))
 13: Constant(3: String("\u00de"))
-14: Call(Method: print(_))
+14: Call(Method, print(_))
 15: Pop
-16: Load(Module 9: Class("System"))
+16: Load(Module, Class("System"))
 17: Constant(4: String("\u0950"))
-18: Call(Method: print(_))
+18: Call(Method, print(_))
 19: Pop
-20: Load(Module 9: Class("System"))
+20: Load(Module, Class("System"))
 21: Constant(5: String("\u0b83"))
-22: Call(Method: print(_))
+22: Call(Method, print(_))
 23: Pop
-24: Load(Module 9: Class("System"))
+24: Load(Module, Class("System"))
 25: Constant(6: String("\u00B6"))
-26: Call(Method: print(_))
+26: Call(Method, print(_))
 27: Pop
-28: Load(Module 9: Class("System"))
+28: Load(Module, Class("System"))
 29: Constant(7: String("\u00DE"))
-30: Call(Method: print(_))
+30: Call(Method, print(_))
 31: Pop
 32: Constant(8: String("\U0001F603"))
-33: Store(Module 10)
+33: Store(Module)
 34: Pop
 35: Constant(9: String("\xf0\x9f\x98\x83"))
-36: Store(Module 11)
+36: Store(Module)
 37: Pop
-38: Load(Module 9: Class("System"))
-39: Load(Module 11: Null)
-40: Load(Module 10: Null)
-41: Call(Method: ==(_))
-42: Call(Method: print(_))
+38: Load(Module, Class("System"))
+39: Load(Module, Null)
+40: Load(Module, Null)
+41: Call(Method, ==(_))
+42: Call(Method, print(_))
 43: Pop
-44: Load(Module 9: Class("System"))
+44: Load(Module, Class("System"))
 45: Constant(10: String("<\U0001F64A>"))
-46: Call(Method: print(_))
+46: Call(Method, print(_))
 47: Pop
-48: Load(Module 9: Class("System"))
+48: Load(Module, Class("System"))
 49: Constant(11: String("<\U0001F680>"))
-50: Call(Method: print(_))
+50: Call(Method, print(_))
 51: Pop
-52: Load(Module 9: Class("System"))
+52: Load(Module, Class("System"))
 53: Constant(12: String("<\U00010318>"))
-54: Call(Method: print(_))
+54: Call(Method, print(_))
 55: Pop
 56: End
 57: End

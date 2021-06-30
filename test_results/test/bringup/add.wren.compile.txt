@@ -5,21 +5,21 @@ Constants:
 03: Num(2)
 04: Num(3)
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: Num(1))
-02: Call(Method: print(_))
+02: Call(Method, print(_))
 03: Pop
-04: Load(Module 9: Class("System"))
+04: Load(Module, Class("System"))
 05: Constant(1: Num(1))
 06: Constant(2: Num(1))
-07: Call(Method: +(_))
-08: Call(Method: print(_))
+07: Call(Method, +(_))
+08: Call(Method, print(_))
 09: Pop
-10: Load(Module 9: Class("System"))
+10: Load(Module, Class("System"))
 11: Constant(3: Num(2))
 12: Constant(4: Num(3))
-13: Call(Method: +(_))
-14: Call(Method: print(_))
+13: Call(Method, +(_))
+14: Call(Method, print(_))
 15: Pop
 16: End
 17: End

@@ -2,13 +2,13 @@ Constants:
 00: String("string")
 01: Num(7)
 Code:
-00: Load(Module 9: Class("System"))
+00: Load(Module, Class("System"))
 01: Constant(0: String("string"))
-02: Call(Getter: codePoints)
+02: Call(Getter, codePoints)
 03: Constant(1: Num(7))
-04: Call(Method: -)
-05: Call(Method: iteratorValue(_))
-06: Call(Method: print(_))
+04: Call(Method, -)
+05: Call(Method, iteratorValue(_))
+06: Call(Method, print(_))
 07: Pop
 08: End
 09: End

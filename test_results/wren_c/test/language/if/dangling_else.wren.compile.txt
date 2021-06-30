@@ -8,27 +8,27 @@ Code:
 01: JumpIfFalse(11)
 02: Boolean false
 03: JumpIfFalse(5)
-04: Load(Module 9: Class("System"))
+04: Load(Module, Class("System"))
 05: Constant(0: String("bad"))
-06: Call(Method: print(_))
+06: Call(Method, print(_))
 07: Pop
 08: Jump(4)
-09: Load(Module 9: Class("System"))
+09: Load(Module, Class("System"))
 10: Constant(1: String("good"))
-11: Call(Method: print(_))
+11: Call(Method, print(_))
 12: Pop
 13: Boolean false
 14: JumpIfFalse(11)
 15: Boolean true
 16: JumpIfFalse(5)
-17: Load(Module 9: Class("System"))
+17: Load(Module, Class("System"))
 18: Constant(2: String("bad"))
-19: Call(Method: print(_))
+19: Call(Method, print(_))
 20: Pop
 21: Jump(4)
-22: Load(Module 9: Class("System"))
+22: Load(Module, Class("System"))
 23: Constant(3: String("bad"))
-24: Call(Method: print(_))
+24: Call(Method, print(_))
 25: Pop
 26: End
 27: End
