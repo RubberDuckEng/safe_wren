@@ -123,6 +123,73 @@ class Sequence {
   // }
 }
 
+
+class List is Sequence {
+  addAll(other) {
+    for (element in other) {
+      add(element)
+    }
+    return other
+  }
+
+  sort() { sort {|low, high| low < high } }
+
+  // sort(comparer) {
+  //   if (!(comparer is Fn)) {
+  //     Fiber.abort("Comparer must be a function.")
+  //   }
+  //   quicksort_(0, count - 1, comparer)
+  //   return this
+  // }
+
+  quicksort_(low, high, comparer) {
+    if (low < high) {
+      var p = partition_(low, high, comparer)
+      quicksort_(low, p - 1, comparer)
+      quicksort_(p + 1, high, comparer)
+    }
+  }
+
+  partition_(low, high, comparer) {
+    var p = this[high]
+    var i = low - 1
+    for (j in low..(high-1)) {
+      if (comparer.call(this[j], p)) {  
+        i = i + 1
+        var t = this[i]
+        this[i] = this[j]
+        this[j] = t
+      }
+    }
+    var t = this[i+1]
+    this[i+1] = this[high]
+    this[high] = t
+    return i+1
+  }
+
+  // toString { "[%(join(", "))]" }
+
+  // +(other) {
+  //   var result = this[0..-1]
+  //   for (element in other) {
+  //     result.add(element)
+  //   }
+  //   return result
+  // }
+
+  // *(count) {
+  //   if (!(count is Num) || !count.isInteger || count < 0) {
+  //     Fiber.abort("Count must be a non-negative integer.")
+  //   }
+
+  //   var result = []
+  //   for (i in 0...count) {
+  //     result.addAll(this)
+  //   }
+  //   return result
+  // }
+}
+
 class System {
   static print() {
     writeString_("\n")

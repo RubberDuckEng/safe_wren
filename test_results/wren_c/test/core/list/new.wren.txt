@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'List\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'List\'")
+Unexpected output on stderr:
+MethodNotFound("new()" on "List metaclass")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("new()" on "List metaclass")
 
 Missing expected output "0" on line 3.
 Missing expected output "[]" on line 4.

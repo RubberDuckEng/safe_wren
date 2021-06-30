@@ -1,1 +1,10 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'List\'") }
+Constants:
+00: Num(1.2)
+Code:
+00: Load(Module, Class("List"))
+01: Constant(0: Num(1.2))
+02: Null
+03: Call(Method, filled(_,_))
+04: Pop
+05: End
+06: End
