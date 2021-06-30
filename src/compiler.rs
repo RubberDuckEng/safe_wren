@@ -1448,11 +1448,11 @@ fn bare_name(
         // Compile the right-hand side.
         expression(ctx)?;
         ctx.compiler_mut().emit_store(variable.clone());
+    } else {
+        ctx.compiler_mut().emit_load(variable);
+
+        allow_line_before_dot(ctx)?;
     }
-
-    ctx.compiler_mut().emit_load(variable);
-
-    allow_line_before_dot(ctx)?;
     Ok(())
 }
 

@@ -51,9 +51,11 @@ wren_c/test/core/system/print.wren
 wren_c/test/core/system/print_bad_to_string.wren
 wren_c/test/core/system/write_bad_to_string.wren
 wren_c/test/language/assignment/associativity.wren
+wren_c/test/language/assignment/global.wren
 wren_c/test/language/assignment/grouping.wren
 wren_c/test/language/assignment/infix_operator.wren
 wren_c/test/language/assignment/is.wren
+wren_c/test/language/assignment/local.wren
 wren_c/test/language/assignment/prefix_operator.wren
 wren_c/test/language/assignment/syntax.wren
 wren_c/test/language/assignment/undefined.wren
@@ -213,6 +215,7 @@ wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/while/newline_after_while.wren
 wren_c/test/language/while/return_inside.wren
+wren_c/test/language/while/syntax.wren
 wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/long_function.wren

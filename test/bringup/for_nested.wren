@@ -8,3 +8,5 @@ for (x in 0..1) {
 
 // expect: 1
 // expect: 2
+// expect: 3
+// expect: 4

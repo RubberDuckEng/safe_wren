@@ -15,16 +15,15 @@ Code:
 07: Constant(2: Num(1))
 08: Call(Method: +(_))
 09: Store(Module 11)
-10: Load(Module 11: Null)
-11: Constant(3: Num(1))
-12: Call(Method: <=(_))
-13: JumpIfFalse(3)
-14: Constant(4: String("inner"))
-15: Pop
-16: Loop(11)
-17: Load(Module 9: Class("System"))
-18: Load(Module 10: Null)
-19: Call(Method: print(_))
-20: Pop
+10: Constant(3: Num(1))
+11: Call(Method: <=(_))
+12: JumpIfFalse(3)
+13: Constant(4: String("inner"))
+14: Pop
+15: Loop(10)
+16: Load(Module 9: Class("System"))
+17: Load(Module 10: Null)
+18: Call(Method: print(_))
+19: Pop
+20: End
 21: End
-22: End

@@ -1,7 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("print(_)" on "String")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("print(_)" on "String")
-
-Missing expected output "arg" on line 8.
-Missing expected output "arg" on line 9.

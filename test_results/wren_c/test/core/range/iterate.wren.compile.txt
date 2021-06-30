@@ -63,109 +63,104 @@ Code:
 36: Constant(7: Num(3))
 37: Call(Method: ...(_))
 38: Store(Module 10)
-39: Load(Module 10: Null)
-40: Pop
-41: Load(Module 9: Class("System"))
-42: Load(Module 10: Null)
-43: Null
-44: Call(Method: iterate(_))
-45: Call(Method: print(_))
-46: Pop
-47: Load(Module 9: Class("System"))
-48: Load(Module 10: Null)
-49: Constant(8: Num(1))
-50: Call(Method: iterate(_))
-51: Call(Method: print(_))
-52: Pop
-53: Load(Module 9: Class("System"))
-54: Load(Module 10: Null)
-55: Constant(9: Num(2))
-56: Call(Method: iterate(_))
-57: Call(Method: print(_))
-58: Pop
-59: Constant(10: Num(3))
-60: Constant(11: Num(1))
-61: Call(Method: ..(_))
-62: Store(Module 10)
-63: Load(Module 10: Null)
-64: Pop
-65: Load(Module 9: Class("System"))
-66: Load(Module 10: Null)
-67: Null
-68: Call(Method: iterate(_))
-69: Call(Method: print(_))
-70: Pop
-71: Load(Module 9: Class("System"))
-72: Load(Module 10: Null)
-73: Constant(12: Num(3))
-74: Call(Method: iterate(_))
-75: Call(Method: print(_))
-76: Pop
-77: Load(Module 9: Class("System"))
-78: Load(Module 10: Null)
-79: Constant(13: Num(2))
-80: Call(Method: iterate(_))
-81: Call(Method: print(_))
-82: Pop
-83: Load(Module 9: Class("System"))
-84: Load(Module 10: Null)
-85: Constant(14: Num(1))
-86: Call(Method: iterate(_))
-87: Call(Method: print(_))
-88: Pop
-89: Constant(15: Num(3))
-90: Constant(16: Num(1))
-91: Call(Method: ...(_))
-92: Store(Module 10)
+39: Pop
+40: Load(Module 9: Class("System"))
+41: Load(Module 10: Null)
+42: Null
+43: Call(Method: iterate(_))
+44: Call(Method: print(_))
+45: Pop
+46: Load(Module 9: Class("System"))
+47: Load(Module 10: Null)
+48: Constant(8: Num(1))
+49: Call(Method: iterate(_))
+50: Call(Method: print(_))
+51: Pop
+52: Load(Module 9: Class("System"))
+53: Load(Module 10: Null)
+54: Constant(9: Num(2))
+55: Call(Method: iterate(_))
+56: Call(Method: print(_))
+57: Pop
+58: Constant(10: Num(3))
+59: Constant(11: Num(1))
+60: Call(Method: ..(_))
+61: Store(Module 10)
+62: Pop
+63: Load(Module 9: Class("System"))
+64: Load(Module 10: Null)
+65: Null
+66: Call(Method: iterate(_))
+67: Call(Method: print(_))
+68: Pop
+69: Load(Module 9: Class("System"))
+70: Load(Module 10: Null)
+71: Constant(12: Num(3))
+72: Call(Method: iterate(_))
+73: Call(Method: print(_))
+74: Pop
+75: Load(Module 9: Class("System"))
+76: Load(Module 10: Null)
+77: Constant(13: Num(2))
+78: Call(Method: iterate(_))
+79: Call(Method: print(_))
+80: Pop
+81: Load(Module 9: Class("System"))
+82: Load(Module 10: Null)
+83: Constant(14: Num(1))
+84: Call(Method: iterate(_))
+85: Call(Method: print(_))
+86: Pop
+87: Constant(15: Num(3))
+88: Constant(16: Num(1))
+89: Call(Method: ...(_))
+90: Store(Module 10)
+91: Pop
+92: Load(Module 9: Class("System"))
 93: Load(Module 10: Null)
-94: Pop
-95: Load(Module 9: Class("System"))
-96: Load(Module 10: Null)
-97: Null
-98: Call(Method: iterate(_))
-99: Call(Method: print(_))
-100: Pop
-101: Load(Module 9: Class("System"))
-102: Load(Module 10: Null)
-103: Constant(17: Num(3))
-104: Call(Method: iterate(_))
-105: Call(Method: print(_))
-106: Pop
-107: Load(Module 9: Class("System"))
-108: Load(Module 10: Null)
-109: Constant(18: Num(2))
-110: Call(Method: iterate(_))
-111: Call(Method: print(_))
-112: Pop
-113: Constant(19: Num(1))
-114: Constant(20: Num(1))
-115: Call(Method: ..(_))
-116: Store(Module 10)
-117: Load(Module 10: Null)
-118: Pop
-119: Load(Module 9: Class("System"))
-120: Load(Module 10: Null)
-121: Null
-122: Call(Method: iterate(_))
-123: Call(Method: print(_))
-124: Pop
-125: Load(Module 9: Class("System"))
-126: Load(Module 10: Null)
-127: Constant(21: Num(1))
-128: Call(Method: iterate(_))
-129: Call(Method: print(_))
-130: Pop
-131: Constant(22: Num(1))
-132: Constant(23: Num(1))
-133: Call(Method: ...(_))
-134: Store(Module 10)
-135: Load(Module 10: Null)
-136: Pop
-137: Load(Module 9: Class("System"))
-138: Load(Module 10: Null)
-139: Null
-140: Call(Method: iterate(_))
-141: Call(Method: print(_))
-142: Pop
-143: End
-144: End
+94: Null
+95: Call(Method: iterate(_))
+96: Call(Method: print(_))
+97: Pop
+98: Load(Module 9: Class("System"))
+99: Load(Module 10: Null)
+100: Constant(17: Num(3))
+101: Call(Method: iterate(_))
+102: Call(Method: print(_))
+103: Pop
+104: Load(Module 9: Class("System"))
+105: Load(Module 10: Null)
+106: Constant(18: Num(2))
+107: Call(Method: iterate(_))
+108: Call(Method: print(_))
+109: Pop
+110: Constant(19: Num(1))
+111: Constant(20: Num(1))
+112: Call(Method: ..(_))
+113: Store(Module 10)
+114: Pop
+115: Load(Module 9: Class("System"))
+116: Load(Module 10: Null)
+117: Null
+118: Call(Method: iterate(_))
+119: Call(Method: print(_))
+120: Pop
+121: Load(Module 9: Class("System"))
+122: Load(Module 10: Null)
+123: Constant(21: Num(1))
+124: Call(Method: iterate(_))
+125: Call(Method: print(_))
+126: Pop
+127: Constant(22: Num(1))
+128: Constant(23: Num(1))
+129: Call(Method: ...(_))
+130: Store(Module 10)
+131: Pop
+132: Load(Module 9: Class("System"))
+133: Load(Module 10: Null)
+134: Null
+135: Call(Method: iterate(_))
+136: Call(Method: print(_))
+137: Pop
+138: End
+139: End

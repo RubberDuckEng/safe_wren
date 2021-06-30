@@ -1,5 +1,5 @@
 Unexpected output on stderr:
-NumberRequired(Boolean(false))
+MethodNotFound("floor" on "Num")
 Expected return code 0 and got 70. Stderr:
-NumberRequired(Boolean(false))
+MethodNotFound("floor" on "Num")
 

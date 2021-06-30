@@ -12,30 +12,27 @@ Code:
 05: Pop
 06: Constant(2: String("chain"))
 07: Store(Module 11)
-08: Load(Module 11: Null)
-09: Store(Module 10)
-10: Load(Module 10: Null)
-11: Pop
-12: Load(Module 9: Class("System"))
-13: Load(Module 10: Null)
-14: Call(Method: print(_))
-15: Pop
-16: Load(Module 9: Class("System"))
-17: Load(Module 11: Null)
-18: Call(Method: print(_))
-19: Pop
-20: Constant(3: String("var"))
-21: Store(Module 10)
-22: Load(Module 10: Null)
-23: Store(Module 12)
-24: Pop
-25: Load(Module 9: Class("System"))
-26: Load(Module 10: Null)
-27: Call(Method: print(_))
-28: Pop
-29: Load(Module 9: Class("System"))
-30: Load(Module 12: Null)
-31: Call(Method: print(_))
-32: Pop
-33: End
-34: End
+08: Store(Module 10)
+09: Pop
+10: Load(Module 9: Class("System"))
+11: Load(Module 10: Null)
+12: Call(Method: print(_))
+13: Pop
+14: Load(Module 9: Class("System"))
+15: Load(Module 11: Null)
+16: Call(Method: print(_))
+17: Pop
+18: Constant(3: String("var"))
+19: Store(Module 10)
+20: Store(Module 12)
+21: Pop
+22: Load(Module 9: Class("System"))
+23: Load(Module 10: Null)
+24: Call(Method: print(_))
+25: Pop
+26: Load(Module 9: Class("System"))
+27: Load(Module 12: Null)
+28: Call(Method: print(_))
+29: Pop
+30: End
+31: End

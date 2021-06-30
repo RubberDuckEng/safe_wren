@@ -40,7 +40,7 @@ Code:
 20: Load(Local 2)
 21: Call(Method: iterate(_))
 22: Store(Local 2)
-23: JumpIfFalse(126)
+23: JumpIfFalse(121)
 24: Load(Local 1)
 25: Load(Local 2)
 26: Call(Method: iteratorValue(_))
@@ -61,7 +61,7 @@ Code:
 41: Load(Local 6)
 42: Call(Method: iterate(_))
 43: Store(Local 6)
-44: JumpIfFalse(97)
+44: JumpIfFalse(92)
 45: Load(Local 5)
 46: Load(Local 6)
 47: Call(Method: iteratorValue(_))
@@ -85,7 +85,7 @@ Code:
 65: Load(Local 13)
 66: Call(Method: iterate(_))
 67: Store(Local 13)
-68: JumpIfFalse(61)
+68: JumpIfFalse(56)
 69: Load(Local 12)
 70: Load(Local 13)
 71: Call(Method: iteratorValue(_))
@@ -105,69 +105,64 @@ Code:
 85: Load(Local 8)
 86: Call(Method: +(_))
 87: Store(Local 15)
-88: Load(Local 15)
-89: Pop
-90: Load(Local 16)
-91: Load(Local 4)
-92: Call(Method: +(_))
-93: Store(Local 16)
-94: Load(Local 16)
-95: Pop
-96: Load(Local 15)
-97: Store(Local 10)
-98: Load(Local 10)
+88: Pop
+89: Load(Local 16)
+90: Load(Local 4)
+91: Call(Method: +(_))
+92: Store(Local 16)
+93: Pop
+94: Load(Local 15)
+95: Store(Local 10)
+96: Pop
+97: Load(Local 16)
+98: Store(Local 11)
 99: Pop
-100: Load(Local 16)
-101: Store(Local 11)
-102: Load(Local 11)
-103: Pop
-104: Load(Local 10)
-105: Load(Local 10)
-106: Call(Method: *(_))
-107: Load(Local 11)
-108: Load(Local 11)
-109: Call(Method: *(_))
-110: Call(Method: +(_))
-111: Load(Local 17)
-112: Constant(14: Num(4))
-113: Call(Method: >(_))
-114: JumpIfFalse(10)
-115: Constant(15: String(" .:;+=xX$&"))
-116: Load(Local 14)
-117: Constant(16: Num(8))
-118: Call(Method: /(_))
-119: Call(Getter: floor)
-120: Call(Subscript: [_])
-121: Store(Local 9)
-122: Load(Local 9)
+100: Load(Local 10)
+101: Load(Local 10)
+102: Call(Method: *(_))
+103: Load(Local 11)
+104: Load(Local 11)
+105: Call(Method: *(_))
+106: Call(Method: +(_))
+107: Load(Local 17)
+108: Constant(14: Num(4))
+109: Call(Method: >(_))
+110: JumpIfFalse(9)
+111: Constant(15: String(" .:;+=xX$&"))
+112: Load(Local 14)
+113: Constant(16: Num(8))
+114: Call(Method: /(_))
+115: Call(Getter: floor)
+116: Call(Subscript: [_])
+117: Store(Local 9)
+118: Pop
+119: Jump(5)
+120: Pop
+121: Pop
+122: Pop
 123: Pop
-124: Jump(5)
+124: Loop(61)
 125: Pop
 126: Pop
-127: Pop
-128: Pop
-129: Loop(66)
+127: Load(Module 9: Class("System"))
+128: Load(Local 9)
+129: Call(Method: write(_))
 130: Pop
 131: Pop
-132: Load(Module 9: Class("System"))
-133: Load(Local 9)
-134: Call(Method: write(_))
+132: Pop
+133: Pop
+134: Pop
 135: Pop
-136: Pop
+136: Loop(97)
 137: Pop
 138: Pop
-139: Pop
-140: Pop
-141: Loop(102)
+139: Load(Module 9: Class("System"))
+140: Call(Method: print())
+141: Pop
 142: Pop
 143: Pop
-144: Load(Module 9: Class("System"))
-145: Call(Method: print())
+144: Loop(126)
+145: Pop
 146: Pop
-147: Pop
-148: Pop
-149: Loop(131)
-150: Pop
-151: Pop
-152: End
-153: End
+147: End
+148: End

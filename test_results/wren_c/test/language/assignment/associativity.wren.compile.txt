@@ -14,21 +14,19 @@ Code:
 08: Pop
 09: Load(Module 12: Null)
 10: Store(Module 11)
-11: Load(Module 11: Null)
-12: Store(Module 10)
-13: Load(Module 10: Null)
-14: Pop
-15: Load(Module 9: Class("System"))
-16: Load(Module 10: Null)
-17: Call(Method: print(_))
-18: Pop
-19: Load(Module 9: Class("System"))
-20: Load(Module 11: Null)
-21: Call(Method: print(_))
-22: Pop
-23: Load(Module 9: Class("System"))
-24: Load(Module 12: Null)
-25: Call(Method: print(_))
-26: Pop
-27: End
-28: End
+11: Store(Module 10)
+12: Pop
+13: Load(Module 9: Class("System"))
+14: Load(Module 10: Null)
+15: Call(Method: print(_))
+16: Pop
+17: Load(Module 9: Class("System"))
+18: Load(Module 11: Null)
+19: Call(Method: print(_))
+20: Pop
+21: Load(Module 9: Class("System"))
+22: Load(Module 12: Null)
+23: Call(Method: print(_))
+24: Pop
+25: End
+26: End
