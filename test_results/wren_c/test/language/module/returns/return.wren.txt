@@ -1,6 +1,0 @@
-Unexpected error:
-[dummy_module line 3] Error Grammar("Expected end of file, found: Name(\"System\")")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Expected end of file, found: Name(\"System\")")
-
-Missing expected output "foo" on line 1.

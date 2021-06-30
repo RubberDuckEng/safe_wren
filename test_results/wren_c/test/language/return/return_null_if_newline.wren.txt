@@ -1,6 +1,0 @@
-Unexpected error:
-[dummy_module line 3] Error Grammar("Expected newline, found: Name(\"System\")")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Expected newline, found: Name(\"System\")")
-
-Missing expected output "null" on line 6.

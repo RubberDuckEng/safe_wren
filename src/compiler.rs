@@ -1934,9 +1934,13 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
         // discard_locals(compiler, offsets.scope_depth + 1);
 
         ctx.compiler_mut().emit_loop(&offsets);
+    } else if match_current(ctx, Token::For)? {
+        for_statement(ctx)?;
+    } else if match_current(ctx, Token::If)? {
+        if_statement(ctx)?;
     } else if match_current(ctx, Token::Return)? {
         // Compile the return value.
-        if match_current(ctx, Token::Newline)? {
+        if peek_expecting(ctx, Token::Newline) {
             // If there's no expression after return, initializers should
             // return 'this' and regular methods should return null
             if ctx.compiler().is_initializer {
@@ -1953,10 +1957,6 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
             expression(ctx)?;
         }
         ctx.compiler_mut().emit(Ops::Return);
-    } else if match_current(ctx, Token::If)? {
-        if_statement(ctx)?;
-    } else if match_current(ctx, Token::For)? {
-        for_statement(ctx)?;
     } else if match_current(ctx, Token::While)? {
         while_statement(ctx)?;
     } else if match_current(ctx, Token::LeftCurlyBrace)? {
@@ -2707,6 +2707,10 @@ fn consume(ctx: &mut ParseContext) -> Result<(), WrenError> {
     std::mem::swap(&mut ctx.parser.current, &mut ctx.parser.next);
     ctx.parser.next = next_token(&mut ctx.parser.input).map_err(|e| ctx.parse_error(e.into()))?;
     Ok(())
+}
+
+fn peek_expecting(ctx: &ParseContext, expected: Token) -> bool {
+    ctx.parser.current.token == expected
 }
 
 fn match_current(ctx: &mut ParseContext, token: Token) -> Result<bool, WrenError> {
