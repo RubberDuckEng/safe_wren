@@ -1,4 +1,11 @@
-Function { constants: [String("Foo"), Fn(), Fn(), Fn(), Fn(), String("value")], code: [Constant(0), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 10 }), Pop, Closure(1, []), Load(Variable { scope: Module, index: 10 }), Method(false, 43), Closure(2, []), Load(Variable { scope: Module, index: 10 }), Method(true, 44), Closure(3, []), Load(Variable { scope: Module, index: 10 }), Method(false, 45), Closure(4, []), Load(Variable { scope: Module, index: 10 }), Method(false, 46), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "new", call_type: Method, arity: 0 }, 44), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 11 }), Constant(5), Call(Signature { bare_name: "bar", call_type: Setter, arity: 1 }, 45), Pop, Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "bar", call_type: Getter, arity: 0 }, 46), Pop, End, End] }
+Constants:
+00: String("Foo")
+01: Fn()
+02: Fn()
+03: Fn()
+04: Fn()
+05: String("value")
+Code:
 00: Constant(0: String("Foo"))
 01: Load(Module 0: Class("Object"))
 02: Class(0 fields)

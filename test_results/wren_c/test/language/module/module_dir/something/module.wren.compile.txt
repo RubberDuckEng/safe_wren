@@ -1,4 +1,6 @@
-Function { constants: [String("index")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, End, End] }
+Constants:
+00: String("index")
+Code:
 00: Constant(0: String("index"))
 01: Store(Module 10)
 02: Pop

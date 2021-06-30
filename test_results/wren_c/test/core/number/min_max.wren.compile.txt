@@ -1,4 +1,7 @@
-Function { constants: [Num(4), Num(6)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Constant(1), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "max", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "min", call_type: Method, arity: 1 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(4)
+01: Num(6)
+Code:
 00: Constant(0: Num(4))
 01: Store(Module 10)
 02: Pop

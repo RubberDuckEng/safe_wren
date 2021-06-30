@@ -1,4 +1,18 @@
-Function { constants: [String("\u0041"), String("\u007e"), String("\u00b6"), String("\u00de"), String("\u0950"), String("\u0b83"), String("\u00B6"), String("\u00DE"), String("\U0001F603"), String("\xf0\x9f\x98\x83"), String("<\U0001F64A>"), String("<\U0001F680>"), String("<\U00010318>")], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(5), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(7), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(8), Store(Variable { scope: Module, index: 10 }), Pop, Constant(9), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(10), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(11), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(12), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("\u0041")
+01: String("\u007e")
+02: String("\u00b6")
+03: String("\u00de")
+04: String("\u0950")
+05: String("\u0b83")
+06: String("\u00B6")
+07: String("\u00DE")
+08: String("\U0001F603")
+09: String("\xf0\x9f\x98\x83")
+10: String("<\U0001F64A>")
+11: String("<\U0001F680>")
+12: String("<\U00010318>")
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("\u0041"))
 02: Call(Method: print(_) 42)

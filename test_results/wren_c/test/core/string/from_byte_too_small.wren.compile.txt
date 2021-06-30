@@ -1,4 +1,6 @@
-Function { constants: [Num(1)], code: [Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(0), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "fromByte", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(1)
+Code:
 00: Load(Module 9: Class("System"))
 01: Load(Module 7: Class("String"))
 02: Constant(0: Num(1))

@@ -1,4 +1,10 @@
-Function { constants: [Num(65), Num(0), Num(0), Num(255), Num(0)], code: [Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(0), Call(Signature { bare_name: "fromByte", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(1), Call(Signature { bare_name: "fromByte", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "bytes", call_type: Getter, arity: 0 }, 44), Constant(2), Call(Signature { bare_name: "", call_type: Subscript, arity: 1 }, 45), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(3), Call(Signature { bare_name: "fromByte", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "bytes", call_type: Getter, arity: 0 }, 44), Constant(4), Call(Signature { bare_name: "", call_type: Subscript, arity: 1 }, 45), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(65)
+01: Num(0)
+02: Num(0)
+03: Num(255)
+04: Num(0)
+Code:
 00: Load(Module 9: Class("System"))
 01: Load(Module 7: Class("String"))
 02: Constant(0: Num(65))

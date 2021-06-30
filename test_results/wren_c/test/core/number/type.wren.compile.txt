@@ -1,4 +1,9 @@
-Function { constants: [Num(123), Num(123), Num(123), Num(123)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Load(Variable { scope: Module, index: 6 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Load(Variable { scope: Module, index: 0 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Load(Variable { scope: Module, index: 7 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "type", call_type: Getter, arity: 0 }, 43), Load(Variable { scope: Module, index: 6 }), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(123)
+01: Num(123)
+02: Num(123)
+03: Num(123)
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(123))
 02: Load(Module 6: Class("Num"))

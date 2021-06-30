@@ -1,4 +1,7 @@
-Function { constants: [String("abracadabra"), Num(123)], code: [Constant(0), Constant(1), Call(Signature { bare_name: "trim", call_type: Method, arity: 1 }, 43), Pop, End, End] }
+Constants:
+00: String("abracadabra")
+01: Num(123)
+Code:
 00: Constant(0: String("abracadabra"))
 01: Constant(1: Num(123))
 02: Call(Method: trim(_) 43)

@@ -1,4 +1,5 @@
-Function { constants: [], code: [Load(Variable { scope: Module, index: 9 }), Boolean(false), Load(Variable { scope: Module, index: 4 }), Call(Signature { bare_name: "is", call_type: Method, arity: 1 }, 3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+Code:
 00: Load(Module 9: Class("System"))
 01: Boolean false
 02: Load(Module 4: Class("Bool"))

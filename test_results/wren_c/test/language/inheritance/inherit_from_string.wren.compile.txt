@@ -1,4 +1,6 @@
-Function { constants: [String("Subclass")], code: [Constant(0), Load(Variable { scope: Module, index: 7 }), Class(0), Store(Variable { scope: Module, index: 10 }), Pop, End, End] }
+Constants:
+00: String("Subclass")
+Code:
 00: Constant(0: String("Subclass"))
 01: Load(Module 7: Class("String"))
 02: Class(0 fields)

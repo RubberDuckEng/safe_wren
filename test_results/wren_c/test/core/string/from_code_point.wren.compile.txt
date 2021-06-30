@@ -1,4 +1,10 @@
-Function { constants: [Num(65), Num(164), Num(398), Num(8225), Num(9547)], code: [Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(0), Call(Signature { bare_name: "fromCodePoint", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(1), Call(Signature { bare_name: "fromCodePoint", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(2), Call(Signature { bare_name: "fromCodePoint", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(3), Call(Signature { bare_name: "fromCodePoint", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 7 }), Constant(4), Call(Signature { bare_name: "fromCodePoint", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(65)
+01: Num(164)
+02: Num(398)
+03: Num(8225)
+04: Num(9547)
+Code:
 00: Load(Module 9: Class("System"))
 01: Load(Module 7: Class("String"))
 02: Constant(0: Num(65))

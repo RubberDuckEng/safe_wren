@@ -136,12 +136,6 @@ pub(crate) fn find_core_class(vm: &WrenVM, name: &str) -> Handle<ObjClass> {
 }
 
 #[derive(Debug)]
-pub(crate) struct Function {
-    pub constants: Vec<Value>,
-    pub code: Vec<Ops>,
-}
-
-#[derive(Debug)]
 pub(crate) struct MissingMethod {
     this_class: String,
     name: String,
@@ -691,7 +685,7 @@ impl WrenVM {
         let fn_obj = frame.closure.borrow().fn_obj.clone();
         frame.pc;
         loop {
-            let op = &fn_obj.borrow().function.code[frame.pc];
+            let op = &fn_obj.borrow().code[frame.pc];
             if self.debug {
                 frame.dump_stack();
                 dump_instruction(
@@ -706,7 +700,7 @@ impl WrenVM {
             frame.pc += 1;
             match op {
                 Ops::Constant(index) => {
-                    frame.push(fn_obj.borrow().function.constants[*index].clone());
+                    frame.push(fn_obj.borrow().constants[*index].clone());
                 }
                 Ops::Boolean(value) => {
                     frame.push(Value::Boolean(*value));
@@ -779,7 +773,7 @@ impl WrenVM {
                     frame.push(instance);
                 }
                 Ops::Closure(constant_index, _upvalues) => {
-                    let fn_value = fn_obj.borrow().function.constants[*constant_index].clone();
+                    let fn_value = fn_obj.borrow().constants[*constant_index].clone();
                     let fn_obj = fn_value.try_into_fn()?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
                     frame.push(Value::Closure(closure));
@@ -911,7 +905,7 @@ fn op_debug_string(
         Ops::Constant(i) => format!(
             "Constant({}: {:?})",
             i,
-            closure.fn_obj.borrow().function.constants[*i]
+            closure.fn_obj.borrow().constants[*i]
         ),
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
@@ -965,11 +959,15 @@ fn op_debug_string(
 }
 
 pub(crate) fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
-    let func = &closure.fn_obj.borrow().function;
-    println!("{:?}", func);
-    let ops = func.code.iter();
-    ops.enumerate()
-        .for_each(|(pc, op)| dump_instruction(pc, op, &vm.module, &vm.methods, closure, None))
+    let func = &closure.fn_obj.borrow();
+    println!("Constants:");
+    for (id, value) in func.constants.iter().enumerate() {
+        println!("{:02}: {:?}", id, value);
+    }
+    println!("Code:");
+    for (pc, op) in func.code.iter().enumerate() {
+        dump_instruction(pc, &op, &vm.module, &vm.methods, closure, None)
+    }
 }
 
 pub trait Obj {
@@ -1011,15 +1009,16 @@ impl Obj for ObjClosure {
 pub(crate) struct ObjFn {
     class_obj: Handle<ObjClass>,
     pub(crate) arity: u8,
-    // Flatten this into ObjFn later?
-    pub(crate) function: Function,
+    pub(crate) constants: Vec<Value>,
+    pub(crate) code: Vec<Ops>,
 }
 
 impl ObjFn {
-    pub(crate) fn new(vm: &WrenVM, function: Function, arity: u8) -> ObjFn {
+    pub(crate) fn new(vm: &WrenVM, compiler: Box<crate::compiler::Compiler>, arity: u8) -> ObjFn {
         ObjFn {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
-            function: function,
+            constants: compiler.constants,
+            code: compiler.code,
             arity: arity,
         }
     }

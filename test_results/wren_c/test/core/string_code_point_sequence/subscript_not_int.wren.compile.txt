@@ -1,4 +1,7 @@
-Function { constants: [String("string"), Num(12.34)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "codePoints", call_type: Getter, arity: 0 }, 43), Constant(1), Call(Signature { bare_name: "", call_type: Subscript, arity: 1 }, 44), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("string")
+01: Num(12.34)
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("string"))
 02: Call(Getter: codePoints 43)

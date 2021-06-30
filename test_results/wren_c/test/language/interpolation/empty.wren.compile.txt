@@ -1,4 +1,6 @@
-Function { constants: [String(" %() ")], code: [Constant(0), Pop, End, End] }
+Constants:
+00: String(" %() ")
+Code:
 00: Constant(0: String(" %() "))
 01: Pop
 02: End

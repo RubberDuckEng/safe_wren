@@ -1,4 +1,8 @@
-Function { constants: [String("123"), Num(1), Num(3)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 10 }), Constant(1), Constant(2), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Call(Signature { bare_name: "", call_type: Subscript, arity: 1 }, 43), Pop, End, End] }
+Constants:
+00: String("123")
+01: Num(1)
+02: Num(3)
+Code:
 00: Constant(0: String("123"))
 01: Store(Module 10)
 02: Pop

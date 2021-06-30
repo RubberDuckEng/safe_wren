@@ -1,4 +1,7 @@
-Function { constants: [String("global"), String("shadow")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Constant(1), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 0 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("global")
+01: String("shadow")
+Code:
 00: Constant(0: String("global"))
 01: Store(Module 10)
 02: Pop

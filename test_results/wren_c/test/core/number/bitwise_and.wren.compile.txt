@@ -1,4 +1,13 @@
-Function { constants: [Num(0), Num(0), Num(2863311530), Num(1431655765), Num(4042322160), Num(1010580540), Num(4294967295), Num(4294967295)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Call(Signature { bare_name: "&", call_type: Method, arity: 1 }, 17), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(2), Constant(3), Call(Signature { bare_name: "&", call_type: Method, arity: 1 }, 17), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Constant(5), Call(Signature { bare_name: "&", call_type: Method, arity: 1 }, 17), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Constant(7), Call(Signature { bare_name: "&", call_type: Method, arity: 1 }, 17), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(0)
+01: Num(0)
+02: Num(2863311530)
+03: Num(1431655765)
+04: Num(4042322160)
+05: Num(1010580540)
+06: Num(4294967295)
+07: Num(4294967295)
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(0))
 02: Constant(1: Num(0))

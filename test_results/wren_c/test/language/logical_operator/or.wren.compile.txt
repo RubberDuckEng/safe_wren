@@ -1,4 +1,7 @@
-Function { constants: [Num(1), Num(1)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Or(1), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(1), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(3), Boolean(false), Or(1), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(1), Boolean(false), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(3), Boolean(false), Or(1), Boolean(false), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Or(7), Load(Variable { scope: Module, index: 9 }), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Or(3), Load(Variable { scope: Module, index: 9 }), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Or(1), Boolean(true), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(1)
+01: Num(1)
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(1))
 02: Or(1)

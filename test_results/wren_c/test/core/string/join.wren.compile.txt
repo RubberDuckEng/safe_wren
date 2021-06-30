@@ -1,4 +1,12 @@
-Function { constants: [String("string"), String(""), String(", "), String("a\0b\0c"), String(""), String(", "), String("a, \0, b, \0, c")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(1), Call(Signature { bare_name: "join", call_type: Method, arity: 1 }, 43), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: "join", call_type: Method, arity: 1 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(3), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Constant(4), Call(Signature { bare_name: "join", call_type: Method, arity: 1 }, 43), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Constant(5), Call(Signature { bare_name: "join", call_type: Method, arity: 1 }, 43), Constant(6), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("string")
+01: String("")
+02: String(", ")
+03: String("a\0b\0c")
+04: String("")
+05: String(", ")
+06: String("a, \0, b, \0, c")
+Code:
 00: Constant(0: String("string"))
 01: Store(Module 10)
 02: Pop

@@ -1,4 +1,10 @@
-Function { constants: [String("out"), String("in"), String("out"), String("dummy"), String("in")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Boolean(true), JumpIfFalse(2), Constant(1), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(2), Store(Variable { scope: Module, index: 11 }), Pop, Boolean(false), JumpIfFalse(3), Constant(3), Pop, Jump(2), Constant(4), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("out")
+01: String("in")
+02: String("out")
+03: String("dummy")
+04: String("in")
+Code:
 00: Constant(0: String("out"))
 01: Store(Module 10)
 02: Pop

@@ -1,4 +1,21 @@
-Function { constants: [String("123"), Num(123), String("-123"), Num(123), String("-0"), Num(0), String("12.34"), Num(12.34), String("-0.0001"), Num(0.0001), String(" 12 "), Num(12), String("test1"), String(""), String("prefix1.2"), String("1.2suffix")], code: [Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(0), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Constant(1), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(2), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Constant(3), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(4), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Constant(5), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(6), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Constant(7), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(8), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Constant(9), Call(Signature { bare_name: "-", call_type: Method, arity: 0 }, 8), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(10), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Constant(11), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(12), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Null, Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(13), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Null, Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(14), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Null, Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 6 }), Constant(15), Call(Signature { bare_name: "fromString", call_type: Method, arity: 1 }, 43), Null, Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("123")
+01: Num(123)
+02: String("-123")
+03: Num(123)
+04: String("-0")
+05: Num(0)
+06: String("12.34")
+07: Num(12.34)
+08: String("-0.0001")
+09: Num(0.0001)
+10: String(" 12 ")
+11: Num(12)
+12: String("test1")
+13: String("")
+14: String("prefix1.2")
+15: String("1.2suffix")
+Code:
 00: Load(Module 9: Class("System"))
 01: Load(Module 6: Class("Num"))
 02: Constant(0: String("123"))

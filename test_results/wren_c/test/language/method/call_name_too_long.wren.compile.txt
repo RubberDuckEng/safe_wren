@@ -1,4 +1,6 @@
-Function { constants: [Num(0)], code: [Boolean(false), JumpIfFalse(3), Constant(0), Call(Signature { bare_name: "thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy1", call_type: Getter, arity: 0 }, 43), Pop, End, End] }
+Constants:
+00: Num(0)
+Code:
 00: Boolean false
 01: JumpIfFalse(3)
 02: Constant(0: Num(0))

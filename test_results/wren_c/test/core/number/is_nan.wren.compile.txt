@@ -1,4 +1,10 @@
-Function { constants: [Num(1), Num(0), Num(0), Num(1), Num(0)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "isNan", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(1), Constant(2), Call(Signature { bare_name: "/", call_type: Method, arity: 1 }, 10), Call(Signature { bare_name: "isNan", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Constant(4), Call(Signature { bare_name: "/", call_type: Method, arity: 1 }, 10), Call(Signature { bare_name: "isNan", call_type: Getter, arity: 0 }, 43), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(1)
+01: Num(0)
+02: Num(0)
+03: Num(1)
+04: Num(0)
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(1))
 02: Call(Getter: isNan 43)

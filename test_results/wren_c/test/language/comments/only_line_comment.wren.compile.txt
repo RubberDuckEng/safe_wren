@@ -1,3 +1,4 @@
-Function { constants: [], code: [End, End] }
+Constants:
+Code:
 00: End
 01: End

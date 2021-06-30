@@ -1,4 +1,9 @@
-Function { constants: [Fn(), Fn(), Fn(), Fn()], code: [Load(Variable { scope: Module, index: 3 }), Closure(0, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, Load(Variable { scope: Module, index: 3 }), Closure(1, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, Load(Variable { scope: Module, index: 3 }), Closure(2, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, Load(Variable { scope: Module, index: 3 }), Closure(3, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "call", call_type: Method, arity: 0 }, 26), Pop, End, End] }
+Constants:
+00: Fn()
+01: Fn()
+02: Fn()
+03: Fn()
+Code:
 00: Load(Module 3: Class("Fn"))
 01: Closure(0, [])
 02: Call(Method: new(_) 24)

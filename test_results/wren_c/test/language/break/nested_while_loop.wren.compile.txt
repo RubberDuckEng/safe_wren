@@ -1,4 +1,13 @@
-Function { constants: [Num(0), String("outer %(i)"), Num(1), Num(0), String("inner %(j)"), Num(1), Num(1), Num(1)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Boolean(true), JumpIfFalse(36), Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: ">", call_type: Method, arity: 1 }, 13), JumpIfFalse(1), Jump(27), Constant(3), Boolean(true), JumpIfFalse(16), Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Local, index: 0 }), Constant(5), Call(Signature { bare_name: ">", call_type: Method, arity: 1 }, 13), JumpIfFalse(1), Jump(7), Load(Variable { scope: Local, index: 0 }), Constant(6), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 0 }), Pop, Loop(18), Load(Variable { scope: Module, index: 10 }), Constant(7), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Pop, Loop(38), End, End] }
+Constants:
+00: Num(0)
+01: String("outer %(i)")
+02: Num(1)
+03: Num(0)
+04: String("inner %(j)")
+05: Num(1)
+06: Num(1)
+07: Num(1)
+Code:
 00: Constant(0: Num(0))
 01: Store(Module 10)
 02: Pop

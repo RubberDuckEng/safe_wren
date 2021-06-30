@@ -1,4 +1,6 @@
-Function { constants: [Num(3)], code: [Load(Variable { scope: Module, index: 3 }), Constant(0), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Pop, End, End] }
+Constants:
+00: Num(3)
+Code:
 00: Load(Module 3: Class("Fn"))
 01: Constant(0: Num(3))
 02: Call(Method: new(_) 24)

@@ -1,4 +1,12 @@
-Function { constants: [String("bad"), String("bad"), String("true"), Num(0), Num(0), String(""), String("string")], code: [Boolean(false), JumpIfFalse(6), Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(1), Loop(8), Null, JumpIfFalse(6), Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(1), Loop(8), Boolean(true), JumpIfFalse(6), Load(Variable { scope: Module, index: 9 }), Constant(2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(1), Loop(8), Constant(3), JumpIfFalse(6), Load(Variable { scope: Module, index: 9 }), Constant(4), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(1), Loop(8), Constant(5), JumpIfFalse(6), Load(Variable { scope: Module, index: 9 }), Constant(6), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(1), Loop(8), End, End] }
+Constants:
+00: String("bad")
+01: String("bad")
+02: String("true")
+03: Num(0)
+04: Num(0)
+05: String("")
+06: String("string")
+Code:
 00: Boolean false
 01: JumpIfFalse(6)
 02: Load(Module 9: Class("System"))

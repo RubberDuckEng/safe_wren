@@ -1,4 +1,7 @@
-Function { constants: [String("first"), String("second")], code: [Constant(0), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 0 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, Constant(1), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Local, index: 0 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Pop, End, End] }
+Constants:
+00: String("first")
+01: String("second")
+Code:
 00: Constant(0: String("first"))
 01: Load(Module 9: Class("System"))
 02: Load(Local 0)

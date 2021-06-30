@@ -1,4 +1,6 @@
-Function { constants: [String("Foo")], code: [Constant(0), Load(Variable { scope: Module, index: 0 }), Class(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "new", call_type: Method, arity: 0 }, 43), Store(Variable { scope: Module, index: 11 }), Pop, End, End] }
+Constants:
+00: String("Foo")
+Code:
 00: Constant(0: String("Foo"))
 01: Load(Module 0: Class("Object"))
 02: Class(0 fields)

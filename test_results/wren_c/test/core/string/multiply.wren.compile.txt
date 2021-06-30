@@ -1,4 +1,13 @@
-Function { constants: [String("|"), String("abc"), Num(0), String("|"), String("abc"), Num(1), String("abc"), Num(4)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Constant(2), Call(Signature { bare_name: "*", call_type: Method, arity: 1 }, 9), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Constant(3), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(4), Constant(5), Call(Signature { bare_name: "*", call_type: Method, arity: 1 }, 9), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(6), Constant(7), Call(Signature { bare_name: "*", call_type: Method, arity: 1 }, 9), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("|")
+01: String("abc")
+02: Num(0)
+03: String("|")
+04: String("abc")
+05: Num(1)
+06: String("abc")
+07: Num(4)
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: String("|"))
 02: Constant(1: String("abc"))

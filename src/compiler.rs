@@ -7,9 +7,7 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
-use crate::vm::{
-    new_handle, wren_define_variable, Function, ModuleError, ObjClosure, ObjFn, Value, WrenVM,
-};
+use crate::vm::{new_handle, wren_define_variable, ModuleError, ObjClosure, ObjFn, Value, WrenVM};
 
 // Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
@@ -735,9 +733,9 @@ impl ClassInfo {
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
 pub(crate) struct Compiler {
-    constants: Vec<Value>,
+    pub(crate) constants: Vec<Value>,
     locals: Vec<Local>, // A fixed size array in wren_c
-    code: Vec<Ops>,
+    pub(crate) code: Vec<Ops>,
     scope_depth: ScopeDepth,
     loops: Vec<LoopOffsets>, // wren_c uses stack-allocated objects instead.
 
@@ -1165,13 +1163,9 @@ fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>, arity: u8) -> Han
 
     // FIXME: Set debug name?
 
-    // We're done with the compiler, take out its parts.
-    // let upvalues = compiler.upvalues;\
-    let function = Function {
-        code: compiler.code,
-        constants: compiler.constants,
-    };
-    let fn_obj = new_handle(ObjFn::new(ctx.vm, function, arity));
+    // We're done with the compiler, create an ObjFn from it.
+    let upvalues = std::mem::take(&mut compiler.upvalues);
+    let fn_obj = new_handle(ObjFn::new(ctx.vm, compiler, arity));
 
     // If this was not the top-compiler, load the compile function into
     // the parent code.
@@ -1184,8 +1178,7 @@ fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>, arity: u8) -> Han
         let constant = ctx
             .compiler_mut()
             .ensure_constant(Value::Fn(fn_obj.clone()));
-        ctx.compiler_mut()
-            .emit(Ops::Closure(constant, compiler.upvalues));
+        ctx.compiler_mut().emit(Ops::Closure(constant, upvalues));
     }
 
     fn_obj

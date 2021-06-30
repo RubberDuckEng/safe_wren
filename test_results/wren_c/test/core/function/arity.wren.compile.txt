@@ -1,4 +1,10 @@
-Function { constants: [Fn(), Fn(), Fn(), Fn(), Fn()], code: [Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(0, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "arity", call_type: Getter, arity: 0 }, 25), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(1, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "arity", call_type: Getter, arity: 0 }, 25), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(2, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "arity", call_type: Getter, arity: 0 }, 25), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(3, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "arity", call_type: Getter, arity: 0 }, 25), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 3 }), Closure(4, []), Call(Signature { bare_name: "new", call_type: Method, arity: 1 }, 24), Call(Signature { bare_name: "arity", call_type: Getter, arity: 0 }, 25), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Fn()
+01: Fn()
+02: Fn()
+03: Fn()
+04: Fn()
+Code:
 00: Load(Module 9: Class("System"))
 01: Load(Module 3: Class("Fn"))
 02: Closure(0, [])

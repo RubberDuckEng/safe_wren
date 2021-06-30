@@ -1,4 +1,6 @@
-Function { constants: [Num(1)], code: [Constant(0), Boolean(false), Call(Signature { bare_name: "^", call_type: Method, arity: 1 }, 19), Pop, End, End] }
+Constants:
+00: Num(1)
+Code:
 00: Constant(0: Num(1))
 01: Boolean false
 02: Call(Method: ^(_) 19)

@@ -1,4 +1,9 @@
-Function { constants: [String("a"), String("b"), String("chain"), String("var")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Constant(1), Store(Variable { scope: Module, index: 11 }), Pop, Constant(2), Store(Variable { scope: Module, index: 11 }), Load(Variable { scope: Module, index: 11 }), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Constant(3), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Store(Variable { scope: Module, index: 12 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 12 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("a")
+01: String("b")
+02: String("chain")
+03: String("var")
+Code:
 00: Constant(0: String("a"))
 01: Store(Module 10)
 02: Pop

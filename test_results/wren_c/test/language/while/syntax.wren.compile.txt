@@ -1,4 +1,11 @@
-Function { constants: [Num(0), Num(3), Num(1), Num(0), Num(3), Num(1)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 10 }), Constant(1), Call(Signature { bare_name: "<", call_type: Method, arity: 1 }, 11), JumpIfFalse(9), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Loop(13), Constant(3), Store(Variable { scope: Module, index: 11 }), Pop, Load(Variable { scope: Module, index: 11 }), Constant(4), Call(Signature { bare_name: "<", call_type: Method, arity: 1 }, 11), JumpIfFalse(11), Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 11 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 11 }), Constant(5), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 11 }), Load(Variable { scope: Module, index: 11 }), Pop, Loop(15), End, End] }
+Constants:
+00: Num(0)
+01: Num(3)
+02: Num(1)
+03: Num(0)
+04: Num(3)
+05: Num(1)
+Code:
 00: Constant(0: Num(0))
 01: Store(Module 10)
 02: Pop

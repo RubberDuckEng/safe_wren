@@ -1,4 +1,15 @@
-Function { constants: [Num(0), Num(2), Num(1), String("outer %(i)"), Num(2), Num(0), Num(2), Num(1), Num(2), String("inner %(j)")], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 10 }), Constant(1), Call(Signature { bare_name: "<=", call_type: Method, arity: 1 }, 12), JumpIfFalse(38), Load(Variable { scope: Module, index: 10 }), Constant(2), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Module, index: 10 }), Load(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 10 }), Constant(4), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), JumpIfFalse(1), Loop(19), Constant(5), Load(Variable { scope: Local, index: 0 }), Constant(6), Call(Signature { bare_name: "<=", call_type: Method, arity: 1 }, 12), JumpIfFalse(16), Load(Variable { scope: Local, index: 0 }), Constant(7), Call(Signature { bare_name: "+", call_type: Method, arity: 1 }, 6), Store(Variable { scope: Local, index: 0 }), Load(Variable { scope: Local, index: 0 }), Pop, Load(Variable { scope: Local, index: 0 }), Constant(8), Call(Signature { bare_name: "==", call_type: Method, arity: 1 }, 1), JumpIfFalse(1), Loop(15), Load(Variable { scope: Module, index: 9 }), Constant(9), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Loop(20), Pop, Loop(42), End, End] }
+Constants:
+00: Num(0)
+01: Num(2)
+02: Num(1)
+03: String("outer %(i)")
+04: Num(2)
+05: Num(0)
+06: Num(2)
+07: Num(1)
+08: Num(2)
+09: String("inner %(j)")
+Code:
 00: Constant(0: Num(0))
 01: Store(Module 10)
 02: Pop

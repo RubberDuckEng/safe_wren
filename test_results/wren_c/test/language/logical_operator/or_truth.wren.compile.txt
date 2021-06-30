@@ -1,4 +1,12 @@
-Function { constants: [String("ok"), String("ok"), String("ok"), Num(0), String("ok"), String("s"), String("ok")], code: [Load(Variable { scope: Module, index: 9 }), Boolean(false), Or(1), Constant(0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Null, Or(1), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(true), Or(1), Constant(2), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(3), Or(1), Constant(4), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Constant(5), Or(1), Constant(6), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("ok")
+01: String("ok")
+02: String("ok")
+03: Num(0)
+04: String("ok")
+05: String("s")
+06: String("ok")
+Code:
 00: Load(Module 9: Class("System"))
 01: Boolean false
 02: Or(1)

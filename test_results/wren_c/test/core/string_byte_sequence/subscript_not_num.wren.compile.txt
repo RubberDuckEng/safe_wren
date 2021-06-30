@@ -1,4 +1,7 @@
-Function { constants: [String("abcd"), String("not num")], code: [Constant(0), Call(Signature { bare_name: "bytes", call_type: Getter, arity: 0 }, 43), Constant(1), Call(Signature { bare_name: "", call_type: Subscript, arity: 1 }, 44), Pop, End, End] }
+Constants:
+00: String("abcd")
+01: String("not num")
+Code:
 00: Constant(0: String("abcd"))
 01: Call(Getter: bytes 43)
 02: Constant(1: String("not num"))

@@ -1,4 +1,7 @@
-Function { constants: [String("FAIL"), String("PASS")], code: [Boolean(false), JumpIfFalse(5), Load(Variable { scope: Module, index: 9 }), Constant(0), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Jump(4), Load(Variable { scope: Module, index: 9 }), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("FAIL")
+01: String("PASS")
+Code:
 00: Boolean false
 01: JumpIfFalse(5)
 02: Load(Module 9: Class("System"))

@@ -1,4 +1,8 @@
-Function { constants: [String("abcd"), String("bc"), Num(4)], code: [Constant(0), Constant(1), Constant(2), Call(Signature { bare_name: "indexOf", call_type: Method, arity: 2 }, 43), Pop, End, End] }
+Constants:
+00: String("abcd")
+01: String("bc")
+02: Num(4)
+Code:
 00: Constant(0: String("abcd"))
 01: Constant(1: String("bc"))
 02: Constant(2: Num(4))

@@ -1,4 +1,9 @@
-Function { constants: [String("yes"), String("no"), String("yes"), String("no")], code: [Load(Variable { scope: Module, index: 9 }), Boolean(true), JumpIfFalse(2), Constant(0), Jump(1), Constant(1), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, Load(Variable { scope: Module, index: 9 }), Boolean(false), JumpIfFalse(2), Constant(2), Jump(1), Constant(3), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: String("yes")
+01: String("no")
+02: String("yes")
+03: String("no")
+Code:
 00: Load(Module 9: Class("System"))
 01: Boolean true
 02: JumpIfFalse(2)

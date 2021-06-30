@@ -1,4 +1,22 @@
-Function { constants: [Num(1), Num(2), Num(3), Num(4), Num(5), Num(6), Num(7), Num(8), Num(9), Num(10), Num(11), Num(12), Num(13), Num(14), Num(15), Num(16), Num(17)], code: [Load(Variable { scope: Module, index: 9 }), Constant(0), Constant(1), Constant(2), Constant(3), Constant(4), Constant(5), Constant(6), Constant(7), Constant(8), Constant(9), Constant(10), Constant(11), Constant(12), Constant(13), Constant(14), Constant(15), Constant(16), Call(Signature { bare_name: "print", call_type: Method, arity: 17 }, 43), Pop, End, End] }
+Constants:
+00: Num(1)
+01: Num(2)
+02: Num(3)
+03: Num(4)
+04: Num(5)
+05: Num(6)
+06: Num(7)
+07: Num(8)
+08: Num(9)
+09: Num(10)
+10: Num(11)
+11: Num(12)
+12: Num(13)
+13: Num(14)
+14: Num(15)
+15: Num(16)
+16: Num(17)
+Code:
 00: Load(Module 9: Class("System"))
 01: Constant(0: Num(1))
 02: Constant(1: Num(2))

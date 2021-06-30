@@ -1,4 +1,6 @@
-Function { constants: [Num(123)], code: [Constant(0), Store(Variable { scope: Module, index: 10 }), Pop, Load(Variable { scope: Module, index: 9 }), Load(Variable { scope: Module, index: 10 }), Call(Signature { bare_name: "print", call_type: Method, arity: 1 }, 42), Pop, End, End] }
+Constants:
+00: Num(123)
+Code:
 00: Constant(0: Num(123))
 01: Store(Module 10)
 02: Pop

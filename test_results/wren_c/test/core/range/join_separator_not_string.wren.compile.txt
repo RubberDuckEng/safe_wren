@@ -1,4 +1,8 @@
-Function { constants: [Num(1), Num(3), Num(2)], code: [Constant(0), Constant(1), Call(Signature { bare_name: "..", call_type: Method, arity: 1 }, 15), Constant(2), Call(Signature { bare_name: "join", call_type: Method, arity: 1 }, 43), Pop, End, End] }
+Constants:
+00: Num(1)
+01: Num(3)
+02: Num(2)
+Code:
 00: Constant(0: Num(1))
 01: Constant(1: Num(3))
 02: Call(Method: ..(_) 15)
