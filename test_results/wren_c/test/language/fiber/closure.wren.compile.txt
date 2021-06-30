@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 6, error: Grammar("Undeclared variable \'Fiber\'") }
+WrenError { module: "dummy_module", line: 7, error: Grammar("Undeclared variable \'a\'") }

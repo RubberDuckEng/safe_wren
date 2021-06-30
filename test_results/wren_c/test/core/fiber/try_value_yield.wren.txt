@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Fiber\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Fiber\'")
+Unexpected output on stderr:
+MethodNotFound("new(_)" on "Fiber metaclass")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("new(_)" on "Fiber metaclass")
 
 Missing expected output "before" on line 11.
 Missing expected output "value1" on line 12.

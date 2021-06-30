@@ -1,1 +1,26 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+Constants:
+00: Fn()
+01: Fn()
+Code:
+00: Load(Module, Class("Fiber"))
+01: Call(Getter, current)
+02: Store(Module)
+03: Pop
+04: Load(Module, Class("Fiber"))
+05: Closure(0, [])
+06: Call(Method, new(_))
+07: Store(Module)
+08: Pop
+09: Load(Module, Class("Fiber"))
+10: Closure(1, [])
+11: Call(Method, new(_))
+12: Store(Module)
+13: Pop
+14: Load(Module, Null)
+15: Call(Method, call())
+16: Pop
+17: Load(Module, Null)
+18: Call(Method, transfer())
+19: Pop
+20: End
+21: End

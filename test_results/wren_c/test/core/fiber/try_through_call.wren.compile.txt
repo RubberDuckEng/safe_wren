@@ -1,1 +1,67 @@
-WrenError { module: "dummy_module", line: 4, error: Grammar("Undeclared variable \'Fiber\'") }
+Constants:
+00: Fn()
+01: Fn()
+02: Fn()
+03: Fn()
+04: Fn()
+05: String("after")
+Code:
+00: Load(Module, Class("Fiber"))
+01: Closure(0, [])
+02: Call(Method, new(_))
+03: Store(Module)
+04: Pop
+05: Load(Module, Class("Fiber"))
+06: Closure(1, [])
+07: Call(Method, new(_))
+08: Store(Module)
+09: Pop
+10: Load(Module, Class("Fiber"))
+11: Closure(2, [])
+12: Call(Method, new(_))
+13: Store(Module)
+14: Pop
+15: Load(Module, Class("Fiber"))
+16: Closure(3, [])
+17: Call(Method, new(_))
+18: Store(Module)
+19: Pop
+20: Load(Module, Class("Fiber"))
+21: Closure(4, [])
+22: Call(Method, new(_))
+23: Store(Module)
+24: Pop
+25: Load(Module, Null)
+26: Call(Method, call())
+27: Pop
+28: Load(Module, Class("System"))
+29: Constant(5: String("after"))
+30: Call(Method, print(_))
+31: Pop
+32: Load(Module, Class("System"))
+33: Load(Module, Null)
+34: Call(Getter, error)
+35: Call(Method, print(_))
+36: Pop
+37: Load(Module, Class("System"))
+38: Load(Module, Null)
+39: Call(Getter, error)
+40: Call(Method, print(_))
+41: Pop
+42: Load(Module, Class("System"))
+43: Load(Module, Null)
+44: Call(Getter, error)
+45: Call(Method, print(_))
+46: Pop
+47: Load(Module, Class("System"))
+48: Load(Module, Null)
+49: Call(Getter, error)
+50: Call(Method, print(_))
+51: Pop
+52: Load(Module, Class("System"))
+53: Load(Module, Null)
+54: Call(Getter, error)
+55: Call(Method, print(_))
+56: Pop
+57: End
+58: End

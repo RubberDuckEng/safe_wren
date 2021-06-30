@@ -1,4 +1,1 @@
-Unexpected error:
-[dummy_module line 5] Error Grammar("Undeclared variable \'Fiber\'")
-Missing expected error on line 6.
 Missing expected error on line 7.

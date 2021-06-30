@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Fiber\'")
+[dummy_module line 3] Error Grammar("Expected Expression: ParseToken { bytes_range: 36..37, token: LeftCurlyBrace, line: 3 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Fiber\'")
+[dummy_module line 3] Error Grammar("Expected Expression: ParseToken { bytes_range: 36..37, token: LeftCurlyBrace, line: 3 }")
 
 Missing expected output "null value" on line 14.
 Missing expected output "true value" on line 15.

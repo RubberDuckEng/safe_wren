@@ -1,1 +1,10 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'Fiber\'") }
+Constants:
+00: String("not fn")
+Code:
+00: Load(Module, Class("Fiber"))
+01: Constant(0: String("not fn"))
+02: Call(Method, new(_))
+03: Store(Module)
+04: Pop
+05: End
+06: End

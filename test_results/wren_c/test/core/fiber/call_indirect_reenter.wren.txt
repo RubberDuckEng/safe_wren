@@ -1,6 +1,4 @@
 Expected runtime error "Fiber has already been called." and got:
-
+MethodNotFound("new(_)" on "Fiber metaclass")
 Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Undeclared variable \'Fiber\'")
 
