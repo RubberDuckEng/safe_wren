@@ -1,6 +1,6 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Could not resolve \'this\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Could not resolve \'this\'")
+Unexpected output on stderr:
+MethodNotFound("super" on "B")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("super" on "B")
 
 Missing expected output "instance of B" on line 11.

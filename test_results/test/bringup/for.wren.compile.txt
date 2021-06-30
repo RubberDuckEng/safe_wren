@@ -6,16 +6,16 @@ Code:
 01: Constant(1: Num(1))
 02: Call(Method: ..(_) 15)
 03: Null
-04: Load(Local 0)
-05: Load(Local 1)
+04: Load(Local 1)
+05: Load(Local 2)
 06: Call(Method: iterate(_) 22)
-07: Store(Local 1)
+07: Store(Local 2)
 08: JumpIfFalse(9)
-09: Load(Local 0)
-10: Load(Local 1)
+09: Load(Local 1)
+10: Load(Local 2)
 11: Call(Method: iteratorValue(_) 23)
 12: Load(Module 9: Class("System"))
-13: Load(Local 2)
+13: Load(Local 3)
 14: Call(Method: print(_) 42)
 15: Pop
 16: Pop

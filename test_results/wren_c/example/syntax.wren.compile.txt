@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 15, error: Grammar("Could not resolve \'this\'") }
+WrenError { module: "dummy_module", line: 19, error: Grammar("Could not resolve \'this\'") }

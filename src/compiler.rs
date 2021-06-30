@@ -671,7 +671,7 @@ pub(crate) enum Ops {
 #[derive(Debug)]
 struct Local {
     name: String,
-    depth: usize,
+    depth: ScopeDepth,
 }
 
 #[derive(Copy, Clone, PartialEq, Debug)]
@@ -760,14 +760,21 @@ pub(crate) struct Compiler {
 }
 
 impl Compiler {
-    fn _with_parent_and_arg0_name(parent: Option<Box<Compiler>>, _arg0_name: &str) -> Compiler {
+    fn _with_parent_and_arg0_name(parent: Option<Box<Compiler>>, arg0_name: &str) -> Compiler {
         Compiler {
             constants: Vec::new(),
-            // locals: vec![Local {
-            //     name: arg0_name.into(),
-            //     depth: 0, // wren_c uses -1 for this, unclear if needed?
-            // }],
-            locals: Vec::new(),
+            locals: vec![Local {
+                name: arg0_name.into(),
+                // wren_c has a funny hack here by setting depth to -1 (module)
+                // it makes a local which is never popped.  I suspect this can
+                // be done differently.  It can't be 0 at the top level or the
+                // first time we create a compiler we'll end up popping the
+                // implicit arg0 closure for the module scope.
+                // However "this" really is a local.  It's owned by the callee
+                // and should be popped by the callee.
+                depth: ScopeDepth::Module,
+            }],
+            // locals: Vec::new(),
             code: Vec::new(),
             scope_depth: match parent {
                 None => ScopeDepth::Module,
@@ -1866,21 +1873,29 @@ impl<'a, 'b> Drop for ScopePusher<'a, 'b> {
 // Returns the number of local variables that were eliminated.
 // FIXME: Is discard_locals needed with each CallFrame having a separate stack?
 fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
-    let depth = match scope_depth {
+    let target_depth = match scope_depth {
         ScopeDepth::Module => panic!("Can't discard locals at module level."),
         ScopeDepth::Local(i) => i,
     };
 
     let starting_locals_len = compiler.locals.len();
-    while let Some(local) = compiler.locals.last() {
-        if local.depth < depth {
-            break;
+
+    fn emit_pops(compiler: &mut Compiler, target_depth: usize) {
+        while let Some(local) = compiler.locals.last() {
+            let local_depth = match local.depth {
+                ScopeDepth::Module => return, // Stop at the magical "this" (see hack note above in Compiler constructor).
+                ScopeDepth::Local(i) => i,
+            };
+            if local_depth < target_depth {
+                break;
+            }
+            // FIXME: Handle upvalues.
+            compiler.emit(Ops::Pop);
+            compiler.locals.pop();
         }
-        // FIXME: Handle upvalues.
-        compiler.emit(Ops::Pop);
-        compiler.locals.pop();
     }
 
+    emit_pops(compiler, target_depth);
     return starting_locals_len - compiler.locals.len();
 }
 
@@ -2036,7 +2051,7 @@ fn declare_method(ctx: &mut ParseContext, signature: &Signature) -> Result<usize
 fn add_local(ctx: &mut ParseContext, name: String) -> u16 {
     let local = Local {
         name: name,
-        depth: ctx.compiler().nested_local_scope_count(),
+        depth: ScopeDepth::Local(ctx.compiler().nested_local_scope_count()),
     };
     ctx.compiler_mut().locals.push(local);
     (ctx.compiler().locals.len() - 1) as u16

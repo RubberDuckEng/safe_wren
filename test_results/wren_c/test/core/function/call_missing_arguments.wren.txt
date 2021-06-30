@@ -1,4 +1,4 @@
 Expected runtime error "Function expects more arguments." and got:
-MethodNotFound("+(_)" on "Fn")
+StringRequired(Class("System"))
 Expected stack trace and got:
 

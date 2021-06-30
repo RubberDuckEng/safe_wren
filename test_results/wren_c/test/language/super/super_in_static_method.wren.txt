@@ -1,7 +1,6 @@
-Unexpected error:
-[dummy_module line 4] Error Grammar("Could not resolve \'this\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Could not resolve \'this\'")
+Unexpected output on stderr:
+MethodNotFound("super" on "Foo metaclass")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("super" on "Foo metaclass")
 
-Missing expected output "Foo.name" on line 3.
 Missing expected output "Foo" on line 4.

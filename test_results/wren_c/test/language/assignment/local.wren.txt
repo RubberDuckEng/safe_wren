@@ -3,6 +3,5 @@ MethodNotFound("print(_)" on "String")
 Expected return code 0 and got 70. Stderr:
 MethodNotFound("print(_)" on "String")
 
-Expected output "before" on line 3 and got "Closure {..}".
 Missing expected output "arg" on line 8.
 Missing expected output "arg" on line 9.

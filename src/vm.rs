@@ -284,8 +284,11 @@ pub struct Fiber {
 
 impl Fiber {
     fn new(closure: Handle<ObjClosure>) -> Fiber {
+        let mut frame = CallFrame::new(closure.clone());
+        // In wrenNewFiber, the first slot always holds the root closure.
+        frame.push(Value::Closure(closure));
         Fiber {
-            call_stack: vec![CallFrame::new(closure)],
+            call_stack: vec![frame],
         }
     }
 }
@@ -538,6 +541,7 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM) {
 
     let input = InputManager::from_string(source);
     let closure = compile(vm, input, "core".into()).expect("compile wren_core");
+    // debug_bytecode(vm, &closure.borrow());
     vm.run(closure).expect("run wren_core");
     vm.debug = had_debug;
 }

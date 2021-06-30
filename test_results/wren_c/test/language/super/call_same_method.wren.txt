@@ -1,7 +1,6 @@
-Unexpected error:
-[dummy_module line 12] Error Grammar("Could not resolve \'this\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 12] Error Grammar("Could not resolve \'this\'")
+Unexpected output on stderr:
+MethodNotFound("super" on "Derived")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("super" on "Derived")
 
-Missing expected output "Derived.foo" on line 17.
 Missing expected output "Base.foo" on line 18.

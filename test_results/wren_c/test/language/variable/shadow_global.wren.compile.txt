@@ -7,7 +7,7 @@ Code:
 02: Pop
 03: Constant(1: String("shadow"))
 04: Load(Module 9: Class("System"))
-05: Load(Local 0)
+05: Load(Local 1)
 06: Call(Method: print(_) 42)
 07: Pop
 08: Pop

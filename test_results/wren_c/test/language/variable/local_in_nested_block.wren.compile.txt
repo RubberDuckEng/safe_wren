@@ -3,7 +3,7 @@ Constants:
 Code:
 00: Constant(0: String("outer"))
 01: Load(Module 9: Class("System"))
-02: Load(Local 0)
+02: Load(Local 1)
 03: Call(Method: print(_) 42)
 04: Pop
 05: Pop

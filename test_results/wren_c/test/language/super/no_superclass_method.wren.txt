@@ -1,6 +1,4 @@
 Expected runtime error "Base does not implement 'doesNotExist(_)'." and got:
-
+MethodNotFound("super" on "Derived")
 Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Could not resolve \'this\'")
 

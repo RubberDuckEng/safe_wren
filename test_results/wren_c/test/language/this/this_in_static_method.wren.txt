@@ -1,7 +1,0 @@
-Unexpected error:
-[dummy_module line 3] Error Grammar("Could not resolve \'this\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Could not resolve \'this\'")
-
-Missing expected output "true" on line 3.
-Missing expected output "bar" on line 4.

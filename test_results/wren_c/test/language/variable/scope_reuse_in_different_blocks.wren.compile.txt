@@ -4,13 +4,13 @@ Constants:
 Code:
 00: Constant(0: String("first"))
 01: Load(Module 9: Class("System"))
-02: Load(Local 0)
+02: Load(Local 1)
 03: Call(Method: print(_) 42)
 04: Pop
 05: Pop
 06: Constant(1: String("second"))
 07: Load(Module 9: Class("System"))
-08: Load(Local 0)
+08: Load(Local 1)
 09: Call(Method: print(_) 42)
 10: Pop
 11: Pop

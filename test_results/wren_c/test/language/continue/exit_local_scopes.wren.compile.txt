@@ -10,18 +10,18 @@ Code:
 01: Constant(1: Num(5))
 02: Call(Method: ..(_) 15)
 03: Null
-04: Load(Local 0)
-05: Load(Local 1)
+04: Load(Local 1)
+05: Load(Local 2)
 06: Call(Method: iterate(_) 22)
-07: Store(Local 1)
+07: Store(Local 2)
 08: JumpIfFalse(20)
-09: Load(Local 0)
-10: Load(Local 1)
+09: Load(Local 1)
+10: Load(Local 2)
 11: Call(Method: iteratorValue(_) 23)
 12: Constant(2: String("a"))
 13: Constant(3: String("b"))
 14: Constant(4: String("c"))
-15: Load(Local 2)
+15: Load(Local 3)
 16: Constant(5: Num(1))
 17: Call(Method: ==(_) 1)
 18: JumpIfFalse(1)
@@ -30,7 +30,7 @@ Code:
 21: Pop
 22: Pop
 23: Load(Module 9: Class("System"))
-24: Load(Local 2)
+24: Load(Local 3)
 25: Call(Method: print(_) 42)
 26: Pop
 27: Pop

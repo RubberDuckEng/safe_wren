@@ -1,8 +1,0 @@
-Unexpected error:
-[dummy_module line 17] Error Grammar("Could not resolve \'this\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 17] Error Grammar("Could not resolve \'this\'")
-
-Missing expected output "getter" on line 17.
-Missing expected output "setter" on line 18.
-Missing expected output "method" on line 19.

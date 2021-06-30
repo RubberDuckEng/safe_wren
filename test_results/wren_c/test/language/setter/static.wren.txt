@@ -1,1 +1,0 @@
-Expected output "value" on line 7 and got "RefCell { value: ObjClass { Foo super: "Object" meta: "Foo metaclass" } }".

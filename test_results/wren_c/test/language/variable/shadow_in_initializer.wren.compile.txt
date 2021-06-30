@@ -3,11 +3,11 @@ Constants:
 01: String(" inner")
 Code:
 00: Constant(0: String("outer"))
-01: Load(Local 0)
+01: Load(Local 1)
 02: Constant(1: String(" inner"))
 03: Call(Method: +(_) 6)
 04: Load(Module 9: Class("System"))
-05: Load(Local 0)
+05: Load(Local 1)
 06: Call(Method: print(_) 42)
 07: Pop
 08: Pop

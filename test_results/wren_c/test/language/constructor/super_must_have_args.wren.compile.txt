@@ -1,1 +1,24 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Could not resolve \'this\'") }
+Constants:
+00: String("A")
+01: String("B")
+02: Fn()
+03: Fn()
+Code:
+00: Constant(0: String("A"))
+01: Load(Module 0: Class("Object"))
+02: Class(0 fields)
+03: Store(Module 10)
+04: Pop
+05: Constant(1: String("B"))
+06: Load(Module 10: Null)
+07: Class(0 fields)
+08: Store(Module 11)
+09: Pop
+10: Closure(2, [])
+11: Load(Module 11: Null)
+12: Method(instance 43: init new())
+13: Closure(3, [])
+14: Load(Module 11: Null)
+15: Method(static 45: new())
+16: End
+17: End

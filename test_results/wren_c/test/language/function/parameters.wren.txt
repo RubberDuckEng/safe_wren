@@ -1,21 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("+(_)" on "Fn")
+MethodNotFound("call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "Fn")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("+(_)" on "Fn")
+MethodNotFound("call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "Fn")
 
-Expected output "1" on line 5 and got "Closure {..}".
-Missing expected output "3" on line 8.
-Missing expected output "6" on line 11.
-Missing expected output "10" on line 14.
-Missing expected output "15" on line 17.
-Missing expected output "21" on line 20.
-Missing expected output "28" on line 23.
-Missing expected output "36" on line 26.
-Missing expected output "45" on line 29.
-Missing expected output "55" on line 32.
-Missing expected output "66" on line 35.
-Missing expected output "78" on line 38.
-Missing expected output "91" on line 41.
-Missing expected output "105" on line 44.
-Missing expected output "120" on line 47.
 Missing expected output "136" on line 50.

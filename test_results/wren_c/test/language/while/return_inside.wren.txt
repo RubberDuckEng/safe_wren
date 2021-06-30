@@ -1,1 +1,0 @@
-Expected output "i" on line 9 and got "Closure {..}".
