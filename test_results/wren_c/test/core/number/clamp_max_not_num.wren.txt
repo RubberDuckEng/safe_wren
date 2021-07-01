@@ -1,4 +1,4 @@
 Expected runtime error "Max value must be a number." and got:
-MethodNotFound("clamp(_,_)" on "Num")
+NumberRequired(Boolean(false))
 Expected stack trace and got:
 

@@ -37,10 +37,12 @@ wren_c/test/core/null/not.wren
 wren_c/test/core/number/abs.wren
 wren_c/test/core/number/bitwise_and.wren
 wren_c/test/core/number/bitwise_lsh.wren
+wren_c/test/core/number/bitwise_not.wren
 wren_c/test/core/number/bitwise_or.wren
 wren_c/test/core/number/bitwise_rsh.wren
 wren_c/test/core/number/bitwise_xor.wren
 wren_c/test/core/number/ceil.wren
+wren_c/test/core/number/clamp.wren
 wren_c/test/core/number/comparison.wren
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/equality.wren
@@ -49,10 +51,13 @@ wren_c/test/core/number/invalid_hex_literal.wren
 wren_c/test/core/number/is_infinity.wren
 wren_c/test/core/number/is_integer.wren
 wren_c/test/core/number/is_nan.wren
+wren_c/test/core/number/min_max.wren
+wren_c/test/core/number/mod.wren
 wren_c/test/core/number/multiply.wren
 wren_c/test/core/number/not.wren
 wren_c/test/core/number/plus.wren
 wren_c/test/core/number/pow.wren
+wren_c/test/core/number/round.wren
 wren_c/test/core/number/to_string.wren
 wren_c/test/core/number/truncate.wren
 wren_c/test/core/object/is.wren

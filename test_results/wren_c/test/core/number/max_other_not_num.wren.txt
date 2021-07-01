@@ -1,4 +1,4 @@
 Expected runtime error "Other value must be a number." and got:
-MethodNotFound("max(_)" on "Num")
+NumberRequired(Boolean(false))
 Expected stack trace and got:
 

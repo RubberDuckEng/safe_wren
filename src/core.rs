@@ -41,6 +41,15 @@ macro_rules! bitwise_num_op {
     };
 }
 
+macro_rules! num_bitwise_unary_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+            let a = args[0].try_into_num()? as u32;
+            Ok(Value::$return_type(a.$method() as f64))
+        }
+    };
+}
+
 macro_rules! num_unary_op {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -101,6 +110,26 @@ num_unary_op!(num_cbrt, cbrt, Num);
 num_unary_op!(num_ceil, ceil, Num);
 num_unary_op!(num_cos, cos, Num);
 num_unary_op!(num_floor, floor, Num);
+
+num_unary_op!(num_round, round, Num);
+num_binary_op!(num_min, min, Num);
+num_binary_op!(num_max, max, Num);
+
+fn num_clamp(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let value = args[0].try_into_num()?;
+    let min = args[1].try_into_num()?;
+    let max = args[2].try_into_num()?;
+    Ok(Value::Num(value.clamp(min, max)))
+}
+
+num_unary_op!(num_sin, sin, Num);
+num_unary_op!(num_sqrt, sqrt, Num);
+num_unary_op!(num_tan, tan, Num);
+num_unary_op!(num_log, ln, Num);
+num_unary_op!(num_log2, log2, Num);
+num_unary_op!(num_exp, exp, Num);
+num_binary_op!(num_mod, rem, Num);
+num_bitwise_unary_op!(num_bitwise_not, not, Num);
 
 fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let x = args[0].try_into_num()?;
@@ -550,6 +579,18 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, "cos", num_cos);
     primitive!(vm, core.num, "floor", num_floor);
     primitive!(vm, core.num, "-", num_unary_minus);
+    primitive!(vm, core.num, "round", num_round);
+    primitive!(vm, core.num, "min(_)", num_min);
+    primitive!(vm, core.num, "max(_)", num_max);
+    primitive!(vm, core.num, "clamp(_,_)", num_clamp);
+    primitive!(vm, core.num, "sin", num_sin);
+    primitive!(vm, core.num, "sqrt", num_sqrt);
+    primitive!(vm, core.num, "tan", num_tan);
+    primitive!(vm, core.num, "log", num_log);
+    primitive!(vm, core.num, "log2", num_log2);
+    primitive!(vm, core.num, "exp", num_exp);
+    primitive!(vm, core.num, "%(_)", num_mod);
+    primitive!(vm, core.num, "~", num_bitwise_not);
     primitive!(vm, core.num, "..(_)", num_range_inclusive);
     primitive!(vm, core.num, "...(_)", num_range_exclusive);
     primitive!(vm, core.num, "atan(_)", num_atan2);

@@ -1,9 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("log2" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("log2" on "Num")
-
-Missing expected output "10" on line 1.
-Missing expected output "11" on line 2.
-Missing expected output "6.6438561897747" on line 3.
-Missing expected output "nan" on line 4.
+Expected output "6.6438561897747" on line 3 and got "6.643856189774724".
