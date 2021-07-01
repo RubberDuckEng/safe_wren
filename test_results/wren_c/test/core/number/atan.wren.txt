@@ -1,7 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("atan" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("atan" on "Num")
-
-Missing expected output "0" on line 1.
-Missing expected output "0.78539816339745" on line 2.
+Expected output "0.78539816339745" on line 2 and got "0.7853981633974483".

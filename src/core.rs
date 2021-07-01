@@ -22,9 +22,20 @@ num_constant!(num_min_safe_integer, -9007199254740991.0);
 macro_rules! infix_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-            Ok(Value::$return_type(
-                args[0].try_into_num()?.$method(&args[1].try_into_num()?),
-            ))
+            let a = args[0].try_into_num()?;
+            let b = args[1].try_into_num()?;
+            Ok(Value::$return_type(a.$method(&b)))
+        }
+    };
+}
+
+// This is identical to infix_num_op except the borrow for b. :/
+macro_rules! num_binary_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+            let a = args[0].try_into_num()?;
+            let b = args[1].try_into_num()?;
+            Ok(Value::$return_type(a.$method(b)))
         }
     };
 }
@@ -53,16 +64,6 @@ bitwise_num_op!(num_bitwise_or, bitor, Num);
 bitwise_num_op!(num_bitwise_xor, bitxor, Num);
 bitwise_num_op!(num_bitwise_shl, shl, Num);
 bitwise_num_op!(num_bitwise_shr, shr, Num);
-
-macro_rules! num_binary_op {
-    ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-            let a = args[0].try_into_num()?;
-            let b = args[1].try_into_num()?;
-            Ok(Value::$return_type(a.$method(b)))
-        }
-    };
-}
 
 macro_rules! num_unary_op {
     ($func:ident, $method:ident, $return_type:ident) => {
@@ -93,6 +94,15 @@ num_unary_op!(num_is_infinity, is_infinite, Boolean);
 num_unary_op!(num_is_nan, is_nan, Boolean);
 num_unary_op!(num_sign, signum, Num);
 num_unary_op!(num_truncate, trunc, Num);
+
+num_unary_op!(num_abs, abs, Num);
+num_unary_op!(num_acos, acos, Num);
+num_unary_op!(num_asin, asin, Num);
+num_unary_op!(num_atan, atan, Num);
+num_unary_op!(num_cbrt, cbrt, Num);
+num_unary_op!(num_ceil, ceil, Num);
+num_unary_op!(num_cos, cos, Num);
+num_unary_op!(num_floor, floor, Num);
 
 fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let x = args[0].try_into_num()?;
@@ -533,14 +543,14 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, "^(_)", num_bitwise_xor);
     primitive!(vm, core.num, "<<(_)", num_bitwise_shl);
     primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
-    // primitive!(vm, core.num, "abs", num_abs);
-    // primitive!(vm, core.num, "acos", num_acos);
-    // primitive!(vm, core.num, "asin", num_asin);
-    // primitive!(vm, core.num, "atan", num_atan);
-    // primitive!(vm, core.num, "cbrt", num_cbrt);
-    // primitive!(vm, core.num, "ceil", num_ceil);
-    // primitive!(vm, core.num, "cos", num_cos);
-    // primitive!(vm, core.num, "floor", num_floor);
+    primitive!(vm, core.num, "abs", num_abs);
+    primitive!(vm, core.num, "acos", num_acos);
+    primitive!(vm, core.num, "asin", num_asin);
+    primitive!(vm, core.num, "atan", num_atan);
+    primitive!(vm, core.num, "cbrt", num_cbrt);
+    primitive!(vm, core.num, "ceil", num_ceil);
+    primitive!(vm, core.num, "cos", num_cos);
+    primitive!(vm, core.num, "floor", num_floor);
     primitive!(vm, core.num, "-", num_unary_minus);
     primitive!(vm, core.num, "..(_)", num_range_inclusive);
     primitive!(vm, core.num, "...(_)", num_range_exclusive);

@@ -1,8 +1,2 @@
-Unexpected output on stderr:
-MethodNotFound("asin" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("asin" on "Num")
-
-Missing expected output "0" on line 1.
-Missing expected output "1.5707963267949" on line 2.
-Missing expected output "-1.5707963267949" on line 3.
+Expected output "1.5707963267949" on line 2 and got "1.5707963267948966".
+Expected output "-1.5707963267949" on line 3 and got "-1.5707963267948966".

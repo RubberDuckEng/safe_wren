@@ -34,14 +34,17 @@ wren_c/test/core/list/not.wren
 wren_c/test/core/list/reduce.wren
 wren_c/test/core/list/reduce_single_item.wren
 wren_c/test/core/null/not.wren
+wren_c/test/core/number/abs.wren
 wren_c/test/core/number/bitwise_and.wren
 wren_c/test/core/number/bitwise_lsh.wren
 wren_c/test/core/number/bitwise_or.wren
 wren_c/test/core/number/bitwise_rsh.wren
 wren_c/test/core/number/bitwise_xor.wren
+wren_c/test/core/number/ceil.wren
 wren_c/test/core/number/comparison.wren
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/equality.wren
+wren_c/test/core/number/floor.wren
 wren_c/test/core/number/invalid_hex_literal.wren
 wren_c/test/core/number/is_infinity.wren
 wren_c/test/core/number/is_integer.wren
