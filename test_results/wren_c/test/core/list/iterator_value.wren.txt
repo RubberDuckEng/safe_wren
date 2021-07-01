@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("iteratorValue(_)" on "List")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("iteratorValue(_)" on "List")
-
-Missing expected output "one" on line 2.
-Missing expected output "two" on line 3.
-Missing expected output "three" on line 4.
-Missing expected output "four" on line 5.

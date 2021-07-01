@@ -269,6 +269,74 @@ fn list_add_core(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeErr
     Ok(list_value)
 }
 
+fn validate_int_value(value: f64, arg_name: &str) -> Result<f64, RuntimeError> {
+    if value.trunc() != value {
+        Err(RuntimeError::ExpectingInteger(arg_name.into()))
+    } else {
+        Ok(value)
+    }
+}
+
+fn validate_int(value: &Value, arg_name: &str) -> Result<f64, RuntimeError> {
+    let num = value.try_into_num()?;
+    validate_int_value(num, arg_name)
+}
+
+fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let list = args[0].try_into_list()?;
+    let elements_len = list.borrow().elements.len() as f64;
+
+    if args[1].is_null() {
+        if elements_len == 0.0 {
+            return Ok(Value::Boolean(false));
+        }
+        return Ok(Value::Num(0.0));
+    }
+
+    let index = validate_int(&args[1], "Iterator")?;
+    // Stop if we're out of bounds.
+    if index < 0.0 || index >= elements_len - 1.0 {
+        return Ok(Value::Boolean(false));
+    }
+    // Otherwise, move to the next index.
+    return Ok(Value::Num(index + 1.0));
+}
+
+fn validate_index(value: &Value, count: usize, arg_name: &str) -> Result<usize, RuntimeError> {
+    let num = value.try_into_num()?;
+    validate_index_value(count, num, arg_name)
+}
+
+// Validates that [value] is an integer within `[0, count)`. Also allows
+// negative indices which map backwards from the end. Returns the valid positive
+// index value. If invalid, reports an error.
+fn validate_index_value(
+    count: usize,
+    mut value: f64,
+    arg_name: &str,
+) -> Result<usize, RuntimeError> {
+    validate_int_value(value, arg_name)?;
+
+    // Negative indices count from the end.
+    if value < 0.0 {
+        value = count as f64 + value;
+    }
+    // Check bounds.
+    if value >= 0.0 && value < count as f64 {
+        Ok(value as usize)
+    } else {
+        Err(RuntimeError::RangeOutOfBounds(arg_name.into()))
+    }
+}
+
+fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let list = args[0].try_into_list()?;
+
+    let index = validate_index(&args[1], list.borrow().elements.len(), "Iterator")?;
+    let value = list.borrow().elements[index].clone();
+    Ok(value)
+}
+
 fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let list = args[0].try_into_list()?;
     let count = list.borrow().elements.len() as f64;
@@ -429,6 +497,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
     primitive!(vm, list, "addCore_(_)", list_add_core);
+    primitive!(vm, list, "iterate(_)", list_iterate);
+    primitive!(vm, list, "iteratorValue(_)", list_iterator_value);
     primitive!(vm, list, "count", list_count);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);

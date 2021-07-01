@@ -1,11 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("iterate(_)" on "List")
+MethodNotFound("toString" on "List")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("iterate(_)" on "List")
+MethodNotFound("toString" on "List")
 
-Missing expected output "true" on line 2.
-Missing expected output "123" on line 5.
-Missing expected output "123" on line 8.
-Missing expected output "1,2,true" on line 11.
 Missing expected output "1,[2, [3], 4],5" on line 14.
 Missing expected output "1, Foo.toString, 2" on line 22.

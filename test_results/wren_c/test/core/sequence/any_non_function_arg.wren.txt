@@ -1,4 +1,4 @@
 Expected runtime error "String does not implement 'call(_)'." and got:
-MethodNotFound("iterate(_)" on "List")
+MethodNotFound("call(_)" on "String")
 Expected stack trace and got:
 
