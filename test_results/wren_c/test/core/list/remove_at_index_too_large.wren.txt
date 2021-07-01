@@ -1,4 +1,4 @@
 Expected runtime error "Index out of bounds." and got:
-MethodNotFound("removeAt(_)" on "List")
+RangeOutOfBounds("Index")
 Expected stack trace and got:
 

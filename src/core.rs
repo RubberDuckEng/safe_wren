@@ -258,6 +258,14 @@ fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::List(wren_new_list(vm)))
 }
 
+fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let value = args.pop().unwrap();
+    let list_value = args.pop().unwrap();
+    let list = list_value.try_into_list()?;
+    list.borrow_mut().elements.push(value.clone());
+    Ok(value)
+}
+
 // Adds an element to the list and then returns the list itself. This is called
 // by the compiler when compiling list literals instead of using add() to
 // minimize stack churn.
@@ -335,6 +343,13 @@ fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeE
     let index = validate_index(&args[1], list.borrow().elements.len(), "Iterator")?;
     let value = list.borrow().elements[index].clone();
     Ok(value)
+}
+
+fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let list = args[0].try_into_list()?;
+    let index = validate_index(&args[1], list.borrow().elements.len(), "Index")?;
+    list.borrow_mut().elements.remove(index);
+    Ok(Value::List(list))
 }
 
 fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -496,9 +511,11 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     let list = find_core_class(vm, "List");
     // primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
+    primitive!(vm, list, "add(_)", list_add);
     primitive!(vm, list, "addCore_(_)", list_add_core);
     primitive!(vm, list, "iterate(_)", list_iterate);
     primitive!(vm, list, "iteratorValue(_)", list_iterator_value);
+    primitive!(vm, list, "removeAt(_)", list_remove_at);
     primitive!(vm, list, "count", list_count);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);

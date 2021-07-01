@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("add(_)" on "List")
+MethodNotFound("[_]" on "List")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("add(_)" on "List")
+MethodNotFound("[_]" on "List")
 
 Expected output "true" on line 15 and got "false".
 Expected output "false" on line 16 and got "true".

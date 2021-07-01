@@ -1,4 +1,4 @@
 Expected runtime error "Index must be a number." and got:
-MethodNotFound("removeAt(_)" on "List")
+NumberRequired(String("2"))
 Expected stack trace and got:
 
