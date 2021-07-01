@@ -1,1 +1,43 @@
-WrenError { module: "dummy_module", line: 7, error: Grammar("Expected Expression: ParseToken { bytes_range: 80..81, token: LeftSquareBracket, line: 7 }") }
+Constants:
+00: String("Foo")
+01: Fn()
+02: Fn()
+03: Fn()
+04: Num(1)
+05: String("s")
+Code:
+00: Constant(0: String("Foo"))
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new())
+11: Closure(3, [])
+12: Load(Module, Null)
+13: Method(instance, toString)
+14: Load(Module, Class("System"))
+15: Load(Module, Class("List"))
+16: Call(Method, new())
+17: Call(Method, printAll(_))
+18: Pop
+19: Load(Module, Class("System"))
+20: Load(Module, Class("List"))
+21: Call(Method, new())
+22: Constant(4: Num(1))
+23: Call(Method, addCore_(_))
+24: Boolean true
+25: Call(Method, addCore_(_))
+26: Load(Module, Null)
+27: Call(Method, new())
+28: Call(Method, addCore_(_))
+29: Constant(5: String("s"))
+30: Call(Method, addCore_(_))
+31: Call(Method, printAll(_))
+32: Pop
+33: End
+34: End

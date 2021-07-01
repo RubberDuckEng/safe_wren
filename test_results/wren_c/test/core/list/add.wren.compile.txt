@@ -1,1 +1,36 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 8..9, token: LeftSquareBracket, line: 1 }") }
+Constants:
+00: Num(1)
+01: Num(2)
+02: Num(3)
+03: Num(4)
+Code:
+00: Load(Module, Class("List"))
+01: Call(Method, new())
+02: Constant(0: Num(1))
+03: Call(Method, addCore_(_))
+04: Store(Module)
+05: Pop
+06: Load(Module, Null)
+07: Constant(1: Num(2))
+08: Call(Method, add(_))
+09: Pop
+10: Load(Module, Class("System"))
+11: Load(Module, Null)
+12: Call(Method, print(_))
+13: Pop
+14: Load(Module, Null)
+15: Constant(2: Num(3))
+16: Call(Method, add(_))
+17: Pop
+18: Load(Module, Class("System"))
+19: Load(Module, Null)
+20: Call(Method, print(_))
+21: Pop
+22: Load(Module, Class("System"))
+23: Load(Module, Null)
+24: Constant(3: Num(4))
+25: Call(Method, add(_))
+26: Call(Method, print(_))
+27: Pop
+28: End
+29: End

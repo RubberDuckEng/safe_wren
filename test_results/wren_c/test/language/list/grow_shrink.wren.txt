@@ -1,6 +1,6 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 86..87, token: LeftSquareBracket, line: 2 }")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 86..87, token: LeftSquareBracket, line: 2 }")
+Unexpected output on stderr:
+MethodNotFound("add(_)" on "List")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("add(_)" on "List")
 
 Missing expected output "[0, 1, 2, 3, 4]" on line 11.

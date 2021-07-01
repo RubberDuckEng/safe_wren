@@ -1083,6 +1083,38 @@ fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
     ctx.compiler_mut().emit_call(signature, symbol);
 }
 
+// A list literal.
+fn list(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
+    // Instantiate a new list.
+    load_core_variable(ctx, "List");
+    call_method(ctx, 0, "new()");
+    // Compile the list elements. Each one compiles to a ".add()" call.
+    loop {
+        ignore_newlines(ctx)?;
+
+        // Stop if we hit the end of the list.
+        if peek_expecting(ctx, Token::RightSquareBracket) {
+            break;
+        }
+
+        // The element.
+        expression(ctx)?;
+        call_method(ctx, 1, "addCore_(_)");
+        if !match_current(ctx, Token::Comma)? {
+            break;
+        }
+    }
+
+    // Allow newlines before the closing ']'.
+    ignore_newlines(ctx)?;
+    consume_expecting_msg(
+        ctx,
+        Token::RightSquareBracket,
+        "Expect ']' after list elements.",
+    )?;
+    Ok(())
+}
+
 fn unary_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     let name = ctx
         .parser
@@ -2585,7 +2617,7 @@ impl Token {
             Token::RightCurlyBrace => GrammarRule::unused(),
             Token::RightSquareBracket => GrammarRule::unused(),
             Token::LeftSquareBracket => GrammarRule {
-                prefix: None, // FIXME: prefix: Some(list),
+                prefix: Some(list),
                 infix: Some(subscript),
                 precedence: Precedence::Call,
             },

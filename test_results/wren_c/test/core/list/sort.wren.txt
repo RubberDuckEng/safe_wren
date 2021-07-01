@@ -1,8 +1,6 @@
 Expected runtime error "Comparer must be a function." and got:
-
+MethodNotFound("sort(_)" on "List")
 Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 13..14, token: LeftSquareBracket, line: 1 }")
 
 Missing expected output "[1, 2, 3, 4]" on line 1.
 Missing expected output "[1, 5, 7, 8, 9, 10]" on line 5.

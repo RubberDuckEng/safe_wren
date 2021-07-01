@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 12..13, token: LeftSquareBracket, line: 2 }")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 12..13, token: LeftSquareBracket, line: 2 }")
+Unexpected output on stderr:
+MethodNotFound("indexOf(_)" on "List")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("indexOf(_)" on "List")
 
 Missing expected output "4" on line 3.
 Missing expected output "2" on line 4.

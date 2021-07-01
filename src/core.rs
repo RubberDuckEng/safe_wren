@@ -258,6 +258,17 @@ fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::List(wren_new_list(vm)))
 }
 
+// Adds an element to the list and then returns the list itself. This is called
+// by the compiler when compiling list literals instead of using add() to
+// minimize stack churn.
+fn list_add_core(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let value = args.pop().unwrap();
+    let list_value = args.pop().unwrap();
+    let list = list_value.try_into_list()?;
+    list.borrow_mut().elements.push(value);
+    Ok(list_value)
+}
+
 fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let list = args[0].try_into_list()?;
     let count = list.borrow().elements.len() as f64;
@@ -417,6 +428,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     let list = find_core_class(vm, "List");
     // primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
+    primitive!(vm, list, "addCore_(_)", list_add_core);
     primitive!(vm, list, "count", list_count);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);

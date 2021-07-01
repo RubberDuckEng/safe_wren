@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 11..12, token: LeftSquareBracket, line: 1 }")
+[dummy_module line 6] Error Grammar("Undeclared variable \'j\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 11..12, token: LeftSquareBracket, line: 1 }")
+[dummy_module line 6] Error Grammar("Undeclared variable \'j\'")
 
 Missing expected output "2" on line 11.
 Missing expected output "3" on line 12.

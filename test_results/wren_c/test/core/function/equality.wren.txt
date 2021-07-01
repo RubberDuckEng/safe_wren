@@ -1,16 +1,8 @@
-Unexpected error:
-[dummy_module line 19] Error Grammar("Expected Expression: ParseToken { bytes_range: 718..719, token: LeftSquareBracket, line: 19 }")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 19] Error Grammar("Expected Expression: ParseToken { bytes_range: 718..719, token: LeftSquareBracket, line: 19 }")
+Unexpected output on stderr:
+MethodNotFound("add(_)" on "List")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("add(_)" on "List")
 
-Missing expected output "false" on line 2.
-Missing expected output "true" on line 3.
-Missing expected output "false" on line 6.
-Missing expected output "false" on line 7.
-Missing expected output "false" on line 8.
-Missing expected output "true" on line 9.
-Missing expected output "true" on line 10.
-Missing expected output "true" on line 11.
-Missing expected output "true" on line 15.
-Missing expected output "false" on line 16.
+Expected output "true" on line 15 and got "false".
+Expected output "false" on line 16 and got "true".
 Missing expected output "false" on line 23.

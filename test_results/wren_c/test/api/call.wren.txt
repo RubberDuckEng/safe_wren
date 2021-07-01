@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 23] Error Grammar("Expected Expression: ParseToken { bytes_range: 378..379, token: LeftSquareBracket, line: 23 }")
+[dummy_module line 25] Error Grammar("Expect method definition.")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 23] Error Grammar("Expected Expression: ParseToken { bytes_range: 378..379, token: LeftSquareBracket, line: 23 }")
+[dummy_module line 25] Error Grammar("Expect method definition.")
 
 Missing expected output "noParams" on line 42.
 Missing expected output "zero" on line 43.

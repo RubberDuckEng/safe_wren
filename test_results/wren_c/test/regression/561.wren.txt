@@ -1,3 +1,7 @@
-Unexpected error:
-[dummy_module line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 133..134, token: LeftSquareBracket, line: 5 }")
+Unexpected output on stderr:
+thread 'main' has overflowed its stack
 Missing expected error on line 91.
+Expected return code 65 and got 3221225725. Stderr:
+
+thread 'main' has overflowed its stack
+

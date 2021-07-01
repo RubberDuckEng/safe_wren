@@ -1,1 +1,47 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 13..14, token: LeftSquareBracket, line: 1 }") }
+Constants:
+00: Num(1)
+01: String("InfiniteSequence")
+02: Fn()
+03: Fn()
+04: Fn()
+05: Fn()
+Code:
+00: Load(Module, Class("System"))
+01: Load(Module, Class("List"))
+02: Call(Method, new())
+03: Call(Getter, isEmpty)
+04: Call(Method, print(_))
+05: Pop
+06: Load(Module, Class("System"))
+07: Load(Module, Class("List"))
+08: Call(Method, new())
+09: Constant(0: Num(1))
+10: Call(Method, addCore_(_))
+11: Call(Getter, isEmpty)
+12: Call(Method, print(_))
+13: Pop
+14: Constant(1: String("InfiniteSequence"))
+15: Load(Module, Class("Sequence"))
+16: Class(0 fields)
+17: Store(Module)
+18: Pop
+19: Closure(2, [])
+20: Load(Module, Null)
+21: Method(instance, init new())
+22: Closure(3, [])
+23: Load(Module, Null)
+24: Method(static, new())
+25: Closure(4, [])
+26: Load(Module, Null)
+27: Method(instance, iterate(_))
+28: Closure(5, [])
+29: Load(Module, Null)
+30: Method(instance, iteratorValue(_))
+31: Load(Module, Class("System"))
+32: Load(Module, Null)
+33: Call(Method, new())
+34: Call(Getter, isEmpty)
+35: Call(Method, print(_))
+36: Pop
+37: End
+38: End

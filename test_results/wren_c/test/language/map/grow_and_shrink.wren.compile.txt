@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 4, error: Grammar("Expected Expression: ParseToken { bytes_range: 143..144, token: LeftSquareBracket, line: 4 }") }
+WrenError { module: "dummy_module", line: 62, error: Grammar("Expected Expression: ParseToken { bytes_range: 4203..4204, token: LeftCurlyBrace, line: 62 }") }

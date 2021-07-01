@@ -22,6 +22,8 @@ wren_c/test/core/bool/to_string.wren
 wren_c/test/core/class/equality.wren
 wren_c/test/core/function/arity.wren
 wren_c/test/core/function/to_string.wren
+wren_c/test/core/list/count.wren
+wren_c/test/core/list/not.wren
 wren_c/test/core/null/not.wren
 wren_c/test/core/number/bitwise_and.wren
 wren_c/test/core/number/bitwise_lsh.wren
@@ -132,6 +134,9 @@ wren_c/test/language/inheritance/is.wren
 wren_c/test/language/list/duplicate_comma.wren
 wren_c/test/language/list/duplicate_trailing_comma.wren
 wren_c/test/language/list/empty_list_with_comma.wren
+wren_c/test/language/list/eof_after_comma.wren
+wren_c/test/language/list/eof_after_element.wren
+wren_c/test/language/list/newline_before_comma.wren
 wren_c/test/language/logical_operator/and.wren
 wren_c/test/language/logical_operator/and_truth.wren
 wren_c/test/language/logical_operator/or.wren

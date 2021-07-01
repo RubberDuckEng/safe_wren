@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 8..9, token: LeftSquareBracket, line: 1 }")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Expected Expression: ParseToken { bytes_range: 8..9, token: LeftSquareBracket, line: 1 }")
+Unexpected output on stderr:
+MethodNotFound("iterate(_)" on "List")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("iterate(_)" on "List")
 
 Missing expected output "0" on line 3.
 Missing expected output "2" on line 4.
