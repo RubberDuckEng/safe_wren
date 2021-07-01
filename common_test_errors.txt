@@ -31,7 +31,6 @@ occurances : error text
 6 : MethodNotFound("indexOf(_,_)" on "String")
 6 : MethodNotFound("insert(_,_)" on "List")
 6 : MethodNotFound("iteratorValue(_)" on "String")
-6 : MethodNotFound("reduce(_)" on "List")
 5 : Error Lexer(UnterminatedString)
 5 : MethodNotFound("filled(_,_)" on "List metaclass")
 4 : Error Grammar("Undeclared variable \'F\'")
@@ -125,7 +124,6 @@ occurances : error text
 2 : MethodNotFound("max" on "Range")
 2 : MethodNotFound("min" on "Range")
 2 : MethodNotFound("print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "System metaclass")
-2 : MethodNotFound("reduce(_)" on "Range")
 2 : MethodNotFound("remove(_)" on "List")
 2 : MethodNotFound("round" on "Num")
 2 : MethodNotFound("same(_,_)" on "Object metaclass")
@@ -165,6 +163,7 @@ occurances : error text
 1 : ClosureRequired(Num(3))
 1 : ExpectingInteger("Index")
 1 : FiberAbort(String("Abort!"))
+1 : FiberAbort(String("Can't reduce an empty sequence."))
 1 : FiberAbort(String("From must be a non-empty string."))
 1 : Got output "%(123.badMethod)" when none was expected.
 1 : Got output "ok" when none was expected.

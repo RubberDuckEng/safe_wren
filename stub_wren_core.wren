@@ -82,18 +82,18 @@ class Sequence {
     return acc
   }
 
-  // reduce(f) {
-  //   var iter = iterate(null)
-  //   if (!iter) Fiber.abort("Can't reduce an empty sequence.")
+  reduce(f) {
+    var iter = iterate(null)
+    if (!iter) Fiber.abort("Can't reduce an empty sequence.")
 
-  //   // Seed with the first element.
-  //   var result = iteratorValue(iter)
-  //   while (iter = iterate(iter)) {
-  //     result = f.call(result, iteratorValue(iter))
-  //   }
+    // Seed with the first element.
+    var result = iteratorValue(iter)
+    while (iter = iterate(iter)) {
+      result = f.call(result, iteratorValue(iter))
+    }
 
-  //   return result
-  // }
+    return result
+  }
 
   join() { join("") }
 

@@ -1,7 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("reduce(_)" on "List")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("reduce(_)" on "List")
-
-Missing expected output "1" on line 1.
-Missing expected output "1" on line 2.

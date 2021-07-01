@@ -22,6 +22,7 @@ with error text from any failed tests.  `test.py` will also update
 
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
+* Support for forward-declaring classes?  (e.g. List in wren_core.wren)
 * object fields
 * maps
 * map literals

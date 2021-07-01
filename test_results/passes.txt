@@ -31,6 +31,8 @@ wren_c/test/core/list/each_no_items.wren
 wren_c/test/core/list/iterate.wren
 wren_c/test/core/list/iterator_value.wren
 wren_c/test/core/list/not.wren
+wren_c/test/core/list/reduce.wren
+wren_c/test/core/list/reduce_single_item.wren
 wren_c/test/core/null/not.wren
 wren_c/test/core/number/bitwise_and.wren
 wren_c/test/core/number/bitwise_lsh.wren
@@ -53,6 +55,7 @@ wren_c/test/core/range/iterate.wren
 wren_c/test/core/range/iterate_from_float.wren
 wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/range/join.wren
+wren_c/test/core/range/reduce.wren
 wren_c/test/core/range/to_string.wren
 wren_c/test/core/sequence/all.wren
 wren_c/test/core/sequence/any.wren

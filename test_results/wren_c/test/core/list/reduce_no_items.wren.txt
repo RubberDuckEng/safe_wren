@@ -1,4 +1,4 @@
 Expected runtime error "Can't reduce an empty sequence." and got:
-MethodNotFound("reduce(_)" on "List")
+FiberAbort(String("Can't reduce an empty sequence."))
 Expected stack trace and got:
 
