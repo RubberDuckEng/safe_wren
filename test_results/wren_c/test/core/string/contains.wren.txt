@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("contains(_)" on "String")
+MethodNotFound("iterate(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("contains(_)" on "String")
+MethodNotFound("iterate(_)" on "String")
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

@@ -1,4 +1,4 @@
 Expected runtime error "Characters must be a string." and got:
-MethodNotFound("trimEnd(_)" on "String")
+FiberAbort(String("Characters must be a string."))
 Expected stack trace and got:
 

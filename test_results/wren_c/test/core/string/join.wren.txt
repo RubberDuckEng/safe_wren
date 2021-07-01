@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("join(_)" on "String")
+MethodNotFound("iterate(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("join(_)" on "String")
+MethodNotFound("iterate(_)" on "String")
 
 Missing expected output "true" on line 3.
 Missing expected output "s, t, r, i, n, g" on line 5.

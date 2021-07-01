@@ -2183,7 +2183,10 @@ fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 // FIXME: This is probably not needed?  All it really adds is an assert?
 fn load_core_variable(ctx: &mut ParseContext, name: &str) {
-    let symbol = ctx.vm.module.lookup_symbol(name).unwrap();
+    let symbol = match ctx.vm.module.lookup_symbol(name) {
+        Some(s) => s,
+        None => panic!("Failed to find core variable {}", name),
+    };
     ctx.compiler_mut().emit_load(Variable::module(symbol));
 }
 
