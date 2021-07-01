@@ -16,6 +16,7 @@ pub(crate) enum Value {
     Range(Handle<ObjRange>),
     Fn(Handle<ObjFn>),
     Closure(Handle<ObjClosure>),
+    List(Handle<ObjList>),
     Instance(Handle<ObjInstance>),
 }
 
@@ -46,6 +47,7 @@ impl core::fmt::Debug for Value {
             Value::String(s) => write!(f, "String(\"{}\")", s),
             Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
             Value::Range(r) => write!(f, "Range({:?})", r),
+            Value::List(_) => write!(f, "List()"),
             Value::Fn(_) => write!(f, "Fn()"),
             Value::Closure(_) => write!(f, "Closure()"),
             Value::Instance(o) => write!(
@@ -155,6 +157,7 @@ pub(crate) enum RuntimeError {
     ObjectRequired(Value),
     ClassRequired(Value),
     RangeRequired(Value),
+    ListRequired(Value),
     FnRequired(Value),
     ClosureRequired(Value),
     MethodNotFound(MissingMethod),
@@ -172,6 +175,7 @@ impl core::fmt::Debug for RuntimeError {
             RuntimeError::ObjectRequired(v) => write!(f, "ObjectRequired({:?})", v),
             RuntimeError::ClassRequired(v) => write!(f, "ClassRequired({:?})", v),
             RuntimeError::RangeRequired(v) => write!(f, "RangeRequired({:?})", v),
+            RuntimeError::ListRequired(v) => write!(f, "ListRequired({:?})", v),
             RuntimeError::FnRequired(v) => write!(f, "FnRequired({:?})", v),
             RuntimeError::FiberAbort(v) => write!(f, "FiberAbort({:?})", v),
             RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
@@ -212,6 +216,13 @@ impl Value {
         match self {
             Value::Range(r) => Ok(r.clone()),
             _ => Err(RuntimeError::RangeRequired(self.clone())),
+        }
+    }
+
+    pub fn try_into_list(&self) -> Result<Handle<ObjList>, RuntimeError> {
+        match self {
+            Value::List(l) => Ok(l.clone()),
+            _ => Err(RuntimeError::ListRequired(self.clone())),
         }
     }
 
@@ -333,6 +344,13 @@ impl core::fmt::Debug for WrenVM {
         write!(f, "methods: (len {}) ", self.methods.method_names.len())?;
         write!(f, "}}")
     }
+}
+
+pub(crate) fn wren_new_list(vm: &WrenVM) -> Handle<ObjList> {
+    new_handle(ObjList {
+        class_obj: vm.core.as_ref().unwrap().list.clone(),
+        elements: Vec::new(),
+    })
 }
 
 pub(crate) fn wren_new_range(
@@ -494,6 +512,7 @@ pub(crate) struct CoreClasses {
     pub(crate) null: Handle<ObjClass>,
     pub(crate) string: Handle<ObjClass>,
     pub(crate) range: Handle<ObjClass>,
+    pub(crate) list: Handle<ObjClass>,
 }
 
 #[derive(Debug)]
@@ -622,6 +641,7 @@ impl WrenVM {
             Value::Boolean(_) => Some(core.bool_class.clone()),
             Value::String(_) => Some(core.string.clone()),
             Value::Class(o) => o.borrow().class_obj(),
+            Value::List(o) => o.borrow().class_obj(),
             Value::Range(o) => o.borrow().class_obj(),
             Value::Fn(o) => o.borrow().class_obj(),
             Value::Closure(o) => o.borrow().class_obj(),
@@ -1027,6 +1047,17 @@ pub(crate) struct ObjRange {
     pub(crate) to: f64,
     // True if [to] is included in the range.
     pub(crate) is_inclusive: bool,
+}
+
+pub(crate) struct ObjList {
+    class_obj: Handle<ObjClass>,
+    pub(crate) elements: Vec<Value>,
+}
+
+impl Obj for ObjList {
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
+        Some(self.class_obj.clone())
+    }
 }
 
 pub(crate) struct ObjClosure {

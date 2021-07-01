@@ -254,6 +254,16 @@ fn fn_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> 
     Ok(Value::from_str("<fn>"))
 }
 
+fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::List(wren_new_list(vm)))
+}
+
+fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let list = args[0].try_into_list()?;
+    let count = list.borrow().elements.len() as f64;
+    Ok(Value::Num(count))
+}
+
 // Modeled after https://github.com/saghm/unescape-rs
 fn unescape(s: &str) -> String {
     let mut queue: VecDeque<_> = String::from(s).chars().collect();
@@ -365,6 +375,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
         string: find_core_class(vm, "String"),
         null: find_core_class(vm, "Null"),
         range: find_core_class(vm, "Range"),
+        list: find_core_class(vm, "List"),
     };
 
     primitive!(vm, core.bool_class, "!", bool_not);
@@ -402,6 +413,11 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     primitive!(vm, core.string, "+(_)", string_plus);
     primitive!(vm, core.string, "toString", string_to_string);
+
+    let list = find_core_class(vm, "List");
+    // primitive_static!(vm, list, "filled(_,_)", list_filled);
+    primitive_static!(vm, list, "new()", list_new);
+    primitive!(vm, list, "count", list_count);
 
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
