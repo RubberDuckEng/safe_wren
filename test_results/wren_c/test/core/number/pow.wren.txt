@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("pow(_)" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("pow(_)" on "Num")
-
-Missing expected output "16" on line 1.
-Missing expected output "1024" on line 2.
-Missing expected output "1" on line 4.

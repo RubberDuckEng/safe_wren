@@ -1,4 +1,4 @@
 Expected runtime error "Count must be a non-negative integer." and got:
-MethodNotFound("isInteger" on "Num")
+FiberAbort(String("Count must be a non-negative integer."))
 Expected stack trace and got:
 

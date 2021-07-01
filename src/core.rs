@@ -68,6 +68,43 @@ fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeEr
     Ok(Value::Range(wren_new_range(vm, start, end, false)))
 }
 
+fn num_atan2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let y = args[0].try_into_num()?;
+    let x = args[1].try_into_num()?;
+    Ok(Value::Num(y.atan2(x)))
+}
+fn num_pow(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let x = args[0].try_into_num()?;
+    let e = args[1].try_into_num()?;
+    Ok(Value::Num(x.powf(e)))
+}
+fn num_fraction(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let x = args[0].try_into_num()?;
+    Ok(Value::Num(x.fract()))
+}
+fn num_is_infinity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let x = args[0].try_into_num()?;
+    Ok(Value::Boolean(x.is_infinite()))
+}
+fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let x = args[0].try_into_num()?;
+    Ok(Value::Boolean(
+        !x.is_nan() && !x.is_infinite() && (x.trunc() == x),
+    ))
+}
+fn num_is_nan(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let x = args[0].try_into_num()?;
+    Ok(Value::Boolean(x.is_nan()))
+}
+fn num_sign(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let x = args[0].try_into_num()?;
+    Ok(Value::Num(x.signum()))
+}
+fn num_truncate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let x = args[0].try_into_num()?;
+    Ok(Value::Num(x.trunc()))
+}
+
 fn wren_num_to_string(num: f64) -> String {
     // Wren prints nan vs NaN and inifity vs inf.
     if num.is_nan() {
@@ -503,7 +540,15 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, "-", num_unary_minus);
     primitive!(vm, core.num, "..(_)", num_range_inclusive);
     primitive!(vm, core.num, "...(_)", num_range_exclusive);
+    primitive!(vm, core.num, "atan(_)", num_atan2);
+    primitive!(vm, core.num, "pow(_)", num_pow);
+    primitive!(vm, core.num, "fraction", num_fraction);
+    primitive!(vm, core.num, "isInfinity", num_is_infinity);
+    primitive!(vm, core.num, "isInteger", num_is_integer);
+    primitive!(vm, core.num, "isNan", num_is_nan);
+    primitive!(vm, core.num, "sign", num_sign);
     primitive!(vm, core.num, "toString", num_to_string);
+    primitive!(vm, core.num, "truncate", num_truncate);
 
     primitive!(vm, core.string, "+(_)", string_plus);
     primitive!(vm, core.string, "toString", string_to_string);

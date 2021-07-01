@@ -1,8 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("atan(_)" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("atan(_)" on "Num")
-
-Missing expected output "0" on line 1.
-Missing expected output "0" on line 2.
-Missing expected output "1.5707963267949" on line 4.
+Expected output "1.5707963267949" on line 4 and got "1.5707963267948966".

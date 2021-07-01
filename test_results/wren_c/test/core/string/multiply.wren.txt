@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("isInteger" on "Num")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("isInteger" on "Num")
-
-Missing expected output "||" on line 1.
-Missing expected output "abc" on line 2.
-Missing expected output "abcabcabcabc" on line 3.
