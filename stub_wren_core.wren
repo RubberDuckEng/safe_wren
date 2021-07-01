@@ -4,7 +4,6 @@ class Bool {}
 class Fiber {}
 class Null {}
 class Num {}
-class Range {}
 
 class Sequence {
   all(f) {
@@ -295,6 +294,8 @@ class List is Sequence {
     return result
   }
 }
+
+class Range is Sequence {}
 
 class System {
   static print() {

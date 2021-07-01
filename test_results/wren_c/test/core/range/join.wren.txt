@@ -1,7 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("join()" on "Range")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("join()" on "Range")
-
-Missing expected output "123" on line 3.
-Missing expected output "1, 2, 3" on line 4.

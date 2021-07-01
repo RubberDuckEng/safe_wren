@@ -47,10 +47,12 @@ wren_c/test/core/number/plus.wren
 wren_c/test/core/number/to_string.wren
 wren_c/test/core/object/is.wren
 wren_c/test/core/object/not.wren
+wren_c/test/core/range/contains.wren
 wren_c/test/core/range/equality.wren
 wren_c/test/core/range/iterate.wren
 wren_c/test/core/range/iterate_from_float.wren
 wren_c/test/core/range/iterator_value.wren
+wren_c/test/core/range/join.wren
 wren_c/test/core/range/to_string.wren
 wren_c/test/core/sequence/all.wren
 wren_c/test/core/sequence/any.wren

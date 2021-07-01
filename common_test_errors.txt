@@ -111,7 +111,6 @@ occurances : error text
 2 : MethodNotFound("cbrt" on "Num")
 2 : MethodNotFound("ceil" on "Num")
 2 : MethodNotFound("clear()" on "List")
-2 : MethodNotFound("contains(_)" on "Range")
 2 : MethodNotFound("exp" on "Num")
 2 : MethodNotFound("fraction" on "Num")
 2 : MethodNotFound("from" on "Range")
@@ -119,7 +118,6 @@ occurances : error text
 2 : MethodNotFound("isInclusive" on "Range")
 2 : MethodNotFound("isInfinity" on "Num")
 2 : MethodNotFound("isNan" on "Num")
-2 : MethodNotFound("join()" on "Range")
 2 : MethodNotFound("log" on "Num")
 2 : MethodNotFound("log2" on "Num")
 2 : MethodNotFound("map(_)" on "List")
@@ -161,6 +159,7 @@ occurances : error text
 2 : NumberRequired(String("s"))
 2 : RangeOutOfBounds("Index")
 2 : RangeOutOfBounds("Iterator")
+2 : StringRequired(Num(2))
 2 : thread 'main' has overflowed its stack
 1 : ClassRequired(Boolean(false))
 1 : ClosureRequired(Num(3))
@@ -173,7 +172,6 @@ occurances : error text
 1 : MethodNotFound("bar" on "Foo metaclass")
 1 : MethodNotFound("base()" on "Bar metaclass")
 1 : MethodNotFound("e" on "Num")
-1 : MethodNotFound("join(_)" on "Range")
 1 : MethodNotFound("methodOnFoo" on "Bar metaclass")
 1 : MethodNotFound("min(_)" on "Num")
 1 : MethodNotFound("new()" on "Bool metaclass")
@@ -195,5 +193,4 @@ occurances : error text
 1 : NumberRequired(String(""))
 1 : StringRequired(Class("System"))
 1 : StringRequired(Num(123))
-1 : StringRequired(Num(2))
 1 : Timed out.
