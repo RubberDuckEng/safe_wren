@@ -500,7 +500,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     primitive!(vm, object, "!=(_)", object_bangeq);
     primitive!(vm, object, "is(_)", object_is);
     // PRIMITIVE(vm->objectClass, "toString", object_toString);
-    primitive!(vm, object, "type(_)", object_type);
+    primitive!(vm, object, "type", object_type);
 
     // Now we can define Class, which is a subclass of Object.
     let class = define_class(&mut vm.module, "Class");

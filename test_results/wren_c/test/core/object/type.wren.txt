@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("type" on "Object metaclass")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("type" on "Object metaclass")
-
-Missing expected output "true" on line 7.
-Missing expected output "true" on line 10.
-Missing expected output "Object metaclass" on line 13.

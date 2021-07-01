@@ -19,9 +19,13 @@ wren_c/example/import_module/cthulu.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/not.wren
 wren_c/test/core/bool/to_string.wren
+wren_c/test/core/bool/type.wren
 wren_c/test/core/class/equality.wren
+wren_c/test/core/class/name.wren
+wren_c/test/core/class/type.wren
 wren_c/test/core/function/arity.wren
 wren_c/test/core/function/to_string.wren
+wren_c/test/core/function/type.wren
 wren_c/test/core/list/contains.wren
 wren_c/test/core/list/count.wren
 wren_c/test/core/list/count_predicate.wren
@@ -33,7 +37,9 @@ wren_c/test/core/list/iterator_value.wren
 wren_c/test/core/list/not.wren
 wren_c/test/core/list/reduce.wren
 wren_c/test/core/list/reduce_single_item.wren
+wren_c/test/core/list/type.wren
 wren_c/test/core/null/not.wren
+wren_c/test/core/null/type.wren
 wren_c/test/core/number/abs.wren
 wren_c/test/core/number/bitwise_and.wren
 wren_c/test/core/number/bitwise_lsh.wren
@@ -60,8 +66,10 @@ wren_c/test/core/number/pow.wren
 wren_c/test/core/number/round.wren
 wren_c/test/core/number/to_string.wren
 wren_c/test/core/number/truncate.wren
+wren_c/test/core/number/type.wren
 wren_c/test/core/object/is.wren
 wren_c/test/core/object/not.wren
+wren_c/test/core/object/type.wren
 wren_c/test/core/range/contains.wren
 wren_c/test/core/range/equality.wren
 wren_c/test/core/range/iterate.wren
@@ -70,6 +78,7 @@ wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/range/join.wren
 wren_c/test/core/range/reduce.wren
 wren_c/test/core/range/to_string.wren
+wren_c/test/core/range/type.wren
 wren_c/test/core/sequence/all.wren
 wren_c/test/core/sequence/any.wren
 wren_c/test/core/sequence/count.wren
@@ -79,6 +88,7 @@ wren_c/test/core/string/equality.wren
 wren_c/test/core/string/multiply.wren
 wren_c/test/core/string/not.wren
 wren_c/test/core/string/to_string.wren
+wren_c/test/core/string/type.wren
 wren_c/test/core/system/print.wren
 wren_c/test/core/system/print_all.wren
 wren_c/test/core/system/print_bad_to_string.wren

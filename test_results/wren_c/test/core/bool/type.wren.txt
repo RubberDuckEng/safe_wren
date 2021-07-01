@@ -1,6 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("type" on "Bool")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("type" on "Bool")
-
-Missing expected output "true" on line 4.
