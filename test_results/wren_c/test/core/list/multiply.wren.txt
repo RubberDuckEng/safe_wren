@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("*(_)" on "List")
+MethodNotFound("isInteger" on "Num")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("*(_)" on "List")
+MethodNotFound("isInteger" on "Num")
 
 Missing expected output "[]" on line 1.
 Missing expected output "[1, 2, 3]" on line 2.

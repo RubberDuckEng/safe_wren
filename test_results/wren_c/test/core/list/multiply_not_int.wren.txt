@@ -1,4 +1,4 @@
 Expected runtime error "Count must be a non-negative integer." and got:
-MethodNotFound("*(_)" on "List")
+MethodNotFound("isInteger" on "Num")
 Expected stack trace and got:
 

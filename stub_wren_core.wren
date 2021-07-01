@@ -167,25 +167,25 @@ class List is Sequence {
 
   // toString { "[%(join(", "))]" }
 
-  // +(other) {
-  //   var result = this[0..-1]
-  //   for (element in other) {
-  //     result.add(element)
-  //   }
-  //   return result
-  // }
+  +(other) {
+    var result = this[0..-1]
+    for (element in other) {
+      result.add(element)
+    }
+    return result
+  }
 
-  // *(count) {
-  //   if (!(count is Num) || !count.isInteger || count < 0) {
-  //     Fiber.abort("Count must be a non-negative integer.")
-  //   }
+  *(count) {
+    if (!(count is Num) || !count.isInteger || count < 0) {
+      Fiber.abort("Count must be a non-negative integer.")
+    }
 
-  //   var result = []
-  //   for (i in 0...count) {
-  //     result.addAll(this)
-  //   }
-  //   return result
-  // }
+    var result = []
+    for (i in 0...count) {
+      result.addAll(this)
+    }
+    return result
+  }
 }
 
 class System {

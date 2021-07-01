@@ -1,8 +1,3 @@
-Unexpected error:
-[dummy_module line 25] Error Grammar("Expect method definition.")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 25] Error Grammar("Expect method definition.")
-
 Missing expected output "noParams" on line 42.
 Missing expected output "zero" on line 43.
 Missing expected output "one 1" on line 44.

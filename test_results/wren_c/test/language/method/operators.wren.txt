@@ -1,22 +1,14 @@
-Unexpected error:
-[dummy_module line 4] Error Grammar("Expect method definition.")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Expect method definition.")
-
-Missing expected output "infix + a" on line 25.
-Missing expected output "infix - a" on line 26.
-Missing expected output "infix * a" on line 27.
-Missing expected output "infix / a" on line 28.
-Missing expected output "infix % a" on line 29.
-Missing expected output "infix < a" on line 30.
-Missing expected output "infix > a" on line 31.
-Missing expected output "infix <= a" on line 32.
-Missing expected output "infix >= a" on line 33.
-Missing expected output "infix == a" on line 34.
-Missing expected output "infix != a" on line 35.
-Missing expected output "infix & a" on line 36.
-Missing expected output "infix | a" on line 37.
-Missing expected output "prefix !" on line 38.
-Missing expected output "prefix ~" on line 39.
-Missing expected output "prefix -" on line 40.
-Missing expected output "infix is a" on line 41.
+Expected output "infix + a" on line 25 and got "infix + %(other)".
+Expected output "infix - a" on line 26 and got "infix - %(other)".
+Expected output "infix * a" on line 27 and got "infix * %(other)".
+Expected output "infix / a" on line 28 and got "infix / %(other)".
+Expected output "infix % a" on line 29 and got "infix \% %(other)".
+Expected output "infix < a" on line 30 and got "infix < %(other)".
+Expected output "infix > a" on line 31 and got "infix > %(other)".
+Expected output "infix <= a" on line 32 and got "infix <= %(other)".
+Expected output "infix >= a" on line 33 and got "infix >= %(other)".
+Expected output "infix == a" on line 34 and got "infix == %(other)".
+Expected output "infix != a" on line 35 and got "infix != %(other)".
+Expected output "infix & a" on line 36 and got "infix & %(other)".
+Expected output "infix | a" on line 37 and got "infix | %(other)".
+Expected output "infix is a" on line 41 and got "infix is %(other)".

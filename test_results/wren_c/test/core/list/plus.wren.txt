@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("+(_)" on "List")
+MethodNotFound("[_]" on "List")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("+(_)" on "List")
+MethodNotFound("[_]" on "List")
 
 Missing expected output "[1, 2, 3, 4, 5, 6]" on line 1.
 Missing expected output "[1, 2, 3, 4, 5, 6]" on line 2.

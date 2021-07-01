@@ -1065,6 +1065,44 @@ fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
     Ok(())
 }
 
+// Compiles a method signature for an infix operator.
+fn infix_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
+    // Add the RHS parameter.
+    signature.call_type = SignatureType::Method;
+    signature.arity = 1;
+
+    // Parse the parameter name.
+    consume_expecting_msg(ctx, Token::LeftParen, "Expect '(' after operator name.")?;
+    declare_named_variable(ctx)?;
+    consume_expecting_msg(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
+    Ok(())
+}
+
+// Compiles a method signature for an unary operator (i.e. "!").
+fn unary_signature(_ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
+    // Do nothing. The name is already complete.
+    signature.call_type = SignatureType::Getter;
+    Ok(())
+}
+
+// Compiles a method signature for an operator that can either be unary or
+// infix (i.e. "-").
+fn mixed_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
+    signature.call_type = SignatureType::Getter;
+
+    // If there is a parameter, it's an infix operator, otherwise it's unary.
+    if match_current(ctx, Token::LeftParen)? {
+        // Add the RHS parameter.
+        signature.call_type = SignatureType::Method;
+        signature.arity = 1;
+
+        // Parse the parameter name.
+        declare_named_variable(ctx)?;
+        consume_expecting_msg(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
+    }
+    Ok(())
+}
+
 // Compiles a method call with [signature] using [instruction].
 fn call_signature(ctx: &mut ParseContext, signature: Signature) {
     let symbol = signature_symbol(ctx, &signature);
@@ -2292,7 +2330,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
         .unwrap()
         .in_static_method = is_static;
 
-    let maybe_signature_fn = ctx.parser.current.token.method_signature();
+    let maybe_signature_fn = ctx.parser.current.token.grammar_rule().signature;
     consume(ctx)?;
 
     let signature_fn = maybe_signature_fn.ok_or(ctx.grammar_error("Expect method definition."))?;
@@ -2492,6 +2530,7 @@ struct GrammarRule {
     prefix: Option<PrefixParslet>,
     infix: Option<InfixParslet>,
     precedence: Precedence,
+    signature: Option<MethodSignatureParslet>,
 }
 
 impl GrammarRule {
@@ -2500,6 +2539,7 @@ impl GrammarRule {
             prefix: Some(prefix_parselet),
             infix: None,
             precedence: Precedence::None,
+            signature: None,
         }
     }
 
@@ -2508,6 +2548,7 @@ impl GrammarRule {
             prefix: None,
             infix: Some(infix_op),
             precedence: precedence,
+            signature: Some(infix_signature),
         }
     }
 
@@ -2516,6 +2557,7 @@ impl GrammarRule {
             prefix: Some(unary_op),
             infix: None,
             precedence: Precedence::None,
+            signature: Some(unary_signature),
         }
     }
     fn infix(precedence: Precedence, infix_parselet: InfixParslet) -> GrammarRule {
@@ -2523,6 +2565,7 @@ impl GrammarRule {
             prefix: None,
             infix: Some(infix_parselet),
             precedence: precedence,
+            signature: None,
         }
     }
 
@@ -2531,6 +2574,7 @@ impl GrammarRule {
             prefix: None,
             infix: None,
             precedence: Precedence::None,
+            signature: None,
         }
     }
 }
@@ -2595,17 +2639,6 @@ impl Token {
         }
     }
 
-    // wren_c embeds this in the GrammarRules array, but it only affects 3
-    // token types, so that seems a bit silly?
-    fn method_signature(&self) -> Option<MethodSignatureParslet> {
-        match self {
-            Token::LeftSquareBracket => Some(subscript_signature),
-            Token::Construct => Some(constructor_signature),
-            Token::Name(_) => Some(named_signature),
-            _ => None,
-        }
-    }
-
     fn grammar_rule(&self) -> GrammarRule {
         // This should switch on TokenType, not Token itself.
         match self {
@@ -2620,11 +2653,13 @@ impl Token {
                 prefix: Some(list),
                 infix: Some(subscript),
                 precedence: Precedence::Call,
+                signature: Some(subscript_signature),
             },
             Token::Minus => GrammarRule {
                 prefix: Some(unary_op),
                 infix: Some(infix_op),
                 precedence: Precedence::Term,
+                signature: Some(mixed_signature),
             },
             Token::Plus => GrammarRule::infix_operator(Precedence::Term),
             Token::Tilde => GrammarRule::prefix_operator(),
@@ -2652,7 +2687,12 @@ impl Token {
             Token::In => GrammarRule::unused(),
             Token::If => GrammarRule::unused(),
             Token::Else => GrammarRule::unused(),
-            Token::Construct => GrammarRule::unused(),
+            Token::Construct => GrammarRule {
+                prefix: None,
+                infix: None,
+                signature: Some(constructor_signature),
+                precedence: Precedence::None,
+            },
             Token::Static => GrammarRule::unused(),
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
@@ -2670,7 +2710,12 @@ impl Token {
             Token::EndOfFile => GrammarRule::unused(),
             Token::Equals => GrammarRule::unused(),
             Token::EqualsEquals => GrammarRule::infix_operator(Precedence::Equality),
-            Token::Name(_) => GrammarRule::prefix(name), // TODO: Also wrong.
+            Token::Name(_) => GrammarRule {
+                prefix: Some(name),
+                infix: None,
+                signature: Some(named_signature),
+                precedence: Precedence::None,
+            },
         }
     }
 }

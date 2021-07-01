@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 38] Error Grammar("Expect method definition.")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 38] Error Grammar("Expect method definition.")
+Unexpected output on stderr:
+MethodNotFound("same(_,_)" on "Object metaclass")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("same(_,_)" on "Object metaclass")
 
 Missing expected output "true" on line 2.
 Missing expected output "false" on line 3.
