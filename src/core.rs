@@ -10,15 +10,6 @@ macro_rules! num_constant {
     };
 }
 
-num_constant!(num_infinity, f64::INFINITY);
-num_constant!(num_nan, f64::NAN);
-num_constant!(num_pi, 3.14159265358979323846264338327950288);
-num_constant!(num_tau, 6.28318530717958647692528676655900577);
-num_constant!(num_largest, f64::MAX);
-num_constant!(num_smallest, f64::MIN);
-num_constant!(num_max_safe_integer, 9007199254740991.0);
-num_constant!(num_min_safe_integer, -9007199254740991.0);
-
 macro_rules! infix_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -40,15 +31,6 @@ macro_rules! num_binary_op {
     };
 }
 
-infix_num_op!(num_plus, add, Num);
-infix_num_op!(num_minus, sub, Num);
-infix_num_op!(num_mult, mul, Num);
-infix_num_op!(num_divide, div, Num);
-infix_num_op!(num_lt, lt, Boolean);
-infix_num_op!(num_gt, gt, Boolean);
-infix_num_op!(num_lte, le, Boolean);
-infix_num_op!(num_gte, ge, Boolean);
-
 macro_rules! bitwise_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -59,12 +41,6 @@ macro_rules! bitwise_num_op {
     };
 }
 
-bitwise_num_op!(num_bitwise_and, bitand, Num);
-bitwise_num_op!(num_bitwise_or, bitor, Num);
-bitwise_num_op!(num_bitwise_xor, bitxor, Num);
-bitwise_num_op!(num_bitwise_shl, shl, Num);
-bitwise_num_op!(num_bitwise_shr, shr, Num);
-
 macro_rules! num_unary_op {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
@@ -74,9 +50,30 @@ macro_rules! num_unary_op {
     };
 }
 
-fn num_unary_minus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    Ok(Value::Num(-args[0].try_into_num()?))
-}
+num_constant!(num_infinity, f64::INFINITY);
+num_constant!(num_nan, f64::NAN);
+num_constant!(num_pi, 3.14159265358979323846264338327950288);
+num_constant!(num_tau, 6.28318530717958647692528676655900577);
+num_constant!(num_largest, f64::MAX);
+num_constant!(num_smallest, f64::MIN);
+num_constant!(num_max_safe_integer, 9007199254740991.0);
+num_constant!(num_min_safe_integer, -9007199254740991.0);
+
+infix_num_op!(num_plus, add, Num);
+infix_num_op!(num_minus, sub, Num);
+infix_num_op!(num_mult, mul, Num);
+infix_num_op!(num_divide, div, Num);
+infix_num_op!(num_lt, lt, Boolean);
+infix_num_op!(num_gt, gt, Boolean);
+infix_num_op!(num_lte, le, Boolean);
+infix_num_op!(num_gte, ge, Boolean);
+
+bitwise_num_op!(num_bitwise_and, bitand, Num);
+bitwise_num_op!(num_bitwise_or, bitor, Num);
+bitwise_num_op!(num_bitwise_xor, bitxor, Num);
+bitwise_num_op!(num_bitwise_shl, shl, Num);
+bitwise_num_op!(num_bitwise_shr, shr, Num);
+
 fn num_range_inclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let start = args[0].try_into_num()?;
     let end = args[1].try_into_num()?;
@@ -89,6 +86,7 @@ fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeEr
 }
 num_binary_op!(num_atan2, atan2, Num);
 num_binary_op!(num_pow, powf, Num);
+num_unary_op!(num_unary_minus, neg, Num);
 num_unary_op!(num_fraction, fract, Num);
 num_unary_op!(num_is_infinity, is_infinite, Boolean);
 num_unary_op!(num_is_nan, is_nan, Boolean);
