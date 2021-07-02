@@ -1,1 +1,51 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 8..9, token: LeftCurlyBrace, line: 1 }") }
+Constants:
+00: Num(1)
+01: String("one")
+02: Num(1)
+03: String("updated")
+Code:
+00: Load(Module, Class("Map"))
+01: Call(Method, new())
+02: Constant(0: Num(1))
+03: Constant(1: String("one"))
+04: Call(Method, addCore_(_,_))
+05: Store(Module)
+06: Pop
+07: Load(Module, Null)
+08: Null
+09: Call(Method, iterate(_))
+10: Store(Module)
+11: Pop
+12: Load(Module, Null)
+13: Load(Module, Null)
+14: Call(Method, iteratorValue(_))
+15: Store(Module)
+16: Pop
+17: Load(Module, Class("System"))
+18: Load(Module, Null)
+19: Load(Module, Class("MapEntry"))
+20: Call(Method, is(_))
+21: Call(Method, print(_))
+22: Pop
+23: Load(Module, Class("System"))
+24: Load(Module, Null)
+25: Call(Getter, key)
+26: Call(Method, print(_))
+27: Pop
+28: Load(Module, Class("System"))
+29: Load(Module, Null)
+30: Call(Getter, value)
+31: Call(Method, print(_))
+32: Pop
+33: Load(Module, Null)
+34: Constant(2: Num(1))
+35: Constant(3: String("updated"))
+36: Call(SubscriptSetter, [_,_]=(_,_))
+37: Pop
+38: Load(Module, Class("System"))
+39: Load(Module, Null)
+40: Call(Getter, value)
+41: Call(Method, print(_))
+42: Pop
+43: End
+44: End

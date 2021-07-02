@@ -1,1 +1,20 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 10..11, token: LeftCurlyBrace, line: 1 }") }
+Constants:
+00: String("")
+01: String("empty string")
+02: String("")
+Code:
+00: Load(Module, Class("Map"))
+01: Call(Method, new())
+02: Constant(0: String(""))
+03: Constant(1: String("empty string"))
+04: Call(Method, addCore_(_,_))
+05: Store(Module)
+06: Pop
+07: Load(Module, Class("System"))
+08: Load(Module, Null)
+09: Constant(2: String(""))
+10: Call(Subscript, [_])
+11: Call(Method, print(_))
+12: Pop
+13: End
+14: End

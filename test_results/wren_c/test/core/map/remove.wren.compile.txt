@@ -1,1 +1,76 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 10..11, token: LeftCurlyBrace, line: 1 }") }
+Constants:
+00: String("one")
+01: Num(1)
+02: String("two")
+03: Num(2)
+04: String("three")
+05: Num(3)
+06: String("two")
+07: String("three")
+08: String("two")
+09: String("one")
+Code:
+00: Load(Module, Class("Map"))
+01: Call(Method, new())
+02: Constant(0: String("one"))
+03: Constant(1: Num(1))
+04: Call(Method, addCore_(_,_))
+05: Constant(2: String("two"))
+06: Constant(3: Num(2))
+07: Call(Method, addCore_(_,_))
+08: Constant(4: String("three"))
+09: Constant(5: Num(3))
+10: Call(Method, addCore_(_,_))
+11: Store(Module)
+12: Pop
+13: Load(Module, Class("System"))
+14: Load(Module, Null)
+15: Call(Getter, count)
+16: Call(Method, print(_))
+17: Pop
+18: Load(Module, Class("System"))
+19: Load(Module, Null)
+20: Constant(6: String("two"))
+21: Call(Method, remove(_))
+22: Call(Method, print(_))
+23: Pop
+24: Load(Module, Class("System"))
+25: Load(Module, Null)
+26: Call(Getter, count)
+27: Call(Method, print(_))
+28: Pop
+29: Load(Module, Class("System"))
+30: Load(Module, Null)
+31: Constant(7: String("three"))
+32: Call(Method, remove(_))
+33: Call(Method, print(_))
+34: Pop
+35: Load(Module, Class("System"))
+36: Load(Module, Null)
+37: Call(Getter, count)
+38: Call(Method, print(_))
+39: Pop
+40: Load(Module, Class("System"))
+41: Load(Module, Null)
+42: Constant(8: String("two"))
+43: Call(Method, remove(_))
+44: Call(Method, print(_))
+45: Pop
+46: Load(Module, Class("System"))
+47: Load(Module, Null)
+48: Call(Getter, count)
+49: Call(Method, print(_))
+50: Pop
+51: Load(Module, Class("System"))
+52: Load(Module, Null)
+53: Constant(9: String("one"))
+54: Call(Method, remove(_))
+55: Call(Method, print(_))
+56: Pop
+57: Load(Module, Class("System"))
+58: Load(Module, Null)
+59: Call(Getter, count)
+60: Call(Method, print(_))
+61: Pop
+62: End
+63: End

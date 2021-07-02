@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 62] Error Grammar("Expected Expression: ParseToken { bytes_range: 4142..4143, token: LeftCurlyBrace, line: 62 }")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 62] Error Grammar("Expected Expression: ParseToken { bytes_range: 4142..4143, token: LeftCurlyBrace, line: 62 }")
+Unexpected output on stderr:
+MethodNotFound("new()" on "Map metaclass")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("new()" on "Map metaclass")
 
 Missing expected output "249" on line 67.
 Missing expected output "99" on line 73.

@@ -186,11 +186,14 @@ wren_c/test/language/logical_operator/and.wren
 wren_c/test/language/logical_operator/and_truth.wren
 wren_c/test/language/logical_operator/or.wren
 wren_c/test/language/logical_operator/or_truth.wren
+wren_c/test/language/map/bad_key_precedence.wren
 wren_c/test/language/map/duplicate_comma.wren
 wren_c/test/language/map/duplicate_trailing_comma.wren
 wren_c/test/language/map/empty_map_with_comma.wren
 wren_c/test/language/map/eof_after_colon.wren
+wren_c/test/language/map/eof_after_comma.wren
 wren_c/test/language/map/eof_after_key.wren
+wren_c/test/language/map/eof_after_value.wren
 wren_c/test/language/method/arity.wren
 wren_c/test/language/method/empty_block.wren
 wren_c/test/language/method/empty_subscript_definition.wren

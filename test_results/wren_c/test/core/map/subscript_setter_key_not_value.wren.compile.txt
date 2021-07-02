@@ -1,1 +1,13 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 13..14, token: LeftCurlyBrace, line: 1 }") }
+Constants:
+00: String("value")
+Code:
+00: Load(Module, Class("Map"))
+01: Call(Method, new())
+02: Load(Module, Class("List"))
+03: Call(Method, new())
+04: Constant(0: String("value"))
+05: Call(SubscriptSetter, [_,_]=(_,_))
+06: Store(Module)
+07: Pop
+08: End
+09: End

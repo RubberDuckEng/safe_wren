@@ -1,1 +1,104 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Expected Expression: ParseToken { bytes_range: 90..91, token: LeftCurlyBrace, line: 5 }") }
+Constants:
+00: Num(1)
+01: Num(1000)
+02: Num(1337)
+03: Num(1)
+04: Num(1000)
+05: String("a")
+06: String("b")
+07: Num(1)
+08: Num(1000)
+09: String("a")
+10: Fn()
+11: String("done")
+Code:
+00: Load(Module, Class("List"))
+01: Call(Method, new())
+02: Store(Module)
+03: Pop
+04: Constant(0: Num(1))
+05: Constant(1: Num(1000))
+06: Call(Method, ..(_))
+07: Null
+08: Load(Local, 1)
+09: Load(Local, 2)
+10: Call(Method, iterate(_))
+11: Store(Local, 2)
+12: JumpIfFalse(60)
+13: Load(Local, 1)
+14: Load(Local, 2)
+15: Call(Method, iteratorValue(_))
+16: Constant(2: Num(1337))
+17: Constant(3: Num(1))
+18: Constant(4: Num(1000))
+19: Call(Method, ..(_))
+20: Null
+21: Load(Local, 5)
+22: Load(Local, 6)
+23: Call(Method, iterate(_))
+24: Store(Local, 6)
+25: JumpIfFalse(15)
+26: Load(Local, 5)
+27: Load(Local, 6)
+28: Call(Method, iteratorValue(_))
+29: Load(Module, Class("Map"))
+30: Call(Method, new())
+31: Constant(5: String("a"))
+32: Load(Local, 4)
+33: Call(Method, addCore_(_,_))
+34: Constant(6: String("b"))
+35: Load(Local, 4)
+36: Call(Method, addCore_(_,_))
+37: Store(Local, 4)
+38: Pop
+39: Pop
+40: Loop(20)
+41: Pop
+42: Pop
+43: Load(Local, 4)
+44: Constant(7: Num(1))
+45: Constant(8: Num(1000))
+46: Call(Method, ..(_))
+47: Null
+48: Load(Local, 6)
+49: Load(Local, 7)
+50: Call(Method, iterate(_))
+51: Store(Local, 7)
+52: JumpIfFalse(10)
+53: Load(Local, 6)
+54: Load(Local, 7)
+55: Call(Method, iteratorValue(_))
+56: Load(Local, 5)
+57: Constant(9: String("a"))
+58: Call(Subscript, [_])
+59: Store(Local, 5)
+60: Pop
+61: Pop
+62: Loop(15)
+63: Pop
+64: Pop
+65: Load(Module, Null)
+66: Load(Local, 5)
+67: Call(Method, add(_))
+68: Pop
+69: Pop
+70: Pop
+71: Pop
+72: Loop(65)
+73: Pop
+74: Pop
+75: Load(Module, Class("System"))
+76: Call(Method, gc())
+77: Pop
+78: Load(Module, Class("System"))
+79: Load(Module, Null)
+80: Closure(10, [])
+81: Call(Method, all(_))
+82: Call(Method, print(_))
+83: Pop
+84: Load(Module, Class("System"))
+85: Constant(11: String("done"))
+86: Call(Method, print(_))
+87: Pop
+88: End
+89: End

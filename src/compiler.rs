@@ -1185,6 +1185,41 @@ fn list(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
+// A map literal.
+fn map(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
+    // Instantiate a new map.
+    load_core_variable(ctx, "Map");
+    call_method(ctx, 0, "new()");
+
+    // Compile the map elements. Each one is compiled to just invoke the
+    // subscript setter on the map.
+    loop {
+        ignore_newlines(ctx)?;
+
+        // Stop if we hit the end of the map.
+        if peek_expecting(ctx, Token::RightCurlyBrace) {
+            break;
+        }
+
+        // The key.
+        parse_precendence(ctx, Precedence::Unary)?;
+        consume_expecting_msg(ctx, Token::Colon, "Expect ':' after map key.")?;
+        ignore_newlines(ctx)?;
+
+        // The value.
+        expression(ctx)?;
+        call_method(ctx, 2, "addCore_(_,_)");
+
+        if !match_current(ctx, Token::Comma)? {
+            break;
+        }
+    }
+
+    // Allow newlines before the closing '}'.
+    ignore_newlines(ctx)?;
+    consume_expecting_msg(ctx, Token::RightCurlyBrace, "Expect '}' after map entries.")
+}
+
 fn unary_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     let name = ctx
         .parser
@@ -2791,7 +2826,7 @@ impl Token {
             Token::LeftParen => GrammarRule::prefix(grouping),
             Token::RightParen => GrammarRule::unused(),
             // Unclear if subscriptSignature is needed?
-            Token::LeftCurlyBrace => GrammarRule::unused(), // WRONG, should be prefix(map)
+            Token::LeftCurlyBrace => GrammarRule::prefix(map),
             Token::RightCurlyBrace => GrammarRule::unused(),
             Token::RightSquareBracket => GrammarRule::unused(),
             Token::LeftSquareBracket => GrammarRule {

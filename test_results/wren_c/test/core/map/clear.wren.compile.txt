@@ -1,1 +1,46 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 8..9, token: LeftCurlyBrace, line: 1 }") }
+Constants:
+00: Num(1)
+01: Num(1)
+02: Num(2)
+03: Num(2)
+04: Num(3)
+05: Num(3)
+06: Num(1)
+07: Num(2)
+Code:
+00: Load(Module, Class("Map"))
+01: Call(Method, new())
+02: Constant(0: Num(1))
+03: Constant(1: Num(1))
+04: Call(Method, addCore_(_,_))
+05: Constant(2: Num(2))
+06: Constant(3: Num(2))
+07: Call(Method, addCore_(_,_))
+08: Constant(4: Num(3))
+09: Constant(5: Num(3))
+10: Call(Method, addCore_(_,_))
+11: Store(Module)
+12: Pop
+13: Load(Module, Null)
+14: Call(Method, clear())
+15: Pop
+16: Load(Module, Class("System"))
+17: Load(Module, Null)
+18: Call(Method, print(_))
+19: Pop
+20: Load(Module, Class("System"))
+21: Load(Module, Null)
+22: Call(Getter, count)
+23: Call(Method, print(_))
+24: Pop
+25: Load(Module, Class("System"))
+26: Load(Module, Class("Map"))
+27: Call(Method, new())
+28: Constant(6: Num(1))
+29: Constant(7: Num(2))
+30: Call(Method, addCore_(_,_))
+31: Call(Method, clear())
+32: Call(Method, print(_))
+33: Pop
+34: End
+35: End
