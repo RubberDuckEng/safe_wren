@@ -985,9 +985,6 @@ impl<'a> ParseContext<'a> {
             maybe_compiler = &compiler.parent;
         }
         f(self, &None)
-
-        // FIXME: Hack until I can make the walk above work.
-        // f(self, &self.compiler().enclosing_class)
     }
 }
 
@@ -1588,11 +1585,6 @@ fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
 }
 
 // fn static_field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
-//     let class_compiler = getEnclosingClassCompiler(compiler);
-//     if class_compiler.is_none() {
-//         return Err(ctx.grammar_error("Cannot use a static field outside of a class definition."));
-//     }
-
 //     // Look up the name in the scope chain.
 //     let name = ctx
 //         .parser
@@ -1600,21 +1592,27 @@ fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
 //         .name(&ctx.parser.input)
 //         .map_err(|e| ctx.parse_error(e.into()))?;
 
+//     let class_compiler = getEnclosingClassCompiler(compiler);
+//     if class_compiler.is_none() {
+//         return Err(ctx.grammar_error("Cannot use a static field outside of a class definition."));
+//     }
+
 //     // If this is the first time we've seen this static field, implicitly
 //     // define it as a variable in the scope surrounding the class definition.
-//     if resolveLocal(classCompiler, name) == -1 {
-//         let symbol = declare_variable(classCompiler, NULL);
+//     if resolve_local(class_compiler, &name).is_none() {
+//         let symbol = declare_variable(class_compiler, name)?;
 
 //         // Implicitly initialize it to null.
-//         emitOp(classCompiler, CODE_NULL);
-//         define_variable(classCompiler, symbol);
+//         emitOp(class_compiler, Ops::Null);
+//         define_variable(class_compiler, symbol);
 //     }
 
 //     // It definitely exists now, so resolve it properly. This is different from
 //     // the above resolveLocal() call because we may have already closed over it
 //     // as an upvalue.
-//     let variable = resolveName(compiler, name);
+//     let variable = resolve_name(ctx, &name).unwrap();
 //     bare_name(ctx, can_assign, variable);
+//     Ok(())
 // }
 
 // Compiles a read or assignment to [variable].
@@ -1818,6 +1816,24 @@ impl<'a, 'b> Compiler {
         }
     }
 }
+
+// Look up [name] in the current scope to see what variable it refers to.
+// Returns the variable either in module scope, local scope, or the enclosing
+// function's upvalue list.
+// fn resolve_name(ctx: &mut ParseContext, name: &str) -> Option<Variable> {
+//     let maybe_variable = resolve_non_module(ctx, name);
+//     if maybe_variable.is_some() {
+//         return maybe_variable;
+//     }
+
+//     if let Some(index) = ctx.vm.module.lookup_symbol(name) {
+//         return Some(Variable {
+//             scope: Scope::Module,
+//             index: index as usize,
+//         });
+//     }
+//     None
+// }
 
 fn load_local(ctx: &mut ParseContext, index: u16) {
     ctx.compiler_mut().emit_load(Variable::local(index))
@@ -2078,6 +2094,19 @@ fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
     emit_pops(compiler, target_depth);
     return starting_locals_len - compiler.locals.len();
 }
+
+// Attempts to look up the name in the local variables of [compiler]. If found,
+// returns its index, otherwise returns -1.
+// fn resolve_local(ctx: &mut ParseContext, name: &str) -> Option<usize> {
+//     // Look it up in the local scopes. Look in reverse order so that the most
+//     // nested variable is found first and shadows outer ones.
+//     for (i, local) in ctx.compiler().locals.iter().enumerate().rev() {
+//         if local.name.eq(name) {
+//             return Some(i);
+//         }
+//     }
+//     None
+// }
 
 // Break, continue, if, for, while, blocks, etc.
 // Unlike expression, does not leave something on the stack.

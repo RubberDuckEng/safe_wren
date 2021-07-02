@@ -33,6 +33,7 @@ with error text from any failed tests.  `test.py` will also update
 * foreign functions
 * attributes
 * Full wren_core.wren parsing
+* Forward-declared module variables. (wren_c has this magic where all module.variables are either classes, null or numbers during compile time.  Numbers = line numbers meaning "this hasn't been declared", null = declared, and classes are declared and set to that class via class declarations.)
 * Limit tests
 * Fibers
 * imports
