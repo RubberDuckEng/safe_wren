@@ -1,1 +1,66 @@
-WrenError { module: "dummy_module", line: 4, error: Grammar("Undeclared variable \'_left\'") }
+Constants:
+00: String("Node")
+01: Fn()
+02: Fn()
+03: Fn()
+04: String("a")
+05: String("b")
+06: String("c")
+07: String("d")
+Code:
+00: Constant(0: String("Node"))
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new(_,_,_))
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new(_,_,_))
+11: Closure(3, [])
+12: Load(Module, Null)
+13: Method(instance, write())
+14: Load(Module, Null)
+15: Null
+16: Constant(4: String("a"))
+17: Null
+18: Call(Method, new(_,_,_))
+19: Store(Module)
+20: Pop
+21: Load(Module, Null)
+22: Null
+23: Constant(5: String("b"))
+24: Null
+25: Call(Method, new(_,_,_))
+26: Store(Module)
+27: Pop
+28: Load(Module, Null)
+29: Load(Module, Null)
+30: Constant(6: String("c"))
+31: Load(Module, Null)
+32: Call(Method, new(_,_,_))
+33: Store(Module)
+34: Pop
+35: Null
+36: Store(Module)
+37: Pop
+38: Null
+39: Store(Module)
+40: Pop
+41: Load(Module, Null)
+42: Load(Module, Null)
+43: Constant(7: String("d"))
+44: Null
+45: Call(Method, new(_,_,_))
+46: Store(Module)
+47: Pop
+48: Null
+49: Store(Module)
+50: Pop
+51: Load(Module, Null)
+52: Call(Method, write())
+53: Pop
+54: End
+55: End

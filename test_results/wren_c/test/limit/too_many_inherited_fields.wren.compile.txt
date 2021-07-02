@@ -1,1 +1,50 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'_field1\'") }
+Constants:
+00: String("Foo")
+01: Fn()
+02: Fn()
+03: Fn()
+04: String("Bar")
+05: Fn()
+06: Fn()
+07: Fn()
+Code:
+00: Constant(0: String("Foo"))
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new())
+11: Closure(3, [])
+12: Load(Module, Null)
+13: Method(instance, foo)
+14: Constant(4: String("Bar"))
+15: Load(Module, Null)
+16: Class(0 fields)
+17: Store(Module)
+18: Pop
+19: Closure(5, [])
+20: Load(Module, Null)
+21: Method(instance, init new())
+22: Closure(6, [])
+23: Load(Module, Null)
+24: Method(static, new())
+25: Closure(7, [])
+26: Load(Module, Null)
+27: Method(instance, bar)
+28: Load(Module, Null)
+29: Call(Method, new())
+30: Store(Module)
+31: Pop
+32: Load(Module, Null)
+33: Call(Getter, foo)
+34: Pop
+35: Load(Module, Null)
+36: Call(Getter, bar)
+37: Pop
+38: End
+39: End

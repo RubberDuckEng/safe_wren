@@ -7,7 +7,9 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
-use crate::vm::{new_handle, wren_define_variable, ModuleError, ObjClosure, ObjFn, Value, WrenVM};
+use crate::vm::{
+    new_handle, wren_define_variable, ModuleError, ObjClosure, ObjFn, SymbolTable, Value, WrenVM,
+};
 
 // Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
@@ -62,6 +64,9 @@ pub enum Token {
     EqualsEquals,
     Boolean(bool),
     Name(String),
+    // Field and StaticField have separate Grammar rules, hence separate.
+    Field(String),
+    StaticField(String),
     String(String),
     Newline,
     EndOfFile,
@@ -442,9 +447,20 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                 ))
             }
             b'"' => return read_string(input),
-            // TODO: How can we share code with is_name above?
-            b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
-                return Ok(read_name(c, input)?);
+            // Note this does not have _ like "is_name" does.
+            b'a'..=b'z' | b'A'..=b'Z' => {
+                let name = read_name(c, input)?;
+                return Ok(input.make_token(keyword_token(&name).unwrap_or(Token::Name(name))));
+            }
+            // Starting with _ is a Field, rather than Name.
+            b'_' => {
+                let is_static_field = input.peek_is(b'_');
+                let name = read_name(c, input)?;
+                return Ok(input.make_token(if is_static_field {
+                    Token::StaticField(name)
+                } else {
+                    Token::Field(name)
+                }));
             }
             b'\n' => return Ok(input.make_token(Token::Newline)),
             _ => {
@@ -557,7 +573,7 @@ fn is_digit(c: Option<u8>) -> bool {
     matches!(c, Some(b'0'..=b'9'))
 }
 
-fn read_name(first_byte: u8, input: &mut InputManager) -> Result<ParseToken, LexError> {
+fn read_name(first_byte: u8, input: &mut InputManager) -> Result<String, LexError> {
     // This should be a string?
     let mut bytes = Vec::new();
     bytes.push(first_byte);
@@ -566,7 +582,7 @@ fn read_name(first_byte: u8, input: &mut InputManager) -> Result<ParseToken, Lex
     }
 
     let name = String::from_utf8(bytes)?;
-    Ok(input.make_token(keyword_token(&name).unwrap_or(Token::Name(name))))
+    Ok(name)
 }
 
 fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
@@ -639,6 +655,8 @@ pub(crate) enum Ops {
     Boolean(bool), // Unclear if needed, could be constant?
     Null,          // Unclear if needed, could be constant?
     Call(Signature, usize),
+    LoadField(usize),
+    StoreField(usize),
     Load(Variable),
     Store(Variable),
     ClassPlaceholder,
@@ -701,7 +719,7 @@ struct ClassInfo {
     //   ObjMap* methodAttributes;
 
     // // Symbol table for the fields of the class.
-    // fields: Vec<String>,
+    fields: SymbolTable,
 
     // // Symbols for the methods defined by the class. Used to detect duplicate
     // // method definitions.
@@ -709,7 +727,7 @@ struct ClassInfo {
     // static_methods: Vec<usize>,
 
     // True if the class being compiled is a foreign class.
-    // is_foreign_class: bool,
+    is_foreign_class: bool,
 
     // // True if the current method being compiled is static.
     in_static_method: bool,
@@ -718,13 +736,13 @@ struct ClassInfo {
 }
 
 impl ClassInfo {
-    fn new(_name: &str, _is_foreign_class: bool) -> ClassInfo {
+    fn new(_name: &str, is_foreign_class: bool) -> ClassInfo {
         ClassInfo {
             // name: name.into(),
-            // fields: Vec::new(),
+            fields: SymbolTable::default(),
             // methods: Vec::new(),
             // static_methods: Vec::new(),
-            // is_foreign_class: is_foreign_class,
+            is_foreign_class: is_foreign_class,
             in_static_method: false,
         }
     }
@@ -742,7 +760,7 @@ pub(crate) struct Compiler {
     upvalues: Vec<Upvalue>,
     parent: Option<Box<Compiler>>,
 
-    enclosing_class: Option<ClassInfo>,
+    enclosing_class: Option<RefCell<ClassInfo>>,
 
     // Unclear if this will be used?
     is_initializer: bool,
@@ -954,6 +972,23 @@ impl<'a> ParseContext<'a> {
         }
         return false;
     }
+
+    fn call_with_enclosing_class<T, F>(&mut self, f: F) -> Result<T, WrenError>
+    where
+        F: Fn(&ParseContext, &Option<RefCell<ClassInfo>>) -> Result<T, WrenError>,
+    {
+        let mut maybe_compiler = &self._compiler;
+        while let Some(compiler) = maybe_compiler {
+            if compiler.enclosing_class.is_some() {
+                return f(self, &compiler.enclosing_class);
+            }
+            maybe_compiler = &compiler.parent;
+        }
+        f(self, &None)
+
+        // FIXME: Hack until I can make the walk above work.
+        // f(self, &self.compiler().enclosing_class)
+    }
 }
 
 // Following the Pratt parser example:
@@ -1112,7 +1147,7 @@ fn call_signature(ctx: &mut ParseContext, signature: Signature) {
 
 // Compiles a method call with [numArgs] for a method with [name] with [length].
 fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
-    let symbol = ctx.vm.methods.ensure_method(full_name);
+    let symbol = ctx.vm.methods.ensure_symbol(full_name);
     let signature = Signature {
         call_type: SignatureType::Method,
         bare_name: full_name.into(), // FIXME: Wrong.
@@ -1187,7 +1222,7 @@ fn signature_from_token(
 // This isn't needed, just here for ease of code porting.
 fn signature_symbol(ctx: &mut ParseContext, signature: &Signature) -> usize {
     // Signature.full_name() is "signatureToString"
-    ctx.vm.methods.ensure_method(&signature.full_name())
+    ctx.vm.methods.ensure_symbol(&signature.full_name())
 }
 
 fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
@@ -1506,6 +1541,81 @@ fn allow_line_before_dot(ctx: &mut ParseContext) -> Result<(), WrenError> {
     }
     Ok(())
 }
+
+fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
+    let name = ctx
+        .parser
+        .previous
+        .name(&ctx.parser.input)
+        .map_err(|e| ctx.parse_error(e.into()))?;
+
+    let field_lookup = |ctx: &ParseContext, maybe_class_info: &Option<RefCell<ClassInfo>>| {
+        match maybe_class_info {
+            None => {
+                Err(ctx.grammar_error("Cannot reference a field outside of a class definition."))
+            }
+            Some(class_info) => {
+                if class_info.borrow().is_foreign_class {
+                    Err(ctx.grammar_error("Cannot define fields in a foreign class."))
+                } else if class_info.borrow().in_static_method {
+                    Err(ctx.grammar_error("Cannot use an instance field in a static method."))
+                } else {
+                    Ok(class_info.borrow_mut().fields.ensure_symbol(&name))
+                }
+            }
+        }
+    };
+
+    let symbol = ctx.call_with_enclosing_class(field_lookup)?;
+    // FIXME: Handle field limits.
+
+    // If there's an "=" after a field name, it's an assignment.
+    let is_assignment = can_assign && match_current(ctx, Token::Equals)?;
+    if is_assignment {
+        // Compile the right-hand side.
+        expression(ctx)?;
+    }
+
+    // FIXME: Could invent a LOAD_FIELD_THIS as an optimization.
+    load_this(ctx)?;
+    if is_assignment {
+        ctx.compiler_mut().emit(Ops::StoreField(symbol));
+    } else {
+        ctx.compiler_mut().emit(Ops::LoadField(symbol));
+    }
+    allow_line_before_dot(ctx)?;
+    Ok(())
+}
+
+// fn static_field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
+//     let class_compiler = getEnclosingClassCompiler(compiler);
+//     if class_compiler.is_none() {
+//         return Err(ctx.grammar_error("Cannot use a static field outside of a class definition."));
+//     }
+
+//     // Look up the name in the scope chain.
+//     let name = ctx
+//         .parser
+//         .previous
+//         .name(&ctx.parser.input)
+//         .map_err(|e| ctx.parse_error(e.into()))?;
+
+//     // If this is the first time we've seen this static field, implicitly
+//     // define it as a variable in the scope surrounding the class definition.
+//     if resolveLocal(classCompiler, name) == -1 {
+//         let symbol = declare_variable(classCompiler, NULL);
+
+//         // Implicitly initialize it to null.
+//         emitOp(classCompiler, CODE_NULL);
+//         define_variable(classCompiler, symbol);
+//     }
+
+//     // It definitely exists now, so resolve it properly. This is different from
+//     // the above resolveLocal() call because we may have already closed over it
+//     // as an upvalue.
+//     let variable = resolveName(compiler, name);
+//     bare_name(ctx, can_assign, variable);
+// }
 
 // Compiles a read or assignment to [variable].
 fn bare_name(
@@ -1910,7 +2020,7 @@ struct ScopePusher<'a, 'b> {
 impl<'a, 'b> ScopePusher<'a, 'b> {
     fn push_class(ctx: &'a mut ParseContext<'b>, class_info: ClassInfo) -> ScopePusher<'a, 'b> {
         ctx.compiler_mut().push_scope();
-        ctx.compiler_mut().enclosing_class = Some(class_info);
+        ctx.compiler_mut().enclosing_class = Some(RefCell::new(class_info));
         ScopePusher {
             ctx: ctx,
             did_pop: false,
@@ -2329,8 +2439,9 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
     let is_static = match_current(ctx, Token::Static)?;
     ctx.compiler_mut()
         .enclosing_class
-        .as_mut()
+        .as_ref()
         .unwrap()
+        .borrow_mut()
         .in_static_method = is_static;
 
     let maybe_signature_fn = ctx.parser.current.token.grammar_rule().signature;
@@ -2614,6 +2725,8 @@ impl Token {
             Token::DotDotDot => "dot dot dot (exclusive range)",
             Token::Boolean(_) => "boolean literal",
             Token::Name(_) => "name",
+            Token::Field(_) => "field",
+            Token::StaticField(_) => "static field",
             Token::Comma => "comma",
             Token::For => "for",
             Token::In => "in",
@@ -2719,6 +2832,9 @@ impl Token {
                 signature: Some(named_signature),
                 precedence: Precedence::None,
             },
+            Token::Field(_) => GrammarRule::prefix(field),
+            // Token::StaticField(_) => GrammarRule::prefix(static_field),
+            Token::StaticField(_) => GrammarRule::unused(), // FIXME: Wrong.
         }
     }
 }

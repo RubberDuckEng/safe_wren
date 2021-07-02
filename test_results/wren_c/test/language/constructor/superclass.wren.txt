@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 4] Error Grammar("Undeclared variable \'_field\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 4] Error Grammar("Undeclared variable \'_field\'")
+Unexpected output on stderr:
+MethodNotFound("super(_,_)" on "C")
+Expected return code 0 and got 70. Stderr:
+MethodNotFound("super(_,_)" on "C")
 
 Missing expected output "new A two" on line 31.
 Missing expected output "new B one" on line 32.

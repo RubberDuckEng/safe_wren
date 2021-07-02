@@ -1,7 +1,7 @@
-Unexpected error:
-[dummy_module line 25] Error Grammar("Undeclared variable \'_test\'")
-Expected return code 0 and got 65. Stderr:
-[dummy_module line 25] Error Grammar("Undeclared variable \'_test\'")
+Unexpected output on stderr:
+FieldOutOfBounds
+Expected return code 0 and got 70. Stderr:
+FieldOutOfBounds
 
 Missing expected output "test0" on line 30.
 Missing expected output "test1" on line 31.

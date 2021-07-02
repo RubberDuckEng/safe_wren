@@ -1,8 +1,1 @@
-Constants:
-00: String("value")
-Code:
-00: Constant(0: String("value"))
-01: Store(Module)
-02: Pop
-03: End
-04: End
+WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }

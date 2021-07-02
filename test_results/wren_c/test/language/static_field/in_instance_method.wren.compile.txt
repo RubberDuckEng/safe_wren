@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Undeclared variable \'__a\'") }
+WrenError { module: "dummy_module", line: 5, error: Grammar("Expected Expression: ParseToken { bytes_range: 65..68, token: StaticField(\"__a\"), line: 5 }") }

@@ -160,12 +160,14 @@ pub(crate) enum RuntimeError {
     ListRequired(Value),
     FnRequired(Value),
     ClosureRequired(Value),
+    InstanceRequired(Value),
     MethodNotFound(MissingMethod),
     CannotInheritFromNonClassObject(String, Value),
     ExpectingInteger(String),
     RangeOutOfBounds(String),
     FiberAbort(Value),
     ThisObjectHasNoClass,
+    FieldOutOfBounds,
 }
 
 impl core::fmt::Debug for RuntimeError {
@@ -183,6 +185,7 @@ impl core::fmt::Debug for RuntimeError {
             RuntimeError::ExpectingInteger(v) => write!(f, "ExpectingInteger({:?})", v),
             RuntimeError::RangeOutOfBounds(v) => write!(f, "RangeOutOfBounds({:?})", v),
             RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
+            RuntimeError::InstanceRequired(v) => write!(f, "InstanceRequired({:?})", v),
             RuntimeError::MethodNotFound(m) => {
                 write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)
             }
@@ -190,6 +193,7 @@ impl core::fmt::Debug for RuntimeError {
                 write!(f, "Class '{}' cannot inherit from a non-class object.", n)
             }
             RuntimeError::ThisObjectHasNoClass => write!(f, "ThisObjectHasNoClass"),
+            RuntimeError::FieldOutOfBounds => write!(f, "FieldOutOfBounds"),
         }
     }
 }
@@ -243,27 +247,34 @@ impl Value {
             _ => Err(RuntimeError::ClosureRequired(self.clone())),
         }
     }
+
+    pub fn try_into_instance(&self) -> Result<Handle<ObjInstance>, RuntimeError> {
+        match self {
+            Value::Instance(c) => Ok(c.clone()),
+            _ => Err(RuntimeError::InstanceRequired(self.clone())),
+        }
+    }
 }
 
 #[derive(Debug, Default)]
 pub struct SymbolTable {
-    method_names: Vec<String>,
+    names: Vec<String>,
 }
 
 impl SymbolTable {
     // This is called methodSymbol or wrenSymbolTableEnsure in wren_c
-    pub fn ensure_method(&mut self, name: &str) -> usize {
-        if let Some(index) = self.method_names.iter().position(|n| n.eq(name)) {
+    pub fn ensure_symbol(&mut self, name: &str) -> usize {
+        if let Some(index) = self.names.iter().position(|n| n.eq(name)) {
             return index;
         }
 
         // New symbol, so add it.
-        self.method_names.push(name.into());
-        self.method_names.len() - 1
+        self.names.push(name.into());
+        self.names.len() - 1
     }
 
     pub fn lookup_symbol(&self, symbol: usize) -> String {
-        match self.method_names.get(symbol) {
+        match self.names.get(symbol) {
             None => "<not found>".into(),
             Some(name) => name.clone(),
         }
@@ -345,7 +356,7 @@ impl core::fmt::Debug for WrenVM {
         if let Some(fiber) = &self.last_fiber {
             write!(f, "stack: {:?}, ", fiber)?;
         }
-        write!(f, "methods: (len {}) ", self.methods.method_names.len())?;
+        write!(f, "methods: (len {}) ", self.methods.names.len())?;
         write!(f, "}}")
     }
 }
@@ -382,14 +393,14 @@ pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<
     }
 }
 
-fn wren_new_single_class(_num_fields: usize, name: String) -> Handle<ObjClass> {
+fn wren_new_single_class(num_fields: usize, name: String) -> Handle<ObjClass> {
     // the wren_c version does a lot more?  Unclear if this should.
     new_handle(ObjClass {
         name: name,
         methods: Vec::new(),
         class: None,
         superclass: None,
-        // num_fields: num_fields,
+        num_fields: num_fields,
     })
 }
 
@@ -551,7 +562,7 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
         methods: Vec::new(),
         class: None,
         superclass: None,
-        // num_fields: 0,
+        num_fields: 0,
     });
 
     wren_define_variable(module, name, Value::Class(class.clone())).expect("defined");
@@ -660,8 +671,12 @@ impl WrenVM {
             match method {
                 Method::None => (),
                 _ => {
-                    let name = &self.methods.method_names[symbol];
-                    println!("{} ({}) => {:?}", name, symbol, method);
+                    println!(
+                        "{} ({}) => {:?}",
+                        self.methods.lookup_symbol(symbol),
+                        symbol,
+                        method
+                    );
                 }
             }
         }
@@ -840,6 +855,22 @@ impl WrenVM {
                         Scope::Local => frame.stack[variable.index] = value.clone(),
                     };
                 }
+                Ops::LoadField(symbol) => {
+                    let receiver = frame.pop()?;
+                    let instance = receiver.try_into_instance()?;
+                    if *symbol >= instance.borrow().fields.len() {
+                        return Err(RuntimeError::FieldOutOfBounds);
+                    }
+                    frame.push(instance.borrow().fields[*symbol].clone());
+                }
+                Ops::StoreField(symbol) => {
+                    let receiver = frame.pop()?;
+                    let instance = receiver.try_into_instance()?;
+                    if *symbol >= instance.borrow().fields.len() {
+                        return Err(RuntimeError::FieldOutOfBounds);
+                    }
+                    instance.borrow_mut().fields[*symbol] = frame.peek()?.clone();
+                }
                 Ops::Pop => {
                     frame.pop()?;
                 }
@@ -990,6 +1021,8 @@ fn op_debug_string(
             Scope::Upvalue => unimplemented!("dump store upvalue"),
             Scope::Module => format!("Store(Module{})", comma_unstable_num(v.index)),
         },
+        Ops::LoadField(field) => format!("LoadField({})", field),
+        Ops::StoreField(field) => format!("StoreField({})", field),
         Ops::JumpIfFalsePlaceholder => format!("{:?}", op),
         Ops::JumpIfFalse(_) => format!("{:?}", op),
         Ops::JumpPlaceholder => format!("{:?}", op),
@@ -1005,7 +1038,7 @@ fn op_debug_string(
                 "Method({}, {}{})",
                 dispatch,
                 unstable_num_arrow(*symbol),
-                methods.method_names[*symbol]
+                methods.lookup_symbol(*symbol)
             )
         }
         Ops::Closure(_, _) => format!("{:?}", op),
@@ -1111,15 +1144,15 @@ impl Obj for ObjFn {
 
 pub(crate) struct ObjInstance {
     class_obj: Handle<ObjClass>,
-    // fields: Vec<Value>,
+    fields: Vec<Value>,
 }
 
 impl ObjInstance {
     pub(crate) fn new(class: Handle<ObjClass>) -> ObjInstance {
-        // let fields = vec![Value::Null; class.borrow().num_fields];
+        let fields = vec![Value::Null; class.borrow().num_fields];
         ObjInstance {
             class_obj: class,
-            // fields: fields,
+            fields: fields,
         }
     }
 }
@@ -1188,7 +1221,7 @@ pub struct ObjClass {
 
     // The number of fields needed for an instance of this class, including all
     // of its superclass fields.
-    // num_fields: usize,
+    num_fields: usize,
 
     // The table of methods that are defined in or inherited by this class.
     // Methods are called by symbol, and the symbol directly maps to an index in

@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 5] Error Grammar("Undeclared variable \'__field\'")
+[dummy_module line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 64..71, token: StaticField(\"__field\"), line: 5 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 5] Error Grammar("Undeclared variable \'__field\'")
+[dummy_module line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 64..71, token: StaticField(\"__field\"), line: 5 }")
 
 Missing expected output "outer" on line 6.
 Missing expected output "inner" on line 13.

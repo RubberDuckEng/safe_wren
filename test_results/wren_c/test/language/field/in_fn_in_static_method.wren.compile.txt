@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'_field\'") }
+WrenError { module: "dummy_module", line: 3, error: Grammar("Cannot use an instance field in a static method.") }

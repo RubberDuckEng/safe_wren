@@ -262,6 +262,7 @@ wren_c/test/language/variable/shadow_global.wren
 wren_c/test/language/variable/undefined_global.wren
 wren_c/test/language/variable/undefined_local.wren
 wren_c/test/language/variable/use_false_as_var.wren
+wren_c/test/language/variable/use_field_as_var.wren
 wren_c/test/language/variable/use_null_as_var.wren
 wren_c/test/language/variable/use_true_as_var.wren
 wren_c/test/language/while/newline_after_while.wren

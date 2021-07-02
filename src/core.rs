@@ -467,22 +467,22 @@ fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeE
 
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
-        let index = $vm.methods.ensure_method($sig);
+        let symbol = $vm.methods.ensure_symbol($sig);
         $class
             .borrow_mut()
-            .set_method(index, Method::Primitive($func));
+            .set_method(symbol, Method::Primitive($func));
     };
 }
 
 macro_rules! primitive_static {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
-        let index = $vm.methods.ensure_method($sig);
+        let symbol = $vm.methods.ensure_symbol($sig);
         $class
             .borrow_mut()
             .class_obj()
             .unwrap()
             .borrow_mut()
-            .set_method(index, Method::Primitive($func));
+            .set_method(symbol, Method::Primitive($func));
     };
 }
 
@@ -635,7 +635,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
             // arity=1 -> "call(_)", arity=2 -> "call(_,_)", etc.
             format!("call({}{})", "_,".repeat(arity - 1), "_")
         };
-        let symbol = vm.methods.ensure_method(&name);
+        let symbol = vm.methods.ensure_symbol(&name);
         fn_class
             .borrow_mut()
             .set_method(symbol, Method::FunctionCall);
