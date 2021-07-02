@@ -38,6 +38,7 @@ wren_c/test/core/list/not.wren
 wren_c/test/core/list/reduce.wren
 wren_c/test/core/list/reduce_single_item.wren
 wren_c/test/core/list/type.wren
+wren_c/test/core/map/type.wren
 wren_c/test/core/null/not.wren
 wren_c/test/core/null/type.wren
 wren_c/test/core/number/abs.wren

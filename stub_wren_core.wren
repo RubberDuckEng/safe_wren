@@ -326,7 +326,6 @@ class MapValueSequence is Sequence {
   iteratorValue(iterator) { _map.valueIteratorValue_(iterator) }
 }
 
-
 class Map is Sequence {
   keys { MapKeySequence.new(this) }
   values { MapValueSequence.new(this) }

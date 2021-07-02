@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("new()" on "Map metaclass")
+MethodNotFound("iterate(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("new()" on "Map metaclass")
+MethodNotFound("iterate(_)" on "String")
 
 Missing expected output "249" on line 67.
 Missing expected output "99" on line 73.

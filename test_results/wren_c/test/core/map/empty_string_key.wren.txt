@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("new()" on "Map metaclass")
+MethodNotFound("addCore_(_,_)" on "Map")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("new()" on "Map metaclass")
+MethodNotFound("addCore_(_,_)" on "Map")
 
 Missing expected output "empty string" on line 5.

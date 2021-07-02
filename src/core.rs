@@ -324,6 +324,10 @@ fn fn_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> 
     Ok(Value::from_str("<fn>"))
 }
 
+fn map_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+    Ok(Value::Map(wren_new_map(vm)))
+}
+
 fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::List(wren_new_list(vm)))
 }
@@ -540,6 +544,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
         null: find_core_class(vm, "Null"),
         range: find_core_class(vm, "Range"),
         list: find_core_class(vm, "List"),
+        map: find_core_class(vm, "Map"),
     };
 
     primitive!(vm, core.bool_class, "!", bool_not);
@@ -622,6 +627,9 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     primitive!(vm, core.null, "!", null_not);
     primitive!(vm, core.null, "toString", null_to_string);
+
+    let map = find_core_class(vm, "Map");
+    primitive_static!(vm, map, "new()", map_new);
 
     let fn_class = vm.fn_class.as_ref().unwrap();
     primitive_static!(vm, fn_class, "new(_)", fn_new);

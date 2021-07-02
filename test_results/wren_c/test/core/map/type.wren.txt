@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-MethodNotFound("new()" on "Map metaclass")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("new()" on "Map metaclass")
-
-Missing expected output "true" on line 1.
-Missing expected output "true" on line 3.
-Missing expected output "false" on line 4.
-Missing expected output "true" on line 5.

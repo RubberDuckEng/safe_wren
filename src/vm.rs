@@ -17,6 +17,7 @@ pub(crate) enum Value {
     Fn(Handle<ObjFn>),
     Closure(Handle<ObjClosure>),
     List(Handle<ObjList>),
+    Map(Handle<ObjMap>),
     Instance(Handle<ObjInstance>),
 }
 
@@ -48,6 +49,7 @@ impl core::fmt::Debug for Value {
             Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
             Value::Range(r) => write!(f, "Range({:?})", r),
             Value::List(_) => write!(f, "List()"),
+            Value::Map(_) => write!(f, "Map()"),
             Value::Fn(_) => write!(f, "Fn()"),
             Value::Closure(_) => write!(f, "Closure()"),
             Value::Instance(o) => write!(
@@ -368,6 +370,12 @@ pub(crate) fn wren_new_list(vm: &WrenVM) -> Handle<ObjList> {
     })
 }
 
+pub(crate) fn wren_new_map(vm: &WrenVM) -> Handle<ObjMap> {
+    new_handle(ObjMap {
+        class_obj: vm.core.as_ref().unwrap().map.clone(),
+    })
+}
+
 pub(crate) fn wren_new_range(
     vm: &WrenVM,
     from: f64,
@@ -528,6 +536,7 @@ pub(crate) struct CoreClasses {
     pub(crate) string: Handle<ObjClass>,
     pub(crate) range: Handle<ObjClass>,
     pub(crate) list: Handle<ObjClass>,
+    pub(crate) map: Handle<ObjClass>,
 }
 
 #[derive(Debug)]
@@ -657,6 +666,7 @@ impl WrenVM {
             Value::String(_) => Some(core.string.clone()),
             Value::Class(o) => o.borrow().class_obj(),
             Value::List(o) => o.borrow().class_obj(),
+            Value::Map(o) => o.borrow().class_obj(),
             Value::Range(o) => o.borrow().class_obj(),
             Value::Fn(o) => o.borrow().class_obj(),
             Value::Closure(o) => o.borrow().class_obj(),
@@ -1084,6 +1094,16 @@ pub(crate) struct ObjRange {
     pub(crate) to: f64,
     // True if [to] is included in the range.
     pub(crate) is_inclusive: bool,
+}
+
+pub(crate) struct ObjMap {
+    class_obj: Handle<ObjClass>,
+}
+
+impl Obj for ObjMap {
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
+        Some(self.class_obj.clone())
+    }
 }
 
 pub(crate) struct ObjList {

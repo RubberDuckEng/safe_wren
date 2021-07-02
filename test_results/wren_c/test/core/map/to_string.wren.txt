@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("new()" on "Map metaclass")
+ClassRequired(Map())
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("new()" on "Map metaclass")
+ClassRequired(Map())
 
 Missing expected output "{}" on line 2.
 Missing expected output "{1: 2}" on line 5.

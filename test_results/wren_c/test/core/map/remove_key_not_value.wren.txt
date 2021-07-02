@@ -1,4 +1,4 @@
 Expected runtime error "Key must be a value type." and got:
-MethodNotFound("new()" on "Map metaclass")
+MethodNotFound("remove(_)" on "Map")
 Expected stack trace and got:
 
