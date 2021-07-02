@@ -1,1 +1,22 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'MapEntry\'") }
+Constants:
+00: String("key")
+01: String("value")
+Code:
+00: Load(Module, Class("MapEntry"))
+01: Constant(0: String("key"))
+02: Constant(1: String("value"))
+03: Call(Method, new(_,_))
+04: Store(Module)
+05: Pop
+06: Load(Module, Class("System"))
+07: Load(Module, Null)
+08: Call(Getter, key)
+09: Call(Method, print(_))
+10: Pop
+11: Load(Module, Class("System"))
+12: Load(Module, Null)
+13: Call(Getter, value)
+14: Call(Method, print(_))
+15: Pop
+16: End
+17: End

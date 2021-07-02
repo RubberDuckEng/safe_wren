@@ -295,6 +295,62 @@ class List is Sequence {
   }
 }
 
+
+class MapEntry {
+  construct new(key, value) {
+    _key = key
+    _value = value
+  }
+
+  key { _key }
+  value { _value }
+
+  toString { "%(_key):%(_value)" }
+}
+
+class MapKeySequence is Sequence {
+  construct new(map) {
+    _map = map
+  }
+
+  iterate(n) { _map.iterate(n) }
+  iteratorValue(iterator) { _map.keyIteratorValue_(iterator) }
+}
+
+class MapValueSequence is Sequence {
+  construct new(map) {
+    _map = map
+  }
+
+  iterate(n) { _map.iterate(n) }
+  iteratorValue(iterator) { _map.valueIteratorValue_(iterator) }
+}
+
+
+class Map is Sequence {
+  keys { MapKeySequence.new(this) }
+  values { MapValueSequence.new(this) }
+
+  toString {
+    var first = true
+    var result = "{"
+
+    for (key in keys) {
+      if (!first) result = result + ", "
+      first = false
+      result = result + "%(key): %(this[key])"
+    }
+
+    return result + "}"
+  }
+
+  iteratorValue(iterator) {
+    return MapEntry.new(
+        keyIteratorValue_(iterator),
+        valueIteratorValue_(iterator))
+  }
+}
+
 class Range is Sequence {}
 
 class System {
