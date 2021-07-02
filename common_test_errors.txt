@@ -3,8 +3,8 @@ Most common errors seen in test_results/**:
 occurances : error text
 81 : MethodNotFound("new(_)" on "Fiber metaclass")
 78 : Error Grammar("Undeclared variable \'import\'")
+28 : MethodNotFound("[_]" on "List")
 28 : MethodNotFound("codePoints" on "String")
-27 : MethodNotFound("[_]" on "List")
 22 : MethodNotFound("iterate(_)" on "String")
 21 : Error Grammar("Expect \'{\' to begin method body.")
 20 : MethodNotFound("bytes" on "String")
@@ -101,6 +101,7 @@ occurances : error text
 2 : MethodNotFound("clear()" on "List")
 2 : MethodNotFound("clear()" on "Map")
 2 : MethodNotFound("from" on "Range")
+2 : MethodNotFound("gc()" on "System metaclass")
 2 : MethodNotFound("indexOf(_)" on "List")
 2 : MethodNotFound("isInclusive" on "Range")
 2 : MethodNotFound("map(_)" on "Fib")
@@ -131,7 +132,6 @@ occurances : error text
 2 : RangeOutOfBounds("Index")
 2 : RangeOutOfBounds("Iterator")
 2 : StringRequired(Num(2))
-2 : Timed out.
 1 : ClosureRequired(Num(3))
 1 : ExpectingInteger("Index")
 1 : FiberAbort(String("Abort!"))
@@ -159,8 +159,8 @@ occurances : error text
 1 : MethodNotFound("someUnknownMethod(_)" on "Foo")
 1 : MethodNotFound("someUnknownMethod(_,_)" on "Foo")
 1 : MethodNotFound("someUnknownMethod(_,_,_,_,_,_,_,_,_,_,_)" on "Foo")
-1 : MethodNotFound("sort(_)" on "List")
 1 : MethodNotFound("swap(_,_)" on "List")
 1 : NumberRequired(String(""))
 1 : StringRequired(Class("System"))
 1 : StringRequired(Num(123))
+1 : Timed out.

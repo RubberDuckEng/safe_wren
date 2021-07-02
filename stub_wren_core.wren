@@ -239,13 +239,13 @@ class List is Sequence {
 
   sort() { sort {|low, high| low < high } }
 
-  // sort(comparer) {
-  //   if (!(comparer is Fn)) {
-  //     Fiber.abort("Comparer must be a function.")
-  //   }
-  //   quicksort_(0, count - 1, comparer)
-  //   return this
-  // }
+  sort(comparer) {
+    if (!(comparer is Fn)) {
+      Fiber.abort("Comparer must be a function.")
+    }
+    quicksort_(0, count - 1, comparer)
+    return this
+  }
 
   quicksort_(low, high, comparer) {
     if (low < high) {

@@ -1,5 +1,5 @@
 Expected runtime error "Comparer must be a function." and got:
-MethodNotFound("sort(_)" on "List")
+MethodNotFound("[_]" on "List")
 Expected stack trace and got:
 
 Missing expected output "[1, 2, 3, 4]" on line 1.
