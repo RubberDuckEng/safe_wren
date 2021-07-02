@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("addCore_(_,_)" on "Map")
+ClassRequired(Map())
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("addCore_(_,_)" on "Map")
+ClassRequired(Map())
 
 Missing expected output "true" on line 7.
 Missing expected output "true" on line 8.

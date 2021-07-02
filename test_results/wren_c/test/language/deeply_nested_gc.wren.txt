@@ -1,6 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("addCore_(_,_)" on "Map")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("addCore_(_,_)" on "Map")
-
-Missing expected output "done" on line 8.
+Timed out.

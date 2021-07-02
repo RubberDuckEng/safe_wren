@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be a number." and got:
-MethodNotFound("addCore_(_,_)" on "Map")
+MethodNotFound("iterate(_)" on "Map")
 Expected stack trace and got:
 

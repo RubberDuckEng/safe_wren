@@ -1,4 +1,6 @@
 use std::cell::RefCell;
+use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::str;
 
@@ -21,6 +23,27 @@ pub(crate) enum Value {
     Instance(Handle<ObjInstance>),
 }
 
+impl Hash for Value {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        match self {
+            Value::Null => Value::Null.hash(state),
+            Value::Num(v) => {
+                let bits: u64 = unsafe { std::mem::transmute(v) };
+                bits.hash(state);
+            }
+            Value::Boolean(v) => v.hash(state),
+            Value::String(v) => v.hash(state),
+            Value::Class(v) => v.as_ptr().hash(state),
+            Value::Range(v) => v.as_ptr().hash(state),
+            Value::Fn(v) => v.as_ptr().hash(state),
+            Value::Closure(v) => v.as_ptr().hash(state),
+            Value::List(v) => v.as_ptr().hash(state),
+            Value::Map(v) => v.as_ptr().hash(state),
+            Value::Instance(v) => v.as_ptr().hash(state),
+        }
+    }
+}
+
 impl PartialEq for Value {
     fn eq(&self, rhs: &Value) -> bool {
         match (self, rhs) {
@@ -38,6 +61,8 @@ impl PartialEq for Value {
         }
     }
 }
+
+impl Eq for Value {}
 
 impl core::fmt::Debug for Value {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -160,6 +185,7 @@ pub(crate) enum RuntimeError {
     ClassRequired(Value),
     RangeRequired(Value),
     ListRequired(Value),
+    MapRequired(Value),
     FnRequired(Value),
     ClosureRequired(Value),
     InstanceRequired(Value),
@@ -167,6 +193,7 @@ pub(crate) enum RuntimeError {
     CannotInheritFromNonClassObject(String, Value),
     ExpectingInteger(String),
     RangeOutOfBounds(String),
+    Generic(String),
     FiberAbort(Value),
     ThisObjectHasNoClass,
     FieldOutOfBounds,
@@ -188,6 +215,8 @@ impl core::fmt::Debug for RuntimeError {
             RuntimeError::RangeOutOfBounds(v) => write!(f, "RangeOutOfBounds({:?})", v),
             RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
             RuntimeError::InstanceRequired(v) => write!(f, "InstanceRequired({:?})", v),
+            RuntimeError::MapRequired(v) => write!(f, "MapRequired({:?})", v),
+            RuntimeError::Generic(v) => write!(f, "Generic({:?})", v),
             RuntimeError::MethodNotFound(m) => {
                 write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)
             }
@@ -235,7 +264,12 @@ impl Value {
             _ => Err(RuntimeError::ListRequired(self.clone())),
         }
     }
-
+    pub fn try_into_map(&self) -> Result<Handle<ObjMap>, RuntimeError> {
+        match self {
+            Value::Map(m) => Ok(m.clone()),
+            _ => Err(RuntimeError::MapRequired(self.clone())),
+        }
+    }
     pub fn try_into_fn(&self) -> Result<Handle<ObjFn>, RuntimeError> {
         match self {
             Value::Fn(c) => Ok(c.clone()),
@@ -373,6 +407,7 @@ pub(crate) fn wren_new_list(vm: &WrenVM) -> Handle<ObjList> {
 pub(crate) fn wren_new_map(vm: &WrenVM) -> Handle<ObjMap> {
     new_handle(ObjMap {
         class_obj: vm.core.as_ref().unwrap().map.clone(),
+        data: HashMap::new(),
     })
 }
 
@@ -1098,6 +1133,7 @@ pub(crate) struct ObjRange {
 
 pub(crate) struct ObjMap {
     class_obj: Handle<ObjClass>,
+    pub(crate) data: HashMap<Value, Value>,
 }
 
 impl Obj for ObjMap {

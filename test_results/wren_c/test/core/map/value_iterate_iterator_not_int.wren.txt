@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be an integer." and got:
-MethodNotFound("addCore_(_,_)" on "Map")
+ClassRequired(Map())
 Expected stack trace and got:
 

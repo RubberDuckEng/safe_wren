@@ -328,6 +328,40 @@ fn map_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::Map(wren_new_map(vm)))
 }
 
+fn wren_map_is_valid_key(arg: &Value) -> bool {
+    match arg {
+        Value::Boolean(_) => true,
+        Value::Class(_) => true,
+        Value::Null => true,
+        Value::Num(_) => true,
+        Value::Range(_) => true,
+        Value::String(_) => true,
+        _ => false,
+    }
+}
+
+fn validate_key(_vm: &WrenVM, arg: &Value) -> Result<bool, RuntimeError> {
+    if wren_map_is_valid_key(arg) {
+        Ok(true)
+    } else {
+        Err(RuntimeError::Generic("Key must be a value type.".into()))
+    }
+}
+
+// Adds an entry to the map and then returns the map itself. This is called by
+// the compiler when compiling map literals instead of using [_]=(_) to
+// minimize stack churn.
+fn map_add_core(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+    validate_key(vm, &args[1])?;
+
+    let value = args.pop().unwrap();
+    let key = args.pop().unwrap();
+    let map = args[0].try_into_map()?;
+    map.borrow_mut().data.insert(key, value);
+    // Return the map itself.
+    Ok(Value::Map(map))
+}
+
 fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
     Ok(Value::List(wren_new_list(vm)))
 }
@@ -630,6 +664,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     let map = find_core_class(vm, "Map");
     primitive_static!(vm, map, "new()", map_new);
+    primitive!(vm, map, "addCore_(_,_)", map_add_core);
 
     let fn_class = vm.fn_class.as_ref().unwrap();
     primitive_static!(vm, fn_class, "new(_)", fn_new);
