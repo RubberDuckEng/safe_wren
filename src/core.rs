@@ -408,6 +408,36 @@ fn map_add_core(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     Ok(Value::Map(map))
 }
 
+fn map_clear(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let map = this_as_map(&args)?;
+    map.borrow_mut().data.clear();
+    Ok(Value::Null)
+}
+
+fn map_contains_key(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
+    validate_key(vm, &args[1])?;
+    let map = this_as_map(&args)?;
+    let key = args.pop().unwrap();
+    let result = map.borrow().data.contains_key(&key);
+    Ok(Value::Boolean(result))
+}
+
+fn map_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let map = this_as_map(&args)?;
+    let count = map.borrow().data.len();
+    Ok(Value::Num(count as f64))
+}
+
+fn map_remove(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    validate_key(vm, &args[1])?;
+    let map = this_as_map(&args)?;
+    let maybe_value = map.borrow_mut().data.remove(&args[1]);
+    match maybe_value {
+        None => Ok(Value::Null),
+        Some(value) => Ok(value),
+    }
+}
+
 fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::List(wren_new_list(vm)))
 }
@@ -709,7 +739,16 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     let map = find_core_class(vm, "Map");
     primitive_static!(vm, map, "new()", map_new);
+    // primitive!(vm, map, "[_]", map_subscript);
+    // primitive!(vm, map, "[_]=(_)", map_subscript_setter);
     primitive!(vm, map, "addCore_(_,_)", map_add_core);
+    primitive!(vm, map, "clear()", map_clear);
+    primitive!(vm, map, "containsKey(_)", map_contains_key);
+    primitive!(vm, map, "count", map_count);
+    primitive!(vm, map, "remove(_)", map_remove);
+    // primitive!(vm, map, "iterate(_)", map_iterate);
+    // primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
+    // primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
 
     let fn_class = vm.fn_class.as_ref().unwrap();
     primitive_static!(vm, fn_class, "new(_)", fn_new);

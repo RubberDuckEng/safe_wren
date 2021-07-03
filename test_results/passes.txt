@@ -53,6 +53,10 @@ wren_c/test/core/list/remove_at_index_not_num.wren
 wren_c/test/core/list/remove_at_index_too_large.wren
 wren_c/test/core/list/remove_at_index_too_small.wren
 wren_c/test/core/list/type.wren
+wren_c/test/core/map/contains_key.wren
+wren_c/test/core/map/contains_key_not_value.wren
+wren_c/test/core/map/remove.wren
+wren_c/test/core/map/remove_key_not_value.wren
 wren_c/test/core/map/type.wren
 wren_c/test/core/map_entry/new.wren
 wren_c/test/core/null/no_constructor.wren

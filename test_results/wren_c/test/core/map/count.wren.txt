@@ -1,15 +1,11 @@
 Unexpected output on stderr:
-Map does not implement 'iterate(_)'.
+Map does not implement '[_,_]=(_,_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 36] in count
-Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 2] in <script>
+[./test/module/name/not/yet/captured line 3] in <script>
 Expected return code 0 and got 70. Stderr:
-Map does not implement 'iterate(_)'.
-[./test/module/name/not/yet/captured line 36] in count
-[./test/module/name/not/yet/captured line 2] in <script>
+Map does not implement '[_,_]=(_,_)'.
+[./test/module/name/not/yet/captured line 3] in <script>
 
-Missing expected output "0" on line 2.
 Missing expected output "1" on line 4.
 Missing expected output "2" on line 6.
 Missing expected output "3" on line 8.

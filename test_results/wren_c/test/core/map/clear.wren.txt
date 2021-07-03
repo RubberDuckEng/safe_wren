@@ -1,10 +1,22 @@
 Unexpected output on stderr:
-Map does not implement 'clear()'.
+Map does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 2] in <script>
+[./test/module/name/not/yet/captured line 340] in iterate(_)
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 361] in toString
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 406] in writeObject_(_)
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 385] in print(_)
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 3] in <script>
 Expected return code 0 and got 70. Stderr:
-Map does not implement 'clear()'.
-[./test/module/name/not/yet/captured line 2] in <script>
+Map does not implement 'iterate(_)'.
+[./test/module/name/not/yet/captured line 340] in iterate(_)
+[./test/module/name/not/yet/captured line 361] in toString
+[./test/module/name/not/yet/captured line 406] in writeObject_(_)
+[./test/module/name/not/yet/captured line 385] in print(_)
+[./test/module/name/not/yet/captured line 3] in <script>
 
 Missing expected output "{}" on line 3.
 Missing expected output "0" on line 4.
