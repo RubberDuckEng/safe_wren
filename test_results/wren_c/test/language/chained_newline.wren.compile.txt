@@ -43,7 +43,7 @@ Code:
 22: Method(instance, [[_])
 23: Constant(7: String("Tester"))
 24: Load(Module, Class("Object"))
-25: Class(0 fields)
+25: Class(1 fields)
 26: Store(Module)
 27: Pop
 28: Closure(8, [])

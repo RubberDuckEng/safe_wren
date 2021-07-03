@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-FieldOutOfBounds
+MethodNotFound("[_]" on "StringByteSequence")
 Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
+MethodNotFound("[_]" on "StringByteSequence")
 
 Missing expected output "0" on line 3.
 Missing expected output "18" on line 4.

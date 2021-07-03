@@ -1,4 +1,4 @@
 Expected runtime error "Index must be a number." and got:
-FieldOutOfBounds
+MethodNotFound("codePointAt_(_)" on "String")
 Expected stack trace and got:
 

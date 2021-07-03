@@ -1,4 +1,4 @@
 Expected runtime error "Index out of bounds." and got:
-FieldOutOfBounds
+MethodNotFound("[_]" on "StringByteSequence")
 Expected stack trace and got:
 

@@ -315,6 +315,10 @@ impl SymbolTable {
             Some(name) => name.clone(),
         }
     }
+
+    pub fn count(&self) -> usize {
+        self.names.len()
+    }
 }
 
 pub struct CallFrame {

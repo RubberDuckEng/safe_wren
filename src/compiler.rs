@@ -2657,7 +2657,15 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
         //   }
 
         // FIXME::Clear symbol tables for tracking field and method names.
-        let num_fields = 0; // FIXME
+        let num_fields = scope
+            .ctx
+            .compiler()
+            .enclosing_class
+            .as_ref()
+            .unwrap()
+            .borrow()
+            .fields
+            .count();
         scope.ctx.compiler_mut().code[class_instruction] = Ops::Class(num_fields);
         scope.pop(); // Making explicit what leaving the block is about to do.
     }

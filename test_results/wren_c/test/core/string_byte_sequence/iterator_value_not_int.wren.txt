@@ -1,4 +1,4 @@
 Expected runtime error "Index must be an integer." and got:
-FieldOutOfBounds
+MethodNotFound("byteAt_(_)" on "String")
 Expected stack trace and got:
 

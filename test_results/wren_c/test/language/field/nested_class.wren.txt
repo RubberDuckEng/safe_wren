@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-FieldOutOfBounds
-Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
-
-Missing expected output "outer" on line 6.
-Missing expected output "inner" on line 13.
-Missing expected output "outer" on line 18.

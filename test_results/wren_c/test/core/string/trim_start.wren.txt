@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-FieldOutOfBounds
+MethodNotFound("toList" on "StringCodePointSequence")
 Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
+MethodNotFound("toList" on "StringCodePointSequence")
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

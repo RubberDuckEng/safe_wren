@@ -39,6 +39,7 @@ wren_c/test/core/list/reduce.wren
 wren_c/test/core/list/reduce_single_item.wren
 wren_c/test/core/list/type.wren
 wren_c/test/core/map/type.wren
+wren_c/test/core/map_entry/new.wren
 wren_c/test/core/null/not.wren
 wren_c/test/core/null/type.wren
 wren_c/test/core/number/abs.wren
@@ -84,6 +85,7 @@ wren_c/test/core/sequence/all.wren
 wren_c/test/core/sequence/any.wren
 wren_c/test/core/sequence/count.wren
 wren_c/test/core/sequence/is_empty.wren
+wren_c/test/core/string/bytes.wren
 wren_c/test/core/string/concatenation.wren
 wren_c/test/core/string/equality.wren
 wren_c/test/core/string/multiply.wren
@@ -138,6 +140,7 @@ wren_c/test/language/constructor/cannot_be_setter.wren
 wren_c/test/language/constructor/cannot_be_subscript.wren
 wren_c/test/language/constructor/cannot_be_unary.wren
 wren_c/test/language/constructor/cannot_return_value.wren
+wren_c/test/language/constructor/named.wren
 wren_c/test/language/constructor/no_parameter_list.wren
 wren_c/test/language/continue/in_function_in_loop.wren
 wren_c/test/language/continue/in_method_in_loop.wren
@@ -145,15 +148,21 @@ wren_c/test/language/continue/in_while_loop.wren
 wren_c/test/language/continue/outside_loop.wren
 wren_c/test/language/empty_block.wren
 wren_c/test/language/empty_file.wren
+wren_c/test/language/field/default_to_null.wren
 wren_c/test/language/field/in_fn_in_static_method.wren
 wren_c/test/language/field/in_static_method.wren
 wren_c/test/language/field/in_static_method_in_nested_class.wren
+wren_c/test/language/field/multiple.wren
+wren_c/test/language/field/nested_class.wren
+wren_c/test/language/field/object_reference.wren
 wren_c/test/language/field/outside_class.wren
+wren_c/test/language/field/use_before_set.wren
 wren_c/test/language/for/newline_after_for.wren
 wren_c/test/language/for/newline_before_in.wren
 wren_c/test/language/for/only_evaluate_sequence_once.wren
 wren_c/test/language/for/return_inside.wren
 wren_c/test/language/for/syntax.wren
+wren_c/test/language/for/truth.wren
 wren_c/test/language/foreign/foreign_after_static.wren
 wren_c/test/language/foreign/foreign_method_with_body.wren
 wren_c/test/language/function/empty_body.wren
@@ -229,6 +238,7 @@ wren_c/test/language/return/in_function.wren
 wren_c/test/language/return/in_method.wren
 wren_c/test/language/return/return_null_if_newline.wren
 wren_c/test/language/semicolon.wren
+wren_c/test/language/setter/associativity.wren
 wren_c/test/language/setter/grouping.wren
 wren_c/test/language/setter/infix_operator.wren
 wren_c/test/language/setter/instance.wren
@@ -277,6 +287,7 @@ wren_c/test/language/whitespace.wren
 wren_c/test/limit/long_function.wren
 wren_c/test/limit/long_variable_name.wren
 wren_c/test/limit/many_constants.wren
+wren_c/test/limit/many_fields.wren
 wren_c/test/limit/many_globals.wren
 wren_c/test/limit/reuse_constants.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren

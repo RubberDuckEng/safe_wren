@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-FieldOutOfBounds
-Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
-
-Missing expected output "d" on line 16.
-Missing expected output "d" on line 17.
-Missing expected output "d" on line 18.

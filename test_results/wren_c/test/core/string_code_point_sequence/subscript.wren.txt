@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-FieldOutOfBounds
+MethodNotFound("[_]" on "StringCodePointSequence")
 Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
+MethodNotFound("[_]" on "StringCodePointSequence")
 
 Missing expected output "115" on line 6.
 Missing expected output "248" on line 7.

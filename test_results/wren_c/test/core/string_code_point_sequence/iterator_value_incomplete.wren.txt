@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-FieldOutOfBounds
+MethodNotFound("codePointAt_(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
+MethodNotFound("codePointAt_(_)" on "String")
 
 Missing expected output "-1" on line 2.
 Missing expected output "-1" on line 5.

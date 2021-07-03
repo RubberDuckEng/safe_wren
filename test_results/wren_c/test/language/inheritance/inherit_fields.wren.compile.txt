@@ -16,7 +16,7 @@ Constants:
 Code:
 00: Constant(0: String("Foo"))
 01: Load(Module, Class("Object"))
-02: Class(0 fields)
+02: Class(2 fields)
 03: Store(Module)
 04: Pop
 05: Closure(1, [])
@@ -33,7 +33,7 @@ Code:
 16: Method(instance, fooPrint)
 17: Constant(5: String("Bar"))
 18: Load(Module, Null)
-19: Class(0 fields)
+19: Class(2 fields)
 20: Store(Module)
 21: Pop
 22: Closure(6, [])

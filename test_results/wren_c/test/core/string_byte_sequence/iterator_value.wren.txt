@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-FieldOutOfBounds
+MethodNotFound("byteAt_(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
+MethodNotFound("byteAt_(_)" on "String")
 
 Missing expected output "115" on line 6.
 Missing expected output "195" on line 7.

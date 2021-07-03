@@ -14,7 +14,7 @@ Constants:
 Code:
 00: Constant(0: String("A"))
 01: Load(Module, Class("Object"))
-02: Class(0 fields)
+02: Class(1 fields)
 03: Store(Module)
 04: Pop
 05: Closure(1, [])
@@ -28,7 +28,7 @@ Code:
 13: Method(instance, aField)
 14: Constant(4: String("B"))
 15: Load(Module, Null)
-16: Class(0 fields)
+16: Class(1 fields)
 17: Store(Module)
 18: Pop
 19: Closure(5, [])
@@ -42,7 +42,7 @@ Code:
 27: Method(instance, bField)
 28: Constant(8: String("C"))
 29: Load(Module, Null)
-30: Class(0 fields)
+30: Class(1 fields)
 31: Store(Module)
 32: Pop
 33: Closure(9, [])

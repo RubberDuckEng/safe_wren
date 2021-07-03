@@ -1,17 +1,8 @@
 Unexpected output on stderr:
-FieldOutOfBounds
+MethodNotFound("[_]" on "Test")
 Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
+MethodNotFound("[_]" on "Test")
 
-Missing expected output "test0" on line 30.
-Missing expected output "test1" on line 31.
-Missing expected output "test2" on line 32.
-Missing expected output "test0" on line 35.
-Missing expected output "test1" on line 36.
-Missing expected output "test2" on line 37.
-Missing expected output "test0" on line 40.
-Missing expected output "test1" on line 41.
-Missing expected output "test2" on line 42.
 Missing expected output "testSubscript" on line 44.
 Missing expected output "test0" on line 45.
 Missing expected output "testSubscript" on line 47.

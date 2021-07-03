@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-FieldOutOfBounds
+MethodNotFound("iterate(_)" on "Map")
 Expected return code 0 and got 70. Stderr:
-FieldOutOfBounds
+MethodNotFound("iterate(_)" on "Map")
 
 Missing expected output "{}" on line 2.
 Missing expected output "{1: 2}" on line 5.

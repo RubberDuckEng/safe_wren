@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be an integer." and got:
-FieldOutOfBounds
+MethodNotFound("iterate(_)" on "String")
 Expected stack trace and got:
 

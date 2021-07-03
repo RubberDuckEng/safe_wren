@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be a number." and got:
-FieldOutOfBounds
+MethodNotFound("iterateByte_(_)" on "String")
 Expected stack trace and got:
 

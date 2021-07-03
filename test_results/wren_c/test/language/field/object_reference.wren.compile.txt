@@ -10,7 +10,7 @@ Constants:
 Code:
 00: Constant(0: String("Node"))
 01: Load(Module, Class("Object"))
-02: Class(0 fields)
+02: Class(3 fields)
 03: Store(Module)
 04: Pop
 05: Closure(1, [])
