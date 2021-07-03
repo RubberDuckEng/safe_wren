@@ -1,4 +1,4 @@
 Expected runtime error "Index must be a number." and got:
-MethodNotFound("byteAt_(_)" on "String")
+NumberRequired(String("not num"))
 Expected stack trace and got:
 

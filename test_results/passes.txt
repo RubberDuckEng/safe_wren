@@ -93,6 +93,8 @@ wren_c/test/core/string/multiply.wren
 wren_c/test/core/string/not.wren
 wren_c/test/core/string/to_string.wren
 wren_c/test/core/string/type.wren
+wren_c/test/core/string_byte_sequence/iterator_value.wren
+wren_c/test/core/string_byte_sequence/subscript.wren
 wren_c/test/core/system/print.wren
 wren_c/test/core/system/print_all.wren
 wren_c/test/core/system/print_bad_to_string.wren

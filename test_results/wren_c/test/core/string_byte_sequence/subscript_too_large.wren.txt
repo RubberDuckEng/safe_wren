@@ -1,4 +1,4 @@
 Expected runtime error "Index out of bounds." and got:
-MethodNotFound("byteAt_(_)" on "String")
+RangeOutOfBounds("Index")
 Expected stack trace and got:
 

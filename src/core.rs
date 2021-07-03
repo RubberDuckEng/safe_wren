@@ -309,6 +309,17 @@ fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeErro
     Ok(args[0].clone())
 }
 
+fn string_byte_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let string = args[0].try_into_string()?;
+    Ok(Value::Num(string.len() as f64))
+}
+
+fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+    let string = args[0].try_into_string()?;
+    let index = validate_index(&args[1], string.len(), "Index")?;
+    Ok(Value::Num(string.as_bytes()[index] as f64))
+}
+
 fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     let closure = args[1].try_into_closure()?;
     Ok(Value::Closure(closure))
@@ -644,6 +655,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     primitive!(vm, core.string, "+(_)", string_plus);
     primitive!(vm, core.string, "toString", string_to_string);
+    primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
+    primitive!(vm, core.string, "byteCount_", string_byte_count);
 
     let list = find_core_class(vm, "List");
     // primitive_static!(vm, list, "filled(_,_)", list_filled);
