@@ -68,6 +68,8 @@ impl Hash for Value {
 
 impl PartialEq for Value {
     fn eq(&self, rhs: &Value) -> bool {
+        // wren_c does memcmp here (e.g. wrenValuesEqual)
+        // However the code below seems to pass all the tests.
         match (self, rhs) {
             (Value::Null, Value::Null) => return true,
             (Value::Num(a), Value::Num(b)) => return a == b,
@@ -79,6 +81,7 @@ impl PartialEq for Value {
                 return a.from == b.from && a.to == b.to && a.is_inclusive == b.is_inclusive;
             }
             (Value::String(a_string), Value::String(b_string)) => return a_string.eq(&b_string),
+            (Value::Instance(a), Value::Instance(b)) => return a.as_ptr() == b.as_ptr(),
             _ => return false,
         }
     }

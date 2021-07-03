@@ -204,6 +204,11 @@ fn object_eqeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(args[0].eq(&args[1])))
 }
 
+// Note this is a static method, comparing two passed args.
+fn object_same(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    Ok(Value::Boolean(args[1].eq(&args[2])))
+}
+
 fn object_bangeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(args[0].ne(&args[1])))
 }
@@ -629,7 +634,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     class.borrow_mut().class = Some(class.clone());
     wren_bind_superclass(&mut object_metaclass.borrow_mut(), &class);
 
-    // primitive_static!(vm, object, "same(_,_)", object_same);
+    primitive_static!(vm, object, "same(_,_)", object_same);
 
     vm.class_class = Some(class);
 

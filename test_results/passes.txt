@@ -110,6 +110,7 @@ wren_c/test/core/object/is.wren
 wren_c/test/core/object/no_constructor.wren
 wren_c/test/core/object/nonclass_on_right.wren
 wren_c/test/core/object/not.wren
+wren_c/test/core/object/same.wren
 wren_c/test/core/object/type.wren
 wren_c/test/core/range/contains.wren
 wren_c/test/core/range/equality.wren
