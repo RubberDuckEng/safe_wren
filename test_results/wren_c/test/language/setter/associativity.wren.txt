@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-ClassRequired(String("a"))
+FieldOutOfBounds
 Expected return code 0 and got 70. Stderr:
-ClassRequired(String("a"))
+FieldOutOfBounds
 
 Missing expected output "d" on line 16.
 Missing expected output "d" on line 17.

@@ -3,6 +3,7 @@ Most common errors seen in test_results/**:
 occurances : error text
 81 : MethodNotFound("new(_)" on "Fiber metaclass")
 78 : Error Grammar("Undeclared variable \'import\'")
+36 : FieldOutOfBounds
 28 : MethodNotFound("[_]" on "List")
 28 : MethodNotFound("codePoints" on "String")
 22 : MethodNotFound("iterate(_)" on "String")
@@ -10,7 +11,6 @@ occurances : error text
 20 : MethodNotFound("bytes" on "String")
 20 : NumberRequired(Boolean(false))
 19 : Error Grammar("Could not resolve \'this\'")
-18 : FieldOutOfBounds
 18 : MethodNotFound("[_]" on "String")
 16 : MethodNotFound("toString" on "List")
 14 : Error Grammar("Undeclared variable \'a\'")
@@ -18,7 +18,6 @@ occurances : error text
 14 : MethodNotFound("iterate(_)" on "Map")
 12 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: Hash,  }")
 11 : MethodNotFound("current" on "Fiber metaclass")
-10 : ClassRequired(Map())
 9 : Error Grammar("Undeclared variable \'B\'")
 9 : MethodNotFound("[_]" on "Map")
 9 : MethodNotFound("super" on "Derived")
@@ -46,7 +45,6 @@ occurances : error text
 4 : MethodNotFound("keyIteratorValue_(_)" on "Map")
 4 : MethodNotFound("split(_)" on "String")
 4 : thread 'main' has overflowed its stack
-3 : ClassRequired(Boolean(false))
 3 : FiberAbort(String("Characters must be a string."))
 3 : MethodNotFound("containsKey(_)" on "Map")
 3 : MethodNotFound("endsWith(_)" on "String")
@@ -56,9 +54,6 @@ occurances : error text
 3 : MethodNotFound("super()" on "Bar")
 3 : MethodNotFound("take(_)" on "List")
 3 : NumberRequired(String("2"))
-2 : ClassRequired(Null)
-2 : ClassRequired(String("a"))
-2 : ClassRequired(String("value"))
 2 : Error Grammar("Expect method definition.")
 2 : Error Grammar("Expected right paren, found: LeftCurlyBrace")
 2 : Error Grammar("Expected right paren, found: Num(1.0)")
@@ -132,6 +127,7 @@ occurances : error text
 2 : RangeOutOfBounds("Index")
 2 : RangeOutOfBounds("Iterator")
 2 : StringRequired(Num(2))
+1 : ClassRequired(Boolean(false))
 1 : ClosureRequired(Num(3))
 1 : ExpectingInteger("Index")
 1 : FiberAbort(String("Abort!"))

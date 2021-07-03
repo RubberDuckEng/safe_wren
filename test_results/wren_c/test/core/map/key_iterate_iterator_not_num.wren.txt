@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be a number." and got:
-ClassRequired(Map())
+FieldOutOfBounds
 Expected stack trace and got:
 

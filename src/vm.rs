@@ -845,6 +845,8 @@ impl WrenVM {
                             // wren_rust (currently) keeps a separate stack
                             // per CallFrame, so underflows are caught on a
                             // per-function call basis.
+                            // println!("About to call:");
+                            // debug_bytecode(self, &closure.borrow());
                             return Ok(RunNext::FunctionCall(CallFrame {
                                 pc: 0,
                                 closure: closure.clone(),
@@ -862,10 +864,10 @@ impl WrenVM {
                     }
                 }
                 Ops::Construct => {
-                    let this = frame.pop()?;
+                    let this = frame.stack[0].clone();
                     let class = this.try_into_class()?;
                     let instance = wren_new_instance(self, class);
-                    frame.push(instance);
+                    frame.stack[0] = instance;
                 }
                 Ops::Closure(constant_index, _upvalues) => {
                     let fn_value = fn_obj.borrow().constants[*constant_index].clone();

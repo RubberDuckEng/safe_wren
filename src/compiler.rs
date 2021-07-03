@@ -2517,51 +2517,54 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
     let mut signature = signature_from_token(ctx, SignatureType::Getter)?;
     //   compiler->enclosingClass->signature = &signature;
 
-    let mut scope = PushCompiler::push_method(ctx);
+    let method_symbol;
+    {
+        let mut scope = PushCompiler::push_method(ctx);
 
-    // Compile the method signature.
-    signature_fn(scope.ctx, &mut signature)?;
+        // Compile the method signature.
+        signature_fn(scope.ctx, &mut signature)?;
 
-    scope.ctx.compiler_mut().is_initializer = signature.call_type == SignatureType::Initializer;
+        scope.ctx.compiler_mut().is_initializer = signature.call_type == SignatureType::Initializer;
 
-    if is_static && signature.call_type == SignatureType::Initializer {
-        scope.ctx.grammar_error("A constructor cannot be static.");
+        if is_static && signature.call_type == SignatureType::Initializer {
+            scope.ctx.grammar_error("A constructor cannot be static.");
+        }
+
+        // Include the full signature in debug messages in stack traces.
+        //   signatureToString(&signature, fullSignature, &length);
+
+        // Copy any attributes the compiler collected into the enclosing class
+        //   copyMethodAttributes(compiler, isForeign, isStatic, fullSignature, length);
+
+        // Check for duplicate methods. Doesn't matter that it's already been
+        // defined, error will discard bytecode anyway.
+        // Check if the method table already contains this symbol
+        method_symbol = declare_method(scope.ctx, &signature)?;
+
+        // FIXME: handle foreign.
+
+        consume_expecting_msg(
+            scope.ctx,
+            Token::LeftCurlyBrace,
+            "Expect '{' to begin method body.",
+        )?;
+        finish_body(scope.ctx)?;
+        let compiler = scope.pop();
+        // FIXME: Where does the closure go?
+        end_compiler(scope.ctx, compiler, signature.arity);
     }
-
-    // Include the full signature in debug messages in stack traces.
-    //   signatureToString(&signature, fullSignature, &length);
-
-    // Copy any attributes the compiler collected into the enclosing class
-    //   copyMethodAttributes(compiler, isForeign, isStatic, fullSignature, length);
-
-    // Check for duplicate methods. Doesn't matter that it's already been
-    // defined, error will discard bytecode anyway.
-    // Check if the method table already contains this symbol
-    let method_symbol = declare_method(scope.ctx, &signature)?;
-
-    // FIXME: handle foreign.
-
-    consume_expecting_msg(
-        scope.ctx,
-        Token::LeftCurlyBrace,
-        "Expect '{' to begin method body.",
-    )?;
-    finish_body(scope.ctx)?;
-    let compiler = scope.pop();
-    // FIXME: Where does the closure go?
-    end_compiler(scope.ctx, compiler, signature.arity);
 
     // Define the method. For a constructor, this defines the instance
     // initializer method.
-    define_method(scope.ctx, class_variable.clone(), is_static, method_symbol);
+    define_method(ctx, class_variable.clone(), is_static, method_symbol);
 
     if signature.call_type == SignatureType::Initializer {
         // Also define a matching constructor method on the metaclass.
         signature.call_type = SignatureType::Method;
-        let constructor_symbol = signature_symbol(scope.ctx, &signature);
+        let constructor_symbol = signature_symbol(ctx, &signature);
 
-        create_constructor(scope.ctx, signature, method_symbol)?;
-        define_method(scope.ctx, class_variable.clone(), true, constructor_symbol);
+        create_constructor(ctx, signature, method_symbol)?;
+        define_method(ctx, class_variable.clone(), true, constructor_symbol);
     }
 
     Ok(true)
