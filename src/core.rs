@@ -610,16 +610,16 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     primitive!(vm, object, "==(_)", object_eqeq);
     primitive!(vm, object, "!=(_)", object_bangeq);
     primitive!(vm, object, "is(_)", object_is);
-    // PRIMITIVE(vm->objectClass, "toString", object_toString);
+    // primitive!(vm, object "toString", object_to_string);
     primitive!(vm, object, "type", object_type);
 
     // Now we can define Class, which is a subclass of Object.
     let class = define_class(&mut vm.module, "Class");
     wren_bind_superclass(&mut class.borrow_mut(), &object);
     primitive!(vm, class, "name", class_name);
-    // PRIMITIVE(vm->classClass, "supertype", class_supertype);
-    // PRIMITIVE(vm->classClass, "toString", class_toString);
-    // PRIMITIVE(vm->classClass, "attributes", class_attributes);
+    // primitive!(vm, class, "supertype", class_supertype);
+    // primitive!(vm, class, "toString", class_to_string);
+    // primitive!(vm, class, "attributes", class_attributes);
 
     // Finally, we can define Object's metaclass which is a subclass of Class.
     let object_metaclass = define_class(&mut vm.module, "Object metaclass");
@@ -628,7 +628,9 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     object_metaclass.borrow_mut().class = Some(class.clone());
     class.borrow_mut().class = Some(class.clone());
     wren_bind_superclass(&mut object_metaclass.borrow_mut(), &class);
-    // PRIMITIVE(objectMetaclass, "same(_,_)", object_same);
+
+    // primitive_static!(vm, object, "same(_,_)", object_same);
+
     vm.class_class = Some(class);
 
     // Hack.  AFAICT, functions/closures inside wren_core.wren are compiled
@@ -658,9 +660,45 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.bool_class, "toString", bool_to_string);
 
     let fiber = find_core_class(vm, "Fiber");
+    // primitive_static!(vm, fiber, "new(_)", fiber_new);
     primitive_static!(vm, fiber, "abort(_)", fiber_abort);
+    // primitive_static!(vm, fiber, "current", fiber_current);
+    // primitive_static!(vm, fiber, "suspend()", fiber_suspend);
+    // primitive_static!(vm, fiber, "yield()", fiber_yield);
+    // primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
+    // primitive!(vm, fiber, "call()", fiber_call);
+    // primitive!(vm, fiber, "call(_)", fiber_call1);
+    // primitive!(vm, fiber, "error", fiber_error);
+    // primitive!(vm, fiber, "isDone", fiber_is_done);
+    // primitive!(vm, fiber, "transfer()", fiber_transfer);
+    // primitive!(vm, fiber, "transfer(_)", fiber_transfer1);
+    // primitive!(vm, fiber, "transferError(_)", fiber_transfer_error);
+    // primitive!(vm, fiber, "try()", fiber_try);
+    // primitive!(vm, fiber, "try(_)", fiber_try1);
 
-    // primitive!(vm, core.num, "fromString(_)", num_from_string);
+    let fn_class = vm.fn_class.as_ref().unwrap();
+    primitive_static!(vm, fn_class, "new(_)", fn_new);
+    primitive!(vm, fn_class, "arity", fn_arity);
+
+    for arity in 0..16 {
+        let name = if arity == 0 {
+            format!("call()")
+        } else {
+            // arity=1 -> "call(_)", arity=2 -> "call(_,_)", etc.
+            format!("call({}{})", "_,".repeat(arity - 1), "_")
+        };
+        let symbol = vm.methods.ensure_symbol(&name);
+        fn_class
+            .borrow_mut()
+            .set_method(symbol, Method::FunctionCall);
+    }
+
+    primitive!(vm, fn_class, "toString", fn_to_string);
+
+    primitive!(vm, core.null, "!", null_not);
+    primitive!(vm, core.null, "toString", null_to_string);
+
+    // primitive_static!(vm, core.num, "fromString(_)", num_from_string);
     primitive_static!(vm, core.num, "infinity", num_infinity);
     primitive_static!(vm, core.num, "nan", num_nan);
     primitive_static!(vm, core.num, "pi", num_pi);
@@ -715,27 +753,44 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.num, "toString", num_to_string);
     primitive!(vm, core.num, "truncate", num_truncate);
 
+    // These are defined just so that 0 and -0 are equal, which is specified by
+    // IEEE 754 even though they have different bit representations.
+    //   PRIMITIVE(vm->numClass, "==(_)", num_eqeq);
+    //   PRIMITIVE(vm->numClass, "!=(_)", num_bangeq);
+
+    // primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
+    // primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);
     primitive!(vm, core.string, "+(_)", string_plus);
-    primitive!(vm, core.string, "toString", string_to_string);
+    // primitive!(vm, core.string, "[_]", string_subscript);
     primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
     primitive!(vm, core.string, "byteCount_", string_byte_count);
+    // primitive!(vm, core.string, "codePointAt_(_)", string_code_point_at);
+    // primitive!(vm, core.string, "contains(_)", string_contains);
+    // primitive!(vm, core.string, "endsWith(_)", string_ends_with);
+    // primitive!(vm, core.string, "indexOf(_)", string_index_of1);
+    // primitive!(vm, core.string, "indexOf(_,_)", string_index_of2);
+    // primitive!(vm, core.string, "iterate(_)", string_iterate);
+    // primitive!(vm, core.string, "iterateByte_(_)", string_iterate_byte);
+    // primitive!(vm, core.string, "iteratorValue(_)", string_iterator_value);
+    // primitive!(vm, core.string, "startsWith(_)", string_starts_with);
+    primitive!(vm, core.string, "toString", string_to_string);
 
     let list = find_core_class(vm, "List");
     // primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
+    // primitive!(vm, list, "[_]", list_subscript);
+    // primitive!(vm, list, "[_]=(_)", list_subscript_setter);
     primitive!(vm, list, "add(_)", list_add);
     primitive!(vm, list, "addCore_(_)", list_add_core);
+    // primitive!(vm, list, "clear()", list_clear);
+    primitive!(vm, list, "count", list_count);
+    // primitive!(vm, list, "insert(_,_)", list_insert);
     primitive!(vm, list, "iterate(_)", list_iterate);
     primitive!(vm, list, "iteratorValue(_)", list_iterator_value);
     primitive!(vm, list, "removeAt(_)", list_remove_at);
-    primitive!(vm, list, "count", list_count);
-
-    primitive!(vm, core.range, "iterate(_)", range_iterate);
-    primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
-    primitive!(vm, core.range, "toString", range_to_string);
-
-    primitive!(vm, core.null, "!", null_not);
-    primitive!(vm, core.null, "toString", null_to_string);
+    // primitive!(vm, list, "remove(_)", list_remove_value);
+    // primitive!(vm, list, "indexOf(_)", list_index_of);
+    // primitive!(vm, list, "swap(_,_)", list_swap);
 
     let map = find_core_class(vm, "Map");
     primitive_static!(vm, map, "new()", map_new);
@@ -750,25 +805,18 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
     // primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
 
-    let fn_class = vm.fn_class.as_ref().unwrap();
-    primitive_static!(vm, fn_class, "new(_)", fn_new);
-    primitive!(vm, fn_class, "arity", fn_arity);
-    primitive!(vm, fn_class, "toString", fn_to_string);
-
-    for arity in 0..16 {
-        let name = if arity == 0 {
-            format!("call()")
-        } else {
-            // arity=1 -> "call(_)", arity=2 -> "call(_,_)", etc.
-            format!("call({}{})", "_,".repeat(arity - 1), "_")
-        };
-        let symbol = vm.methods.ensure_symbol(&name);
-        fn_class
-            .borrow_mut()
-            .set_method(symbol, Method::FunctionCall);
-    }
+    // primitive!(vm, core.range, "from", range_from);
+    // primitive!(vm, core.range, "to", range_to);
+    // primitive!(vm, core.range, "min", range_min);
+    // primitive!(vm, core.range, "max", range_max);
+    // primitive!(vm, core.range, "isInclusive", range_isInclusive);
+    primitive!(vm, core.range, "iterate(_)", range_iterate);
+    primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
+    primitive!(vm, core.range, "toString", range_to_string);
 
     let system = find_core_class(vm, "System");
+    // primitive_static!(vm, system, "clock", system_clock);
+    // primitive_static!(vm, system, "gc()", system_gc);
     primitive_static!(vm, system, "writeString_(_)", system_write_string);
 
     vm.core = Some(core);
