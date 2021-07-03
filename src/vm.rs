@@ -1168,6 +1168,16 @@ pub(crate) struct ObjRange {
     pub(crate) is_inclusive: bool,
 }
 
+impl ObjRange {
+    pub(crate) fn min(&self) -> f64 {
+        self.from.min(self.to)
+    }
+
+    pub(crate) fn max(&self) -> f64 {
+        self.from.max(self.to)
+    }
+}
+
 pub(crate) struct ObjMap {
     class_obj: Handle<ObjClass>,
     pub(crate) data: HashMap<Value, Value>,

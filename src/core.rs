@@ -235,6 +235,33 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+macro_rules! range_getter {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let range_cell = this_as_range(&args)?;
+            let range = range_cell.borrow();
+            Ok(Value::$return_type(range.$method))
+        }
+    };
+}
+
+// FIXME: Should be possible to share with range_getter?
+macro_rules! range_getter_fn {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let range_cell = this_as_range(&args)?;
+            let range = range_cell.borrow();
+            Ok(Value::$return_type(range.$method()))
+        }
+    };
+}
+
+range_getter!(range_from, from, Num);
+range_getter!(range_to, to, Num);
+range_getter!(range_is_inclusive, is_inclusive, Boolean);
+range_getter_fn!(range_min, min, Num);
+range_getter_fn!(range_max, max, Num);
+
 fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let range_cell = this_as_range(&args)?;
     let range = range_cell.borrow();
@@ -914,11 +941,11 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
     // primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
 
-    // primitive!(vm, core.range, "from", range_from);
-    // primitive!(vm, core.range, "to", range_to);
-    // primitive!(vm, core.range, "min", range_min);
-    // primitive!(vm, core.range, "max", range_max);
-    // primitive!(vm, core.range, "isInclusive", range_isInclusive);
+    primitive!(vm, core.range, "from", range_from);
+    primitive!(vm, core.range, "to", range_to);
+    primitive!(vm, core.range, "min", range_min);
+    primitive!(vm, core.range, "max", range_max);
+    primitive!(vm, core.range, "isInclusive", range_is_inclusive);
     primitive!(vm, core.range, "iterate(_)", range_iterate);
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
     primitive!(vm, core.range, "toString", range_to_string);
