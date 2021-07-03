@@ -355,6 +355,50 @@ fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Num(string.as_bytes()[index] as f64))
 }
 
+fn string_contains(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_string(&args)?;
+    let search = validate_string(&args[1], "Argument")?;
+    Ok(Value::Boolean(this.contains(&search)))
+}
+fn string_ends_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_string(&args)?;
+    let search = validate_string(&args[1], "Argument")?;
+    Ok(Value::Boolean(this.ends_with(&search)))
+}
+
+fn string_index_of1(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_string(&args)?;
+    let search = validate_string(&args[1], "Argument")?;
+    let maybe_index = this.find(&search);
+    match maybe_index {
+        None => Ok(Value::Num(-1.0)),
+        Some(index) => Ok(Value::Num(index as f64)),
+    }
+}
+
+fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_string(&args)?;
+    let search = validate_string(&args[1], "Argument")?;
+    let start = validate_index(&args[2], this.len(), "Start")?;
+    // Rust will panic if you try to slice in the middle of a code point
+    // since it's not possible to successfully "find" a partial code point, this
+    // should be correct (and prevent the panic).
+    if !this.is_char_boundary(start) {
+        return Ok(Value::Num(-1.0));
+    }
+    let maybe_index = this[start..].find(&search);
+    match maybe_index {
+        None => Ok(Value::Num(-1.0)),
+        Some(index) => Ok(Value::Num((start + index) as f64)),
+    }
+}
+
+fn string_starts_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_string(&args)?;
+    let search = validate_string(&args[1], "Argument")?;
+    Ok(Value::Boolean(this.starts_with(&search)))
+}
+
 fn validate_fn(arg: &Value, arg_name: &str) -> Result<Handle<ObjClosure>> {
     arg.try_into_closure(format!("{} must be a function", arg_name))
 }
@@ -770,14 +814,14 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
     primitive!(vm, core.string, "byteCount_", string_byte_count);
     // primitive!(vm, core.string, "codePointAt_(_)", string_code_point_at);
-    // primitive!(vm, core.string, "contains(_)", string_contains);
-    // primitive!(vm, core.string, "endsWith(_)", string_ends_with);
-    // primitive!(vm, core.string, "indexOf(_)", string_index_of1);
-    // primitive!(vm, core.string, "indexOf(_,_)", string_index_of2);
+    primitive!(vm, core.string, "contains(_)", string_contains);
+    primitive!(vm, core.string, "endsWith(_)", string_ends_with);
+    primitive!(vm, core.string, "indexOf(_)", string_index_of1);
+    primitive!(vm, core.string, "indexOf(_,_)", string_index_of2);
     // primitive!(vm, core.string, "iterate(_)", string_iterate);
     // primitive!(vm, core.string, "iterateByte_(_)", string_iterate_byte);
     // primitive!(vm, core.string, "iteratorValue(_)", string_iterator_value);
-    // primitive!(vm, core.string, "startsWith(_)", string_starts_with);
+    primitive!(vm, core.string, "startsWith(_)", string_starts_with);
     primitive!(vm, core.string, "toString", string_to_string);
 
     let list = find_core_class(vm, "List");
