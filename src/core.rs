@@ -492,8 +492,17 @@ fn map_remove(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+fn list_filled(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let size = validate_int(&args[1], "Size")?;
+    if size < 0.0 {
+        return Err(VMError::from_str("Size cannot be negative."));
+    }
+    let contents = vec![args[2].clone(); size as usize];
+    Ok(Value::List(wren_new_list(vm, contents)))
+}
+
 fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
-    Ok(Value::List(wren_new_list(vm)))
+    Ok(Value::List(wren_new_list(vm, Vec::new())))
 }
 
 fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
@@ -876,7 +885,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.string, "toString", string_to_string);
 
     let list = find_core_class(vm, "List");
-    // primitive_static!(vm, list, "filled(_,_)", list_filled);
+    primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
     // primitive!(vm, list, "[_]", list_subscript);
     // primitive!(vm, list, "[_]=(_)", list_subscript_setter);

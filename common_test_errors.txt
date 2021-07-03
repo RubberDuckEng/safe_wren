@@ -7,10 +7,10 @@ occurances : error text
 71 : Expected runtime error on line  but was on line .
 28 : Expected return code 65 and got 0. Stderr:
 28 : List does not implement '[_]'.
+26 : in print(_)
+26 : in writeObject_(_)
+25 : List does not implement 'toString'.
 25 : String does not implement 'iterate(_)'.
-24 : in print(_)
-24 : in writeObject_(_)
-23 : List does not implement 'toString'.
 22 : Map does not implement 'iterate(_)'.
 21 : Error Grammar("Expect \'{\' to begin method body.")
 19 : Error Grammar("Could not resolve \'this\'")
@@ -49,7 +49,6 @@ occurances : error text
 6 : in trim_(_,_,_)
 5 : Error Lexer(UnterminatedString)
 5 : Expected output "inner 1" on line  and got "inner %(j)".
-5 : List metaclass does not implement 'filled(_,_)'.
 4 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: StaticField(\"__a\"), line:  }")
 4 : Error Grammar("Undeclared variable \'F\'")
 4 : Error Grammar("Undeclared variable \'Global\'")
@@ -331,9 +330,6 @@ occurances : error text
 1 : Expected runtime error "Seed must be a number or a sequence of numbers." and got:
 1 : Expected runtime error "Sequence cannot be empty." and got:
 1 : Expected runtime error "Sequence elements must all be numbers." and got:
-1 : Expected runtime error "Size cannot be negative." and got:
-1 : Expected runtime error "Size must be a number." and got:
-1 : Expected runtime error "Size must be an integer." and got:
 1 : Expected runtime error "Source code must be a string." and got:
 1 : Expected runtime error "Subscript must be a number." and got:
 1 : Expected runtime error "To must be a string." and got:

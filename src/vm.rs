@@ -383,10 +383,10 @@ impl core::fmt::Debug for WrenVM {
     }
 }
 
-pub(crate) fn wren_new_list(vm: &WrenVM) -> Handle<ObjList> {
+pub(crate) fn wren_new_list(vm: &WrenVM, contents: Vec<Value>) -> Handle<ObjList> {
     new_handle(ObjList {
         class_obj: vm.core.as_ref().unwrap().list.clone(),
-        elements: Vec::new(),
+        elements: contents,
     })
 }
 
