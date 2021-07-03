@@ -755,12 +755,12 @@ pub(crate) struct FnDebug {
     // An array of line numbers. There is one element in this array for each
     // bytecode in the function's bytecode array. The value of that element is
     // the line in the source code that generated that instruction.
-    // source_lines: Vec<usize>,
+    source_lines: Vec<usize>,
 }
 
 impl FnDebug {
-    pub(crate) fn line_for(&self, _pc: usize) -> usize {
-        0
+    pub(crate) fn line_for_pc(&self, pc: usize) -> usize {
+        self.source_lines[pc]
     }
 }
 
@@ -841,68 +841,18 @@ impl Compiler {
         index
     }
 
-    fn emit_constant(&mut self, value: Value) {
-        let index = self.ensure_constant(value);
-        self.code.push(Ops::Constant(index));
-    }
-
-    fn emit_boolean(&mut self, value: bool) {
-        self.code.push(Ops::Boolean(value));
-    }
-
-    fn emit_call(&mut self, signature: Signature, symbol: usize) {
-        self.code.push(Ops::Call(signature, symbol));
-    }
-
-    fn emit(&mut self, op: Ops) -> usize {
-        self.code.push(op);
-        self.code.len() - 1
-    }
-
-    fn emit_loop(&mut self, offsets: &LoopOffsets) {
-        // Emit a loop instruction which jumps to start of current loop.
-        // Measures from *after* start and doesn't include this Loop, so +2.
-        let backwards_by = self.offset_to_current_pc_from_after(offsets.start) + 2;
-
-        self.code.push(Ops::Loop(backwards_by))
-    }
-
-    fn emit_store(&mut self, variable: Variable) {
-        self.code.push(Ops::Store(variable))
-    }
-
-    fn emit_load(&mut self, variable: Variable) {
-        self.code.push(Ops::Load(variable))
-    }
-
-    fn push_scope(&mut self) {
-        self.scope_depth = match self.scope_depth {
-            ScopeDepth::Module => ScopeDepth::Local(0),
-            ScopeDepth::Local(i) => ScopeDepth::Local(i + 1),
-        }
-    }
-    fn pop_scope(&mut self) {
-        // let popped =
-        discard_locals(self, self.scope_depth);
-        // self.num_slots -= popped;
-
-        self.scope_depth = match self.scope_depth {
-            ScopeDepth::Module => panic!("Can't pop from module scope!"),
-            ScopeDepth::Local(i) => {
-                if i == 0 {
-                    ScopeDepth::Module
-                } else {
-                    ScopeDepth::Local(i - 1)
-                }
-            }
-        }
-    }
-
     fn nested_local_scope_count(&self) -> usize {
         match self.scope_depth {
             ScopeDepth::Module => panic!("No local scopes."),
             ScopeDepth::Local(i) => i,
         }
+    }
+
+    fn emit_op_for_line(&mut self, op: Ops, line: usize) -> usize {
+        self.code.push(op);
+        self.fn_debug.source_lines.push(line);
+        assert_eq!(self.code.len(), self.fn_debug.source_lines.len());
+        self.code.len() - 1
     }
 
     // Adds an upvalue to [compiler]'s function with the given properties. Does not
@@ -923,6 +873,50 @@ impl Compiler {
     //     });
     //     self.upvalues.len() - 1
     // }
+}
+
+fn emit_constant(ctx: &mut ParseContext, value: Value) {
+    let index = ctx.compiler_mut().ensure_constant(value);
+    emit(ctx, Ops::Constant(index));
+}
+
+fn emit(ctx: &mut ParseContext, op: Ops) -> usize {
+    let line = ctx.parser.previous.line;
+    ctx.compiler_mut().emit_op_for_line(op, line)
+}
+
+fn emit_loop(ctx: &mut ParseContext, offsets: &LoopOffsets) {
+    // Emit a loop instruction which jumps to start of current loop.
+    // Measures from *after* start and doesn't include this Loop, so +2.
+    let backwards_by = ctx
+        .compiler()
+        .offset_to_current_pc_from_after(offsets.start)
+        + 2;
+
+    emit(ctx, Ops::Loop(backwards_by));
+}
+
+fn push_scope(ctx: &mut ParseContext) {
+    ctx.compiler_mut().scope_depth = match ctx.compiler().scope_depth {
+        ScopeDepth::Module => ScopeDepth::Local(0),
+        ScopeDepth::Local(i) => ScopeDepth::Local(i + 1),
+    }
+}
+fn pop_scope(ctx: &mut ParseContext) {
+    // let popped =
+    discard_locals(ctx, ctx.compiler().scope_depth);
+    // self.num_slots -= popped;
+
+    ctx.compiler_mut().scope_depth = match ctx.compiler_mut().scope_depth {
+        ScopeDepth::Module => panic!("Can't pop from module scope!"),
+        ScopeDepth::Local(i) => {
+            if i == 0 {
+                ScopeDepth::Module
+            } else {
+                ScopeDepth::Local(i - 1)
+            }
+        }
+    }
 }
 
 impl fmt::Debug for Compiler {
@@ -1020,7 +1014,7 @@ fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
         Token::String(s) => Value::from_str(s),
         _ => panic!("invalid literal"),
     };
-    ctx.compiler_mut().emit_constant(value);
+    emit_constant(ctx, value);
     Ok(())
 }
 
@@ -1029,7 +1023,7 @@ fn conditional(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenErro
     ignore_newlines(ctx)?;
 
     // Jump to the else branch if the condition is false.
-    let if_jump = ctx.compiler_mut().emit(Ops::JumpIfFalsePlaceholder);
+    let if_jump = emit(ctx, Ops::JumpIfFalsePlaceholder);
 
     // Compile the then branch.
     parse_precendence(ctx, Precedence::Conditional)?;
@@ -1038,7 +1032,7 @@ fn conditional(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenErro
     ignore_newlines(ctx)?;
 
     // Jump over the else branch when the if branch is taken.
-    let else_jump = ctx.compiler_mut().emit(Ops::JumpPlaceholder);
+    let else_jump = emit(ctx, Ops::JumpPlaceholder);
 
     // Compile the else branch.
     ctx.compiler_mut().patch_jump(if_jump);
@@ -1156,7 +1150,7 @@ fn mixed_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<
 // Compiles a method call with [signature] using [instruction].
 fn call_signature(ctx: &mut ParseContext, signature: Signature) {
     let symbol = signature_symbol(ctx, &signature);
-    ctx.compiler_mut().emit_call(signature, symbol);
+    emit(ctx, Ops::Call(signature, symbol));
     // FIXME: Handle superclass calls.
 }
 
@@ -1168,7 +1162,7 @@ fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
         bare_name: full_name.into(), // FIXME: Wrong.
         arity: arity,
     };
-    ctx.compiler_mut().emit_call(signature, symbol);
+    emit(ctx, Ops::Call(signature, symbol));
 }
 
 // A list literal.
@@ -1326,7 +1320,9 @@ fn end_compiler(
     let mut compiler = ending;
     // Mark the end of the bytecode. Since it may contain multiple early returns,
     // we can't rely on CODE_RETURN to tell us we're at the end.
-    compiler.emit(Ops::End);
+    // NOTE: emit() would use wrong compiler, emit manually:
+    let line = ctx.parser.previous.line;
+    compiler.emit_op_for_line(Ops::End, line);
 
     compiler.fn_debug.name = name;
 
@@ -1345,7 +1341,7 @@ fn end_compiler(
         let constant = ctx
             .compiler_mut()
             .ensure_constant(Value::Fn(fn_obj.clone()));
-        ctx.compiler_mut().emit(Ops::Closure(constant, upvalues));
+        emit(ctx, Ops::Closure(constant, upvalues));
     }
 
     fn_obj
@@ -1361,20 +1357,23 @@ fn finish_body(ctx: &mut ParseContext) -> Result<(), WrenError> {
     if ctx.compiler().is_initializer {
         // If the initializer body evaluates to a value, discard it.
         if is_expression_body {
-            ctx.compiler_mut().emit(Ops::Pop);
+            emit(ctx, Ops::Pop);
         }
 
         // The receiver is always stored in the first local slot.
-        ctx.compiler_mut().emit_load(Variable {
-            scope: Scope::Local,
-            index: 0,
-        });
+        emit(
+            ctx,
+            Ops::Load(Variable {
+                scope: Scope::Local,
+                index: 0,
+            }),
+        );
     } else if !is_expression_body {
         // Implicitly return null in statement bodies.
-        ctx.compiler_mut().emit(Ops::Null);
+        emit(ctx, Ops::Null);
     }
 
-    ctx.compiler_mut().emit(Ops::Return);
+    emit(ctx, Ops::Return);
     Ok(())
 }
 
@@ -1510,7 +1509,7 @@ fn or_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
 
     // Skip the right argument if the left is true.
-    let jump = ctx.compiler_mut().emit(Ops::OrPlaceholder);
+    let jump = emit(ctx, Ops::OrPlaceholder);
     parse_precendence(ctx, Precedence::LogicalOr)?;
     ctx.compiler_mut().patch_jump(jump);
     Ok(())
@@ -1520,7 +1519,7 @@ fn and_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
 
     // Skip the right argument if the left is true.
-    let jump = ctx.compiler_mut().emit(Ops::AndPlaceholder);
+    let jump = emit(ctx, Ops::AndPlaceholder);
     parse_precendence(ctx, Precedence::LogicalAnd)?;
     ctx.compiler_mut().patch_jump(jump);
     Ok(())
@@ -1630,9 +1629,9 @@ fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     // FIXME: Could invent a LOAD_FIELD_THIS as an optimization.
     load_this(ctx)?;
     if is_assignment {
-        ctx.compiler_mut().emit(Ops::StoreField(symbol));
+        emit(ctx, Ops::StoreField(symbol));
     } else {
-        ctx.compiler_mut().emit(Ops::LoadField(symbol));
+        emit(ctx, Ops::LoadField(symbol));
     }
     allow_line_before_dot(ctx)?;
     Ok(())
@@ -1679,9 +1678,9 @@ fn bare_name(
     if can_assign && match_current(ctx, Token::Equals)? {
         // Compile the right-hand side.
         expression(ctx)?;
-        ctx.compiler_mut().emit_store(variable.clone());
+        emit(ctx, Ops::Store(variable));
     } else {
-        ctx.compiler_mut().emit_load(variable);
+        emit(ctx, Ops::Load(variable));
 
         allow_line_before_dot(ctx)?;
     }
@@ -1727,7 +1726,7 @@ fn load_this(ctx: &mut ParseContext) -> Result<(), WrenError> {
     match var {
         None => Err(ctx.grammar_error("Could not resolve 'this'".into()))?,
         Some(var) => {
-            ctx.compiler_mut().emit_load(var);
+            emit(ctx, Ops::Load(var));
             Ok(())
         }
     }
@@ -1834,6 +1833,26 @@ fn loop_body(ctx: &mut ParseContext) -> Result<(), WrenError> {
     statement(ctx)
 }
 
+fn end_loop(ctx: &mut ParseContext) {
+    let offsets = ctx
+        .compiler_mut()
+        .loops
+        .pop()
+        .expect("end_loop called with no loop!");
+    emit_loop(ctx, &offsets);
+    // Load up the exitLoop instruction and patch it to the current code offset.
+    ctx.compiler_mut().patch_jump(offsets.exit_jump);
+
+    // FIXME: Break this out into a method on compiler?
+    // Find any break placeholders and make them real jumps.
+    for i in offsets.body..ctx.compiler().code.len() {
+        match ctx.compiler_mut().code[i] {
+            Ops::JumpIfFalsePlaceholder | Ops::JumpPlaceholder => ctx.compiler_mut().patch_jump(i),
+            _ => (),
+        }
+    }
+}
+
 impl<'a, 'b> Compiler {
     fn offset_to_current_pc_from_after(&self, offset: usize) -> u16 {
         // We are commonly passed in the instruction offset
@@ -1842,21 +1861,6 @@ impl<'a, 'b> Compiler {
         // end of the current PC.  Hence after = offset + 1
         let after = offset + 1;
         (self.code.len() - after) as u16
-    }
-
-    fn end_loop(&mut self) {
-        let offsets = self.loops.pop().expect("end_loop called with no loop!");
-        self.emit_loop(&offsets);
-        // Load up the exitLoop instruction and patch it to the current code offset.
-        self.patch_jump(offsets.exit_jump);
-
-        // Find any break placeholders and make them real jumps.
-        for i in offsets.body..self.code.len() {
-            match self.code[i] {
-                Ops::JumpIfFalsePlaceholder | Ops::JumpPlaceholder => self.patch_jump(i),
-                _ => (),
-            }
-        }
     }
 
     fn patch_jump(&mut self, index: usize) {
@@ -1890,11 +1894,11 @@ impl<'a, 'b> Compiler {
 // }
 
 fn load_local(ctx: &mut ParseContext, index: u16) {
-    ctx.compiler_mut().emit_load(Variable::local(index))
+    emit(ctx, Ops::Load(Variable::local(index)));
 }
 
-fn test_exit_loop(compiler: &mut Compiler) {
-    compiler.loops.last_mut().unwrap().exit_jump = compiler.emit(Ops::JumpIfFalsePlaceholder);
+fn test_exit_loop(ctx: &mut ParseContext) {
+    ctx.compiler_mut().loops.last_mut().unwrap().exit_jump = emit(ctx, Ops::JumpIfFalsePlaceholder);
 }
 
 fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
@@ -1934,25 +1938,22 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
     // Update and test the iterator.
     call_method(ctx, 1, "iterate(_)");
-    ctx.compiler_mut().emit_store(Variable::local(iter_slot));
-    test_exit_loop(ctx.compiler_mut());
+    emit(ctx, Ops::Store(Variable::local(iter_slot)));
+    test_exit_loop(ctx);
 
     // Get the current value in the sequence by calling ".iteratorValue".
     load_local(ctx, seq_slot);
     load_local(ctx, iter_slot);
     call_method(ctx, 1, "iteratorValue(_)");
 
-    // Bind the loop variable in its own scope. This ensures we get a fresh
-    // variable each iteration so that closures for it don't all see the same one.
-    ctx.compiler_mut().push_scope();
-    add_local(ctx, name);
-
-    loop_body(ctx)?;
-
-    // Loop variable.
-    ctx.compiler_mut().pop_scope();
-
-    ctx.compiler_mut().end_loop();
+    // Bind the loop variable in its own scope, ensures we get a fresh variable
+    // each iteration so that closures for it don't all see the same one.
+    {
+        let scope = ScopePusher::push_block(ctx);
+        add_local(scope.ctx, name);
+        loop_body(scope.ctx)?;
+    }
+    end_loop(ctx);
     Ok(())
 }
 
@@ -1986,7 +1987,8 @@ fn for_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
     //   iterator position.
 
     // Create a scope for the hidden local variables used for the iterator.
-    auto_scope(ctx, for_hidden_variable_scope)
+    let scope = ScopePusher::push_block(ctx);
+    for_hidden_variable_scope(scope.ctx)
 }
 
 fn if_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
@@ -1995,13 +1997,13 @@ fn if_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
     expression(ctx)?;
     consume_expecting(ctx, Token::RightParen)?;
     // Jump to the else branch if the condition is false.
-    let if_jump = ctx.compiler_mut().emit(Ops::JumpIfFalsePlaceholder);
+    let if_jump = emit(ctx, Ops::JumpIfFalsePlaceholder);
     // Compile the then branch.
     statement(ctx)?;
     // Compile the else branch if there is one.
     if match_current(ctx, Token::Else)? {
         // Jump over the else branch when the if branch is taken.
-        let else_jump = ctx.compiler_mut().emit(Ops::JumpPlaceholder);
+        let else_jump = emit(ctx, Ops::JumpPlaceholder);
         ctx.compiler_mut().patch_jump(if_jump);
         statement(ctx)?;
         // Patch the jump over the else.
@@ -2020,9 +2022,9 @@ fn while_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
     expression(ctx)?;
     consume_expecting(ctx, Token::RightParen)?;
 
-    test_exit_loop(ctx.compiler_mut());
+    test_exit_loop(ctx);
     loop_body(ctx)?;
-    ctx.compiler_mut().end_loop();
+    end_loop(ctx);
     Ok(())
 }
 
@@ -2072,35 +2074,38 @@ fn finish_block(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     return Ok(false);
 }
 
-fn auto_scope(
-    ctx: &mut ParseContext,
-    f: fn(&mut ParseContext) -> Result<(), WrenError>,
-) -> Result<(), WrenError> {
-    ctx.compiler_mut().push_scope();
-    let v = f(ctx);
-    ctx.compiler_mut().pop_scope();
-    return v;
-}
-
 struct ScopePusher<'a, 'b> {
     ctx: &'a mut ParseContext<'b>,
     did_pop: bool,
+    did_set_class: bool,
 }
 
 impl<'a, 'b> ScopePusher<'a, 'b> {
     fn push_class(ctx: &'a mut ParseContext<'b>, class_info: ClassInfo) -> ScopePusher<'a, 'b> {
-        ctx.compiler_mut().push_scope();
+        push_scope(ctx);
         ctx.compiler_mut().enclosing_class = Some(RefCell::new(class_info));
         ScopePusher {
             ctx: ctx,
             did_pop: false,
+            did_set_class: true,
+        }
+    }
+
+    fn push_block(ctx: &'a mut ParseContext<'b>) -> ScopePusher<'a, 'b> {
+        push_scope(ctx);
+        ScopePusher {
+            ctx: ctx,
+            did_pop: false,
+            did_set_class: false,
         }
     }
 
     fn pop(&mut self) {
         assert_eq!(self.did_pop, false);
-        self.ctx.compiler_mut().enclosing_class = None;
-        self.ctx.compiler_mut().pop_scope();
+        if self.did_set_class {
+            self.ctx.compiler_mut().enclosing_class = None;
+        }
+        pop_scope(self.ctx);
         self.did_pop = true;
     }
 }
@@ -2122,16 +2127,16 @@ impl<'a, 'b> Drop for ScopePusher<'a, 'b> {
 //
 // Returns the number of local variables that were eliminated.
 // FIXME: Is discard_locals needed with each CallFrame having a separate stack?
-fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
+fn discard_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usize {
     let target_depth = match scope_depth {
         ScopeDepth::Module => panic!("Can't discard locals at module level."),
         ScopeDepth::Local(i) => i,
     };
 
-    let starting_locals_len = compiler.locals.len();
+    let starting_locals_len = ctx.compiler().locals.len();
 
-    fn emit_pops(compiler: &mut Compiler, target_depth: usize) {
-        while let Some(local) = compiler.locals.last() {
+    fn emit_pops(ctx: &mut ParseContext, target_depth: usize) {
+        while let Some(local) = ctx.compiler().locals.last() {
             let local_depth = match local.depth {
                 ScopeDepth::Module => return, // Stop at the magical "this" (see hack note above in Compiler constructor).
                 ScopeDepth::Local(i) => i,
@@ -2140,13 +2145,13 @@ fn discard_locals(compiler: &mut Compiler, scope_depth: ScopeDepth) -> usize {
                 break;
             }
             // FIXME: Handle upvalues.
-            compiler.emit(Ops::Pop);
-            compiler.locals.pop();
+            emit(ctx, Ops::Pop);
+            ctx.compiler_mut().locals.pop();
         }
     }
 
-    emit_pops(compiler, target_depth);
-    return starting_locals_len - compiler.locals.len();
+    emit_pops(ctx, target_depth);
+    return starting_locals_len - ctx.compiler().locals.len();
 }
 
 // Attempts to look up the name in the local variables of [compiler]. If found,
@@ -2182,7 +2187,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
         // Emit a placeholder instruction for the jump to the end of the body.
         // We'll fix these up with real Jumps at the end of compiling this loop.
-        ctx.compiler_mut().emit(Ops::JumpPlaceholder); // Break placeholder
+        emit(ctx, Ops::JumpPlaceholder); // Break placeholder
     } else if match_current(ctx, Token::Continue)? {
         let offsets = *ctx
             .compiler()
@@ -2196,7 +2201,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
         // are discarded first.
         // discard_locals(compiler, offsets.scope_depth + 1);
 
-        ctx.compiler_mut().emit_loop(&offsets);
+        emit_loop(ctx, &offsets);
     } else if match_current(ctx, Token::For)? {
         for_statement(ctx)?;
     } else if match_current(ctx, Token::If)? {
@@ -2207,9 +2212,9 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
             // If there's no expression after return, initializers should
             // return 'this' and regular methods should return null
             if ctx.compiler().is_initializer {
-                ctx.compiler_mut().emit_load(Variable::local(0));
+                emit(ctx, Ops::Load(Variable::local(0)));
             } else {
-                ctx.compiler_mut().emit(Ops::Null);
+                emit(ctx, Ops::Null);
             }
         } else {
             if ctx.compiler().is_initializer {
@@ -2219,22 +2224,19 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
             }
             expression(ctx)?;
         }
-        ctx.compiler_mut().emit(Ops::Return);
+        emit(ctx, Ops::Return);
     } else if match_current(ctx, Token::While)? {
         while_statement(ctx)?;
     } else if match_current(ctx, Token::LeftCurlyBrace)? {
         // Block statement.
-        fn finish(p: &mut ParseContext) -> Result<(), WrenError> {
-            if finish_block(p)? {
-                // Block was an expression, so discard it.
-                p.compiler_mut().emit(Ops::Pop);
-            }
-            Ok(())
+        let scope = ScopePusher::push_block(ctx);
+        if finish_block(scope.ctx)? {
+            // Block was an expression, so discard it.
+            emit(scope.ctx, Ops::Pop);
         }
-        auto_scope(ctx, finish)?;
     } else {
         expression(ctx)?;
-        ctx.compiler_mut().emit(Ops::Pop);
+        emit(ctx, Ops::Pop);
     }
     Ok(())
 }
@@ -2262,16 +2264,13 @@ fn create_constructor(
 
     // Allocate the instance.
     // FIXME: handle foreign
-    scope.ctx.compiler_mut().emit(Ops::Construct);
+    emit(scope.ctx, Ops::Construct);
 
     // Run its initializer.
-    scope
-        .ctx
-        .compiler_mut()
-        .emit_call(signature, initializer_symbol);
+    emit(scope.ctx, Ops::Call(signature, initializer_symbol));
 
     // Return the instance.
-    scope.ctx.compiler_mut().emit(Ops::Return);
+    emit(scope.ctx, Ops::Return);
 
     let compiler = scope.pop();
     // FIXME: Where does this closure get put?
@@ -2292,11 +2291,10 @@ fn define_method(
     // will be locals above the initial variable slot for the class on the
     // stack. To skip past those, we just load the class each time right before
     // defining a method.
-    ctx.compiler_mut().emit_load(class_variable);
+    emit(ctx, Ops::Load(class_variable));
 
     // Define the method.
-    ctx.compiler_mut()
-        .emit(Ops::Method(is_static, method_symbol));
+    emit(ctx, Ops::Method(is_static, method_symbol));
 }
 
 // Declares a method in the enclosing class with [signature].
@@ -2365,7 +2363,7 @@ fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
         expression(ctx)?;
     } else {
         // Default initialize it to null.
-        ctx.compiler_mut().emit(Ops::Null);
+        emit(ctx, Ops::Null);
     }
 
     // Now put it in scope.
@@ -2380,7 +2378,7 @@ fn load_core_variable(ctx: &mut ParseContext, name: &str) {
         Some(s) => s,
         None => panic!("Failed to find core variable {}", name),
     };
-    ctx.compiler_mut().emit_load(Variable::module(symbol));
+    emit(ctx, Ops::Load(Variable::module(symbol)));
 }
 
 fn define_variable(ctx: &mut ParseContext, symbol: u16) {
@@ -2393,8 +2391,8 @@ fn define_variable(ctx: &mut ParseContext, symbol: u16) {
         ScopeDepth::Module => {
             // It's a module-level variable, so store the value in the module slot and
             // then discard the temporary for the initializer.
-            ctx.compiler_mut().emit_store(Variable::module(symbol));
-            ctx.compiler_mut().emit(Ops::Pop);
+            emit(ctx, Ops::Store(Variable::module(symbol)));
+            emit(ctx, Ops::Pop);
         }
     }
 }
@@ -2610,7 +2608,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     let class_name = Value::String(Rc::new(name.clone()));
 
     // Make a string constant for the name.
-    ctx.compiler_mut().emit_constant(class_name);
+    emit_constant(ctx, class_name);
     // FIXME: Handle superclasses, TOKEN_IS
 
     // Load the superclass (if there is one).
@@ -2623,7 +2621,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
 
     // Store a placeholder for the number of fields argument. We don't know the
     // count until we've compiled all the methods to see which fields are used.
-    let class_instruction = ctx.compiler_mut().emit(Ops::ClassPlaceholder);
+    let class_instruction = emit(ctx, Ops::ClassPlaceholder);
 
     // Store it in its name. (in the module case)
     define_variable(ctx, class_symbol);
@@ -2716,7 +2714,7 @@ fn grouping(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
 
 fn boolean(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     if let Token::Boolean(b) = ctx.parser.previous.token {
-        ctx.compiler_mut().emit_boolean(b);
+        emit(ctx, Ops::Boolean(b));
     } else {
         panic!("boolean called w/o boolean token");
     }
@@ -2724,7 +2722,7 @@ fn boolean(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 }
 
 fn null(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
-    ctx.compiler_mut().emit(Ops::Null);
+    emit(ctx, Ops::Null);
     Ok(())
 }
 
@@ -3169,7 +3167,7 @@ pub(crate) fn compile<'a>(
 
     // FIXME: Check for undefined implicit variables and throw errors.
 
-    scope.ctx.compiler_mut().emit(Ops::End);
+    emit(scope.ctx, Ops::End);
     let compiler = scope.pop();
     // wren_c uses (script) :shrug:
     let fn_obj = end_compiler(scope.ctx, compiler, 0, "<script>".into());

@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 Map does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 0] in <script>
+[./test/module/name/not/yet/captured line 3] in <script>
 Expected return code 0 and got 70. Stderr:
 Map does not implement 'iterate(_)'.
-[./test/module/name/not/yet/captured line 0] in <script>
+[./test/module/name/not/yet/captured line 3] in <script>
 
 Missing expected output "0" on line 3.
 Missing expected output "{}" on line 4.

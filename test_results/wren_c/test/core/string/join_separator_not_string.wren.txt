@@ -1,3 +1,2 @@
 Expected runtime error "Right operand must be a string." and got:
 String does not implement 'iterate(_)'.
-Expected runtime error on line 1 but was on line 0.

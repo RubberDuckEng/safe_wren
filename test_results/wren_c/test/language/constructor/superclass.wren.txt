@@ -1,13 +1,13 @@
 Unexpected output on stderr:
 C does not implement 'super(_,_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 0] in 
+[./test/module/name/not/yet/captured line 25] in 
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 0] in <script>
+[./test/module/name/not/yet/captured line 30] in <script>
 Expected return code 0 and got 70. Stderr:
 C does not implement 'super(_,_)'.
-[./test/module/name/not/yet/captured line 0] in 
-[./test/module/name/not/yet/captured line 0] in <script>
+[./test/module/name/not/yet/captured line 25] in 
+[./test/module/name/not/yet/captured line 30] in <script>
 
 Missing expected output "new A two" on line 31.
 Missing expected output "new B one" on line 32.

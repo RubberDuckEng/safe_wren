@@ -1,3 +1,2 @@
 Expected runtime error "Can't reduce an empty sequence." and got:
 Fiber Abort <value>
-Expected runtime error on line 1 but was on line 0.

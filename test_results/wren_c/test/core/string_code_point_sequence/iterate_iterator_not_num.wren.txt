@@ -1,3 +1,2 @@
 Expected runtime error "Iterator must be a number." and got:
 String does not implement 'iterate(_)'.
-Expected runtime error on line 1 but was on line 0.

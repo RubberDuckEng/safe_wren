@@ -723,7 +723,7 @@ impl WrenVM {
             FrameInfo {
                 // HACK: Use path/syntax to fool test.py
                 module: "./test/module/name/not/yet/captured".into(),
-                line: fn_obj.debug.line_for(frame.pc),
+                line: fn_obj.debug.line_for_pc(frame.pc),
                 fn_name: fn_obj.debug.name.clone(),
             }
         }
