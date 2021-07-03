@@ -1,4 +1,2 @@
-Expected runtime error "Foo does not implement 'someUnknownMethod(_,_)'." and got:
-MethodNotFound("someUnknownMethod(_,_)" on "Foo")
 Expected stack trace and got:
 

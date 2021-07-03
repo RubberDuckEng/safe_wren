@@ -1,4 +1,2 @@
-Expected runtime error "Foo metaclass does not implement 'bar'." and got:
-MethodNotFound("bar" on "Foo metaclass")
 Expected stack trace and got:
 

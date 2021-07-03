@@ -1,6 +1,9 @@
 Unexpected output on stderr:
-MethodNotFound("super" on "C")
+C does not implement 'super'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 0] in <script>
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("super" on "C")
+C does not implement 'super'.
+[./test/module/name/not/yet/captured line 0] in <script>
 
 Missing expected output "A.foo" on line 20.

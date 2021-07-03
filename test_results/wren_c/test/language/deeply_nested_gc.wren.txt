@@ -1,6 +1,1 @@
-Unexpected output on stderr:
-MethodNotFound("gc()" on "System metaclass")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("gc()" on "System metaclass")
-
-Missing expected output "done" on line 8.
+Timed out.

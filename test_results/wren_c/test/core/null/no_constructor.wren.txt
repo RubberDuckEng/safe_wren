@@ -1,4 +1,2 @@
-Expected runtime error "Null metaclass does not implement 'new()'." and got:
-MethodNotFound("new()" on "Null metaclass")
 Expected stack trace and got:
 

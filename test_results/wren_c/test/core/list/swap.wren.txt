@@ -1,5 +1,5 @@
 Expected runtime error "Index 0 out of bounds." and got:
-MethodNotFound("swap(_,_)" on "List")
+List does not implement 'swap(_,_)'.
 Expected stack trace and got:
 
 Missing expected output "[3, 1, 2, 0, 4]" on line 4.

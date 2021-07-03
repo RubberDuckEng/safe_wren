@@ -1,5 +1,5 @@
 Expected runtime error "Cannot try a finished fiber." and got:
-MethodNotFound("new(_)" on "Fiber metaclass")
+Fiber metaclass does not implement 'new(_)'.
 Expected stack trace and got:
 
 Missing expected output "try" on line 5.

@@ -1,4 +1,4 @@
 Expected runtime error "Power value must be a number." and got:
-NumberRequired(Boolean(false))
+Right operand must be a number.
 Expected stack trace and got:
 

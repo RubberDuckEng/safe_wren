@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("clear()" on "List")
+List does not implement 'clear()'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("clear()" on "List")
+List does not implement 'clear()'.
 
 Missing expected output "[]" on line 3.
 Missing expected output "0" on line 4.

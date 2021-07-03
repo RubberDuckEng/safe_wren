@@ -1,4 +1,2 @@
-Expected runtime error "Index out of bounds." and got:
-RangeOutOfBounds("Index")
 Expected stack trace and got:
 

@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be a number." and got:
-MethodNotFound("iterate(_)" on "String")
+String does not implement 'iterate(_)'.
 Expected stack trace and got:
 

@@ -1,4 +1,4 @@
 Expected runtime error "Number literal is too large." and got:
-MethodNotFound("fromString(_)" on "Num metaclass")
+Num metaclass does not implement 'fromString(_)'.
 Expected stack trace and got:
 

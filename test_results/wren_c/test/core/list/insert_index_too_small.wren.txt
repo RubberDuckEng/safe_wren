@@ -1,4 +1,4 @@
 Expected runtime error "Index out of bounds." and got:
-MethodNotFound("insert(_,_)" on "List")
+List does not implement 'insert(_,_)'.
 Expected stack trace and got:
 

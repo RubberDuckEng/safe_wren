@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("[_,_]=(_,_)" on "Map")
+Map does not implement '[_,_]=(_,_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("[_,_]=(_,_)" on "Map")
+Map does not implement '[_,_]=(_,_)'.
 
 Missing expected output "10" on line 11.

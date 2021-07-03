@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("toString" on "List")
+List does not implement 'toString'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("toString" on "List")
+List does not implement 'toString'.
 
 Missing expected output "[]" on line 2.
 Missing expected output "[1, 2, true]" on line 5.

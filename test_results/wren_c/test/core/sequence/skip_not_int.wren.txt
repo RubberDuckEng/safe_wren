@@ -1,4 +1,4 @@
 Expected runtime error "Count must be a non-negative integer." and got:
-MethodNotFound("skip(_)" on "List")
+List does not implement 'skip(_)'.
 Expected stack trace and got:
 

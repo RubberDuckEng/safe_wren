@@ -1,4 +1,4 @@
 Expected runtime error "Key must be a value type." and got:
-MethodNotFound("remove(_)" on "Map")
+Map does not implement 'remove(_)'.
 Expected stack trace and got:
 

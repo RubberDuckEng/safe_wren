@@ -1,4 +1,2 @@
-Expected runtime error "Iterator out of bounds." and got:
-RangeOutOfBounds("Iterator")
 Expected stack trace and got:
 

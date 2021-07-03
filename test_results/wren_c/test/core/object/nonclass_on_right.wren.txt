@@ -1,4 +1,2 @@
-Expected runtime error "Right operand must be a class." and got:
-ClassRequired(Boolean(false))
 Expected stack trace and got:
 

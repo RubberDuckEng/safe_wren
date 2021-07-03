@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("max" on "Range")
+Range does not implement 'max'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("max" on "Range")
+Range does not implement 'max'.
 
 Missing expected output "5" on line 2.
 Missing expected output "3" on line 3.

@@ -1,4 +1,2 @@
-Expected runtime error "Foo does not implement 'new()'." and got:
-MethodNotFound("new()" on "Foo")
 Expected stack trace and got:
 

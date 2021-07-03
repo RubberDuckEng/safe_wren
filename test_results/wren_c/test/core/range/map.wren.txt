@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("map(_)" on "Range")
+Range does not implement 'map(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("map(_)" on "Range")
+Range does not implement 'map(_)'.
 
 Missing expected output "[2, 3, 4]" on line 3.

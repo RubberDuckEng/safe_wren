@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("iterate(_)" on "Num")
+Num does not implement 'iterate(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("iterate(_)" on "Num")
+Num does not implement 'iterate(_)'.
 
 Expected output "outer 0" on line 11 and got "outer %(i)".
 Expected output "inner 0" on line 12 and got "inner %(j)".

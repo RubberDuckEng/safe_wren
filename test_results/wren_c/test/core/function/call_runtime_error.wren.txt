@@ -1,4 +1,1 @@
-Expected runtime error "Bool does not implement '+(_)'." and got:
-MethodNotFound("+(_)" on "Bool")
-Expected stack trace and got:
-
+Expected runtime error on line 1 but was on line 0.

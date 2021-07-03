@@ -1,4 +1,2 @@
-Expected runtime error "Iterator must be a number." and got:
-NumberRequired(String(""))
 Expected stack trace and got:
 

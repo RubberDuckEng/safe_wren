@@ -1,7 +1,13 @@
 Unexpected output on stderr:
-MethodNotFound("toList" on "StringCodePointSequence")
+StringCodePointSequence does not implement 'toList'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 0] in trim()
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 0] in <script>
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("toList" on "StringCodePointSequence")
+StringCodePointSequence does not implement 'toList'.
+[./test/module/name/not/yet/captured line 0] in trim()
+[./test/module/name/not/yet/captured line 0] in <script>
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

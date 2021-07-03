@@ -1,4 +1,4 @@
 Expected runtime error "Subscript out of bounds." and got:
-MethodNotFound("[_]" on "String")
+String does not implement '[_]'.
 Expected stack trace and got:
 

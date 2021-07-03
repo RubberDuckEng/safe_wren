@@ -1,4 +1,4 @@
 Expected runtime error "Size must be a number." and got:
-MethodNotFound("filled(_,_)" on "List metaclass")
+List metaclass does not implement 'filled(_,_)'.
 Expected stack trace and got:
 

@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("same(_,_)" on "Object metaclass")
+Object metaclass does not implement 'same(_,_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("same(_,_)" on "Object metaclass")
+Object metaclass does not implement 'same(_,_)'.
 
 Missing expected output "true" on line 2.
 Missing expected output "false" on line 3.

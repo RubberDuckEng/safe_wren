@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("skip(_)" on "TestSequence")
+TestSequence does not implement 'skip(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("skip(_)" on "TestSequence")
+TestSequence does not implement 'skip(_)'.
 
 Missing expected output "true" on line 15.
 Missing expected output "instance of SkipSequence" on line 16.

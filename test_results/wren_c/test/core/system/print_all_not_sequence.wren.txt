@@ -1,4 +1,1 @@
-Expected runtime error "Num does not implement 'iterate(_)'." and got:
-MethodNotFound("iterate(_)" on "Num")
-Expected stack trace and got:
-
+Expected runtime error on line 1 but was on line 0.

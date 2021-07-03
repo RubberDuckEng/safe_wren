@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "Fn")
+Fn does not implement 'call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "Fn")
+Fn does not implement 'call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
 
 Missing expected output "136" on line 50.

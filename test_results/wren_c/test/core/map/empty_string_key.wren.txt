@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("[_]" on "Map")
+Map does not implement '[_]'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("[_]" on "Map")
+Map does not implement '[_]'.
 
 Missing expected output "empty string" on line 5.

@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("isInclusive" on "Range")
+Range does not implement 'isInclusive'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("isInclusive" on "Range")
+Range does not implement 'isInclusive'.
 
 Missing expected output "true" on line 1.
 Missing expected output "false" on line 2.

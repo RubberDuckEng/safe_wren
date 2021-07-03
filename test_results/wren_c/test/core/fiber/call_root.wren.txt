@@ -1,5 +1,5 @@
 Expected runtime error "Cannot call root fiber." and got:
-MethodNotFound("current" on "Fiber metaclass")
+Fiber metaclass does not implement 'current'.
 Expected stack trace and got:
 
 Missing expected output "begin root" on line 2.

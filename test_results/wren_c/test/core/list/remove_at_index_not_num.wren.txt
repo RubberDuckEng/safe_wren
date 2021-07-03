@@ -1,4 +1,2 @@
-Expected runtime error "Index must be a number." and got:
-NumberRequired(String("2"))
 Expected stack trace and got:
 

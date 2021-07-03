@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("where(_)" on "Range")
+Range does not implement 'where(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("where(_)" on "Range")
+Range does not implement 'where(_)'.
 
 Missing expected output "[2, 3]" on line 3.
 Missing expected output "[]" on line 6.

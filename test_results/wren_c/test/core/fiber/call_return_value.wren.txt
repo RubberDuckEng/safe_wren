@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("new(_)" on "Fiber metaclass")
+Fiber metaclass does not implement 'new(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("new(_)" on "Fiber metaclass")
+Fiber metaclass does not implement 'new(_)'.
 
 Missing expected output "fiber" on line 3.
 Missing expected output "result" on line 6.

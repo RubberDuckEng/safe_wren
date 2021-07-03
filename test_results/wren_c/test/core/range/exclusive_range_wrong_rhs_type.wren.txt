@@ -1,4 +1,2 @@
-Expected runtime error "Right hand side of range must be a number." and got:
-NumberRequired(String("s"))
 Expected stack trace and got:
 

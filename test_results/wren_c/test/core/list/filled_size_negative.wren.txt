@@ -1,4 +1,4 @@
 Expected runtime error "Size cannot be negative." and got:
-MethodNotFound("filled(_,_)" on "List metaclass")
+List metaclass does not implement 'filled(_,_)'.
 Expected stack trace and got:
 

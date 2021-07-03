@@ -1,4 +1,4 @@
 Expected runtime error "Iterator out of bounds." and got:
-MethodNotFound("iteratorValue(_)" on "String")
+String does not implement 'iteratorValue(_)'.
 Expected stack trace and got:
 

@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("[_,_]=(_,_)" on "List")
+List does not implement '[_,_]=(_,_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("[_,_]=(_,_)" on "List")
+List does not implement '[_,_]=(_,_)'.
 
 Missing expected output "[5, 6, 7]" on line 7.
 Missing expected output "5" on line 13.

@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("current" on "Fiber metaclass")
+Fiber metaclass does not implement 'current'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("current" on "Fiber metaclass")
+Fiber metaclass does not implement 'current'.
 
 Missing expected output "transferred" on line 9.
 Missing expected output "main" on line 10.

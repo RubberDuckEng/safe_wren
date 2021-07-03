@@ -758,6 +758,12 @@ pub(crate) struct FnDebug {
     // source_lines: Vec<usize>,
 }
 
+impl FnDebug {
+    pub(crate) fn line_for(&self, _pc: usize) -> usize {
+        0
+    }
+}
+
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
 pub(crate) struct Compiler {
@@ -3165,6 +3171,7 @@ pub(crate) fn compile<'a>(
 
     scope.ctx.compiler_mut().emit(Ops::End);
     let compiler = scope.pop();
+    // wren_c uses (script) :shrug:
     let fn_obj = end_compiler(scope.ctx, compiler, 0, "<script>".into());
     let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
     Ok(closure)

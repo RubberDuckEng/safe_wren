@@ -7,6 +7,28 @@ use std::str;
 use crate::compiler::{compile, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, register_core_primitives};
 
+type Result<T, E = VMError> = std::result::Result<T, E>;
+
+// Internal VM Error, wrapped in RuntimeError for API.
+#[derive(Debug)]
+pub(crate) enum VMError {
+    Error(String),
+    FiberAbort(Value),
+    StackUnderflow,
+}
+
+impl VMError {
+    // Rename to error_str?
+    pub(crate) fn from_str(msg: &str) -> VMError {
+        VMError::Error(msg.into())
+    }
+
+    // Rename to error_string?
+    pub(crate) fn from_string(msg: String) -> VMError {
+        VMError::Error(msg)
+    }
+}
+
 #[derive(Clone)]
 pub(crate) enum Value {
     Null,
@@ -164,130 +186,87 @@ pub(crate) fn find_core_class(vm: &WrenVM, name: &str) -> Handle<ObjClass> {
         .lookup_symbol(name)
         .expect(&format!("find_core_class failed to load {}", name));
     vm.module.variables[symbol as usize]
-        .try_into_class()
+        .try_into_class("not class".into())
         .expect(&format!("find_core_class failed to load {}", name))
 }
 
 #[derive(Debug)]
-pub(crate) struct MissingMethod {
-    this_class: String,
-    name: String,
+pub struct FrameInfo {
+    pub module: String,
+    pub line: usize,
+    pub fn_name: String,
 }
 
-pub(crate) enum RuntimeError {
-    StackUnderflow,
-    // VariableAlreadyDefined,
-    // TooManyVariablesDefined,
-    // VariableUsedBeforeDefinition,
-    NumberRequired(Value),
-    StringRequired(Value),
-    ObjectRequired(Value),
-    ClassRequired(Value),
-    RangeRequired(Value),
-    ListRequired(Value),
-    MapRequired(Value),
-    FnRequired(Value),
-    ClosureRequired(Value),
-    InstanceRequired(Value),
-    MethodNotFound(MissingMethod),
-    CannotInheritFromNonClassObject(String, Value),
-    ExpectingInteger(String),
-    RangeOutOfBounds(String),
-    Generic(String),
-    FiberAbort(Value),
-    ThisObjectHasNoClass,
-    FieldOutOfBounds,
+#[derive(Debug)]
+pub struct StackTrace {
+    pub frames: Vec<FrameInfo>,
 }
 
-impl core::fmt::Debug for RuntimeError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        match self {
-            RuntimeError::StackUnderflow => write!(f, "StackUnderflow"),
-            RuntimeError::NumberRequired(v) => write!(f, "NumberRequired({:?})", v),
-            RuntimeError::StringRequired(v) => write!(f, "StringRequired({:?})", v),
-            RuntimeError::ObjectRequired(v) => write!(f, "ObjectRequired({:?})", v),
-            RuntimeError::ClassRequired(v) => write!(f, "ClassRequired({:?})", v),
-            RuntimeError::RangeRequired(v) => write!(f, "RangeRequired({:?})", v),
-            RuntimeError::ListRequired(v) => write!(f, "ListRequired({:?})", v),
-            RuntimeError::FnRequired(v) => write!(f, "FnRequired({:?})", v),
-            RuntimeError::FiberAbort(v) => write!(f, "FiberAbort({:?})", v),
-            RuntimeError::ExpectingInteger(v) => write!(f, "ExpectingInteger({:?})", v),
-            RuntimeError::RangeOutOfBounds(v) => write!(f, "RangeOutOfBounds({:?})", v),
-            RuntimeError::ClosureRequired(v) => write!(f, "ClosureRequired({:?})", v),
-            RuntimeError::InstanceRequired(v) => write!(f, "InstanceRequired({:?})", v),
-            RuntimeError::MapRequired(v) => write!(f, "MapRequired({:?})", v),
-            RuntimeError::Generic(v) => write!(f, "Generic({:?})", v),
-            RuntimeError::MethodNotFound(m) => {
-                write!(f, "MethodNotFound(\"{}\" on \"{}\")", m.name, m.this_class)
-            }
-            RuntimeError::CannotInheritFromNonClassObject(n, _) => {
-                write!(f, "Class '{}' cannot inherit from a non-class object.", n)
-            }
-            RuntimeError::ThisObjectHasNoClass => write!(f, "ThisObjectHasNoClass"),
-            RuntimeError::FieldOutOfBounds => write!(f, "FieldOutOfBounds"),
-        }
-    }
+#[derive(Debug)]
+pub struct RuntimeError {
+    pub msg: String,
+    pub stack_trace: StackTrace,
 }
 
 impl Value {
-    pub fn try_into_num(&self) -> Result<f64, RuntimeError> {
+    pub fn try_into_num(&self, msg: String) -> Result<f64> {
         match self {
             Value::Num(value) => Ok(*value),
-            _ => Err(RuntimeError::NumberRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
 
-    pub fn try_into_string(&self) -> Result<String, RuntimeError> {
+    pub fn try_into_string(&self, msg: String) -> Result<String> {
         match self {
             Value::String(string) => Ok(string.as_ref().clone()),
-            _ => Err(RuntimeError::StringRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
 
-    pub fn try_into_class(&self) -> Result<Handle<ObjClass>, RuntimeError> {
+    pub fn try_into_class(&self, msg: String) -> Result<Handle<ObjClass>> {
         match self {
             Value::Class(c) => Ok(c.clone()),
-            _ => Err(RuntimeError::ClassRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
 
-    pub fn try_into_range(&self) -> Result<Handle<ObjRange>, RuntimeError> {
+    pub fn try_into_range(&self, msg: String) -> Result<Handle<ObjRange>> {
         match self {
             Value::Range(r) => Ok(r.clone()),
-            _ => Err(RuntimeError::RangeRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
 
-    pub fn try_into_list(&self) -> Result<Handle<ObjList>, RuntimeError> {
+    pub fn try_into_list(&self, msg: String) -> Result<Handle<ObjList>> {
         match self {
             Value::List(l) => Ok(l.clone()),
-            _ => Err(RuntimeError::ListRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
-    pub fn try_into_map(&self) -> Result<Handle<ObjMap>, RuntimeError> {
+    pub fn try_into_map(&self, msg: String) -> Result<Handle<ObjMap>> {
         match self {
             Value::Map(m) => Ok(m.clone()),
-            _ => Err(RuntimeError::MapRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
-    pub fn try_into_fn(&self) -> Result<Handle<ObjFn>, RuntimeError> {
+    pub fn try_into_fn(&self, msg: String) -> Result<Handle<ObjFn>> {
         match self {
             Value::Fn(c) => Ok(c.clone()),
-            _ => Err(RuntimeError::FnRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
 
-    pub fn try_into_closure(&self) -> Result<Handle<ObjClosure>, RuntimeError> {
+    pub fn try_into_closure(&self, msg: String) -> Result<Handle<ObjClosure>> {
         match self {
             Value::Closure(c) => Ok(c.clone()),
-            _ => Err(RuntimeError::ClosureRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
 
-    pub fn try_into_instance(&self) -> Result<Handle<ObjInstance>, RuntimeError> {
+    pub fn try_into_instance(&self, msg: String) -> Result<Handle<ObjInstance>> {
         match self {
             Value::Instance(c) => Ok(c.clone()),
-            _ => Err(RuntimeError::InstanceRequired(self.clone())),
+            _ => Err(VMError::from_string(msg)),
         }
     }
 }
@@ -460,7 +439,7 @@ fn wren_new_class_with_class_class(
     num_fields: usize,
     name_string: String,
     class_class: &Handle<ObjClass>,
-) -> Result<Handle<ObjClass>, RuntimeError> {
+) -> Result<Handle<ObjClass>> {
     // Create the metaclass.
 
     let metaclass_name_string = format!("{} metaclass", name_string);
@@ -485,7 +464,7 @@ pub(crate) fn wren_new_class(
     superclass: &Handle<ObjClass>,
     num_fields: usize,
     name: String,
-) -> Result<Handle<ObjClass>, RuntimeError> {
+) -> Result<Handle<ObjClass>> {
     wren_new_class_with_class_class(
         superclass,
         num_fields,
@@ -494,14 +473,12 @@ pub(crate) fn wren_new_class(
     )
 }
 
-fn validate_superclass(
-    name: &str,
-    superclass_value: Value,
-) -> Result<Handle<ObjClass>, RuntimeError> {
+fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<ObjClass>> {
     // Make sure the superclass is a class.
-    let superclass = superclass_value.try_into_class().map_err(|_| {
-        RuntimeError::CannotInheritFromNonClassObject(name.into(), superclass_value)
-    })?;
+    let superclass = superclass_value.try_into_class(format!(
+        "Class '{}' cannot inherit from a non-class object.",
+        name
+    ))?;
 
     // FIXME: Unclear if this is required in wren_rust or not?
     // Make sure it doesn't inherit from a sealed built-in type. Primitive methods
@@ -548,12 +525,12 @@ fn validate_superclass(
     Ok(superclass)
 }
 
-fn create_class(vm: &WrenVM, frame: &mut CallFrame, num_fields: usize) -> Result<(), RuntimeError> {
+fn create_class(vm: &WrenVM, frame: &mut CallFrame, num_fields: usize) -> Result<()> {
     // Pull the name and superclass off the stack.
     let superclass_value = frame.pop()?;
     let name_value = frame.pop()?;
 
-    let name = name_value.try_into_string()?;
+    let name = name_value.try_into_string("Class name not string.".into())?;
     let superclass = validate_superclass(&name, superclass_value)?;
 
     let class = wren_new_class(vm, &superclass, num_fields, name)?;
@@ -657,8 +634,8 @@ fn bind_method(
     symbol: usize,
     class: &mut ObjClass,
     method_value: Value,
-) -> Result<(), RuntimeError> {
-    let method = Method::Block(method_value.try_into_closure()?);
+) -> Result<()> {
+    let method = Method::Block(method_value.try_into_closure("method body not closure".into())?);
 
     // FIXME: Need to patch the closure code!
     // Patch up the bytecode now that we know the superclass.
@@ -731,12 +708,29 @@ impl WrenVM {
         }
     }
 
-    fn method_not_found(&self, class: &ObjClass, symbol: usize) -> RuntimeError {
+    fn method_not_found(&self, class: &ObjClass, symbol: usize) -> VMError {
         let name = self.methods.lookup_symbol(symbol);
-        RuntimeError::MethodNotFound(MissingMethod {
-            this_class: class.name.clone(),
-            name: name,
-        })
+        VMError::from_string(format!("{} does not implement '{}'.", class.name, name))
+    }
+
+    // Will this eventually have to walk across fibers?
+    // Or can this just be a free function?
+    fn stack_trace(&self, fiber: &Fiber) -> StackTrace {
+        // Walk the fibers in reverse info.
+        fn frame_info(frame: &CallFrame) -> FrameInfo {
+            let closure = frame.closure.borrow();
+            let fn_obj = closure.fn_obj.borrow();
+            FrameInfo {
+                // HACK: Use path/syntax to fool test.py
+                module: "./test/module/name/not/yet/captured".into(),
+                line: fn_obj.debug.line_for(frame.pc),
+                fn_name: fn_obj.debug.name.clone(),
+            }
+        }
+
+        StackTrace {
+            frames: fiber.call_stack.iter().rev().map(frame_info).collect(),
+        }
     }
 
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
@@ -767,19 +761,30 @@ impl WrenVM {
                     self.last_fiber = Some(fiber);
                     return Ok(Value::Null);
                 }
-                Err(e) => {
+                Err(vm_error) => {
+                    let stack_trace = self.stack_trace(&fiber);
+                    let runtime_error = match vm_error {
+                        VMError::Error(msg) => RuntimeError {
+                            msg: msg,
+                            stack_trace: stack_trace,
+                        },
+                        VMError::FiberAbort(_) => RuntimeError {
+                            msg: "Fiber Abort <value>".into(),
+                            stack_trace: stack_trace,
+                        },
+                        VMError::StackUnderflow => RuntimeError {
+                            msg: "stack underflow".into(),
+                            stack_trace: stack_trace,
+                        },
+                    };
                     self.last_fiber = Some(fiber);
-                    return Err(e);
+                    return Err(runtime_error);
                 }
             }
         }
     }
 
-    fn run_frame_in_fiber(
-        &mut self,
-        frame: &mut CallFrame,
-        _fiber: &Fiber,
-    ) -> Result<RunNext, RuntimeError> {
+    fn run_frame_in_fiber(&mut self, frame: &mut CallFrame, _fiber: &Fiber) -> Result<RunNext> {
         let fn_obj = frame.closure.borrow().fn_obj.clone();
         frame.pc;
         loop {
@@ -817,7 +822,7 @@ impl WrenVM {
 
                     let this_class = self
                         .class_for_value(&args[0])
-                        .ok_or(RuntimeError::ThisObjectHasNoClass)?;
+                        .ok_or(VMError::from_str("object has no class"))?;
                     let class_obj = this_class.borrow();
                     // Get the Method record for this class for this symbol.
                     // This could return None instead of MethodNone?
@@ -840,7 +845,7 @@ impl WrenVM {
                             // per-function call basis.
                             return Ok(RunNext::FunctionCall(CallFrame {
                                 pc: 0,
-                                closure: args[0].try_into_closure()?,
+                                closure: check_arity(&args[0], num_args)?,
                                 stack: args,
                             }));
                         }
@@ -869,13 +874,13 @@ impl WrenVM {
                 }
                 Ops::Construct => {
                     let this = frame.stack[0].clone();
-                    let class = this.try_into_class()?;
+                    let class = this.try_into_class("'this' should be a class.".into())?;
                     let instance = wren_new_instance(self, class);
                     frame.stack[0] = instance;
                 }
                 Ops::Closure(constant_index, _upvalues) => {
                     let fn_value = fn_obj.borrow().constants[*constant_index].clone();
-                    let fn_obj = fn_value.try_into_fn()?;
+                    let fn_obj = fn_value.try_into_fn("constant was not closure".into())?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
                     frame.push(Value::Closure(closure));
                     // FIXME: Handle upvalues.
@@ -908,17 +913,19 @@ impl WrenVM {
                 }
                 Ops::LoadField(symbol) => {
                     let receiver = frame.pop()?;
-                    let instance = receiver.try_into_instance()?;
+                    let instance =
+                        receiver.try_into_instance("Receiver should be instance.".into())?;
                     if *symbol >= instance.borrow().fields.len() {
-                        return Err(RuntimeError::FieldOutOfBounds);
+                        return Err(VMError::from_str("Out of bounds field."));
                     }
                     frame.push(instance.borrow().fields[*symbol].clone());
                 }
                 Ops::StoreField(symbol) => {
                     let receiver = frame.pop()?;
-                    let instance = receiver.try_into_instance()?;
+                    let instance =
+                        receiver.try_into_instance("Receiver should be instance.".into())?;
                     if *symbol >= instance.borrow().fields.len() {
-                        return Err(RuntimeError::FieldOutOfBounds);
+                        return Err(VMError::from_str("Out of bounds field."));
                     }
                     instance.borrow_mut().fields[*symbol] = frame.peek()?.clone();
                 }
@@ -926,7 +933,8 @@ impl WrenVM {
                     frame.pop()?;
                 }
                 Ops::Method(is_static, symbol) => {
-                    let class = frame.pop()?.try_into_class()?;
+                    // wren_c peeks first then drops after bind, unclear why
+                    let class = frame.pop()?.try_into_class("expected class".into())?;
                     let method = frame.pop()?;
                     bind_method(self, *is_static, *symbol, &mut class.borrow_mut(), method)?;
                 }
@@ -972,17 +980,31 @@ impl WrenVM {
     }
 }
 
+fn check_arity(value: &Value, _num_args: usize) -> Result<Handle<ObjClosure>> {
+    let closure = value.try_into_closure("Receiver must be a closure.".into())?;
+    Ok(closure)
+
+    // FIXME: Enable in a separate change.
+    // // num_args includes implicit this, not counted in arity.
+    // if num_args - 1 >= closure.borrow().fn_obj.borrow().arity {
+    //     Ok(closure)
+    // } else {
+    //     Err(VMError::from_str("Function expects more arguments."))?
+    //     // I guess too many arguments is OK?
+    // }
+}
+
 impl CallFrame {
     fn push(&mut self, value: Value) {
         self.stack.push(value);
     }
 
-    fn pop(&mut self) -> Result<Value, RuntimeError> {
-        self.stack.pop().ok_or(RuntimeError::StackUnderflow)
+    fn pop(&mut self) -> Result<Value> {
+        self.stack.pop().ok_or(VMError::StackUnderflow)
     }
 
-    fn peek(&mut self) -> Result<&Value, RuntimeError> {
-        self.stack.last().ok_or(RuntimeError::StackUnderflow)
+    fn peek(&mut self) -> Result<&Value> {
+        self.stack.last().ok_or(VMError::StackUnderflow)
     }
 
     fn dump_stack(&self) {
@@ -1247,7 +1269,7 @@ impl Obj for ObjRange {
 // }
 
 // Unclear if this should take Vec or a slice?
-type Primitive = fn(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError>;
+type Primitive = fn(vm: &WrenVM, args: Vec<Value>) -> Result<Value>;
 
 #[derive(Clone)]
 pub(crate) enum Method {

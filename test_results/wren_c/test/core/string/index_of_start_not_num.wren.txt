@@ -1,4 +1,4 @@
 Expected runtime error "Start must be a number." and got:
-MethodNotFound("indexOf(_,_)" on "String")
+String does not implement 'indexOf(_,_)'.
 Expected stack trace and got:
 

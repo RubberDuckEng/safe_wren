@@ -1,4 +1,4 @@
 Expected runtime error "Argument must be a function." and got:
-ClosureRequired(Num(3))
+Argument must be a function
 Expected stack trace and got:
 

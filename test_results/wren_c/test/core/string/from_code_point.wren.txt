@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("fromCodePoint(_)" on "String metaclass")
+String metaclass does not implement 'fromCodePoint(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("fromCodePoint(_)" on "String metaclass")
+String metaclass does not implement 'fromCodePoint(_)'.
 
 Missing expected output "A" on line 1.
 Missing expected output "¤" on line 2.

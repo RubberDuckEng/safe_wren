@@ -1,4 +1,2 @@
-Expected runtime error "Foo does not implement 'someUnknownMethod'." and got:
-MethodNotFound("someUnknownMethod" on "Foo")
 Expected stack trace and got:
 

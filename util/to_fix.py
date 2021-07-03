@@ -24,7 +24,8 @@ def collect_lines(file_name):
         for line in results_file:
             line = line.strip()
             # Remove error boilerplate
-            if line == "" or line.startswith('Expected') or line.startswith('Unexpected') or line.startswith('Missing expected'):
+            # Explicitly don't remove "Expeted stack trace"
+            if line == "" or line.startswith("Expected return code 0") or line.startswith('Unexpected') or line.startswith('Missing expected output') or line.startswith('Missing expected error'):
                 continue
             # Remove path lines (from imports?)
             if (line.startswith("wren_c/") or line.startswith("test")) and line.endswith(".wren"):
@@ -32,8 +33,8 @@ def collect_lines(file_name):
             # Remove variants of line-numbers:
             line = re.sub(r'\[.*?\] ', '', line)
             line = re.sub(r'\d+\.\.\d+', '', line)
-            line = re.sub(r'line: \d+', '', line)
-            line = re.sub(r'line \d+', '', line)
+            line = re.sub(r'line: \d+', 'line: ', line)
+            line = re.sub(r'line \d+', 'line ', line)
             count = word_counts.get(line, 0)
             word_counts[line] = count + 1
 

@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("attributes" on "Without metaclass")
+Without metaclass does not implement 'attributes'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("attributes" on "Without metaclass")
+Without metaclass does not implement 'attributes'.
 
 Missing expected output "true" on line 4.

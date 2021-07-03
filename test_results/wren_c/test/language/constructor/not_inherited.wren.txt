@@ -1,4 +1,2 @@
-Expected runtime error "Bar metaclass does not implement 'base()'." and got:
-MethodNotFound("base()" on "Bar metaclass")
 Expected stack trace and got:
 

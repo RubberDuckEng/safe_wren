@@ -2,19 +2,45 @@ use crate::vm::*;
 use std::collections::VecDeque;
 use std::ops::*;
 
+type Result<T, E = VMError> = std::result::Result<T, E>;
+type Handle<T> = std::rc::Rc<std::cell::RefCell<T>>;
+
+// wren_c has these AS_RANGE, AS_CLASS, etc. macros
+// which (unsafely) do direct "downcasts" to the type.
+// These are our safer (and error-message sharing) alternatives.
+fn this_as_range(args: &Vec<Value>) -> Result<Handle<ObjRange>> {
+    args[0].try_into_range("reciever must be Range".into())
+}
+fn this_as_string(args: &Vec<Value>) -> Result<String> {
+    args[0].try_into_string("reciever must be String".into())
+}
+fn this_as_closure(args: &Vec<Value>) -> Result<Handle<ObjClosure>> {
+    args[0].try_into_closure("reciever must be Closure".into())
+}
+fn this_as_map(args: &Vec<Value>) -> Result<Handle<ObjMap>> {
+    args[0].try_into_map("reciever must be Map".into())
+}
+fn this_as_list(args: &Vec<Value>) -> Result<Handle<ObjList>> {
+    args[0].try_into_list("reciever must be List".into())
+}
+
 macro_rules! num_constant {
     ($func:ident, $value:expr) => {
-        fn $func(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+        fn $func(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
             Ok(Value::Num($value))
         }
     };
 }
 
+fn validate_num(value: &Value, arg_name: &str) -> Result<f64> {
+    value.try_into_num(format!("{} must be a number.", arg_name))
+}
+
 macro_rules! infix_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-            let a = args[0].try_into_num()?;
-            let b = args[1].try_into_num()?;
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let a = validate_num(&args[0], "this")?;
+            let b = validate_num(&args[1], "Right operand")?;
             Ok(Value::$return_type(a.$method(&b)))
         }
     };
@@ -23,9 +49,9 @@ macro_rules! infix_num_op {
 // This is identical to infix_num_op except the borrow for b. :/
 macro_rules! num_binary_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-            let a = args[0].try_into_num()?;
-            let b = args[1].try_into_num()?;
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let a = validate_num(&args[0], "this")?;
+            let b = validate_num(&args[1], "Right operand")?;
             Ok(Value::$return_type(a.$method(b)))
         }
     };
@@ -33,9 +59,9 @@ macro_rules! num_binary_op {
 
 macro_rules! bitwise_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-            let a = args[0].try_into_num()? as u32;
-            let b = args[1].try_into_num()? as u32;
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let a = validate_num(&args[0], "this")? as u32;
+            let b = validate_num(&args[1], "Right operand")? as u32;
             Ok(Value::$return_type(a.$method(&b) as f64))
         }
     };
@@ -43,8 +69,8 @@ macro_rules! bitwise_num_op {
 
 macro_rules! num_bitwise_unary_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-            let a = args[0].try_into_num()? as u32;
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let a = validate_num(&args[0], "this")? as u32;
             Ok(Value::$return_type(a.$method() as f64))
         }
     };
@@ -52,9 +78,9 @@ macro_rules! num_bitwise_unary_op {
 
 macro_rules! num_unary_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-            let num = args[0].try_into_num()?;
-            Ok(Value::$return_type(num.$method()))
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let a = validate_num(&args[0], "this")?;
+            Ok(Value::$return_type(a.$method()))
         }
     };
 }
@@ -83,14 +109,14 @@ bitwise_num_op!(num_bitwise_xor, bitxor, Num);
 bitwise_num_op!(num_bitwise_shl, shl, Num);
 bitwise_num_op!(num_bitwise_shr, shr, Num);
 
-fn num_range_inclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let start = args[0].try_into_num()?;
-    let end = args[1].try_into_num()?;
+fn num_range_inclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let start = validate_num(&args[0], "Left hand side of range")?;
+    let end = validate_num(&args[1], "Right hand side of range")?;
     Ok(Value::Range(wren_new_range(vm, start, end, true)))
 }
-fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let start = args[0].try_into_num()?;
-    let end = args[1].try_into_num()?;
+fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let start = validate_num(&args[0], "Left hand side of range")?;
+    let end = validate_num(&args[1], "Right hand side of range")?;
     Ok(Value::Range(wren_new_range(vm, start, end, false)))
 }
 num_binary_op!(num_atan2, atan2, Num);
@@ -115,10 +141,10 @@ num_unary_op!(num_round, round, Num);
 num_binary_op!(num_min, min, Num);
 num_binary_op!(num_max, max, Num);
 
-fn num_clamp(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let value = args[0].try_into_num()?;
-    let min = args[1].try_into_num()?;
-    let max = args[2].try_into_num()?;
+fn num_clamp(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let value = validate_num(&args[0], "this")?;
+    let min = validate_num(&args[1], "Min value")?;
+    let max = validate_num(&args[2], "Max value")?;
     Ok(Value::Num(value.clamp(min, max)))
 }
 
@@ -131,8 +157,8 @@ num_unary_op!(num_exp, exp, Num);
 num_binary_op!(num_mod, rem, Num);
 num_bitwise_unary_op!(num_bitwise_not, not, Num);
 
-fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let x = args[0].try_into_num()?;
+fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let x = validate_num(&args[0], "this")?;
     Ok(Value::Boolean(
         !x.is_nan() && !x.is_infinite() && (x.trunc() == x),
     ))
@@ -162,30 +188,31 @@ fn wren_num_to_string(num: f64) -> String {
     format!("{}", num)
 }
 
-fn num_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let string = wren_num_to_string(args[0].try_into_num()?);
+fn num_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let value = validate_num(&args[0], "this")?;
+    let string = wren_num_to_string(value);
     Ok(Value::from_string(string))
 }
 
-fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let this = args[0].try_into_class()?;
+fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = args[0].try_into_class("this must be class".into())?;
     let string = this.borrow().name.clone();
     Ok(Value::from_string(string))
 }
 
-fn object_eqeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn object_eqeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(args[0].eq(&args[1])))
 }
 
-fn object_bangeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn object_bangeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(args[0].ne(&args[1])))
 }
 
-fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let expected_baseclass = args[1].try_into_class()?;
+fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let expected_baseclass = args[1].try_into_class("Right operand must be a class.".into())?;
     let mut class = vm
         .class_for_value(&args[0])
-        .ok_or(RuntimeError::ObjectRequired(args[0].clone()))?;
+        .ok_or(VMError::from_str("this must be class"))?;
     // Should this just be an iterator?
     // e.g. for class in object.class_chain()
 
@@ -203,8 +230,8 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     }
 }
 
-fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let range_cell = args[0].try_into_range()?;
+fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let range_cell = this_as_range(&args)?;
     let range = range_cell.borrow();
 
     // Special case: empty range.
@@ -216,7 +243,7 @@ fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> 
         return Ok(Value::Num(range.from));
     }
 
-    let mut iterator = args[1].try_into_num()?;
+    let mut iterator = validate_num(&args[1], "Iterator")?;
 
     // Iterate towards [to] from [from].
     if range.from < range.to {
@@ -238,13 +265,13 @@ fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> 
     Ok(Value::Num(iterator))
 }
 
-fn range_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn range_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     // Assuming args[1] is a number.
     Ok(args[1].clone())
 }
 
-fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let range_ref = args[0].try_into_range()?;
+fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let range_ref = args[0].try_into_range("this must be range".into())?;
     let range = range_ref.borrow();
 
     let from = wren_num_to_string(range.from);
@@ -253,22 +280,22 @@ fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError
     Ok(Value::from_string(format!("{}{}{}", from, op, to)))
 }
 
-fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let class = vm
-        .class_for_value(&args[0])
-        .ok_or(RuntimeError::ObjectRequired(args[0].clone()))?;
-    Ok(Value::Class(class))
+fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    Ok(match vm.class_for_value(&args[0]) {
+        Some(c) => Value::Class(c),
+        None => Value::Null,
+    })
 }
 
-fn object_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn object_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(false))
 }
 
-fn bool_not(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn bool_not(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(!args[0].equals_true()))
 }
 
-fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     if args[0].equals_true() {
         Ok(Value::from_str("true"))
     } else {
@@ -276,12 +303,12 @@ fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError>
     }
 }
 
-fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let is_abort = !args[1].is_null();
     // wren_c just records the error string and continues?
     // vm->fiber->error = args[1];
     if is_abort {
-        Err(RuntimeError::FiberAbort(args[1].clone()))
+        Err(VMError::FiberAbort(args[1].clone()))
     } else {
         // I guess Fiber.abort(null) clears the error?
         // wren_c: If the error is explicitly null, it's not really an abort.
@@ -289,53 +316,61 @@ fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     }
 }
 
-fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(true))
 }
 
-fn null_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn null_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_str("null"))
 }
 
-fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let a = args[0].try_into_string()?;
-    let b = args[1].try_into_string()?;
+fn validate_string(arg: &Value, arg_name: &str) -> Result<String> {
+    arg.try_into_string(format!("{} must be a string.", arg_name))
+}
+
+fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let a = args[0].try_into_string("this must be string".into())?;
+    let b = validate_string(&args[1], "Right operand")?;
 
     Ok(Value::from_string(a + &b))
 }
 
-fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     // Do we need to confirm args[0] is a string?  wren_c does not.
     Ok(args[0].clone())
 }
 
-fn string_byte_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let string = args[0].try_into_string()?;
-    Ok(Value::Num(string.len() as f64))
+fn string_byte_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    Ok(Value::Num(this_as_string(&args)?.len() as f64))
 }
 
-fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let string = args[0].try_into_string()?;
+fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let string = this_as_string(&args)?;
     let index = validate_index(&args[1], string.len(), "Index")?;
     Ok(Value::Num(string.as_bytes()[index] as f64))
 }
 
-fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let closure = args[1].try_into_closure()?;
-    Ok(Value::Closure(closure))
+fn validate_fn(arg: &Value, arg_name: &str) -> Result<Handle<ObjClosure>> {
+    arg.try_into_closure(format!("{} must be a function", arg_name))
 }
 
-fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let closure = args[0].try_into_closure()?;
+fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    // Odd that this never checks arg[0].
+    // The block argument is already a function, so just return it.
+    Ok(Value::Closure(validate_fn(&args[1], "Argument")?))
+}
+
+fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let closure = this_as_closure(&args)?;
     let arity = closure.borrow().fn_obj.borrow().arity as f64;
     Ok(Value::Num(arity))
 }
 
-fn fn_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn fn_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_str("<fn>"))
 }
 
-fn map_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn map_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Map(wren_new_map(vm)))
 }
 
@@ -351,36 +386,35 @@ fn wren_map_is_valid_key(arg: &Value) -> bool {
     }
 }
 
-fn validate_key(_vm: &WrenVM, arg: &Value) -> Result<bool, RuntimeError> {
+fn validate_key(_vm: &WrenVM, arg: &Value) -> Result<bool> {
     if wren_map_is_valid_key(arg) {
         Ok(true)
     } else {
-        Err(RuntimeError::Generic("Key must be a value type.".into()))
+        Err(VMError::from_str("Key must be a value type."))
     }
 }
 
 // Adds an entry to the map and then returns the map itself. This is called by
 // the compiler when compiling map literals instead of using [_]=(_) to
 // minimize stack churn.
-fn map_add_core(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn map_add_core(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
 
     let value = args.pop().unwrap();
     let key = args.pop().unwrap();
-    let map = args[0].try_into_map()?;
+    let map = this_as_map(&args)?;
     map.borrow_mut().data.insert(key, value);
     // Return the map itself.
     Ok(Value::Map(map))
 }
 
-fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::List(wren_new_list(vm)))
 }
 
-fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
-    let list_value = args.pop().unwrap();
-    let list = list_value.try_into_list()?;
+    let list = this_as_list(&args)?;
     list.borrow_mut().elements.push(value.clone());
     Ok(value)
 }
@@ -388,29 +422,31 @@ fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
 // Adds an element to the list and then returns the list itself. This is called
 // by the compiler when compiling list literals instead of using add() to
 // minimize stack churn.
-fn list_add_core(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value, RuntimeError> {
+fn list_add_core(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
-    let list_value = args.pop().unwrap();
-    let list = list_value.try_into_list()?;
+    let list = this_as_list(&args)?;
     list.borrow_mut().elements.push(value);
-    Ok(list_value)
+    Ok(args[0].clone())
 }
 
-fn validate_int_value(value: f64, arg_name: &str) -> Result<f64, RuntimeError> {
+fn validate_int_value(value: f64, arg_name: &str) -> Result<f64> {
     if value.trunc() != value {
-        Err(RuntimeError::ExpectingInteger(arg_name.into()))
+        Err(VMError::from_string(format!(
+            "{} must be an integer.",
+            arg_name
+        )))
     } else {
         Ok(value)
     }
 }
 
-fn validate_int(value: &Value, arg_name: &str) -> Result<f64, RuntimeError> {
-    let num = value.try_into_num()?;
+fn validate_int(value: &Value, arg_name: &str) -> Result<f64> {
+    let num = validate_num(value, arg_name)?;
     validate_int_value(num, arg_name)
 }
 
-fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let list = args[0].try_into_list()?;
+fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
     let elements_len = list.borrow().elements.len() as f64;
 
     if args[1].is_null() {
@@ -429,19 +465,15 @@ fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
     return Ok(Value::Num(index + 1.0));
 }
 
-fn validate_index(value: &Value, count: usize, arg_name: &str) -> Result<usize, RuntimeError> {
-    let num = value.try_into_num()?;
+fn validate_index(value: &Value, count: usize, arg_name: &str) -> Result<usize> {
+    let num = validate_num(value, arg_name)?;
     validate_index_value(count, num, arg_name)
 }
 
 // Validates that [value] is an integer within `[0, count)`. Also allows
 // negative indices which map backwards from the end. Returns the valid positive
 // index value. If invalid, reports an error.
-fn validate_index_value(
-    count: usize,
-    mut value: f64,
-    arg_name: &str,
-) -> Result<usize, RuntimeError> {
+fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<usize> {
     validate_int_value(value, arg_name)?;
 
     // Negative indices count from the end.
@@ -452,27 +484,27 @@ fn validate_index_value(
     if value >= 0.0 && value < count as f64 {
         Ok(value as usize)
     } else {
-        Err(RuntimeError::RangeOutOfBounds(arg_name.into()))
+        Err(VMError::from_string(format!("{} out of bounds.", arg_name)))
     }
 }
 
-fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let list = args[0].try_into_list()?;
+fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
 
     let index = validate_index(&args[1], list.borrow().elements.len(), "Iterator")?;
     let value = list.borrow().elements[index].clone();
     Ok(value)
 }
 
-fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let list = args[0].try_into_list()?;
+fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
     let index = validate_index(&args[1], list.borrow().elements.len(), "Index")?;
     list.borrow_mut().elements.remove(index);
     Ok(Value::List(list))
 }
 
-fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let list = args[0].try_into_list()?;
+fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
     let count = list.borrow().elements.len() as f64;
     Ok(Value::Num(count))
 }
@@ -506,8 +538,8 @@ fn unescape(s: &str) -> String {
     s
 }
 
-fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value, RuntimeError> {
-    let string = args[1].try_into_string()?;
+fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let string = args[1].try_into_string("expected String".into())?;
     let result = unescape(&string);
     // FIXME: This should be an API call to the embedder.
     print!("{}", result);

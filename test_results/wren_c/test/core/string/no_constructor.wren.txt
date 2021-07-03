@@ -1,4 +1,2 @@
-Expected runtime error "String metaclass does not implement 'new()'." and got:
-MethodNotFound("new()" on "String metaclass")
 Expected stack trace and got:
 

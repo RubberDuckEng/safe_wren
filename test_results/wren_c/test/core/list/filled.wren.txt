@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("filled(_,_)" on "List metaclass")
+List metaclass does not implement 'filled(_,_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("filled(_,_)" on "List metaclass")
+List metaclass does not implement 'filled(_,_)'.
 
 Missing expected output "3" on line 2.
 Missing expected output "[value, value, value]" on line 3.

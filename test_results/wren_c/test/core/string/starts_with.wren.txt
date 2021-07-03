@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("startsWith(_)" on "String")
+String does not implement 'startsWith(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("startsWith(_)" on "String")
+String does not implement 'startsWith(_)'.
 
 Missing expected output "false" on line 1.
 Missing expected output "true" on line 2.

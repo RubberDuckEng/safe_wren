@@ -10,7 +10,7 @@ mod core;
 mod vm;
 
 use crate::compiler::{compile, lex, InputManager};
-use crate::vm::{debug_bytecode, WrenVM};
+use crate::vm::{debug_bytecode, RuntimeError, WrenVM};
 
 enum ExitCode {
     Success = 0,
@@ -66,9 +66,22 @@ fn run_file(path: &String) {
     });
 
     vm.run(closure).unwrap_or_else(|e| {
-        eprintln!("{:?}", e);
+        dump_runtime_error(&e);
         exit(ExitCode::RuntimeError);
     });
+}
+
+// wre_test expects:
+// Index must be a number.
+// [.test/core/string.../iterator_value_not_num line 1] in (script)
+fn dump_runtime_error(e: &RuntimeError) {
+    eprintln!("{}", e.msg);
+    for frame in &e.stack_trace.frames {
+        eprintln!(
+            "[{} line {}] in {}",
+            frame.module, frame.line, frame.fn_name
+        );
+    }
 }
 
 fn wren_test_main(args: &Vec<String>) {

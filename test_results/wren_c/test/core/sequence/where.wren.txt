@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("where(_)" on "Fib")
+Fib does not implement 'where(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("where(_)" on "Fib")
+Fib does not implement 'where(_)'.
 
 Missing expected output "true" on line 32.
 Missing expected output "instance of WhereSequence" on line 33.

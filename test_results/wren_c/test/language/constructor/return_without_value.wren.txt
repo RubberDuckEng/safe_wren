@@ -1,7 +1,13 @@
 Unexpected output on stderr:
-MethodNotFound("toString" on "Baz")
+Baz does not implement 'toString'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 0] in print(_)
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 0] in <script>
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("toString" on "Baz")
+Baz does not implement 'toString'.
+[./test/module/name/not/yet/captured line 0] in print(_)
+[./test/module/name/not/yet/captured line 0] in <script>
 
 Missing expected output "instance of Baz" on line 15.
 Missing expected output "instance of Bar" on line 16.

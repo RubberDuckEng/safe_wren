@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]=(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "List")
+List does not implement '[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]=(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
 Missing expected error on line 2.
 Expected return code 65 and got 70. Stderr:
-MethodNotFound("[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]=(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)" on "List")
+List does not implement '[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]=(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
 

@@ -1,4 +1,4 @@
 Expected runtime error "Delimiter must be a non-empty string." and got:
-MethodNotFound("split(_)" on "String")
+String does not implement 'split(_)'.
 Expected stack trace and got:
 

@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("supertype" on "Foo metaclass")
+Foo metaclass does not implement 'supertype'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("supertype" on "Foo metaclass")
+Foo metaclass does not implement 'supertype'.
 
 Missing expected output "true" on line 8.
 Missing expected output "true" on line 11.

@@ -1,4 +1,1 @@
-Expected runtime error "Right operand must be a string." and got:
-StringRequired(Num(2))
-Expected stack trace and got:
-
+Expected runtime error on line 1 but was on line 0.

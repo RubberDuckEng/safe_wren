@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("[_]" on "List")
+List does not implement '[_]'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("[_]" on "List")
+List does not implement '[_]'.
 
 Missing expected output "a" on line 3.
 Missing expected output "b" on line 4.

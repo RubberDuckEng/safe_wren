@@ -1,4 +1,2 @@
-Expected runtime error "Range metaclass does not implement 'new()'." and got:
-MethodNotFound("new()" on "Range metaclass")
 Expected stack trace and got:
 

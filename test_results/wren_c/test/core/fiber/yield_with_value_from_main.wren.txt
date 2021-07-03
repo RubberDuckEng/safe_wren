@@ -1,5 +1,5 @@
 Unexpected output on stderr:
-MethodNotFound("yield(_)" on "Fiber metaclass")
+Fiber metaclass does not implement 'yield(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("yield(_)" on "Fiber metaclass")
+Fiber metaclass does not implement 'yield(_)'.
 

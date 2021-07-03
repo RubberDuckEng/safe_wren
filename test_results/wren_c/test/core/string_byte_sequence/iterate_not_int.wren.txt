@@ -1,4 +1,3 @@
 Expected runtime error "Iterator must be an integer." and got:
-MethodNotFound("iterateByte_(_)" on "String")
-Expected stack trace and got:
-
+String does not implement 'iterateByte_(_)'.
+Expected runtime error on line 1 but was on line 0.

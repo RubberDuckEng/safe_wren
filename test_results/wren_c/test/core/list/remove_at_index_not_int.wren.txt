@@ -1,4 +1,2 @@
-Expected runtime error "Index must be an integer." and got:
-ExpectingInteger("Index")
 Expected stack trace and got:
 

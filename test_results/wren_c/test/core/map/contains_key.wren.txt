@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("containsKey(_)" on "Map")
+Map does not implement 'containsKey(_)'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("containsKey(_)" on "Map")
+Map does not implement 'containsKey(_)'.
 
 Missing expected output "true" on line 7.
 Missing expected output "true" on line 8.

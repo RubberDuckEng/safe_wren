@@ -1,4 +1,4 @@
 Expected runtime error "Abort!" and got:
-FiberAbort(String("Abort!"))
+Fiber Abort <value>
 Expected stack trace and got:
 

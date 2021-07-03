@@ -1,7 +1,10 @@
 Unexpected output on stderr:
-MethodNotFound("iterateByte_(_)" on "String")
+String does not implement 'iterateByte_(_)'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 0] in <script>
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("iterateByte_(_)" on "String")
+String does not implement 'iterateByte_(_)'.
+[./test/module/name/not/yet/captured line 0] in <script>
 
 Missing expected output "0" on line 6.
 Missing expected output "false" on line 7.

@@ -1,4 +1,4 @@
 Expected runtime error "Iterator must be an integer." and got:
-MethodNotFound("iterate(_)" on "Map")
+Map does not implement 'iterate(_)'.
 Expected stack trace and got:
 

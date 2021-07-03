@@ -1,4 +1,4 @@
 Expected runtime error "Key must be a value type." and got:
-MethodNotFound("containsKey(_)" on "Map")
+Map does not implement 'containsKey(_)'.
 Expected stack trace and got:
 

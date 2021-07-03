@@ -1,4 +1,2 @@
-Expected runtime error "Min value must be a number." and got:
-NumberRequired(Boolean(false))
 Expected stack trace and got:
 

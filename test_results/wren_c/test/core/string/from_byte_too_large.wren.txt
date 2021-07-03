@@ -1,4 +1,4 @@
 Expected runtime error "Byte cannot be greater than 0xff." and got:
-MethodNotFound("fromByte(_)" on "String metaclass")
+String metaclass does not implement 'fromByte(_)'.
 Expected stack trace and got:
 

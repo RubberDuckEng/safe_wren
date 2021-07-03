@@ -1,4 +1,1 @@
-Expected runtime error "Index must be a number." and got:
-NumberRequired(String("not num"))
-Expected stack trace and got:
-
+Expected runtime error on line 1 but was on line 0.

@@ -1,6 +1,6 @@
 Unexpected output on stderr:
-MethodNotFound("toString" on "Foo")
+Foo does not implement 'toString'.
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("toString" on "Foo")
+Foo does not implement 'toString'.
 
 Missing expected output "true" on line 4.

@@ -1,4 +1,4 @@
 Expected runtime error "Code point cannot be greater than 0x10ffff." and got:
-MethodNotFound("fromCodePoint(_)" on "String metaclass")
+String metaclass does not implement 'fromCodePoint(_)'.
 Expected stack trace and got:
 

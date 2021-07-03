@@ -1,4 +1,2 @@
-Expected runtime error "Bar metaclass does not implement 'methodOnFoo'." and got:
-MethodNotFound("methodOnFoo" on "Bar metaclass")
 Expected stack trace and got:
 

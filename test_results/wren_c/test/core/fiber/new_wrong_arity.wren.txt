@@ -1,4 +1,4 @@
 Expected runtime error "Function cannot take more than one parameter." and got:
-MethodNotFound("new(_)" on "Fiber metaclass")
+Fiber metaclass does not implement 'new(_)'.
 Expected stack trace and got:
 

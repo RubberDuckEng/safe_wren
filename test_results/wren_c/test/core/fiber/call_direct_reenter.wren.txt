@@ -1,4 +1,4 @@
 Expected runtime error "Fiber has already been called." and got:
-MethodNotFound("new(_)" on "Fiber metaclass")
+Fiber metaclass does not implement 'new(_)'.
 Expected stack trace and got:
 

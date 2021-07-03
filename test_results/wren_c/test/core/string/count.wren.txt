@@ -1,7 +1,10 @@
 Unexpected output on stderr:
-MethodNotFound("iterate(_)" on "String")
+String does not implement 'iterate(_)'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 0] in <script>
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("iterate(_)" on "String")
+String does not implement 'iterate(_)'.
+[./test/module/name/not/yet/captured line 0] in <script>
 
 Missing expected output "0" on line 1.
 Missing expected output "8" on line 2.
