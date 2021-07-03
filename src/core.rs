@@ -455,6 +455,26 @@ fn map_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Map(wren_new_map(vm)))
 }
 
+fn map_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    validate_key(vm, &args[1])?;
+    let map_cell = this_as_map(&args)?;
+    let map = map_cell.borrow();
+    let maybe_value = map.data.get(&args[1]);
+    match maybe_value {
+        None => Ok(Value::Null),
+        Some(v) => Ok(v.clone()),
+    }
+}
+
+fn map_subscript_setter(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    validate_key(vm, &args[1])?;
+    let map = this_as_map(&args)?;
+    map.borrow_mut()
+        .data
+        .insert(args[1].clone(), args[2].clone());
+    Ok(args[2].clone())
+}
+
 fn wren_map_is_valid_key(arg: &Value) -> bool {
     match arg {
         Value::Boolean(_) => true,
@@ -930,8 +950,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     let map = find_core_class(vm, "Map");
     primitive_static!(vm, map, "new()", map_new);
-    // primitive!(vm, map, "[_]", map_subscript);
-    // primitive!(vm, map, "[_]=(_)", map_subscript_setter);
+    primitive!(vm, map, "[_]", map_subscript);
+    primitive!(vm, map, "[_]=(_)", map_subscript_setter);
     primitive!(vm, map, "addCore_(_,_)", map_add_core);
     primitive!(vm, map, "clear()", map_clear);
     primitive!(vm, map, "containsKey(_)", map_contains_key);
