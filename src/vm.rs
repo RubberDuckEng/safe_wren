@@ -771,10 +771,13 @@ impl WrenVM {
                             msg: msg,
                             stack_trace: stack_trace,
                         },
-                        VMError::FiberAbort(_) => RuntimeError {
-                            msg: "Fiber Abort <value>".into(),
-                            stack_trace: stack_trace,
-                        },
+                        VMError::FiberAbort(value) => {
+                            let maybe_msg = value.try_into_string("ignored".into());
+                            RuntimeError {
+                                msg: maybe_msg.unwrap_or("Fiber Abort <non-string>".to_string()),
+                                stack_trace: stack_trace,
+                            }
+                        }
                         VMError::StackUnderflow => RuntimeError {
                             msg: "stack underflow".into(),
                             stack_trace: stack_trace,

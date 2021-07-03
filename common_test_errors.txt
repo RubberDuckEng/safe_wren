@@ -24,8 +24,6 @@ occurances : error text
 14 : in writeObject_(_)
 12 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: Hash, line:  }")
 12 : Expected return code 70 and got 0. Stderr:
-12 : Expected runtime error "Count must be a non-negative integer." and got:
-12 : Fiber Abort <value>
 11 : Fiber metaclass does not implement 'current'.
 11 : Map does not implement '[_]'.
 10 : in iterate(_)
@@ -37,6 +35,7 @@ occurances : error text
 8 : Expected runtime error "Range end out of bounds." and got:
 6 : Error Grammar("Undeclared variable \'local\'")
 6 : Error Lexer(UnterminatedScientificNotation)
+6 : Expected runtime error "Count must be a non-negative integer." and got:
 6 : Expected runtime error "Fiber has already been called." and got:
 6 : Expected runtime error "Index out of bounds." and got:
 6 : Expected runtime error "Subscript out of bounds." and got:
@@ -82,7 +81,6 @@ occurances : error text
 3 : Expected output "outer 1" on line  and got "outer %(i)".
 3 : Expected output "outer 2" on line  and got "outer %(i)".
 3 : Expected return code 65 and got 70. Stderr:
-3 : Expected runtime error "Characters must be a string." and got:
 3 : Expected runtime error "Index must be a number." and got:
 3 : Expected runtime error "Index must be an integer." and got:
 3 : Expected runtime error "Subscript must be an integer." and got:
@@ -121,7 +119,6 @@ occurances : error text
 2 : Expected runtime error "Cannot transfer to a finished fiber." and got:
 2 : Expected runtime error "Cannot transfer to an aborted fiber." and got:
 2 : Expected runtime error "Delimiter must be a non-empty string." and got:
-2 : Expected runtime error "From must be a non-empty string." and got:
 2 : Expected runtime error "Not enough elements to sample." and got:
 2 : Expected runtime error "Other value must be a number." and got:
 2 : Expected runtime error "Range end must be an integer." and got:
@@ -299,13 +296,11 @@ occurances : error text
 1 : Expected output "ஃ" on line  and got "\u0b83".
 1 : Expected return code 65 and got 3221225725. Stderr:
 1 : Expected runtime error "Abort!" and got none.
-1 : Expected runtime error "Abort!" and got:
 1 : Expected runtime error "Base does not implement 'doesNotExist(_)'." and got:
 1 : Expected runtime error "Byte cannot be greater than 0xff." and got:
 1 : Expected runtime error "Byte cannot be negative." and got:
 1 : Expected runtime error "Byte must be a number." and got:
 1 : Expected runtime error "Byte must be an integer." and got:
-1 : Expected runtime error "Can't reduce an empty sequence." and got:
 1 : Expected runtime error "Cannot try a finished fiber." and got:
 1 : Expected runtime error "Cannot try an aborted fiber." and got:
 1 : Expected runtime error "Class 'Bar' may not have more than 255 fields, including inherited ones." and got:
@@ -332,6 +327,7 @@ occurances : error text
 1 : Expected runtime error "Could not find foreign method 'someUnknownMethod' for class Foo in module './test/language/foreign/unknown_method'." and got:
 1 : Expected runtime error "Could not load module './test/language/module/does_not_exist'." and got:
 1 : Expected runtime error "Foreign class 'Bar' may not inherit from a class with fields." and got:
+1 : Expected runtime error "From must be a non-empty string." and got:
 1 : Expected runtime error "Function cannot take more than one parameter." and got:
 1 : Expected runtime error "Function expects more arguments." and got none.
 1 : Expected runtime error "Function expects more arguments." and got:

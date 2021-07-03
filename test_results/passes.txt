@@ -26,6 +26,7 @@ wren_c/test/core/class/equality.wren
 wren_c/test/core/class/name.wren
 wren_c/test/core/class/no_constructor.wren
 wren_c/test/core/class/type.wren
+wren_c/test/core/fiber/abort_main_fiber.wren
 wren_c/test/core/function/arity.wren
 wren_c/test/core/function/call_runtime_error.wren
 wren_c/test/core/function/to_string.wren
