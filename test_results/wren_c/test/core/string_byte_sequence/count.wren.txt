@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("bytes" on "String")
+FieldOutOfBounds
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("bytes" on "String")
+FieldOutOfBounds
 
 Missing expected output "0" on line 2.
 Missing expected output "3" on line 3.

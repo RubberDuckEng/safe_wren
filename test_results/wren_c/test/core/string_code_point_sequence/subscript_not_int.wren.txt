@@ -1,4 +1,4 @@
 Expected runtime error "Index must be an integer." and got:
-MethodNotFound("codePoints" on "String")
+FieldOutOfBounds
 Expected stack trace and got:
 

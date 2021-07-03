@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("codePoints" on "String")
+FieldOutOfBounds
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("codePoints" on "String")
+FieldOutOfBounds
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

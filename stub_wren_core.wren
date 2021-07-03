@@ -119,9 +119,33 @@ class Sequence {
   // }
 }
 
+class StringByteSequence is Sequence {
+  construct new(string) {
+    _string = string
+  }
+
+  [index] { _string.byteAt_(index) }
+  iterate(iterator) { _string.iterateByte_(iterator) }
+  iteratorValue(iterator) { _string.byteAt_(iterator) }
+
+  count { _string.byteCount_ }
+}
+
+class StringCodePointSequence is Sequence {
+  construct new(string) {
+    _string = string
+  }
+
+  [index] { _string.codePointAt_(index) }
+  iterate(iterator) { _string.iterate(iterator) }
+  iteratorValue(iterator) { _string.codePointAt_(iterator) }
+
+  count { _string.count }
+}
+
 class String is Sequence {
-  // bytes { StringByteSequence.new(this) }
-  // codePoints { StringCodePointSequence.new(this) }
+  bytes { StringByteSequence.new(this) }
+  codePoints { StringCodePointSequence.new(this) }
 
   // split(delimiter) {
   //   if (!(delimiter is String) || delimiter.isEmpty) {
