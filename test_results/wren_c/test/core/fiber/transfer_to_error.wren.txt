@@ -1,4 +1,3 @@
 Expected runtime error "Cannot transfer to an aborted fiber." and got:
 Fiber metaclass does not implement 'new(_)'.
-Expected stack trace and got:
-
+Expected runtime error on line 7 but was on line 4.

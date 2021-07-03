@@ -1,9 +1,12 @@
 Unexpected output on stderr:
 String does not implement 'iterate(_)'.
 Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 28] in contains(_)
+Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterate(_)'.
+[./test/module/name/not/yet/captured line 28] in contains(_)
 [./test/module/name/not/yet/captured line 1] in <script>
 
 Missing expected output "true" on line 1.

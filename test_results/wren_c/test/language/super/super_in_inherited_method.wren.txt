@@ -1,9 +1,12 @@
 Unexpected output on stderr:
 B does not implement 'super'.
 Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 2] in callSuperToString
+Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 11] in <script>
 Expected return code 0 and got 70. Stderr:
 B does not implement 'super'.
+[./test/module/name/not/yet/captured line 2] in callSuperToString
 [./test/module/name/not/yet/captured line 11] in <script>
 
 Missing expected output "instance of B" on line 11.

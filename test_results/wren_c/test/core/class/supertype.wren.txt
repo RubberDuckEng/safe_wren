@@ -1,7 +1,10 @@
 Unexpected output on stderr:
 Foo metaclass does not implement 'supertype'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 8] in <script>
 Expected return code 0 and got 70. Stderr:
 Foo metaclass does not implement 'supertype'.
+[./test/module/name/not/yet/captured line 8] in <script>
 
 Missing expected output "true" on line 8.
 Missing expected output "true" on line 11.

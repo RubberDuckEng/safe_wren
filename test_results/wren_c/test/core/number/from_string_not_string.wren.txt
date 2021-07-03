@@ -1,4 +1,2 @@
 Expected runtime error "Argument must be a string." and got:
 Num metaclass does not implement 'fromString(_)'.
-Expected stack trace and got:
-

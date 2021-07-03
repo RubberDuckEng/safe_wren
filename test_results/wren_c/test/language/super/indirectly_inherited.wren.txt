@@ -1,9 +1,12 @@
 Unexpected output on stderr:
 C does not implement 'super'.
 Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 14] in foo
+Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 18] in <script>
 Expected return code 0 and got 70. Stderr:
 C does not implement 'super'.
+[./test/module/name/not/yet/captured line 14] in foo
 [./test/module/name/not/yet/captured line 18] in <script>
 
 Missing expected output "A.foo" on line 20.

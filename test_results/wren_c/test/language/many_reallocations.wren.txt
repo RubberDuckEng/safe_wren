@@ -1,8 +1,10 @@
 Unexpected output on stderr:
-thread 'main' has overflowed its stack
-Expected return code 0 and got 3221225725. Stderr:
-
-thread 'main' has overflowed its stack
+Map does not implement '[_]'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 9] in <script>
+Expected return code 0 and got 70. Stderr:
+Map does not implement '[_]'.
+[./test/module/name/not/yet/captured line 9] in <script>
 
 Missing expected output "true" on line 15.
 Missing expected output "done" on line 16.

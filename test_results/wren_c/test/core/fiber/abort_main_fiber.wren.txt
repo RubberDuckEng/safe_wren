@@ -1,4 +1,2 @@
 Expected runtime error "Abort!" and got:
 Fiber Abort <value>
-Expected stack trace and got:
-

@@ -1,4 +1,2 @@
 Expected runtime error "Start must be a number." and got:
 String does not implement 'indexOf(_,_)'.
-Expected stack trace and got:
-

@@ -1,5 +1,4 @@
 Expected runtime error "Cannot call a finished fiber." and got:
 Fiber metaclass does not implement 'new(_)'.
-Expected stack trace and got:
-
+Expected runtime error on line 6 but was on line 3.
 Missing expected output "call" on line 5.

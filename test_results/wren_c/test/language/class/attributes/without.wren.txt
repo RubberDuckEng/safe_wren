@@ -1,6 +1,9 @@
 Unexpected output on stderr:
 Without metaclass does not implement 'attributes'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 4] in <script>
 Expected return code 0 and got 70. Stderr:
 Without metaclass does not implement 'attributes'.
+[./test/module/name/not/yet/captured line 4] in <script>
 
 Missing expected output "true" on line 4.

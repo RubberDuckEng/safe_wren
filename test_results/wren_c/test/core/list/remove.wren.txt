@@ -1,7 +1,10 @@
 Unexpected output on stderr:
 List does not implement 'remove(_)'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 2] in <script>
 Expected return code 0 and got 70. Stderr:
 List does not implement 'remove(_)'.
+[./test/module/name/not/yet/captured line 2] in <script>
 
 Missing expected output "[1, 3]" on line 3.
 Missing expected output "[2, 3]" on line 7.

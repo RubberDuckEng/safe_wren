@@ -1,9 +1,12 @@
 Unexpected output on stderr:
 Derived does not implement 'super'.
 Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 12] in foo
+Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 16] in <script>
 Expected return code 0 and got 70. Stderr:
 Derived does not implement 'super'.
+[./test/module/name/not/yet/captured line 12] in foo
 [./test/module/name/not/yet/captured line 16] in <script>
 
 Missing expected output "Base.foo" on line 18.

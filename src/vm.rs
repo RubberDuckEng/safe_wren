@@ -762,6 +762,9 @@ impl WrenVM {
                     return Ok(Value::Null);
                 }
                 Err(vm_error) => {
+                    // Push the current frame back onto the fiber so we can
+                    // see it in error reporting.
+                    fiber.call_stack.push(frame);
                     let stack_trace = self.stack_trace(&fiber);
                     let runtime_error = match vm_error {
                         VMError::Error(msg) => RuntimeError {

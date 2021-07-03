@@ -1,11 +1,14 @@
 Unexpected output on stderr:
 Bar does not implement 'super()'.
 Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 141] in init new()
+Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 269] in 
 Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 277] in <script>
 Expected return code 0 and got 70. Stderr:
 Bar does not implement 'super()'.
+[./test/module/name/not/yet/captured line 141] in init new()
 [./test/module/name/not/yet/captured line 269] in 
 [./test/module/name/not/yet/captured line 277] in <script>
 

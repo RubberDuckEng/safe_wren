@@ -1,4 +1,2 @@
 Expected runtime error "Count must be a non-negative integer." and got:
 List does not implement 'skip(_)'.
-Expected stack trace and got:
-

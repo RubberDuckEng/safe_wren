@@ -1,3 +1,3 @@
 Expected runtime error "Class 'Bar' may not have more than 255 fields, including inherited ones." and got:
 Bar does not implement 'super()'.
-Expected runtime error on line 139 but was on line 270.
+Expected runtime error on line 139 but was on line 141.

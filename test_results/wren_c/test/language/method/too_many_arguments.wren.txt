@@ -1,6 +1,9 @@
 Unexpected output on stderr:
 System metaclass does not implement 'print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 1] in <script>
 Missing expected error on line 1.
 Expected return code 65 and got 70. Stderr:
 System metaclass does not implement 'print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
+[./test/module/name/not/yet/captured line 1] in <script>
 

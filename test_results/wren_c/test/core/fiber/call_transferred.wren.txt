@@ -1,7 +1,10 @@
 Unexpected output on stderr:
 Fiber metaclass does not implement 'current'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 Fiber metaclass does not implement 'current'.
+[./test/module/name/not/yet/captured line 1] in <script>
 
 Missing expected output "transferred" on line 9.
 Missing expected output "main" on line 10.

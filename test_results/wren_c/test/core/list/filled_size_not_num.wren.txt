@@ -1,4 +1,2 @@
 Expected runtime error "Size must be a number." and got:
 List metaclass does not implement 'filled(_,_)'.
-Expected stack trace and got:
-

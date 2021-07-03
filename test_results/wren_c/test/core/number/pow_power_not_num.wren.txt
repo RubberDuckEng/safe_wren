@@ -1,4 +1,2 @@
 Expected runtime error "Power value must be a number." and got:
 Right operand must be a number.
-Expected stack trace and got:
-

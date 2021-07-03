@@ -1,4 +1,2 @@
 Expected runtime error "Byte must be a number." and got:
 String metaclass does not implement 'fromByte(_)'.
-Expected stack trace and got:
-

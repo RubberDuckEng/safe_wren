@@ -1,4 +1,2 @@
 Expected runtime error "Range start out of bounds." and got:
 String does not implement '[_]'.
-Expected stack trace and got:
-

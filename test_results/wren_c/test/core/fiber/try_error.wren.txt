@@ -1,5 +1,4 @@
 Expected runtime error "Cannot try an aborted fiber." and got:
 Fiber metaclass does not implement 'new(_)'.
-Expected stack trace and got:
-
+Expected runtime error on line 7 but was on line 4.
 Missing expected output "try" on line 6.

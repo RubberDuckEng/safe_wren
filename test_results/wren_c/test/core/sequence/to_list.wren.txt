@@ -1,6 +1,9 @@
 Unexpected output on stderr:
 TestSequence does not implement 'toList'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 13] in <script>
 Expected return code 0 and got 70. Stderr:
 TestSequence does not implement 'toList'.
+[./test/module/name/not/yet/captured line 13] in <script>
 
 Missing expected output "[1, 2, 3]" on line 13.

@@ -1,4 +1,2 @@
 Expected runtime error "Argument must be a string." and got:
 String does not implement 'indexOf(_)'.
-Expected stack trace and got:
-

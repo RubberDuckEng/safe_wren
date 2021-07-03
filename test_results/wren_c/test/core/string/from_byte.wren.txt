@@ -1,7 +1,10 @@
 Unexpected output on stderr:
 String metaclass does not implement 'fromByte(_)'.
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 String metaclass does not implement 'fromByte(_)'.
+[./test/module/name/not/yet/captured line 1] in <script>
 
 Missing expected output "A" on line 1.
 Missing expected output "0" on line 2.

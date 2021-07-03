@@ -1,11 +1,14 @@
 Unexpected output on stderr:
 StringCodePointSequence does not implement 'toList'.
 Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 215] in trim_(_,_,_)
+Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 203] in trimEnd()
 Unexpected output on stderr:
 [./test/module/name/not/yet/captured line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 StringCodePointSequence does not implement 'toList'.
+[./test/module/name/not/yet/captured line 215] in trim_(_,_,_)
 [./test/module/name/not/yet/captured line 203] in trimEnd()
 [./test/module/name/not/yet/captured line 1] in <script>
 

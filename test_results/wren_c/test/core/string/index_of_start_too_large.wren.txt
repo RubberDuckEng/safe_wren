@@ -1,4 +1,2 @@
 Expected runtime error "Start out of bounds." and got:
 String does not implement 'indexOf(_,_)'.
-Expected stack trace and got:
-
