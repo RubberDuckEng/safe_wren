@@ -1,10 +1,16 @@
 Unexpected output on stderr:
-List does not implement 'insert(_,_)'.
+List does not implement 'toString'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 3] in <script>
+[./test/module/name/not/yet/captured line 406] in writeObject_(_)
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 385] in print(_)
+Unexpected output on stderr:
+[./test/module/name/not/yet/captured line 4] in <script>
 Expected return code 0 and got 70. Stderr:
-List does not implement 'insert(_,_)'.
-[./test/module/name/not/yet/captured line 3] in <script>
+List does not implement 'toString'.
+[./test/module/name/not/yet/captured line 406] in writeObject_(_)
+[./test/module/name/not/yet/captured line 385] in print(_)
+[./test/module/name/not/yet/captured line 4] in <script>
 
 Missing expected output "[1]" on line 4.
 Missing expected output "[4, 1, 2, 3]" on line 9.

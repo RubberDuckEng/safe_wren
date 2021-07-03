@@ -366,14 +366,18 @@ fn string_ends_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(this.ends_with(&search)))
 }
 
+fn index_or_neg_one(maybe_index: Option<usize>) -> Value {
+    match maybe_index {
+        None => Value::Num(-1.0),
+        Some(index) => Value::Num(index as f64),
+    }
+}
+
 fn string_index_of1(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let this = this_as_string(&args)?;
     let search = validate_string(&args[1], "Argument")?;
     let maybe_index = this.find(&search);
-    match maybe_index {
-        None => Ok(Value::Num(-1.0)),
-        Some(index) => Ok(Value::Num(index as f64)),
-    }
+    Ok(index_or_neg_one(maybe_index))
 }
 
 fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -387,6 +391,7 @@ fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
         return Ok(Value::Num(-1.0));
     }
     let maybe_index = this[start..].find(&search);
+    // This cannot use index_or_neg_one, due to adding start.
     match maybe_index {
         None => Ok(Value::Num(-1.0)),
         Some(index) => Ok(Value::Num((start + index) as f64)),
@@ -506,6 +511,52 @@ fn list_add_core(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     let list = this_as_list(&args)?;
     list.borrow_mut().elements.push(value);
     Ok(args[0].clone())
+}
+
+fn list_clear(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
+    list.borrow_mut().elements.clear();
+    Ok(Value::Null)
+}
+fn list_insert(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
+    let elements = &mut list.borrow_mut().elements;
+    let count = elements.len();
+    // count + 1 here so you can "insert" at the very end.
+    let index = validate_index(&args[1], count + 1, "Index")?;
+    if index == count {
+        elements.push(args[1].clone());
+    } else {
+        elements.insert(index, args[1].clone());
+    }
+    Ok(args[1].clone())
+}
+
+fn list_remove_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
+    let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
+    match maybe_index {
+        None => Ok(Value::Null),
+        Some(index) => {
+            let value = list.borrow_mut().elements.remove(index);
+            Ok(value)
+        }
+    }
+}
+
+fn list_index_of(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
+    let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
+    Ok(index_or_neg_one(maybe_index))
+}
+
+fn list_swap(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
+    let index_a = validate_index(&args[1], list.borrow().elements.len(), "Index 0")?;
+    let index_b = validate_index(&args[2], list.borrow().elements.len(), "Index 1")?;
+
+    list.borrow_mut().elements.swap(index_a, index_b);
+    Ok(Value::Null)
 }
 
 fn validate_int_value(value: f64, arg_name: &str) -> Result<f64> {
@@ -831,15 +882,15 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive!(vm, list, "[_]=(_)", list_subscript_setter);
     primitive!(vm, list, "add(_)", list_add);
     primitive!(vm, list, "addCore_(_)", list_add_core);
-    // primitive!(vm, list, "clear()", list_clear);
+    primitive!(vm, list, "clear()", list_clear);
     primitive!(vm, list, "count", list_count);
-    // primitive!(vm, list, "insert(_,_)", list_insert);
+    primitive!(vm, list, "insert(_,_)", list_insert);
     primitive!(vm, list, "iterate(_)", list_iterate);
     primitive!(vm, list, "iteratorValue(_)", list_iterator_value);
     primitive!(vm, list, "removeAt(_)", list_remove_at);
-    // primitive!(vm, list, "remove(_)", list_remove_value);
-    // primitive!(vm, list, "indexOf(_)", list_index_of);
-    // primitive!(vm, list, "swap(_,_)", list_swap);
+    primitive!(vm, list, "remove(_)", list_remove_value);
+    primitive!(vm, list, "indexOf(_)", list_index_of);
+    primitive!(vm, list, "swap(_,_)", list_swap);
 
     let map = find_core_class(vm, "Map");
     primitive_static!(vm, map, "new()", map_new);

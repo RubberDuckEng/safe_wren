@@ -1,2 +1,0 @@
-Expected runtime error "Index out of bounds." and got:
-List does not implement 'insert(_,_)'.

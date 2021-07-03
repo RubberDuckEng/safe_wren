@@ -1,2 +1,0 @@
-Expected runtime error "Index must be an integer." and got:
-List does not implement 'insert(_,_)'.

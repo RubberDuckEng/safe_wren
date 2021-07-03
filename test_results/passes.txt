@@ -37,6 +37,11 @@ wren_c/test/core/list/count_predicate.wren
 wren_c/test/core/list/count_predicate_non_bool_returning_fn.wren
 wren_c/test/core/list/each.wren
 wren_c/test/core/list/each_no_items.wren
+wren_c/test/core/list/index_of.wren
+wren_c/test/core/list/insert_index_not_int.wren
+wren_c/test/core/list/insert_index_not_num.wren
+wren_c/test/core/list/insert_index_too_large.wren
+wren_c/test/core/list/insert_index_too_small.wren
 wren_c/test/core/list/iterate.wren
 wren_c/test/core/list/iterate_iterator_not_int.wren
 wren_c/test/core/list/iterate_iterator_not_num.wren

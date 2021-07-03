@@ -38,6 +38,7 @@ with error text from any failed tests.  `test.py` will also update
 * imports
 * C API
 * Garbage Collection
+* What happens if you pass too many values to a function?
 
 ## Most failing tests
 * Maps/map lookup, but requires object allocation
