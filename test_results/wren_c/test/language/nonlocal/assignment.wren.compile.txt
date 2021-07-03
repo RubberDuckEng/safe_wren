@@ -2,8 +2,8 @@ Constants:
 00: String("before")
 01: String("after")
 02: String("Foo")
-03: Fn()
-04: Fn()
+03: Fn(method)
+04: Fn(new(_) block argument)
 Code:
 00: Constant(0: String("before"))
 01: Store(Module)

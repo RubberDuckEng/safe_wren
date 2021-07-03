@@ -1,8 +1,8 @@
 Constants:
 00: String("Node")
-01: Fn()
+01: Fn(init new(_,_,_))
 02: Fn()
-03: Fn()
+03: Fn(write())
 04: String("a")
 05: String("b")
 06: String("c")

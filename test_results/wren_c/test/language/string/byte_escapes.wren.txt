@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-MethodNotFound("[_]" on "StringByteSequence")
+MethodNotFound("byteAt_(_)" on "String")
 Expected return code 0 and got 70. Stderr:
-MethodNotFound("[_]" on "StringByteSequence")
+MethodNotFound("byteAt_(_)" on "String")
 
 Missing expected output "0" on line 3.
 Missing expected output "18" on line 4.

@@ -1,7 +1,7 @@
 Constants:
-00: Fn()
-01: Fn()
-02: Fn()
+00: Fn(new(_) block argument)
+01: Fn(new(_) block argument)
+02: Fn(new(_) block argument)
 03: String("not reached")
 Code:
 00: Load(Module, Class("Fiber"))

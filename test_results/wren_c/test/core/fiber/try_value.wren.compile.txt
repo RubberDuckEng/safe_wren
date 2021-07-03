@@ -1,5 +1,5 @@
 Constants:
-00: Fn()
+00: Fn(new(_) block argument)
 01: String("value")
 02: String("after try")
 Code:

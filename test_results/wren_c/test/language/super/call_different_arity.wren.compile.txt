@@ -1,12 +1,12 @@
 Constants:
 00: String("Base")
-01: Fn()
-02: Fn()
-03: Fn()
+01: Fn(foo)
+02: Fn(foo(_))
+03: Fn(foo(_,_))
 04: String("Derived")
-05: Fn()
+05: Fn(init new())
 06: Fn()
-07: Fn()
+07: Fn(foo(_))
 08: Num(1)
 Code:
 00: Constant(0: String("Base"))

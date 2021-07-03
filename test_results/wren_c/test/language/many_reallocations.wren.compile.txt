@@ -9,7 +9,7 @@ Constants:
 07: Num(1)
 08: Num(1000)
 09: String("a")
-10: Fn()
+10: Fn(all(_) block argument)
 11: String("done")
 Code:
 00: Load(Module, Class("List"))

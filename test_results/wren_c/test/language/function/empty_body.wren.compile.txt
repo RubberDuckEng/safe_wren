@@ -1,5 +1,5 @@
 Constants:
-00: Fn()
+00: Fn(new(_) block argument)
 Code:
 00: Load(Module, Class("Fn"))
 01: Closure(0, [])

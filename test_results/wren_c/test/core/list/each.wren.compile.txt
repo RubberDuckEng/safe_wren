@@ -3,7 +3,7 @@ Constants:
 01: String("One")
 02: String("Two")
 03: String("Three")
-04: Fn()
+04: Fn(each(_) block argument)
 Code:
 00: Constant(0: String(""))
 01: Store(Module)

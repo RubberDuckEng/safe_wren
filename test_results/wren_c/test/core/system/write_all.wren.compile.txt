@@ -1,8 +1,8 @@
 Constants:
 00: String("Foo")
-01: Fn()
+01: Fn(init new())
 02: Fn()
-03: Fn()
+03: Fn(toString)
 04: Num(1)
 05: String("s")
 Code:

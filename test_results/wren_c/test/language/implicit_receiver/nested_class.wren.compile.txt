@@ -1,11 +1,11 @@
 Constants:
 00: String("Outer")
-01: Fn()
+01: Fn(init new())
 02: Fn()
-03: Fn()
-04: Fn()
-05: Fn()
-06: Fn()
+03: Fn(getter)
+04: Fn(setter=_)
+05: Fn(method(_))
+06: Fn(test)
 Code:
 00: Constant(0: String("Outer"))
 01: Load(Module, Class("Object"))

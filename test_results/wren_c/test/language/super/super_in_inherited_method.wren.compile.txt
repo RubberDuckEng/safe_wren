@@ -1,9 +1,9 @@
 Constants:
 00: String("A")
-01: Fn()
-02: Fn()
+01: Fn(callSuperToString)
+02: Fn(toString)
 03: String("B")
-04: Fn()
+04: Fn(init new())
 05: Fn()
 Code:
 00: Constant(0: String("A"))

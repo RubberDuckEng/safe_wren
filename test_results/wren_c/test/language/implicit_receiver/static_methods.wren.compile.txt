@@ -1,9 +1,9 @@
 Constants:
 00: String("Foo")
-01: Fn()
-02: Fn()
-03: Fn()
-04: Fn()
+01: Fn(getter)
+02: Fn(setter=_)
+03: Fn(method(_))
+04: Fn(test)
 Code:
 00: Constant(0: String("Foo"))
 01: Load(Module, Class("Object"))

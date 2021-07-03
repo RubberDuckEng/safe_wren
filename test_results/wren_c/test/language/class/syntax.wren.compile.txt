@@ -2,7 +2,7 @@ Constants:
 00: String("A")
 01: String("B")
 02: String("C")
-03: Fn()
+03: Fn(method)
 Code:
 00: Constant(0: String("A"))
 01: Load(Module, Class("Object"))

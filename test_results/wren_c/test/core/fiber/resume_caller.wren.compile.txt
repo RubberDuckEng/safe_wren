@@ -1,6 +1,6 @@
 Constants:
-00: Fn()
-01: Fn()
+00: Fn(new(_) block argument)
+01: Fn(new(_) block argument)
 02: String("begin main")
 03: String("end main")
 Code:

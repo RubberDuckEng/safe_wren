@@ -1,12 +1,12 @@
 Constants:
 00: String("variable")
 01: String("Foo")
-02: Fn()
+02: Fn(init new())
 03: Fn()
-04: Fn()
-05: Fn()
-06: Fn()
-07: Fn()
+04: Fn(foo)
+05: Fn(method)
+06: Fn(foo)
+07: Fn(classMethod)
 Code:
 00: Constant(0: String("variable"))
 01: Constant(1: String("Foo"))

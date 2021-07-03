@@ -2,8 +2,8 @@ Constants:
 00: String("Foo")
 01: Fn(init new())
 02: Fn()
-03: Fn(bar=_)
-04: Fn(test)
+03: Fn([_])
+04: Num(0)
 Code:
 00: Constant(0: String("Foo"))
 01: Load(Module, Class("Object"))
@@ -18,13 +18,16 @@ Code:
 10: Method(static, new())
 11: Closure(3, [])
 12: Load(Module, Null)
-13: Method(instance, bar=_)
-14: Closure(4, [])
-15: Load(Module, Null)
-16: Method(instance, test)
-17: Load(Module, Null)
-18: Call(Method, new())
-19: Call(Getter, test)
-20: Pop
-21: End
-22: End
+13: Method(instance, [_])
+14: Load(Module, Null)
+15: Call(Method, new())
+16: Store(Module)
+17: Pop
+18: Load(Module, Class("System"))
+19: Load(Module, Null)
+20: Constant(4: Num(0))
+21: Call(Subscript, [_])
+22: Call(Method, print(_))
+23: Pop
+24: End
+25: End

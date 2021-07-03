@@ -1,8 +1,3 @@
-Unexpected output on stderr:
-MethodNotFound("[_]" on "Foo metaclass")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("[_]" on "Foo metaclass")
-
 Expected output "infix Foo + a" on line 29 and got "infix %(this) + %(other)".
 Expected output "infix Foo - a" on line 30 and got "infix %(this) - %(other)".
 Expected output "infix Foo * a" on line 31 and got "infix %(this) * %(other)".
@@ -20,9 +15,9 @@ Expected output "prefix !Foo" on line 42 and got "prefix !%(this)".
 Expected output "prefix ~Foo" on line 43 and got "prefix ~%(this)".
 Expected output "prefix -Foo" on line 44 and got "prefix -%(this)".
 Expected output "infix Foo is a" on line 45 and got "infix %(this) is %(other)".
-Missing expected output "Foo 1-subscript a" on line 47.
-Missing expected output "Foo 2-subscript a b" on line 48.
-Missing expected output "Foo 3-subscript a b c" on line 49.
-Missing expected output "Foo 1-subscript setter a = value" on line 50.
-Missing expected output "Foo 2-subscript setter a b = value" on line 51.
-Missing expected output "Foo 3-subscript setter a b c = value" on line 52.
+Expected output "Foo 1-subscript a" on line 47 and got "%(this) 1-subscript %(a)".
+Expected output "Foo 2-subscript a b" on line 48 and got "%(this) 2-subscript %(a) %(b)".
+Expected output "Foo 3-subscript a b c" on line 49 and got "%(this) 3-subscript %(a) %(b) %(c)".
+Expected output "Foo 1-subscript setter a = value" on line 50 and got "%(this) 1-subscript setter %(a) = %(value)".
+Expected output "Foo 2-subscript setter a b = value" on line 51 and got "%(this) 2-subscript setter %(a) %(b) = %(value)".
+Expected output "Foo 3-subscript setter a b c = value" on line 52 and got "%(this) 3-subscript setter %(a) %(b) %(c) = %(value)".

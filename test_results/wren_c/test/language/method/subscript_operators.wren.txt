@@ -1,11 +1,6 @@
-Unexpected output on stderr:
-MethodNotFound("[_]" on "Foo")
-Expected return code 0 and got 70. Stderr:
-MethodNotFound("[_]" on "Foo")
-
-Missing expected output "1-subscript a" on line 12.
-Missing expected output "2-subscript a b" on line 13.
-Missing expected output "3-subscript a b c" on line 14.
-Missing expected output "1-subscript setter a = value" on line 15.
-Missing expected output "2-subscript setter a b = value" on line 16.
-Missing expected output "3-subscript setter a b c = value" on line 17.
+Expected output "1-subscript a" on line 12 and got "1-subscript %(a)".
+Expected output "2-subscript a b" on line 13 and got "2-subscript %(a) %(b)".
+Expected output "3-subscript a b c" on line 14 and got "3-subscript %(a) %(b) %(c)".
+Expected output "1-subscript setter a = value" on line 15 and got "1-subscript setter %(a) = %(value)".
+Expected output "2-subscript setter a b = value" on line 16 and got "2-subscript setter %(a) %(b) = %(value)".
+Expected output "3-subscript setter a b c = value" on line 17 and got "3-subscript setter %(a) %(b) %(c) = %(value)".

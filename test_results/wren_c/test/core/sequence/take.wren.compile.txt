@@ -1,9 +1,9 @@
 Constants:
 00: String("TestSequence")
-01: Fn()
+01: Fn(init new())
 02: Fn()
-03: Fn()
-04: Fn()
+03: Fn(iterate(_))
+04: Fn(iteratorValue(_))
 05: Num(3)
 06: Num(0)
 07: Num(1)

@@ -1,11 +1,11 @@
 Constants:
 00: String("A")
-01: Fn()
+01: Fn(foo)
 02: String("B")
 03: String("C")
-04: Fn()
+04: Fn(init new())
 05: Fn()
-06: Fn()
+06: Fn(foo)
 Code:
 00: Constant(0: String("A"))
 01: Load(Module, Class("Object"))

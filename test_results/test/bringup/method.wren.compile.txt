@@ -1,10 +1,10 @@
 Constants:
 00: String("Foo")
-01: Fn()
+01: Fn(init new())
 02: Fn()
-03: Fn()
-04: Fn()
-05: Fn()
+03: Fn(foo())
+04: Fn(bar)
+05: Fn(baz(_))
 06: Num(1)
 Code:
 00: Constant(0: String("Foo"))

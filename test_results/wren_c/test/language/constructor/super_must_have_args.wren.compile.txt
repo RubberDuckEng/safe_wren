@@ -1,7 +1,7 @@
 Constants:
 00: String("A")
 01: String("B")
-02: Fn()
+02: Fn(init new())
 03: Fn()
 Code:
 00: Constant(0: String("A"))

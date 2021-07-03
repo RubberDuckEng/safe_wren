@@ -1,5 +1,5 @@
 Constants:
-00: Fn()
+00: Fn(new(_) block argument)
 01: String("null value")
 02: String("true value")
 03: String("false value")

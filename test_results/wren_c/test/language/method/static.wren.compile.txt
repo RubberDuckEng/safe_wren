@@ -1,11 +1,11 @@
 Constants:
 00: String("Foo")
-01: Fn()
+01: Fn(init new())
 02: Fn()
-03: Fn()
-04: Fn()
-05: Fn()
-06: Fn()
+03: Fn(bar)
+04: Fn(bar)
+05: Fn(bar(_))
+06: Fn(bar(_))
 07: String("arg")
 08: String("arg")
 Code:

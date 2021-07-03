@@ -1,6 +1,6 @@
 Constants:
 00: String("global")
-01: Fn()
+01: Fn(new(_) block argument)
 Code:
 00: Constant(0: String("global"))
 01: Store(Module)

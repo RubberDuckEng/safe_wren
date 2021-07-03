@@ -1,6 +1,6 @@
 Constants:
 00: Num(0)
-01: Fn()
+01: Fn(each(_) block argument)
 Code:
 00: Constant(0: Num(0))
 01: Store(Module)

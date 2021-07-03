@@ -1,9 +1,9 @@
 Constants:
 00: String("Iter")
-01: Fn()
+01: Fn(init new(_))
 02: Fn()
-03: Fn()
-04: Fn()
+03: Fn(iterate(_))
+04: Fn(iteratorValue(_))
 05: String("bad")
 06: String("bad")
 07: String("true")

@@ -1,10 +1,10 @@
 Constants:
 00: Num(1)
 01: String("InfiniteSequence")
-02: Fn()
+02: Fn(init new())
 03: Fn()
-04: Fn()
-05: Fn()
+04: Fn(iterate(_))
+05: Fn(iteratorValue(_))
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))

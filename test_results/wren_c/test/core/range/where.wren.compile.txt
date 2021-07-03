@@ -1,8 +1,8 @@
 Constants:
 00: Num(1)
 01: Num(3)
-02: Fn()
-03: Fn()
+02: Fn(where(_) block argument)
+03: Fn(where(_) block argument)
 Code:
 00: Constant(0: Num(1))
 01: Constant(1: Num(3))

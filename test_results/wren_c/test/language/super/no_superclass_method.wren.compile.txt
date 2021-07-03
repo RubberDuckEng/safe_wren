@@ -1,9 +1,9 @@
 Constants:
 00: String("Base")
 01: String("Derived")
-02: Fn()
+02: Fn(init new())
 03: Fn()
-04: Fn()
+04: Fn(foo)
 Code:
 00: Constant(0: String("Base"))
 01: Load(Module, Class("Object"))

@@ -4,7 +4,7 @@ use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::str;
 
-use crate::compiler::{compile, InputManager, Ops, Scope};
+use crate::compiler::{compile, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, register_core_primitives};
 
 #[derive(Clone)]
@@ -75,8 +75,8 @@ impl core::fmt::Debug for Value {
             Value::Range(r) => write!(f, "Range({:?})", r),
             Value::List(_) => write!(f, "List()"),
             Value::Map(_) => write!(f, "Map()"),
-            Value::Fn(_) => write!(f, "Fn()"),
-            Value::Closure(_) => write!(f, "Closure()"),
+            Value::Fn(c) => write!(f, "Fn({})", c.borrow().debug.name),
+            Value::Closure(c) => write!(f, "Closure({})", c.borrow().fn_obj.borrow().debug.name),
             Value::Instance(o) => write!(
                 f,
                 "Instance({})",
@@ -1185,6 +1185,7 @@ pub(crate) struct ObjFn {
     pub(crate) arity: u8,
     pub(crate) constants: Vec<Value>,
     pub(crate) code: Vec<Ops>,
+    pub(crate) debug: FnDebug,
 }
 
 impl ObjFn {
@@ -1194,6 +1195,7 @@ impl ObjFn {
             constants: compiler.constants,
             code: compiler.code,
             arity: arity,
+            debug: compiler.fn_debug,
         }
     }
 }

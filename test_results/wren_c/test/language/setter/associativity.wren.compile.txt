@@ -1,9 +1,9 @@
 Constants:
 00: String("Foo")
-01: Fn()
+01: Fn(init new(_))
 02: Fn()
-03: Fn()
-04: Fn()
+03: Fn(toString)
+04: Fn(bar=_)
 05: String("a")
 06: String("b")
 07: String("c")

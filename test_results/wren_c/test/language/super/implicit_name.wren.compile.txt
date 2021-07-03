@@ -1,10 +1,10 @@
 Constants:
 00: String("Base")
-01: Fn()
+01: Fn(foo)
 02: String("Derived")
-03: Fn()
+03: Fn(init new())
 04: Fn()
-05: Fn()
+05: Fn(foo)
 Code:
 00: Constant(0: String("Base"))
 01: Load(Module, Class("Object"))

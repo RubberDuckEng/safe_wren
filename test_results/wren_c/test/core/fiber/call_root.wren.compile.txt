@@ -1,6 +1,6 @@
 Constants:
 00: String("begin root")
-01: Fn()
+01: Fn(new(_) block argument)
 Code:
 00: Load(Module, Class("Fiber"))
 01: Call(Getter, current)

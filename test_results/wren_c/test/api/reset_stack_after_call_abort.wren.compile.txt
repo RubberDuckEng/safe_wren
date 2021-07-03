@@ -1,7 +1,7 @@
 Constants:
 00: String("Test")
-01: Fn()
-02: Fn()
+01: Fn(abortFiber())
+02: Fn(afterAbort(_,_))
 Code:
 00: Constant(0: String("Test"))
 01: Load(Module, Class("Object"))

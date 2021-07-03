@@ -1,10 +1,10 @@
 Constants:
 00: String("global")
 01: String("Foo")
-02: Fn()
+02: Fn(init new())
 03: Fn()
-04: Fn()
-05: Fn()
+04: Fn(method)
+05: Fn(classMethod)
 Code:
 00: Constant(0: String("global"))
 01: Store(Module)

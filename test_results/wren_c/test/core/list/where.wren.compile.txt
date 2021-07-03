@@ -2,8 +2,8 @@ Constants:
 00: Num(1)
 01: Num(2)
 02: Num(3)
-03: Fn()
-04: Fn()
+03: Fn(where(_) block argument)
+04: Fn(where(_) block argument)
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())

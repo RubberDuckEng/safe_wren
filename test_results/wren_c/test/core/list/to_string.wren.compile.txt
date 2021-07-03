@@ -7,9 +7,9 @@ Constants:
 05: Num(4)
 06: Num(5)
 07: String("Foo")
-08: Fn()
+08: Fn(init new())
 09: Fn()
-10: Fn()
+10: Fn(toString)
 11: Num(1)
 12: Num(2)
 Code:

@@ -6,6 +6,7 @@ test/bringup/for_nested.wren
 test/bringup/function_call.wren
 test/bringup/greater_than.wren
 test/bringup/if.wren
+test/bringup/index_operator.wren
 test/bringup/is.wren
 test/bringup/locals.wren
 test/bringup/method.wren
@@ -114,6 +115,7 @@ wren_c/test/language/break/in_function_in_loop.wren
 wren_c/test/language/break/in_method_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren
 wren_c/test/language/break/outside_loop.wren
+wren_c/test/language/chained_newline.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
 wren_c/test/language/class/lowercase_name_inside_body.wren
 wren_c/test/language/class/missing_class_after_foreign.wren

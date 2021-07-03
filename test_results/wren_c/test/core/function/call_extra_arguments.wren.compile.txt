@@ -1,8 +1,8 @@
 Constants:
-00: Fn()
-01: Fn()
-02: Fn()
-03: Fn()
+00: Fn(new(_) block argument)
+01: Fn(new(_) block argument)
+02: Fn(new(_) block argument)
+03: Fn(new(_) block argument)
 04: String("a")
 05: String("a")
 06: String("b")

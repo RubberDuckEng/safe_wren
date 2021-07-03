@@ -748,6 +748,16 @@ impl ClassInfo {
     }
 }
 
+#[derive(Default)]
+pub(crate) struct FnDebug {
+    // The name of the function.
+    pub(crate) name: String,
+    // An array of line numbers. There is one element in this array for each
+    // bytecode in the function's bytecode array. The value of that element is
+    // the line in the source code that generated that instruction.
+    // source_lines: Vec<usize>,
+}
+
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
 pub(crate) struct Compiler {
@@ -775,6 +785,7 @@ pub(crate) struct Compiler {
     // are already pushed onto the stack by the caller and tracked there, we
     // don't need to double count them here.
     // num_slots: usize,
+    pub(crate) fn_debug: FnDebug,
 }
 
 impl Compiler {
@@ -804,6 +815,7 @@ impl Compiler {
             parent: parent,
             upvalues: Vec::new(),
             is_initializer: false, // Should this be tracked here?
+            fn_debug: FnDebug::default(),
         }
     }
 
@@ -1299,13 +1311,18 @@ type Handle<T> = Rc<RefCell<T>>;
 // Finishes [compiler], which is compiling a function, method, or chunk of top
 // level code. If there is a parent compiler, then this emits code in the
 // parent compiler to load the resulting function.
-fn end_compiler(ctx: &mut ParseContext, ending: Box<Compiler>, arity: u8) -> Handle<ObjFn> {
+fn end_compiler(
+    ctx: &mut ParseContext,
+    ending: Box<Compiler>,
+    arity: u8,
+    name: String,
+) -> Handle<ObjFn> {
     let mut compiler = ending;
     // Mark the end of the bytecode. Since it may contain multiple early returns,
     // we can't rely on CODE_RETURN to tell us we're at the end.
     compiler.emit(Ops::End);
 
-    // FIXME: Set debug name?
+    compiler.fn_debug.name = name;
 
     // We're done with the compiler, create an ObjFn from it.
     let upvalues = std::mem::take(&mut compiler.upvalues);
@@ -1458,13 +1475,9 @@ fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenE
         finish_body(scope.ctx)?;
 
         // Name the function based on the method its passed to.
-        // char blockName[MAX_METHOD_SIGNATURE + 15];
-        // int blockLength;
-        // signatureToString(&called, blockName, &blockLength);
-        // memmove(blockName + blockLength, " block argument", 16);
-
+        let name = called.full_name() + " block argument";
         let compiler = scope.pop();
-        end_compiler(scope.ctx, compiler, fn_signature.arity);
+        end_compiler(scope.ctx, compiler, fn_signature.arity, name);
     }
 
     // Handle SIG_INITIALIZER?
@@ -2256,7 +2269,7 @@ fn create_constructor(
 
     let compiler = scope.pop();
     // FIXME: Where does this closure get put?
-    end_compiler(scope.ctx, compiler, 0);
+    end_compiler(scope.ctx, compiler, 0, "".into());
     Ok(())
 }
 
@@ -2416,7 +2429,8 @@ fn maybe_setter(ctx: &mut ParseContext, signature: &mut Signature) -> Result<boo
 // Compiles a method signature for a subscript operator.
 fn subscript_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
     signature.call_type = SignatureType::Subscript;
-    // FIXME: Do we need to reset name to empty here?
+    // signature is "[" since that was the matching token, clear it.
+    signature.bare_name = "".into();
 
     // Parse the parameters inside the subscript.
     finish_parameter_list(ctx, signature)?;
@@ -2551,7 +2565,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
         finish_body(scope.ctx)?;
         let compiler = scope.pop();
         // FIXME: Where does the closure go?
-        end_compiler(scope.ctx, compiler, signature.arity);
+        end_compiler(scope.ctx, compiler, signature.arity, signature.full_name());
     }
 
     // Define the method. For a constructor, this defines the instance
@@ -3151,7 +3165,7 @@ pub(crate) fn compile<'a>(
 
     scope.ctx.compiler_mut().emit(Ops::End);
     let compiler = scope.pop();
-    let fn_obj = end_compiler(scope.ctx, compiler, 0);
+    let fn_obj = end_compiler(scope.ctx, compiler, 0, "<script>".into());
     let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
     Ok(closure)
 }

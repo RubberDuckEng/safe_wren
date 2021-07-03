@@ -1,6 +1,6 @@
 Constants:
 00: String("Foo")
-01: Fn()
+01: Fn(init new())
 02: Fn()
 03: String("instance of Foo")
 Code:
