@@ -1,6 +1,6 @@
 Expected runtime error "Comparer must be a function." and got:
 List does not implement '[_]'.
-Expected runtime error on line 9 but was on line 284.
+Expected runtime error on line 9 but was on line 1.
 Missing expected output "[1, 2, 3, 4]" on line 1.
 Missing expected output "[1, 5, 7, 8, 9, 10]" on line 5.
 Missing expected output "[10, 9, 8, 7, 5, 1]" on line 7.

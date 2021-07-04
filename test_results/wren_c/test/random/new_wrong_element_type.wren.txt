@@ -2,5 +2,5 @@ Expected runtime error "Sequence elements must all be numbers." and got:
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/random/new_wrong_element_type line 1] Error Grammar("Undeclared variable \'import\'")
 

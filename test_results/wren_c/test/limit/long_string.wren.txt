@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Lexer(UnexpectedChar('\\'))
+[wren_c/test/limit/long_string line 2] Error Lexer(UnexpectedChar('\\'))
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Lexer(UnexpectedChar('\\'))
+[wren_c/test/limit/long_string line 2] Error Lexer(UnexpectedChar('\\'))
 
 Missing expected output "1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890" on line 4.
 Missing expected output "1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890" on line 5.

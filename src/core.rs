@@ -753,7 +753,7 @@ macro_rules! primitive_static {
     };
 }
 
-pub(crate) fn init_base_classes(vm: &mut WrenVM) {
+pub(crate) fn init_base_classes(vm: &mut WrenVM, core_module: &mut Module) {
     // wren_c makes a core module, which it then imports
     // into every module when running.  For now we're just
     // "importing" core directly into the one module we ever have.
@@ -761,7 +761,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     // FIXME: Store core_module in module map.
     // Define the root Object class. This has to be done a little specially
     // because it has no superclass.
-    let object = define_class(&mut vm.module, "Object");
+    let object = define_class(core_module, "Object");
     primitive!(vm, object, "!", object_not);
     primitive!(vm, object, "==(_)", object_eqeq);
     primitive!(vm, object, "!=(_)", object_bangeq);
@@ -770,7 +770,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     primitive!(vm, object, "type", object_type);
 
     // Now we can define Class, which is a subclass of Object.
-    let class = define_class(&mut vm.module, "Class");
+    let class = define_class(core_module, "Class");
     wren_bind_superclass(&mut class.borrow_mut(), &object);
     primitive!(vm, class, "name", class_name);
     // primitive!(vm, class, "supertype", class_supertype);
@@ -778,7 +778,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     // primitive!(vm, class, "attributes", class_attributes);
 
     // Finally, we can define Object's metaclass which is a subclass of Class.
-    let object_metaclass = define_class(&mut vm.module, "Object metaclass");
+    let object_metaclass = define_class(core_module, "Object metaclass");
     // Wire up the metaclass relationships now that all three classes are built.
     object.borrow_mut().class = Some(object_metaclass.clone());
     object_metaclass.borrow_mut().class = Some(class.clone());
@@ -786,15 +786,16 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM) {
     wren_bind_superclass(&mut object_metaclass.borrow_mut(), &class);
 
     primitive_static!(vm, object, "same(_,_)", object_same);
+}
 
-    vm.class_class = Some(class);
-
+pub(crate) fn init_fn_class(vm: &mut WrenVM, core_module: &mut Module) {
     // Hack.  AFAICT, functions/closures inside wren_core.wren are compiled
     // by wren_c and have a null class!  Rust won't allow us to do that so
     // manually initialize Fn class before compiling wren_core.wren.
+    let object = core_module.expect_class("Object");
     let fn_class = wren_new_class(vm, &object, 0, "Fn".into()).expect("creating Fn");
     vm.fn_class = Some(fn_class.clone());
-    wren_define_variable(&mut vm.module, "Fn", Value::Class(fn_class)).expect("defining Fn");
+    wren_define_variable(core_module, "Fn", Value::Class(fn_class)).expect("defining Fn");
 }
 
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
@@ -802,20 +803,22 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // superclass, so any classes added to a superclass
     // WOULD NOT end up inherited into wren_core.wren subclasses.
 
+    let module = vm.core_module.as_ref().unwrap();
+
     let core = CoreClasses {
-        bool_class: find_core_class(vm, "Bool"),
-        num: find_core_class(vm, "Num"),
-        string: find_core_class(vm, "String"),
-        null: find_core_class(vm, "Null"),
-        range: find_core_class(vm, "Range"),
-        list: find_core_class(vm, "List"),
-        map: find_core_class(vm, "Map"),
+        bool_class: module.expect_class("Bool"),
+        num: module.expect_class("Num"),
+        string: module.expect_class("String"),
+        null: module.expect_class("Null"),
+        range: module.expect_class("Range"),
+        list: module.expect_class("List"),
+        map: module.expect_class("Map"),
     };
 
     primitive!(vm, core.bool_class, "!", bool_not);
     primitive!(vm, core.bool_class, "toString", bool_to_string);
 
-    let fiber = find_core_class(vm, "Fiber");
+    let fiber = module.expect_class("Fiber");
     // primitive_static!(vm, fiber, "new(_)", fiber_new);
     primitive_static!(vm, fiber, "abort(_)", fiber_abort);
     // primitive_static!(vm, fiber, "current", fiber_current);
@@ -931,7 +934,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.string, "startsWith(_)", string_starts_with);
     primitive!(vm, core.string, "toString", string_to_string);
 
-    let list = find_core_class(vm, "List");
+    let list = module.expect_class("List");
     primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
     // primitive!(vm, list, "[_]", list_subscript);
@@ -948,7 +951,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, list, "indexOf(_)", list_index_of);
     primitive!(vm, list, "swap(_,_)", list_swap);
 
-    let map = find_core_class(vm, "Map");
+    let map = module.expect_class("Map");
     primitive_static!(vm, map, "new()", map_new);
     primitive!(vm, map, "[_]", map_subscript);
     primitive!(vm, map, "[_]=(_)", map_subscript_setter);
@@ -970,7 +973,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
     primitive!(vm, core.range, "toString", range_to_string);
 
-    let system = find_core_class(vm, "System");
+    let system = module.expect_class("System");
     // primitive_static!(vm, system, "clock", system_clock);
     // primitive_static!(vm, system, "gc()", system_gc);
     primitive_static!(vm, system, "writeString_(_)", system_write_string);

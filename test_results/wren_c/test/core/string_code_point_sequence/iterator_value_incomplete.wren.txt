@@ -1,13 +1,13 @@
 Unexpected output on stderr:
 String does not implement 'codePointAt_(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 141] in iteratorValue(_)
+[#core line 141] in iteratorValue(_)
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 2] in <script>
+[wren_c/test/core/string_code_point_sequence/iterator_value_incomplete line 2] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'codePointAt_(_)'.
-[./test/module/name/not/yet/captured line 141] in iteratorValue(_)
-[./test/module/name/not/yet/captured line 2] in <script>
+[#core line 141] in iteratorValue(_)
+[wren_c/test/core/string_code_point_sequence/iterator_value_incomplete line 2] in <script>
 
 Missing expected output "-1" on line 2.
 Missing expected output "-1" on line 5.

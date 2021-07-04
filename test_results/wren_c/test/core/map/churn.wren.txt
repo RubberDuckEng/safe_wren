@@ -1,9 +1,9 @@
 Unexpected output on stderr:
 Map does not implement '[_,_]=(_,_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 6] in <script>
+[wren_c/test/core/map/churn line 6] in <script>
 Expected return code 0 and got 70. Stderr:
 Map does not implement '[_,_]=(_,_)'.
-[./test/module/name/not/yet/captured line 6] in <script>
+[wren_c/test/core/map/churn line 6] in <script>
 
 Missing expected output "10" on line 11.

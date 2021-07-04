@@ -1,13 +1,13 @@
 Unexpected output on stderr:
 String does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 104] in join(_)
+[#core line 104] in join(_)
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 3] in <script>
+[wren_c/test/core/string/join line 3] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterate(_)'.
-[./test/module/name/not/yet/captured line 104] in join(_)
-[./test/module/name/not/yet/captured line 3] in <script>
+[#core line 104] in join(_)
+[wren_c/test/core/string/join line 3] in <script>
 
 Missing expected output "true" on line 3.
 Missing expected output "s, t, r, i, n, g" on line 5.

@@ -1,16 +1,16 @@
 Unexpected output on stderr:
 Bar does not implement 'super()'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 141] in init new()
+[wren_c/test/limit/many_inherited_fields line 141] in init new()
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 269] in 
+[wren_c/test/limit/many_inherited_fields line 269] in 
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 277] in <script>
+[wren_c/test/limit/many_inherited_fields line 277] in <script>
 Expected return code 0 and got 70. Stderr:
 Bar does not implement 'super()'.
-[./test/module/name/not/yet/captured line 141] in init new()
-[./test/module/name/not/yet/captured line 269] in 
-[./test/module/name/not/yet/captured line 277] in <script>
+[wren_c/test/limit/many_inherited_fields line 141] in init new()
+[wren_c/test/limit/many_inherited_fields line 269] in 
+[wren_c/test/limit/many_inherited_fields line 277] in <script>
 
 Missing expected output "1" on line 278.
 Missing expected output "128" on line 279.

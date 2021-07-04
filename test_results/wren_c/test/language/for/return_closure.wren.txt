@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Undeclared variable \'i\'")
+[wren_c/test/language/for/return_closure line 3] Error Grammar("Undeclared variable \'i\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Undeclared variable \'i\'")
+[wren_c/test/language/for/return_closure line 3] Error Grammar("Undeclared variable \'i\'")
 
 Missing expected output "1" on line 9.

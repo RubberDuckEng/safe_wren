@@ -2,5 +2,5 @@ Expected runtime error "Could not find a module named 'unknown'." and got:
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/meta/get_module_variables_unknown_module line 1] Error Grammar("Undeclared variable \'import\'")
 

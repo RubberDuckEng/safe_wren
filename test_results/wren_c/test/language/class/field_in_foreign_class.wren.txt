@@ -1,4 +1,4 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'foreign\'")
+[wren_c/test/language/class/field_in_foreign_class line 1] Error Grammar("Undeclared variable \'foreign\'")
 Missing expected error on line 4.
 Missing expected error on line 7.

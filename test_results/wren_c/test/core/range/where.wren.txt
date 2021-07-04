@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 Range does not implement 'where(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 2] in <script>
+[wren_c/test/core/range/where line 2] in <script>
 Expected return code 0 and got 70. Stderr:
 Range does not implement 'where(_)'.
-[./test/module/name/not/yet/captured line 2] in <script>
+[wren_c/test/core/range/where line 2] in <script>
 
 Missing expected output "[2, 3]" on line 3.
 Missing expected output "[]" on line 6.

@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 8] Error Grammar("Expected right paren, found: String(\"A raw string\")")
+[wren_c/test/language/string/literals line 8] Error Grammar("Expected right paren, found: String(\"A raw string\")")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 8] Error Grammar("Expected right paren, found: String(\"A raw string\")")
+[wren_c/test/language/string/literals line 8] Error Grammar("Expected right paren, found: String(\"A raw string\")")
 
 Missing expected output "0" on line 1.
 Missing expected output "a string" on line 2.

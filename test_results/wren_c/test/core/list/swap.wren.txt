@@ -1,5 +1,5 @@
 Expected runtime error "Index 0 out of bounds." and got:
 List does not implement 'toString'.
-Expected runtime error on line 9 but was on line 406.
+Expected runtime error on line 9 but was on line 4.
 Missing expected output "[3, 1, 2, 0, 4]" on line 4.
 Missing expected output "[3, 1, 4, 0, 2]" on line 7.

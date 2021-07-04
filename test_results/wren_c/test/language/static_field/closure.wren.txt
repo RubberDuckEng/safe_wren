@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 34..41, token: StaticField(\"__field\"), line: 2 }")
+[wren_c/test/language/static_field/closure line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 34..41, token: StaticField(\"__field\"), line: 2 }")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 34..41, token: StaticField(\"__field\"), line: 2 }")
+[wren_c/test/language/static_field/closure line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 34..41, token: StaticField(\"__field\"), line: 2 }")
 
 Missing expected output "Foo field" on line 14.
 Missing expected output "new value" on line 16.

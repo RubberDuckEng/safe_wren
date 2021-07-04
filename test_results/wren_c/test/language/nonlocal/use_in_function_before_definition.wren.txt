@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Undeclared variable \'Global\'")
+[wren_c/test/language/nonlocal/use_in_function_before_definition line 2] Error Grammar("Undeclared variable \'Global\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Undeclared variable \'Global\'")
+[wren_c/test/language/nonlocal/use_in_function_before_definition line 2] Error Grammar("Undeclared variable \'Global\'")
 
 Missing expected output "global" on line 7.

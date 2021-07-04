@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 2] Error Grammar("Undeclared variable \'B\'")
+[wren_c/test/core/fiber/transfer_error_not_string line 2] Error Grammar("Undeclared variable \'B\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 2] Error Grammar("Undeclared variable \'B\'")
+[wren_c/test/core/fiber/transfer_error_not_string line 2] Error Grammar("Undeclared variable \'B\'")
 
 Missing expected output "123" on line 10.

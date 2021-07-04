@@ -8,7 +8,8 @@ use std::str;
 use num_traits::FromPrimitive;
 
 use crate::vm::{
-    new_handle, wren_define_variable, ModuleError, ObjClosure, ObjFn, SymbolTable, Value, WrenVM,
+    new_handle, wren_define_variable, Module, ModuleError, ObjClosure, ObjFn, SymbolTable, Value,
+    WrenVM,
 };
 
 // Token lifetimes should be tied to the Parser or InputManager.
@@ -750,6 +751,7 @@ impl ClassInfo {
 
 #[derive(Default)]
 pub(crate) struct FnDebug {
+    pub(crate) module_name: String,
     // The name of the function.
     pub(crate) name: String,
     // An array of line numbers. There is one element in this array for each
@@ -943,13 +945,18 @@ struct ParseContext<'a> {
     parser: Parser,
     _compiler: Option<Box<Compiler>>,
     vm: &'a mut WrenVM,
+    module: &'a mut Module,
 }
 
 impl<'a> ParseContext<'a> {
+    fn module_name(&self) -> String {
+        self.module.name.clone()
+    }
+
     fn parse_error(&self, error: ParserError) -> WrenError {
         WrenError {
             line: self.parser.previous.line,
-            module: self.vm.module.name.clone(),
+            module: self.module_name(),
             error: error,
         }
     }
@@ -957,7 +964,7 @@ impl<'a> ParseContext<'a> {
     fn grammar_error(&self, message: &str) -> WrenError {
         WrenError {
             line: self.parser.previous.line,
-            module: self.vm.module.name.clone(),
+            module: self.module_name(),
             error: ParserError::Grammar(message.into()),
         }
     }
@@ -1324,6 +1331,7 @@ fn end_compiler(
     let line = ctx.parser.previous.line;
     compiler.emit_op_for_line(Ops::End, line);
 
+    compiler.fn_debug.module_name = ctx.module_name();
     compiler.fn_debug.name = name;
 
     // We're done with the compiler, create an ObjFn from it.
@@ -1778,7 +1786,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
 
     // Otherwise if in module scope handle module case:
 
-    let maybe_index = ctx.vm.module.lookup_symbol(&name);
+    let maybe_index = ctx.module.lookup_symbol(&name);
     let symbol = match maybe_index {
         None => {
             // Otherwise define a variable and hope it's filled in later (by what?)
@@ -2325,7 +2333,7 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
     if ctx.compiler().scope_depth == ScopeDepth::Module {
         // Error handling missing.
         // Error handling should occur inside wren_define_variable, no?
-        let result = wren_define_variable(&mut ctx.vm.module, &name, Value::Null);
+        let result = wren_define_variable(&mut ctx.module, &name, Value::Null);
         let symbol = result.map_err(|e| ctx.parse_error(ParserError::Module(e)))?;
         return Ok(symbol as u16);
     }
@@ -2374,7 +2382,7 @@ fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 // FIXME: This is probably not needed?  All it really adds is an assert?
 fn load_core_variable(ctx: &mut ParseContext, name: &str) {
-    let symbol = match ctx.vm.module.lookup_symbol(name) {
+    let symbol = match ctx.module.lookup_symbol(name) {
         Some(s) => s,
         None => panic!("Failed to find core variable {}", name),
     };
@@ -3111,25 +3119,21 @@ fn ignore_newlines(ctx: &mut ParseContext) -> Result<(), WrenError> {
 pub(crate) fn compile<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
-    _module_name: &str,
+    module_name: &str,
 ) -> Result<Handle<ObjClosure>, WrenError> {
-    // TODO: We should create one per module_name instead.
-
     // When compiling, we create a module and register it.
-    // We automatically import Core into all modules.
-    // Implicitly import the core module.
-    // ObjModule* coreModule = getModule(vm, NULL_VAL);
-    // for (int i = 0; i < coreModule->variables.count; i++)
-    // {
-    //   wrenDefineVariable(vm, module,
-    //                      coreModule->variableNames.data[i]->value,
-    //                      coreModule->variableNames.data[i]->length,
-    //                      coreModule->variables.data[i], NULL);
-    // }
+    let mut module = vm.new_module_with_name(module_name);
+    let result = compile_into_module(vm, input, &mut module);
+    // FIXME: Should we register even on failure?
+    vm.register_module(module);
+    result
+}
 
-    // If we init the module we need to copy over the core stuff.
-    // vm.module = Module::with_name(module_name);
-
+pub(crate) fn compile_into_module<'a>(
+    vm: &'a mut WrenVM,
+    input: InputManager,
+    module: &'a mut Module,
+) -> Result<Handle<ObjClosure>, WrenError> {
     // Init the parser & compiler
     let mut parse_context = ParseContext {
         parser: Parser {
@@ -3139,6 +3143,7 @@ pub(crate) fn compile<'a>(
             next: ParseToken::before_file(),
         },
         _compiler: None,
+        module: module,
         vm: vm,
     };
 

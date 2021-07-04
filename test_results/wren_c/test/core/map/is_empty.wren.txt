@@ -1,13 +1,13 @@
 Unexpected output on stderr:
 Map does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 56] in isEmpty
+[#core line 56] in isEmpty
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 1] in <script>
+[wren_c/test/core/map/is_empty line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 Map does not implement 'iterate(_)'.
-[./test/module/name/not/yet/captured line 56] in isEmpty
-[./test/module/name/not/yet/captured line 1] in <script>
+[#core line 56] in isEmpty
+[wren_c/test/core/map/is_empty line 1] in <script>
 
 Missing expected output "true" on line 1.
 Missing expected output "false" on line 2.

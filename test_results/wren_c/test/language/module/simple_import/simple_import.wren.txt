@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/simple_import/simple_import line 1] Error Grammar("Undeclared variable \'import\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/simple_import/simple_import line 1] Error Grammar("Undeclared variable \'import\'")
 
 Missing expected output "ran module" on line 2.
 Missing expected output "from module" on line 4.

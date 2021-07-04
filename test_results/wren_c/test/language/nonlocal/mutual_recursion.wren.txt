@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 3] Error Grammar("Undeclared variable \'Bar\'")
+[wren_c/test/language/nonlocal/mutual_recursion line 3] Error Grammar("Undeclared variable \'Bar\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 3] Error Grammar("Undeclared variable \'Bar\'")
+[wren_c/test/language/nonlocal/mutual_recursion line 3] Error Grammar("Undeclared variable \'Bar\'")
 
 Missing expected output "instance of Bar" on line 11.
 Missing expected output "instance of Foo" on line 12.

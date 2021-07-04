@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 Num does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 5] in <script>
+[wren_c/test/language/break/nested_for_loop line 5] in <script>
 Expected return code 0 and got 70. Stderr:
 Num does not implement 'iterate(_)'.
-[./test/module/name/not/yet/captured line 5] in <script>
+[wren_c/test/language/break/nested_for_loop line 5] in <script>
 
 Expected output "outer 0" on line 11 and got "outer %(i)".
 Expected output "inner 0" on line 12 and got "inner %(j)".

@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Foo\'")
+[wren_c/test/language/nonlocal/null_before_defined line 1] Error Grammar("Undeclared variable \'Foo\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 1] Error Grammar("Undeclared variable \'Foo\'")
+[wren_c/test/language/nonlocal/null_before_defined line 1] Error Grammar("Undeclared variable \'Foo\'")
 
 Missing expected output "null" on line 1.
 Missing expected output "value" on line 3.

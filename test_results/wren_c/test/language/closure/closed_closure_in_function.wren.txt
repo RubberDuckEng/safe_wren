@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 6] Error Grammar("Undeclared variable \'local\'")
+[wren_c/test/language/closure/closed_closure_in_function line 6] Error Grammar("Undeclared variable \'local\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 6] Error Grammar("Undeclared variable \'local\'")
+[wren_c/test/language/closure/closed_closure_in_function line 6] Error Grammar("Undeclared variable \'local\'")
 
 Missing expected output "local" on line 10.

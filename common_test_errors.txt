@@ -4,7 +4,6 @@ occurances : error text
 244 : in <script>
 81 : Fiber metaclass does not implement 'new(_)'.
 78 : Error Grammar("Undeclared variable \'import\'")
-71 : Expected runtime error on line  but was on line .
 28 : Expected return code 65 and got 0. Stderr:
 28 : List does not implement '[_]'.
 26 : in print(_)
@@ -13,6 +12,7 @@ occurances : error text
 25 : String does not implement 'iterate(_)'.
 22 : Map does not implement 'iterate(_)'.
 21 : Error Grammar("Expect \'{\' to begin method body.")
+20 : Expected runtime error on line  but was on line .
 19 : Error Grammar("Could not resolve \'this\'")
 18 : String does not implement '[_]'.
 17 : Expected return code 65 and got 66. Stderr:

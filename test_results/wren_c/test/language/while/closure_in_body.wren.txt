@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 6] Error Grammar("Undeclared variable \'j\'")
+[wren_c/test/language/while/closure_in_body line 6] Error Grammar("Undeclared variable \'j\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 6] Error Grammar("Undeclared variable \'j\'")
+[wren_c/test/language/while/closure_in_body line 6] Error Grammar("Undeclared variable \'j\'")
 
 Missing expected output "2" on line 11.
 Missing expected output "3" on line 12.

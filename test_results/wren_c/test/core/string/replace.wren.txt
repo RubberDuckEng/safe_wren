@@ -1,16 +1,16 @@
 Unexpected output on stderr:
 String does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 56] in isEmpty
+[#core line 56] in isEmpty
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 177] in replace(_,_)
+[#core line 177] in replace(_,_)
 Unexpected output on stderr:
-[./test/module/name/not/yet/captured line 1] in <script>
+[wren_c/test/core/string/replace line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterate(_)'.
-[./test/module/name/not/yet/captured line 56] in isEmpty
-[./test/module/name/not/yet/captured line 177] in replace(_,_)
-[./test/module/name/not/yet/captured line 1] in <script>
+[#core line 56] in isEmpty
+[#core line 177] in replace(_,_)
+[wren_c/test/core/string/replace line 1] in <script>
 
 Missing expected output "nothing" on line 1.
 Missing expected output "someone" on line 2.

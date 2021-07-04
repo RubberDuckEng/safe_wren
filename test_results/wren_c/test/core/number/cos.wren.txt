@@ -1,7 +1,7 @@
 Unexpected error:
-[dummy_module line 6] Error Lexer(UnterminatedScientificNotation)
+[wren_c/test/core/number/cos line 6] Error Lexer(UnterminatedScientificNotation)
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 6] Error Lexer(UnterminatedScientificNotation)
+[wren_c/test/core/number/cos line 6] Error Lexer(UnterminatedScientificNotation)
 
 Missing expected output "1" on line 1.
 Missing expected output "-1" on line 2.

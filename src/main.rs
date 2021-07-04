@@ -10,7 +10,7 @@ mod core;
 mod vm;
 
 use crate::compiler::{compile, lex, InputManager};
-use crate::vm::{debug_bytecode, RuntimeError, WrenVM};
+use crate::vm::{wren_debug_bytecode, RuntimeError, WrenVM};
 
 enum ExitCode {
     Success = 0,
@@ -58,7 +58,7 @@ fn run_file(path: &String) {
     // handle module setup.
     let mut vm = WrenVM::new(false);
     let input = InputManager::from_bytes(no_crs);
-    let module_name = "dummy_module";
+    let module_name = path.strip_suffix(".wren").unwrap();
     let closure = compile(&mut vm, input, module_name).unwrap_or_else(|e| {
         // Matching test.c output:
         eprintln!("[{} line {}] Error {:?}", e.module, e.line, e.error);
@@ -126,7 +126,7 @@ fn print_bytecode(source_or_path: &String) {
     let input = input_from_source_or_path(source_or_path);
     let result = compile(&mut vm, input, "dummy_module");
     match result {
-        Ok(closure) => debug_bytecode(&vm, &closure.borrow()),
+        Ok(closure) => wren_debug_bytecode(&vm, &closure.borrow()),
         Err(e) => eprintln!("{:?}", e),
     }
 }

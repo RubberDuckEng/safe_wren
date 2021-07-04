@@ -5,7 +5,7 @@ use std::rc::Rc;
 use std::str;
 
 use crate::compiler::{compile, FnDebug, InputManager, Ops, Scope};
-use crate::core::{init_base_classes, register_core_primitives};
+use crate::core::{init_base_classes, init_fn_class, register_core_primitives};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -151,24 +151,16 @@ impl Value {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub(crate) struct Module {
-    // Missing some pointer to the actual code?
+    pub name: String,
 
     // Should this just be a map?  wren_utils.h suggests so?
     variables: Vec<Value>,
     variable_names: Vec<String>,
-    pub name: String, // Should be a GC'd object?
 }
 
 impl Module {
-    pub fn with_name(name: &str) -> Module {
-        Module {
-            name: name.into(),
-            ..Module::default()
-        }
-    }
-
     pub fn lookup_symbol(&self, name: &str) -> Option<u16> {
         self.variable_names
             .iter()
@@ -181,16 +173,15 @@ impl Module {
         self.variables.push(value);
         self.variable_names.len() - 1
     }
-}
 
-pub(crate) fn find_core_class(vm: &WrenVM, name: &str) -> Handle<ObjClass> {
-    let symbol = vm
-        .module
-        .lookup_symbol(name)
-        .expect(&format!("find_core_class failed to load {}", name));
-    vm.module.variables[symbol as usize]
-        .try_into_class("not class".into())
-        .expect(&format!("find_core_class failed to load {}", name))
+    pub(crate) fn expect_class(&self, name: &str) -> Handle<ObjClass> {
+        let symbol = self
+            .lookup_symbol(name)
+            .expect(&format!("failed to load {}", name));
+        self.variables[symbol as usize]
+            .try_into_class("ignored".into())
+            .expect(&format!("failed to load {}", name))
+    }
 }
 
 #[derive(Debug)]
@@ -358,8 +349,6 @@ impl core::fmt::Debug for Fiber {
 }
 
 pub struct WrenVM {
-    // Current executing module (only module currently)
-    pub(crate) module: Module, // No support for multiple modules yet.
     // Current executing Fiber (should eventually be a list?)
     last_fiber: Option<Fiber>,
     // Print debug information when running
@@ -367,8 +356,15 @@ pub struct WrenVM {
     // Single global symbol table for all method names (matches wren_c)
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
+    modules: HashMap<String, Module>,
+
+    // The Core module is created first (empty)
+    pub(crate) core_module: Option<Module>,
+    // Then Class
     pub(crate) class_class: Option<Handle<ObjClass>>,
+    // Then Fn
     pub(crate) fn_class: Option<Handle<ObjClass>>,
+    // Finally the rest of WrenCore
     pub(crate) core: Option<CoreClasses>,
 }
 
@@ -597,7 +593,7 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
     class
 }
 
-pub(crate) fn load_wren_core(vm: &mut WrenVM) {
+pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
     let had_debug = vm.debug;
     vm.debug = false;
     use std::fs;
@@ -608,8 +604,8 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM) {
     });
 
     let input = InputManager::from_string(source);
-    let closure = compile(vm, input, "core".into()).expect("compile wren_core");
-    // debug_bytecode(vm, &closure.borrow());
+    let closure = compile(vm, input, module_name).expect("compile wren_core");
+    // debug_bytecode(vm, &closure.borrow(), module);
     vm.run(closure).expect("run wren_core");
     vm.debug = had_debug;
 }
@@ -659,20 +655,51 @@ fn bind_method(
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
         let mut vm = Self {
-            // dummy_module to avoid changing test results (for now)
-            module: Module::with_name("dummy_module"),
+            // Invalid import name, intentionally.
             methods: SymbolTable::default(),
             last_fiber: None,
             debug: debug,
+            core_module: None,
             core: None,
             class_class: None,
             fn_class: None,
+            modules: HashMap::new(),
         };
 
-        init_base_classes(&mut vm);
-        load_wren_core(&mut vm);
+        // Modules are owned by the modules HashMap.
+        // When compiled into, they are taken out of the HashMap.
+        // Core is special.  We can't both compile core and have it
+        // accessible for lookups at the same time, so we make this
+        // stub, compile the real core, and then replace this.
+        let mut stub_core = Module {
+            name: "stub_core".into(),
+            variables: Vec::new(),
+            variable_names: Vec::new(),
+        };
+        init_base_classes(&mut vm, &mut stub_core);
+        vm.class_class = Some(stub_core.expect_class("Class"));
+        init_fn_class(&mut vm, &mut stub_core);
+        vm.core_module = Some(stub_core);
+        let core_name = "#core";
+        load_wren_core(&mut vm, core_name);
+        vm.core_module = Some(vm.modules.remove(core_name).unwrap());
         register_core_primitives(&mut vm);
         vm
+    }
+
+    pub(crate) fn new_module_with_name(&self, name: &str) -> Module {
+        // We automatically import Core into all modules.
+        // Implicitly import the core module.
+        let core = self.core_module.as_ref().unwrap();
+        Module {
+            name: name.into(),
+            variable_names: core.variable_names.clone(),
+            variables: core.variables.clone(),
+        }
+    }
+
+    pub(crate) fn register_module(&mut self, module: Module) {
+        self.modules.insert(module.name.clone(), module);
     }
 
     // TODO: This needs to be Option?  Root classes dont have classes?
@@ -724,8 +751,7 @@ impl WrenVM {
             let closure = frame.closure.borrow();
             let fn_obj = closure.fn_obj.borrow();
             FrameInfo {
-                // HACK: Use path/syntax to fool test.py
-                module: "./test/module/name/not/yet/captured".into(),
+                module: fn_obj.debug.module_name.clone(),
                 line: fn_obj.debug.line_for_pc(frame.pc),
                 fn_name: fn_obj.debug.name.clone(),
             }
@@ -737,13 +763,26 @@ impl WrenVM {
     }
 
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
+        let module_name = closure.borrow().fn_obj.borrow().debug.module_name.clone();
         let mut fiber = Fiber::new(closure);
+        let mut module = self.modules.remove(&module_name).unwrap();
+        let result = self.run_in_fiber(&mut fiber, &mut module);
+        self.last_fiber = Some(fiber);
+        self.modules.insert(module.name.clone(), module);
+        result
+    }
+
+    fn run_in_fiber(
+        &mut self,
+        fiber: &mut Fiber,
+        module: &mut Module,
+    ) -> Result<Value, RuntimeError> {
         loop {
             let mut frame = fiber.call_stack.pop().unwrap();
             // This is all to avoid run_fiber needing to call itself
             // recursively, or the run_fiber main loop needing to pull
             // the frame on every iteration.  Maybe not worth it?
-            let result = self.run_frame_in_fiber(&mut frame, &fiber);
+            let result = self.run_frame_in_fiber(&mut frame, fiber, module);
             match result {
                 Ok(RunNext::FunctionCall(new_frame)) => {
                     // call_stack does not contain "frame", restore it.
@@ -761,7 +800,6 @@ impl WrenVM {
                 }
                 Ok(RunNext::Done) => {
                     // FIXME: Is this an error now that FunctionReturn is implemented?
-                    self.last_fiber = Some(fiber);
                     return Ok(Value::Null);
                 }
                 Err(vm_error) => {
@@ -786,14 +824,18 @@ impl WrenVM {
                             stack_trace: stack_trace,
                         },
                     };
-                    self.last_fiber = Some(fiber);
                     return Err(runtime_error);
                 }
             }
         }
     }
 
-    fn run_frame_in_fiber(&mut self, frame: &mut CallFrame, _fiber: &Fiber) -> Result<RunNext> {
+    fn run_frame_in_fiber(
+        &mut self,
+        frame: &mut CallFrame,
+        _fiber: &Fiber,
+        module: &mut Module,
+    ) -> Result<RunNext> {
         let fn_obj = frame.closure.borrow().fn_obj.clone();
         frame.pc;
         loop {
@@ -803,7 +845,7 @@ impl WrenVM {
                 dump_instruction(
                     frame.pc,
                     op,
-                    &self.module,
+                    module,
                     &self.methods,
                     &frame.closure.borrow(),
                     Some(frame),
@@ -864,7 +906,7 @@ impl WrenVM {
                             // per CallFrame, so underflows are caught on a
                             // per-function call basis.
                             // println!("About to call:");
-                            // debug_bytecode(self, &closure.borrow());
+                            // debug_bytecode(self, &closure.borrow(), module);
                             return Ok(RunNext::FunctionCall(CallFrame {
                                 pc: 0,
                                 closure: closure.clone(),
@@ -906,7 +948,7 @@ impl WrenVM {
                 }
                 Ops::Load(variable) => {
                     let value = match variable.scope {
-                        Scope::Module => self.module.variables[variable.index].clone(),
+                        Scope::Module => module.variables[variable.index].clone(),
                         Scope::Upvalue => unimplemented!("load upvalue"),
                         Scope::Local => frame.stack[variable.index].clone(),
                     };
@@ -915,7 +957,7 @@ impl WrenVM {
                 Ops::Store(variable) => {
                     let value = frame.peek()?;
                     match variable.scope {
-                        Scope::Module => self.module.variables[variable.index] = value.clone(),
+                        Scope::Module => module.variables[variable.index] = value.clone(),
                         Scope::Upvalue => unimplemented!("store upvalue"),
                         Scope::Local => frame.stack[variable.index] = value.clone(),
                     };
@@ -1133,7 +1175,12 @@ fn op_debug_string(
     }
 }
 
-pub(crate) fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
+pub(crate) fn wren_debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
+    let module_name = closure.fn_obj.borrow().debug.module_name.clone();
+    debug_bytecode(vm, closure, &vm.modules[&module_name]);
+}
+
+fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure, module: &Module) {
     let func = &closure.fn_obj.borrow();
     println!("Constants:");
     for (id, value) in func.constants.iter().enumerate() {
@@ -1144,7 +1191,7 @@ pub(crate) fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
         dump_instruction(
             pc,
             &op,
-            &vm.module,
+            &module,
             &vm.methods,
             closure,
             None,

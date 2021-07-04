@@ -1,6 +1,6 @@
 Unexpected error:
-[dummy_module line 7] Error Grammar("Undeclared variable \'a\'")
+[wren_c/test/language/closure/unused_closure line 7] Error Grammar("Undeclared variable \'a\'")
 Expected return code 0 and got 65. Stderr:
-[dummy_module line 7] Error Grammar("Undeclared variable \'a\'")
+[wren_c/test/language/closure/unused_closure line 7] Error Grammar("Undeclared variable \'a\'")
 
 Missing expected output "ok" on line 11.
