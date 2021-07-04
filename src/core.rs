@@ -570,6 +570,95 @@ fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::List(wren_new_list(vm, Vec::new())))
 }
 
+struct Range {
+    range: std::ops::Range<usize>,
+    reverse: bool,
+}
+
+impl Range {
+    fn empty() -> Range {
+        Range {
+            range: 0..0, // will be empty.
+            reverse: false,
+        }
+    }
+}
+
+// FIXME: This could be much simpler!
+fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
+    // Edge case: an empty range is allowed at the end of a sequence. This way,
+    // list[0..-1] and list[0...list.count] can be used to copy a list even when
+    // empty.
+    let len_f = length as f64;
+    let is_full_slice = if range.is_inclusive {
+        range.from == len_f && range.to == -1.0
+    } else {
+        range.from == len_f && range.to == len_f
+    };
+    if is_full_slice {
+        return Ok(Range::empty());
+    }
+    let from = validate_index_value(length, range.from as f64, "Range start")?;
+    // Bounds check the end manually to handle exclusive ranges.
+    let mut value = validate_int_value(range.to as f64, "Range end")?;
+    // Negative indices count from the end.
+    if value < 0.0 {
+        value = len_f + value;
+    }
+    // Convert the exclusive range to an inclusive one.
+    if !range.is_inclusive {
+        // An exclusive range with the same start and end points is empty.
+        if value == range.from {
+            return Ok(Range::empty());
+        }
+
+        // Shift the endpoint to make it inclusive, handling both increasing and
+        // decreasing ranges.
+        if value >= range.from {
+            value += -1.0;
+        } else {
+            value += 1.0;
+        }
+    }
+    // Check bounds.
+    if value < 0.0 || value >= len_f {
+        return Err(VMError::from_str("Range end out of bounds."));
+    }
+    let to = value as usize;
+    if from <= to {
+        Ok(Range {
+            range: from..to,
+            reverse: false,
+        })
+    } else {
+        Ok(Range {
+            range: to..from,
+            reverse: true,
+        })
+    }
+}
+
+fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
+
+    match &args[1] {
+        Value::Num(_) => {
+            let index = validate_index(&args[1], list.borrow().elements.len(), "Subscript".into())?;
+            Ok(list.borrow().elements[index].clone())
+        }
+        Value::Range(r) => {
+            let range = calculate_range(&r.borrow(), list.borrow().elements.len())?;
+            let slice = &list.borrow().elements[range.range];
+            let mut vec = slice.to_vec();
+            if range.reverse {
+                vec.reverse();
+            }
+            Ok(Value::List(wren_new_list(vm, vec)))
+        }
+        _ => Err(VMError::from_str("Subscript must be a number or a range.")),
+    }
+}
+
 fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
     let list = this_as_list(&args)?;
@@ -955,7 +1044,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     let list = module.expect_class("List");
     primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
-    // primitive!(vm, list, "[_]", list_subscript);
+    primitive!(vm, list, "[_]", list_subscript);
     // primitive!(vm, list, "[_]=(_)", list_subscript_setter);
     primitive!(vm, list, "add(_)", list_add);
     primitive!(vm, list, "addCore_(_)", list_add_core);

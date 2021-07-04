@@ -1,9 +1,15 @@
 Unexpected output on stderr:
-List does not implement '[_]'.
+List does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 406] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 385] in print(_)
 Unexpected output on stderr:
 [wren_c/test/core/list/subscript_range line 3] in <script>
 Expected return code 0 and got 70. Stderr:
-List does not implement '[_]'.
+List does not implement 'toString'.
+[#core line 406] in writeObject_(_)
+[#core line 385] in print(_)
 [wren_c/test/core/list/subscript_range line 3] in <script>
 
 Missing expected output "[a]" on line 3.

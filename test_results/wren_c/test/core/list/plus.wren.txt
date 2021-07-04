@@ -1,12 +1,15 @@
 Unexpected output on stderr:
-List does not implement '[_]'.
+List does not implement 'toString'.
 Unexpected output on stderr:
-[#core line 303] in +(_)
+[#core line 406] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 385] in print(_)
 Unexpected output on stderr:
 [wren_c/test/core/list/plus line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-List does not implement '[_]'.
-[#core line 303] in +(_)
+List does not implement 'toString'.
+[#core line 406] in writeObject_(_)
+[#core line 385] in print(_)
 [wren_c/test/core/list/plus line 1] in <script>
 
 Missing expected output "[1, 2, 3, 4, 5, 6]" on line 1.

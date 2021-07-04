@@ -61,6 +61,7 @@ wren_c/test/core/list/multiply_negative.wren
 wren_c/test/core/list/multiply_not_int.wren
 wren_c/test/core/list/multiply_not_num.wren
 wren_c/test/core/list/not.wren
+wren_c/test/core/list/plus_not_iterable.wren
 wren_c/test/core/list/reduce.wren
 wren_c/test/core/list/reduce_no_items.wren
 wren_c/test/core/list/reduce_single_item.wren
@@ -68,6 +69,19 @@ wren_c/test/core/list/remove_at_index_not_int.wren
 wren_c/test/core/list/remove_at_index_not_num.wren
 wren_c/test/core/list/remove_at_index_too_large.wren
 wren_c/test/core/list/remove_at_index_too_small.wren
+wren_c/test/core/list/subscript.wren
+wren_c/test/core/list/subscript_not_int.wren
+wren_c/test/core/list/subscript_range_from_not_int.wren
+wren_c/test/core/list/subscript_range_from_too_large.wren
+wren_c/test/core/list/subscript_range_from_too_small.wren
+wren_c/test/core/list/subscript_range_to_exclusive_too_large.wren
+wren_c/test/core/list/subscript_range_to_exclusive_too_small.wren
+wren_c/test/core/list/subscript_range_to_not_int.wren
+wren_c/test/core/list/subscript_range_to_too_large.wren
+wren_c/test/core/list/subscript_range_to_too_small.wren
+wren_c/test/core/list/subscript_too_large.wren
+wren_c/test/core/list/subscript_too_small.wren
+wren_c/test/core/list/subscript_wrong_type.wren
 wren_c/test/core/list/type.wren
 wren_c/test/core/map/contains_key.wren
 wren_c/test/core/map/contains_key_not_value.wren
@@ -303,6 +317,8 @@ wren_c/test/language/list/empty_list_with_comma.wren
 wren_c/test/language/list/eof_after_comma.wren
 wren_c/test/language/list/eof_after_element.wren
 wren_c/test/language/list/newline_before_comma.wren
+wren_c/test/language/list/newlines.wren
+wren_c/test/language/list/trailing_comma.wren
 wren_c/test/language/logical_operator/and.wren
 wren_c/test/language/logical_operator/and_truth.wren
 wren_c/test/language/logical_operator/or.wren
