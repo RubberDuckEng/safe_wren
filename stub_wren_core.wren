@@ -296,7 +296,13 @@ class List is Sequence {
     return i+1
   }
 
-  // toString { "[%(join(", "))]" }
+  toString { 
+    // We don't support string interpolation yet but
+    // List.toString is blocking too many other tests.
+    // "[%(join(", "))]" 
+    var inner = join(", ")
+    return "[" + inner + "]"
+  }
 
   +(other) {
     var result = this[0..-1]
