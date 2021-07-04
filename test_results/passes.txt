@@ -229,6 +229,14 @@ wren_c/test/core/string_byte_sequence/subscript_not_int.wren
 wren_c/test/core/string_byte_sequence/subscript_not_num.wren
 wren_c/test/core/string_byte_sequence/subscript_too_large.wren
 wren_c/test/core/string_byte_sequence/subscript_too_small.wren
+wren_c/test/core/string_code_point_sequence/iterator_value_not_int.wren
+wren_c/test/core/string_code_point_sequence/iterator_value_not_num.wren
+wren_c/test/core/string_code_point_sequence/iterator_value_too_large.wren
+wren_c/test/core/string_code_point_sequence/iterator_value_too_small.wren
+wren_c/test/core/string_code_point_sequence/subscript_not_int.wren
+wren_c/test/core/string_code_point_sequence/subscript_not_num.wren
+wren_c/test/core/string_code_point_sequence/subscript_too_large.wren
+wren_c/test/core/string_code_point_sequence/subscript_too_small.wren
 wren_c/test/core/system/print.wren
 wren_c/test/core/system/print_all.wren
 wren_c/test/core/system/print_all_not_sequence.wren

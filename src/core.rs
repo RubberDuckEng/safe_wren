@@ -394,6 +394,19 @@ fn string_byte_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Num(this_as_string(&args)?.len() as f64))
 }
 
+fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_string(&args)?;
+    let index = validate_index(&args[1], this.len(), "Index")?;
+
+    // If we are in the middle of a UTF-8 sequence, indicate that.
+    if !this.is_char_boundary(index) {
+        return Ok(Value::Num(-1.0));
+    }
+    // FIXME: Might be a nicer way to do this in rust?
+    let c = this.split_at(index).1.chars().nth(0).unwrap();
+    Ok(Value::Num(c as usize as f64))
+}
+
 fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let string = this_as_string(&args)?;
     let index = validate_index(&args[1], string.len(), "Index")?;
@@ -1042,7 +1055,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive!(vm, core.string, "[_]", string_subscript);
     primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
     primitive!(vm, core.string, "byteCount_", string_byte_count);
-    // primitive!(vm, core.string, "codePointAt_(_)", string_code_point_at);
+    primitive!(vm, core.string, "codePointAt_(_)", string_code_point_at);
     primitive!(vm, core.string, "contains(_)", string_contains);
     primitive!(vm, core.string, "endsWith(_)", string_ends_with);
     primitive!(vm, core.string, "indexOf(_)", string_index_of1);
