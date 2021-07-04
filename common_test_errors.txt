@@ -3,7 +3,7 @@ Most common errors seen in test_results/**:
 occurances : error text
 186 : in <script>
 78 : Error Grammar("Undeclared variable \'import\'")
-29 : Fiber does not implement 'call()'.
+31 : Fiber does not implement 'call()'.
 28 : Expected return code 65 and got 0. Stderr:
 27 : String does not implement 'iterate(_)'.
 22 : Map does not implement 'iterate(_)'.
@@ -15,20 +15,19 @@ occurances : error text
 17 : Expected return code 65 and got 66. Stderr:
 17 : Expected return code 70 and got 65. Stderr:
 17 : Expected stack trace and got:
+17 : Fiber does not implement 'transfer()'.
 14 : Error Grammar("Undeclared variable \'a\'")
 14 : Error Grammar("Undeclared variable \'i\'")
 14 : in iterate(_)
 12 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: Hash, line:  }")
 12 : Expected return code 70 and got 0. Stderr:
 12 : in count
-11 : Fiber metaclass does not implement 'current'.
 9 : Derived does not implement 'super'.
 9 : Error Grammar("Undeclared variable \'B\'")
 8 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: StaticField(\"__field\"), line:  }")
 8 : Expected output "-1" on line  and got "92".
 8 : Expected runtime error "Iterator must be a number." and got:
 8 : Expected runtime error "Iterator must be an integer." and got:
-8 : Fiber does not implement 'transfer()'.
 8 : in print(_)
 8 : in writeObject_(_)
 6 : Error Grammar("Undeclared variable \'local\'")
@@ -180,7 +179,7 @@ occurances : error text
 1 : Expected output "1.0986122886681" on line  and got "1.0986122886681098".
 1 : Expected output "1.4142135623731" on line  and got "1.4142135623730951".
 1 : Expected output "1.7976931348623e+308" on line  and got "179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000".
-1 : Expected output "10" on line  and got "100".
+1 : Expected output "10" on line  and got "99".
 1 : Expected output "102" on line  and got "92".
 1 : Expected output "120" on line  and got "92".
 1 : Expected output "148.41315910258" on line  and got "148.4131591025766".

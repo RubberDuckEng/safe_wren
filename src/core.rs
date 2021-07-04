@@ -377,6 +377,10 @@ fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+fn fiber_current(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+    Ok(Value::Fiber(vm.fiber.as_ref().unwrap().clone()))
+}
+
 fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(true))
 }
@@ -976,7 +980,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     let fiber = vm.fiber_class.as_ref().unwrap();
     primitive_static!(vm, fiber, "new(_)", fiber_new);
     primitive_static!(vm, fiber, "abort(_)", fiber_abort);
-    // primitive_static!(vm, fiber, "current", fiber_current);
+    primitive_static!(vm, fiber, "current", fiber_current);
     // primitive_static!(vm, fiber, "suspend()", fiber_suspend);
     // primitive_static!(vm, fiber, "yield()", fiber_yield);
     // primitive_static!(vm, fiber, "yield(_)", fiber_yield1);

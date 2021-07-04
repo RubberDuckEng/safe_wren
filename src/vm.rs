@@ -366,7 +366,7 @@ impl core::fmt::Debug for ObjFiber {
 
 pub struct WrenVM {
     // Current executing Fiber (should eventually be a list?)
-    last_fiber: Option<Handle<ObjFiber>>,
+    pub(crate) fiber: Option<Handle<ObjFiber>>,
     // Print debug information when running
     debug: bool,
     // Single global symbol table for all method names (matches wren_c)
@@ -388,7 +388,7 @@ pub struct WrenVM {
 impl core::fmt::Debug for WrenVM {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "WrenVM {{ ")?;
-        if let Some(fiber) = &self.last_fiber {
+        if let Some(fiber) = &self.fiber {
             write!(f, "stack: {:?}, ", fiber)?;
         }
         write!(f, "methods: (len {}) ", self.methods.names.len())?;
@@ -674,7 +674,7 @@ impl WrenVM {
         let mut vm = Self {
             // Invalid import name, intentionally.
             methods: SymbolTable::default(),
-            last_fiber: None,
+            fiber: None,
             debug: debug,
             core_module: None,
             core: None,
@@ -784,9 +784,9 @@ impl WrenVM {
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
         let module_name = closure.borrow().fn_obj.borrow().debug.module_name.clone();
         let fiber = new_handle(ObjFiber::new(self, closure));
+        self.fiber = Some(fiber.clone());
         let mut module = self.modules.remove(&module_name).unwrap();
         let result = self.run_in_fiber(&mut fiber.borrow_mut(), &mut module);
-        self.last_fiber = Some(fiber);
         self.modules.insert(module.name.clone(), module);
         result
     }
