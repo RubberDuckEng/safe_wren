@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Fiber metaclass does not implement 'new(_)'.
+Fiber does not implement 'try(_)'.
 Unexpected output on stderr:
-[wren_c/test/core/fiber/try_value_yield line 8] in <script>
+[wren_c/test/core/fiber/try_value_yield line 10] in <script>
 Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'new(_)'.
-[wren_c/test/core/fiber/try_value_yield line 8] in <script>
+Fiber does not implement 'try(_)'.
+[wren_c/test/core/fiber/try_value_yield line 10] in <script>
 
 Missing expected output "before" on line 11.
 Missing expected output "value1" on line 12.

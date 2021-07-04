@@ -1,7 +1,6 @@
 class Bool {}
-// class Fn can't be defined in wren_core, because it's needed
-// to be the class for all the functions in wren core!
-class Fiber {}
+// Fn and Fiber can't be defined in wren_core, because they're needed
+// to be the class for the Fiber and for all closures here.
 class Null {}
 class Num {}
 

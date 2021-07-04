@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-Fiber metaclass does not implement 'new(_)'.
+Fiber does not implement 'try()'.
 Unexpected output on stderr:
-[wren_c/test/core/fiber/is_done_after_error line 3] in <script>
+[wren_c/test/core/fiber/is_done_after_error line 5] in <script>
 Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'new(_)'.
-[wren_c/test/core/fiber/is_done_after_error line 3] in <script>
+Fiber does not implement 'try()'.
+[wren_c/test/core/fiber/is_done_after_error line 5] in <script>
 
 Missing expected output "true" on line 6.

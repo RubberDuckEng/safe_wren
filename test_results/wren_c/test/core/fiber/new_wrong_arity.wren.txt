@@ -1,2 +1,0 @@
-Expected runtime error "Function cannot take more than one parameter." and got:
-Fiber metaclass does not implement 'new(_)'.

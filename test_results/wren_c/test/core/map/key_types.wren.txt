@@ -1,10 +1,8 @@
 Unexpected output on stderr:
-Fiber metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[wren_c/test/core/map/key_types line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'new(_)'.
-[wren_c/test/core/map/key_types line 1] in <script>
+thread 'main' has overflowed its stack
+Expected return code 0 and got 3221225725. Stderr:
+
+thread 'main' has overflowed its stack
 
 Missing expected output "null value" on line 14.
 Missing expected output "true value" on line 15.

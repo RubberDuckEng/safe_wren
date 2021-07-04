@@ -1,15 +1,15 @@
 Unexpected output on stderr:
 StringCodePointSequence does not implement 'toList'.
 Unexpected output on stderr:
-[#core line 215] in trim_(_,_,_)
+[#core line 214] in trim_(_,_,_)
 Unexpected output on stderr:
-[#core line 201] in trim()
+[#core line 200] in trim()
 Unexpected output on stderr:
 [wren_c/test/core/string/trim line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 StringCodePointSequence does not implement 'toList'.
-[#core line 215] in trim_(_,_,_)
-[#core line 201] in trim()
+[#core line 214] in trim_(_,_,_)
+[#core line 200] in trim()
 [wren_c/test/core/string/trim line 1] in <script>
 
 Missing expected output "true" on line 1.

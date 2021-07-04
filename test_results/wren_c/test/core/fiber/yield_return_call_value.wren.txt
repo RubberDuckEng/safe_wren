@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Fiber metaclass does not implement 'new(_)'.
+Fiber does not implement 'call()'.
 Unexpected output on stderr:
-[wren_c/test/core/fiber/yield_return_call_value line 5] in <script>
+[wren_c/test/core/fiber/yield_return_call_value line 7] in <script>
 Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'new(_)'.
-[wren_c/test/core/fiber/yield_return_call_value line 5] in <script>
+Fiber does not implement 'call()'.
+[wren_c/test/core/fiber/yield_return_call_value line 7] in <script>
 
 Missing expected output "fiber 1" on line 7.
 Missing expected output "main 1" on line 8.

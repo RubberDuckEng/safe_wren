@@ -1,15 +1,15 @@
 Unexpected output on stderr:
 String does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[#core line 36] in count
+[#core line 35] in count
 Unexpected output on stderr:
-[#core line 143] in count
+[#core line 142] in count
 Unexpected output on stderr:
 [wren_c/test/core/string_code_point_sequence/count line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterate(_)'.
-[#core line 36] in count
-[#core line 143] in count
+[#core line 35] in count
+[#core line 142] in count
 [wren_c/test/core/string_code_point_sequence/count line 1] in <script>
 
 Missing expected output "0" on line 1.

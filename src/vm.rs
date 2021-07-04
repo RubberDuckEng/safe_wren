@@ -5,7 +5,7 @@ use std::rc::Rc;
 use std::str;
 
 use crate::compiler::{compile, FnDebug, InputManager, Ops, Scope};
-use crate::core::{init_base_classes, init_fn_class, register_core_primitives};
+use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -42,6 +42,7 @@ pub(crate) enum Value {
     Closure(Handle<ObjClosure>),
     List(Handle<ObjList>),
     Map(Handle<ObjMap>),
+    Fiber(Handle<ObjFiber>),
     Instance(Handle<ObjInstance>),
 }
 
@@ -61,6 +62,7 @@ impl Hash for Value {
             Value::Closure(v) => v.as_ptr().hash(state),
             Value::List(v) => v.as_ptr().hash(state),
             Value::Map(v) => v.as_ptr().hash(state),
+            Value::Fiber(v) => v.as_ptr().hash(state),
             Value::Instance(v) => v.as_ptr().hash(state),
         }
     }
@@ -100,6 +102,7 @@ impl core::fmt::Debug for Value {
             Value::Range(r) => write!(f, "Range({:?})", r),
             Value::List(_) => write!(f, "List()"),
             Value::Map(_) => write!(f, "Map()"),
+            Value::Fiber(_) => write!(f, "Fiber()"),
             Value::Fn(c) => write!(f, "Fn({})", c.borrow().debug.name),
             Value::Closure(c) => write!(f, "Closure({})", c.borrow().fn_obj.borrow().debug.name),
             Value::Instance(o) => write!(
@@ -323,21 +326,34 @@ impl core::fmt::Debug for CallFrame {
     }
 }
 
-pub struct Fiber {
+pub struct ObjFiber {
+    class_obj: Handle<ObjClass>,
     call_stack: Vec<CallFrame>,
 }
 
-impl Fiber {
-    fn new(closure: Handle<ObjClosure>) -> Fiber {
+impl Obj for ObjFiber {
+    fn class_obj(&self) -> Option<Handle<ObjClass>> {
+        Some(self.class_obj.clone())
+    }
+}
+
+impl ObjFiber {
+    pub(crate) fn new(vm: &WrenVM, closure: Handle<ObjClosure>) -> ObjFiber {
         let mut frame = CallFrame::new(closure.clone());
         // In wrenNewFiber, the first slot always holds the root closure.
         frame.push(Value::Closure(closure));
-        Fiber {
+        ObjFiber {
+            class_obj: vm.fiber_class.as_ref().unwrap().clone(),
             call_stack: vec![frame],
         }
     }
 }
-impl core::fmt::Debug for Fiber {
+
+pub(crate) fn wren_new_fiber(vm: &WrenVM, closure: Handle<ObjClosure>) -> Handle<ObjFiber> {
+    new_handle(ObjFiber::new(vm, closure))
+}
+
+impl core::fmt::Debug for ObjFiber {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(
             f,
@@ -350,7 +366,7 @@ impl core::fmt::Debug for Fiber {
 
 pub struct WrenVM {
     // Current executing Fiber (should eventually be a list?)
-    last_fiber: Option<Fiber>,
+    last_fiber: Option<Handle<ObjFiber>>,
     // Print debug information when running
     debug: bool,
     // Single global symbol table for all method names (matches wren_c)
@@ -362,9 +378,10 @@ pub struct WrenVM {
     pub(crate) core_module: Option<Module>,
     // Then Class
     pub(crate) class_class: Option<Handle<ObjClass>>,
-    // Then Fn
+    // Then Fn and Fiber (which are used by wren_core.wren)
     pub(crate) fn_class: Option<Handle<ObjClass>>,
-    // Finally the rest of WrenCore
+    pub(crate) fiber_class: Option<Handle<ObjClass>>,
+    // Finally the rest of wren_core.wren
     pub(crate) core: Option<CoreClasses>,
 }
 
@@ -663,6 +680,7 @@ impl WrenVM {
             core: None,
             class_class: None,
             fn_class: None,
+            fiber_class: None,
             modules: HashMap::new(),
         };
 
@@ -678,7 +696,7 @@ impl WrenVM {
         };
         init_base_classes(&mut vm, &mut stub_core);
         vm.class_class = Some(stub_core.expect_class("Class"));
-        init_fn_class(&mut vm, &mut stub_core);
+        init_fn_and_fiber(&mut vm, &mut stub_core);
         vm.core_module = Some(stub_core);
         let core_name = "#core";
         load_wren_core(&mut vm, core_name);
@@ -714,6 +732,7 @@ impl WrenVM {
             Value::List(o) => o.borrow().class_obj(),
             Value::Map(o) => o.borrow().class_obj(),
             Value::Range(o) => o.borrow().class_obj(),
+            Value::Fiber(o) => o.borrow().class_obj(),
             Value::Fn(o) => o.borrow().class_obj(),
             Value::Closure(o) => o.borrow().class_obj(),
             Value::Instance(o) => o.borrow().class_obj(),
@@ -745,7 +764,7 @@ impl WrenVM {
 
     // Will this eventually have to walk across fibers?
     // Or can this just be a free function?
-    fn stack_trace(&self, fiber: &Fiber) -> StackTrace {
+    fn stack_trace(&self, fiber: &ObjFiber) -> StackTrace {
         // Walk the fibers in reverse info.
         fn frame_info(frame: &CallFrame) -> FrameInfo {
             let closure = frame.closure.borrow();
@@ -764,9 +783,9 @@ impl WrenVM {
 
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
         let module_name = closure.borrow().fn_obj.borrow().debug.module_name.clone();
-        let mut fiber = Fiber::new(closure);
+        let fiber = new_handle(ObjFiber::new(self, closure));
         let mut module = self.modules.remove(&module_name).unwrap();
-        let result = self.run_in_fiber(&mut fiber, &mut module);
+        let result = self.run_in_fiber(&mut fiber.borrow_mut(), &mut module);
         self.last_fiber = Some(fiber);
         self.modules.insert(module.name.clone(), module);
         result
@@ -774,7 +793,7 @@ impl WrenVM {
 
     fn run_in_fiber(
         &mut self,
-        fiber: &mut Fiber,
+        fiber: &mut ObjFiber,
         module: &mut Module,
     ) -> Result<Value, RuntimeError> {
         loop {
@@ -833,7 +852,7 @@ impl WrenVM {
     fn run_frame_in_fiber(
         &mut self,
         frame: &mut CallFrame,
-        _fiber: &Fiber,
+        _fiber: &ObjFiber,
         module: &mut Module,
     ) -> Result<RunNext> {
         let fn_obj = frame.closure.borrow().fn_obj.clone();

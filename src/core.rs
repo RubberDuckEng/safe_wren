@@ -353,6 +353,17 @@ fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+fn fiber_new(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let closure = validate_fn(&args[1], "Argument")?;
+    if closure.borrow().fn_obj.borrow().arity > 1 {
+        Err(VMError::from_str(
+            "Function cannot take more than one parameter.",
+        ))
+    } else {
+        Ok(Value::Fiber(wren_new_fiber(vm, closure)))
+    }
+}
+
 fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let is_abort = !args[1].is_null();
     // wren_c just records the error string and continues?
@@ -920,14 +931,26 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM, core_module: &mut Module) {
     primitive_static!(vm, object, "same(_,_)", object_same);
 }
 
-pub(crate) fn init_fn_class(vm: &mut WrenVM, core_module: &mut Module) {
-    // Hack.  AFAICT, functions/closures inside wren_core.wren are compiled
-    // by wren_c and have a null class!  Rust won't allow us to do that so
-    // manually initialize Fn class before compiling wren_core.wren.
-    let object = core_module.expect_class("Object");
-    let fn_class = wren_new_class(vm, &object, 0, "Fn".into()).expect("creating Fn");
-    vm.fn_class = Some(fn_class.clone());
-    wren_define_variable(core_module, "Fn", Value::Class(fn_class)).expect("defining Fn");
+// Only used by init_fn_and_fiber
+fn create_and_define_class(
+    vm: &mut WrenVM,
+    module: &mut Module,
+    name: &str,
+    superclass: &Handle<ObjClass>,
+) -> Handle<ObjClass> {
+    let class = wren_new_class(vm, &superclass, 0, name.into()).unwrap();
+    wren_define_variable(module, name, Value::Class(class.clone())).unwrap();
+    class
+}
+
+// Only used for initing before loading wren_core.wren.
+pub(crate) fn init_fn_and_fiber(vm: &mut WrenVM, module: &mut Module) {
+    // wren_c compiles wren_core.wren with functions/closures with a
+    // null class. Manually initialize classes before compiling wren_core.wren.
+    let superclass = module.expect_class("Object");
+    vm.fn_class = Some(create_and_define_class(vm, module, "Fn", &superclass));
+    // The Fiber used to run wren_core for wren_c has a null class.
+    vm.fiber_class = Some(create_and_define_class(vm, module, "Fiber", &superclass));
 }
 
 pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
@@ -950,8 +973,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.bool_class, "!", bool_not);
     primitive!(vm, core.bool_class, "toString", bool_to_string);
 
-    let fiber = module.expect_class("Fiber");
-    // primitive_static!(vm, fiber, "new(_)", fiber_new);
+    let fiber = vm.fiber_class.as_ref().unwrap();
+    primitive_static!(vm, fiber, "new(_)", fiber_new);
     primitive_static!(vm, fiber, "abort(_)", fiber_abort);
     // primitive_static!(vm, fiber, "current", fiber_current);
     // primitive_static!(vm, fiber, "suspend()", fiber_suspend);

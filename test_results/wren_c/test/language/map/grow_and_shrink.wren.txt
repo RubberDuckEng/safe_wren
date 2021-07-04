@@ -1,12 +1,12 @@
 Unexpected output on stderr:
 String does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[#core line 36] in count
+[#core line 35] in count
 Unexpected output on stderr:
 [wren_c/test/language/map/grow_and_shrink line 64] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterate(_)'.
-[#core line 36] in count
+[#core line 35] in count
 [wren_c/test/language/map/grow_and_shrink line 64] in <script>
 
 Missing expected output "249" on line 67.
