@@ -688,11 +688,11 @@ fn list_insert(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     // count + 1 here so you can "insert" at the very end.
     let index = validate_index(&args[1], count + 1, "Index")?;
     if index == count {
-        elements.push(args[1].clone());
+        elements.push(args[2].clone());
     } else {
-        elements.insert(index, args[1].clone());
+        elements.insert(index, args[2].clone());
     }
-    Ok(args[1].clone())
+    Ok(args[2].clone())
 }
 
 fn list_remove_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {

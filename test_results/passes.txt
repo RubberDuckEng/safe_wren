@@ -48,6 +48,7 @@ wren_c/test/core/list/filled_size_negative.wren
 wren_c/test/core/list/filled_size_not_int.wren
 wren_c/test/core/list/filled_size_not_num.wren
 wren_c/test/core/list/index_of.wren
+wren_c/test/core/list/insert.wren
 wren_c/test/core/list/insert_index_not_int.wren
 wren_c/test/core/list/insert_index_not_num.wren
 wren_c/test/core/list/insert_index_too_large.wren
