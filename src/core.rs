@@ -23,6 +23,9 @@ fn this_as_map(args: &Vec<Value>) -> Result<Handle<ObjMap>> {
 fn this_as_list(args: &Vec<Value>) -> Result<Handle<ObjList>> {
     args[0].try_into_list("reciever must be List".into())
 }
+fn this_as_class(args: &Vec<Value>) -> Result<Handle<ObjClass>> {
+    args[0].try_into_class("reciever must be Class".into())
+}
 
 macro_rules! num_constant {
     ($func:ident, $value:expr) => {
@@ -195,7 +198,22 @@ fn num_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = args[0].try_into_class("this must be class".into())?;
+    let this = this_as_class(&args)?;
+    let string = this.borrow().name.clone();
+    Ok(Value::from_string(string))
+}
+
+fn class_supertype(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_class(&args)?;
+    let maybe_superclass = &this.borrow().superclass;
+    match maybe_superclass {
+        None => Ok(Value::Null),
+        Some(superclass) => Ok(Value::Class(superclass.clone())),
+    }
+}
+
+fn class_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_class(&args)?;
     let string = this.borrow().name.clone();
     Ok(Value::from_string(string))
 }
@@ -222,7 +240,7 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     // e.g. for class in object.class_chain()
 
     loop {
-        if *expected_baseclass.borrow() == *class.borrow() {
+        if *expected_baseclass.borrow().name == *class.borrow().name {
             return Ok(Value::Boolean(true));
         }
         let superclass = match &class.borrow().superclass {
@@ -773,8 +791,8 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM, core_module: &mut Module) {
     let class = define_class(core_module, "Class");
     wren_bind_superclass(&mut class.borrow_mut(), &object);
     primitive!(vm, class, "name", class_name);
-    // primitive!(vm, class, "supertype", class_supertype);
-    // primitive!(vm, class, "toString", class_to_string);
+    primitive!(vm, class, "supertype", class_supertype);
+    primitive!(vm, class, "toString", class_to_string);
     // primitive!(vm, class, "attributes", class_attributes);
 
     // Finally, we can define Object's metaclass which is a subclass of Class.

@@ -74,13 +74,13 @@ impl PartialEq for Value {
             (Value::Null, Value::Null) => return true,
             (Value::Num(a), Value::Num(b)) => return a == b,
             (Value::Boolean(a), Value::Boolean(b)) => return a == b,
-            (Value::Class(a), Value::Class(b)) => return a == b,
             (Value::Range(a_range), Value::Range(b_range)) => {
                 let a = a_range.borrow();
                 let b = b_range.borrow();
                 return a.from == b.from && a.to == b.to && a.is_inclusive == b.is_inclusive;
             }
             (Value::String(a_string), Value::String(b_string)) => return a_string.eq(&b_string),
+            (Value::Class(a), Value::Class(b)) => return a.as_ptr() == b.as_ptr(),
             (Value::Instance(a), Value::Instance(b)) => return a.as_ptr() == b.as_ptr(),
             _ => return false,
         }
@@ -1392,12 +1392,12 @@ pub struct ObjClass {
                              //   Value attributes;
 }
 
-// FIXME: This is a hack?
-impl PartialEq for ObjClass {
-    fn eq(&self, other: &ObjClass) -> bool {
-        self.name.eq(&other.name)
-    }
-}
+// FIXME: This is a hack?  for object_is
+// impl PartialEq for ObjClass {
+//     fn eq(&self, other: &ObjClass) -> bool {
+//         self.name.eq(&other.name)
+//     }
+// }
 
 impl core::fmt::Debug for ObjClass {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
