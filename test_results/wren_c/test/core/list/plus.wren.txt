@@ -1,12 +1,12 @@
 Unexpected output on stderr:
 String does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[#core line 308] in +(_)
+[#core line 312] in +(_)
 Unexpected output on stderr:
 [wren_c/test/core/list/plus line 3] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterate(_)'.
-[#core line 308] in +(_)
+[#core line 312] in +(_)
 [wren_c/test/core/list/plus line 3] in <script>
 
 Missing expected output "[1, 2, 3, a, b, c]" on line 3.

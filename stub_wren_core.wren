@@ -109,6 +109,7 @@ class Sequence {
     return result
   }
 
+  // We don't support implicit definitions of module variables yet.
   // toList {
   //   var result = List.new()
   //   for (element in this) {
@@ -146,6 +147,9 @@ class String is Sequence {
   bytes { StringByteSequence.new(this) }
   codePoints { StringCodePointSequence.new(this) }
 
+  // Uses a List literal, which can't work until List is defined.
+  // wren_c depends on Sequence.toList mentioning List, thus causing
+  // an implicit definition of List to register.
   // split(delimiter) {
   //   if (!(delimiter is String) || delimiter.isEmpty) {
   //     Fiber.abort("Delimiter must be a non-empty string.")
@@ -414,4 +418,14 @@ class System {
       writeString_("[invalid toString]")
     }
   }
+}
+
+class ClassAttributes {
+  self { _attributes }
+  methods { _methods }
+  construct new(attributes, methods) {
+    _attributes = attributes
+    _methods = methods
+  }
+  toString { "attributes:%(_attributes) methods:%(_methods)" }
 }
