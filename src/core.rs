@@ -571,14 +571,14 @@ fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
 }
 
 struct Range {
-    range: std::ops::Range<usize>,
+    range: std::ops::RangeInclusive<usize>,
     reverse: bool,
 }
 
 impl Range {
     fn empty() -> Range {
         Range {
-            range: 0..0, // will be empty.
+            range: 1..=0, // will be empty.
             reverse: false,
         }
     }
@@ -599,22 +599,24 @@ fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
         return Ok(Range::empty());
     }
     let from = validate_index_value(length, range.from as f64, "Range start")?;
+    let from_f = from as f64;
     // Bounds check the end manually to handle exclusive ranges.
     let mut value = validate_int_value(range.to as f64, "Range end")?;
     // Negative indices count from the end.
     if value < 0.0 {
         value = len_f + value;
     }
+
     // Convert the exclusive range to an inclusive one.
     if !range.is_inclusive {
         // An exclusive range with the same start and end points is empty.
-        if value == range.from {
+        if value == from_f {
             return Ok(Range::empty());
         }
 
         // Shift the endpoint to make it inclusive, handling both increasing and
         // decreasing ranges.
-        if value >= range.from {
+        if value >= from_f {
             value += -1.0;
         } else {
             value += 1.0;
@@ -627,12 +629,12 @@ fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
     let to = value as usize;
     if from <= to {
         Ok(Range {
-            range: from..to,
+            range: from..=to,
             reverse: false,
         })
     } else {
         Ok(Range {
-            range: to..from,
+            range: to..=from,
             reverse: true,
         })
     }
@@ -648,6 +650,9 @@ fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
         }
         Value::Range(r) => {
             let range = calculate_range(&r.borrow(), list.borrow().elements.len())?;
+            if range.range.is_empty() {
+                return Ok(Value::List(wren_new_list(vm, Vec::new())));
+            }
             let slice = &list.borrow().elements[range.range];
             let mut vec = slice.to_vec();
             if range.reverse {
