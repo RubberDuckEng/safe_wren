@@ -78,6 +78,7 @@ wren_c/test/core/list/remove_at_index_not_int.wren
 wren_c/test/core/list/remove_at_index_not_num.wren
 wren_c/test/core/list/remove_at_index_too_large.wren
 wren_c/test/core/list/remove_at_index_too_small.wren
+wren_c/test/core/list/sort.wren
 wren_c/test/core/list/subscript.wren
 wren_c/test/core/list/subscript_not_int.wren
 wren_c/test/core/list/subscript_range.wren
@@ -89,6 +90,11 @@ wren_c/test/core/list/subscript_range_to_exclusive_too_small.wren
 wren_c/test/core/list/subscript_range_to_not_int.wren
 wren_c/test/core/list/subscript_range_to_too_large.wren
 wren_c/test/core/list/subscript_range_to_too_small.wren
+wren_c/test/core/list/subscript_setter.wren
+wren_c/test/core/list/subscript_setter_not_int.wren
+wren_c/test/core/list/subscript_setter_not_num.wren
+wren_c/test/core/list/subscript_setter_too_large.wren
+wren_c/test/core/list/subscript_setter_too_small.wren
 wren_c/test/core/list/subscript_too_large.wren
 wren_c/test/core/list/subscript_too_small.wren
 wren_c/test/core/list/subscript_wrong_type.wren
@@ -97,11 +103,14 @@ wren_c/test/core/list/to_string.wren
 wren_c/test/core/list/type.wren
 wren_c/test/core/map/contains_key.wren
 wren_c/test/core/map/contains_key_not_value.wren
+wren_c/test/core/map/count.wren
 wren_c/test/core/map/empty_string_key.wren
 wren_c/test/core/map/remove.wren
 wren_c/test/core/map/remove_key_not_value.wren
+wren_c/test/core/map/reuse_tombstone.wren
 wren_c/test/core/map/subscript_empty_map.wren
 wren_c/test/core/map/subscript_key_not_value.wren
+wren_c/test/core/map/subscript_setter_key_not_value.wren
 wren_c/test/core/map/type.wren
 wren_c/test/core/map_entry/new.wren
 wren_c/test/core/null/no_constructor.wren

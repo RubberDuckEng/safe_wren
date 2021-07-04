@@ -18,7 +18,7 @@ Code:
 10: Load(Module, Null)
 11: Constant(3: Num(1.5))
 12: Constant(4: Num(1))
-13: Call(SubscriptSetter, [_,_]=(_,_))
+13: Call(SubscriptSetter, [_]=(_))
 14: Pop
 15: End
 16: End

@@ -19,7 +19,7 @@ Code:
 11: Constant(3: Num(5))
 12: Call(Method, -)
 13: Constant(4: Num(1))
-14: Call(SubscriptSetter, [_,_]=(_,_))
+14: Call(SubscriptSetter, [_]=(_))
 15: Pop
 16: End
 17: End

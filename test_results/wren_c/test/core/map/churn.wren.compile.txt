@@ -23,7 +23,7 @@ Code:
 16: Load(Module, Null)
 17: Load(Local, 3)
 18: Load(Local, 3)
-19: Call(SubscriptSetter, [_,_]=(_,_))
+19: Call(SubscriptSetter, [_]=(_))
 20: Pop
 21: Load(Local, 3)
 22: Constant(2: Num(10))

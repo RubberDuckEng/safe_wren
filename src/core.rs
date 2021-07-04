@@ -664,6 +664,13 @@ fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+fn list_subscript_setter(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let list = this_as_list(&args)?;
+    let index = validate_index(&args[1], list.borrow().elements.len(), "Subscript")?;
+    list.borrow_mut().elements[index] = args[2].clone();
+    Ok(args[2].clone())
+}
+
 fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
     let list = this_as_list(&args)?;
@@ -1050,7 +1057,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive_static!(vm, list, "filled(_,_)", list_filled);
     primitive_static!(vm, list, "new()", list_new);
     primitive!(vm, list, "[_]", list_subscript);
-    // primitive!(vm, list, "[_]=(_)", list_subscript_setter);
+    primitive!(vm, list, "[_]=(_)", list_subscript_setter);
     primitive!(vm, list, "add(_)", list_add);
     primitive!(vm, list, "addCore_(_)", list_add_core);
     primitive!(vm, list, "clear()", list_clear);

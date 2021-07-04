@@ -20,7 +20,7 @@ Code:
 09: Load(Module, Null)
 10: Constant(0: String("one"))
 11: Constant(1: String("value"))
-12: Call(SubscriptSetter, [_,_]=(_,_))
+12: Call(SubscriptSetter, [_]=(_))
 13: Pop
 14: Load(Module, Class("System"))
 15: Load(Module, Null)
@@ -30,7 +30,7 @@ Code:
 19: Load(Module, Null)
 20: Constant(2: String("two"))
 21: Constant(3: String("value"))
-22: Call(SubscriptSetter, [_,_]=(_,_))
+22: Call(SubscriptSetter, [_]=(_))
 23: Pop
 24: Load(Module, Class("System"))
 25: Load(Module, Null)
@@ -40,7 +40,7 @@ Code:
 29: Load(Module, Null)
 30: Constant(4: String("three"))
 31: Constant(5: String("value"))
-32: Call(SubscriptSetter, [_,_]=(_,_))
+32: Call(SubscriptSetter, [_]=(_))
 33: Pop
 34: Load(Module, Class("System"))
 35: Load(Module, Null)
@@ -50,7 +50,7 @@ Code:
 39: Load(Module, Null)
 40: Constant(6: String("two"))
 41: Constant(7: String("new value"))
-42: Call(SubscriptSetter, [_,_]=(_,_))
+42: Call(SubscriptSetter, [_]=(_))
 43: Pop
 44: Load(Module, Class("System"))
 45: Load(Module, Null)

@@ -16,12 +16,12 @@ Code:
 04: Load(Module, Null)
 05: Constant(0: Num(2))
 06: Constant(1: String("two"))
-07: Call(SubscriptSetter, [_,_]=(_,_))
+07: Call(SubscriptSetter, [_]=(_))
 08: Pop
 09: Load(Module, Null)
 10: Constant(2: Num(0))
 11: Constant(3: String("zero"))
-12: Call(SubscriptSetter, [_,_]=(_,_))
+12: Call(SubscriptSetter, [_]=(_))
 13: Pop
 14: Load(Module, Null)
 15: Constant(4: Num(2))
@@ -30,7 +30,7 @@ Code:
 18: Load(Module, Null)
 19: Constant(5: Num(0))
 20: Constant(6: String("zero again"))
-21: Call(SubscriptSetter, [_,_]=(_,_))
+21: Call(SubscriptSetter, [_]=(_))
 22: Pop
 23: Load(Module, Null)
 24: Constant(7: Num(0))

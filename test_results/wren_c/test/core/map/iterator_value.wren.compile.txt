@@ -40,7 +40,7 @@ Code:
 33: Load(Module, Null)
 34: Constant(2: Num(1))
 35: Constant(3: String("updated"))
-36: Call(SubscriptSetter, [_,_]=(_,_))
+36: Call(SubscriptSetter, [_]=(_))
 37: Pop
 38: Load(Module, Class("System"))
 39: Load(Module, Null)

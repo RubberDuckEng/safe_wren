@@ -39,7 +39,7 @@ Code:
 19: Constant(14: Num(15))
 20: Constant(15: Num(16))
 21: Constant(16: Num(17))
-22: Call(SubscriptSetter, [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]=(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
+22: Call(SubscriptSetter, [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]=(_))
 23: Pop
 24: End
 25: End

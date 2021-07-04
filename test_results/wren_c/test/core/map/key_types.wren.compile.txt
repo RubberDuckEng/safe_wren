@@ -134,45 +134,45 @@ Code:
 90: Load(Module, Null)
 91: Null
 92: Constant(19: String("new null value"))
-93: Call(SubscriptSetter, [_,_]=(_,_))
+93: Call(SubscriptSetter, [_]=(_))
 94: Pop
 95: Load(Module, Null)
 96: Boolean false
 97: Call(Method, !)
 98: Constant(20: String("new true value"))
-99: Call(SubscriptSetter, [_,_]=(_,_))
+99: Call(SubscriptSetter, [_]=(_))
 100: Pop
 101: Load(Module, Null)
 102: Boolean true
 103: Call(Method, !)
 104: Constant(21: String("new false value"))
-105: Call(SubscriptSetter, [_,_]=(_,_))
+105: Call(SubscriptSetter, [_]=(_))
 106: Pop
 107: Load(Module, Null)
 108: Constant(22: Num(2))
 109: Constant(23: Num(2))
 110: Call(Method, -(_))
 111: Constant(24: String("new zero"))
-112: Call(SubscriptSetter, [_,_]=(_,_))
+112: Call(SubscriptSetter, [_]=(_))
 113: Pop
 114: Load(Module, Null)
 115: Constant(25: Num(1.2))
 116: Constant(26: String("new 1 point 2"))
-117: Call(SubscriptSetter, [_,_]=(_,_))
+117: Call(SubscriptSetter, [_]=(_))
 118: Pop
 119: Load(Module, Null)
 120: Load(Module, Class("List"))
 121: Call(Method, new())
 122: Call(Getter, type)
 123: Constant(27: String("new list class"))
-124: Call(SubscriptSetter, [_,_]=(_,_))
+124: Call(SubscriptSetter, [_]=(_))
 125: Pop
 126: Load(Module, Null)
 127: Constant(28: String("nu"))
 128: Constant(29: String("ll"))
 129: Call(Method, +(_))
 130: Constant(30: String("new string value"))
-131: Call(SubscriptSetter, [_,_]=(_,_))
+131: Call(SubscriptSetter, [_]=(_))
 132: Pop
 133: Load(Module, Null)
 134: Constant(31: Num(3))
@@ -183,7 +183,7 @@ Code:
 139: Call(Method, +(_))
 140: Call(Method, ..(_))
 141: Constant(35: String("new 1 to 3"))
-142: Call(SubscriptSetter, [_,_]=(_,_))
+142: Call(SubscriptSetter, [_]=(_))
 143: Pop
 144: Load(Module, Class("System"))
 145: Load(Module, Null)

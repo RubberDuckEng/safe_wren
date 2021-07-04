@@ -775,7 +775,7 @@ Code:
 517: Load(Local, 3)
 518: Load(Local, 3)
 519: Call(Getter, count)
-520: Call(SubscriptSetter, [_,_]=(_,_))
+520: Call(SubscriptSetter, [_]=(_))
 521: Pop
 522: Pop
 523: Loop(16)

@@ -34,17 +34,17 @@ Code:
 08: Load(Local, 1)
 09: Constant(3: Num(0))
 10: Constant(4: Num(5))
-11: Call(SubscriptSetter, [_,_]=(_,_))
+11: Call(SubscriptSetter, [_]=(_))
 12: Pop
 13: Load(Local, 1)
 14: Constant(5: Num(1))
 15: Constant(6: Num(6))
-16: Call(SubscriptSetter, [_,_]=(_,_))
+16: Call(SubscriptSetter, [_]=(_))
 17: Pop
 18: Load(Local, 1)
 19: Constant(7: Num(2))
 20: Constant(8: Num(7))
-21: Call(SubscriptSetter, [_,_]=(_,_))
+21: Call(SubscriptSetter, [_]=(_))
 22: Pop
 23: Load(Module, Class("System"))
 24: Load(Local, 1)
@@ -63,7 +63,7 @@ Code:
 37: Load(Local, 1)
 38: Constant(12: Num(1))
 39: Constant(13: Num(5))
-40: Call(SubscriptSetter, [_,_]=(_,_))
+40: Call(SubscriptSetter, [_]=(_))
 41: Call(Method, print(_))
 42: Pop
 43: Pop
@@ -79,19 +79,19 @@ Code:
 53: Constant(17: Num(1))
 54: Call(Method, -)
 55: Constant(18: Num(5))
-56: Call(SubscriptSetter, [_,_]=(_,_))
+56: Call(SubscriptSetter, [_]=(_))
 57: Pop
 58: Load(Local, 1)
 59: Constant(19: Num(2))
 60: Call(Method, -)
 61: Constant(20: Num(6))
-62: Call(SubscriptSetter, [_,_]=(_,_))
+62: Call(SubscriptSetter, [_]=(_))
 63: Pop
 64: Load(Local, 1)
 65: Constant(21: Num(3))
 66: Call(Method, -)
 67: Constant(22: Num(7))
-68: Call(SubscriptSetter, [_,_]=(_,_))
+68: Call(SubscriptSetter, [_]=(_))
 69: Pop
 70: Load(Module, Class("System"))
 71: Load(Local, 1)

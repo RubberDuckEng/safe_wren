@@ -1076,17 +1076,19 @@ impl Signature {
     // should never call this, but rather lookup the
     // name from the symbol.
     fn full_name(&self) -> String {
-        let args = (0..self.arity)
-            .map(|_| "_")
-            .collect::<Vec<&str>>()
-            .join(",");
+        // FIXME: wren_c has special handling for SubscriptSetter.
+        fn args(arity: u8) -> String {
+            (0..arity).map(|_| "_").collect::<Vec<&str>>().join(",")
+        }
         match self.call_type {
             SignatureType::Getter => self.bare_name.clone(),
-            SignatureType::Setter => format!("{}={}", self.bare_name, args),
-            SignatureType::Method => format!("{}({})", self.bare_name, args),
-            SignatureType::Initializer => format!("init {}({})", self.bare_name, args),
-            SignatureType::Subscript => format!("{}[{}]", self.bare_name, args), // name should always be empty
-            SignatureType::SubscriptSetter => format!("{}[{}]=({})", self.bare_name, args, args), // name should always be empty.
+            SignatureType::Setter => format!("{}={}", self.bare_name, args(self.arity)),
+            SignatureType::Method => format!("{}({})", self.bare_name, args(self.arity)),
+            SignatureType::Initializer => format!("init {}({})", self.bare_name, args(self.arity)),
+            SignatureType::Subscript => format!("{}[{}]", self.bare_name, args(self.arity)), // name should always be empty
+            SignatureType::SubscriptSetter => {
+                format!("{}[{}]=(_)", self.bare_name, args(self.arity - 1))
+            } // name should always be empty.
         }
     }
     fn from_bare_name(call_type: SignatureType, bare_name: &str, arity: u8) -> Signature {
@@ -1543,6 +1545,7 @@ fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> 
     let mut call_type = SignatureType::Subscript;
     if can_assign && match_current(ctx, Token::Equals)? {
         call_type = SignatureType::SubscriptSetter;
+        // wren_c adss one here, but then subtracts in stringForSubscript?
         arity += 1; // Why? I guess the value being set?
                     // Compile the assigned value.
                     // Validate # of parameters.
