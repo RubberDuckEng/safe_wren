@@ -20,7 +20,6 @@ occurances : error text
 14 : Error Grammar("Undeclared variable \'i\'")
 14 : in iterate(_)
 12 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: Hash, line:  }")
-12 : Expected return code 70 and got 0. Stderr:
 12 : in count
 9 : Derived does not implement 'super'.
 9 : Error Grammar("Undeclared variable \'B\'")
@@ -100,6 +99,7 @@ occurances : error text
 2 : Expected output "three a b c" on line  and got "three %(a) %(b) %(c)".
 2 : Expected output "true" on line  and got "false".
 2 : Expected output "two a b" on line  and got "two %(a) %(b)".
+2 : Expected return code 70 and got 0. Stderr:
 2 : Expected runtime error "Argument must be a function." and got:
 2 : Expected runtime error "Cannot call a finished fiber." and got:
 2 : Expected runtime error "Cannot call an aborted fiber." and got:
@@ -282,17 +282,7 @@ occurances : error text
 1 : Expected runtime error "Cannot try a finished fiber." and got:
 1 : Expected runtime error "Cannot try an aborted fiber." and got:
 1 : Expected runtime error "Class 'Bar' may not have more than 255 fields, including inherited ones." and got:
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Bool'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Class'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Fiber'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Fn'." and got none.
 1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Fn'." and got:
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'List'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Map'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Null'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Num'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Range'." and got none.
-1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'String'." and got none.
 1 : Expected runtime error "Code point cannot be greater than 0x10ffff." and got:
 1 : Expected runtime error "Code point cannot be negative." and got:
 1 : Expected runtime error "Code point must be a number." and got:

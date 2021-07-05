@@ -1,3 +1,0 @@
-Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Class'." and got none.
-Expected return code 70 and got 0. Stderr:
-

@@ -496,26 +496,22 @@ fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<Obj
         name
     ))?;
 
-    // FIXME: Unclear if this is required in wren_rust or not?
-    // Make sure it doesn't inherit from a sealed built-in type. Primitive methods
-    // on these classes assume the instance is one of the other Obj___ types and
-    // will fail horribly if it's actually an ObjInstance.
-    //   ObjClass* superclass = AS_CLASS(superclassValue);
-    //   if (superclass == vm->classClass ||
-    //       superclass == vm->fiberClass ||
-    //       superclass == vm->fnClass || // Includes OBJ_CLOSURE.
-    //       superclass == vm->listClass ||
-    //       superclass == vm->mapClass ||
-    //       superclass == vm->rangeClass ||
-    //       superclass == vm->stringClass ||
-    //       superclass == vm->boolClass ||
-    //       superclass == vm->nullClass ||
-    //       superclass == vm->numClass)
-    //   {
-    //     return wrenStringFormat(vm,
-    //         "Class '@' cannot inherit from built-in class '@'.",
-    //         name, OBJ_VAL(superclass->name));
-    //   }
+    // This isn't (currently) required in wren_c, since we cast safely
+    // in primitive methods.  However in wren_c, this is required since
+    // wren_c does blind-casts of "this" in primitives.  So to conform
+    // with the wren_c test suite we copy this for now.  Regardless calls
+    // would fail for us, even if safely-fail.
+    match &superclass.borrow().name[..] {
+        "Class" | "Fiber" | "Fn" | "List" | "Map" | "Range" | "String" | "Bool" | "Null"
+        | "Num" => {
+            return Err(VMError::from_string(format!(
+                "Class '{}' cannot inherit from built-in class '{}'.",
+                name,
+                superclass.borrow().name
+            )));
+        }
+        _ => {}
+    }
 
     //   if (superclass->numFields == -1)
     //   {

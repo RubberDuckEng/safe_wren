@@ -22,22 +22,27 @@ with error text from any failed tests.  `test.py` will also update
 
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
-* Support for forward-declaring classes?  (e.g. List in wren_core.wren)
-* subclasses
 * Time the tests / make faster
+* String interpolation (blocks wren_core.wren)
+* Forward-declared module variables. (wren_c has this magic where all module.variables are either classes, null or numbers during compile time.  Numbers = line numbers meaning "this hasn't been declared", null = declared, and classes are declared and set to that class via class declarations.) (blocks wren_core.wren)
 * Upvalues
-* String interpolation
+* String codepoint APIs (including String.iterate)
+* Map.iterate
 * remove all f64 casting (hide behind methods)
-* Closures (Fn)
 * foreign functions
 * attributes
 * Full wren_core.wren parsing
-* Forward-declared module variables. (wren_c has this magic where all module.variables are either classes, null or numbers during compile time.  Numbers = line numbers meaning "this hasn't been declared", null = declared, and classes are declared and set to that class via class declarations.)
 * Limit tests
-* Fibers
+* Scientific notation
+* super / superclass calls
+* Fiber APIs (try, etc.)
 * imports
+* static fields
+* Raw strings
 * C API
 * Garbage Collection
+* System.clock
+* Sort methods to match wren_c order?
 * What happens if you pass too many values to a function?
 
 ## Most failing tests
