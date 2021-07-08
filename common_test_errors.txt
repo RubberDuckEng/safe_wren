@@ -42,6 +42,7 @@ occurances : error text
 6 : in foo
 6 : in toString
 6 : in trim_(_,_,_)
+6 : thread 'main' has overflowed its stack
 4 : Error Grammar("Expected Expression: ParseToken { bytes_range: , token: StaticField(\"__a\"), line:  }")
 4 : Error Grammar("Undeclared variable \'F\'")
 4 : Error Grammar("Undeclared variable \'Global\'")
@@ -61,7 +62,6 @@ occurances : error text
 4 : in
 4 : in init new()
 4 : in isEmpty
-4 : thread 'main' has overflowed its stack
 3 : Bar does not implement 'super()'.
 3 : Expected output "-0" on line  and got "0".
 3 : Expected output "0" on line  and got "92".
@@ -69,7 +69,6 @@ occurances : error text
 3 : Expected return code 65 and got 70. Stderr:
 3 : List does not implement 'skip(_)'.
 3 : List does not implement 'take(_)'.
-3 : Timed out.
 2 : Argument must be a function
 2 : B does not implement 'super'.
 2 : Baz does not implement 'toString'.
@@ -136,6 +135,7 @@ occurances : error text
 2 : TestSequence does not implement 'skip(_)'.
 2 : TestSequence does not implement 'take(_)'.
 2 : TestSequence does not implement 'toList'.
+2 : Timed out.
 2 : Without metaclass does not implement 'attributes'.
 2 : in +(_)
 2 : in bar

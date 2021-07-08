@@ -1,1 +1,8 @@
-Timed out.
+Unexpected output on stderr:
+thread 'main' has overflowed its stack
+Expected return code 0 and got 3221225725. Stderr:
+
+thread 'main' has overflowed its stack
+
+Missing expected output "true" on line 15.
+Missing expected output "done" on line 16.
