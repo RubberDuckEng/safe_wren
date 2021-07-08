@@ -871,6 +871,11 @@ fn unescape(s: &str) -> String {
     s
 }
 
+fn system_clock(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+    let now = std::time::Instant::now();
+    Ok(Value::Num(now.duration_since(vm.start_time).as_secs_f64()))
+}
+
 fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let string = args[1].try_into_string("expected String".into())?;
     let result = unescape(&string);
@@ -1133,7 +1138,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.range, "toString", range_to_string);
 
     let system = module.expect_class("System");
-    // primitive_static!(vm, system, "clock", system_clock);
+    primitive_static!(vm, system, "clock", system_clock);
     // primitive_static!(vm, system, "gc()", system_gc);
     primitive_static!(vm, system, "writeString_(_)", system_write_string);
 

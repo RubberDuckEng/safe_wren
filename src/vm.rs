@@ -383,6 +383,7 @@ pub struct WrenVM {
     pub(crate) fiber_class: Option<Handle<ObjClass>>,
     // Finally the rest of wren_core.wren
     pub(crate) core: Option<CoreClasses>,
+    pub(crate) start_time: std::time::Instant,
 }
 
 impl core::fmt::Debug for WrenVM {
@@ -678,6 +679,7 @@ impl WrenVM {
             fn_class: None,
             fiber_class: None,
             modules: HashMap::new(),
+            start_time: std::time::Instant::now(),
         };
 
         // Modules are owned by the modules HashMap.
