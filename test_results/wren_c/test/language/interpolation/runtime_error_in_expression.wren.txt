@@ -1,4 +1,0 @@
-Expected runtime error "Num does not implement 'badMethod'." and got none.
-Expected return code 70 and got 0. Stderr:
-
-Got output "%(123.badMethod)" when none was expected.

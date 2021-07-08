@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected right paren, found: Num(1.0)") }
+WrenError { module: "dummy_module", line: 1, error: Lexer(Error("Interpolation may only nest 8 levels deep.")) }

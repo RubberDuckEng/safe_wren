@@ -23,13 +23,16 @@ with error text from any failed tests.  `test.py` will also update
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
 * Time the tests / make faster
-* String interpolation (blocks wren_core.wren)
 * Forward-declared module variables. (wren_c has this magic where all module.variables are either classes, null or numbers during compile time.  Numbers = line numbers meaning "this hasn't been declared", null = declared, and classes are declared and set to that class via class declarations.) (blocks wren_core.wren)
 * Upvalues
 * String codepoint APIs (including String.iterate)
 * Map.iterate
 * remove all f64 casting (hide behind methods)
 * foreign functions
+* rename consume_expecting_msg to consume()
+* Add typedef Result<T> to compiler.rs
+* Fix ensure_constant to lookup before making new ones.
+* Give different types to Symbol, Constant, etc.
 * attributes
 * Full wren_core.wren parsing
 * Limit tests

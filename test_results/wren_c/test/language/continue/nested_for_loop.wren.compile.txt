@@ -1,12 +1,14 @@
 Constants:
 00: Num(0)
 01: Num(2)
-02: String("outer %(i)")
-03: Num(1)
-04: Num(0)
-05: Num(2)
-06: Num(1)
-07: String("inner %(j)")
+02: String("outer ")
+03: String("")
+04: Num(1)
+05: Num(0)
+06: Num(2)
+07: Num(1)
+08: String("inner ")
+09: String("")
 Code:
 00: Constant(0: Num(0))
 01: Constant(1: Num(2))
@@ -16,47 +18,63 @@ Code:
 05: Load(Local, 2)
 06: Call(Method, iterate(_))
 07: Store(Local, 2)
-08: JumpIfFalse(39)
+08: JumpIfFalse(55)
 09: Load(Local, 1)
 10: Load(Local, 2)
 11: Call(Method, iteratorValue(_))
 12: Load(Module, Class("System"))
-13: Constant(2: String("outer %(i)"))
-14: Call(Method, print(_))
-15: Pop
-16: Load(Local, 3)
-17: Constant(3: Num(1))
-18: Call(Method, ==(_))
-19: JumpIfFalse(1)
-20: Loop(17)
-21: Constant(4: Num(0))
-22: Constant(5: Num(2))
-23: Call(Method, ..(_))
-24: Null
-25: Load(Local, 4)
-26: Load(Local, 5)
-27: Call(Method, iterate(_))
-28: Store(Local, 5)
-29: JumpIfFalse(14)
-30: Load(Local, 4)
-31: Load(Local, 5)
-32: Call(Method, iteratorValue(_))
-33: Load(Local, 6)
-34: Constant(6: Num(1))
-35: Call(Method, ==(_))
-36: JumpIfFalse(1)
-37: Loop(13)
-38: Load(Module, Class("System"))
-39: Constant(7: String("inner %(j)"))
-40: Call(Method, print(_))
-41: Pop
-42: Pop
-43: Loop(19)
-44: Pop
-45: Pop
-46: Pop
-47: Loop(44)
-48: Pop
-49: Pop
-50: End
-51: End
+13: Load(Module, Class("List"))
+14: Call(Method, new())
+15: Constant(2: String("outer "))
+16: Call(Method, addCore_(_))
+17: Load(Local, 3)
+18: Call(Method, addCore_(_))
+19: Constant(3: String(""))
+20: Call(Method, addCore_(_))
+21: Call(Method, join())
+22: Call(Method, print(_))
+23: Pop
+24: Load(Local, 3)
+25: Constant(4: Num(1))
+26: Call(Method, ==(_))
+27: JumpIfFalse(1)
+28: Loop(25)
+29: Constant(5: Num(0))
+30: Constant(6: Num(2))
+31: Call(Method, ..(_))
+32: Null
+33: Load(Local, 4)
+34: Load(Local, 5)
+35: Call(Method, iterate(_))
+36: Store(Local, 5)
+37: JumpIfFalse(22)
+38: Load(Local, 4)
+39: Load(Local, 5)
+40: Call(Method, iteratorValue(_))
+41: Load(Local, 6)
+42: Constant(7: Num(1))
+43: Call(Method, ==(_))
+44: JumpIfFalse(1)
+45: Loop(13)
+46: Load(Module, Class("System"))
+47: Load(Module, Class("List"))
+48: Call(Method, new())
+49: Constant(8: String("inner "))
+50: Call(Method, addCore_(_))
+51: Load(Local, 6)
+52: Call(Method, addCore_(_))
+53: Constant(9: String(""))
+54: Call(Method, addCore_(_))
+55: Call(Method, join())
+56: Call(Method, print(_))
+57: Pop
+58: Pop
+59: Loop(27)
+60: Pop
+61: Pop
+62: Pop
+63: Loop(60)
+64: Pop
+65: Pop
+66: End
+67: End

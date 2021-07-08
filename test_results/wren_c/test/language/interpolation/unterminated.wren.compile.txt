@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 0, error: Lexer(UnterminatedString) }
+WrenError { module: "dummy_module", line: 2, error: Grammar("Expected Expression: ParseToken { bytes_range: 6..21, token: EndOfFile, line: 2 }") }

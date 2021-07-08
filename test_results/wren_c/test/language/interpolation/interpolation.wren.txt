@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/interpolation/interpolation line 8] Error Grammar("Expected right paren, found: LeftCurlyBrace")
+[wren_c/test/language/interpolation/interpolation line 5] Error Lexer(Error("Expect \'(\' after \'%%\'."))
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/interpolation/interpolation line 8] Error Grammar("Expected right paren, found: LeftCurlyBrace")
+[wren_c/test/language/interpolation/interpolation line 5] Error Lexer(Error("Expect \'(\' after \'%%\'."))
 
 Missing expected output "3" on line 2.
 Missing expected output "str3(7%11" on line 5.

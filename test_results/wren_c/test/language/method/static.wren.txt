@@ -1,2 +1,0 @@
-Expected output "on instance arg" on line 12 and got "on instance %(arg)".
-Expected output "on metaclass arg" on line 13 and got "on metaclass %(arg)".

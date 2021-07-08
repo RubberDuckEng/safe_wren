@@ -1,9 +1,0 @@
-Expected output "outer 0" on line 17 and got "outer %(i)".
-Expected output "inner 0" on line 18 and got "inner %(j)".
-Expected output "inner 1" on line 19 and got "inner %(j)".
-Expected output "inner 2" on line 20 and got "inner %(j)".
-Expected output "outer 1" on line 21 and got "outer %(i)".
-Expected output "inner 0" on line 22 and got "inner %(j)".
-Expected output "inner 1" on line 23 and got "inner %(j)".
-Expected output "inner 2" on line 24 and got "inner %(j)".
-Expected output "outer 2" on line 25 and got "outer %(i)".

@@ -1,7 +1,1 @@
-Constants:
-00: String(" %(123")
-Code:
-00: Constant(0: String(" %(123"))
-01: Pop
-02: End
-03: End
+WrenError { module: "dummy_module", line: 2, error: Lexer(UnterminatedString) }

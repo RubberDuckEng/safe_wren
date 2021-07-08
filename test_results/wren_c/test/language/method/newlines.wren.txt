@@ -1,2 +1,0 @@
-Expected output "method a b" on line 14 and got "method %(a) %(b)".
-Expected output "subscript a b" on line 21 and got "subscript %(a) %(b)".

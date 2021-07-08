@@ -1,23 +1,28 @@
-Expected output "infix Foo + a" on line 29 and got "infix %(this) + %(other)".
-Expected output "infix Foo - a" on line 30 and got "infix %(this) - %(other)".
-Expected output "infix Foo * a" on line 31 and got "infix %(this) * %(other)".
-Expected output "infix Foo / a" on line 32 and got "infix %(this) / %(other)".
-Expected output "infix Foo % a" on line 33 and got "infix %(this) \% %(other)".
-Expected output "infix Foo < a" on line 34 and got "infix %(this) < %(other)".
-Expected output "infix Foo > a" on line 35 and got "infix %(this) > %(other)".
-Expected output "infix Foo <= a" on line 36 and got "infix %(this) <= %(other)".
-Expected output "infix Foo >= a" on line 37 and got "infix %(this) >= %(other)".
-Expected output "infix Foo == a" on line 38 and got "infix %(this) == %(other)".
-Expected output "infix Foo != a" on line 39 and got "infix %(this) != %(other)".
-Expected output "infix Foo & a" on line 40 and got "infix %(this) & %(other)".
-Expected output "infix Foo | a" on line 41 and got "infix %(this) | %(other)".
-Expected output "prefix !Foo" on line 42 and got "prefix !%(this)".
-Expected output "prefix ~Foo" on line 43 and got "prefix ~%(this)".
-Expected output "prefix -Foo" on line 44 and got "prefix -%(this)".
-Expected output "infix Foo is a" on line 45 and got "infix %(this) is %(other)".
-Expected output "Foo 1-subscript a" on line 47 and got "%(this) 1-subscript %(a)".
-Expected output "Foo 2-subscript a b" on line 48 and got "%(this) 2-subscript %(a) %(b)".
-Expected output "Foo 3-subscript a b c" on line 49 and got "%(this) 3-subscript %(a) %(b) %(c)".
-Expected output "Foo 1-subscript setter a = value" on line 50 and got "%(this) 1-subscript setter %(a) = %(value)".
-Expected output "Foo 2-subscript setter a b = value" on line 51 and got "%(this) 2-subscript setter %(a) %(b) = %(value)".
-Expected output "Foo 3-subscript setter a b c = value" on line 52 and got "%(this) 3-subscript setter %(a) %(b) %(c) = %(value)".
+Unexpected error:
+[wren_c/test/language/method/static_operators line 6] Error Lexer(Error("Expect \'(\' after \'%%\'."))
+Expected return code 0 and got 65. Stderr:
+[wren_c/test/language/method/static_operators line 6] Error Lexer(Error("Expect \'(\' after \'%%\'."))
+
+Missing expected output "infix Foo + a" on line 29.
+Missing expected output "infix Foo - a" on line 30.
+Missing expected output "infix Foo * a" on line 31.
+Missing expected output "infix Foo / a" on line 32.
+Missing expected output "infix Foo % a" on line 33.
+Missing expected output "infix Foo < a" on line 34.
+Missing expected output "infix Foo > a" on line 35.
+Missing expected output "infix Foo <= a" on line 36.
+Missing expected output "infix Foo >= a" on line 37.
+Missing expected output "infix Foo == a" on line 38.
+Missing expected output "infix Foo != a" on line 39.
+Missing expected output "infix Foo & a" on line 40.
+Missing expected output "infix Foo | a" on line 41.
+Missing expected output "prefix !Foo" on line 42.
+Missing expected output "prefix ~Foo" on line 43.
+Missing expected output "prefix -Foo" on line 44.
+Missing expected output "infix Foo is a" on line 45.
+Missing expected output "Foo 1-subscript a" on line 47.
+Missing expected output "Foo 2-subscript a b" on line 48.
+Missing expected output "Foo 3-subscript a b c" on line 49.
+Missing expected output "Foo 1-subscript setter a = value" on line 50.
+Missing expected output "Foo 2-subscript setter a b = value" on line 51.
+Missing expected output "Foo 3-subscript setter a b c = value" on line 52.

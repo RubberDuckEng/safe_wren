@@ -1,9 +1,20 @@
 Constants:
-00: String("%(123.badMethod)")
+00: String("")
+01: Num(123)
+02: String("")
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: String("%(123.badMethod)"))
-02: Call(Method, print(_))
-03: Pop
-04: End
-05: End
+01: Load(Module, Class("List"))
+02: Call(Method, new())
+03: Constant(0: String(""))
+04: Call(Method, addCore_(_))
+05: Constant(1: Num(123))
+06: Call(Getter, badMethod)
+07: Call(Method, addCore_(_))
+08: Constant(2: String(""))
+09: Call(Method, addCore_(_))
+10: Call(Method, join())
+11: Call(Method, print(_))
+12: Pop
+13: End
+14: End

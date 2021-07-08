@@ -7,6 +7,8 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
+const MAX_INTERPOLATION_NESTING: usize = 8;
+
 use crate::vm::{
     new_handle, wren_define_variable, Module, ModuleError, ObjClosure, ObjFn, SymbolTable, Value,
     WrenVM,
@@ -63,6 +65,19 @@ pub enum Token {
     Construct,
     Equals,
     EqualsEquals,
+    // A portion of a string literal preceding an interpolated expression. This
+    // string:
+    //
+    //     "a %(b) c %(d) e"
+    //
+    // is tokenized to:
+    //
+    //     TOKEN_INTERPOLATION "a "
+    //     TOKEN_NAME          b
+    //     TOKEN_INTERPOLATION " c "
+    //     TOKEN_NAME          d
+    //     TOKEN_STRING        " e"
+    Interpolation(String),
     Boolean(bool),
     Name(String),
     // Field and StaticField have separate Grammar rules, hence separate.
@@ -105,6 +120,22 @@ pub struct InputManager {
     offset: usize,
     line_number: usize,
     token_start_offset: usize,
+
+    // Tracks the lexing state when tokenizing interpolated strings.
+    //
+    // Interpolated strings make the lexer not strictly regular: we don't know
+    // whether a ")" should be treated as a RIGHT_PAREN token or as ending an
+    // interpolated expression unless we know whether we are inside a string
+    // interpolation and how many unmatched "(" there are. This is particularly
+    // complex because interpolation can nest:
+    //
+    //     " %( " %( inner ) " ) "
+    //
+    // This tracks that state. The parser maintains a stack of ints, one for each
+    // level of current interpolation nesting. Each value is the number of
+    // unmatched "(" that are waiting to be closed.
+    // FIXME: This belongs on Parser instead?
+    parens: Vec<usize>,
 }
 
 impl InputManager {
@@ -123,6 +154,7 @@ impl InputManager {
             offset: start_offset,
             line_number: 1,
             token_start_offset: start_offset,
+            parens: Vec::new(),
         }
     }
 
@@ -205,6 +237,33 @@ impl InputManager {
     fn is_at_end(&self) -> bool {
         self.offset >= self.source.len()
     }
+
+    fn interpolation_allowed(&self) -> bool {
+        self.parens.len() < MAX_INTERPOLATION_NESTING
+    }
+
+    fn count_open_parens(&mut self) {
+        // If we are inside an interpolated expression, count the unmatched "(".
+        if let Some(last) = self.parens.last_mut() {
+            *last += 1;
+        }
+    }
+
+    fn count_close_parens(&mut self) -> bool {
+        // If we are inside an interpolated expression, count the ")".
+        if let Some(last) = self.parens.last_mut() {
+            *last -= 1;
+            if *last != 0 {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        // This is the final ")", so the interpolation expression has ended.
+        // This ")" now begins the next section of the template string.
+        self.parens.pop();
+        return true;
+    }
 }
 
 impl From<ModuleError> for ParserError {
@@ -224,6 +283,19 @@ pub enum LexError {
     UnterminatedString,
     UnterminatedBlockComment,
     UnterminatedScientificNotation,
+    Error(String),
+}
+
+impl LexError {
+    // Rename to error_str?
+    pub(crate) fn from_str(msg: &str) -> LexError {
+        LexError::Error(msg.into())
+    }
+
+    // Rename to error_string?
+    pub(crate) fn from_string(msg: String) -> LexError {
+        LexError::Error(msg)
+    }
 }
 
 impl From<std::string::FromUtf8Error> for LexError {
@@ -263,6 +335,7 @@ impl fmt::Display for LexError {
                 write!(f, "Unterminated Scientific Notation")
             }
             LexError::UnexpectedChar(c) => write!(f, "Unexpected char '{}'", c),
+            LexError::Error(s) => write!(f, "{}", s),
         }
     }
 }
@@ -278,6 +351,7 @@ impl error::Error for LexError {
             LexError::UnterminatedBlockComment => None,
             LexError::UnterminatedScientificNotation => None,
             LexError::UnexpectedChar(_) => None,
+            LexError::Error(_) => None,
         }
     }
 }
@@ -408,8 +482,16 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                     two_char_token(input, b'=', Token::GreaterThanEquals, Token::GreaterThan)
                 });
             }
-            b'(' => return Ok(input.make_token(Token::LeftParen)),
-            b')' => return Ok(input.make_token(Token::RightParen)),
+            b'(' => {
+                input.count_open_parens();
+                return Ok(input.make_token(Token::LeftParen));
+            }
+            b')' => {
+                if input.count_close_parens() {
+                    return read_string(input);
+                }
+                return Ok(input.make_token(Token::RightParen));
+            }
             b'{' => return Ok(input.make_token(Token::LeftCurlyBrace)),
             b'}' => return Ok(input.make_token(Token::RightCurlyBrace)),
             b'[' => return Ok(input.make_token(Token::LeftSquareBracket)),
@@ -588,6 +670,7 @@ fn read_name(first_byte: u8, input: &mut InputManager) -> Result<String, LexErro
 
 fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
     let mut bytes = Vec::new();
+    let mut is_interpolation = false;
     loop {
         if input.is_at_end() {
             return Err(LexError::UnterminatedString);
@@ -596,11 +679,40 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
         if next == b'"' {
             break;
         }
+        // Ignore carriage returns on windows.
+        // FIXME: Needs a test.
+        // if next == b'\r' {
+        //     continue;
+        // }
+
+        if next == b'%' {
+            if input.interpolation_allowed() {
+                // TODO: Allow format string.
+                if input.is_at_end() || input.next() != b'(' {
+                    return Err(LexError::from_str("Expect '(' after '%%'."));
+                }
+
+                input.parens.push(1);
+
+                is_interpolation = true;
+                break;
+            }
+
+            return Err(LexError::from_string(format!(
+                "Interpolation may only nest {} levels deep.",
+                MAX_INTERPOLATION_NESTING
+            )));
+        }
+
         bytes.push(next);
     }
     let string = String::from_utf8(bytes)?;
 
-    Ok(input.make_token(Token::String(string)))
+    Ok(input.make_token(if is_interpolation {
+        Token::Interpolation(string)
+    } else {
+        Token::String(string)
+    }))
 }
 
 pub fn lex(input: &mut InputManager) -> Result<Vec<ParseToken>, WrenError> {
@@ -1019,9 +1131,54 @@ fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     let value = match &ctx.parser.previous.token {
         Token::Num(n) => Value::Num(*n),
         Token::String(s) => Value::from_str(s),
-        _ => panic!("invalid literal"),
+        Token::Interpolation(s) => Value::from_str(s),
+        _ => {
+            let name = previous_token_name(ctx)?;
+            return Err(ctx.grammar_error(&format!("Invalid literal {}", name)));
+        }
     };
     emit_constant(ctx, value);
+    Ok(())
+}
+
+// A string literal that contains interpolated expressions.
+//
+// Interpolation is syntactic sugar for calling ".join()" on a list. So the
+// string:
+//
+//     "a %(b + c) d"
+//
+// is compiled roughly like:
+//
+//     ["a ", b + c, " d"].join()
+fn string_interpolation(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
+    // Instantiate a new list.
+    load_core_variable(ctx, "List");
+    call_method(ctx, 0, "new()");
+
+    loop {
+        // The opening string part.
+        literal(ctx, false)?;
+        call_method(ctx, 1, "addCore_(_)");
+
+        // The interpolated expression.
+        ignore_newlines(ctx)?;
+        expression(ctx)?;
+        call_method(ctx, 1, "addCore_(_)");
+
+        ignore_newlines(ctx)?;
+        if !match_current_interpolation(ctx)? {
+            break;
+        }
+    }
+
+    // The trailing string part.
+    consume_string(ctx, "Expect end of string interpolation.")?;
+    literal(ctx, false)?;
+    call_method(ctx, 1, "addCore_(_)");
+
+    // The list of interpolated parts.
+    call_method(ctx, 0, "join()");
     Ok(())
 }
 
@@ -2358,6 +2515,13 @@ fn declare_named_variable(ctx: &mut ParseContext) -> Result<u16, WrenError> {
     declare_variable(ctx, name)
 }
 
+fn previous_token_name(ctx: &ParseContext) -> Result<String, WrenError> {
+    ctx.parser
+        .previous
+        .name(&ctx.parser.input)
+        .map_err(|e| ctx.parse_error(e.into()))
+}
+
 fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
     // Grab its name, but don't declare it yet. A (local) variable shouldn't be
     // in scope in its own initializer.
@@ -2856,6 +3020,7 @@ impl Token {
             Token::Continue => "continue",
             Token::Equals => "equal sign",
             Token::EqualsEquals => "==",
+            Token::Interpolation(_) => "string interpolation",
         }
     }
 
@@ -2939,6 +3104,7 @@ impl Token {
             Token::Field(_) => GrammarRule::prefix(field),
             // Token::StaticField(_) => GrammarRule::prefix(static_field),
             Token::StaticField(_) => GrammarRule::unused(), // FIXME: Wrong.
+            Token::Interpolation(_) => GrammarRule::prefix(string_interpolation),
         }
     }
 }
@@ -3021,6 +3187,16 @@ fn match_current(ctx: &mut ParseContext, token: Token) -> Result<bool, WrenError
     Ok(false)
 }
 
+fn match_current_interpolation(ctx: &mut ParseContext) -> Result<bool, WrenError> {
+    match ctx.parser.current.token {
+        Token::Interpolation(_) => {
+            consume(ctx)?;
+            return Ok(true);
+        }
+        _ => Ok(false),
+    }
+}
+
 fn match_at_least_one_line(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     let mut saw_line = false;
     while Token::Newline == ctx.parser.current.token {
@@ -3047,6 +3223,14 @@ fn consume_expecting_name_msg(
     consume(ctx)?;
     match ctx.parser.previous.token {
         Token::Name(_) => Ok(()),
+        _ => Err(ctx.grammar_error(error_message)),
+    }
+}
+
+fn consume_string(ctx: &mut ParseContext, error_message: &str) -> Result<String, WrenError> {
+    consume(ctx)?;
+    match &ctx.parser.previous.token {
+        Token::String(s) => Ok(s.clone()),
         _ => Err(ctx.grammar_error(error_message)),
     }
 }

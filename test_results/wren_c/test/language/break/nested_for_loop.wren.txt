@@ -6,11 +6,7 @@ Expected return code 0 and got 70. Stderr:
 Num does not implement 'iterate(_)'.
 [wren_c/test/language/break/nested_for_loop line 5] in <script>
 
-Expected output "outer 0" on line 11 and got "outer %(i)".
-Expected output "inner 0" on line 12 and got "inner %(j)".
-Expected output "inner 1" on line 13 and got "inner %(j)".
-Expected output "inner 2" on line 14 and got "inner %(j)".
-Expected output "outer 1" on line 15 and got "outer %(i)".
+Expected output "outer 1" on line 15 and got "outer 0".
 Missing expected output "inner 0" on line 16.
 Missing expected output "inner 1" on line 17.
 Missing expected output "inner 2" on line 18.

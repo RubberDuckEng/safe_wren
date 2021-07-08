@@ -1,3 +1,0 @@
-Unexpected error:
-[wren_c/test/language/interpolation/unterminated line 0] Error Lexer(UnterminatedString)
-Missing expected error on line 2.

@@ -31,6 +31,7 @@ wren_c/test/core/fiber/abort_main_fiber.wren
 wren_c/test/core/fiber/new_wrong_arity.wren
 wren_c/test/core/fiber/type.wren
 wren_c/test/core/function/arity.wren
+wren_c/test/core/function/call_extra_arguments.wren
 wren_c/test/core/function/call_runtime_error.wren
 wren_c/test/core/function/to_string.wren
 wren_c/test/core/function/type.wren
@@ -262,6 +263,7 @@ wren_c/test/language/break/in_for_loop.wren
 wren_c/test/language/break/in_function_in_loop.wren
 wren_c/test/language/break/in_method_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren
+wren_c/test/language/break/nested_while_loop.wren
 wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/chained_newline.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
@@ -298,6 +300,7 @@ wren_c/test/language/constructor/not_inherited.wren
 wren_c/test/language/continue/in_function_in_loop.wren
 wren_c/test/language/continue/in_method_in_loop.wren
 wren_c/test/language/continue/in_while_loop.wren
+wren_c/test/language/continue/nested_while_loop.wren
 wren_c/test/language/continue/outside_loop.wren
 wren_c/test/language/empty_block.wren
 wren_c/test/language/empty_file.wren
@@ -352,6 +355,10 @@ wren_c/test/language/inheritance/inherit_from_range.wren
 wren_c/test/language/inheritance/inherit_from_string.wren
 wren_c/test/language/inheritance/inherit_methods.wren
 wren_c/test/language/inheritance/is.wren
+wren_c/test/language/interpolation/empty.wren
+wren_c/test/language/interpolation/runtime_error_in_expression.wren
+wren_c/test/language/interpolation/unterminated.wren
+wren_c/test/language/interpolation/unterminated_expression.wren
 wren_c/test/language/list/duplicate_comma.wren
 wren_c/test/language/list/duplicate_trailing_comma.wren
 wren_c/test/language/list/empty_list_with_comma.wren
@@ -380,12 +387,15 @@ wren_c/test/language/method/empty_block.wren
 wren_c/test/language/method/empty_subscript_definition.wren
 wren_c/test/language/method/long_name.wren
 wren_c/test/language/method/many_methods.wren
+wren_c/test/language/method/newlines.wren
 wren_c/test/language/method/no_parameters_new_line.wren
 wren_c/test/language/method/not_found.wren
 wren_c/test/language/method/not_found_eleven_arguments.wren
 wren_c/test/language/method/not_found_multiple_arguments.wren
 wren_c/test/language/method/not_found_one_argument.wren
+wren_c/test/language/method/static.wren
 wren_c/test/language/method/static_method_not_found.wren
+wren_c/test/language/method/subscript_operators.wren
 wren_c/test/language/module/missing_for.wren
 wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
@@ -461,6 +471,7 @@ wren_c/test/language/while/return_inside.wren
 wren_c/test/language/while/syntax.wren
 wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
+wren_c/test/limit/interpolation_nesting.wren
 wren_c/test/limit/long_function.wren
 wren_c/test/limit/long_variable_name.wren
 wren_c/test/limit/many_constants.wren
