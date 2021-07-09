@@ -1,1 +1,9 @@
-Timed out.
+Unexpected output on stderr:
+System metaclass does not implement 'gc()'.
+Unexpected output on stderr:
+[wren_c/test/language/deeply_nested_gc line 7] in <script>
+Expected return code 0 and got 70. Stderr:
+System metaclass does not implement 'gc()'.
+[wren_c/test/language/deeply_nested_gc line 7] in <script>
+
+Missing expected output "done" on line 8.
