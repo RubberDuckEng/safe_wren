@@ -227,7 +227,7 @@ def run_benchmark_language(benchmark, language, benchmark_result):
                 comparison = red(comparison)
         else:
             comparison = "no baseline"
-    else:
+    elif "wren_rust" in benchmark_result:
         # Hack: assumes wren_rust gets run first.
         wren_score = benchmark_result["wren_rust"]["score"]
         ratio = 100.0 * wren_score / score
@@ -236,6 +236,8 @@ def run_benchmark_language(benchmark, language, benchmark_result):
             comparison = green(comparison)
         if ratio < 95:
             comparison = red(comparison)
+    else:
+        comparison = "no baseline"
 
     print(" {:4.2f}s {:4.4f} {:s}".format(
         best,
