@@ -182,7 +182,7 @@ impl Module {
             .lookup_symbol(name)
             .expect(&format!("failed to load {}", name));
         self.variables[symbol as usize]
-            .try_into_class("ignored".into())
+            .try_into_class()
             .expect(&format!("failed to load {}", name))
     }
 }
@@ -205,67 +205,39 @@ pub struct RuntimeError {
     pub stack_trace: StackTrace,
 }
 
+macro_rules! try_into {
+    ($func:ident,  $value_type:ident, $return_type:ident) => {
+        pub fn $func(&self) -> Option<Handle<$return_type>> {
+            match self {
+                Value::$value_type(value) => Some(value.clone()),
+                _ => None,
+            }
+        }
+    };
+}
+
 impl Value {
-    pub fn try_into_num(&self, msg: String) -> Result<f64> {
+    pub fn try_into_num(&self) -> Option<f64> {
         match self {
-            Value::Num(value) => Ok(*value),
-            _ => Err(VMError::from_string(msg)),
+            Value::Num(value) => Some(*value),
+            _ => None,
         }
     }
 
-    pub fn try_into_string(&self, msg: String) -> Result<String> {
+    pub fn try_into_string(&self) -> Option<String> {
         match self {
-            Value::String(string) => Ok(string.as_ref().clone()),
-            _ => Err(VMError::from_string(msg)),
+            Value::String(string) => Some(string.as_ref().clone()),
+            _ => None,
         }
     }
 
-    pub fn try_into_class(&self, msg: String) -> Result<Handle<ObjClass>> {
-        match self {
-            Value::Class(c) => Ok(c.clone()),
-            _ => Err(VMError::from_string(msg)),
-        }
-    }
-
-    pub fn try_into_range(&self, msg: String) -> Result<Handle<ObjRange>> {
-        match self {
-            Value::Range(r) => Ok(r.clone()),
-            _ => Err(VMError::from_string(msg)),
-        }
-    }
-
-    pub fn try_into_list(&self, msg: String) -> Result<Handle<ObjList>> {
-        match self {
-            Value::List(l) => Ok(l.clone()),
-            _ => Err(VMError::from_string(msg)),
-        }
-    }
-    pub fn try_into_map(&self, msg: String) -> Result<Handle<ObjMap>> {
-        match self {
-            Value::Map(m) => Ok(m.clone()),
-            _ => Err(VMError::from_string(msg)),
-        }
-    }
-    pub fn try_into_fn(&self, msg: String) -> Result<Handle<ObjFn>> {
-        match self {
-            Value::Fn(c) => Ok(c.clone()),
-            _ => Err(VMError::from_string(msg)),
-        }
-    }
-
-    pub fn try_into_closure(&self, msg: String) -> Result<Handle<ObjClosure>> {
-        match self {
-            Value::Closure(c) => Ok(c.clone()),
-            _ => Err(VMError::from_string(msg)),
-        }
-    }
-
-    pub fn try_into_instance(&self, msg: String) -> Result<Handle<ObjInstance>> {
-        match self {
-            Value::Instance(c) => Ok(c.clone()),
-            _ => Err(VMError::from_string(msg)),
-        }
-    }
+    try_into!(try_into_range, Range, ObjRange);
+    try_into!(try_into_map, Map, ObjMap);
+    try_into!(try_into_class, Class, ObjClass);
+    try_into!(try_into_list, List, ObjList);
+    try_into!(try_into_fn, Fn, ObjFn);
+    try_into!(try_into_closure, Closure, ObjClosure);
+    try_into!(try_into_instance, Instance, ObjInstance);
 }
 
 #[derive(Debug, Default)]
@@ -492,10 +464,12 @@ pub(crate) fn wren_new_class(
 
 fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<ObjClass>> {
     // Make sure the superclass is a class.
-    let superclass = superclass_value.try_into_class(format!(
-        "Class '{}' cannot inherit from a non-class object.",
-        name
-    ))?;
+    let superclass = superclass_value.try_into_class().ok_or_else(|| {
+        VMError::from_string(format!(
+            "Class '{}' cannot inherit from a non-class object.",
+            name
+        ))
+    })?;
 
     // This isn't (currently) required in wren_c, since we cast safely
     // in primitive methods.  However in wren_c, this is required since
@@ -543,7 +517,9 @@ fn create_class(vm: &WrenVM, frame: &mut CallFrame, num_fields: usize) -> Result
     let superclass_value = frame.pop()?;
     let name_value = frame.pop()?;
 
-    let name = name_value.try_into_string("Class name not string.".into())?;
+    let name = name_value
+        .try_into_string()
+        .ok_or_else(|| VMError::from_str("Class name not string."))?;
     let superclass = validate_superclass(&name, superclass_value)?;
 
     let class = wren_new_class(vm, &superclass, num_fields, name)?;
@@ -648,7 +624,11 @@ fn bind_method(
     class: &mut ObjClass,
     method_value: Value,
 ) -> Result<()> {
-    let method = Method::Block(method_value.try_into_closure("method body not closure".into())?);
+    let method = Method::Block(
+        method_value
+            .try_into_closure()
+            .ok_or_else(|| VMError::from_str("method body not closure"))?,
+    );
 
     // FIXME: Need to patch the closure code!
     // Patch up the bytecode now that we know the superclass.
@@ -830,7 +810,7 @@ impl WrenVM {
                             stack_trace: stack_trace,
                         },
                         VMError::FiberAbort(value) => {
-                            let maybe_msg = value.try_into_string("ignored".into());
+                            let maybe_msg = value.try_into_string();
                             RuntimeError {
                                 msg: maybe_msg.unwrap_or("Fiber Abort <non-string>".to_string()),
                                 stack_trace: stack_trace,
@@ -890,14 +870,14 @@ impl WrenVM {
 
                     let this_class = self
                         .class_for_value(&args[0])
-                        .ok_or(VMError::from_str("object has no class"))?;
+                        .ok_or_else(|| VMError::from_str("object has no class"))?;
                     let class_obj = this_class.borrow();
                     // Get the Method record for this class for this symbol.
                     // This could return None instead of MethodNone?
                     let method = class_obj
                         .methods
                         .get(*symbol)
-                        .ok_or(self.method_not_found(&class_obj, *symbol))?;
+                        .ok_or_else(|| self.method_not_found(&class_obj, *symbol))?;
 
                     // Even if we got a Method doesn't mean *this* class
                     // implements it.
@@ -942,13 +922,15 @@ impl WrenVM {
                 }
                 Ops::Construct => {
                     let this = frame.stack[0].clone();
-                    let class = this.try_into_class("'this' should be a class.".into())?;
+                    let class = this.try_into_class().expect("'this' should be a class.");
                     let instance = wren_new_instance(self, class);
                     frame.stack[0] = instance;
                 }
                 Ops::Closure(constant_index, _upvalues) => {
                     let fn_value = fn_obj.borrow().constants[*constant_index].clone();
-                    let fn_obj = fn_value.try_into_fn("constant was not closure".into())?;
+                    let fn_obj = fn_value
+                        .try_into_fn()
+                        .ok_or_else(|| VMError::from_str("constant was not closure"))?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
                     frame.push(Value::Closure(closure));
                     // FIXME: Handle upvalues.
@@ -981,8 +963,9 @@ impl WrenVM {
                 }
                 Ops::LoadField(symbol) => {
                     let receiver = frame.pop()?;
-                    let instance =
-                        receiver.try_into_instance("Receiver should be instance.".into())?;
+                    let instance = receiver
+                        .try_into_instance()
+                        .ok_or_else(|| VMError::from_str("Receiver should be instance."))?;
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
                     }
@@ -990,8 +973,9 @@ impl WrenVM {
                 }
                 Ops::StoreField(symbol) => {
                     let receiver = frame.pop()?;
-                    let instance =
-                        receiver.try_into_instance("Receiver should be instance.".into())?;
+                    let instance = receiver
+                        .try_into_instance()
+                        .ok_or_else(|| VMError::from_str("Receiver should be instance."))?;
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
                     }
@@ -1002,7 +986,7 @@ impl WrenVM {
                 }
                 Ops::Method(is_static, symbol) => {
                     // wren_c peeks first then drops after bind, unclear why
-                    let class = frame.pop()?.try_into_class("expected class".into())?;
+                    let class = frame.pop()?.try_into_class().unwrap();
                     let method = frame.pop()?;
                     bind_method(self, *is_static, *symbol, &mut class.borrow_mut(), method)?;
                 }
@@ -1049,7 +1033,9 @@ impl WrenVM {
 }
 
 fn check_arity(value: &Value, _num_args: usize) -> Result<Handle<ObjClosure>> {
-    let closure = value.try_into_closure("Receiver must be a closure.".into())?;
+    let closure = value
+        .try_into_closure()
+        .expect("Receiver must be a closure.");
     Ok(closure)
 
     // FIXME: Enable in a separate change.

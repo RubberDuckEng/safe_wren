@@ -8,23 +8,23 @@ type Handle<T> = std::rc::Rc<std::cell::RefCell<T>>;
 // wren_c has these AS_RANGE, AS_CLASS, etc. macros
 // which (unsafely) do direct "downcasts" to the type.
 // These are our safer (and error-message sharing) alternatives.
-fn this_as_range(args: &Vec<Value>) -> Result<Handle<ObjRange>> {
-    args[0].try_into_range("reciever must be Range".into())
+fn this_as_range(args: &Vec<Value>) -> Handle<ObjRange> {
+    args[0].try_into_range().unwrap()
 }
-fn this_as_string(args: &Vec<Value>) -> Result<String> {
-    args[0].try_into_string("reciever must be String".into())
+fn this_as_string(args: &Vec<Value>) -> String {
+    args[0].try_into_string().unwrap()
 }
-fn this_as_closure(args: &Vec<Value>) -> Result<Handle<ObjClosure>> {
-    args[0].try_into_closure("reciever must be Closure".into())
+fn this_as_closure(args: &Vec<Value>) -> Handle<ObjClosure> {
+    args[0].try_into_closure().unwrap()
 }
-fn this_as_map(args: &Vec<Value>) -> Result<Handle<ObjMap>> {
-    args[0].try_into_map("reciever must be Map".into())
+fn this_as_map(args: &Vec<Value>) -> Handle<ObjMap> {
+    args[0].try_into_map().unwrap()
 }
-fn this_as_list(args: &Vec<Value>) -> Result<Handle<ObjList>> {
-    args[0].try_into_list("reciever must be List".into())
+fn this_as_list(args: &Vec<Value>) -> Handle<ObjList> {
+    args[0].try_into_list().unwrap()
 }
-fn this_as_class(args: &Vec<Value>) -> Result<Handle<ObjClass>> {
-    args[0].try_into_class("reciever must be Class".into())
+fn this_as_class(args: &Vec<Value>) -> Handle<ObjClass> {
+    args[0].try_into_class().unwrap()
 }
 
 macro_rules! num_constant {
@@ -36,7 +36,9 @@ macro_rules! num_constant {
 }
 
 fn validate_num(value: &Value, arg_name: &str) -> Result<f64> {
-    value.try_into_num(format!("{} must be a number.", arg_name))
+    value
+        .try_into_num()
+        .ok_or_else(|| VMError::from_string(format!("{} must be a number.", arg_name)))
 }
 
 macro_rules! infix_num_op {
@@ -198,13 +200,13 @@ fn num_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_class(&args)?;
+    let this = this_as_class(&args);
     let string = this.borrow().name.clone();
     Ok(Value::from_string(string))
 }
 
 fn class_supertype(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_class(&args)?;
+    let this = this_as_class(&args);
     let maybe_superclass = &this.borrow().superclass;
     match maybe_superclass {
         None => Ok(Value::Null),
@@ -213,7 +215,7 @@ fn class_supertype(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn class_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_class(&args)?;
+    let this = this_as_class(&args);
     let string = this.borrow().name.clone();
     Ok(Value::from_string(string))
 }
@@ -232,7 +234,9 @@ fn object_bangeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let expected_baseclass = args[1].try_into_class("Right operand must be a class.".into())?;
+    let expected_baseclass = args[1]
+        .try_into_class()
+        .ok_or_else(|| VMError::from_str("Right operand must be a class."))?;
     let mut class = vm
         .class_for_value(&args[0])
         .ok_or(VMError::from_str("this must be class"))?;
@@ -256,7 +260,7 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 macro_rules! range_getter {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-            let range_cell = this_as_range(&args)?;
+            let range_cell = this_as_range(&args);
             let range = range_cell.borrow();
             Ok(Value::$return_type(range.$method))
         }
@@ -267,7 +271,7 @@ macro_rules! range_getter {
 macro_rules! range_getter_fn {
     ($func:ident, $method:ident, $return_type:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-            let range_cell = this_as_range(&args)?;
+            let range_cell = this_as_range(&args);
             let range = range_cell.borrow();
             Ok(Value::$return_type(range.$method()))
         }
@@ -281,7 +285,7 @@ range_getter_fn!(range_min, min, Num);
 range_getter_fn!(range_max, max, Num);
 
 fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let range_cell = this_as_range(&args)?;
+    let range_cell = this_as_range(&args);
     let range = range_cell.borrow();
 
     // Special case: empty range.
@@ -321,7 +325,9 @@ fn range_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let range_ref = args[0].try_into_range("this must be range".into())?;
+    let range_ref = args[0]
+        .try_into_range()
+        .ok_or_else(|| VMError::from_str("this must be range"))?;
     let range = range_ref.borrow();
 
     let from = wren_num_to_string(range.from);
@@ -390,11 +396,14 @@ fn null_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
 }
 
 fn validate_string(arg: &Value, arg_name: &str) -> Result<String> {
-    arg.try_into_string(format!("{} must be a string.", arg_name))
+    arg.try_into_string()
+        .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))
 }
 
 fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let a = args[0].try_into_string("this must be string".into())?;
+    let a = args[0]
+        .try_into_string()
+        .ok_or_else(|| VMError::from_str("this must be string"))?;
     let b = validate_string(&args[1], "Right operand")?;
 
     Ok(Value::from_string(a + &b))
@@ -406,11 +415,11 @@ fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn string_byte_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    Ok(Value::Num(this_as_string(&args)?.len() as f64))
+    Ok(Value::Num(this_as_string(&args).len() as f64))
 }
 
 fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_string(&args)?;
+    let this = this_as_string(&args);
     let index = validate_index(&args[1], this.len(), "Index")?;
 
     // If we are in the middle of a UTF-8 sequence, indicate that.
@@ -423,18 +432,18 @@ fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let string = this_as_string(&args)?;
+    let string = this_as_string(&args);
     let index = validate_index(&args[1], string.len(), "Index")?;
     Ok(Value::Num(string.as_bytes()[index] as f64))
 }
 
 fn string_contains(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_string(&args)?;
+    let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     Ok(Value::Boolean(this.contains(&search)))
 }
 fn string_ends_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_string(&args)?;
+    let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     Ok(Value::Boolean(this.ends_with(&search)))
 }
@@ -447,14 +456,14 @@ fn index_or_neg_one(maybe_index: Option<usize>) -> Value {
 }
 
 fn string_index_of1(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_string(&args)?;
+    let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     let maybe_index = this.find(&search);
     Ok(index_or_neg_one(maybe_index))
 }
 
 fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_string(&args)?;
+    let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     let start = validate_index(&args[2], this.len(), "Start")?;
     // Rust will panic if you try to slice in the middle of a code point
@@ -472,13 +481,14 @@ fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn string_starts_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_string(&args)?;
+    let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     Ok(Value::Boolean(this.starts_with(&search)))
 }
 
 fn validate_fn(arg: &Value, arg_name: &str) -> Result<Handle<ObjClosure>> {
-    arg.try_into_closure(format!("{} must be a function", arg_name))
+    arg.try_into_closure()
+        .ok_or_else(|| VMError::from_string(format!("{} must be a function", arg_name)))
 }
 
 fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -488,7 +498,7 @@ fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let closure = this_as_closure(&args)?;
+    let closure = this_as_closure(&args);
     let arity = closure.borrow().fn_obj.borrow().arity as f64;
     Ok(Value::Num(arity))
 }
@@ -503,7 +513,7 @@ fn map_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
 
 fn map_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
-    let map_cell = this_as_map(&args)?;
+    let map_cell = this_as_map(&args);
     let map = map_cell.borrow();
     let maybe_value = map.data.get(&args[1]);
     match maybe_value {
@@ -514,7 +524,7 @@ fn map_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn map_subscript_setter(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
-    let map = this_as_map(&args)?;
+    let map = this_as_map(&args);
     map.borrow_mut()
         .data
         .insert(args[1].clone(), args[2].clone());
@@ -549,35 +559,35 @@ fn map_add_core(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
 
     let value = args.pop().unwrap();
     let key = args.pop().unwrap();
-    let map = this_as_map(&args)?;
+    let map = this_as_map(&args);
     map.borrow_mut().data.insert(key, value);
     // Return the map itself.
     Ok(Value::Map(map))
 }
 
 fn map_clear(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let map = this_as_map(&args)?;
+    let map = this_as_map(&args);
     map.borrow_mut().data.clear();
     Ok(Value::Null)
 }
 
 fn map_contains_key(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
-    let map = this_as_map(&args)?;
+    let map = this_as_map(&args);
     let key = args.pop().unwrap();
     let result = map.borrow().data.contains_key(&key);
     Ok(Value::Boolean(result))
 }
 
 fn map_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let map = this_as_map(&args)?;
+    let map = this_as_map(&args);
     let count = map.borrow().data.len();
     Ok(Value::Num(count as f64))
 }
 
 fn map_remove(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
-    let map = this_as_map(&args)?;
+    let map = this_as_map(&args);
     let maybe_value = map.borrow_mut().data.remove(&args[1]);
     match maybe_value {
         None => Ok(Value::Null),
@@ -669,7 +679,7 @@ fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
 }
 
 fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
 
     match &args[1] {
         Value::Num(_) => {
@@ -693,7 +703,7 @@ fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn list_subscript_setter(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let index = validate_index(&args[1], list.borrow().elements.len(), "Subscript")?;
     list.borrow_mut().elements[index] = args[2].clone();
     Ok(args[2].clone())
@@ -701,7 +711,7 @@ fn list_subscript_setter(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     list.borrow_mut().elements.push(value.clone());
     Ok(value)
 }
@@ -711,18 +721,18 @@ fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
 // minimize stack churn.
 fn list_add_core(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     list.borrow_mut().elements.push(value);
     Ok(args[0].clone())
 }
 
 fn list_clear(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     list.borrow_mut().elements.clear();
     Ok(Value::Null)
 }
 fn list_insert(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let elements = &mut list.borrow_mut().elements;
     let count = elements.len();
     // count + 1 here so you can "insert" at the very end.
@@ -736,7 +746,7 @@ fn list_insert(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn list_remove_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
     match maybe_index {
         None => Ok(Value::Null),
@@ -748,13 +758,13 @@ fn list_remove_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn list_index_of(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
     Ok(index_or_neg_one(maybe_index))
 }
 
 fn list_swap(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let index_a = validate_index(&args[1], list.borrow().elements.len(), "Index 0")?;
     let index_b = validate_index(&args[2], list.borrow().elements.len(), "Index 1")?;
 
@@ -779,7 +789,7 @@ fn validate_int(value: &Value, arg_name: &str) -> Result<f64> {
 }
 
 fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let elements_len = list.borrow().elements.len() as f64;
 
     if args[1].is_null() {
@@ -822,7 +832,7 @@ fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<
 }
 
 fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
 
     let index = validate_index(&args[1], list.borrow().elements.len(), "Iterator")?;
     let value = list.borrow().elements[index].clone();
@@ -830,14 +840,14 @@ fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let index = validate_index(&args[1], list.borrow().elements.len(), "Index")?;
     list.borrow_mut().elements.remove(index);
     Ok(Value::List(list))
 }
 
 fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let list = this_as_list(&args)?;
+    let list = this_as_list(&args);
     let count = list.borrow().elements.len() as f64;
     Ok(Value::Num(count))
 }
@@ -877,7 +887,9 @@ fn system_clock(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
 }
 
 fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let string = args[1].try_into_string("expected String".into())?;
+    let string = args[1]
+        .try_into_string()
+        .ok_or_else(|| VMError::from_str("expected String"))?;
     let result = unescape(&string);
     // FIXME: This should be an API call to the embedder.
     print!("{}", result);
