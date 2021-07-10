@@ -8,6 +8,8 @@ type Handle<T> = std::rc::Rc<std::cell::RefCell<T>>;
 // wren_c has these AS_RANGE, AS_CLASS, etc. macros
 // which (unsafely) do direct "downcasts" to the type.
 // These are our safer (and error-message sharing) alternatives.
+// FIXME: Rust would expect "unwrap" in these names.
+// e.g. unwrap_this_as_range
 fn this_as_range(args: &Vec<Value>) -> Handle<ObjRange> {
     args[0].try_into_range().unwrap()
 }
@@ -1011,7 +1013,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // superclass, so any classes added to a superclass
     // WOULD NOT end up inherited into wren_core.wren subclasses.
 
-    let module = vm.core_module.as_ref().unwrap();
+    let module = vm.core_module.as_ref().unwrap().borrow();
 
     let core = CoreClasses {
         bool_class: module.expect_class("Bool"),

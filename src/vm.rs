@@ -4,7 +4,7 @@ use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::str;
 
-use crate::compiler::{compile, FnDebug, InputManager, Ops, Scope};
+use crate::compiler::{compile_in_module, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
@@ -191,6 +191,14 @@ impl Module {
         self.variable_names.len() - 1
     }
 
+    // pub fn variable_by_name(&self, name: &str) -> Option<Value> {
+    //     if let Some(index) = self.lookup_symbol(name) {
+    //         Some(self.variables[index as usize].clone())
+    //     } else {
+    //         None
+    //     }
+    // }
+
     pub(crate) fn expect_class(&self, name: &str) -> Handle<ObjClass> {
         let symbol = self
             .lookup_symbol(name)
@@ -358,10 +366,10 @@ pub struct WrenVM {
     // Single global symbol table for all method names (matches wren_c)
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
-    modules: HashMap<String, Module>,
+    modules: HashMap<String, Handle<Module>>,
 
     // The Core module is created first (empty)
-    pub(crate) core_module: Option<Module>,
+    pub(crate) core_module: Option<Handle<Module>>,
     // Then Class
     pub(crate) class_class: Option<Handle<ObjClass>>,
     // Then Fn and Fiber (which are used by wren_core.wren)
@@ -485,11 +493,9 @@ fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<Obj
         ))
     })?;
 
-    // This isn't (currently) required in wren_c, since we cast safely
-    // in primitive methods.  However in wren_c, this is required since
-    // wren_c does blind-casts of "this" in primitives.  So to conform
-    // with the wren_c test suite we copy this for now.  Regardless calls
-    // would fail for us, even if safely-fail.
+    // In wren_c, this is required since wren_c does blind-casts
+    // of "this" in primitives.  wren_rust also does unwrap() and would
+    // (safely) panic if "this" were a ObjInstance subclass.
     match &superclass.borrow().name[..] {
         "Class" | "Fiber" | "Fn" | "List" | "Map" | "Range" | "String" | "Bool" | "Null"
         | "Num" => {
@@ -608,7 +614,7 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
     });
 
     let input = InputManager::from_string(source);
-    let closure = compile(vm, input, module_name).expect("compile wren_core");
+    let closure = compile_in_module(vm, input, module_name).expect("compile wren_core");
     // debug_bytecode(vm, &closure.borrow(), module);
     vm.run(closure).expect("run wren_core");
     vm.debug = had_debug;
@@ -660,6 +666,55 @@ fn bind_method(
     Ok(())
 }
 
+// Let the host resolve an imported module name if it wants to.
+// fn resolve_module(_vm: &mut WrenVM, name: String) -> String {
+//     // Add call out to host.
+//     name
+// }
+
+// struct WrenLoadModuleResult {
+//     source: String,
+// }
+
+// // FIXME: Belongs in main.rs instead.
+// fn read_module(name: String) -> Option<WrenLoadModuleResult> {
+//     None
+// }
+
+// enum ImportResult {
+//     Existing(Handle<Module>),
+//     New(Handle<ObjClosure>),
+// }
+
+// fn import_module(vm: &mut WrenVM, name: String) -> Result<ImportResult> {
+//     name = resolve_module(vm, name);
+
+//     // If the module is already loaded, we don't need to do anything.
+//     match vm.modules.get(&name) {
+//         Some(m) => return Ok(ImportResult::Existing(m.clone())),
+//         None => {}
+//     }
+
+//     // FIXME: Let the host provide modules.
+//     let result = read_module(name)
+//         .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
+
+//     let closure = compile_in_module(vm, name, result.source)
+//         .ok_or_else(|| VMError::from_string(format!("Could not compile module '{}'.", name)))?;
+
+//     // Return the closure that executes the module.
+//     Ok(ImportResult::New(closure))
+// }
+
+// fn get_module_variable(vm: &WrenVM, module: &Module, variable_name: &str) -> Result<Value> {
+//     module.variable_by_name(variable_name).ok_or_else(|| {
+//         VMError::from_string(format!(
+//             "Could not find a variable named '{}' in module '{}'.",
+//             variable_name, module.name
+//         ))
+//     })
+// }
+
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
         let mut vm = Self {
@@ -689,7 +744,7 @@ impl WrenVM {
         init_base_classes(&mut vm, &mut stub_core);
         vm.class_class = Some(stub_core.expect_class("Class"));
         init_fn_and_fiber(&mut vm, &mut stub_core);
-        vm.core_module = Some(stub_core);
+        vm.core_module = Some(new_handle(stub_core));
         let core_name = "#core";
         load_wren_core(&mut vm, core_name);
         vm.core_module = Some(vm.modules.remove(core_name).unwrap());
@@ -697,19 +752,30 @@ impl WrenVM {
         vm
     }
 
-    pub(crate) fn new_module_with_name(&self, name: &str) -> Module {
+    // pub(crate) fn lookup_or_create_empty_module(&mut self, name: &str) -> Handle<Module> {
+    //     match self.modules.get(name) {
+    //         Some(m) => return m.clone(),
+    //         None => {}
+    //     }
+    //     let module = self.new_module_with_name(name);
+    //     self.register_module(module.clone());
+    //     module
+    // }
+
+    pub(crate) fn new_module_with_name(&self, name: &str) -> Handle<Module> {
         // We automatically import Core into all modules.
         // Implicitly import the core module.
-        let core = self.core_module.as_ref().unwrap();
-        Module {
+        let core = self.core_module.as_ref().unwrap().borrow();
+        new_handle(Module {
             name: name.into(),
             variable_names: core.variable_names.clone(),
             variables: core.variables.clone(),
-        }
+        })
     }
 
-    pub(crate) fn register_module(&mut self, module: Module) {
-        self.modules.insert(module.name.clone(), module);
+    pub(crate) fn register_module(&mut self, module: Handle<Module>) {
+        let name = module.borrow().name.clone();
+        self.modules.insert(name, module);
     }
 
     // TODO: This needs to be Option?  Root classes dont have classes?
@@ -777,9 +843,9 @@ impl WrenVM {
         let module_name = closure.borrow().fn_obj.borrow().debug.module_name.clone();
         let fiber = new_handle(ObjFiber::new(self, closure));
         self.fiber = Some(fiber.clone());
-        let mut module = self.modules.remove(&module_name).unwrap();
-        let result = self.run_in_fiber(&mut fiber.borrow_mut(), &mut module);
-        self.modules.insert(module.name.clone(), module);
+        let module = self.modules.remove(&module_name).unwrap();
+        let result = self.run_in_fiber(&mut fiber.borrow_mut(), &mut module.borrow_mut());
+        self.modules.insert(module_name, module);
         result
     }
 
@@ -1007,6 +1073,39 @@ impl WrenVM {
                 Ops::End => {
                     return Ok(RunNext::Done);
                 }
+                // Ops::ImportModule(constant) => {
+                //     // Make a slot on the stack for the module's fiber to place the return
+                //     // value. It will be popped after this fiber is resumed. Store the
+                //     // imported module's closure in the slot in case a GC happens when
+                //     // invoking the closure.
+                //     let value = import_module(self, fn_obj.borrow().constants[*constant]);
+                //     frame.push(value.clone());
+                //     // Check for fiber error?
+                //     // if wrenHasError(fiber) RUNTIME_ERROR();
+
+                //     // If we get a closure, call it to execute the module body.
+                //     match value {
+                //         Value::Closure(c) => {
+                //             return Ok(RunNext::FunctionCall(c));
+                //         }
+                //         Value::Module(m) => {
+                //             // The module has already been loaded. Remember it so we can import
+                //             // variables from it if needed.
+                //             self.last_module = m;
+                //         }
+                //         _ => panic!("Unexpected value from import_module"),
+                //     }
+                // }
+                // Ops::ImportVariable(constant) => {
+                //     let variable = closure.fn_obj.borrow().constants[*constant];
+                //     assert_ne!(
+                //         self.last_module, None,
+                //         "Should have already imported module."
+                //     );
+                //     let result = get_module_variable(self, self.last_module, variable);
+                //     // if (wrenHasError(fiber)) RUNTIME_ERROR();
+                //     frame.push(result);
+                // }
                 Ops::Loop(offset_backwards) => {
                     frame.pc -= *offset_backwards as usize;
                 }
@@ -1189,12 +1288,14 @@ fn op_debug_string(
         Ops::Pop => format!("{:?}", op),
         Ops::Return => format!("{:?}", op),
         Ops::End => format!("{:?}", op),
+        // Ops::ImportModule(_) => format!("{:?}", op),
+        // Ops::ImportVariable(_) => format!("{:?}", op),
     }
 }
 
 pub(crate) fn wren_debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     let module_name = closure.fn_obj.borrow().debug.module_name.clone();
-    debug_bytecode(vm, closure, &vm.modules[&module_name]);
+    debug_bytecode(vm, closure, &vm.modules[&module_name].borrow());
 }
 
 fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure, module: &Module) {

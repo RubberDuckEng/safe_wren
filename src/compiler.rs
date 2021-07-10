@@ -102,6 +102,8 @@ pub enum Token {
     Continue,
     Return,
     Static,
+    // Import,
+    // As,
     For,
     In,
     Is,
@@ -817,6 +819,9 @@ pub(crate) enum Ops {
     Construct,
     Method(bool, usize), // METHOD_STATIC and METHOD_INSTANCE from wren_c
 
+    // ImportModule(usize),
+    // ImportVariable(usize),
+
     // If the top of the stack is false, jump [arg] forward. Otherwise, pop and
     // continue.
     And(u16),
@@ -987,10 +992,12 @@ impl Compiler {
         Compiler::_with_parent_and_arg0_name(parent, "this")
     }
 
+    // named addConstant in wren_c
     fn ensure_constant(&mut self, value: Value) -> usize {
         // FIXME: This should check if we already have this value stored!
         let index = self.constants.len();
         self.constants.push(value);
+        // FIXME: Also needs to check that we haven't hit limit.
         index
     }
 
@@ -2567,6 +2574,77 @@ fn declare_named_variable(ctx: &mut ParseContext) -> Result<u16, WrenError> {
     declare_variable(ctx, name)
 }
 
+// Compiles an "import" statement.
+//
+// An import compiles to a series of instructions. Given:
+//
+//     import "foo" for Bar, Baz
+//
+// We compile a single IMPORT_MODULE "foo" instruction to load the module
+// itself. When that finishes executing the imported module, it leaves the
+// ObjModule in vm->lastModule. Then, for Bar and Baz, we:
+//
+// * Declare a variable in the current scope with that name.
+// * Emit an IMPORT_VARIABLE instruction to load the variable's value from the
+//   other module.
+// * Compile the code to store that value in the variable in this scope.
+// fn import(ctx: &mut ParseContext) -> Result<(), WrenError> {
+//     ignore_newlines(ctx)?;
+//     let import_name = consume_string(ctx, "Expect a string after 'import'.")?;
+//     let module_constant = ctx
+//         .compiler_mut()
+//         .ensure_constant(Value::from_string(import_name));
+
+//     // Load the module.
+//     emit(ctx, Ops::ImportModule(module_constant));
+
+//     // Discard the unused result value from calling the module body's closure.
+//     emit(ctx, Ops::Pop);
+
+//     // The for clause is optional.
+//     if !match_current(ctx, Token::For)? {
+//         return Ok(());
+//     }
+
+//     // Compile the comma-separated list of variables to import.
+//     loop {
+//         ignore_newlines(ctx)?;
+
+//         consume_expecting_name(ctx, "Expect variable name.");
+
+//         // We need to hold onto the source variable,
+//         // in order to reference it in the import later
+//         let source_string = previous_token_name(ctx)?;
+
+//         // Define a string constant for the original variable name.
+//         let source_variable_constant = ctx
+//             .compiler_mut()
+//             .ensure_constant(Value::from_string(source_string.clone()));
+
+//         // Store the symbol we care about for the variable
+//         let slot = if match_current(ctx, Token::As)? {
+//             //import "module" for Source as Dest
+//             //Use 'Dest' as the name by declaring a new variable for it.
+//             //This parses a name after the 'as' and defines it.
+//             declare_named_variable(ctx)
+//         } else {
+//             //import "module" for Source
+//             //Uses 'Source' as the name directly
+//             declare_variable(ctx, source_string)
+//         }?;
+
+//         // Load the variable from the other module.
+//         emit(ctx, Ops::ImportVariable(source_variable_constant));
+
+//         // Store the result in the variable here.
+//         define_variable(ctx, slot);
+//         if !match_current(ctx, Token::Comma)? {
+//             break;
+//         }
+//     }
+//     Ok(())
+// }
+
 fn previous_token_name(ctx: &ParseContext) -> Result<String, WrenError> {
     ctx.parser
         .previous
@@ -3082,6 +3160,8 @@ impl Token {
             Token::LessThanEquals => GrammarRule::infix_operator(Precedence::Comparison),
             Token::GreaterThanEquals => GrammarRule::infix_operator(Precedence::Comparison),
             Token::Comma => GrammarRule::unused(),
+            // Token::Import => GrammarRule::unused(),
+            // Token::As => GrammarRule::unused(),
             Token::Newline => GrammarRule::unused(),
             Token::EndOfFile => GrammarRule::unused(),
             Token::Equals => GrammarRule::unused(),
@@ -3263,21 +3343,30 @@ fn ignore_newlines(ctx: &mut ParseContext) -> Result<(), WrenError> {
     Ok(())
 }
 
-// Called wrenCompile in wren_c
-pub(crate) fn compile<'a>(
+pub(crate) fn compile_in_module<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
     module_name: &str,
 ) -> Result<Handle<ObjClosure>, WrenError> {
     // When compiling, we create a module and register it.
-    let mut module = vm.new_module_with_name(module_name);
-    let result = compile_into_module(vm, input, &mut module);
+    let module = vm.new_module_with_name(module_name);
+    let result = wren_compile(vm, input, &mut module.borrow_mut());
     // FIXME: Should we register even on failure?
     vm.register_module(module);
     result
 }
 
-pub(crate) fn compile_into_module<'a>(
+// fn compile_in_module_new(
+//     vm: &mut WrenVM,
+//     name: String,
+//     input: InputManager,
+// ) -> Result<Handle<ObjClosure>, WrenError> {
+//     let module = vm.lookup_or_create_empty_module(&name);
+//     let module_mut = &mut module.borrow_mut();
+//     compile_in_module(vm, input, module_mut)
+// }
+
+pub(crate) fn wren_compile<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
     module: &'a mut Module,
