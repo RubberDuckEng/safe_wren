@@ -1,0 +1,16 @@
+Before:
+
+PS C:\Users\micro\Documents\GitHub\wren_rust> python3 util\benchmark.py -l wren_rust
+binary_trees - wren_rust       .......... 5.66s 0.4532 no baseline
+fib - wren_rust                .......... 9.22s 0.2789 no baseline
+for - wren_rust                .......... 2.85s 0.0402 no baseline
+map_string - wren_rust         .......... 0.98s 0.0745 no baseline
+string_equals - wren_rust      .......... 6.94s 0.1870 no baseline
+
+After:
+PS C:\Users\micro\Documents\GitHub\wren_rust> python3 util\benchmark.py -l wren_rust
+binary_trees - wren_rust       .......... 2.37s 0.1554 no baseline
+fib - wren_rust                .......... 3.19s 0.1235 no baseline
+for - wren_rust                .......... 0.84s 0.0108 no baseline
+map_string - wren_rust         .......... 0.38s 0.0043 no baseline
+string_equals - wren_rust      .......... 2.04s 0.0386 no baseline
