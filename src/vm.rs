@@ -178,26 +178,26 @@ pub(crate) struct Module {
 }
 
 impl Module {
-    pub fn lookup_symbol(&self, name: &str) -> Option<u16> {
+    pub(crate) fn lookup_symbol(&self, name: &str) -> Option<u16> {
         self.variable_names
             .iter()
             .position(|e| e.eq(name))
             .map(|s| s as u16)
     }
 
-    pub fn define_variable(&mut self, name: &str, value: Value) -> usize {
+    pub(crate) fn define_variable(&mut self, name: &str, value: Value) -> usize {
         self.variable_names.push(name.into());
         self.variables.push(value);
         self.variable_names.len() - 1
     }
 
-    // pub fn variable_by_name(&self, name: &str) -> Option<Value> {
-    //     if let Some(index) = self.lookup_symbol(name) {
-    //         Some(self.variables[index as usize].clone())
-    //     } else {
-    //         None
-    //     }
-    // }
+    pub(crate) fn variable_by_name(&self, name: &str) -> Option<Value> {
+        if let Some(index) = self.lookup_symbol(name) {
+            Some(self.variables[index as usize].clone())
+        } else {
+            None
+        }
+    }
 
     pub(crate) fn expect_class(&self, name: &str) -> Handle<ObjClass> {
         let symbol = self
@@ -378,6 +378,7 @@ pub struct WrenVM {
     // Finally the rest of wren_core.wren
     pub(crate) core: Option<CoreClasses>,
     pub(crate) start_time: std::time::Instant,
+    pub(crate) last_imported_module: Option<Handle<Module>>,
 }
 
 impl core::fmt::Debug for WrenVM {
@@ -614,7 +615,7 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
     });
 
     let input = InputManager::from_string(source);
-    let closure = compile_in_module(vm, input, module_name).expect("compile wren_core");
+    let closure = compile_in_module(vm, module_name, input).expect("compile wren_core");
     // debug_bytecode(vm, &closure.borrow(), module);
     vm.run(closure).expect("run wren_core");
     vm.debug = had_debug;
@@ -667,53 +668,54 @@ fn bind_method(
 }
 
 // Let the host resolve an imported module name if it wants to.
-// fn resolve_module(_vm: &mut WrenVM, name: String) -> String {
-//     // Add call out to host.
-//     name
-// }
+fn resolve_module(_vm: &mut WrenVM, name: &str) -> String {
+    // Add call out to host.
+    name.into()
+}
 
-// struct WrenLoadModuleResult {
-//     source: String,
-// }
+struct WrenLoadModuleResult {
+    source: String,
+}
 
-// // FIXME: Belongs in main.rs instead.
-// fn read_module(name: String) -> Option<WrenLoadModuleResult> {
-//     None
-// }
+// FIXME: Belongs in main.rs instead.
+fn read_module(_name: &str) -> Option<WrenLoadModuleResult> {
+    None
+}
 
-// enum ImportResult {
-//     Existing(Handle<Module>),
-//     New(Handle<ObjClosure>),
-// }
+enum ImportResult {
+    Existing(Handle<Module>),
+    New(Handle<ObjClosure>),
+}
 
-// fn import_module(vm: &mut WrenVM, name: String) -> Result<ImportResult> {
-//     name = resolve_module(vm, name);
+fn import_module(vm: &mut WrenVM, unresolved_name: &str) -> Result<ImportResult> {
+    let name = resolve_module(vm, unresolved_name);
 
-//     // If the module is already loaded, we don't need to do anything.
-//     match vm.modules.get(&name) {
-//         Some(m) => return Ok(ImportResult::Existing(m.clone())),
-//         None => {}
-//     }
+    // If the module is already loaded, we don't need to do anything.
+    match vm.modules.get(&name) {
+        Some(m) => return Ok(ImportResult::Existing(m.clone())),
+        None => {}
+    }
 
-//     // FIXME: Let the host provide modules.
-//     let result = read_module(name)
-//         .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
+    // FIXME: Let the host provide modules.
+    let result = read_module(&name)
+        .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
 
-//     let closure = compile_in_module(vm, name, result.source)
-//         .ok_or_else(|| VMError::from_string(format!("Could not compile module '{}'.", name)))?;
+    let input = InputManager::from_string(result.source);
+    let closure = compile_in_module(vm, &name, input)
+        .map_err(|_| VMError::from_string(format!("Could not compile module '{}'.", name)))?;
 
-//     // Return the closure that executes the module.
-//     Ok(ImportResult::New(closure))
-// }
+    // Return the closure that executes the module.
+    Ok(ImportResult::New(closure))
+}
 
-// fn get_module_variable(vm: &WrenVM, module: &Module, variable_name: &str) -> Result<Value> {
-//     module.variable_by_name(variable_name).ok_or_else(|| {
-//         VMError::from_string(format!(
-//             "Could not find a variable named '{}' in module '{}'.",
-//             variable_name, module.name
-//         ))
-//     })
-// }
+fn get_module_variable(_vm: &WrenVM, module: &Module, variable_name: &str) -> Result<Value> {
+    module.variable_by_name(variable_name).ok_or_else(|| {
+        VMError::from_string(format!(
+            "Could not find a variable named '{}' in module '{}'.",
+            variable_name, module.name
+        ))
+    })
+}
 
 impl WrenVM {
     pub fn new(debug: bool) -> Self {
@@ -729,6 +731,7 @@ impl WrenVM {
             fiber_class: None,
             modules: HashMap::new(),
             start_time: std::time::Instant::now(),
+            last_imported_module: None,
         };
 
         // Modules are owned by the modules HashMap.
@@ -752,15 +755,15 @@ impl WrenVM {
         vm
     }
 
-    // pub(crate) fn lookup_or_create_empty_module(&mut self, name: &str) -> Handle<Module> {
-    //     match self.modules.get(name) {
-    //         Some(m) => return m.clone(),
-    //         None => {}
-    //     }
-    //     let module = self.new_module_with_name(name);
-    //     self.register_module(module.clone());
-    //     module
-    // }
+    pub(crate) fn lookup_or_register_empty_module(&mut self, name: &str) -> Handle<Module> {
+        match self.modules.get(name) {
+            Some(m) => return m.clone(),
+            None => {}
+        }
+        let module = self.new_module_with_name(name);
+        self.register_module(module.clone());
+        module
+    }
 
     pub(crate) fn new_module_with_name(&self, name: &str) -> Handle<Module> {
         // We automatically import Core into all modules.
@@ -1073,39 +1076,38 @@ impl WrenVM {
                 Ops::End => {
                     return Ok(RunNext::Done);
                 }
-                // Ops::ImportModule(constant) => {
-                //     // Make a slot on the stack for the module's fiber to place the return
-                //     // value. It will be popped after this fiber is resumed. Store the
-                //     // imported module's closure in the slot in case a GC happens when
-                //     // invoking the closure.
-                //     let value = import_module(self, fn_obj.borrow().constants[*constant]);
-                //     frame.push(value.clone());
-                //     // Check for fiber error?
-                //     // if wrenHasError(fiber) RUNTIME_ERROR();
+                Ops::ImportModule(module_name) => {
+                    // Make a slot on the stack for the module's fiber to place the return
+                    // value. It will be popped after this fiber is resumed. Store the
+                    // imported module's closure in the slot in case a GC happens when
+                    // invoking the closure.
+                    let result = import_module(self, module_name)?;
+                    // frame.push(value.clone());
+                    // Check for fiber error?
+                    // if wrenHasError(fiber) RUNTIME_ERROR();
 
-                //     // If we get a closure, call it to execute the module body.
-                //     match value {
-                //         Value::Closure(c) => {
-                //             return Ok(RunNext::FunctionCall(c));
-                //         }
-                //         Value::Module(m) => {
-                //             // The module has already been loaded. Remember it so we can import
-                //             // variables from it if needed.
-                //             self.last_module = m;
-                //         }
-                //         _ => panic!("Unexpected value from import_module"),
-                //     }
-                // }
-                // Ops::ImportVariable(constant) => {
-                //     let variable = closure.fn_obj.borrow().constants[*constant];
-                //     assert_ne!(
-                //         self.last_module, None,
-                //         "Should have already imported module."
-                //     );
-                //     let result = get_module_variable(self, self.last_module, variable);
-                //     // if (wrenHasError(fiber)) RUNTIME_ERROR();
-                //     frame.push(result);
-                // }
+                    // If we get a closure, call it to execute the module body.
+                    match result {
+                        ImportResult::New(closure) => {
+                            frame.push(Value::Closure(closure.clone()));
+                            return Ok(RunNext::FunctionCall(CallFrame::new(closure)));
+                        }
+                        ImportResult::Existing(module) => {
+                            // The module has already been loaded. Remember it so we can import
+                            // variables from it if needed.
+                            frame.push(Value::from_str("dummy for module"));
+                            self.last_imported_module = Some(module);
+                        }
+                    }
+                }
+                Ops::ImportVariable(variable_name) => {
+                    let module = self
+                        .last_imported_module
+                        .as_ref()
+                        .expect("Should have already imported module.");
+                    let value = get_module_variable(self, &module.borrow(), variable_name)?;
+                    frame.push(value);
+                }
                 Ops::Loop(offset_backwards) => {
                     frame.pc -= *offset_backwards as usize;
                 }
@@ -1288,8 +1290,8 @@ fn op_debug_string(
         Ops::Pop => format!("{:?}", op),
         Ops::Return => format!("{:?}", op),
         Ops::End => format!("{:?}", op),
-        // Ops::ImportModule(_) => format!("{:?}", op),
-        // Ops::ImportVariable(_) => format!("{:?}", op),
+        Ops::ImportModule(_) => format!("{:?}", op),
+        Ops::ImportVariable(_) => format!("{:?}", op),
     }
 }
 

@@ -59,7 +59,7 @@ fn run_file(path: &String) {
     let mut vm = WrenVM::new(false);
     let input = InputManager::from_bytes(no_crs);
     let module_name = path.strip_suffix(".wren").unwrap();
-    let closure = compile_in_module(&mut vm, input, module_name).unwrap_or_else(|e| {
+    let closure = compile_in_module(&mut vm, module_name, input).unwrap_or_else(|e| {
         print_compile_error(e);
         exit(ExitCode::CompileError);
     });
@@ -139,7 +139,7 @@ fn print_tokens(source_or_path: &String) {
 fn print_bytecode(source_or_path: &String) {
     let mut vm = WrenVM::new(false);
     let input = input_from_source_or_path(source_or_path);
-    let result = compile_in_module(&mut vm, input.input, &input.module_name);
+    let result = compile_in_module(&mut vm, &input.module_name, input.input);
     match result {
         Ok(closure) => wren_debug_bytecode(&vm, &closure.borrow()),
         Err(e) => print_compile_error(e),
@@ -149,7 +149,7 @@ fn print_bytecode(source_or_path: &String) {
 fn interpret_and_print_vm(source_or_path: &String) {
     let mut vm = WrenVM::new(true);
     let input = input_from_source_or_path(source_or_path);
-    let result = compile_in_module(&mut vm, input.input, &input.module_name);
+    let result = compile_in_module(&mut vm, &input.module_name, input.input);
     match result {
         Ok(closure) => match vm.run(closure) {
             Ok(_) => println!("{:?}", vm),

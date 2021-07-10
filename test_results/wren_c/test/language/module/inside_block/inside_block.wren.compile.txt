@@ -1,1 +1,22 @@
-[wren_c/test/language/module/inside_block/inside_block line 4] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("outer")
+Code:
+00: Constant(0: String("outer"))
+01: Store(Module)
+02: Pop
+03: Boolean true
+04: JumpIfFalse(8)
+05: ImportModule("./module")
+06: Pop
+07: ImportVariable("Module")
+08: Load(Module, Class("System"))
+09: Load(Local, 1)
+10: Call(Method, print(_))
+11: Pop
+12: Pop
+13: Load(Module, Class("System"))
+14: Load(Module, Null)
+15: Call(Method, print(_))
+16: Pop
+17: End
+18: End

@@ -1,1 +1,101 @@
-[wren_c/test/random/int_max line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: Num(12345)
+01: Num(0)
+02: Num(0)
+03: Num(0)
+04: Num(0)
+05: Num(0)
+06: Num(1)
+07: Num(10000)
+08: Num(5)
+09: Num(1)
+10: Num(1900)
+11: String("too few")
+12: Num(2100)
+13: String("too many")
+Code:
+00: ImportModule("random")
+01: Pop
+02: ImportVariable("Random")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Constant(0: Num(12345))
+07: Call(Method, new(_))
+08: Store(Module)
+09: Pop
+10: Load(Module, Class("List"))
+11: Call(Method, new())
+12: Constant(1: Num(0))
+13: Call(Method, addCore_(_))
+14: Constant(2: Num(0))
+15: Call(Method, addCore_(_))
+16: Constant(3: Num(0))
+17: Call(Method, addCore_(_))
+18: Constant(4: Num(0))
+19: Call(Method, addCore_(_))
+20: Constant(5: Num(0))
+21: Call(Method, addCore_(_))
+22: Store(Module)
+23: Pop
+24: Constant(6: Num(1))
+25: Constant(7: Num(10000))
+26: Call(Method, ..(_))
+27: Null
+28: Load(Local, 1)
+29: Load(Local, 2)
+30: Call(Method, iterate(_))
+31: Store(Local, 2)
+32: JumpIfFalse(18)
+33: Load(Local, 1)
+34: Load(Local, 2)
+35: Call(Method, iteratorValue(_))
+36: Load(Module, Null)
+37: Constant(8: Num(5))
+38: Call(Method, int(_))
+39: Load(Module, Null)
+40: Load(Local, 4)
+41: Load(Module, Null)
+42: Load(Local, 4)
+43: Call(Subscript, [_])
+44: Constant(9: Num(1))
+45: Call(Method, +(_))
+46: Call(SubscriptSetter, [_]=(_))
+47: Pop
+48: Pop
+49: Pop
+50: Loop(23)
+51: Pop
+52: Pop
+53: Load(Module, Null)
+54: Null
+55: Load(Local, 1)
+56: Load(Local, 2)
+57: Call(Method, iterate(_))
+58: Store(Local, 2)
+59: JumpIfFalse(21)
+60: Load(Local, 1)
+61: Load(Local, 2)
+62: Call(Method, iteratorValue(_))
+63: Load(Local, 3)
+64: Constant(10: Num(1900))
+65: Call(Method, <(_))
+66: JumpIfFalse(4)
+67: Load(Module, Class("System"))
+68: Constant(11: String("too few"))
+69: Call(Method, print(_))
+70: Pop
+71: Load(Local, 3)
+72: Constant(12: Num(2100))
+73: Call(Method, >(_))
+74: JumpIfFalse(4)
+75: Load(Module, Class("System"))
+76: Constant(13: String("too many"))
+77: Call(Method, print(_))
+78: Pop
+79: Pop
+80: Loop(26)
+81: Pop
+82: Pop
+83: End
+84: End

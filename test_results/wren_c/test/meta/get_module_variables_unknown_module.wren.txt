@@ -1,6 +1,3 @@
 Expected runtime error "Could not find a module named 'unknown'." and got:
-
-Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[wren_c/test/meta/get_module_variables_unknown_module line 1] Error at 'import': Undeclared variable 'import'
-
+Could not load module 'meta'.
+Expected runtime error on line 3 but was on line 1.

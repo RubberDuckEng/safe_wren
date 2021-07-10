@@ -1,1 +1,13 @@
-[wren_c/test/random/new_wrong_arg_type line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+Code:
+00: ImportModule("random")
+01: Pop
+02: ImportVariable("Random")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Boolean false
+07: Call(Method, new(_))
+08: Pop
+09: End
+10: End

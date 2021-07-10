@@ -1,1 +1,1 @@
-[wren_c/test/random/sample_count_multiple line 1] Error at 'import': Undeclared variable 'import'
+[wren_c/test/random/sample_count_multiple line 17] Error at 'bitmask': Undeclared variable 'bitmask'

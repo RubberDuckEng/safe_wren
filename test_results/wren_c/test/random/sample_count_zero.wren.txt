@@ -1,7 +1,10 @@
-Unexpected error:
-[wren_c/test/random/sample_count_zero line 1] Error at 'import': Undeclared variable 'import'
-Expected return code 0 and got 65. Stderr:
-[wren_c/test/random/sample_count_zero line 1] Error at 'import': Undeclared variable 'import'
+Unexpected output on stderr:
+Could not load module 'random'.
+Unexpected output on stderr:
+[wren_c/test/random/sample_count_zero line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Could not load module 'random'.
+[wren_c/test/random/sample_count_zero line 1] in <script>
 
 Missing expected output "[]" on line 5.
 Missing expected output "[]" on line 6.

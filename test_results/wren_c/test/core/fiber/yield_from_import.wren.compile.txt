@@ -1,1 +1,26 @@
-[wren_c/test/core/fiber/yield_from_import line 4] Error at 'import': Undeclared variable 'import'
+Constants:
+00: Fn(new(_) block argument)
+01: String("main 1")
+02: String("main 2")
+Code:
+00: Load(Module, Class("Fiber"))
+01: Closure(0, [])
+02: Call(Method, new(_))
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Call(Method, call())
+07: Pop
+08: Load(Module, Class("System"))
+09: Constant(1: String("main 1"))
+10: Call(Method, print(_))
+11: Pop
+12: Load(Module, Null)
+13: Call(Method, call())
+14: Pop
+15: Load(Module, Class("System"))
+16: Constant(2: String("main 2"))
+17: Call(Method, print(_))
+18: Pop
+19: End
+20: End

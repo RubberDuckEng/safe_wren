@@ -1,1 +1,1 @@
-[wren_c/test/language/module/missing_for line 1] Error at 'import': Undeclared variable 'import'
+[wren_c/test/language/module/missing_for line 1] Error at 'NoString': Expect end of file.

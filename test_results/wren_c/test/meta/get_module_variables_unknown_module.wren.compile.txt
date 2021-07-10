@@ -1,1 +1,14 @@
-[wren_c/test/meta/get_module_variables_unknown_module line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("unknown")
+Code:
+00: ImportModule("meta")
+01: Pop
+02: ImportVariable("Meta")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Constant(0: String("unknown"))
+07: Call(Method, getModuleVariables(_))
+08: Pop
+09: End
+10: End

@@ -1,1 +1,17 @@
-[wren_c/test/random/new_wrong_element_type line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("wrong type")
+Code:
+00: ImportModule("random")
+01: Pop
+02: ImportVariable("Random")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Load(Module, Class("List"))
+07: Call(Method, new())
+08: Constant(0: String("wrong type"))
+09: Call(Method, addCore_(_))
+10: Call(Method, new(_))
+11: Pop
+12: End
+13: End

@@ -1,1 +1,22 @@
-[wren_c/test/language/module/newlines/newlines line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+Code:
+00: ImportModule("./module")
+01: Pop
+02: ImportModule("./module")
+03: Pop
+04: ImportVariable("A")
+05: Store(Module)
+06: Pop
+07: ImportVariable("B")
+08: Store(Module)
+09: Pop
+10: Load(Module, Class("System"))
+11: Load(Module, Null)
+12: Call(Method, print(_))
+13: Pop
+14: Load(Module, Class("System"))
+15: Load(Module, Null)
+16: Call(Method, print(_))
+17: Pop
+18: End
+19: End

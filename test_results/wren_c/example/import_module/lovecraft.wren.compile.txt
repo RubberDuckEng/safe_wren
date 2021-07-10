@@ -1,1 +1,33 @@
-[wren_c/example/import_module/lovecraft line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("Lovecraft")
+01: Fn(init new())
+02: Fn()
+03: Fn(say())
+Code:
+00: ImportModule("./cthulu")
+01: Pop
+02: ImportVariable("Cthulu")
+03: Store(Module)
+04: Pop
+05: Constant(0: String("Lovecraft"))
+06: Load(Module, Class("Object"))
+07: Class(0 fields)
+08: Store(Module)
+09: Pop
+10: Closure(1, [])
+11: Load(Module, Null)
+12: Method(instance, init new())
+13: Closure(2, [])
+14: Load(Module, Null)
+15: Method(static, new())
+16: Closure(3, [])
+17: Load(Module, Null)
+18: Method(instance, say())
+19: Load(Module, Class("System"))
+20: Load(Module, Null)
+21: Call(Method, new())
+22: Call(Method, say())
+23: Call(Method, print(_))
+24: Pop
+25: End
+26: End

@@ -1,1 +1,26 @@
-[wren_c/test/language/module/change_imported_value/change_imported_value line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+Code:
+00: ImportModule("./module")
+01: Pop
+02: ImportVariable("Module")
+03: Store(Module)
+04: Pop
+05: ImportVariable("Other")
+06: Store(Module)
+07: Pop
+08: Load(Module, Class("System"))
+09: Load(Module, Null)
+10: Call(Method, print(_))
+11: Pop
+12: Load(Module, Null)
+13: Call(Getter, change)
+14: Pop
+15: Load(Module, Class("System"))
+16: Load(Module, Null)
+17: Call(Method, print(_))
+18: Pop
+19: Load(Module, Null)
+20: Call(Getter, show)
+21: Pop
+22: End
+23: End

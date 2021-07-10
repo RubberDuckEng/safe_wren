@@ -1,1 +1,1 @@
-[wren_c/test/language/module/name_collision line 2] Error at 'import': Undeclared variable 'import'
+[wren_c/test/language/module/name_collision line 2] Error at 'Collides': Module variable is already defined.

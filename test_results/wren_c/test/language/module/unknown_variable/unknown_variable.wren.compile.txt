@@ -1,1 +1,9 @@
-[wren_c/test/language/module/unknown_variable/unknown_variable line 3] Error at 'import': Undeclared variable 'import'
+Constants:
+Code:
+00: ImportModule("./module")
+01: Pop
+02: ImportVariable("DoesNotExist")
+03: Store(Module)
+04: Pop
+05: End
+06: End

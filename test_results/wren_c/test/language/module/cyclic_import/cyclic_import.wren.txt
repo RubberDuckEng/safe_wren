@@ -1,7 +1,10 @@
-Unexpected error:
-[wren_c/test/language/module/cyclic_import/cyclic_import line 1] Error at 'import': Undeclared variable 'import'
-Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/cyclic_import/cyclic_import line 1] Error at 'import': Undeclared variable 'import'
+Unexpected output on stderr:
+Could not load module './a'.
+Unexpected output on stderr:
+[wren_c/test/language/module/cyclic_import/cyclic_import line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Could not load module './a'.
+[wren_c/test/language/module/cyclic_import/cyclic_import line 1] in <script>
 
 Missing expected output "start a" on line 4.
 Missing expected output "a defined a value" on line 5.

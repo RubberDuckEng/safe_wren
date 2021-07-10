@@ -1,1 +1,42 @@
-[wren_c/test/random/sample_count_zero line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: Num(12345)
+01: Num(0)
+02: Num(1)
+03: Num(2)
+04: Num(3)
+05: Num(0)
+Code:
+00: ImportModule("random")
+01: Pop
+02: ImportVariable("Random")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Constant(0: Num(12345))
+07: Call(Method, new(_))
+08: Store(Module)
+09: Pop
+10: Load(Module, Class("System"))
+11: Load(Module, Null)
+12: Load(Module, Class("List"))
+13: Call(Method, new())
+14: Constant(1: Num(0))
+15: Call(Method, sample(_,_))
+16: Call(Method, print(_))
+17: Pop
+18: Load(Module, Class("System"))
+19: Load(Module, Null)
+20: Load(Module, Class("List"))
+21: Call(Method, new())
+22: Constant(2: Num(1))
+23: Call(Method, addCore_(_))
+24: Constant(3: Num(2))
+25: Call(Method, addCore_(_))
+26: Constant(4: Num(3))
+27: Call(Method, addCore_(_))
+28: Constant(5: Num(0))
+29: Call(Method, sample(_,_))
+30: Call(Method, print(_))
+31: Pop
+32: End
+33: End

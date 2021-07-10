@@ -1,1 +1,1 @@
-[wren_c/test/api/get_variable line 1] Error at 'import': Undeclared variable 'import'
+[wren_c/test/api/get_variable line 4] Error at 'static': Expect '{' to begin method body.

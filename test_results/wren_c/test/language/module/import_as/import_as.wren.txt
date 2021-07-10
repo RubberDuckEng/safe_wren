@@ -1,7 +1,10 @@
-Unexpected error:
-[wren_c/test/language/module/import_as/import_as line 3] Error at 'import': Undeclared variable 'import'
-Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/import_as/import_as line 3] Error at 'import': Undeclared variable 'import'
+Unexpected output on stderr:
+Could not load module './module'.
+Unexpected output on stderr:
+[wren_c/test/language/module/import_as/import_as line 3] in <script>
+Expected return code 0 and got 70. Stderr:
+Could not load module './module'.
+[wren_c/test/language/module/import_as/import_as line 3] in <script>
 
 Missing expected output "ran module" on line 3.
 Missing expected output "from here" on line 6.

@@ -1,1 +1,8 @@
-[wren_c/test/language/module/relative_import/relative_import line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+Code:
+00: ImportModule("./sub/module")
+01: Pop
+02: ImportModule("./sub/././///dir/module")
+03: Pop
+04: End
+05: End

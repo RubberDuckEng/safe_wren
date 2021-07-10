@@ -1,7 +1,10 @@
-Unexpected error:
-[wren_c/test/language/module/relative_import/relative_import line 1] Error at 'import': Undeclared variable 'import'
-Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/relative_import/relative_import line 1] Error at 'import': Undeclared variable 'import'
+Unexpected output on stderr:
+Could not load module './sub/module'.
+Unexpected output on stderr:
+[wren_c/test/language/module/relative_import/relative_import line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Could not load module './sub/module'.
+[wren_c/test/language/module/relative_import/relative_import line 1] in <script>
 
 Missing expected output "sub/module" on line 3.
 Missing expected output "sub/module_2" on line 4.

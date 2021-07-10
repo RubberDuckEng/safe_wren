@@ -1,1 +1,11 @@
-[wren_c/test/language/module/returns/return_value_from_import line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("baz")
+Code:
+00: ImportModule("./module_return_value")
+01: Pop
+02: Load(Module, Class("System"))
+03: Constant(0: String("baz"))
+04: Call(Method, print(_))
+05: Pop
+06: End
+07: End

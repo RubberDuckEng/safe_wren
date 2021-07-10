@@ -1,1 +1,1 @@
-[wren_c/test/language/module/missing_string_after_import line 1] Error at 'import': Undeclared variable 'import'
+[wren_c/test/language/module/missing_string_after_import line 1] Error at 'for': Expect a string after 'import'.

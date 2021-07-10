@@ -1,1 +1,14 @@
-[wren_c/test/language/module/compile_error/compile_error line 2] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("before")
+Code:
+00: Load(Module, Class("System"))
+01: Constant(0: String("before"))
+02: Call(Method, print(_))
+03: Pop
+04: ImportModule("./module")
+05: Pop
+06: ImportVariable("Module")
+07: Store(Module)
+08: Pop
+09: End
+10: End

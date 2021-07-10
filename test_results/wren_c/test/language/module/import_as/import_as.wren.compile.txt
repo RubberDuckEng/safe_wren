@@ -1,1 +1,52 @@
-[wren_c/test/language/module/import_as/import_as line 3] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("from here")
+01: String("value C")
+Code:
+00: Constant(0: String("from here"))
+01: Store(Module)
+02: Pop
+03: Constant(1: String("value C"))
+04: Store(Module)
+05: Pop
+06: ImportModule("./module")
+07: Pop
+08: ImportVariable("ValueA")
+09: Store(Module)
+10: Pop
+11: ImportVariable("Module")
+12: Store(Module)
+13: Pop
+14: ImportVariable("ValueB")
+15: Store(Module)
+16: Pop
+17: ImportModule("./module")
+18: Pop
+19: ImportVariable("ValueC")
+20: Store(Module)
+21: Pop
+22: Load(Module, Class("System"))
+23: Load(Module, Null)
+24: Call(Method, print(_))
+25: Pop
+26: Load(Module, Class("System"))
+27: Load(Module, Null)
+28: Call(Method, print(_))
+29: Pop
+30: Load(Module, Class("System"))
+31: Load(Module, Null)
+32: Call(Method, print(_))
+33: Pop
+34: Load(Module, Class("System"))
+35: Load(Module, Null)
+36: Call(Method, print(_))
+37: Pop
+38: Load(Module, Class("System"))
+39: Load(Module, Null)
+40: Call(Method, print(_))
+41: Pop
+42: Load(Module, Class("System"))
+43: Load(Module, Null)
+44: Call(Method, print(_))
+45: Pop
+46: End
+47: End

@@ -1,1 +1,41 @@
-[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+Code:
+00: ImportModule("./module")
+01: Pop
+02: ImportVariable("Module1")
+03: Store(Module)
+04: Pop
+05: ImportVariable("Module2")
+06: Store(Module)
+07: Pop
+08: ImportVariable("Module3")
+09: Store(Module)
+10: Pop
+11: ImportVariable("Module4")
+12: Store(Module)
+13: Pop
+14: ImportVariable("Module5")
+15: Store(Module)
+16: Pop
+17: Load(Module, Class("System"))
+18: Load(Module, Null)
+19: Call(Method, print(_))
+20: Pop
+21: Load(Module, Class("System"))
+22: Load(Module, Null)
+23: Call(Method, print(_))
+24: Pop
+25: Load(Module, Class("System"))
+26: Load(Module, Null)
+27: Call(Method, print(_))
+28: Pop
+29: Load(Module, Class("System"))
+30: Load(Module, Null)
+31: Call(Method, print(_))
+32: Pop
+33: Load(Module, Class("System"))
+34: Load(Module, Null)
+35: Call(Method, print(_))
+36: Pop
+37: End
+38: End

@@ -1,1 +1,54 @@
-[wren_c/test/meta/get_module_variables line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: String("./test/meta/get_module_variables")
+01: String("Object")
+02: String("Bool")
+03: String("variables")
+04: String("later")
+05: String("values")
+06: String("unknown")
+Code:
+00: ImportModule("meta")
+01: Pop
+02: ImportVariable("Meta")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Constant(0: String("./test/meta/get_module_variables"))
+07: Call(Method, getModuleVariables(_))
+08: Store(Module)
+09: Pop
+10: Load(Module, Class("System"))
+11: Load(Module, Null)
+12: Constant(1: String("Object"))
+13: Call(Method, contains(_))
+14: Call(Method, print(_))
+15: Pop
+16: Load(Module, Class("System"))
+17: Load(Module, Null)
+18: Constant(2: String("Bool"))
+19: Call(Method, contains(_))
+20: Call(Method, print(_))
+21: Pop
+22: Load(Module, Class("System"))
+23: Load(Module, Null)
+24: Constant(3: String("variables"))
+25: Call(Method, contains(_))
+26: Call(Method, print(_))
+27: Pop
+28: Load(Module, Class("System"))
+29: Load(Module, Null)
+30: Constant(4: String("later"))
+31: Call(Method, contains(_))
+32: Call(Method, print(_))
+33: Pop
+34: Constant(5: String("values"))
+35: Store(Module)
+36: Pop
+37: Load(Module, Class("System"))
+38: Load(Module, Null)
+39: Constant(6: String("unknown"))
+40: Call(Method, contains(_))
+41: Call(Method, print(_))
+42: Pop
+43: End
+44: End

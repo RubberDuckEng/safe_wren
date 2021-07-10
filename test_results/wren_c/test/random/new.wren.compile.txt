@@ -1,1 +1,64 @@
-[wren_c/test/random/new line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: Num(0)
+01: Num(1)
+02: Num(100)
+03: Num(0)
+04: Num(1)
+05: Num(1)
+06: Num(1)
+Code:
+00: ImportModule("random")
+01: Pop
+02: ImportVariable("Random")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Call(Method, new())
+07: Store(Module)
+08: Pop
+09: Constant(0: Num(0))
+10: Store(Module)
+11: Pop
+12: Constant(1: Num(1))
+13: Constant(2: Num(100))
+14: Call(Method, ..(_))
+15: Null
+16: Load(Local, 1)
+17: Load(Local, 2)
+18: Call(Method, iterate(_))
+19: Store(Local, 2)
+20: JumpIfFalse(26)
+21: Load(Local, 1)
+22: Load(Local, 2)
+23: Call(Method, iteratorValue(_))
+24: Load(Module, Null)
+25: Call(Method, float())
+26: Load(Local, 4)
+27: Constant(3: Num(0))
+28: Call(Method, >=(_))
+29: JumpIfFalse(5)
+30: Load(Module, Null)
+31: Constant(4: Num(1))
+32: Call(Method, +(_))
+33: Store(Module)
+34: Pop
+35: Load(Local, 4)
+36: Constant(5: Num(1))
+37: Call(Method, <(_))
+38: JumpIfFalse(5)
+39: Load(Module, Null)
+40: Constant(6: Num(1))
+41: Call(Method, +(_))
+42: Store(Module)
+43: Pop
+44: Pop
+45: Pop
+46: Loop(31)
+47: Pop
+48: Pop
+49: Load(Module, Class("System"))
+50: Load(Module, Null)
+51: Call(Method, print(_))
+52: Pop
+53: End
+54: End

@@ -1,1 +1,160 @@
-[wren_c/test/random/shuffle line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+00: Num(12345)
+01: Num(1)
+02: Num(1)
+03: Num(5000)
+04: Num(1)
+05: Num(2)
+06: Num(3)
+07: Num(4)
+08: Num(0)
+09: Num(1)
+10: Num(5000)
+11: Num(24)
+12: Num(1)
+13: Num(0.21)
+14: String("!!! ")
+15: String("")
+Code:
+00: ImportModule("random")
+01: Pop
+02: ImportVariable("Random")
+03: Store(Module)
+04: Pop
+05: Load(Module, Null)
+06: Constant(0: Num(12345))
+07: Call(Method, new(_))
+08: Store(Module)
+09: Pop
+10: Load(Module, Class("List"))
+11: Call(Method, new())
+12: Store(Module)
+13: Pop
+14: Load(Module, Null)
+15: Load(Module, Null)
+16: Call(Method, shuffle(_))
+17: Pop
+18: Load(Module, Class("System"))
+19: Load(Module, Null)
+20: Call(Method, print(_))
+21: Pop
+22: Load(Module, Class("List"))
+23: Call(Method, new())
+24: Constant(1: Num(1))
+25: Call(Method, addCore_(_))
+26: Store(Module)
+27: Pop
+28: Load(Module, Null)
+29: Load(Module, Null)
+30: Call(Method, shuffle(_))
+31: Pop
+32: Load(Module, Class("System"))
+33: Load(Module, Null)
+34: Call(Method, print(_))
+35: Pop
+36: Load(Module, Class("Map"))
+37: Call(Method, new())
+38: Store(Module)
+39: Pop
+40: Constant(2: Num(1))
+41: Constant(3: Num(5000))
+42: Call(Method, ..(_))
+43: Null
+44: Load(Local, 1)
+45: Load(Local, 2)
+46: Call(Method, iterate(_))
+47: Store(Local, 2)
+48: JumpIfFalse(42)
+49: Load(Local, 1)
+50: Load(Local, 2)
+51: Call(Method, iteratorValue(_))
+52: Load(Module, Class("List"))
+53: Call(Method, new())
+54: Constant(4: Num(1))
+55: Call(Method, addCore_(_))
+56: Constant(5: Num(2))
+57: Call(Method, addCore_(_))
+58: Constant(6: Num(3))
+59: Call(Method, addCore_(_))
+60: Constant(7: Num(4))
+61: Call(Method, addCore_(_))
+62: Load(Module, Null)
+63: Load(Local, 4)
+64: Call(Method, shuffle(_))
+65: Pop
+66: Load(Local, 4)
+67: Call(Getter, toString)
+68: Load(Module, Null)
+69: Load(Local, 5)
+70: Call(Method, containsKey(_))
+71: Call(Method, !)
+72: JumpIfFalse(5)
+73: Load(Module, Null)
+74: Load(Local, 5)
+75: Constant(8: Num(0))
+76: Call(SubscriptSetter, [_]=(_))
+77: Pop
+78: Load(Module, Null)
+79: Load(Local, 5)
+80: Load(Module, Null)
+81: Load(Local, 5)
+82: Call(Subscript, [_])
+83: Constant(9: Num(1))
+84: Call(Method, +(_))
+85: Call(SubscriptSetter, [_]=(_))
+86: Pop
+87: Pop
+88: Pop
+89: Pop
+90: Loop(47)
+91: Pop
+92: Pop
+93: Load(Module, Class("System"))
+94: Load(Module, Null)
+95: Call(Getter, count)
+96: Call(Method, print(_))
+97: Pop
+98: Load(Module, Null)
+99: Call(Getter, keys)
+100: Null
+101: Load(Local, 1)
+102: Load(Local, 2)
+103: Call(Method, iterate(_))
+104: Store(Local, 2)
+105: JumpIfFalse(32)
+106: Load(Local, 1)
+107: Load(Local, 2)
+108: Call(Method, iteratorValue(_))
+109: Load(Module, Null)
+110: Load(Local, 3)
+111: Call(Subscript, [_])
+112: Constant(10: Num(5000))
+113: Constant(11: Num(24))
+114: Call(Method, /(_))
+115: Call(Method, /(_))
+116: Constant(12: Num(1))
+117: Call(Method, -(_))
+118: Call(Getter, abs)
+119: Load(Local, 4)
+120: Constant(13: Num(0.21))
+121: Call(Method, >(_))
+122: JumpIfFalse(12)
+123: Load(Module, Class("System"))
+124: Load(Module, Class("List"))
+125: Call(Method, new())
+126: Constant(14: String("!!! "))
+127: Call(Method, addCore_(_))
+128: Load(Local, 4)
+129: Call(Method, addCore_(_))
+130: Constant(15: String(""))
+131: Call(Method, addCore_(_))
+132: Call(Method, join())
+133: Call(Method, print(_))
+134: Pop
+135: Pop
+136: Pop
+137: Loop(37)
+138: Pop
+139: Pop
+140: End
+141: End

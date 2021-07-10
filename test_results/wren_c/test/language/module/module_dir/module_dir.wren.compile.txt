@@ -1,1 +1,13 @@
-[wren_c/test/language/module/module_dir/module_dir line 1] Error at 'import': Undeclared variable 'import'
+Constants:
+Code:
+00: ImportModule("./something/module")
+01: Pop
+02: ImportVariable("Index")
+03: Store(Module)
+04: Pop
+05: Load(Module, Class("System"))
+06: Load(Module, Null)
+07: Call(Method, print(_))
+08: Pop
+09: End
+10: End

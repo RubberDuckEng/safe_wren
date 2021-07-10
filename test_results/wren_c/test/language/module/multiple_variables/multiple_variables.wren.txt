@@ -1,7 +1,10 @@
-Unexpected error:
-[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error at 'import': Undeclared variable 'import'
-Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error at 'import': Undeclared variable 'import'
+Unexpected output on stderr:
+Could not load module './module'.
+Unexpected output on stderr:
+[wren_c/test/language/module/multiple_variables/multiple_variables line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Could not load module './module'.
+[wren_c/test/language/module/multiple_variables/multiple_variables line 1] in <script>
 
 Missing expected output "ran module" on line 4.
 Missing expected output "from module one" on line 6.
