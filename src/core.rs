@@ -127,7 +127,19 @@ fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 num_binary_op!(num_atan2, atan2, Num);
 num_binary_op!(num_pow, powf, Num);
 num_unary_op!(num_unary_minus, neg, Num);
-num_unary_op!(num_fraction, fract, Num);
+
+fn num_fraction(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let a = validate_num(&args[0], "this")?;
+    let fract = a.fract();
+    // wren_c uses modf which seems to be negative if original is?
+    // rust seems to only "get this wrong" for zero.
+    if fract == 0.0 && a.is_sign_negative() {
+        Ok(Value::Num(-0.0))
+    } else {
+        Ok(Value::Num(fract))
+    }
+}
+
 num_unary_op!(num_is_infinity, is_infinite, Boolean);
 num_unary_op!(num_is_nan, is_nan, Boolean);
 num_unary_op!(num_sign, signum, Num);
@@ -182,6 +194,8 @@ fn wren_num_to_string(num: f64) -> String {
         }
     }
     // Wren prints -0 differently from 0.
+    // rust does sometime too?  But seems inconsistent about it.
+    // https://github.com/rust-lang/rfcs/issues/1074
     if num == -0.0 && num.is_sign_negative() {
         return "-0".into();
     }
@@ -190,7 +204,21 @@ fn wren_num_to_string(num: f64) -> String {
     // It's not clear how to set a maximum precision without also
     // forcing rust to use that precision always.
     // e.g. "{:.14}" would always print 14 digits.
-    format!("{}", num)
+    // See also https://github.com/rust-lang/rfcs/issues/844
+
+    // Hacks to get us closer:
+    let log_x = num.abs().log10();
+    if (log_x >= -4.0 && log_x <= 14.0) || num == 0.0 {
+        format!("{}", num)
+    } else {
+        let sci = format!("{:e}", num);
+        // rust prints "1e10" rather than "1e+10" which wren_c expects.
+        if num < 1.0 {
+            sci
+        } else {
+            sci.replace("e", "e+")
+        }
+    }
 }
 
 fn num_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -885,6 +913,10 @@ fn system_clock(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     let now = std::time::Instant::now();
     Ok(Value::Num(now.duration_since(vm.start_time).as_secs_f64()))
 }
+
+// fn system_gc(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+//     Ok(Value::Null)
+// }
 
 fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let string = args[1]

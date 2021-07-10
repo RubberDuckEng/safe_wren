@@ -65,7 +65,6 @@ occurances : error text
 4 : in init new()
 4 : in isEmpty
 3 : Bar does not implement 'super()'.
-3 : Expected output "-0" on line  and got "0".
 3 : Expected output "0" on line  and got "92".
 3 : Expected output "1.5707963267949" on line  and got "1.5707963267948966".
 3 : Expected return code 65 and got 70. Stderr:
@@ -159,9 +158,8 @@ occurances : error text
 1 : Expected output "-1" on line  and got "-0.9999999999999999".
 1 : Expected output "-1.2599210498949" on line  and got "-1.259921049894873".
 1 : Expected output "-1.5707963267949" on line  and got "-1.5707963267948966".
-1 : Expected output "-1e-42" on line  and got "-0.000000000000000000000000000000000000000001".
 1 : Expected output "-30.85" on line  and got "-30.849999999999998".
-1 : Expected output "-9.007199254741e+15" on line  and got "-9007199254740991".
+1 : Expected output "-9.007199254741e+15" on line  and got "-9.007199254740991e15".
 1 : Expected output "0" on line  and got "-1".
 1 : Expected output "0" on line  and got "1".
 1 : Expected output "0.23456789012345" on line  and got "0.23456789012345003".
@@ -171,16 +169,15 @@ occurances : error text
 1 : Expected output "1" on line  and got "0.9999999999999999".
 1 : Expected output "1.0986122886681" on line  and got "1.0986122886681098".
 1 : Expected output "1.4142135623731" on line  and got "1.4142135623730951".
-1 : Expected output "1.7976931348623e+308" on line  and got "179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000".
+1 : Expected output "1.7976931348623e+308" on line  and got "1.7976931348623157e+308".
 1 : Expected output "10" on line  and got "100".
 1 : Expected output "102" on line  and got "92".
 1 : Expected output "120" on line  and got "92".
 1 : Expected output "148.41315910258" on line  and got "148.4131591025766".
 1 : Expected output "171" on line  and got "120".
 1 : Expected output "18" on line  and got "120".
-1 : Expected output "1e-42" on line  and got "0.000000000000000000000000000000000000000001".
 1 : Expected output "2" on line  and got "8".
-1 : Expected output "2.2250738585072e-308" on line  and got "-179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000".
+1 : Expected output "2.2250738585072e-308" on line  and got "-1.7976931348623157e308".
 1 : Expected output "2.86" on line  and got "2.8600000000000003".
 1 : Expected output "205" on line  and got "49".
 1 : Expected output "22026.465794807" on line  and got "22026.465794806718".
@@ -196,7 +193,7 @@ occurances : error text
 1 : Expected output "6.6438561897747" on line  and got "6.643856189774724".
 1 : Expected output "86" on line  and got "48".
 1 : Expected output "9" on line  and got "-1".
-1 : Expected output "9.007199254741e+15" on line  and got "9007199254740991".
+1 : Expected output "9.007199254741e+15" on line  and got "9.007199254740991e+15".
 1 : Expected output "<𐌘>" on line  and got "<\U00010318>".
 1 : Expected output "<🙊>" on line  and got "<\U0001F64A>".
 1 : Expected output "<🚀>" on line  and got "<\U0001F680>".
