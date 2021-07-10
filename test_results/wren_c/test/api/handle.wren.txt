@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/api/handle line 2] Error Grammar("Expect \'{\' to begin method body.")
+[wren_c/test/api/handle line 2] Error at 'static': Expect '{' to begin method body.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/api/handle line 2] Error Grammar("Expect \'{\' to begin method body.")
+[wren_c/test/api/handle line 2] Error at 'static': Expect '{' to begin method body.
 
 Missing expected output "[list, of, strings]" on line 11.

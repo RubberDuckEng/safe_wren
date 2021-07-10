@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 1..2, token: Comma, line: 1 }") }
+[wren_c/test/language/map/empty_map_with_comma line 1] Error at ',': Expected expression.

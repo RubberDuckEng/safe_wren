@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 6, error: Lexer(Error("Expect \'(\' after \'%%\'.")) }
+[wren_c/test/language/method/static_operators line 6] Error: Expect '(' after '%%'.

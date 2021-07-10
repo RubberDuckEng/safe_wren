@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 6, error: Grammar("Undeclared variable \'isDone\'") }
+[wren_c/test/regression/428 line 6] Error at 'isDone': Undeclared variable 'isDone'

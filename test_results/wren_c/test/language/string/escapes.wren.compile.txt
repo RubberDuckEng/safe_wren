@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expected right paren, found: String(\")     // expect: \")") }
+[wren_c/test/language/string/escapes line 2] Error at '")     // expect: "': Expect ')' after arguments.

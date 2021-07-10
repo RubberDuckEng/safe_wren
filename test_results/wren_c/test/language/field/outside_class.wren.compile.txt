@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Cannot reference a field outside of a class definition.") }
+[wren_c/test/language/field/outside_class line 1] Error at '_field': Cannot reference a field outside of a class definition.

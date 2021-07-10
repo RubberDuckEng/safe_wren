@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/class/attributes/compile_only line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 88..89, token: Hash, line: 4 }")
+[wren_c/test/language/class/attributes/compile_only line 4] Error at '#': Expected expression.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/class/attributes/compile_only line 4] Error Grammar("Expected Expression: ParseToken { bytes_range: 88..89, token: Hash, line: 4 }")
+[wren_c/test/language/class/attributes/compile_only line 4] Error at '#': Expected expression.
 
 Missing expected output "true" on line 9.

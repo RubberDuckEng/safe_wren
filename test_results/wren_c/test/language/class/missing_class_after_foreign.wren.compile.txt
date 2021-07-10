@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'foreign\'") }
+[wren_c/test/language/class/missing_class_after_foreign line 2] Error at 'foreign': Undeclared variable 'foreign'

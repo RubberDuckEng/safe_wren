@@ -7,6 +7,51 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
+// The maximum name of a method, not including the signature. This is an
+// arbitrary but enforced maximum just so we know how long the method name
+// strings need to be in the parser.
+// const MAX_METHOD_NAME: usize = 64;
+
+// The maximum length of a method signature. Signatures look like:
+//
+//     foo        // Getter.
+//     foo()      // No-argument method.
+//     foo(_)     // One-argument method.
+//     foo(_,_)   // Two-argument method.
+//     init foo() // Constructor initializer.
+//
+// The maximum signature length takes into account the longest method name, the
+// maximum number of parameters with separators between them, "init ", and "()".
+// const MAX_METHOD_SIGNATURE: usize = MAX_METHOD_NAME + (MAX_PARAMETERS * 2) + 6;
+
+// The maximum length of an identifier.  This isn't needed in wren_rust, but
+// is kept for consistency with wren_c for now.
+pub(crate) const MAX_VARIABLE_NAME: usize = 64;
+
+// This is written in bottom-up order, so the tokenization comes first, then
+// parsing/code generation. This minimizes the number of explicit forward
+// declarations needed.
+
+// The maximum number of local (i.e. not module level) variables that can be
+// declared in a single function, method, or chunk of top level code. This is
+// the maximum number of variables in scope at one time, and spans block scopes.
+// const MAX_LOCALS: usize = 256;
+
+// The maximum number of upvalues (i.e. variables from enclosing functions)
+// that a function can close over.
+// const MAX_UPVALUES: usize = 256;
+
+// The maximum number of distinct constants that a function can contain.
+// const MAX_CONSTANTS: usize = 1 << 16;
+
+// The maximum distance a Ops::Jump or Ops::JumpIfFalse instruction can move the
+// instruction pointer.
+// const MAX_JUMP: usize = 1 << 16;
+
+// The maximum depth that interpolation can nest. For example, this string has
+// three levels:
+//
+//      "outside %(one + "%(two + "%(three)")")"
 const MAX_INTERPOLATION_NESTING: usize = 8;
 
 use crate::vm::{
@@ -263,12 +308,6 @@ impl InputManager {
         // This ")" now begins the next section of the template string.
         self.parens.pop();
         return true;
-    }
-}
-
-impl From<ModuleError> for ParserError {
-    fn from(err: ModuleError) -> ParserError {
-        ParserError::Module(err)
     }
 }
 
@@ -1073,12 +1112,43 @@ impl<'a> ParseContext<'a> {
         }
     }
 
-    fn grammar_error(&self, message: &str) -> WrenError {
+    fn grammar_error(&self, label: &str, message: String) -> WrenError {
         WrenError {
             line: self.parser.previous.line,
             module: self.module_name(),
-            error: ParserError::Grammar(message.into()),
+            error: ParserError::Grammar(format!("{}: {}", label, message)),
         }
+    }
+
+    fn module_error(&self, e: ModuleError) -> WrenError {
+        let message = match e {
+            ModuleError::VariableAlreadyDefined => "Module variable is already defined.",
+        };
+        self.error_str(message)
+    }
+
+    fn error_str(&self, msg: &str) -> WrenError {
+        self.error_string(msg.into())
+    }
+
+    // Outputs a compile or syntax error.
+    fn error_string(&self, msg: String) -> WrenError {
+        let token = &self.parser.previous.token;
+
+        let label = if token == &Token::Newline {
+            "Error at newline".into()
+        } else if token == &Token::EndOfFile {
+            "Error at end of file".into()
+        } else {
+            let name = previous_token_name(self).unwrap();
+            // Match wren_c's variable name limits.
+            if name.len() <= MAX_VARIABLE_NAME {
+                format!("Error at '{}'", name)
+            } else {
+                format!("Error at '{:.*}...'", MAX_VARIABLE_NAME, name)
+            }
+        };
+        self.grammar_error(&label, msg)
     }
 
     fn compiler(&self) -> &Compiler {
@@ -1134,7 +1204,7 @@ fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
         Token::Interpolation(s) => Value::from_str(s),
         _ => {
             let name = previous_token_name(ctx)?;
-            return Err(ctx.grammar_error(&format!("Invalid literal {}", name)));
+            return Err(ctx.error_string(format!("Invalid literal {}", name)));
         }
     };
     emit_constant(ctx, value);
@@ -1192,7 +1262,11 @@ fn conditional(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenErro
     // Compile the then branch.
     parse_precendence(ctx, Precedence::Conditional)?;
 
-    consume_expecting(ctx, Token::Colon)?;
+    consume_expecting(
+        ctx,
+        Token::Colon,
+        "Expect ':' after then branch of conditional operator.",
+    )?;
     ignore_newlines(ctx)?;
 
     // Jump over the else branch when the if branch is taken.
@@ -1259,11 +1333,7 @@ impl Signature {
 
 fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     let rule = ctx.parser.previous.token.grammar_rule();
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    let name = previous_token_name(ctx)?;
     ignore_newlines(ctx)?;
     // Compile the right-hand side.
     parse_precendence(ctx, rule.precedence.one_higher())?;
@@ -1282,9 +1352,9 @@ fn infix_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<
     signature.arity = 1;
 
     // Parse the parameter name.
-    consume_expecting_msg(ctx, Token::LeftParen, "Expect '(' after operator name.")?;
+    consume_expecting(ctx, Token::LeftParen, "Expect '(' after operator name.")?;
     declare_named_variable(ctx)?;
-    consume_expecting_msg(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
     Ok(())
 }
 
@@ -1308,7 +1378,7 @@ fn mixed_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<
 
         // Parse the parameter name.
         declare_named_variable(ctx)?;
-        consume_expecting_msg(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
+        consume_expecting(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
     }
     Ok(())
 }
@@ -1355,7 +1425,7 @@ fn list(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 
     // Allow newlines before the closing ']'.
     ignore_newlines(ctx)?;
-    consume_expecting_msg(
+    consume_expecting(
         ctx,
         Token::RightSquareBracket,
         "Expect ']' after list elements.",
@@ -1381,7 +1451,7 @@ fn map(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 
         // The key.
         parse_precendence(ctx, Precedence::Unary)?;
-        consume_expecting_msg(ctx, Token::Colon, "Expect ':' after map key.")?;
+        consume_expecting(ctx, Token::Colon, "Expect ':' after map key.")?;
         ignore_newlines(ctx)?;
 
         // The value.
@@ -1395,15 +1465,11 @@ fn map(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 
     // Allow newlines before the closing '}'.
     ignore_newlines(ctx)?;
-    consume_expecting_msg(ctx, Token::RightCurlyBrace, "Expect '}' after map entries.")
+    consume_expecting(ctx, Token::RightCurlyBrace, "Expect '}' after map entries.")
 }
 
 fn unary_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    let name = previous_token_name(ctx)?;
 
     ignore_newlines(ctx)?;
     // Compile the argument.
@@ -1418,11 +1484,7 @@ fn signature_from_token(
     ctx: &ParseContext,
     call_type: SignatureType,
 ) -> Result<Signature, WrenError> {
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    let name = previous_token_name(ctx)?;
 
     // FIXME: Handle method name limits.
 
@@ -1624,7 +1686,7 @@ fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenE
         if ctx.parser.current.token != Token::RightParen {
             called.arity = finish_arguments_list(ctx)?;
         }
-        consume_expecting(ctx, Token::RightParen)?;
+        consume_expecting(ctx, Token::RightParen, "Expect ')' after arguments.")?;
     }
 
     // Parse the block argument, if any.
@@ -1641,7 +1703,11 @@ fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenE
         // Parse the parameter list, if any.
         if match_current(scope.ctx, Token::Pipe)? {
             finish_parameter_list(scope.ctx, &mut fn_signature)?;
-            consume_expecting(scope.ctx, Token::Pipe)?;
+            consume_expecting(
+                scope.ctx,
+                Token::Pipe,
+                "Expect '|' after function parameters.",
+            )?;
         }
 
         finish_body(scope.ctx)?;
@@ -1667,7 +1733,7 @@ fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenE
 
 fn call(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
-    consume_expecting_name(ctx)?;
+    consume_expecting_name(ctx, "Expect method name after '.'.")?;
     named_call(ctx, can_assign)?;
     Ok(())
 }
@@ -1696,7 +1762,11 @@ fn and_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     let mut arity = finish_arguments_list(ctx)?;
     // Isn't arity always 1 here?
-    consume_expecting(ctx, Token::RightSquareBracket)?;
+    consume_expecting(
+        ctx,
+        Token::RightSquareBracket,
+        "Expect ']' after arguments.",
+    )?;
     allow_line_before_dot(ctx)?;
 
     let mut call_type = SignatureType::Subscript;
@@ -1761,22 +1831,16 @@ fn allow_line_before_dot(ctx: &mut ParseContext) -> Result<(), WrenError> {
 }
 
 fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    let name = previous_token_name(ctx)?;
 
     let field_lookup = |ctx: &ParseContext, maybe_class_info: &Option<RefCell<ClassInfo>>| {
         match maybe_class_info {
-            None => {
-                Err(ctx.grammar_error("Cannot reference a field outside of a class definition."))
-            }
+            None => Err(ctx.error_str("Cannot reference a field outside of a class definition.")),
             Some(class_info) => {
                 if class_info.borrow().is_foreign_class {
-                    Err(ctx.grammar_error("Cannot define fields in a foreign class."))
+                    Err(ctx.error_str("Cannot define fields in a foreign class."))
                 } else if class_info.borrow().in_static_method {
-                    Err(ctx.grammar_error("Cannot use an instance field in a static method."))
+                    Err(ctx.error_str("Cannot use an instance field in a static method."))
                 } else {
                     Ok(class_info.borrow_mut().fields.ensure_symbol(&name))
                 }
@@ -1892,7 +1956,7 @@ fn wren_is_local_name(name: &String) -> bool {
 fn load_this(ctx: &mut ParseContext) -> Result<(), WrenError> {
     let var = resolve_non_module(ctx, "this");
     match var {
-        None => Err(ctx.grammar_error("Could not resolve 'this'".into()))?,
+        None => Err(ctx.error_str("Could not resolve 'this'"))?,
         Some(var) => {
             emit(ctx, Ops::Load(var));
             Ok(())
@@ -1927,11 +1991,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     // This needs to be much more complicated to handle module
     // lookups as well as setters.
 
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    let name = previous_token_name(ctx)?;
     if let Some(variable) = resolve_non_module(ctx, &name) {
         bare_name(ctx, can_assign, variable)?;
         return Ok(());
@@ -1957,7 +2017,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
             //     token->start, token->length,
             //     token->line);
             // loadVariable(compiler, variable);
-            return Err(ctx.grammar_error(&format!("Undeclared variable '{}'", name)));
+            return Err(ctx.error_string(format!("Undeclared variable '{}'", name)));
         }
         Some(index) => index,
     };
@@ -2070,17 +2130,13 @@ fn test_exit_loop(ctx: &mut ParseContext) {
 }
 
 fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
-    consume_expecting(ctx, Token::LeftParen)?;
-    consume_expecting_name(ctx)?;
+    consume_expecting(ctx, Token::LeftParen, "Expect '(' after 'for'.")?;
+    consume_expecting_name(ctx, "Expect for loop variable name.")?;
 
     // Remember the name of the loop variable.
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    let name = previous_token_name(ctx)?;
 
-    consume_expecting(ctx, Token::In)?;
+    consume_expecting(ctx, Token::In, "Expect 'in' after loop variable.")?;
     ignore_newlines(ctx)?;
 
     // Evaluate the sequence expression and store it in a hidden local variable.
@@ -2096,7 +2152,7 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
     null(ctx, false)?;
     let iter_slot = add_local(ctx, "iter ".into());
 
-    consume_expecting(ctx, Token::RightParen)?;
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after loop expression.")?;
 
     ctx.compiler_mut().start_loop();
 
@@ -2161,9 +2217,9 @@ fn for_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 fn if_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
     // Compile the condition.
-    consume_expecting(ctx, Token::LeftParen)?;
+    consume_expecting(ctx, Token::LeftParen, "Expect '(' after 'if'.")?;
     expression(ctx)?;
-    consume_expecting(ctx, Token::RightParen)?;
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after if condition.")?;
     // Jump to the else branch if the condition is false.
     let if_jump = emit(ctx, Ops::JumpIfFalsePlaceholder);
     // Compile the then branch.
@@ -2186,9 +2242,9 @@ fn while_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
     ctx.compiler_mut().start_loop();
 
     // Compile the condition.
-    consume_expecting(ctx, Token::LeftParen)?;
+    consume_expecting(ctx, Token::LeftParen, "Expect '(' after 'while'.")?;
     expression(ctx)?;
-    consume_expecting(ctx, Token::RightParen)?;
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after while condition.")?;
 
     test_exit_loop(ctx);
     loop_body(ctx)?;
@@ -2198,8 +2254,8 @@ fn while_statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 // Consumes the current token. Emits an error if it is not a newline. Then
 // discards any duplicate newlines following it.
-fn consume_at_least_one_line(ctx: &mut ParseContext) -> Result<(), WrenError> {
-    consume_expecting(ctx, Token::Newline)?;
+fn consume_at_least_one_line(ctx: &mut ParseContext, msg: &str) -> Result<(), WrenError> {
+    consume_expecting(ctx, Token::Newline, msg)?;
     ignore_newlines(ctx)
 }
 
@@ -2218,7 +2274,7 @@ fn finish_block(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     // If there's no line after the "{", it's a single-expression body.
     if !match_at_least_one_line(ctx)? {
         expression(ctx)?;
-        consume_expecting(ctx, Token::RightCurlyBrace)?;
+        consume_expecting(ctx, Token::RightCurlyBrace, "Expect '}' at end of block.")?;
         return Ok(true);
     }
 
@@ -2230,7 +2286,7 @@ fn finish_block(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     // Compile the definition list.
     loop {
         definition(ctx)?;
-        consume_at_least_one_line(ctx)?;
+        consume_at_least_one_line(ctx, "Expect newline after statement.")?;
         if ctx.parser.current.token == Token::RightCurlyBrace
             || ctx.parser.current.token == Token::EndOfFile
         {
@@ -2238,7 +2294,7 @@ fn finish_block(ctx: &mut ParseContext) -> Result<bool, WrenError> {
         }
     }
 
-    consume_expecting(ctx, Token::RightCurlyBrace)?;
+    consume_expecting(ctx, Token::RightCurlyBrace, "Expect '}' at end of block.")?;
     return Ok(false);
 }
 
@@ -2345,9 +2401,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
         ctx.compiler()
             .loops
             .last()
-            .ok_or(ctx.parse_error(ParserError::Grammar(
-                "Cannot use 'break' outside of a loop.".into(),
-            )))?;
+            .ok_or_else(|| ctx.error_str("Cannot use 'break' outside of a loop."))?;
 
         // Since we will be jumping out of the scope, make sure any locals in it
         // are discarded first.
@@ -2361,9 +2415,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
             .compiler()
             .loops
             .last()
-            .ok_or(ctx.parse_error(ParserError::Grammar(
-                "Cannot use 'continue' outside of a loop.".into(),
-            )))?;
+            .ok_or_else(|| ctx.error_str("Cannot use 'continue' outside of a loop."))?;
 
         // Since we will be jumping out of the scope, make sure any locals in it
         // are discarded first.
@@ -2386,9 +2438,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
             }
         } else {
             if ctx.compiler().is_initializer {
-                return Err(ctx.parse_error(ParserError::Grammar(
-                    "A constructor cannot return a value.".into(),
-                )));
+                return Err(ctx.error_str("A constructor cannot return a value."));
             }
             expression(ctx)?;
         }
@@ -2487,14 +2537,20 @@ fn add_local(ctx: &mut ParseContext, name: String) -> u16 {
 }
 
 fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenError> {
-    // TODO: Check variable name max length.
+    // Enable in a separate change.
+    // if name.len() > MAX_VARIABLE_NAME {
+    //     return Err(ctx.error_string(format!(
+    //         "Variable name cannot be longer than {} characters.",
+    //         MAX_VARIABLE_NAME
+    //     )));
+    // }
 
     // Top-level module scope.
     if ctx.compiler().scope_depth == ScopeDepth::Module {
         // Error handling missing.
         // Error handling should occur inside wren_define_variable, no?
         let result = wren_define_variable(&mut ctx.module, &name, Value::Null);
-        let symbol = result.map_err(|e| ctx.parse_error(ParserError::Module(e)))?;
+        let symbol = result.map_err(|e| ctx.module_error(e))?;
         return Ok(symbol as u16);
     }
 
@@ -2506,12 +2562,8 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
 // Parses a name token and declares a variable in the current scope with that
 // name. Returns its slot.
 fn declare_named_variable(ctx: &mut ParseContext) -> Result<u16, WrenError> {
-    consume_expecting_name(ctx)?;
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    consume_expecting_name(ctx, "Expect variable name.")?;
+    let name = previous_token_name(ctx)?;
     declare_variable(ctx, name)
 }
 
@@ -2525,12 +2577,8 @@ fn previous_token_name(ctx: &ParseContext) -> Result<String, WrenError> {
 fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
     // Grab its name, but don't declare it yet. A (local) variable shouldn't be
     // in scope in its own initializer.
-    consume_expecting_name(ctx)?;
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    consume_expecting_name(ctx, "Expect variable name.")?;
+    let name = previous_token_name(ctx)?;
 
     // Compile the initializer.
     if match_current(ctx, Token::Equals)? {
@@ -2596,9 +2644,9 @@ fn maybe_setter(ctx: &mut ParseContext, signature: &mut Signature) -> Result<boo
     };
 
     // Parse the value parameter.
-    consume_expecting(ctx, Token::LeftParen)?;
+    consume_expecting(ctx, Token::LeftParen, "Expect '(' after '='.")?;
     declare_named_variable(ctx)?;
-    consume_expecting(ctx, Token::RightParen)?;
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
 
     signature.arity += 1;
 
@@ -2613,7 +2661,11 @@ fn subscript_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Res
 
     // Parse the parameters inside the subscript.
     finish_parameter_list(ctx, signature)?;
-    consume_expecting(ctx, Token::RightSquareBracket)?;
+    consume_expecting(
+        ctx,
+        Token::RightSquareBracket,
+        "Expect ']' after parameters.",
+    )?;
 
     maybe_setter(ctx, signature)?;
     Ok(())
@@ -2638,7 +2690,7 @@ fn parameter_list(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(
     }
 
     finish_parameter_list(ctx, signature)?;
-    consume_expecting(ctx, Token::RightParen)
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after parameters.")
 }
 // Compiles a method signature for a named method or setter.
 fn named_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
@@ -2658,18 +2710,18 @@ fn constructor_signature(
     ctx: &mut ParseContext,
     signature: &mut Signature,
 ) -> Result<(), WrenError> {
-    consume_expecting_name_msg(ctx, "Expect constructor name after 'construct'.")?;
+    consume_expecting_name(ctx, "Expect constructor name after 'construct'.")?;
     // HACK(from wren_c) Capture the name.
     signature.bare_name = signature_from_token(ctx, SignatureType::Initializer)?.bare_name;
     signature.call_type = SignatureType::Initializer;
 
     if match_current(ctx, Token::Equals)? {
-        return Err(ctx.grammar_error("A constructor cannot be a setter."));
+        return Err(ctx.error_str("A constructor cannot be a setter."));
     }
 
     // Isn't this just consume_expecting_msg?
     if !match_current(ctx, Token::LeftParen)? {
-        return Err(ctx.grammar_error("A constructor cannot be a getter."));
+        return Err(ctx.error_str("A constructor cannot be a getter."));
     }
     // Allow an empty parameter list.
     if match_current(ctx, Token::RightParen)? {
@@ -2677,7 +2729,7 @@ fn constructor_signature(
     }
     finish_parameter_list(ctx, signature)?;
 
-    consume_expecting_msg(ctx, Token::RightParen, "Expect ')' after parameters.")
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after parameters.")
 }
 
 // Compiles a method definition inside a class body.
@@ -2704,7 +2756,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
     let maybe_signature_fn = ctx.parser.current.token.grammar_rule().signature;
     consume(ctx)?;
 
-    let signature_fn = maybe_signature_fn.ok_or(ctx.grammar_error("Expect method definition."))?;
+    let signature_fn = maybe_signature_fn.ok_or(ctx.error_str("Expect method definition."))?;
 
     // Build the method signature.
     let mut signature = signature_from_token(ctx, SignatureType::Getter)?;
@@ -2720,7 +2772,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
         scope.ctx.compiler_mut().is_initializer = signature.call_type == SignatureType::Initializer;
 
         if is_static && signature.call_type == SignatureType::Initializer {
-            scope.ctx.grammar_error("A constructor cannot be static.");
+            scope.ctx.error_str("A constructor cannot be static.");
         }
 
         // Include the full signature in debug messages in stack traces.
@@ -2736,7 +2788,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
 
         // FIXME: handle foreign.
 
-        consume_expecting_msg(
+        consume_expecting(
             scope.ctx,
             Token::LeftCurlyBrace,
             "Expect '{' to begin method body.",
@@ -2773,11 +2825,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
         index: class_symbol as usize,
     };
     // FIXME: Should declare_named_variable return the name too?
-    let name = ctx
-        .parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))?;
+    let name = previous_token_name(ctx)?;
 
     // FIXME: Clone shouldn't be needed.
     let class_name = Value::String(Rc::new(name.clone()));
@@ -2819,7 +2867,11 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
         //   wrenIntBufferInit(&classInfo.staticMethods);
 
         // Compile the method definitions.
-        consume_expecting(scope.ctx, Token::LeftCurlyBrace)?;
+        consume_expecting(
+            scope.ctx,
+            Token::LeftCurlyBrace,
+            "Expect '{' after class declaration.",
+        )?;
         match_at_least_one_line(scope.ctx)?;
 
         while !match_current(scope.ctx, Token::RightCurlyBrace)? {
@@ -2832,7 +2884,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
                 break;
             }
 
-            consume_at_least_one_line(scope.ctx)?;
+            consume_at_least_one_line(scope.ctx, "Expect newline after definition in class.")?;
         }
 
         //   // If any attributes are present,
@@ -2883,7 +2935,7 @@ fn definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 fn grouping(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     expression(ctx)?;
-    consume_expecting(ctx, Token::RightParen)?;
+    consume_expecting(ctx, Token::RightParen, "Expect ')' after expression.")?;
     Ok(())
 }
 
@@ -2963,67 +3015,6 @@ impl GrammarRule {
 
 // Parslets belong in some sort of grouped parslet object per token?
 impl Token {
-    fn error_message_name(&self) -> &'static str {
-        match self {
-            Token::BeforeFile => unimplemented!(),
-            Token::LeftParen => "left paren",
-            Token::RightParen => "right paren",
-            Token::LeftCurlyBrace => "left curly brace",
-            Token::RightCurlyBrace => "right curly brace",
-            Token::LeftSquareBracket => "left square bracket",
-            Token::RightSquareBracket => "right square bracket",
-            Token::Tilde => "tilde",
-            Token::Colon => "colon",
-            Token::Question => "question mark",
-            Token::Plus => "plus sign",
-            Token::Minus => "minus sign",
-            Token::Hash => "hash (attributes)",
-            Token::Caret => "bitwise xor",
-            Token::Pipe => "bitwise or",
-            Token::PipePipe => "logical or",
-            Token::Amp => "bitwise and",
-            Token::AmpAmp => "logical and",
-            Token::Bang => "bang / unary not",
-            Token::BangEquals => "not equals",
-            Token::OpFactor(_) => "operator * or / or %",
-            Token::Num(_) => "number literal",
-            Token::String(_) => "string literal",
-            Token::Dot => "dot (call)",
-            Token::DotDot => "dot dot (inclusive range)",
-            Token::DotDotDot => "dot dot dot (exclusive range)",
-            Token::Boolean(_) => "boolean literal",
-            Token::Name(_) => "name",
-            Token::Field(_) => "field",
-            Token::StaticField(_) => "static field",
-            Token::Comma => "comma",
-            Token::For => "for",
-            Token::In => "in",
-            Token::Null => "null",
-            Token::Static => "static",
-            Token::Construct => "construct",
-            Token::Class => "class",
-            Token::LessThanLessThan => "bit-shift left",
-            Token::GreaterThanGreaterThan => "bit-shift right",
-            Token::LessThan => "less than",
-            Token::GreaterThan => "greater than",
-            Token::LessThanEquals => "less than or equal to",
-            Token::GreaterThanEquals => "greater than or equal to",
-            Token::Newline => "newline",
-            Token::EndOfFile => "end of file",
-            Token::Var => "var",
-            Token::Is => "is",
-            Token::If => "if",
-            Token::Else => "else",
-            Token::While => "while",
-            Token::Return => "return",
-            Token::Break => "break",
-            Token::Continue => "continue",
-            Token::Equals => "equal sign",
-            Token::EqualsEquals => "==",
-            Token::Interpolation(_) => "string interpolation",
-        }
-    }
-
     fn grammar_rule(&self) -> GrammarRule {
         // This should switch on TokenType, not Token itself.
         match self {
@@ -3113,15 +3104,15 @@ impl Token {
 pub enum ParserError {
     Lexer(LexError),
     Grammar(String),
-    Module(ModuleError),
 }
 
 impl fmt::Display for ParserError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            ParserError::Lexer(..) => write!(f, "Lex failure"),
-            ParserError::Grammar(..) => write!(f, "Grammer failure"),
-            ParserError::Module(..) => write!(f, "Module failure"),
+        match self {
+            // Add Error: to Lexer messages to match
+            // lexError from wren_c (needs refactor).
+            ParserError::Lexer(msg) => write!(f, "Error: {}", msg),
+            ParserError::Grammar(msg) => write!(f, "{}", msg),
         }
     }
 }
@@ -3131,7 +3122,6 @@ impl error::Error for ParserError {
         match *self {
             ParserError::Lexer(ref e) => Some(e),
             ParserError::Grammar(..) => None,
-            ParserError::Module(..) => None,
         }
     }
 }
@@ -3206,24 +3196,11 @@ fn match_at_least_one_line(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     Ok(saw_line)
 }
 
-// Hack until we split TokenType and Token.
-fn consume_expecting_name(ctx: &mut ParseContext) -> Result<(), WrenError> {
+fn consume_expecting_name(ctx: &mut ParseContext, error_message: &str) -> Result<(), WrenError> {
     consume(ctx)?;
     match ctx.parser.previous.token {
         Token::Name(_) => Ok(()),
-        _ => Err(ctx.parse_error(ParserError::Grammar("Expected name".into()))),
-    }
-}
-
-// FIXME: Replace all existing instances of consume_expecting_name with this.
-fn consume_expecting_name_msg(
-    ctx: &mut ParseContext,
-    error_message: &str,
-) -> Result<(), WrenError> {
-    consume(ctx)?;
-    match ctx.parser.previous.token {
-        Token::Name(_) => Ok(()),
-        _ => Err(ctx.grammar_error(error_message)),
+        _ => Err(ctx.error_str(error_message)),
     }
 }
 
@@ -3231,31 +3208,18 @@ fn consume_string(ctx: &mut ParseContext, error_message: &str) -> Result<String,
     consume(ctx)?;
     match &ctx.parser.previous.token {
         Token::String(s) => Ok(s.clone()),
-        _ => Err(ctx.grammar_error(error_message)),
+        _ => Err(ctx.error_str(error_message)),
     }
 }
 
-fn consume_expecting(ctx: &mut ParseContext, token: Token) -> Result<(), WrenError> {
-    consume(ctx)?;
-    let name_for_error = token.error_message_name(); // Can we avoid this?
-    if ctx.parser.previous.token != token {
-        return Err(ctx.parse_error(ParserError::Grammar(format!(
-            "Expected {}, found: {:?}",
-            name_for_error, ctx.parser.previous.token
-        ))));
-    }
-    Ok(())
-}
-
-// FIXME: Replace all existing instances of consume_expecting with this.
-fn consume_expecting_msg(
+fn consume_expecting(
     ctx: &mut ParseContext,
     token: Token,
     error_message: &str,
 ) -> Result<(), WrenError> {
     consume(ctx)?;
     if ctx.parser.previous.token != token {
-        return Err(ctx.grammar_error(error_message));
+        return Err(ctx.error_str(error_message));
     }
     Ok(())
 }
@@ -3268,10 +3232,7 @@ fn parse_precendence(ctx: &mut ParseContext, precedence: Precedence) -> Result<(
         .token
         .grammar_rule()
         .prefix
-        .ok_or(ctx.parse_error(ParserError::Grammar(format!(
-            "Expected Expression: {:?}",
-            ctx.parser.previous
-        ))))?;
+        .ok_or_else(|| ctx.error_str("Expected expression."))?;
 
     // Track if the precendence of the surrounding expression is low enough to
     // allow an assignment inside this one. We can't compile an assignment like
@@ -3350,7 +3311,7 @@ pub(crate) fn compile_into_module<'a>(
         let found_newline = match_at_least_one_line(scope.ctx)?;
         // If there is no newline we must be EOF?
         if !found_newline {
-            consume_expecting(scope.ctx, Token::EndOfFile)?;
+            consume_expecting(scope.ctx, Token::EndOfFile, "Expect end of file.")?;
             break;
         }
     }

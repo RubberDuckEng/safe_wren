@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Expected Expression: ParseToken { bytes_range: 102..103, token: Hash, line: 5 }") }
+[wren_c/test/language/class/attributes/invalid_expression line 5] Error at '#': Expected expression.

@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected name") }
+[wren_c/test/language/variable/newline_after_var line 1] Error at newline: Expect variable name.

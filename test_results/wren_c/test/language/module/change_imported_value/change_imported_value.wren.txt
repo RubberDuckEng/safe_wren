@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/module/change_imported_value/change_imported_value line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/change_imported_value/change_imported_value line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/change_imported_value/change_imported_value line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/change_imported_value/change_imported_value line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "before" on line 3.
 Missing expected output "before" on line 8.

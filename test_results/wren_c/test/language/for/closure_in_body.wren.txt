@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/for/closure_in_body line 5] Error Grammar("Undeclared variable \'j\'")
+[wren_c/test/language/for/closure_in_body line 5] Error at 'j': Undeclared variable 'j'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/for/closure_in_body line 5] Error Grammar("Undeclared variable \'j\'")
+[wren_c/test/language/for/closure_in_body line 5] Error at 'j': Undeclared variable 'j'
 
 Missing expected output "2" on line 9.
 Missing expected output "3" on line 10.

@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/nonlocal/nonlocal_in_initializer line 1] Error Grammar("Undeclared variable \'A\'")
+[wren_c/test/language/nonlocal/nonlocal_in_initializer line 1] Error at 'A': Undeclared variable 'A'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/nonlocal/nonlocal_in_initializer line 1] Error Grammar("Undeclared variable \'A\'")
+[wren_c/test/language/nonlocal/nonlocal_in_initializer line 1] Error at 'A': Undeclared variable 'A'
 
 Missing expected output "true" on line 2.

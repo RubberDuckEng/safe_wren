@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Undeclared variable \'a\'") }
+[wren_c/test/language/inheritance/inherit_from_closure line 5] Error at 'a': Undeclared variable 'a'

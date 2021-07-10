@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/module/cyclic_import/cyclic_import line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/cyclic_import/cyclic_import line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/cyclic_import/cyclic_import line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/cyclic_import/cyclic_import line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "start a" on line 4.
 Missing expected output "a defined a value" on line 5.

@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("Expected end of file, found: Equals") }
+[wren_c/test/language/assignment/is line 3] Error at '=': Expect end of file.

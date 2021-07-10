@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/module/implicitly_imports_core/implicitly_imports_core line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/implicitly_imports_core/implicitly_imports_core line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/implicitly_imports_core/implicitly_imports_core line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/implicitly_imports_core/implicitly_imports_core line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "Bool" on line 2.
 Missing expected output "Class" on line 3.

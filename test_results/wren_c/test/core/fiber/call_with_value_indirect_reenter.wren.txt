@@ -2,5 +2,5 @@ Expected runtime error "Fiber has already been called." and got:
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[wren_c/test/core/fiber/call_with_value_indirect_reenter line 2] Error Grammar("Undeclared variable \'B\'")
+[wren_c/test/core/fiber/call_with_value_indirect_reenter line 2] Error at 'B': Undeclared variable 'B'
 

@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/module/relative_import/relative_import line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/relative_import/relative_import line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/relative_import/relative_import line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/relative_import/relative_import line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "sub/module" on line 3.
 Missing expected output "sub/module_2" on line 4.

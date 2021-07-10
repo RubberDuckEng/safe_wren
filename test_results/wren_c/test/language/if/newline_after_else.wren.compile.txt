@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 36..37, token: Newline, line: 1 }") }
+[wren_c/test/language/if/newline_after_else line 1] Error at newline: Expected expression.

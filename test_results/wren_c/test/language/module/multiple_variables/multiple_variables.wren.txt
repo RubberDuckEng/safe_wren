@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "ran module" on line 4.
 Missing expected output "from module one" on line 6.

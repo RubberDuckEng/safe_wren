@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/module/returns/return_from_import line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/returns/return_from_import line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/module/returns/return_from_import line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/returns/return_from_import line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "foo" on line 4.
 Missing expected output "baz" on line 5.

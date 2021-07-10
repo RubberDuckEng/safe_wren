@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 6, error: Lexer(UnterminatedScientificNotation) }
+[wren_c/test/core/number/cos line 6] Error: Unterminated Scientific Notation

@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected right curly brace, found: Colon") }
+[wren_c/test/language/map/duplicate_comma line 1] Error at ':': Expect '}' at end of block.

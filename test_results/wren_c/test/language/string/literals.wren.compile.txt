@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 8, error: Grammar("Expected right paren, found: String(\"A raw string\")") }
+[wren_c/test/language/string/literals line 8] Error at '"A raw string"': Expect ')' after arguments.

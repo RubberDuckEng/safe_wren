@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 7, error: Grammar("Expect \'{\' to begin method body.") }
+[wren_c/test/api/call_calls_foreign line 7] Error at 'static': Expect '{' to begin method body.

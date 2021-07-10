@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("Cannot use an instance field in a static method.") }
+[wren_c/test/language/field/in_fn_in_static_method line 3] Error at '_field': Cannot use an instance field in a static method.

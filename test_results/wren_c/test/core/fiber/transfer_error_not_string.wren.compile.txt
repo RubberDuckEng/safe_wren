@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'B\'") }
+[wren_c/test/core/fiber/transfer_error_not_string line 2] Error at 'B': Undeclared variable 'B'

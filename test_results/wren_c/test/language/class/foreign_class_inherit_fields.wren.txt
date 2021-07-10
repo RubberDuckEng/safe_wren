@@ -2,5 +2,5 @@ Expected runtime error "Foreign class 'Bar' may not inherit from a class with fi
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[wren_c/test/language/class/foreign_class_inherit_fields line 7] Error Grammar("Undeclared variable \'foreign\'")
+[wren_c/test/language/class/foreign_class_inherit_fields line 7] Error at 'foreign': Undeclared variable 'foreign'
 

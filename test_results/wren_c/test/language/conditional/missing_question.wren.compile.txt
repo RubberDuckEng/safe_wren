@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected end of file, found: Num(1.0)") }
+[wren_c/test/language/conditional/missing_question line 1] Error at '1': Expect end of file.

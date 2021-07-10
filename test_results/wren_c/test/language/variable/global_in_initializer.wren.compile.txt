@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'a\'") }
+[wren_c/test/language/variable/global_in_initializer line 1] Error at 'a': Undeclared variable 'a'

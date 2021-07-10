@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expected newline, found: RightCurlyBrace") }
+[wren_c/test/language/function/no_newline_before_close line 2] Error at '}': Expect newline after statement.

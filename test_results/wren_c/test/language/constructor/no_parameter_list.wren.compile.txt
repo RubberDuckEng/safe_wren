@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("A constructor cannot be a getter.") }
+[wren_c/test/language/constructor/no_parameter_list line 2] Error at 'new': A constructor cannot be a getter.

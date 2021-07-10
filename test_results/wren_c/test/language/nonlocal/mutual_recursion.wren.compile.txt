@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("Undeclared variable \'Bar\'") }
+[wren_c/test/language/nonlocal/mutual_recursion line 3] Error at 'Bar': Undeclared variable 'Bar'

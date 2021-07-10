@@ -2,6 +2,6 @@ Expected runtime error "Could not compile module './test/language/module/compile
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[wren_c/test/language/module/compile_error/compile_error line 2] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/language/module/compile_error/compile_error line 2] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "before" on line 1.

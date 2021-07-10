@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/field/closure line 5] Error Grammar("Could not resolve \'this\'")
+[wren_c/test/language/field/closure line 5] Error at '_field': Could not resolve 'this'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/field/closure line 5] Error Grammar("Could not resolve \'this\'")
+[wren_c/test/language/field/closure line 5] Error at '_field': Could not resolve 'this'
 
 Missing expected output "Foo field" on line 14.
 Missing expected output "new value" on line 16.

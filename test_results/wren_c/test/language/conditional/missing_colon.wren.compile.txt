@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected colon, found: Newline") }
+[wren_c/test/language/conditional/missing_colon line 1] Error at newline: Expect ':' after then branch of conditional operator.

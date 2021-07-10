@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/random/new_number line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/random/new_number line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/random/new_number line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/random/new_number line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "100" on line 12.

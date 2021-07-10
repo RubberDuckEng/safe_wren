@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("A constructor cannot return a value.") }
+[wren_c/test/language/constructor/cannot_return_value line 3] Error at 'return': A constructor cannot return a value.

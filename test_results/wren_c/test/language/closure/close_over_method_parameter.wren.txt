@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/closure/close_over_method_parameter line 8] Error Grammar("Could not resolve \'this\'")
+[wren_c/test/language/closure/close_over_method_parameter line 8] Error at 'param': Could not resolve 'this'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/closure/close_over_method_parameter line 8] Error Grammar("Could not resolve \'this\'")
+[wren_c/test/language/closure/close_over_method_parameter line 8] Error at 'param': Could not resolve 'this'
 
 Missing expected output "param" on line 14.

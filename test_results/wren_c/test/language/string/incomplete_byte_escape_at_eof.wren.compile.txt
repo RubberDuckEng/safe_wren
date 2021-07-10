@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 0, error: Lexer(UnterminatedString) }
+[wren_c/test/language/string/incomplete_byte_escape_at_eof line 0] Error: Unterminated String

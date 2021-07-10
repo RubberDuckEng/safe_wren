@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected left paren, found: Newline") }
+[wren_c/test/language/for/newline_after_for line 1] Error at newline: Expect '(' after 'for'.

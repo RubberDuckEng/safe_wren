@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Lexer(UnterminatedScientificNotation) }
+[wren_c/test/core/number/sin line 5] Error: Unterminated Scientific Notation

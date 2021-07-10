@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expect \']\' after list elements.") }
+[wren_c/test/language/list/eof_after_element line 2] Error at end of file: Expect ']' after list elements.

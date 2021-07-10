@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Cannot use \'break\' outside of a loop.") }
+[wren_c/test/language/break/outside_loop line 1] Error at 'break': Cannot use 'break' outside of a loop.

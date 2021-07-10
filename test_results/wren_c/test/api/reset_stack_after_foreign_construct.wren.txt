@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/api/reset_stack_after_foreign_construct line 6] Error Grammar("Undeclared variable \'foreign\'")
+[wren_c/test/api/reset_stack_after_foreign_construct line 6] Error at 'foreign': Undeclared variable 'foreign'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/api/reset_stack_after_foreign_construct line 6] Error Grammar("Undeclared variable \'foreign\'")
+[wren_c/test/api/reset_stack_after_foreign_construct line 6] Error at 'foreign': Undeclared variable 'foreign'
 
 Missing expected output "3" on line 16.

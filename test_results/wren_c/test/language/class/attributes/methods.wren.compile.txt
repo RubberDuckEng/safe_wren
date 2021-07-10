@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 4, error: Grammar("Expect method definition.") }
+[wren_c/test/language/class/attributes/methods line 4] Error at '#': Expect method definition.

@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expect \'}\' after map entries.") }
+[wren_c/test/language/map/eof_after_value line 2] Error at end of file: Expect '}' after map entries.

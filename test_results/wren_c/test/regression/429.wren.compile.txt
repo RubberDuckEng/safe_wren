@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 6, error: Grammar("Expected newline, found: EndOfFile") }
+[wren_c/test/regression/429 line 6] Error at end of file: Expect newline after statement.

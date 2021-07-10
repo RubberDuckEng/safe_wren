@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Lexer(UnexpectedChar('\\')) }
+[wren_c/test/limit/long_string line 2] Error: Unexpected char '\'

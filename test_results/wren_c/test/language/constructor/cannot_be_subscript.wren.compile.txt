@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expect constructor name after \'construct\'.") }
+[wren_c/test/language/constructor/cannot_be_subscript line 2] Error at '[': Expect constructor name after 'construct'.

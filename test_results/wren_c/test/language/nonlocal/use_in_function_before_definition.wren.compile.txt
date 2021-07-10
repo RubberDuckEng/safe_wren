@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'Global\'") }
+[wren_c/test/language/nonlocal/use_in_function_before_definition line 2] Error at 'Global': Undeclared variable 'Global'

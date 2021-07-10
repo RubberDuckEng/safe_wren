@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 8..9, token: Colon, line: 1 }") }
+[wren_c/test/language/conditional/missing_then line 1] Error at ':': Expected expression.

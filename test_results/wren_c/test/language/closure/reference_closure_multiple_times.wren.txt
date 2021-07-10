@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/closure/reference_closure_multiple_times line 6] Error Grammar("Undeclared variable \'a\'")
+[wren_c/test/language/closure/reference_closure_multiple_times line 6] Error at 'a': Undeclared variable 'a'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/closure/reference_closure_multiple_times line 6] Error Grammar("Undeclared variable \'a\'")
+[wren_c/test/language/closure/reference_closure_multiple_times line 6] Error at 'a': Undeclared variable 'a'
 
 Missing expected output "a" on line 12.
 Missing expected output "a" on line 13.

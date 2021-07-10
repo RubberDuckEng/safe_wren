@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 6, error: Grammar("Undeclared variable \'j\'") }
+[wren_c/test/language/while/closure_in_body line 6] Error at 'j': Undeclared variable 'j'

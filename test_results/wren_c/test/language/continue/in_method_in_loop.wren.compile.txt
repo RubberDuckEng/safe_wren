@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Cannot use \'continue\' outside of a loop.") }
+[wren_c/test/language/continue/in_method_in_loop line 5] Error at 'continue': Cannot use 'continue' outside of a loop.

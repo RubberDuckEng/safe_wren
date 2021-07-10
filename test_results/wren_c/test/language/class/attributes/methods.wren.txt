@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/class/attributes/methods line 4] Error Grammar("Expect method definition.")
+[wren_c/test/language/class/attributes/methods line 4] Error at '#': Expect method definition.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/class/attributes/methods line 4] Error Grammar("Expect method definition.")
+[wren_c/test/language/class/attributes/methods line 4] Error at '#': Expect method definition.
 
 Missing expected output "{null: {getter: [null]}}" on line 26.
 Missing expected output "null" on line 27.

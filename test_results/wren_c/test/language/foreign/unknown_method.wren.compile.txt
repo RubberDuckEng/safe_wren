@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expect \'{\' to begin method body.") }
+[wren_c/test/language/foreign/unknown_method line 2] Error at 'someUnknownMethod': Expect '{' to begin method body.

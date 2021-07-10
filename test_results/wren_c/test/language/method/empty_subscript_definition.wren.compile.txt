@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }
+[wren_c/test/language/method/empty_subscript_definition line 2] Error at ']': Expect variable name.

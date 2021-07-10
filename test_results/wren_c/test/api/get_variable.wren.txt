@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/api/get_variable line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/api/get_variable line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/api/get_variable line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/api/get_variable line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "null" on line 16.
 Missing expected output "a" on line 20.

@@ -9,7 +9,7 @@ mod compiler;
 mod core;
 mod vm;
 
-use crate::compiler::{compile, lex, InputManager};
+use crate::compiler::{compile, lex, InputManager, WrenError};
 use crate::vm::{wren_debug_bytecode, RuntimeError, WrenVM};
 
 enum ExitCode {
@@ -60,21 +60,25 @@ fn run_file(path: &String) {
     let input = InputManager::from_bytes(no_crs);
     let module_name = path.strip_suffix(".wren").unwrap();
     let closure = compile(&mut vm, input, module_name).unwrap_or_else(|e| {
-        // Matching test.c output:
-        eprintln!("[{} line {}] Error {:?}", e.module, e.line, e.error);
+        print_compile_error(e);
         exit(ExitCode::CompileError);
     });
 
     vm.run(closure).unwrap_or_else(|e| {
-        dump_runtime_error(&e);
+        print_runtime_error(e);
         exit(ExitCode::RuntimeError);
     });
+}
+
+fn print_compile_error(e: WrenError) {
+    // Matching test.c output:
+    eprintln!("[{} line {}] {}", e.module, e.line, e.error);
 }
 
 // wre_test expects:
 // Index must be a number.
 // [.test/core/string.../iterator_value_not_num line 1] in (script)
-fn dump_runtime_error(e: &RuntimeError) {
+fn print_runtime_error(e: RuntimeError) {
     eprintln!("{}", e.msg);
     for frame in &e.stack_trace.frames {
         eprintln!(
@@ -90,21 +94,32 @@ fn wren_test_main(args: &Vec<String>) {
     run_file(&args[1]);
 }
 
-fn input_from_source_or_path(source_or_path: &String) -> InputManager {
+struct CompileInput {
+    input: InputManager,
+    module_name: String,
+}
+
+fn input_from_source_or_path(source_or_path: &String) -> CompileInput {
     if source_or_path.ends_with(".wren") {
         let source = fs::read_to_string(source_or_path).unwrap_or_else(|_| {
             eprintln!("Could not find file \"{}\".", source_or_path);
             exit(ExitCode::NoInput);
         });
-        InputManager::from_string(source)
+        CompileInput {
+            input: InputManager::from_string(source),
+            module_name: source_or_path.strip_suffix(".wren").unwrap().into(),
+        }
     } else {
-        InputManager::from_string(source_or_path.clone())
+        CompileInput {
+            input: InputManager::from_string(source_or_path.clone()),
+            module_name: "<inline>".into(),
+        }
     }
 }
 
 fn print_tokens(source_or_path: &String) {
     let mut input = input_from_source_or_path(source_or_path);
-    let result = lex(&mut input);
+    let result = lex(&mut input.input);
 
     if let Ok(tokens) = result {
         let mut as_string = Vec::new();
@@ -112,7 +127,7 @@ fn print_tokens(source_or_path: &String) {
             as_string.push(format!(
                 "{:?} '{}'",
                 token.token,
-                token.name(&input).expect("input")
+                token.name(&input.input).expect("input")
             ));
         }
         println!("Tokens: [{}]", as_string.join(", "));
@@ -124,20 +139,23 @@ fn print_tokens(source_or_path: &String) {
 fn print_bytecode(source_or_path: &String) {
     let mut vm = WrenVM::new(false);
     let input = input_from_source_or_path(source_or_path);
-    let result = compile(&mut vm, input, "dummy_module");
+    let result = compile(&mut vm, input.input, &input.module_name);
     match result {
         Ok(closure) => wren_debug_bytecode(&vm, &closure.borrow()),
-        Err(e) => eprintln!("{:?}", e),
+        Err(e) => print_compile_error(e),
     }
 }
 
 fn interpret_and_print_vm(source_or_path: &String) {
     let mut vm = WrenVM::new(true);
     let input = input_from_source_or_path(source_or_path);
-    let closure = compile(&mut vm, input, "dummy_module").expect("compile");
-    match vm.run(closure) {
-        Ok(_) => println!("{:?}", vm),
-        Err(e) => println!("{:?}", e),
+    let result = compile(&mut vm, input.input, &input.module_name);
+    match result {
+        Ok(closure) => match vm.run(closure) {
+            Ok(_) => println!("{:?}", vm),
+            Err(e) => print_runtime_error(e),
+        },
+        Err(e) => print_compile_error(e),
     }
 }
 

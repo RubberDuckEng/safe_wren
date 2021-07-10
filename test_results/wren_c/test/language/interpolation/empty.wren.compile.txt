@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("Expect end of string interpolation.") }
+[wren_c/test/language/interpolation/empty line 3] Error at end of file: Expect end of string interpolation.

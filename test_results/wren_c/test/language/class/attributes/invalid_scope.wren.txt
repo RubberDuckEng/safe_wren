@@ -1,3 +1,3 @@
 Unexpected error:
-[wren_c/test/language/class/attributes/invalid_scope line 3] Error Grammar("Expected Expression: ParseToken { bytes_range: 2..3, token: Hash, line: 3 }")
+[wren_c/test/language/class/attributes/invalid_scope line 3] Error at '#': Expected expression.
 Missing expected error on line 8.

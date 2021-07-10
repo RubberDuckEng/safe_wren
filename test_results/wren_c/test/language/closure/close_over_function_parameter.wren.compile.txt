@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Undeclared variable \'param\'") }
+[wren_c/test/language/closure/close_over_function_parameter line 5] Error at 'param': Undeclared variable 'param'

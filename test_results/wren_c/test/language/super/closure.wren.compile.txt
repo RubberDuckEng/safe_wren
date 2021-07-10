@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 7, error: Grammar("Could not resolve \'this\'") }
+[wren_c/test/language/super/closure line 7] Error at 'super': Could not resolve 'this'

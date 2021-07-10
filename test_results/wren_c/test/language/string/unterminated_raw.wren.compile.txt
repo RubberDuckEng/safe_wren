@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Lexer(UnterminatedString) }
+[wren_c/test/language/string/unterminated_raw line 1] Error: Unterminated String

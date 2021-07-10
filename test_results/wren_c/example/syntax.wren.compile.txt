@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 19, error: Grammar("Could not resolve \'this\'") }
+[wren_c/example/syntax line 19] Error at 'block': Could not resolve 'this'

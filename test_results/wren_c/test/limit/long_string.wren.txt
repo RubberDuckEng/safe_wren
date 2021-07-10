@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/limit/long_string line 2] Error Lexer(UnexpectedChar('\\'))
+[wren_c/test/limit/long_string line 2] Error: Unexpected char '\'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/limit/long_string line 2] Error Lexer(UnexpectedChar('\\'))
+[wren_c/test/limit/long_string line 2] Error: Unexpected char '\'
 
 Missing expected output "1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890" on line 4.
 Missing expected output "1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890"1234567890" on line 5.

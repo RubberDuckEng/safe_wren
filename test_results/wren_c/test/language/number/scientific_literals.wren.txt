@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/number/scientific_literals line 1] Error Lexer(UnterminatedScientificNotation)
+[wren_c/test/language/number/scientific_literals line 1] Error: Unterminated Scientific Notation
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/number/scientific_literals line 1] Error Lexer(UnterminatedScientificNotation)
+[wren_c/test/language/number/scientific_literals line 1] Error: Unterminated Scientific Notation
 
 Missing expected output "255" on line 3.
 Missing expected output "256" on line 4.

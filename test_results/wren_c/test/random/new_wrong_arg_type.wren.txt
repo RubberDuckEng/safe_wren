@@ -2,5 +2,5 @@ Expected runtime error "Seed must be a number or a sequence of numbers." and got
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[wren_c/test/random/new_wrong_arg_type line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/random/new_wrong_arg_type line 1] Error at 'import': Undeclared variable 'import'
 

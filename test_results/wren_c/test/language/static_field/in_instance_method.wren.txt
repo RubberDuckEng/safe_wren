@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/static_field/in_instance_method line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 61..64, token: StaticField(\"__a\"), line: 5 }")
+[wren_c/test/language/static_field/in_instance_method line 5] Error at '__a': Expected expression.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/static_field/in_instance_method line 5] Error Grammar("Expected Expression: ParseToken { bytes_range: 61..64, token: StaticField(\"__a\"), line: 5 }")
+[wren_c/test/language/static_field/in_instance_method line 5] Error at '__a': Expected expression.
 
 Missing expected output "1" on line 23.
 Missing expected output "2" on line 24.

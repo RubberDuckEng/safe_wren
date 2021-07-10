@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 3, error: Grammar("Expected Expression: ParseToken { bytes_range: 64..65, token: Caret, line: 3 }") }
+[wren_c/test/language/unexpected_character line 3] Error at '^': Expected expression.

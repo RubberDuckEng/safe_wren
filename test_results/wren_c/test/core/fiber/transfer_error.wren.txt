@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/core/fiber/transfer_error line 3] Error Grammar("Undeclared variable \'B\'")
+[wren_c/test/core/fiber/transfer_error line 3] Error at 'B': Undeclared variable 'B'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/core/fiber/transfer_error line 3] Error Grammar("Undeclared variable \'B\'")
+[wren_c/test/core/fiber/transfer_error line 3] Error at 'B': Undeclared variable 'B'
 
 Missing expected output "started B" on line 13.
 Missing expected output "transferred to A" on line 14.

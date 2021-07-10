@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Lexer(Error("Interpolation may only nest 8 levels deep.")) }
+[wren_c/test/limit/too_much_interpolation_nesting line 1] Error: Interpolation may only nest 8 levels deep.

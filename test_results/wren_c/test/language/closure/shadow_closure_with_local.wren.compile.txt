@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Grammar("Undeclared variable \'foo\'") }
+[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Undeclared variable 'foo'

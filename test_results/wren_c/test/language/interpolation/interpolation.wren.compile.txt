@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 5, error: Lexer(Error("Expect \'(\' after \'%%\'.")) }
+[wren_c/test/language/interpolation/interpolation line 5] Error: Expect '(' after '%%'.

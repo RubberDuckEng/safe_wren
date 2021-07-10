@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/core/fiber/transfer_with_value_direct_reenter line 3] Error Grammar("Undeclared variable \'F\'")
+[wren_c/test/core/fiber/transfer_with_value_direct_reenter line 3] Error at 'F': Undeclared variable 'F'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/core/fiber/transfer_with_value_direct_reenter line 3] Error Grammar("Undeclared variable \'F\'")
+[wren_c/test/core/fiber/transfer_with_value_direct_reenter line 3] Error at 'F': Undeclared variable 'F'
 
 Missing expected output "1" on line 2.
 Missing expected output "value" on line 3.

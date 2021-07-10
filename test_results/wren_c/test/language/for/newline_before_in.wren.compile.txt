@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected in, found: Newline") }
+[wren_c/test/language/for/newline_before_in line 1] Error at newline: Expect 'in' after loop variable.

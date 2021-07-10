@@ -9,6 +9,20 @@ use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
+// The maximum number of module-level variables that may be defined at one time.
+// const MAX_MODULE_VARS: usize = 65536;
+
+// The maximum number of arguments that can be passed to a method. Note that
+// this limit may be hardcoded in other places in the VM.
+pub(crate) const MAX_PARAMETERS: usize = 16;
+
+// The maximum number of fields a class can have, including inherited fields.
+// This is explicit in the bytecode since `CODE_CLASS` and `CODE_SUBCLASS` take
+// a single byte for the number of fields. Note that it's 255 and not 256
+// because creating a class takes the *number* of fields, not the *highest
+// field index*.
+// const MAX_FIELDS: usize = 255;
+
 // Internal VM Error, wrapped in RuntimeError for API.
 #[derive(Debug)]
 pub(crate) enum VMError {

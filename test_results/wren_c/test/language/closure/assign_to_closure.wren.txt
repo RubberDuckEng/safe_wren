@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/closure/assign_to_closure line 7] Error Grammar("Undeclared variable \'local\'")
+[wren_c/test/language/closure/assign_to_closure line 7] Error at 'local': Undeclared variable 'local'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/closure/assign_to_closure line 7] Error Grammar("Undeclared variable \'local\'")
+[wren_c/test/language/closure/assign_to_closure line 7] Error at 'local': Undeclared variable 'local'
 
 Missing expected output "local" on line 20.
 Missing expected output "after f" on line 21.

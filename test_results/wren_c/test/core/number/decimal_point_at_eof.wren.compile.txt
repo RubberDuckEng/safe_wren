@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expected name") }
+[wren_c/test/core/number/decimal_point_at_eof line 2] Error at end of file: Expect method name after '.'.

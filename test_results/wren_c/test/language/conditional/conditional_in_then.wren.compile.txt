@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected colon, found: Question") }
+[wren_c/test/language/conditional/conditional_in_then line 1] Error at '?': Expect ':' after then branch of conditional operator.

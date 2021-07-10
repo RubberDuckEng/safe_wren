@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected end of file, found: Name(\"xFF\")") }
+[wren_c/test/core/number/invalid_hex_literal line 1] Error at 'xFF': Expect end of file.

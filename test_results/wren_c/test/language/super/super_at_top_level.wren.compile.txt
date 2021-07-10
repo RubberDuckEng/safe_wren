@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'super\'") }
+[wren_c/test/language/super/super_at_top_level line 1] Error at 'super': Undeclared variable 'super'

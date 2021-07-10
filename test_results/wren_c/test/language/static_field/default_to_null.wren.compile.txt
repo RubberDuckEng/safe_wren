@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Expected Expression: ParseToken { bytes_range: 43..50, token: StaticField(\"__field\"), line: 2 }") }
+[wren_c/test/language/static_field/default_to_null line 2] Error at '__field': Expected expression.

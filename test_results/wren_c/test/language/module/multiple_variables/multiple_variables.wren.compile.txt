@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Undeclared variable \'import\'") }
+[wren_c/test/language/module/multiple_variables/multiple_variables line 1] Error at 'import': Undeclared variable 'import'

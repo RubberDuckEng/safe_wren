@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 2, error: Grammar("Undeclared variable \'notDefined\'") }
+[wren_c/test/language/variable/undefined_local line 2] Error at 'notDefined': Undeclared variable 'notDefined'

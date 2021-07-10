@@ -2,5 +2,5 @@ Expected runtime error "Sequence cannot be empty." and got:
 
 Expected stack trace and got:
 Expected return code 70 and got 65. Stderr:
-[wren_c/test/random/new_empty_sequence line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/random/new_empty_sequence line 1] Error at 'import': Undeclared variable 'import'
 

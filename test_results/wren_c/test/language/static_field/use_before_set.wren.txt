@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/static_field/use_before_set line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 42..49, token: StaticField(\"__field\"), line: 2 }")
+[wren_c/test/language/static_field/use_before_set line 2] Error at '__field': Expected expression.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/static_field/use_before_set line 2] Error Grammar("Expected Expression: ParseToken { bytes_range: 42..49, token: StaticField(\"__field\"), line: 2 }")
+[wren_c/test/language/static_field/use_before_set line 2] Error at '__field': Expected expression.
 
 Missing expected output "value" on line 8.

@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/string/escapes line 2] Error Grammar("Expected right paren, found: String(\")     // expect: \")")
+[wren_c/test/language/string/escapes line 2] Error at '")     // expect: "': Expect ')' after arguments.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/string/escapes line 2] Error Grammar("Expected right paren, found: String(\")     // expect: \")")
+[wren_c/test/language/string/escapes line 2] Error at '")     // expect: "': Expect ')' after arguments.
 
 Missing expected output """ on line 2.
 Missing expected output "\" on line 3.

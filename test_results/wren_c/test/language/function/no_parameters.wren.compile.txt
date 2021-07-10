@@ -1,1 +1,1 @@
-WrenError { module: "dummy_module", line: 1, error: Grammar("Expected Expression: ParseToken { bytes_range: 8..10, token: PipePipe, line: 1 }") }
+[wren_c/test/language/function/no_parameters line 1] Error at '||': Expected expression.

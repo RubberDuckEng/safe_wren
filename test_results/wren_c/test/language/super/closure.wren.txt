@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/super/closure line 7] Error Grammar("Could not resolve \'this\'")
+[wren_c/test/language/super/closure line 7] Error at 'super': Could not resolve 'this'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/super/closure line 7] Error Grammar("Could not resolve \'this\'")
+[wren_c/test/language/super/closure line 7] Error at 'super': Could not resolve 'this'
 
 Missing expected output "Base" on line 12.

@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/meta/get_module_variables line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/meta/get_module_variables line 1] Error at 'import': Undeclared variable 'import'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/meta/get_module_variables line 1] Error Grammar("Undeclared variable \'import\'")
+[wren_c/test/meta/get_module_variables line 1] Error at 'import': Undeclared variable 'import'
 
 Missing expected output "true" on line 6.
 Missing expected output "true" on line 7.
