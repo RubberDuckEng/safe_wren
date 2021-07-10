@@ -2538,12 +2538,12 @@ fn add_local(ctx: &mut ParseContext, name: String) -> u16 {
 
 fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenError> {
     // Enable in a separate change.
-    // if name.len() > MAX_VARIABLE_NAME {
-    //     return Err(ctx.error_string(format!(
-    //         "Variable name cannot be longer than {} characters.",
-    //         MAX_VARIABLE_NAME
-    //     )));
-    // }
+    if name.len() > MAX_VARIABLE_NAME {
+        return Err(ctx.error_string(format!(
+            "Variable name cannot be longer than {} characters.",
+            MAX_VARIABLE_NAME
+        )));
+    }
 
     // Top-level module scope.
     if ctx.compiler().scope_depth == ScopeDepth::Module {
