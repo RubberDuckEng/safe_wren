@@ -1,10 +1,1 @@
-Unexpected output on stderr:
-Could not load module './module'.
-Unexpected output on stderr:
-[wren_c/test/language/module/simple_import/simple_import line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Could not load module './module'.
-[wren_c/test/language/module/simple_import/simple_import line 1] in <script>
-
-Missing expected output "ran module" on line 2.
 Missing expected output "from module" on line 4.

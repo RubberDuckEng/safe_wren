@@ -17,6 +17,7 @@ test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
 wren_c/example/hello.wren
 wren_c/example/import_module/cthulu.wren
+wren_c/example/import_module/lovecraft.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/no_constructor.wren
 wren_c/test/core/bool/not.wren
@@ -396,12 +397,16 @@ wren_c/test/language/method/not_found_one_argument.wren
 wren_c/test/language/method/static.wren
 wren_c/test/language/method/static_method_not_found.wren
 wren_c/test/language/method/subscript_operators.wren
+wren_c/test/language/module/implicitly_imports_core/implicitly_imports_core.wren
 wren_c/test/language/module/missing_for.wren
 wren_c/test/language/module/missing_string_after_import.wren
 wren_c/test/language/module/module_dir/something/module.wren
 wren_c/test/language/module/name_collision.wren
+wren_c/test/language/module/no_variable/no_variable.wren
 wren_c/test/language/module/returns/return.wren
+wren_c/test/language/module/returns/return_from_import.wren
 wren_c/test/language/module/returns/return_value.wren
+wren_c/test/language/module/returns/return_value_from_import.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/nonlocal/assignment.wren
 wren_c/test/language/nonlocal/in_block_scope.wren

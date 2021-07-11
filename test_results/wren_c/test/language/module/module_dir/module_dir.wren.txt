@@ -1,9 +1,1 @@
-Unexpected output on stderr:
-Could not load module './something/module'.
-Unexpected output on stderr:
-[wren_c/test/language/module/module_dir/module_dir line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Could not load module './something/module'.
-[wren_c/test/language/module/module_dir/module_dir line 1] in <script>
-
 Missing expected output "index" on line 3.

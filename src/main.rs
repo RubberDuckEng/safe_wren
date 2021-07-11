@@ -1,6 +1,6 @@
 use std::env;
 use std::fs;
-// use std::path::{Component, Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 
 #[macro_use]
 extern crate num_derive;
@@ -191,22 +191,22 @@ fn write_string(_vm: &WrenVM, string: &str) {
     print!("{}", string);
 }
 
-// fn is_relative_import(module: &str) -> bool {
-//     module.starts_with(".")
-// }
+fn is_relative_import(module: &str) -> bool {
+    module.starts_with(".")
+}
 
-// fn normalize_path(path: &PathBuf) -> String {
-//     path.components()
-//         .map(|component| match component {
-//             Component::Prefix(s) => s.as_os_str().to_str().unwrap(),
-//             Component::RootDir => "",
-//             Component::CurDir => ".",
-//             Component::ParentDir => "..",
-//             Component::Normal(s) => s.to_str().unwrap(),
-//         })
-//         .collect::<Vec<&str>>()
-//         .join("/")
-// }
+fn normalize_path(path: &PathBuf) -> String {
+    path.components()
+        .map(|component| match component {
+            Component::Prefix(s) => s.as_os_str().to_str().unwrap(),
+            Component::RootDir => "",
+            Component::CurDir => ".",
+            Component::ParentDir => "..",
+            Component::Normal(s) => s.to_str().unwrap(),
+        })
+        .collect::<Vec<&str>>()
+        .join("/")
+}
 
 // Applies the CLI's import resolution policy. The rules are:
 //
@@ -215,20 +215,18 @@ fn write_string(_vm: &WrenVM, string: &str) {
 //   containing [importer] and then normalized.
 //
 //   For example, importing "./a/./b/../c" from "./d/e/f" gives you "./d/e/a/c".
-fn resolve_module(_vm: &WrenVM, _importer: &str, module: &str) -> String {
-    module.into()
+fn resolve_module(_vm: &WrenVM, importer: &str, module: &str) -> String {
+    // Only relative imports need resolution?
+    if !is_relative_import(module) {
+        return module.into();
+    }
 
-    // // Only relative imports need resolution?
-    // if !is_relative_import(module) {
-    //     return module.into();
-    // }
-
-    // // Get the directory containing the importing module.
-    // let importer_path = Path::new(importer);
-    // let importer_dir = importer_path.parent().unwrap();
-    // // Add the relative import path.
-    // let resolved = importer_dir.join(module);
-    // normalize_path(&resolved)
+    // Get the directory containing the importing module.
+    let importer_path = Path::new(importer);
+    let importer_dir = importer_path.parent().unwrap();
+    // Add the relative import path.
+    let resolved = importer_dir.join(module);
+    normalize_path(&resolved)
 }
 
 fn read_module(_vm: &WrenVM, name: &str) -> Option<WrenLoadModuleResult> {

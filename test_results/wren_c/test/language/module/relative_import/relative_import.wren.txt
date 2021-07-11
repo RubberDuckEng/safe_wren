@@ -1,13 +1,3 @@
-Unexpected output on stderr:
-Could not load module './sub/module'.
-Unexpected output on stderr:
-[wren_c/test/language/module/relative_import/relative_import line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Could not load module './sub/module'.
-[wren_c/test/language/module/relative_import/relative_import line 1] in <script>
-
-Missing expected output "sub/module" on line 3.
-Missing expected output "sub/module_2" on line 4.
 Missing expected output "sub/dir/module" on line 5.
 Missing expected output "sub/dir/module_2" on line 6.
 Missing expected output "sub/module_3" on line 7.

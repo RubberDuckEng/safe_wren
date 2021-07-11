@@ -31,6 +31,7 @@ with error text from any failed tests.  `test.py` will also update
 * foreign functions
 * rename consume_expecting_msg to consume()
 * Add typedef Result<T> to compiler.rs
+* remove stub_core from core initialization.
 * Fix ensure_constant to lookup before making new ones.
 * Give different types to Symbol, Constant, etc.
 * attributes

@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-Could not load module './cthulu'.
-Unexpected output on stderr:
-[wren_c/example/import_module/lovecraft line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Could not load module './cthulu'.
-[wren_c/example/import_module/lovecraft line 1] in <script>
-

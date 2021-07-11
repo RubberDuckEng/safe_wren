@@ -1,13 +1,3 @@
-Unexpected output on stderr:
-Could not load module './a'.
-Unexpected output on stderr:
-[wren_c/test/language/module/shared_import/shared_import line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Could not load module './a'.
-[wren_c/test/language/module/shared_import/shared_import line 1] in <script>
-
-Missing expected output "a" on line 5.
-Missing expected output "shared" on line 6.
 Missing expected output "a done" on line 7.
 Missing expected output "b" on line 8.
 Missing expected output "b done" on line 9.
