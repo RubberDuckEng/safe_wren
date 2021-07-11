@@ -19,5 +19,6 @@ Code:
 13: Constant(2: String("after"))
 14: Call(Method, print(_))
 15: Pop
-16: End
-17: End
+16: EndModule
+17: Return
+18: End

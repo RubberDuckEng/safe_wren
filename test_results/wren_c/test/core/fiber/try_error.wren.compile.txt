@@ -12,5 +12,6 @@ Code:
 08: Load(Module, Null)
 09: Call(Method, try())
 10: Pop
-11: End
-12: End
+11: EndModule
+12: Return
+13: End

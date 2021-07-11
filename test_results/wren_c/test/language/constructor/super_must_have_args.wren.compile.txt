@@ -20,5 +20,6 @@ Code:
 13: Closure(3, [])
 14: Load(Module, Null)
 15: Method(static, new())
-16: End
-17: End
+16: EndModule
+17: Return
+18: End

@@ -62,5 +62,6 @@ Code:
 48: Call(Method, indexOf(_))
 49: Call(Method, print(_))
 50: Pop
-51: End
-52: End
+51: EndModule
+52: Return
+53: End

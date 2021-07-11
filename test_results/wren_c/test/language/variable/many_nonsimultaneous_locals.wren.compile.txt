@@ -1030,5 +1030,6 @@ Code:
 1025: Pop
 1026: Pop
 1027: Pop
-1028: End
-1029: End
+1028: EndModule
+1029: Return
+1030: End

@@ -82,5 +82,6 @@ Code:
 60: Constant(18: Num(3))
 61: Call(Method, sort(_))
 62: Pop
-63: End
-64: End
+63: EndModule
+64: Return
+65: End

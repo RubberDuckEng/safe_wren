@@ -7,5 +7,6 @@ Code:
 04: Call(Method, containsKey(_))
 05: Store(Module)
 06: Pop
-07: End
-08: End
+07: EndModule
+08: Return
+09: End

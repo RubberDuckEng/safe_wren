@@ -65,5 +65,6 @@ Code:
 52: Pop
 53: Pop
 54: Loop(52)
-55: End
-56: End
+55: EndModule
+56: Return
+57: End

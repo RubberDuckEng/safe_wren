@@ -459,5 +459,6 @@ Code:
 303: Call(Method, call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 304: Call(Method, print(_))
 305: Pop
-306: End
-307: End
+306: EndModule
+307: Return
+308: End

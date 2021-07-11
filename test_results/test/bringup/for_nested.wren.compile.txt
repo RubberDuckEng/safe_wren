@@ -50,5 +50,6 @@ Code:
 41: Loop(35)
 42: Pop
 43: Pop
-44: End
-45: End
+44: EndModule
+45: Return
+46: End

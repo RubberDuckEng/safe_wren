@@ -20,5 +20,6 @@ Code:
 14: Call(Method, !)
 15: Call(Method, print(_))
 16: Pop
-17: End
-18: End
+17: EndModule
+18: Return
+19: End

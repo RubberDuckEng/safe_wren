@@ -1,5 +1,0 @@
-Missing expected output "a done" on line 7.
-Missing expected output "b" on line 8.
-Missing expected output "b done" on line 9.
-Missing expected output "a shared" on line 11.
-Missing expected output "b shared" on line 12.

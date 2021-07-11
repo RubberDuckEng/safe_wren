@@ -254,5 +254,6 @@ Code:
 176: Call(Method, indexOf(_,_))
 177: Call(Method, print(_))
 178: Pop
-179: End
-180: End
+179: EndModule
+180: Return
+181: End

@@ -54,5 +54,6 @@ Code:
 40: Call(Method, containsKey(_))
 41: Call(Method, print(_))
 42: Pop
-43: End
-44: End
+43: EndModule
+44: Return
+45: End

@@ -841,7 +841,8 @@ pub(crate) enum Ops {
 
     Loop(u16), // Jump backwards relative offset.
     Pop,
-    Return, // FIXME: Never actually used.
+    Return,
+    EndModule,
     End,
 }
 
@@ -3391,12 +3392,11 @@ pub(crate) fn wren_compile<'a>(
             break;
         }
     }
-    // ctx.parser.emit_end_module();
-    // ctx.parser.emit_return();
+    emit(scope.ctx, Ops::EndModule);
+    emit(scope.ctx, Ops::Return);
 
     // FIXME: Check for undefined implicit variables and throw errors.
 
-    emit(scope.ctx, Ops::End);
     let compiler = scope.pop();
     // wren_c uses (script) :shrug:
     let fn_obj = end_compiler(scope.ctx, compiler, 0, "<script>".into());

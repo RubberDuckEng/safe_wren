@@ -108,5 +108,6 @@ Code:
 96: Call(Method, is(_))
 97: Call(Method, print(_))
 98: Pop
-99: End
-100: End
+99: EndModule
+100: Return
+101: End

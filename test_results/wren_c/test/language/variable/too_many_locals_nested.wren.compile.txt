@@ -513,5 +513,6 @@ Code:
 509: Pop
 510: Pop
 511: Pop
-512: End
-513: End
+512: EndModule
+513: Return
+514: End

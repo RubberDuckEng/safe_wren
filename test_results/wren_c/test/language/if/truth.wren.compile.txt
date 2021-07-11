@@ -48,5 +48,6 @@ Code:
 37: Constant(7: String("empty"))
 38: Call(Method, print(_))
 39: Pop
-40: End
-41: End
+40: EndModule
+41: Return
+42: End

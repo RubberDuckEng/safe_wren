@@ -144,5 +144,6 @@ Code:
 105: Call(Method, indexOf(_))
 106: Call(Method, print(_))
 107: Pop
-108: End
-109: End
+108: EndModule
+109: Return
+110: End

@@ -40,5 +40,6 @@ Code:
 32: Call(Getter, arity)
 33: Call(Method, print(_))
 34: Pop
-35: End
-36: End
+35: EndModule
+36: Return
+37: End

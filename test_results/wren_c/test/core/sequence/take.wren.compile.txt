@@ -63,5 +63,6 @@ Code:
 51: Call(Getter, toList)
 52: Call(Method, print(_))
 53: Pop
-54: End
-55: End
+54: EndModule
+55: Return
+56: End

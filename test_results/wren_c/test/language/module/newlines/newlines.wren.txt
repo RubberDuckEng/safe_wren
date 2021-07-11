@@ -1,2 +1,0 @@
-Missing expected output "a" on line 14.
-Missing expected output "b" on line 15.

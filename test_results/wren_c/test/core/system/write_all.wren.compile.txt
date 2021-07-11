@@ -45,5 +45,6 @@ Code:
 36: Load(Module, Class("System"))
 37: Call(Method, print())
 38: Pop
-39: End
-40: End
+39: EndModule
+40: Return
+41: End

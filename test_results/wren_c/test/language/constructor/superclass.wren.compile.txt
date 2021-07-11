@@ -91,5 +91,6 @@ Code:
 76: Call(Getter, cField)
 77: Call(Method, print(_))
 78: Pop
-79: End
-80: End
+79: EndModule
+80: Return
+81: End

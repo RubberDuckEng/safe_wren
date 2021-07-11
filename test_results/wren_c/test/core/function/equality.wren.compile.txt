@@ -141,5 +141,6 @@ Code:
 118: Call(Method, ==(_))
 119: Call(Method, print(_))
 120: Pop
-121: End
-122: End
+121: EndModule
+122: Return
+123: End

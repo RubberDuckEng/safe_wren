@@ -39,5 +39,6 @@ Code:
 28: Pop
 29: Pop
 30: Pop
-31: End
-32: End
+31: EndModule
+32: Return
+33: End

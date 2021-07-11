@@ -38,5 +38,6 @@ Code:
 26: Closure(8, [])
 27: Load(Module, Null)
 28: Method(static, baz())
-29: End
-30: End
+29: EndModule
+30: Return
+31: End

@@ -452,5 +452,6 @@ Code:
 292: Call(Method, method(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 293: Call(Method, print(_))
 294: Pop
-295: End
-296: End
+295: EndModule
+296: Return
+297: End

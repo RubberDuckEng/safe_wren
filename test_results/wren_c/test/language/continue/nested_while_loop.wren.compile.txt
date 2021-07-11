@@ -71,5 +71,6 @@ Code:
 56: Loop(27)
 57: Pop
 58: Loop(56)
-59: End
-60: End
+59: EndModule
+60: Return
+61: End

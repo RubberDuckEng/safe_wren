@@ -4,5 +4,6 @@ Code:
 01: Pop
 02: ImportModule("./sub/././///dir/module")
 03: Pop
-04: End
-05: End
+04: EndModule
+05: Return
+06: End

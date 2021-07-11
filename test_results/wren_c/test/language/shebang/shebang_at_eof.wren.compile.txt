@@ -1,4 +1,5 @@
 Constants:
 Code:
-00: End
-01: End
+00: EndModule
+01: Return
+02: End

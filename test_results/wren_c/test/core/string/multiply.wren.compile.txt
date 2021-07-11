@@ -30,5 +30,6 @@ Code:
 19: Call(Method, *(_))
 20: Call(Method, print(_))
 21: Pop
-22: End
-23: End
+22: EndModule
+23: Return
+24: End

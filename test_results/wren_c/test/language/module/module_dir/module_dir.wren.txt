@@ -1,1 +1,0 @@
-Missing expected output "index" on line 3.

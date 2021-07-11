@@ -63,5 +63,6 @@ Code:
 54: Call(Getter, error)
 55: Call(Method, print(_))
 56: Pop
-57: End
-58: End
+57: EndModule
+58: Return
+59: End

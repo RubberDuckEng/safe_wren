@@ -33032,5 +33032,6 @@ Code:
 22020: Constant(11008: String("ok"))
 22021: Call(Method, print(_))
 22022: Pop
-22023: End
-22024: End
+22023: EndModule
+22024: Return
+22025: End

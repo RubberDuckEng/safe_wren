@@ -57,5 +57,6 @@ Code:
 46: Call(Getter, count)
 47: Call(Method, print(_))
 48: Pop
-49: End
-50: End
+49: EndModule
+50: Return
+51: End

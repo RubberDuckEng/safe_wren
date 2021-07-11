@@ -93,5 +93,6 @@ Code:
 75: Call(Method, reduce(_))
 76: Call(Method, print(_))
 77: Pop
-78: End
-79: End
+78: EndModule
+79: Return
+80: End

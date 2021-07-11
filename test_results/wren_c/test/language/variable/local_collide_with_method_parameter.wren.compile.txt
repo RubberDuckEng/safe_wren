@@ -10,5 +10,6 @@ Code:
 05: Closure(1, [])
 06: Load(Module, Null)
 07: Method(instance, bar(_))
-08: End
-09: End
+08: EndModule
+09: Return
+10: End

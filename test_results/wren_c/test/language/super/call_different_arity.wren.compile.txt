@@ -42,5 +42,6 @@ Code:
 30: Constant(8: Num(1))
 31: Call(Method, foo(_))
 32: Pop
-33: End
-34: End
+33: EndModule
+34: Return
+35: End

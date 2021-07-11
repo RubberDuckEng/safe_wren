@@ -164,5 +164,6 @@ Code:
 144: Loop(126)
 145: Pop
 146: Pop
-147: End
-148: End
+147: EndModule
+148: Return
+149: End

@@ -18,5 +18,6 @@ Code:
 11: Closure(3, [])
 12: Load(Module, Null)
 13: Method(instance, message)
-14: End
-15: End
+14: EndModule
+15: Return
+16: End

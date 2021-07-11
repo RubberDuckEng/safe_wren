@@ -151,5 +151,6 @@ Code:
 130: Call(Subscript, [_])
 131: Call(Method, test0())
 132: Pop
-133: End
-134: End
+133: EndModule
+134: Return
+135: End

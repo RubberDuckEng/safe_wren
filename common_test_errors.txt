@@ -94,7 +94,6 @@ occurances : error text
 2 : Expected output "-1" on line  and got "120".
 2 : Expected output "2" on line  and got "3".
 2 : Expected output "true" on line  and got "false".
-2 : Expected return code 70 and got 0. Stderr:
 2 : Expected runtime error "Argument must be a function." and got:
 2 : Expected runtime error "Cannot call a finished fiber." and got:
 2 : Expected runtime error "Cannot call an aborted fiber." and got:
@@ -155,6 +154,7 @@ occurances : error text
 2 : in trimEnd()
 2 : in trimStart()
 1 : Could not compile module 'wren_c/test/language/module/compile_error/module'.
+1 : Could not find a variable named 'DoesNotExist' in module 'wren_c/test/language/module/unknown_variable/module'.
 1 : Could not load module 'wren_c/test/language/module/does_not_exist'.
 1 : Error at 'root': Could not resolve 'this'
 1 : Error at 'someUnknownMethod': Expect '{' to begin method body.
@@ -207,6 +207,7 @@ occurances : error text
 1 : Expected output "foo 1" on line  and got "bar 1".
 1 : Expected output "foo 2" on line  and got "bar 2".
 1 : Expected output "foo" on line  and got "null".
+1 : Expected output "from module" on line  and got "<fn>".
 1 : Expected output "inner 2" on line  and got "outer 0".
 1 : Expected output "inner" on line  and got "outer".
 1 : Expected output "outer 1" on line  and got "inner ".
@@ -222,6 +223,7 @@ occurances : error text
 1 : Expected output "ॐ" on line  and got "\u0950".
 1 : Expected output "ஃ" on line  and got "\u0b83".
 1 : Expected return code 65 and got 3221225725. Stderr:
+1 : Expected return code 70 and got 0. Stderr:
 1 : Expected runtime error "Abort!" and got none.
 1 : Expected runtime error "Argument must be a string." and got:
 1 : Expected runtime error "Base does not implement 'doesNotExist(_)'." and got:
@@ -240,7 +242,7 @@ occurances : error text
 1 : Expected runtime error "Could not compile module './test/language/module/compile_error/module'." and got:
 1 : Expected runtime error "Could not compile source code." and got:
 1 : Expected runtime error "Could not find a module named 'unknown'." and got:
-1 : Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got none.
+1 : Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got:
 1 : Expected runtime error "Could not find foreign method 'someUnknownMethod' for class Foo in module './test/language/foreign/unknown_method'." and got:
 1 : Expected runtime error "Could not load module './test/language/module/does_not_exist'." and got:
 1 : Expected runtime error "Foreign class 'Bar' may not inherit from a class with fields." and got:

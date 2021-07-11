@@ -21,5 +21,6 @@ Code:
 13: Constant(4: String("value"))
 14: Call(Method, insert(_,_))
 15: Pop
-16: End
-17: End
+16: EndModule
+17: Return
+18: End

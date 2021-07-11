@@ -49,5 +49,6 @@ Code:
 35: Constant(10: Num(0))
 36: Call(Method, swap(_,_))
 37: Pop
-38: End
-39: End
+38: EndModule
+39: Return
+40: End

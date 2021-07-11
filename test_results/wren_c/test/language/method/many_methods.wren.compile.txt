@@ -10026,5 +10026,6 @@ Code:
 9019: Load(Module, Null)
 9020: Call(Method, print(_))
 9021: Pop
-9022: End
-9023: End
+9022: EndModule
+9023: Return
+9024: End

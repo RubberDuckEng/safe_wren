@@ -7,5 +7,6 @@ Code:
 02: Boolean false
 03: Call(Method, clamp(_,_))
 04: Pop
-05: End
-06: End
+05: EndModule
+06: Return
+07: End

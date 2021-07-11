@@ -27,5 +27,6 @@ Code:
 19: Constant(4: Num(4))
 20: Call(Method, sample(_,_))
 21: Pop
-22: End
-23: End
+22: EndModule
+23: Return
+24: End

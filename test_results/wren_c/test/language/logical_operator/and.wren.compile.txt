@@ -60,5 +60,6 @@ Code:
 49: Boolean true
 50: Call(Method, print(_))
 51: Pop
-52: End
-53: End
+52: EndModule
+53: Return
+54: End

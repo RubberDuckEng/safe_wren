@@ -349,5 +349,6 @@ Code:
 270: Call(Subscript, [_])
 271: Call(Method, print(_))
 272: Pop
-273: End
-274: End
+273: EndModule
+274: Return
+275: End

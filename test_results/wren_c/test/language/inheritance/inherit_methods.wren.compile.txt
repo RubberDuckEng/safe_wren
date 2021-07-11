@@ -97,5 +97,6 @@ Code:
 72: Load(Module, Null)
 73: Call(Getter, override)
 74: Pop
-75: End
-76: End
+75: EndModule
+76: Return
+77: End

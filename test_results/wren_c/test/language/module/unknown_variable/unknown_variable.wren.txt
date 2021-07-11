@@ -1,3 +1,2 @@
-Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got none.
-Expected return code 70 and got 0. Stderr:
-
+Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got:
+Could not find a variable named 'DoesNotExist' in module 'wren_c/test/language/module/unknown_variable/module'.

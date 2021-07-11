@@ -33,5 +33,6 @@ Code:
 25: Call(Getter, count)
 26: Call(Method, print(_))
 27: Pop
-28: End
-29: End
+28: EndModule
+29: Return
+30: End

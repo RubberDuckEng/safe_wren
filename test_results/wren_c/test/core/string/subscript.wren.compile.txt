@@ -280,5 +280,6 @@ Code:
 206: Call(Method, ==(_))
 207: Call(Method, print(_))
 208: Pop
-209: End
-210: End
+209: EndModule
+210: Return
+211: End

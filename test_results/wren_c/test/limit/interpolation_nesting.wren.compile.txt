@@ -85,5 +85,6 @@ Code:
 65: Call(Method, join())
 66: Call(Method, print(_))
 67: Pop
-68: End
-69: End
+68: EndModule
+69: Return
+70: End

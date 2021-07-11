@@ -68,5 +68,6 @@ Code:
 55: Call(Subscript, [_])
 56: Call(Method, print(_))
 57: Pop
-58: End
-59: End
+58: EndModule
+59: Return
+60: End

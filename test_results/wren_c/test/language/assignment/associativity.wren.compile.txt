@@ -28,5 +28,6 @@ Code:
 22: Load(Module, Null)
 23: Call(Method, print(_))
 24: Pop
-25: End
-26: End
+25: EndModule
+26: Return
+27: End

@@ -25,5 +25,6 @@ Code:
 21: Loop(14)
 22: Pop
 23: Pop
-24: End
-25: End
+24: EndModule
+25: Return
+26: End

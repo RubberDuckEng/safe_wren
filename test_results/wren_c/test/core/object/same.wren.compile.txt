@@ -225,5 +225,6 @@ Code:
 187: Call(Method, same(_,_))
 188: Call(Method, print(_))
 189: Pop
-190: End
-191: End
+190: EndModule
+191: Return
+192: End

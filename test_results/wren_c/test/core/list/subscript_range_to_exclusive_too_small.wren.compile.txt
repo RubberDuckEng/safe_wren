@@ -22,5 +22,6 @@ Code:
 14: Call(Method, ...(_))
 15: Call(Subscript, [_])
 16: Pop
-17: End
-18: End
+17: EndModule
+18: Return
+19: End

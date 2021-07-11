@@ -28,5 +28,6 @@ Code:
 22: Pop
 23: Jump(1)
 24: Loop(22)
-25: End
-26: End
+25: EndModule
+26: Return
+27: End

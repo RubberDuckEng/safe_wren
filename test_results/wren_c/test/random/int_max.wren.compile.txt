@@ -97,5 +97,6 @@ Code:
 80: Loop(26)
 81: Pop
 82: Pop
-83: End
-84: End
+83: EndModule
+84: Return
+85: End

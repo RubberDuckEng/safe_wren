@@ -42,5 +42,6 @@ Code:
 29: Closure(9, [])
 30: Load(Module, Null)
 31: Method(static, [_,_]=(_))
-32: End
-33: End
+32: EndModule
+33: Return
+34: End

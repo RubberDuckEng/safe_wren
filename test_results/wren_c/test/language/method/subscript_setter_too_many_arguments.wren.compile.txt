@@ -41,5 +41,6 @@ Code:
 21: Constant(16: Num(17))
 22: Call(SubscriptSetter, [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]=(_))
 23: Pop
-24: End
-25: End
+24: EndModule
+25: Return
+26: End

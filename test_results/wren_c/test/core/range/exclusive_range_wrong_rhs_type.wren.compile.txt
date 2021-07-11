@@ -6,5 +6,6 @@ Code:
 01: Constant(1: String("s"))
 02: Call(Method, ...(_))
 03: Pop
-04: End
-05: End
+04: EndModule
+05: Return
+06: End

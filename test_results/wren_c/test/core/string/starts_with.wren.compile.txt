@@ -80,5 +80,6 @@ Code:
 57: Call(Method, startsWith(_))
 58: Call(Method, print(_))
 59: Pop
-60: End
-61: End
+60: EndModule
+61: Return
+62: End

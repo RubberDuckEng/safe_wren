@@ -61,5 +61,6 @@ Code:
 50: Call(Method, <(_))
 51: Call(Method, print(_))
 52: Pop
-53: End
-54: End
+53: EndModule
+54: Return
+55: End

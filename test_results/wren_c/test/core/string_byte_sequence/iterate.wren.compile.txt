@@ -97,5 +97,6 @@ Code:
 81: Call(Method, iterate(_))
 82: Call(Method, print(_))
 83: Pop
-84: End
-85: End
+84: EndModule
+85: Return
+86: End

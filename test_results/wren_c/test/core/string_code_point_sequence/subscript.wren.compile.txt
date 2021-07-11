@@ -257,5 +257,6 @@ Code:
 217: Call(Subscript, [_])
 218: Call(Method, print(_))
 219: Pop
-220: End
-221: End
+220: EndModule
+221: Return
+222: End

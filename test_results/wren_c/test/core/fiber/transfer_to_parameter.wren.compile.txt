@@ -26,5 +26,6 @@ Code:
 19: Load(Module, Null)
 20: Call(Method, transfer())
 21: Pop
-22: End
-23: End
+22: EndModule
+23: Return
+24: End

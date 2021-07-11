@@ -78,5 +78,6 @@ Code:
 62: Call(Method, addCore_(_))
 63: Call(Method, print(_))
 64: Pop
-65: End
-66: End
+65: EndModule
+66: Return
+67: End

@@ -72,5 +72,6 @@ Code:
 59: Call(Getter, count)
 60: Call(Method, print(_))
 61: Pop
-62: End
-63: End
+62: EndModule
+63: Return
+64: End

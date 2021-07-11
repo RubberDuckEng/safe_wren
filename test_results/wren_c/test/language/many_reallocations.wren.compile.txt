@@ -100,5 +100,6 @@ Code:
 85: Constant(11: String("done"))
 86: Call(Method, print(_))
 87: Pop
-88: End
-89: End
+88: EndModule
+89: Return
+90: End

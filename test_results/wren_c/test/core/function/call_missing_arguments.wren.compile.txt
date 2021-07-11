@@ -11,5 +11,6 @@ Code:
 06: Constant(1: String("a"))
 07: Call(Method, call(_))
 08: Pop
-09: End
-10: End
+09: EndModule
+10: Return
+11: End

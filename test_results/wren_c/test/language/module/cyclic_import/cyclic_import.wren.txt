@@ -1,2 +1,0 @@
-Missing expected output "a imported b value" on line 10.
-Missing expected output "end a" on line 11.

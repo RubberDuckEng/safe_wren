@@ -26,5 +26,6 @@ Code:
 18: Call(Method, new())
 19: Call(Getter, test)
 20: Pop
-21: End
-22: End
+21: EndModule
+22: Return
+23: End

@@ -27,5 +27,6 @@ Code:
 19: Constant(4: String("value"))
 20: Call(Setter, bar=_)
 21: Pop
-22: End
-23: End
+22: EndModule
+23: Return
+24: End

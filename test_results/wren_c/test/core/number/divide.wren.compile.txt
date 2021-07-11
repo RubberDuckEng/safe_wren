@@ -89,5 +89,6 @@ Code:
 66: Call(Method, /(_))
 67: Call(Method, print(_))
 68: Pop
-69: End
-70: End
+69: EndModule
+70: Return
+71: End

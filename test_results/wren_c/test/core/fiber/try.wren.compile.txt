@@ -16,5 +16,6 @@ Code:
 11: Constant(1: String("after try"))
 12: Call(Method, print(_))
 13: Pop
-14: End
-15: End
+14: EndModule
+15: Return
+16: End

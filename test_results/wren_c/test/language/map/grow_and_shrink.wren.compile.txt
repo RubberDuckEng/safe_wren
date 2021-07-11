@@ -847,5 +847,6 @@ Code:
 589: Load(Module, Null)
 590: Call(Method, print(_))
 591: Pop
-592: End
-593: End
+592: EndModule
+593: Return
+594: End

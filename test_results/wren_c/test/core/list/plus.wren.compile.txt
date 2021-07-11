@@ -121,5 +121,6 @@ Code:
 95: Load(Module, Null)
 96: Call(Method, print(_))
 97: Pop
-98: End
-99: End
+98: EndModule
+99: Return
+100: End

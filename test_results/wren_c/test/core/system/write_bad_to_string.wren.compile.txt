@@ -28,5 +28,6 @@ Code:
 20: Constant(4: String("!"))
 21: Call(Method, print(_))
 22: Pop
-23: End
-24: End
+23: EndModule
+24: Return
+25: End

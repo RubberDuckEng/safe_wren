@@ -56,5 +56,6 @@ Code:
 44: Call(Method, bar(_))
 45: Call(Method, print(_))
 46: Pop
-47: End
-48: End
+47: EndModule
+48: Return
+49: End

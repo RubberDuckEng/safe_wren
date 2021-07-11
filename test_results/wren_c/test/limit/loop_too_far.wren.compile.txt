@@ -33027,5 +33027,6 @@ Code:
 22016: Call(Method, +(_))
 22017: Pop
 22018: Loop(22019)
-22019: End
-22020: End
+22019: EndModule
+22020: Return
+22021: End

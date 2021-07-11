@@ -91,5 +91,6 @@ Code:
 74: Call(Getter, fraction)
 75: Call(Method, print(_))
 76: Pop
-77: End
-78: End
+77: EndModule
+78: Return
+79: End

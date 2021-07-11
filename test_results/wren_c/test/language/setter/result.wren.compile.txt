@@ -29,5 +29,6 @@ Code:
 21: Call(Setter, bar=_)
 22: Call(Method, print(_))
 23: Pop
-24: End
-25: End
+24: EndModule
+25: Return
+26: End

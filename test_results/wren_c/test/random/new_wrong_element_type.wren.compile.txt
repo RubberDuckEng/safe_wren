@@ -13,5 +13,6 @@ Code:
 09: Call(Method, addCore_(_))
 10: Call(Method, new(_))
 11: Pop
-12: End
-13: End
+12: EndModule
+13: Return
+14: End

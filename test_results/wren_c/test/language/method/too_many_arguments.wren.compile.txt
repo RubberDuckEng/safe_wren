@@ -37,5 +37,6 @@ Code:
 17: Constant(16: Num(17))
 18: Call(Method, print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 19: Pop
-20: End
-21: End
+20: EndModule
+21: Return
+22: End

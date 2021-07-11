@@ -14,5 +14,6 @@ Code:
 08: Closure(2, [])
 09: Load(Module, Null)
 10: Method(static, afterAbort(_,_))
-11: End
-12: End
+11: EndModule
+12: Return
+13: End

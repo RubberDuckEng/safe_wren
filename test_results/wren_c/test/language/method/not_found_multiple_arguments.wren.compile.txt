@@ -22,5 +22,6 @@ Code:
 14: Constant(4: Num(2))
 15: Call(Method, someUnknownMethod(_,_))
 16: Pop
-17: End
-18: End
+17: EndModule
+18: Return
+19: End

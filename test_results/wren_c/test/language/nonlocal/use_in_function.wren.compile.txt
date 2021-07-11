@@ -10,5 +10,6 @@ Code:
 05: Call(Method, new(_))
 06: Call(Method, call())
 07: Pop
-08: End
-09: End
+08: EndModule
+09: Return
+10: End

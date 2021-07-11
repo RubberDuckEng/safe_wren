@@ -495,5 +495,6 @@ Code:
 396: Constant(95: Num(5))
 397: Call(Method, print(_))
 398: Pop
-399: End
-400: End
+399: EndModule
+400: Return
+401: End

@@ -227,5 +227,6 @@ Code:
 178: Call(Method, insert(_,_))
 179: Call(Method, print(_))
 180: Pop
-181: End
-182: End
+181: EndModule
+182: Return
+183: End

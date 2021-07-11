@@ -16388,5 +16388,6 @@ Code:
 12289: Load(Module, Null)
 12290: Call(Method, print(_))
 12291: Pop
-12292: End
-12293: End
+12292: EndModule
+12293: Return
+12294: End

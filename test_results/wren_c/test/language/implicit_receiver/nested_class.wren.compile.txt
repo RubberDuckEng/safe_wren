@@ -34,5 +34,6 @@ Code:
 24: Call(Method, new())
 25: Call(Getter, test)
 26: Pop
-27: End
-28: End
+27: EndModule
+28: Return
+29: End

@@ -1,2 +1,1 @@
-Missing expected output "from module" on line 7.
-Missing expected output "outer" on line 10.
+Expected output "from module" on line 7 and got "<fn>".

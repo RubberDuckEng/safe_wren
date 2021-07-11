@@ -96,5 +96,6 @@ Code:
 69: Call(Method, contains(_))
 70: Call(Method, print(_))
 71: Pop
-72: End
-73: End
+72: EndModule
+73: Return
+74: End

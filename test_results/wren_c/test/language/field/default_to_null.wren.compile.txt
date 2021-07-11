@@ -22,5 +22,6 @@ Code:
 15: Call(Method, new())
 16: Call(Getter, write)
 17: Pop
-18: End
-19: End
+18: EndModule
+19: Return
+20: End

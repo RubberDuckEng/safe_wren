@@ -10,5 +10,6 @@ Code:
 05: Call(Method, fromCodePoint(_))
 06: Call(Method, print(_))
 07: Pop
-08: End
-09: End
+08: EndModule
+09: Return
+10: End

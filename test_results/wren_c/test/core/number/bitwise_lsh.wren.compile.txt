@@ -56,5 +56,6 @@ Code:
 39: Call(Method, <<(_))
 40: Call(Method, print(_))
 41: Pop
-42: End
-43: End
+42: EndModule
+43: Return
+44: End

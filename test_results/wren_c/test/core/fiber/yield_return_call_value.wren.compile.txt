@@ -32,5 +32,6 @@ Code:
 24: Constant(4: String("main 3"))
 25: Call(Method, print(_))
 26: Pop
-27: End
-28: End
+27: EndModule
+28: Return
+29: End

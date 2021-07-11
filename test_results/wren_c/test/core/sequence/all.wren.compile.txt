@@ -49,5 +49,6 @@ Code:
 38: Call(Method, all(_))
 39: Call(Method, print(_))
 40: Pop
-41: End
-42: End
+41: EndModule
+42: Return
+43: End

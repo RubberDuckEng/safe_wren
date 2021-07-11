@@ -23,5 +23,6 @@ Code:
 15: Load(Module, Null)
 16: Call(Method, print(_))
 17: Pop
-18: End
-19: End
+18: EndModule
+19: Return
+20: End

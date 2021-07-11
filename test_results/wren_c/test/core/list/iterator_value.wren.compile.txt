@@ -44,5 +44,6 @@ Code:
 33: Call(Method, iteratorValue(_))
 34: Call(Method, print(_))
 35: Pop
-36: End
-37: End
+36: EndModule
+37: Return
+38: End

@@ -9,5 +9,6 @@ Code:
 03: Call(Method, -)
 04: Call(Method, indexOf(_,_))
 05: Pop
-06: End
-07: End
+06: EndModule
+07: Return
+08: End

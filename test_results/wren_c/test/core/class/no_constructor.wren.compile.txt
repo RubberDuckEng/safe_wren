@@ -3,5 +3,6 @@ Code:
 00: Load(Module, Class("Class"))
 01: Call(Method, new())
 02: Pop
-03: End
-04: End
+03: EndModule
+04: Return
+05: End

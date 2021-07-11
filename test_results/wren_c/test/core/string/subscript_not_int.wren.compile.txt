@@ -9,5 +9,6 @@ Code:
 04: Constant(1: Num(1.5))
 05: Call(Subscript, [_])
 06: Pop
-07: End
-08: End
+07: EndModule
+08: Return
+09: End

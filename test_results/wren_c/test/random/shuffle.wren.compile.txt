@@ -156,5 +156,6 @@ Code:
 137: Loop(37)
 138: Pop
 139: Pop
-140: End
-141: End
+140: EndModule
+141: Return
+142: End

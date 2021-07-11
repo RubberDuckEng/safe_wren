@@ -96,5 +96,6 @@ Code:
 65: Constant(27: String("e"))
 66: Call(Method, call(_,_,_,_,_))
 67: Pop
-68: End
-69: End
+68: EndModule
+69: Return
+70: End

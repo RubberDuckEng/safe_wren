@@ -18,5 +18,6 @@ Code:
 12: Call(Method, new())
 13: Store(Module)
 14: Pop
-15: End
-16: End
+15: EndModule
+16: Return
+17: End

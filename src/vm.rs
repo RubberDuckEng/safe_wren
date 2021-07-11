@@ -623,7 +623,6 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
 enum RunNext {
     FunctionCall(CallFrame),
     FunctionReturn(Value),
-    Done,
 }
 
 fn wren_new_instance(_vm: &mut WrenVM, class: Handle<ObjClass>) -> Value {
@@ -880,10 +879,6 @@ impl WrenVM {
                         fiber.call_stack.last_mut().unwrap().push(value);
                     }
                 }
-                Ok(RunNext::Done) => {
-                    // FIXME: Is this an error now that FunctionReturn is implemented?
-                    return Ok(Value::Null);
-                }
                 Err(vm_error) => {
                     // Push the current frame back onto the fiber so we can
                     // see it in error reporting.
@@ -1042,6 +1037,10 @@ impl WrenVM {
                     frame.push(Value::Closure(closure));
                     // FIXME: Handle upvalues.
                 }
+                Ops::EndModule => {
+                    self.last_imported_module = Some(fn_obj.module.clone());
+                    frame.push(Value::Null); // Is this the return value?
+                }
                 Ops::Return => {
                     // The top of our stack is returned and then the caller of
                     // this rust function will push the return onto the stack of
@@ -1100,7 +1099,7 @@ impl WrenVM {
                     bind_method(self, *is_static, *symbol, &mut class.borrow_mut(), method)?;
                 }
                 Ops::End => {
-                    return Ok(RunNext::Done);
+                    panic!("Compile error: END instruction should never be reached.");
                 }
                 Ops::ImportModule(module_name) => {
                     // Make a slot on the stack for the module's fiber to place the return
@@ -1314,6 +1313,7 @@ fn op_debug_string(
         Ops::Loop(_) => format!("{:?}", op),
         Ops::Pop => format!("{:?}", op),
         Ops::Return => format!("{:?}", op),
+        Ops::EndModule => format!("{:?}", op),
         Ops::End => format!("{:?}", op),
         Ops::ImportModule(_) => format!("{:?}", op),
         Ops::ImportVariable(_) => format!("{:?}", op),

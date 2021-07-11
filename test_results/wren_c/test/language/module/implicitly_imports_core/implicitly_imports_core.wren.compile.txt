@@ -2,5 +2,6 @@ Constants:
 Code:
 00: ImportModule("./module")
 01: Pop
-02: End
-03: End
+02: EndModule
+03: Return
+04: End

@@ -17,5 +17,6 @@ Code:
 11: Load(Module, Null)
 12: Call(Getter, test)
 13: Pop
-14: End
-15: End
+14: EndModule
+15: Return
+16: End

@@ -40,5 +40,6 @@ Code:
 23: Constant(13: Num(11))
 24: Call(Method, someUnknownMethod(_,_,_,_,_,_,_,_,_,_,_))
 25: Pop
-26: End
-27: End
+26: EndModule
+27: Return
+28: End

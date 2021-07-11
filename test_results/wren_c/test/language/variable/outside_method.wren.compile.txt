@@ -41,5 +41,6 @@ Code:
 30: Load(Module, Null)
 31: Call(Getter, classMethod)
 32: Pop
-33: End
-34: End
+33: EndModule
+34: Return
+35: End

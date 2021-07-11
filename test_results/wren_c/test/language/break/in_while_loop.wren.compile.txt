@@ -27,5 +27,6 @@ Code:
 21: Call(Method, print(_))
 22: Pop
 23: Loop(21)
-24: End
-25: End
+24: EndModule
+25: Return
+26: End

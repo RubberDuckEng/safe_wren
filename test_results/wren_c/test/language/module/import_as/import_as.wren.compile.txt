@@ -48,5 +48,6 @@ Code:
 43: Load(Module, Null)
 44: Call(Method, print(_))
 45: Pop
-46: End
-47: End
+46: EndModule
+47: Return
+48: End

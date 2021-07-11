@@ -1,3 +1,0 @@
-Missing expected output "before" on line 3.
-Missing expected output "before" on line 8.
-Missing expected output "after" on line 11.

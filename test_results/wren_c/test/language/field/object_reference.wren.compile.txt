@@ -62,5 +62,6 @@ Code:
 51: Load(Module, Null)
 52: Call(Method, write())
 53: Pop
-54: End
-55: End
+54: EndModule
+55: Return
+56: End

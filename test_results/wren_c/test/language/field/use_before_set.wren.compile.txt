@@ -32,5 +32,6 @@ Code:
 24: Load(Module, Null)
 25: Call(Getter, write)
 26: Pop
-27: End
-28: End
+27: EndModule
+28: Return
+29: End

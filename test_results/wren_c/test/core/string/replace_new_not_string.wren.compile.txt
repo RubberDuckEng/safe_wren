@@ -8,5 +8,6 @@ Code:
 02: Constant(2: Num(1))
 03: Call(Method, replace(_,_))
 04: Pop
-05: End
-06: End
+05: EndModule
+06: Return
+07: End

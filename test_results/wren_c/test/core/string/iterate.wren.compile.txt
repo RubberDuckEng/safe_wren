@@ -137,5 +137,6 @@ Code:
 109: Call(Method, iterate(_))
 110: Call(Method, print(_))
 111: Pop
-112: End
-113: End
+112: EndModule
+113: Return
+114: End

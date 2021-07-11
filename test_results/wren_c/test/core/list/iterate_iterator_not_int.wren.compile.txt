@@ -18,5 +18,6 @@ Code:
 11: Constant(3: Num(1.5))
 12: Call(Method, iterate(_))
 13: Pop
-14: End
-15: End
+14: EndModule
+15: Return
+16: End

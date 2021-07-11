@@ -147,5 +147,6 @@ Code:
 126: Loop(38)
 127: Pop
 128: Pop
-129: End
-130: End
+129: EndModule
+130: Return
+131: End

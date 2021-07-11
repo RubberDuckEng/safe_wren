@@ -36,5 +36,6 @@ Code:
 28: Constant(4: String("block"))
 29: Call(Method, print(_))
 30: Pop
-31: End
-32: End
+31: EndModule
+32: Return
+33: End

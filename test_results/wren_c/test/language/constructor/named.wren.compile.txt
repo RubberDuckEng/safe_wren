@@ -51,5 +51,6 @@ Code:
 42: Call(Getter, toString)
 43: Call(Method, print(_))
 44: Pop
-45: End
-46: End
+45: EndModule
+46: Return
+47: End

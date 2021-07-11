@@ -15,5 +15,6 @@ Code:
 09: Constant(2: String("value"))
 10: Call(Setter, bar=_)
 11: Pop
-12: End
-13: End
+12: EndModule
+13: Return
+14: End

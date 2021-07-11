@@ -15,5 +15,6 @@ Code:
 10: Call(Method, new(_))
 11: Call(Method, transfer())
 12: Pop
-13: End
-14: End
+13: EndModule
+14: Return
+15: End

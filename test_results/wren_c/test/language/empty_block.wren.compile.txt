@@ -10,5 +10,6 @@ Code:
 06: Constant(0: String("ok"))
 07: Call(Method, print(_))
 08: Pop
-09: End
-10: End
+09: EndModule
+10: Return
+11: End

@@ -146,5 +146,6 @@ Code:
 119: Loop(30)
 120: Pop
 121: Pop
-122: End
-123: End
+122: EndModule
+123: Return
+124: End

@@ -240,5 +240,6 @@ Code:
 196: Call(Getter, count)
 197: Call(Method, print(_))
 198: Pop
-199: End
-200: End
+199: EndModule
+200: Return
+201: End

@@ -47,5 +47,6 @@ Code:
 37: Pop
 38: Jump(1)
 39: Loop(8)
-40: End
-41: End
+40: EndModule
+41: Return
+42: End

@@ -24,5 +24,6 @@ Code:
 16: Call(Getter, isNan)
 17: Call(Method, print(_))
 18: Pop
-19: End
-20: End
+19: EndModule
+20: Return
+21: End
