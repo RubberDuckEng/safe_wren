@@ -8,7 +8,10 @@ extern crate num_traits;
 mod compiler;
 mod core;
 mod vm;
+mod wren;
 
+use crate::wren::*;
+//FIXME:  Remove these
 use crate::compiler::{compile_in_module, lex, InputManager, WrenError};
 use crate::vm::{wren_debug_bytecode, RuntimeError, WrenVM};
 
@@ -41,6 +44,15 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
+fn test_config(debug: bool) -> WrenConfiguration {
+    WrenConfiguration {
+        load_module_fn: Some(read_module),
+        wren_write_fn: Some(write_string),
+        debug: debug,
+        ..Default::default()
+    }
+}
+
 fn run_file(path: &String) {
     let source = fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
@@ -56,7 +68,7 @@ fn run_file(path: &String) {
         .collect::<Vec<u8>>();
 
     // handle module setup.
-    let mut vm = WrenVM::new(false);
+    let mut vm = WrenVM::new(test_config(false));
     let input = InputManager::from_bytes(no_crs);
     let module_name = path.strip_suffix(".wren").unwrap();
     let closure = compile_in_module(&mut vm, module_name, input).unwrap_or_else(|e| {
@@ -137,7 +149,7 @@ fn print_tokens(source_or_path: &String) {
 }
 
 fn print_bytecode(source_or_path: &String) {
-    let mut vm = WrenVM::new(false);
+    let mut vm = WrenVM::new(test_config(false));
     let input = input_from_source_or_path(source_or_path);
     let result = compile_in_module(&mut vm, &input.module_name, input.input);
     match result {
@@ -147,7 +159,7 @@ fn print_bytecode(source_or_path: &String) {
 }
 
 fn interpret_and_print_vm(source_or_path: &String) {
-    let mut vm = WrenVM::new(true);
+    let mut vm = WrenVM::new(test_config(true));
     let input = input_from_source_or_path(source_or_path);
     let result = compile_in_module(&mut vm, &input.module_name, input.input);
     match result {
@@ -171,4 +183,12 @@ fn main() {
         wren_test_main(&args);
     }
     exit(ExitCode::Success);
+}
+
+fn write_string(_vm: &WrenVM, string: &str) {
+    print!("{}", string);
+}
+
+fn read_module(_vm: &WrenVM, _name: &str) -> Option<WrenLoadModuleResult> {
+    None
 }

@@ -920,13 +920,14 @@ fn system_clock(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
 //     Ok(Value::Null)
 // }
 
-fn system_write_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn system_write_string(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let string = args[1]
         .try_into_string()
         .ok_or_else(|| VMError::from_str("expected String"))?;
     let result = unescape(&string);
-    // FIXME: This should be an API call to the embedder.
-    print!("{}", result);
+    if let Some(write_fn) = vm.config.wren_write_fn {
+        write_fn(vm, &result);
+    }
     Ok(args[1].clone())
 }
 

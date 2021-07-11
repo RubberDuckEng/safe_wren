@@ -6,6 +6,7 @@ use std::str;
 
 use crate::compiler::{compile_in_module, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
+use crate::wren::WrenConfiguration;
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -361,8 +362,6 @@ impl core::fmt::Debug for ObjFiber {
 pub struct WrenVM {
     // Current executing Fiber (should eventually be a list?)
     pub(crate) fiber: Option<Handle<ObjFiber>>,
-    // Print debug information when running
-    debug: bool,
     // Single global symbol table for all method names (matches wren_c)
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
@@ -379,6 +378,7 @@ pub struct WrenVM {
     pub(crate) core: Option<CoreClasses>,
     pub(crate) start_time: std::time::Instant,
     pub(crate) last_imported_module: Option<Handle<Module>>,
+    pub(crate) config: WrenConfiguration,
 }
 
 impl core::fmt::Debug for WrenVM {
@@ -605,8 +605,8 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
 }
 
 pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
-    let had_debug = vm.debug;
-    vm.debug = false;
+    let had_debug = vm.config.debug;
+    vm.config.debug = false;
     use std::fs;
     // hacks upon hacks.
     let path = "stub_wren_core.wren";
@@ -618,7 +618,7 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
     let closure = compile_in_module(vm, module_name, input).expect("compile wren_core");
     // debug_bytecode(vm, &closure.borrow(), module);
     vm.run(closure).expect("run wren_core");
-    vm.debug = had_debug;
+    vm.config.debug = had_debug;
 }
 
 enum RunNext {
@@ -673,15 +673,6 @@ fn resolve_module(_vm: &mut WrenVM, name: &str) -> String {
     name.into()
 }
 
-struct WrenLoadModuleResult {
-    source: String,
-}
-
-// FIXME: Belongs in main.rs instead.
-fn read_module(_name: &str) -> Option<WrenLoadModuleResult> {
-    None
-}
-
 enum ImportResult {
     Existing(Handle<Module>),
     New(Handle<ObjClosure>),
@@ -696,8 +687,14 @@ fn import_module(vm: &mut WrenVM, unresolved_name: &str) -> Result<ImportResult>
         None => {}
     }
 
-    // FIXME: Let the host provide modules.
-    let result = read_module(&name)
+    // If we ever have other builtins, this doesn't need to be an error.
+    let load_module = vm
+        .config
+        .load_module_fn
+        .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
+
+    // Isn't there a rusty way to chain this with the above?
+    let result = load_module(vm, &name)
         .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
 
     let input = InputManager::from_string(result.source);
@@ -718,12 +715,11 @@ fn get_module_variable(_vm: &WrenVM, module: &Module, variable_name: &str) -> Re
 }
 
 impl WrenVM {
-    pub fn new(debug: bool) -> Self {
+    pub fn new(config: WrenConfiguration) -> Self {
         let mut vm = Self {
             // Invalid import name, intentionally.
             methods: SymbolTable::default(),
             fiber: None,
-            debug: debug,
             core_module: None,
             core: None,
             class_class: None,
@@ -732,6 +728,7 @@ impl WrenVM {
             modules: HashMap::new(),
             start_time: std::time::Instant::now(),
             last_imported_module: None,
+            config: config,
         };
 
         // Modules are owned by the modules HashMap.
@@ -920,7 +917,7 @@ impl WrenVM {
         frame.pc;
         loop {
             let op = &fn_obj.borrow().code[frame.pc];
-            if self.debug {
+            if self.config.debug {
                 frame.dump_stack();
                 dump_instruction(
                     frame.pc,
