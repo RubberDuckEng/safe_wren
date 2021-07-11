@@ -137,5 +137,11 @@ pub struct WrenConfiguration {
     // pub error_fn: Option<WrenErrorFn>,
 
     // FIXME: Hack during development, shouldn't be API.
-    pub debug: bool,
+    pub debug_level: Option<DebugLevel>,
+}
+
+#[allow(dead_code)]
+pub enum DebugLevel {
+    NonCore,
+    All,
 }

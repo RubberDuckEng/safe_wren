@@ -1,5 +1,6 @@
 use std::env;
 use std::fs;
+// use std::path::{Component, Path, PathBuf};
 
 #[macro_use]
 extern crate num_derive;
@@ -44,11 +45,11 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
-fn test_config(debug: bool) -> WrenConfiguration {
+fn test_config() -> WrenConfiguration {
     WrenConfiguration {
         load_module_fn: Some(read_module),
         wren_write_fn: Some(write_string),
-        debug: debug,
+        resolve_module_fn: Some(resolve_module),
         ..Default::default()
     }
 }
@@ -68,7 +69,7 @@ fn run_file(path: &String) {
         .collect::<Vec<u8>>();
 
     // handle module setup.
-    let mut vm = WrenVM::new(test_config(false));
+    let mut vm = WrenVM::new(test_config());
     let input = InputManager::from_bytes(no_crs);
     let module_name = path.strip_suffix(".wren").unwrap();
     let closure = compile_in_module(&mut vm, module_name, input).unwrap_or_else(|e| {
@@ -149,7 +150,7 @@ fn print_tokens(source_or_path: &String) {
 }
 
 fn print_bytecode(source_or_path: &String) {
-    let mut vm = WrenVM::new(test_config(false));
+    let mut vm = WrenVM::new(test_config());
     let input = input_from_source_or_path(source_or_path);
     let result = compile_in_module(&mut vm, &input.module_name, input.input);
     match result {
@@ -159,7 +160,8 @@ fn print_bytecode(source_or_path: &String) {
 }
 
 fn interpret_and_print_vm(source_or_path: &String) {
-    let mut vm = WrenVM::new(test_config(true));
+    let mut vm = WrenVM::new(test_config());
+    vm.config.debug_level = Some(DebugLevel::NonCore);
     let input = input_from_source_or_path(source_or_path);
     let result = compile_in_module(&mut vm, &input.module_name, input.input);
     match result {
@@ -189,6 +191,55 @@ fn write_string(_vm: &WrenVM, string: &str) {
     print!("{}", string);
 }
 
-fn read_module(_vm: &WrenVM, _name: &str) -> Option<WrenLoadModuleResult> {
+// fn is_relative_import(module: &str) -> bool {
+//     module.starts_with(".")
+// }
+
+// fn normalize_path(path: &PathBuf) -> String {
+//     path.components()
+//         .map(|component| match component {
+//             Component::Prefix(s) => s.as_os_str().to_str().unwrap(),
+//             Component::RootDir => "",
+//             Component::CurDir => ".",
+//             Component::ParentDir => "..",
+//             Component::Normal(s) => s.to_str().unwrap(),
+//         })
+//         .collect::<Vec<&str>>()
+//         .join("/")
+// }
+
+// Applies the CLI's import resolution policy. The rules are:
+//
+// * If [module] starts with "./" or "../", it is a relative import, relative
+//   to [importer]. The resolved path is [name] concatenated onto the directory
+//   containing [importer] and then normalized.
+//
+//   For example, importing "./a/./b/../c" from "./d/e/f" gives you "./d/e/a/c".
+fn resolve_module(_vm: &WrenVM, _importer: &str, module: &str) -> String {
+    module.into()
+
+    // // Only relative imports need resolution?
+    // if !is_relative_import(module) {
+    //     return module.into();
+    // }
+
+    // // Get the directory containing the importing module.
+    // let importer_path = Path::new(importer);
+    // let importer_dir = importer_path.parent().unwrap();
+    // // Add the relative import path.
+    // let resolved = importer_dir.join(module);
+    // normalize_path(&resolved)
+}
+
+fn read_module(_vm: &WrenVM, name: &str) -> Option<WrenLoadModuleResult> {
+    // Hack for now.
+    let path = format!("{}.wren", name);
+    match fs::read_to_string(&path) {
+        Ok(source) => return Some(WrenLoadModuleResult { source: source }),
+        // Err(e) => {
+        //     println!("{} : {}", path, e);
+        // }
+        _ => {}
+    }
     None
 }

@@ -909,13 +909,13 @@ impl ClassInfo {
 
 #[derive(Default)]
 pub(crate) struct FnDebug {
-    pub(crate) module_name: String,
     // The name of the function.
     pub(crate) name: String,
     // An array of line numbers. There is one element in this array for each
     // bytecode in the function's bytecode array. The value of that element is
     // the line in the source code that generated that instruction.
     source_lines: Vec<usize>,
+    pub(crate) from_core_module: bool,
 }
 
 impl FnDebug {
@@ -1105,12 +1105,16 @@ struct ParseContext<'a> {
     parser: Parser,
     _compiler: Option<Box<Compiler>>,
     vm: &'a mut WrenVM,
-    module: &'a mut Module,
+    module: Handle<Module>,
 }
 
 impl<'a> ParseContext<'a> {
     fn module_name(&self) -> String {
-        self.module.name.clone()
+        self.module.borrow().name.clone()
+    }
+
+    fn in_core_module(&self) -> bool {
+        self.module.borrow().name.eq(crate::vm::CORE_MODULE_NAME)
     }
 
     fn parse_error(&self, error: ParserError) -> WrenError {
@@ -1561,12 +1565,12 @@ fn end_compiler(
     let line = ctx.parser.previous.line;
     compiler.emit_op_for_line(Ops::End, line);
 
-    compiler.fn_debug.module_name = ctx.module_name();
     compiler.fn_debug.name = name;
+    compiler.fn_debug.from_core_module = ctx.in_core_module();
 
     // We're done with the compiler, create an ObjFn from it.
     let upvalues = std::mem::take(&mut compiler.upvalues);
-    let fn_obj = new_handle(ObjFn::new(ctx.vm, compiler, arity));
+    let fn_obj = new_handle(ObjFn::new(ctx.vm, ctx.module.clone(), compiler, arity));
 
     // If this was not the top-compiler, load the compile function into
     // the parent code.
@@ -2015,7 +2019,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
 
     // Otherwise if in module scope handle module case:
 
-    let maybe_index = ctx.module.lookup_symbol(&name);
+    let maybe_index = ctx.module.borrow().lookup_symbol(&name);
     let symbol = match maybe_index {
         None => {
             // Otherwise define a variable and hope it's filled in later (by what?)
@@ -2558,7 +2562,7 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
     if ctx.compiler().scope_depth == ScopeDepth::Module {
         // Error handling missing.
         // Error handling should occur inside wren_define_variable, no?
-        let result = wren_define_variable(&mut ctx.module, &name, Value::Null);
+        let result = wren_define_variable(&mut ctx.module.borrow_mut(), &name, Value::Null);
         let symbol = result.map_err(|e| ctx.module_error(e))?;
         return Ok(symbol as u16);
     }
@@ -2669,7 +2673,7 @@ fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 // FIXME: This is probably not needed?  All it really adds is an assert?
 fn load_core_variable(ctx: &mut ParseContext, name: &str) {
-    let symbol = match ctx.module.lookup_symbol(name) {
+    let symbol = match ctx.module.borrow().lookup_symbol(name) {
         Some(s) => s,
         None => panic!("Failed to find core variable {}", name),
     };
@@ -3346,14 +3350,13 @@ pub(crate) fn compile_in_module(
 ) -> Result<Handle<ObjClosure>, WrenError> {
     // When compiling, we create a module and register it.
     let module = vm.lookup_or_register_empty_module(module_name);
-    let module_mut = &mut module.borrow_mut();
-    wren_compile(vm, input, module_mut)
+    wren_compile(vm, input, module)
 }
 
 pub(crate) fn wren_compile<'a>(
     vm: &'a mut WrenVM,
     input: InputManager,
-    module: &'a mut Module,
+    module: Handle<Module>,
 ) -> Result<Handle<ObjClosure>, WrenError> {
     // Init the parser & compiler
     let mut parse_context = ParseContext {

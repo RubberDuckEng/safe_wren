@@ -6,9 +6,11 @@ use std::str;
 
 use crate::compiler::{compile_in_module, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-use crate::wren::WrenConfiguration;
+use crate::wren::{DebugLevel, WrenConfiguration};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
+
+pub(crate) const CORE_MODULE_NAME: &str = "#core";
 
 // The maximum number of module-level variables that may be defined at one time.
 // const MAX_MODULE_VARS: usize = 65536;
@@ -605,8 +607,6 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
 }
 
 pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
-    let had_debug = vm.config.debug;
-    vm.config.debug = false;
     use std::fs;
     // hacks upon hacks.
     let path = "stub_wren_core.wren";
@@ -618,7 +618,6 @@ pub(crate) fn load_wren_core(vm: &mut WrenVM, module_name: &str) {
     let closure = compile_in_module(vm, module_name, input).expect("compile wren_core");
     // debug_bytecode(vm, &closure.borrow(), module);
     vm.run(closure).expect("run wren_core");
-    vm.config.debug = had_debug;
 }
 
 enum RunNext {
@@ -668,9 +667,12 @@ fn bind_method(
 }
 
 // Let the host resolve an imported module name if it wants to.
-fn resolve_module(_vm: &mut WrenVM, name: &str) -> String {
-    // Add call out to host.
-    name.into()
+fn resolve_module(vm: &mut WrenVM, importer: &str, name: &str) -> String {
+    if let Some(resolve_module) = vm.config.resolve_module_fn {
+        resolve_module(vm, importer, name)
+    } else {
+        name.into()
+    }
 }
 
 enum ImportResult {
@@ -678,8 +680,12 @@ enum ImportResult {
     New(Handle<ObjClosure>),
 }
 
-fn import_module(vm: &mut WrenVM, unresolved_name: &str) -> Result<ImportResult> {
-    let name = resolve_module(vm, unresolved_name);
+fn import_module(
+    vm: &mut WrenVM,
+    importer_name: &str,
+    unresolved_name: &str,
+) -> Result<ImportResult> {
+    let name = resolve_module(vm, importer_name, unresolved_name);
 
     // If the module is already loaded, we don't need to do anything.
     match vm.modules.get(&name) {
@@ -731,13 +737,18 @@ impl WrenVM {
             config: config,
         };
 
+        // FIXME: This shouldn't be needed anymore.  We no longer
+        // remove modules during parsing.
         // Modules are owned by the modules HashMap.
         // When compiled into, they are taken out of the HashMap.
         // Core is special.  We can't both compile core and have it
         // accessible for lookups at the same time, so we make this
         // stub, compile the real core, and then replace this.
+        // FIXME: Does this mean that things compiled with the stub
+        // will store their module-level variables in a different
+        // module than the rest of core?
         let mut stub_core = Module {
-            name: "stub_core".into(),
+            name: CORE_MODULE_NAME.into(),
             variables: Vec::new(),
             variable_names: Vec::new(),
         };
@@ -745,7 +756,7 @@ impl WrenVM {
         vm.class_class = Some(stub_core.expect_class("Class"));
         init_fn_and_fiber(&mut vm, &mut stub_core);
         vm.core_module = Some(new_handle(stub_core));
-        let core_name = "#core";
+        let core_name = CORE_MODULE_NAME;
         load_wren_core(&mut vm, core_name);
         vm.core_module = Some(vm.modules.remove(core_name).unwrap());
         register_core_primitives(&mut vm);
@@ -827,8 +838,9 @@ impl WrenVM {
         fn frame_info(frame: &CallFrame) -> FrameInfo {
             let closure = frame.closure.borrow();
             let fn_obj = closure.fn_obj.borrow();
+            let module = fn_obj.module.borrow().name.clone();
             FrameInfo {
-                module: fn_obj.debug.module_name.clone(),
+                module: module,
                 line: fn_obj.debug.line_for_pc(frame.pc),
                 fn_name: fn_obj.debug.name.clone(),
             }
@@ -840,26 +852,19 @@ impl WrenVM {
     }
 
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
-        let module_name = closure.borrow().fn_obj.borrow().debug.module_name.clone();
         let fiber = new_handle(ObjFiber::new(self, closure));
         self.fiber = Some(fiber.clone());
-        let module = self.modules.remove(&module_name).unwrap();
-        let result = self.run_in_fiber(&mut fiber.borrow_mut(), &mut module.borrow_mut());
-        self.modules.insert(module_name, module);
+        let result = self.run_in_fiber(&mut fiber.borrow_mut());
         result
     }
 
-    fn run_in_fiber(
-        &mut self,
-        fiber: &mut ObjFiber,
-        module: &mut Module,
-    ) -> Result<Value, RuntimeError> {
+    fn run_in_fiber(&mut self, fiber: &mut ObjFiber) -> Result<Value, RuntimeError> {
         loop {
             let mut frame = fiber.call_stack.pop().unwrap();
             // This is all to avoid run_fiber needing to call itself
             // recursively, or the run_fiber main loop needing to pull
             // the frame on every iteration.  Maybe not worth it?
-            let result = self.run_frame_in_fiber(&mut frame, fiber, module);
+            let result = self.run_frame_in_fiber(&mut frame, fiber);
             match result {
                 Ok(RunNext::FunctionCall(new_frame)) => {
                     // call_stack does not contain "frame", restore it.
@@ -907,22 +912,44 @@ impl WrenVM {
         }
     }
 
-    fn run_frame_in_fiber(
-        &mut self,
-        frame: &mut CallFrame,
-        _fiber: &ObjFiber,
-        module: &mut Module,
-    ) -> Result<RunNext> {
-        let fn_obj = frame.closure.borrow().fn_obj.clone();
+    fn should_dump_instructions(&self, fn_debug: &FnDebug) -> bool {
+        match &self.config.debug_level {
+            None => false,
+            Some(level) => match level {
+                DebugLevel::All => true,
+                DebugLevel::NonCore => !fn_debug.from_core_module,
+            },
+        }
+    }
+
+    fn run_frame_in_fiber(&mut self, frame: &mut CallFrame, fiber: &ObjFiber) -> Result<RunNext> {
+        // Copy out a ref, so we can later mut borrow the frame.
+        let closure_rc = frame.closure.clone();
+        let closure = closure_rc.borrow();
+        let fn_obj = closure.fn_obj.borrow();
         frame.pc;
+        let dump_instructions = self.should_dump_instructions(&fn_obj.debug);
         loop {
-            let op = &fn_obj.borrow().code[frame.pc];
-            if self.config.debug {
-                frame.dump_stack();
+            let op = &fn_obj.code[frame.pc];
+            if dump_instructions {
+                // Grab the "dynamic" scope (top module) since that
+                // makes the most sense as the "owner" of the stack.
+                let top_module_name = match &fiber.call_stack.first() {
+                    None => fn_obj.module.borrow().name.clone(),
+                    Some(top_frame) => top_frame
+                        .closure
+                        .borrow()
+                        .fn_obj
+                        .borrow()
+                        .module
+                        .borrow()
+                        .name
+                        .clone(),
+                };
+                frame.dump_stack(&top_module_name);
                 dump_instruction(
                     frame.pc,
                     op,
-                    module,
                     &self.methods,
                     &frame.closure.borrow(),
                     Some(frame),
@@ -932,7 +959,7 @@ impl WrenVM {
             frame.pc += 1;
             match op {
                 Ops::Constant(index) => {
-                    frame.push(fn_obj.borrow().constants[*index].clone());
+                    frame.push(fn_obj.constants[*index].clone());
                 }
                 Ops::Boolean(value) => {
                     frame.push(Value::Boolean(*value));
@@ -1007,7 +1034,7 @@ impl WrenVM {
                     frame.stack[0] = instance;
                 }
                 Ops::Closure(constant_index, _upvalues) => {
-                    let fn_value = fn_obj.borrow().constants[*constant_index].clone();
+                    let fn_value = fn_obj.constants[*constant_index].clone();
                     let fn_obj = fn_value
                         .try_into_fn()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
@@ -1027,7 +1054,7 @@ impl WrenVM {
                 }
                 Ops::Load(variable) => {
                     let value = match variable.scope {
-                        Scope::Module => module.variables[variable.index].clone(),
+                        Scope::Module => fn_obj.module.borrow().variables[variable.index].clone(),
                         Scope::Upvalue => unimplemented!("load upvalue"),
                         Scope::Local => frame.stack[variable.index].clone(),
                     };
@@ -1036,7 +1063,9 @@ impl WrenVM {
                 Ops::Store(variable) => {
                     let value = frame.peek()?;
                     match variable.scope {
-                        Scope::Module => module.variables[variable.index] = value.clone(),
+                        Scope::Module => {
+                            fn_obj.module.borrow_mut().variables[variable.index] = value.clone()
+                        }
                         Scope::Upvalue => unimplemented!("store upvalue"),
                         Scope::Local => frame.stack[variable.index] = value.clone(),
                     };
@@ -1078,7 +1107,7 @@ impl WrenVM {
                     // value. It will be popped after this fiber is resumed. Store the
                     // imported module's closure in the slot in case a GC happens when
                     // invoking the closure.
-                    let result = import_module(self, module_name)?;
+                    let result = import_module(self, &fn_obj.module.borrow().name, module_name)?;
                     // frame.push(value.clone());
                     // Check for fiber error?
                     // if wrenHasError(fiber) RUNTIME_ERROR();
@@ -1173,14 +1202,14 @@ impl CallFrame {
         self.stack.last().ok_or(VMError::StackUnderflow)
     }
 
-    fn dump_stack(&self) {
+    fn dump_stack(&self, active_module: &str) {
         // Print the stack left (top) to right (bottom)
         let mut as_string = Vec::new();
         for value in &self.stack {
             as_string.push(format!("{:?}", value));
         }
         as_string.reverse();
-        println!("  Stack: [{}]", as_string.join(", "));
+        println!("{}  Stack: [{}]", active_module, as_string.join(", "));
     }
 }
 
@@ -1192,22 +1221,23 @@ enum DumpMode {
 fn dump_instruction(
     pc: usize,
     op: &Ops,
-    module: &Module,
     methods: &SymbolTable,
     closure: &ObjClosure,
     frame: Option<&CallFrame>,
     mode: DumpMode,
 ) {
+    let fn_obj = &closure.fn_obj.borrow();
     println!(
-        "{:02}: {}",
+        "{}:{} {:02}: {}",
+        fn_obj.module.borrow().name,
+        fn_obj.debug.name,
         pc,
-        op_debug_string(op, module, methods, closure, frame, mode)
+        op_debug_string(op, methods, closure, frame, mode)
     );
 }
 
 fn op_debug_string(
     op: &Ops,
-    module: &Module,
     methods: &SymbolTable,
     closure: &ObjClosure,
     frame: Option<&CallFrame>,
@@ -1224,12 +1254,10 @@ fn op_debug_string(
         DumpMode::ShowSymbols => format!(" {}", symbol),
     };
 
+    let fn_obj = closure.fn_obj.borrow();
+
     match op {
-        Ops::Constant(i) => format!(
-            "Constant({}: {:?})",
-            i,
-            closure.fn_obj.borrow().constants[*i]
-        ),
+        Ops::Constant(i) => format!("Constant({}: {:?})", i, fn_obj.constants[*i]),
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
         Ops::Call(sig, symbol) => {
@@ -1251,7 +1279,7 @@ fn op_debug_string(
                 format!(
                     "Load(Module, {}{:?})",
                     unstable_num_arrow(v.index),
-                    module.variables[v.index]
+                    fn_obj.module.borrow().variables[v.index]
                 )
             }
         },
@@ -1293,11 +1321,10 @@ fn op_debug_string(
 }
 
 pub(crate) fn wren_debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
-    let module_name = closure.fn_obj.borrow().debug.module_name.clone();
-    debug_bytecode(vm, closure, &vm.modules[&module_name].borrow());
+    debug_bytecode(vm, closure);
 }
 
-fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure, module: &Module) {
+fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     let func = &closure.fn_obj.borrow();
     println!("Constants:");
     for (id, value) in func.constants.iter().enumerate() {
@@ -1305,15 +1332,12 @@ fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure, module: &Module) {
     }
     println!("Code:");
     for (pc, op) in func.code.iter().enumerate() {
-        dump_instruction(
+        // Don't share with dump_instruction for now.
+        println!(
+            "{:02}: {}",
             pc,
-            &op,
-            &module,
-            &vm.methods,
-            closure,
-            None,
-            DumpMode::HideSymbols,
-        )
+            op_debug_string(op, &vm.methods, closure, None, DumpMode::HideSymbols)
+        );
     }
 }
 
@@ -1391,16 +1415,26 @@ pub(crate) struct ObjFn {
     pub(crate) constants: Vec<Value>,
     pub(crate) code: Vec<Ops>,
     pub(crate) debug: FnDebug,
+    // This is needed so that we can find the Module through which to
+    // do module-level loads/stores when executing.  This is *definitely*
+    // circular reference however.  Maybe there is another way?
+    pub(crate) module: Handle<Module>,
 }
 
 impl ObjFn {
-    pub(crate) fn new(vm: &WrenVM, compiler: Box<crate::compiler::Compiler>, arity: u8) -> ObjFn {
+    pub(crate) fn new(
+        vm: &WrenVM,
+        module: Handle<Module>,
+        compiler: Box<crate::compiler::Compiler>,
+        arity: u8,
+    ) -> ObjFn {
         ObjFn {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
             constants: compiler.constants,
             code: compiler.code,
             arity: arity,
             debug: compiler.fn_debug,
+            module: module,
         }
     }
 }
