@@ -327,6 +327,7 @@ wren_c/test/language/function/newline_body.wren
 wren_c/test/language/function/newline_in_expression_block.wren
 wren_c/test/language/function/no_newline_before_close.wren
 wren_c/test/language/function/no_parameters.wren
+wren_c/test/language/function/parameters.wren
 wren_c/test/language/function/syntax.wren
 wren_c/test/language/if/dangling_else.wren
 wren_c/test/language/if/else.wren
@@ -397,6 +398,10 @@ wren_c/test/language/method/not_found_one_argument.wren
 wren_c/test/language/method/static.wren
 wren_c/test/language/method/static_method_not_found.wren
 wren_c/test/language/method/subscript_operators.wren
+wren_c/test/language/method/subscript_setter_too_many_arguments.wren
+wren_c/test/language/method/subscript_too_many_arguments.wren
+wren_c/test/language/method/too_many_arguments.wren
+wren_c/test/language/method/too_many_parameters.wren
 wren_c/test/language/module/change_imported_value/change_imported_value.wren
 wren_c/test/language/module/cyclic_import/cyclic_import.wren
 wren_c/test/language/module/implicitly_imports_core/implicitly_imports_core.wren
@@ -492,5 +497,6 @@ wren_c/test/limit/many_constants.wren
 wren_c/test/limit/many_fields.wren
 wren_c/test/limit/many_globals.wren
 wren_c/test/limit/reuse_constants.wren
+wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
 wren_c/test/regression/429.wren

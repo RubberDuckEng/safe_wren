@@ -30,6 +30,7 @@ enum ExitCode {
     Usage = 64,
     CompileError = 65,
     RuntimeError = 70,
+    // wren_c wren_test has NoInput, but always exits IO_ERR instead.
     NoInput = 66,
     // IOError = 74,
 }
@@ -57,6 +58,10 @@ fn exit(code: ExitCode) -> ! {
 fn run_file(path: &String) -> ! {
     let source = fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
+        // FIXME: wren_c appears to read the file as bytes and
+        // does not exit NO_INPUT for invalid UTF-8, but rather
+        // expects invalid UTF-8 to be a compile error.
+        // Unclear if that's worth repliciating?
         exit(ExitCode::NoInput);
     });
 

@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-System metaclass does not implement 'print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
-Unexpected output on stderr:
-[wren_c/test/language/method/too_many_arguments line 1] in <script>
-Missing expected error on line 1.
-Expected return code 65 and got 70. Stderr:
-System metaclass does not implement 'print(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
-[wren_c/test/language/method/too_many_arguments line 1] in <script>
-

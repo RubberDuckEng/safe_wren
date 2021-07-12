@@ -1,11 +1,1 @@
-Constants:
-00: Fn(new(_) block argument)
-Code:
-00: Load(Module, Class("Fn"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: EndModule
-06: Return
-07: End
+[wren_c/test/limit/too_many_function_parameters line 1] Error at ',': Methods cannot have more than 16 parameters.

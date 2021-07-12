@@ -1052,7 +1052,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive_static!(vm, fn_class, "new(_)", fn_new);
     primitive!(vm, fn_class, "arity", fn_arity);
 
-    for arity in 0..crate::vm::MAX_PARAMETERS {
+    for arity in 0..=crate::vm::MAX_PARAMETERS {
         let name = if arity == 0 {
             format!("call()")
         } else {

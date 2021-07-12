@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Fn does not implement 'call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
-Unexpected output on stderr:
-[wren_c/test/language/function/parameters line 50] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn does not implement 'call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_)'.
-[wren_c/test/language/function/parameters line 50] in <script>
-
-Missing expected output "136" on line 50.

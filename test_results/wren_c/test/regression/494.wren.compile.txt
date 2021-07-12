@@ -1,1 +1,1 @@
-[wren_c/test/regression/494 line 4] Error at end of file: Expected expression.
+[wren_c/test/regression/494 line 1] Error at ',': Methods cannot have more than 16 parameters.

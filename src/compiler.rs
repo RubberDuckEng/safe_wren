@@ -1517,8 +1517,8 @@ fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
     let mut arg_count = 0;
     loop {
         ignore_newlines(ctx)?;
-        // TODO: Check and throw an error if too many parameters.
         arg_count += 1;
+        validate_num_parameters(ctx, arg_count)?;
         expression(ctx)?;
         let found_comma = match_current(ctx, Token::Comma)?;
         if !found_comma {
@@ -1530,6 +1530,17 @@ fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
     Ok(arg_count)
 }
 
+// The VM can only handle a certain number of parameters, so check that we
+// haven't exceeded that and give a usable error.
+fn validate_num_parameters(ctx: &mut ParseContext, num_args: u8) -> Result<(), WrenError> {
+    // wren_c checks == here and continues after the error.
+    let max: u8 = crate::vm::MAX_PARAMETERS as u8;
+    if num_args > max {
+        return Err(ctx.error_string(format!("Methods cannot have more than {} parameters.", max)));
+    }
+    Ok(())
+}
+
 // Parses the rest of a comma-separated parameter list after the opening
 // delimeter. Updates `arity` in [signature] with the number of parameters.
 fn finish_parameter_list(
@@ -1539,7 +1550,7 @@ fn finish_parameter_list(
     loop {
         ignore_newlines(ctx)?;
         signature.arity += 1;
-        // FIXME: Parameter limits.
+        validate_num_parameters(ctx, signature.arity)?;
 
         // Define a local variable in the method for the parameter.
         declare_named_variable(ctx)?;
@@ -1788,10 +1799,10 @@ fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> 
     let mut call_type = SignatureType::Subscript;
     if can_assign && match_current(ctx, Token::Equals)? {
         call_type = SignatureType::SubscriptSetter;
-        // wren_c adss one here, but then subtracts in stringForSubscript?
-        arity += 1; // Why? I guess the value being set?
-                    // Compile the assigned value.
-                    // Validate # of parameters.
+        // Add one for the implicit RHS arg.
+        arity += 1;
+        // Compile the assigned value.
+        validate_num_parameters(ctx, arity)?;
         expression(ctx)?;
     }
     // Name is always empty for Subscripts, I think?
