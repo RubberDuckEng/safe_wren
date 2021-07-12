@@ -1,15 +1,1 @@
-Constants:
-00: String("Foo")
-01: Fn(thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy1)
-Code:
-00: Constant(0: String("Foo"))
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy1)
-08: EndModule
-09: Return
-10: End
+[wren_c/test/language/method/name_too_long line 2] Error at 'thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy...': Method names cannot be longer than 64 characters.

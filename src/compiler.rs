@@ -12,7 +12,7 @@ use num_traits::FromPrimitive;
 // The maximum name of a method, not including the signature. This is an
 // arbitrary but enforced maximum just so we know how long the method name
 // strings need to be in the parser.
-// const MAX_METHOD_NAME: usize = 64;
+const MAX_METHOD_NAME: usize = 64;
 
 // The maximum length of a method signature. Signatures look like:
 //
@@ -1355,7 +1355,8 @@ fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
     parse_precendence(ctx, rule.precedence.one_higher())?;
 
     // Call the operator method on the left-hand side.
-    // FIXME: Should this use signature_from_token?
+    // This could use signature_from_token, but since this is only called
+    // for tokens with known name lengths wren_c skips it.
     let signature = Signature::from_bare_name(SignatureType::Method, &name, 1);
     call_signature(ctx, signature);
     Ok(())
@@ -1502,9 +1503,15 @@ fn signature_from_token(
 ) -> Result<Signature, WrenError> {
     let name = previous_token_name(ctx)?;
 
-    // FIXME: Handle method name limits.
-
-    Ok(Signature::from_bare_name(call_type, &name, 0))
+    // wren_c measures in bytes so we do too.
+    if name.len() > MAX_METHOD_NAME {
+        Err(ctx.error_string(format!(
+            "Method names cannot be longer than {} characters.",
+            MAX_METHOD_NAME
+        )))
+    } else {
+        Ok(Signature::from_bare_name(call_type, &name, 0))
+    }
 }
 
 // This isn't needed, just here for ease of code porting.

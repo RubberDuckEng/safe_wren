@@ -385,10 +385,12 @@ wren_c/test/language/map/eof_after_value.wren
 wren_c/test/language/map/newlines.wren
 wren_c/test/language/map/trailing_comma.wren
 wren_c/test/language/method/arity.wren
+wren_c/test/language/method/call_name_too_long.wren
 wren_c/test/language/method/empty_block.wren
 wren_c/test/language/method/empty_subscript_definition.wren
 wren_c/test/language/method/long_name.wren
 wren_c/test/language/method/many_methods.wren
+wren_c/test/language/method/name_too_long.wren
 wren_c/test/language/method/newlines.wren
 wren_c/test/language/method/no_parameters_new_line.wren
 wren_c/test/language/method/not_found.wren

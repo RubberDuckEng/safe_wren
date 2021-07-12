@@ -1,11 +1,1 @@
-Constants:
-00: Num(0)
-Code:
-00: Boolean false
-01: JumpIfFalse(3)
-02: Constant(0: Num(0))
-03: Call(Getter, thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy1)
-04: Pop
-05: EndModule
-06: Return
-07: End
+[wren_c/test/language/method/call_name_too_long line 3] Error at 'thisIsAMethodNameThatExceedsTheMaximumNameLengthOf64CharactersBy...': Method names cannot be longer than 64 characters.
