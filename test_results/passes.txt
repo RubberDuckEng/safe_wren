@@ -169,6 +169,7 @@ wren_c/test/core/object/no_constructor.wren
 wren_c/test/core/object/nonclass_on_right.wren
 wren_c/test/core/object/not.wren
 wren_c/test/core/object/same.wren
+wren_c/test/core/object/to_string.wren
 wren_c/test/core/object/type.wren
 wren_c/test/core/range/contains.wren
 wren_c/test/core/range/equality.wren
@@ -286,6 +287,7 @@ wren_c/test/language/conditional/missing_else.wren
 wren_c/test/language/conditional/missing_question.wren
 wren_c/test/language/conditional/missing_then.wren
 wren_c/test/language/conditional/newlines.wren
+wren_c/test/language/conditional/precedence.wren
 wren_c/test/language/conditional/short_circuit.wren
 wren_c/test/language/constructor/cannot_be_infix.wren
 wren_c/test/language/constructor/cannot_be_minus.wren
@@ -298,6 +300,7 @@ wren_c/test/language/constructor/named.wren
 wren_c/test/language/constructor/no_default.wren
 wren_c/test/language/constructor/no_parameter_list.wren
 wren_c/test/language/constructor/not_inherited.wren
+wren_c/test/language/constructor/return_without_value.wren
 wren_c/test/language/continue/in_function_in_loop.wren
 wren_c/test/language/continue/in_method_in_loop.wren
 wren_c/test/language/continue/in_while_loop.wren

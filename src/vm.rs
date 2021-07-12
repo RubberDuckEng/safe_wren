@@ -128,7 +128,7 @@ impl core::fmt::Debug for Value {
                 f,
                 "Instance({})",
                 // FIXME: Probably needs a helper on ObjInstance?
-                o.borrow().class_obj().unwrap().borrow().name
+                o.borrow().class_obj().borrow().name
             ),
         }
     }
@@ -342,8 +342,8 @@ pub struct ObjFiber {
 }
 
 impl Obj for ObjFiber {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        Some(self.class_obj.clone())
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -667,11 +667,7 @@ fn bind_method(
     // wrenBindMethodCode(classObj, method.as.closure->fn);
 
     if is_static {
-        class
-            .class_obj()
-            .unwrap()
-            .borrow_mut()
-            .set_method(symbol, method);
+        class.class_obj().borrow_mut().set_method(symbol, method);
     } else {
         class.set_method(symbol, method);
     };
@@ -801,14 +797,14 @@ impl WrenVM {
         self.modules.insert(name, module);
     }
 
-    // TODO: This needs to be Option?  Root classes dont have classes?
-    pub(crate) fn class_for_value(&self, value: &Value) -> Option<Handle<ObjClass>> {
+    // called wrenGetClass in wren_c.
+    pub(crate) fn class_for_value(&self, value: &Value) -> Handle<ObjClass> {
         let core = self.core.as_ref().unwrap();
         match value {
-            Value::Null => Some(core.null.clone()),
-            Value::Num(_) => Some(core.num.clone()),
-            Value::Boolean(_) => Some(core.bool_class.clone()),
-            Value::String(_) => Some(core.string.clone()),
+            Value::Null => core.null.clone(),
+            Value::Num(_) => core.num.clone(),
+            Value::Boolean(_) => core.bool_class.clone(),
+            Value::String(_) => core.string.clone(),
             Value::Class(o) => o.borrow().class_obj(),
             Value::List(o) => o.borrow().class_obj(),
             Value::Map(o) => o.borrow().class_obj(),
@@ -983,9 +979,7 @@ impl WrenVM {
                     // and pass them to the function.
                     let args = frame.stack.split_off(this_offset);
 
-                    let this_class = self
-                        .class_for_value(&args[0])
-                        .ok_or_else(|| VMError::from_str("object has no class"))?;
+                    let this_class = self.class_for_value(&args[0]);
                     let class_obj = this_class.borrow();
                     // Get the Method record for this class for this symbol.
                     // This could return None instead of MethodNone?
@@ -1356,7 +1350,7 @@ fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
 
 pub trait Obj {
     // The object's class.
-    fn class_obj(&self) -> Option<Handle<ObjClass>>;
+    fn class_obj(&self) -> Handle<ObjClass>;
 }
 
 pub(crate) struct ObjRange {
@@ -1385,8 +1379,8 @@ pub(crate) struct ObjMap {
 }
 
 impl Obj for ObjMap {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        Some(self.class_obj.clone())
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -1396,8 +1390,8 @@ pub(crate) struct ObjList {
 }
 
 impl Obj for ObjList {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        Some(self.class_obj.clone())
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -1417,8 +1411,8 @@ impl ObjClosure {
 }
 
 impl Obj for ObjClosure {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        Some(self.class_obj.clone())
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -1453,8 +1447,8 @@ impl ObjFn {
 }
 
 impl Obj for ObjFn {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        Some(self.class_obj.clone())
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -1474,8 +1468,8 @@ impl ObjInstance {
 }
 
 impl Obj for ObjInstance {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        Some(self.class_obj.clone())
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -1487,8 +1481,8 @@ impl core::fmt::Debug for ObjRange {
 }
 
 impl Obj for ObjRange {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        Some(self.class_obj.clone())
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -1532,7 +1526,12 @@ impl core::fmt::Debug for Method {
 }
 
 pub struct ObjClass {
+    // FIXME: class is only Option due to Object and Class and Object metaclass
+    // initialization starting with class = None and then filling in.
+    // We could use a dummy class to start intead and make this non-optional.
     pub(crate) class: Option<Handle<ObjClass>>,
+
+    // Class is the only class w/o a superclass, all others this is Some(class).
     pub(crate) superclass: Option<Handle<ObjClass>>,
 
     // The number of fields needed for an instance of this class, including all
@@ -1591,7 +1590,8 @@ impl ObjClass {
 }
 
 impl Obj for ObjClass {
-    fn class_obj(&self) -> Option<Handle<ObjClass>> {
-        self.class.clone()
+    fn class_obj(&self) -> Handle<ObjClass> {
+        // FIXME: Fix to be non-Option and remove unwrap.
+        self.class.as_ref().unwrap().clone()
     }
 }

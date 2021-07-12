@@ -269,9 +269,8 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let expected_baseclass = args[1]
         .try_into_class()
         .ok_or_else(|| VMError::from_str("Right operand must be a class."))?;
-    let mut class = vm
-        .class_for_value(&args[0])
-        .ok_or(VMError::from_str("this must be class"))?;
+    // Start the class walk from class of "this".
+    let mut class = vm.class_for_value(&args[0]);
     // Should this just be an iterator?
     // e.g. for class in object.class_chain()
 
@@ -287,6 +286,13 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
         };
         class = superclass;
     }
+}
+
+fn object_to_string(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    Ok(Value::from_string(format!(
+        "instance of {}",
+        vm.class_for_value(&args[0]).borrow().name
+    )))
 }
 
 macro_rules! range_getter {
@@ -369,10 +375,7 @@ fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    Ok(match vm.class_for_value(&args[0]) {
-        Some(c) => Value::Class(c),
-        None => Value::Null,
-    })
+    Ok(Value::Class(vm.class_for_value(&args[0])))
 }
 
 fn object_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
@@ -948,7 +951,6 @@ macro_rules! primitive_static {
         $class
             .borrow_mut()
             .class_obj()
-            .unwrap()
             .borrow_mut()
             .set_method(symbol, Method::Primitive($func));
     };
@@ -967,7 +969,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM, core_module: &mut Module) {
     primitive!(vm, object, "==(_)", object_eqeq);
     primitive!(vm, object, "!=(_)", object_bangeq);
     primitive!(vm, object, "is(_)", object_is);
-    // primitive!(vm, object "toString", object_to_string);
+    primitive!(vm, object, "toString", object_to_string);
     primitive!(vm, object, "type", object_type);
 
     // Now we can define Class, which is a subclass of Object.
@@ -987,6 +989,28 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM, core_module: &mut Module) {
     wren_bind_superclass(&mut object_metaclass.borrow_mut(), &class);
 
     primitive_static!(vm, object, "same(_,_)", object_same);
+
+    // The core class diagram ends up looking like this, where single lines point
+    // to a class's superclass, and double lines point to its metaclass:
+    //
+    //        .------------------------------------. .====.
+    //        |                  .---------------. | #    #
+    //        v                  |               v | v    #
+    //   .---------.   .-------------------.   .-------.  #
+    //   | Object  |==>| Object metaclass  |==>| Class |=="
+    //   '---------'   '-------------------'   '-------'
+    //        ^                                 ^ ^ ^ ^
+    //        |                  .--------------' # | #
+    //        |                  |                # | #
+    //   .---------.   .-------------------.      # | # -.
+    //   |  Base   |==>|  Base metaclass   |======" | #  |
+    //   '---------'   '-------------------'        | #  |
+    //        ^                                     | #  |
+    //        |                  .------------------' #  | Example classes
+    //        |                  |                    #  |
+    //   .---------.   .-------------------.          #  |
+    //   | Derived |==>| Derived metaclass |=========="  |
+    //   '---------'   '-------------------'            -'
 }
 
 // Only used by init_fn_and_fiber

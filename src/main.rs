@@ -60,8 +60,9 @@ fn run_file(path: &String) -> ! {
         eprintln!("Failed to open file \"{}\": {}", path, e);
         // FIXME: wren_c appears to read the file as bytes and
         // does not exit NO_INPUT for invalid UTF-8, but rather
-        // expects invalid UTF-8 to be a compile error.
-        // Unclear if that's worth repliciating?
+        // expects invalid UTF-8 to appear as compile errors
+        // including the line number they occured on.
+        // We can't pass those with this up-front decoding strategy.
         exit(ExitCode::NoInput);
     });
 

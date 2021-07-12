@@ -24,6 +24,7 @@ const MAX_METHOD_NAME: usize = 64;
 //
 // The maximum signature length takes into account the longest method name, the
 // maximum number of parameters with separators between them, "init ", and "()".
+// This is for buffer pre-allocation, rather than limit enforcement.
 // const MAX_METHOD_SIGNATURE: usize = MAX_METHOD_NAME + (MAX_PARAMETERS * 2) + 6;
 
 // The maximum length of an identifier.  This isn't needed in wren_rust, but
