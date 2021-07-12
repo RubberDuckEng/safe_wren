@@ -1,3 +1,5 @@
+// analog to wren_compiler.c from wren_c.
+
 use std::cell::RefCell;
 use std::error;
 use std::fmt;
@@ -3352,6 +3354,15 @@ pub(crate) fn compile_in_module(
     // When compiling, we create a module and register it.
     let module = vm.lookup_or_register_empty_module(module_name);
     wren_compile(vm, input, module)
+}
+
+pub(crate) fn wren_compile_source(
+    vm: &mut WrenVM,
+    module_name: &str,
+    source: String,
+) -> Result<Handle<ObjClosure>, WrenError> {
+    let input = InputManager::from_string(source);
+    compile_in_module(vm, module_name, input)
 }
 
 pub(crate) fn wren_compile<'a>(

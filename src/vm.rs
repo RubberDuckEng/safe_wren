@@ -1,3 +1,5 @@
+// analog to wren_vm.c from wren_c.
+
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};

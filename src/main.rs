@@ -1,6 +1,11 @@
+// analog to main.c from wren_test in wren_c.
+// wren_rust's version of wren_test.  Should only use public APIs
+// Currently has additional --tokenize, --compile and --interpret
+// options, which do use private interfaces and should be split out
+// into a separate executable.
+
 use std::env;
 use std::fs;
-use std::path::{Component, Path, PathBuf};
 
 #[macro_use]
 extern crate num_derive;
@@ -11,10 +16,13 @@ mod core;
 mod vm;
 mod wren;
 
+mod test;
+mod wren_debug;
+
+use crate::test::test_config;
+use crate::wren_debug::{interpret_and_print_vm, print_bytecode, print_tokens};
+
 use crate::wren::*;
-//FIXME:  Remove these
-use crate::compiler::{compile_in_module, lex, InputManager, WrenError};
-use crate::vm::{wren_debug_bytecode, RuntimeError};
 
 enum ExitCode {
     Success = 0,
@@ -26,8 +34,6 @@ enum ExitCode {
     // IOError = 74,
 }
 
-static VERSION_STRING: &str = "wren_rust-0.1";
-
 fn handle_usage(args: &Vec<String>) {
     if args.len() < 2 {
         println!("This is a Wren test runner.\nUsage: wren_test [file]\n");
@@ -35,7 +41,10 @@ fn handle_usage(args: &Vec<String>) {
     }
 
     if args.len() == 2 && args[1] == "--version" {
-        println!("wren_test is running on Wren version {}\n", VERSION_STRING);
+        println!(
+            "wren_test is running on Wren version {}\n",
+            WREN_VERSION_STRING
+        );
         exit(ExitCode::GenericError);
     }
 }
@@ -45,59 +54,26 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
-fn test_config() -> WrenConfiguration {
-    WrenConfiguration {
-        load_module_fn: Some(read_module),
-        wren_write_fn: Some(write_string),
-        resolve_module_fn: Some(resolve_module),
-        ..Default::default()
-    }
-}
-
-fn run_file(path: &String) {
+fn run_file(path: &String) -> ! {
     let source = fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
         exit(ExitCode::NoInput);
     });
-    // Hack to avoid \r adjusting printed byte-ranges for ParseTokens
-    // on windows:
-    let no_crs = source
-        .as_bytes()
-        .to_vec()
-        .into_iter()
-        .filter(|i| *i != b'\r')
-        .collect::<Vec<u8>>();
 
     // handle module setup.
     let mut vm = WrenVM::new(test_config());
-    let input = InputManager::from_bytes(no_crs);
     let module_name = path.strip_suffix(".wren").unwrap();
-    let closure = compile_in_module(&mut vm, module_name, input).unwrap_or_else(|e| {
-        print_compile_error(e);
-        exit(ExitCode::CompileError);
-    });
-
-    vm.run(closure).unwrap_or_else(|e| {
-        print_runtime_error(e);
-        exit(ExitCode::RuntimeError);
-    });
-}
-
-fn print_compile_error(e: WrenError) {
-    // Matching test.c output:
-    eprintln!("[{} line {}] {}", e.module, e.line, e.error);
-}
-
-// wre_test expects:
-// Index must be a number.
-// [.test/core/string.../iterator_value_not_num line 1] in (script)
-fn print_runtime_error(e: RuntimeError) {
-    eprintln!("{}", e.msg);
-    for frame in &e.stack_trace.frames {
-        eprintln!(
-            "[{} line {}] in {}",
-            frame.module, frame.line, frame.fn_name
-        );
+    let result = wren_interpret(&mut vm, module_name, source);
+    match result {
+        WrenInterpretResult::CompileError => {
+            exit(ExitCode::CompileError);
+        }
+        WrenInterpretResult::RuntimeError => {
+            exit(ExitCode::RuntimeError);
+        }
+        WrenInterpretResult::Success => {
+            exit(ExitCode::Success);
+        }
     }
 }
 
@@ -105,72 +81,6 @@ fn wren_test_main(args: &Vec<String>) {
     handle_usage(&args);
     // handle API tests.
     run_file(&args[1]);
-}
-
-struct CompileInput {
-    input: InputManager,
-    module_name: String,
-}
-
-fn input_from_source_or_path(source_or_path: &String) -> CompileInput {
-    if source_or_path.ends_with(".wren") {
-        let source = fs::read_to_string(source_or_path).unwrap_or_else(|_| {
-            eprintln!("Could not find file \"{}\".", source_or_path);
-            exit(ExitCode::NoInput);
-        });
-        CompileInput {
-            input: InputManager::from_string(source),
-            module_name: source_or_path.strip_suffix(".wren").unwrap().into(),
-        }
-    } else {
-        CompileInput {
-            input: InputManager::from_string(source_or_path.clone()),
-            module_name: "<inline>".into(),
-        }
-    }
-}
-
-fn print_tokens(source_or_path: &String) {
-    let mut input = input_from_source_or_path(source_or_path);
-    let result = lex(&mut input.input);
-
-    if let Ok(tokens) = result {
-        let mut as_string = Vec::new();
-        for token in tokens {
-            as_string.push(format!(
-                "{:?} '{}'",
-                token.token,
-                token.name(&input.input).expect("input")
-            ));
-        }
-        println!("Tokens: [{}]", as_string.join(", "));
-    } else {
-        println!("{:?}", result);
-    }
-}
-
-fn print_bytecode(source_or_path: &String) {
-    let mut vm = WrenVM::new(test_config());
-    let input = input_from_source_or_path(source_or_path);
-    let result = compile_in_module(&mut vm, &input.module_name, input.input);
-    match result {
-        Ok(closure) => wren_debug_bytecode(&vm, &closure.borrow()),
-        Err(e) => print_compile_error(e),
-    }
-}
-
-fn interpret_and_print_vm(source_or_path: &String) {
-    let mut vm = WrenVM::new(test_config());
-    vm.config.debug_level = Some(DebugLevel::NonCore);
-    let input = input_from_source_or_path(source_or_path);
-    let result = compile_in_module(&mut vm, &input.module_name, input.input);
-    match result {
-        Ok(closure) => match vm.run(closure) {
-            Ok(_) => println!("{:?}", vm),
-            Err(e) => print_runtime_error(e),
-        },
-        Err(e) => print_compile_error(e),
-    }
 }
 
 fn main() {
@@ -185,59 +95,4 @@ fn main() {
         wren_test_main(&args);
     }
     exit(ExitCode::Success);
-}
-
-fn write_string(_vm: &WrenVM, string: &str) {
-    print!("{}", string);
-}
-
-fn is_relative_import(module: &str) -> bool {
-    module.starts_with(".")
-}
-
-fn normalize_path(path: &PathBuf) -> String {
-    path.components()
-        .map(|component| match component {
-            Component::Prefix(s) => s.as_os_str().to_str().unwrap(),
-            Component::RootDir => "",
-            Component::CurDir => ".",
-            Component::ParentDir => "..",
-            Component::Normal(s) => s.to_str().unwrap(),
-        })
-        .collect::<Vec<&str>>()
-        .join("/")
-}
-
-// Applies the CLI's import resolution policy. The rules are:
-//
-// * If [module] starts with "./" or "../", it is a relative import, relative
-//   to [importer]. The resolved path is [name] concatenated onto the directory
-//   containing [importer] and then normalized.
-//
-//   For example, importing "./a/./b/../c" from "./d/e/f" gives you "./d/e/a/c".
-fn resolve_module(_vm: &WrenVM, importer: &str, module: &str) -> String {
-    // Only relative imports need resolution?
-    if !is_relative_import(module) {
-        return module.into();
-    }
-
-    // Get the directory containing the importing module.
-    let importer_path = Path::new(importer);
-    let importer_dir = importer_path.parent().unwrap();
-    // Add the relative import path.
-    let resolved = importer_dir.join(module);
-    normalize_path(&resolved)
-}
-
-fn read_module(_vm: &WrenVM, name: &str) -> Option<WrenLoadModuleResult> {
-    // Hack for now.
-    let path = format!("{}.wren", name);
-    match fs::read_to_string(&path) {
-        Ok(source) => return Some(WrenLoadModuleResult { source: source }),
-        // Err(e) => {
-        //     println!("{} : {}", path, e);
-        // }
-        _ => {}
-    }
-    None
 }

@@ -1,3 +1,5 @@
+// analog to wren_core.c from wren_c.
+
 use crate::vm::*;
 use std::collections::VecDeque;
 use std::ops::*;

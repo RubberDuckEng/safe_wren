@@ -1,4 +1,8 @@
+// analog to wren.h from wren_c.
+
 pub use crate::vm::WrenVM;
+
+pub static WREN_VERSION_STRING: &str = "wren_rust-0.1";
 
 // A function callable from Wren code, but implemented in another language.
 // FIXME: How does this report errors?
@@ -32,16 +36,16 @@ type WrenBindForeignMethodFn = fn(
 // Displays a string of text to the user.
 type WrenWriteFn = fn(vm: &WrenVM, text: &str);
 
-// pub enum WrenErrorType {
-//     // A syntax or resolution error detected at compile time.
-//     Compile,
+pub enum WrenErrorType {
+    // A syntax or resolution error detected at compile time.
+    Compile,
 
-//     // The error message for a runtime error.
-//     Runtime,
+    // The error message for a runtime error.
+    Runtime,
 
-//     // One entry of a runtime error's stack trace.
-//     StackTrace,
-// }
+    // One entry of a runtime error's stack trace.
+    StackTrace,
+}
 
 // Reports an error to the user.
 //
@@ -55,8 +59,8 @@ type WrenWriteFn = fn(vm: &WrenVM, text: &str);
 // made for each line in the stack trace. Each of those has the resolved
 // [module] and [line] where the method or function is defined and [message] is
 // the name of the method or function.
-// type WrenErrorFn =
-//     fn(vm: &WrenVM, error_type: WrenErrorType, module: &str, line: usize, message: &str);
+type WrenErrorFn =
+    fn(vm: &WrenVM, error_type: WrenErrorType, module: &str, line: usize, message: &str);
 
 // FIXME: derive Default is a hack for now.
 #[derive(Default)]
@@ -132,9 +136,9 @@ pub struct WrenConfiguration {
     // The callback Wren uses to report errors.
     //
     // When an error occurs, this will be called with the module name, line
-    // number, and an error message. If this is `NULL`, Wren doesn't report any
+    // number, and an error message. If this is None, Wren doesn't report any
     // errors.
-    // pub error_fn: Option<WrenErrorFn>,
+    pub error_fn: Option<WrenErrorFn>,
 
     // FIXME: Hack during development, shouldn't be API.
     pub debug_level: Option<DebugLevel>,
@@ -144,4 +148,61 @@ pub struct WrenConfiguration {
 pub enum DebugLevel {
     NonCore,
     All,
+}
+
+pub enum WrenInterpretResult {
+    Success,
+    CompileError,
+    RuntimeError,
+}
+
+// Runs [source], a string of Wren source code in a new fiber in [vm] in the
+// context of resolved [module].
+pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInterpretResult {
+    match crate::compiler::wren_compile_source(vm, module, source) {
+        Err(e) => {
+            if let Some(error_fn) = vm.config.error_fn {
+                error_fn(
+                    vm,
+                    WrenErrorType::Compile,
+                    module,
+                    e.line,
+                    &e.error.to_string(),
+                );
+            }
+            return WrenInterpretResult::CompileError;
+        }
+        Ok(closure) => {
+            // wren_c does the fiber creation here instead.
+            match vm.run(closure) {
+                Err(e) => {
+                    if let Some(error_fn) = vm.config.error_fn {
+                        // wren_c sends module = null, line = -1 in the
+                        // first message we're sending the info for the
+                        // top frame instead.
+                        error_fn(
+                            vm,
+                            WrenErrorType::Runtime,
+                            module,
+                            e.stack_trace.frames[0].line,
+                            &e.msg,
+                        );
+                        for frame in &e.stack_trace.frames {
+                            error_fn(
+                                vm,
+                                WrenErrorType::StackTrace,
+                                &frame.module,
+                                frame.line,
+                                &frame.fn_name,
+                            );
+                        }
+                    }
+                    return WrenInterpretResult::RuntimeError;
+                }
+                Ok(_) => {
+                    return WrenInterpretResult::Success;
+                }
+            }
+        }
+    }
 }
