@@ -27,7 +27,6 @@ with error text from any failed tests.  `test.py` will also update
 * Upvalues
 * String codepoint APIs (including String.iterate)
 * Map.iterate
-* remove all f64 casting (hide behind methods)
 * foreign functions
 * rename consume_expecting_msg to consume()
 * Add typedef Result<T> to compiler.rs

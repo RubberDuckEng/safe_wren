@@ -69,16 +69,16 @@ macro_rules! bitwise_num_op {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")? as u32;
             let b = validate_num(&args[1], "Right operand")? as u32;
-            Ok(Value::$return_type(a.$method(&b) as f64))
+            Ok(Value::from_u32(a.$method(&b)))
         }
     };
 }
 
 macro_rules! num_bitwise_unary_op {
-    ($func:ident, $method:ident, $return_type:ident) => {
+    ($func:ident, $method:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")? as u32;
-            Ok(Value::$return_type(a.$method() as f64))
+            Ok(Value::from_u32(a.$method()))
         }
     };
 }
@@ -174,7 +174,7 @@ num_unary_op!(num_log, ln, Num);
 num_unary_op!(num_log2, log2, Num);
 num_unary_op!(num_exp, exp, Num);
 num_binary_op!(num_mod, rem, Num);
-num_bitwise_unary_op!(num_bitwise_not, not, Num);
+num_bitwise_unary_op!(num_bitwise_not, not);
 
 fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let x = validate_num(&args[0], "this")?;
@@ -445,7 +445,7 @@ fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn string_byte_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    Ok(Value::Num(this_as_string(&args).len() as f64))
+    Ok(Value::from_usize(this_as_string(&args).len()))
 }
 
 fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -458,13 +458,13 @@ fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
     // FIXME: Might be a nicer way to do this in rust?
     let c = this.split_at(index).1.chars().nth(0).unwrap();
-    Ok(Value::Num(c as usize as f64))
+    Ok(Value::from_usize(c as usize))
 }
 
 fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let string = this_as_string(&args);
     let index = validate_index(&args[1], string.len(), "Index")?;
-    Ok(Value::Num(string.as_bytes()[index] as f64))
+    Ok(Value::from_u8(string.as_bytes()[index]))
 }
 
 fn string_contains(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -481,7 +481,7 @@ fn string_ends_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 fn index_or_neg_one(maybe_index: Option<usize>) -> Value {
     match maybe_index {
         None => Value::Num(-1.0),
-        Some(index) => Value::Num(index as f64),
+        Some(index) => Value::from_usize(index),
     }
 }
 
@@ -506,7 +506,7 @@ fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     // This cannot use index_or_neg_one, due to adding start.
     match maybe_index {
         None => Ok(Value::Num(-1.0)),
-        Some(index) => Ok(Value::Num((start + index) as f64)),
+        Some(index) => Ok(Value::from_usize(start + index)),
     }
 }
 
@@ -529,8 +529,8 @@ fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let closure = this_as_closure(&args);
-    let arity = closure.borrow().fn_obj.borrow().arity as f64;
-    Ok(Value::Num(arity))
+    let arity = closure.borrow().fn_obj.borrow().arity;
+    Ok(Value::from_u8(arity))
 }
 
 fn fn_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
@@ -612,7 +612,7 @@ fn map_contains_key(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
 fn map_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let map = this_as_map(&args);
     let count = map.borrow().data.len();
-    Ok(Value::Num(count as f64))
+    Ok(Value::from_usize(count))
 }
 
 fn map_remove(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -878,8 +878,8 @@ fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = this_as_list(&args);
-    let count = list.borrow().elements.len() as f64;
-    Ok(Value::Num(count))
+    let count = list.borrow().elements.len();
+    Ok(Value::from_usize(count))
 }
 
 // Modeled after https://github.com/saghm/unescape-rs

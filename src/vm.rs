@@ -141,6 +141,17 @@ impl Value {
         Self::from_string(string.into())
     }
 
+    // Make num casts explicit and easily searchable:
+    pub(crate) fn from_usize(num: usize) -> Value {
+        Self::Num(num as f64)
+    }
+    pub(crate) fn from_u8(num: u8) -> Value {
+        Self::Num(num as f64)
+    }
+    pub(crate) fn from_u32(num: u32) -> Value {
+        Self::Num(num as f64)
+    }
+
     // Different from "is truthy" used by "as_bool" in wren_c
     // Unclear if this is only ever called on a known-bool?
     pub(crate) fn equals_true(&self) -> bool {

@@ -14,7 +14,7 @@ mod wren;
 use crate::wren::*;
 //FIXME:  Remove these
 use crate::compiler::{compile_in_module, lex, InputManager, WrenError};
-use crate::vm::{wren_debug_bytecode, RuntimeError, WrenVM};
+use crate::vm::{wren_debug_bytecode, RuntimeError};
 
 enum ExitCode {
     Success = 0,
