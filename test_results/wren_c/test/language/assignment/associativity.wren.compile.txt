@@ -1,15 +1,15 @@
 Constants:
-00: String("a")
-01: String("b")
-02: String("c")
+00: "a"
+01: "b"
+02: "c"
 Code:
-00: Constant(0: String("a"))
+00: Constant(0: "a")
 01: Store(Module)
 02: Pop
-03: Constant(1: String("b"))
+03: Constant(1: "b")
 04: Store(Module)
 05: Pop
-06: Constant(2: String("c"))
+06: Constant(2: "c")
 07: Store(Module)
 08: Pop
 09: Load(Module, Null)

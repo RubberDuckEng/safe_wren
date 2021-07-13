@@ -1,8 +1,8 @@
 Constants:
-00: String("global")
+00: "global"
 01: Fn(new(_) block argument)
 Code:
-00: Constant(0: String("global"))
+00: Constant(0: "global")
 01: Store(Module)
 02: Pop
 03: Load(Module, Class("Fn"))

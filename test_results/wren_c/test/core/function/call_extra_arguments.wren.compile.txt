@@ -3,30 +3,30 @@ Constants:
 01: Fn(new(_) block argument)
 02: Fn(new(_) block argument)
 03: Fn(new(_) block argument)
-04: String("a")
-05: String("a")
-06: String("b")
-07: String("a")
-08: String("b")
-09: String("a")
-10: String("b")
-11: String("c")
-12: String("a")
-13: String("b")
-14: String("c")
-15: String("a")
-16: String("b")
-17: String("c")
-18: String("d")
-19: String("a")
-20: String("b")
-21: String("c")
-22: String("d")
-23: String("a")
-24: String("b")
-25: String("c")
-26: String("d")
-27: String("e")
+04: "a"
+05: "a"
+06: "b"
+07: "a"
+08: "b"
+09: "a"
+10: "b"
+11: "c"
+12: "a"
+13: "b"
+14: "c"
+15: "a"
+16: "b"
+17: "c"
+18: "d"
+19: "a"
+20: "b"
+21: "c"
+22: "d"
+23: "a"
+24: "b"
+25: "c"
+26: "d"
+27: "e"
 Code:
 00: Load(Module, Class("Fn"))
 01: Closure(0, [])
@@ -49,51 +49,51 @@ Code:
 18: Store(Module)
 19: Pop
 20: Load(Module, Null)
-21: Constant(4: String("a"))
+21: Constant(4: "a")
 22: Call(Method, call(_))
 23: Pop
 24: Load(Module, Null)
-25: Constant(5: String("a"))
-26: Constant(6: String("b"))
+25: Constant(5: "a")
+26: Constant(6: "b")
 27: Call(Method, call(_,_))
 28: Pop
 29: Load(Module, Null)
-30: Constant(7: String("a"))
-31: Constant(8: String("b"))
+30: Constant(7: "a")
+31: Constant(8: "b")
 32: Call(Method, call(_,_))
 33: Pop
 34: Load(Module, Null)
-35: Constant(9: String("a"))
-36: Constant(10: String("b"))
-37: Constant(11: String("c"))
+35: Constant(9: "a")
+36: Constant(10: "b")
+37: Constant(11: "c")
 38: Call(Method, call(_,_,_))
 39: Pop
 40: Load(Module, Null)
-41: Constant(12: String("a"))
-42: Constant(13: String("b"))
-43: Constant(14: String("c"))
+41: Constant(12: "a")
+42: Constant(13: "b")
+43: Constant(14: "c")
 44: Call(Method, call(_,_,_))
 45: Pop
 46: Load(Module, Null)
-47: Constant(15: String("a"))
-48: Constant(16: String("b"))
-49: Constant(17: String("c"))
-50: Constant(18: String("d"))
+47: Constant(15: "a")
+48: Constant(16: "b")
+49: Constant(17: "c")
+50: Constant(18: "d")
 51: Call(Method, call(_,_,_,_))
 52: Pop
 53: Load(Module, Null)
-54: Constant(19: String("a"))
-55: Constant(20: String("b"))
-56: Constant(21: String("c"))
-57: Constant(22: String("d"))
+54: Constant(19: "a")
+55: Constant(20: "b")
+56: Constant(21: "c")
+57: Constant(22: "d")
 58: Call(Method, call(_,_,_,_))
 59: Pop
 60: Load(Module, Null)
-61: Constant(23: String("a"))
-62: Constant(24: String("b"))
-63: Constant(25: String("c"))
-64: Constant(26: String("d"))
-65: Constant(27: String("e"))
+61: Constant(23: "a")
+62: Constant(24: "b")
+63: Constant(25: "c")
+64: Constant(26: "d")
+65: Constant(27: "e")
 66: Call(Method, call(_,_,_,_,_))
 67: Pop
 68: EndModule

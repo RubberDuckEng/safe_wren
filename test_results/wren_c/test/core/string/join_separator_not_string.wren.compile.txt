@@ -1,9 +1,9 @@
 Constants:
-00: String("string")
-01: Num(2)
+00: "string"
+01: 2
 Code:
-00: Constant(0: String("string"))
-01: Constant(1: Num(2))
+00: Constant(0: "string")
+01: Constant(1: 2)
 02: Call(Method, join(_))
 03: Pop
 04: EndModule

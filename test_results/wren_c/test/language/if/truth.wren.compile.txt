@@ -1,33 +1,33 @@
 Constants:
-00: String("bad")
-01: String("false")
-02: String("bad")
-03: String("null")
-04: Num(0)
-05: Num(0)
-06: String("")
-07: String("empty")
+00: "bad"
+01: "false"
+02: "bad"
+03: "null"
+04: 0
+05: 0
+06: ""
+07: "empty"
 Code:
 00: Boolean false
 01: JumpIfFalse(5)
 02: Load(Module, Class("System"))
-03: Constant(0: String("bad"))
+03: Constant(0: "bad")
 04: Call(Method, print(_))
 05: Pop
 06: Jump(4)
 07: Load(Module, Class("System"))
-08: Constant(1: String("false"))
+08: Constant(1: "false")
 09: Call(Method, print(_))
 10: Pop
 11: Null
 12: JumpIfFalse(5)
 13: Load(Module, Class("System"))
-14: Constant(2: String("bad"))
+14: Constant(2: "bad")
 15: Call(Method, print(_))
 16: Pop
 17: Jump(4)
 18: Load(Module, Class("System"))
-19: Constant(3: String("null"))
+19: Constant(3: "null")
 20: Call(Method, print(_))
 21: Pop
 22: Boolean true
@@ -36,16 +36,16 @@ Code:
 25: Boolean true
 26: Call(Method, print(_))
 27: Pop
-28: Constant(4: Num(0))
+28: Constant(4: 0)
 29: JumpIfFalse(4)
 30: Load(Module, Class("System"))
-31: Constant(5: Num(0))
+31: Constant(5: 0)
 32: Call(Method, print(_))
 33: Pop
-34: Constant(6: String(""))
+34: Constant(6: "")
 35: JumpIfFalse(4)
 36: Load(Module, Class("System"))
-37: Constant(7: String("empty"))
+37: Constant(7: "empty")
 38: Call(Method, print(_))
 39: Pop
 40: EndModule

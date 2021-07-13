@@ -1,13 +1,13 @@
 Constants:
-00: Num(1)
+00: 1
 01: Fn(reduce(_) block argument)
-02: Num(1)
+02: 1
 03: Fn(reduce(_,_) block argument)
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
 02: Call(Method, new())
-03: Constant(0: Num(1))
+03: Constant(0: 1)
 04: Call(Method, addCore_(_))
 05: Closure(1, [])
 06: Call(Method, reduce(_))
@@ -16,7 +16,7 @@ Code:
 09: Load(Module, Class("System"))
 10: Load(Module, Class("List"))
 11: Call(Method, new())
-12: Constant(2: Num(1))
+12: Constant(2: 1)
 13: Closure(3, [])
 14: Call(Method, reduce(_,_))
 15: Call(Method, print(_))

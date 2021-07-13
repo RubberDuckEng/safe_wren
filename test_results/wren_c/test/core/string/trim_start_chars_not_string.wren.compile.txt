@@ -1,9 +1,9 @@
 Constants:
-00: String("abracadabra")
-01: Num(123)
+00: "abracadabra"
+01: 123
 Code:
-00: Constant(0: String("abracadabra"))
-01: Constant(1: Num(123))
+00: Constant(0: "abracadabra")
+01: Constant(1: 123)
 02: Call(Method, trimStart(_))
 03: Pop
 04: EndModule

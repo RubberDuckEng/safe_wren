@@ -1,5 +1,5 @@
 Constants:
-00: String("Call")
+00: "Call"
 01: Fn(noParams)
 02: Fn(zero())
 03: Fn(one(_))
@@ -10,7 +10,7 @@ Constants:
 08: Fn([_,_])
 09: Fn([_,_]=(_))
 Code:
-00: Constant(0: String("Call"))
+00: Constant(0: "Call")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)

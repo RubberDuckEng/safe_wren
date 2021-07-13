@@ -1,16 +1,16 @@
 Constants:
-00: String("before")
-01: String("not reached")
+00: "before"
+01: "not reached"
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: String("before"))
+01: Constant(0: "before")
 02: Call(Method, print(_))
 03: Pop
 04: Load(Module, Class("Fiber"))
 05: Call(Method, yield())
 06: Pop
 07: Load(Module, Class("System"))
-08: Constant(1: String("not reached"))
+08: Constant(1: "not reached")
 09: Call(Method, print(_))
 10: Pop
 11: EndModule

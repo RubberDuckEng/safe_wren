@@ -1,15 +1,15 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn(bar)
 04: Fn(bar)
 05: Fn(bar(_))
 06: Fn(bar(_))
-07: String("arg")
-08: String("arg")
+07: "arg"
+08: "arg"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -46,13 +46,13 @@ Code:
 34: Load(Module, Class("System"))
 35: Load(Module, Null)
 36: Call(Method, new())
-37: Constant(7: String("arg"))
+37: Constant(7: "arg")
 38: Call(Method, bar(_))
 39: Call(Method, print(_))
 40: Pop
 41: Load(Module, Class("System"))
 42: Load(Module, Null)
-43: Constant(8: String("arg"))
+43: Constant(8: "arg")
 44: Call(Method, bar(_))
 45: Call(Method, print(_))
 46: Pop

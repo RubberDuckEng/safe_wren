@@ -1,8 +1,8 @@
 Constants:
-00: Num(3)
+00: 3
 Code:
 00: Load(Module, Class("Fn"))
-01: Constant(0: Num(3))
+01: Constant(0: 3)
 02: Call(Method, new(_))
 03: Pop
 04: EndModule

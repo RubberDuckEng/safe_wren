@@ -1,12 +1,12 @@
 Constants:
-00: Num(1)
-01: Num(10)
+00: 1
+01: 10
 02: Fn(reduce(_) block argument)
-03: Num(100)
+03: 100
 04: Fn(reduce(_,_) block argument)
 Code:
-00: Constant(0: Num(1))
-01: Constant(1: Num(10))
+00: Constant(0: 1)
+01: Constant(1: 10)
 02: Call(Method, ..(_))
 03: Store(Module)
 04: Pop
@@ -18,7 +18,7 @@ Code:
 10: Pop
 11: Load(Module, Class("System"))
 12: Load(Module, Null)
-13: Constant(3: Num(100))
+13: Constant(3: 100)
 14: Closure(4, [])
 15: Call(Method, reduce(_,_))
 16: Call(Method, print(_))

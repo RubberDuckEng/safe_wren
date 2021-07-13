@@ -1,31 +1,31 @@
 Constants:
-00: String("abçd")
-01: Num(0)
-02: Num(1)
-03: Num(2)
-04: Num(3)
-05: Num(4)
-06: Num(123)
-07: Num(1)
-08: String("")
-09: String("a\0b\0c")
-10: String("a\0b\0c")
-11: Num(0)
-12: String("a\0b\0c")
-13: Num(1)
-14: String("a\0b\0c")
-15: Num(2)
-16: String("a\0b\0c")
-17: Num(3)
-18: String("a\0b\0c")
-19: Num(4)
-20: String("\xef\xf7")
-21: String("\xef\xf7")
-22: Num(0)
-23: String("\xef\xf7")
-24: Num(1)
+00: "abçd"
+01: 0
+02: 1
+03: 2
+04: 3
+05: 4
+06: 123
+07: 1
+08: ""
+09: "a\0b\0c"
+10: "a\0b\0c"
+11: 0
+12: "a\0b\0c"
+13: 1
+14: "a\0b\0c"
+15: 2
+16: "a\0b\0c"
+17: 3
+18: "a\0b\0c"
+19: 4
+20: "\xef\xf7"
+21: "\xef\xf7"
+22: 0
+23: "\xef\xf7"
+24: 1
 Code:
-00: Constant(0: String("abçd"))
+00: Constant(0: "abçd")
 01: Call(Getter, codePoints)
 02: Store(Module)
 03: Pop
@@ -37,114 +37,114 @@ Code:
 09: Pop
 10: Load(Module, Class("System"))
 11: Load(Module, Null)
-12: Constant(1: Num(0))
+12: Constant(1: 0)
 13: Call(Method, iterate(_))
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Class("System"))
 17: Load(Module, Null)
-18: Constant(2: Num(1))
+18: Constant(2: 1)
 19: Call(Method, iterate(_))
 20: Call(Method, print(_))
 21: Pop
 22: Load(Module, Class("System"))
 23: Load(Module, Null)
-24: Constant(3: Num(2))
+24: Constant(3: 2)
 25: Call(Method, iterate(_))
 26: Call(Method, print(_))
 27: Pop
 28: Load(Module, Class("System"))
 29: Load(Module, Null)
-30: Constant(4: Num(3))
+30: Constant(4: 3)
 31: Call(Method, iterate(_))
 32: Call(Method, print(_))
 33: Pop
 34: Load(Module, Class("System"))
 35: Load(Module, Null)
-36: Constant(5: Num(4))
+36: Constant(5: 4)
 37: Call(Method, iterate(_))
 38: Call(Method, print(_))
 39: Pop
 40: Load(Module, Class("System"))
 41: Load(Module, Null)
-42: Constant(6: Num(123))
+42: Constant(6: 123)
 43: Call(Method, iterate(_))
 44: Call(Method, print(_))
 45: Pop
 46: Load(Module, Class("System"))
 47: Load(Module, Null)
-48: Constant(7: Num(1))
+48: Constant(7: 1)
 49: Call(Method, -)
 50: Call(Method, iterate(_))
 51: Call(Method, print(_))
 52: Pop
 53: Load(Module, Class("System"))
-54: Constant(8: String(""))
+54: Constant(8: "")
 55: Call(Getter, codePoints)
 56: Null
 57: Call(Method, iterate(_))
 58: Call(Method, print(_))
 59: Pop
 60: Load(Module, Class("System"))
-61: Constant(9: String("a\0b\0c"))
+61: Constant(9: "a\0b\0c")
 62: Call(Getter, codePoints)
 63: Null
 64: Call(Method, iterate(_))
 65: Call(Method, print(_))
 66: Pop
 67: Load(Module, Class("System"))
-68: Constant(10: String("a\0b\0c"))
+68: Constant(10: "a\0b\0c")
 69: Call(Getter, codePoints)
-70: Constant(11: Num(0))
+70: Constant(11: 0)
 71: Call(Method, iterate(_))
 72: Call(Method, print(_))
 73: Pop
 74: Load(Module, Class("System"))
-75: Constant(12: String("a\0b\0c"))
+75: Constant(12: "a\0b\0c")
 76: Call(Getter, codePoints)
-77: Constant(13: Num(1))
+77: Constant(13: 1)
 78: Call(Method, iterate(_))
 79: Call(Method, print(_))
 80: Pop
 81: Load(Module, Class("System"))
-82: Constant(14: String("a\0b\0c"))
+82: Constant(14: "a\0b\0c")
 83: Call(Getter, codePoints)
-84: Constant(15: Num(2))
+84: Constant(15: 2)
 85: Call(Method, iterate(_))
 86: Call(Method, print(_))
 87: Pop
 88: Load(Module, Class("System"))
-89: Constant(16: String("a\0b\0c"))
+89: Constant(16: "a\0b\0c")
 90: Call(Getter, codePoints)
-91: Constant(17: Num(3))
+91: Constant(17: 3)
 92: Call(Method, iterate(_))
 93: Call(Method, print(_))
 94: Pop
 95: Load(Module, Class("System"))
-96: Constant(18: String("a\0b\0c"))
+96: Constant(18: "a\0b\0c")
 97: Call(Getter, codePoints)
-98: Constant(19: Num(4))
+98: Constant(19: 4)
 99: Call(Method, iterate(_))
 100: Call(Method, print(_))
 101: Pop
 102: Load(Module, Class("System"))
-103: Constant(20: String("\xef\xf7"))
+103: Constant(20: "\xef\xf7")
 104: Call(Getter, codePoints)
 105: Null
 106: Call(Method, iterate(_))
 107: Call(Method, print(_))
 108: Pop
 109: Load(Module, Class("System"))
-110: Constant(21: String("\xef\xf7"))
+110: Constant(21: "\xef\xf7")
 111: Call(Getter, codePoints)
-112: Constant(22: Num(0))
+112: Constant(22: 0)
 113: Call(Method, iterate(_))
 114: Call(Method, print(_))
 115: Pop
 116: Load(Module, Class("System"))
-117: Constant(23: String("\xef\xf7"))
+117: Constant(23: "\xef\xf7")
 118: Call(Getter, codePoints)
-119: Constant(24: Num(1))
+119: Constant(24: 1)
 120: Call(Method, iterate(_))
 121: Call(Method, print(_))
 122: Pop

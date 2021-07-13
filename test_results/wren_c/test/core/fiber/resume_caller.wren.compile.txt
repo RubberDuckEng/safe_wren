@@ -1,8 +1,8 @@
 Constants:
 00: Fn(new(_) block argument)
 01: Fn(new(_) block argument)
-02: String("begin main")
-03: String("end main")
+02: "begin main"
+03: "end main"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -15,14 +15,14 @@ Code:
 08: Store(Module)
 09: Pop
 10: Load(Module, Class("System"))
-11: Constant(2: String("begin main"))
+11: Constant(2: "begin main")
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Null)
 15: Call(Method, call())
 16: Pop
 17: Load(Module, Class("System"))
-18: Constant(3: String("end main"))
+18: Constant(3: "end main")
 19: Call(Method, print(_))
 20: Pop
 21: EndModule

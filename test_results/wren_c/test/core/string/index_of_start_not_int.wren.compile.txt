@@ -1,11 +1,11 @@
 Constants:
-00: String("abcd")
-01: String("bc")
-02: Num(12.34)
+00: "abcd"
+01: "bc"
+02: 12.34
 Code:
-00: Constant(0: String("abcd"))
-01: Constant(1: String("bc"))
-02: Constant(2: Num(12.34))
+00: Constant(0: "abcd")
+01: Constant(1: "bc")
+02: Constant(2: 12.34)
 03: Call(Method, indexOf(_,_))
 04: Pop
 05: EndModule

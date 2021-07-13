@@ -1,10 +1,10 @@
 Constants:
-00: String("abcd")
-01: Num(4)
+00: "abcd"
+01: 4
 Code:
-00: Constant(0: String("abcd"))
+00: Constant(0: "abcd")
 01: Call(Getter, bytes)
-02: Constant(1: Num(4))
+02: Constant(1: 4)
 03: Call(Subscript, [_])
 04: Pop
 05: EndModule

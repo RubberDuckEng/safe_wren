@@ -1,5 +1,5 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn([_])
@@ -8,23 +8,23 @@ Constants:
 06: Fn([_]=(_))
 07: Fn([_,_]=(_))
 08: Fn([_,_,_]=(_))
-09: String("a")
-10: String("a")
-11: String("b")
-12: String("a")
-13: String("b")
-14: String("c")
-15: String("a")
-16: String("value")
-17: String("a")
-18: String("b")
-19: String("value")
-20: String("a")
-21: String("b")
-22: String("c")
-23: String("value")
+09: "a"
+10: "a"
+11: "b"
+12: "a"
+13: "b"
+14: "c"
+15: "a"
+16: "value"
+17: "a"
+18: "b"
+19: "value"
+20: "a"
+21: "b"
+22: "c"
+23: "value"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -59,46 +59,46 @@ Code:
 32: Pop
 33: Load(Module, Class("System"))
 34: Load(Module, Null)
-35: Constant(9: String("a"))
+35: Constant(9: "a")
 36: Call(Subscript, [_])
 37: Call(Method, print(_))
 38: Pop
 39: Load(Module, Class("System"))
 40: Load(Module, Null)
-41: Constant(10: String("a"))
-42: Constant(11: String("b"))
+41: Constant(10: "a")
+42: Constant(11: "b")
 43: Call(Subscript, [_,_])
 44: Call(Method, print(_))
 45: Pop
 46: Load(Module, Class("System"))
 47: Load(Module, Null)
-48: Constant(12: String("a"))
-49: Constant(13: String("b"))
-50: Constant(14: String("c"))
+48: Constant(12: "a")
+49: Constant(13: "b")
+50: Constant(14: "c")
 51: Call(Subscript, [_,_,_])
 52: Call(Method, print(_))
 53: Pop
 54: Load(Module, Class("System"))
 55: Load(Module, Null)
-56: Constant(15: String("a"))
-57: Constant(16: String("value"))
+56: Constant(15: "a")
+57: Constant(16: "value")
 58: Call(SubscriptSetter, [_]=(_))
 59: Call(Method, print(_))
 60: Pop
 61: Load(Module, Class("System"))
 62: Load(Module, Null)
-63: Constant(17: String("a"))
-64: Constant(18: String("b"))
-65: Constant(19: String("value"))
+63: Constant(17: "a")
+64: Constant(18: "b")
+65: Constant(19: "value")
 66: Call(SubscriptSetter, [_,_]=(_))
 67: Call(Method, print(_))
 68: Pop
 69: Load(Module, Class("System"))
 70: Load(Module, Null)
-71: Constant(20: String("a"))
-72: Constant(21: String("b"))
-73: Constant(22: String("c"))
-74: Constant(23: String("value"))
+71: Constant(20: "a")
+72: Constant(21: "b")
+73: Constant(22: "c")
+74: Constant(23: "value")
 75: Call(SubscriptSetter, [_,_,_]=(_))
 76: Call(Method, print(_))
 77: Pop

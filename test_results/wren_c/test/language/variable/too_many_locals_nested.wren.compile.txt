@@ -1,7 +1,7 @@
 Constants:
-00: String("value")
+00: "value"
 Code:
-00: Constant(0: String("value"))
+00: Constant(0: "value")
 01: Load(Local, 1)
 02: Load(Local, 2)
 03: Load(Local, 3)

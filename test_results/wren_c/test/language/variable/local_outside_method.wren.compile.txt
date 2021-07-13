@@ -1,6 +1,6 @@
 Constants:
-00: String("variable")
-01: String("Foo")
+00: "variable"
+01: "Foo"
 02: Fn(init new())
 03: Fn()
 04: Fn(foo)
@@ -8,8 +8,8 @@ Constants:
 06: Fn(foo)
 07: Fn(classMethod)
 Code:
-00: Constant(0: String("variable"))
-01: Constant(1: String("Foo"))
+00: Constant(0: "variable")
+01: Constant(1: "Foo")
 02: Load(Module, Class("Object"))
 03: Class(0 fields)
 04: Closure(2, [])

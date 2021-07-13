@@ -1,9 +1,9 @@
 Constants:
-00: String("s")
-01: Num(1.5)
+00: "s"
+01: 1.5
 Code:
-00: Constant(0: String("s"))
-01: Constant(1: Num(1.5))
+00: Constant(0: "s")
+01: Constant(1: 1.5)
 02: Call(Method, iterate(_))
 03: Pop
 04: EndModule

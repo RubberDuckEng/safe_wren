@@ -2,7 +2,7 @@ Constants:
 00: Fn(new(_) block argument)
 01: Fn(new(_) block argument)
 02: Fn(new(_) block argument)
-03: String("not reached")
+03: "not reached"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -23,7 +23,7 @@ Code:
 16: Call(Method, transfer())
 17: Pop
 18: Load(Module, Class("System"))
-19: Constant(3: String("not reached"))
+19: Constant(3: "not reached")
 20: Call(Method, print(_))
 21: Pop
 22: EndModule

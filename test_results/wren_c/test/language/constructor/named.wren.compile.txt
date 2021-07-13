@@ -1,12 +1,12 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init named())
 02: Fn()
 03: Fn(init other())
 04: Fn()
 05: Fn(toString)
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(1 fields)
 03: Store(Module)

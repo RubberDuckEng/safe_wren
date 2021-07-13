@@ -1,20 +1,20 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn(foo(_,_))
 04: Fn(fooPrint)
-05: String("Bar")
+05: "Bar"
 06: Fn(init new())
 07: Fn()
 08: Fn(bar(_,_))
 09: Fn(barPrint)
-10: String("foo 1")
-11: String("foo 2")
-12: String("bar 1")
-13: String("bar 2")
+10: "foo 1"
+11: "foo 2"
+12: "bar 1"
+13: "bar 2"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(2 fields)
 03: Store(Module)
@@ -31,7 +31,7 @@ Code:
 14: Closure(4, [])
 15: Load(Module, Null)
 16: Method(instance, fooPrint)
-17: Constant(5: String("Bar"))
+17: Constant(5: "Bar")
 18: Load(Module, Null)
 19: Class(2 fields)
 20: Store(Module)
@@ -53,13 +53,13 @@ Code:
 36: Store(Module)
 37: Pop
 38: Load(Module, Null)
-39: Constant(10: String("foo 1"))
-40: Constant(11: String("foo 2"))
+39: Constant(10: "foo 1")
+40: Constant(11: "foo 2")
 41: Call(Method, foo(_,_))
 42: Pop
 43: Load(Module, Null)
-44: Constant(12: String("bar 1"))
-45: Constant(13: String("bar 2"))
+44: Constant(12: "bar 1")
+45: Constant(13: "bar 2")
 46: Call(Method, bar(_,_))
 47: Pop
 48: Load(Module, Null)

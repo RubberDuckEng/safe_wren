@@ -1,7 +1,7 @@
 Constants:
-00: String("\U0060")
+00: "\U0060"
 Code:
-00: Constant(0: String("\U0060"))
+00: Constant(0: "\U0060")
 01: Pop
 02: EndModule
 03: Return

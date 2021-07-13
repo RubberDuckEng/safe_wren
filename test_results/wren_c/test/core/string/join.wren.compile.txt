@@ -1,18 +1,18 @@
 Constants:
-00: String("string")
-01: String("")
-02: String(", ")
-03: String("a\0b\0c")
-04: String("")
-05: String(", ")
-06: String("a, \0, b, \0, c")
+00: "string"
+01: ""
+02: ", "
+03: "a\0b\0c"
+04: ""
+05: ", "
+06: "a, \0, b, \0, c"
 Code:
-00: Constant(0: String("string"))
+00: Constant(0: "string")
 01: Store(Module)
 02: Pop
 03: Load(Module, Class("System"))
 04: Load(Module, Null)
-05: Constant(1: String(""))
+05: Constant(1: "")
 06: Call(Method, join(_))
 07: Load(Module, Null)
 08: Call(Method, ==(_))
@@ -20,16 +20,16 @@ Code:
 10: Pop
 11: Load(Module, Class("System"))
 12: Load(Module, Null)
-13: Constant(2: String(", "))
+13: Constant(2: ", ")
 14: Call(Method, join(_))
 15: Call(Method, print(_))
 16: Pop
-17: Constant(3: String("a\0b\0c"))
+17: Constant(3: "a\0b\0c")
 18: Store(Module)
 19: Pop
 20: Load(Module, Class("System"))
 21: Load(Module, Null)
-22: Constant(4: String(""))
+22: Constant(4: "")
 23: Call(Method, join(_))
 24: Load(Module, Null)
 25: Call(Method, ==(_))
@@ -37,9 +37,9 @@ Code:
 27: Pop
 28: Load(Module, Class("System"))
 29: Load(Module, Null)
-30: Constant(5: String(", "))
+30: Constant(5: ", ")
 31: Call(Method, join(_))
-32: Constant(6: String("a, \0, b, \0, c"))
+32: Constant(6: "a, \0, b, \0, c")
 33: Call(Method, ==(_))
 34: Call(Method, print(_))
 35: Pop

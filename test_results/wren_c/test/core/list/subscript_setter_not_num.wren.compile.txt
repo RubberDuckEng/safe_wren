@@ -1,23 +1,23 @@
 Constants:
-00: Num(1)
-01: Num(2)
-02: Num(3)
-03: String("2")
-04: Num(1)
+00: 1
+01: 2
+02: 3
+03: "2"
+04: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
-02: Constant(0: Num(1))
+02: Constant(0: 1)
 03: Call(Method, addCore_(_))
-04: Constant(1: Num(2))
+04: Constant(1: 2)
 05: Call(Method, addCore_(_))
-06: Constant(2: Num(3))
+06: Constant(2: 3)
 07: Call(Method, addCore_(_))
 08: Store(Module)
 09: Pop
 10: Load(Module, Null)
-11: Constant(3: String("2"))
-12: Constant(4: Num(1))
+11: Constant(3: "2")
+12: Constant(4: 1)
 13: Call(SubscriptSetter, [_]=(_))
 14: Pop
 15: EndModule

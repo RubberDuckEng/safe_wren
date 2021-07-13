@@ -2,7 +2,7 @@ Constants:
 00: Fn(new(_) block argument)
 01: Fn(new(_) block argument)
 02: Fn(new(_) block argument)
-03: String("start")
+03: "start"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -20,7 +20,7 @@ Code:
 13: Store(Module)
 14: Pop
 15: Load(Module, Class("System"))
-16: Constant(3: String("start"))
+16: Constant(3: "start")
 17: Call(Method, print(_))
 18: Pop
 19: Load(Module, Null)

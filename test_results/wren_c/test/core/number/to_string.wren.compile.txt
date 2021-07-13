@@ -1,50 +1,50 @@
 Constants:
-00: Num(123)
-01: String("123")
-02: Num(123)
-03: String("-123")
-04: Num(0)
-05: String("-0")
-06: Num(12.34)
-07: String("12.34")
-08: Num(0.0001)
-09: String("-0.0001")
+00: 123
+01: "123"
+02: 123
+03: "-123"
+04: 0
+05: "-0"
+06: 12.34
+07: "12.34"
+08: 0.0001
+09: "-0.0001"
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(123))
+01: Constant(0: 123)
 02: Call(Getter, toString)
-03: Constant(1: String("123"))
+03: Constant(1: "123")
 04: Call(Method, ==(_))
 05: Call(Method, print(_))
 06: Pop
 07: Load(Module, Class("System"))
-08: Constant(2: Num(123))
+08: Constant(2: 123)
 09: Call(Method, -)
 10: Call(Getter, toString)
-11: Constant(3: String("-123"))
+11: Constant(3: "-123")
 12: Call(Method, ==(_))
 13: Call(Method, print(_))
 14: Pop
 15: Load(Module, Class("System"))
-16: Constant(4: Num(0))
+16: Constant(4: 0)
 17: Call(Method, -)
 18: Call(Getter, toString)
-19: Constant(5: String("-0"))
+19: Constant(5: "-0")
 20: Call(Method, ==(_))
 21: Call(Method, print(_))
 22: Pop
 23: Load(Module, Class("System"))
-24: Constant(6: Num(12.34))
+24: Constant(6: 12.34)
 25: Call(Getter, toString)
-26: Constant(7: String("12.34"))
+26: Constant(7: "12.34")
 27: Call(Method, ==(_))
 28: Call(Method, print(_))
 29: Pop
 30: Load(Module, Class("System"))
-31: Constant(8: Num(0.0001))
+31: Constant(8: 0.0001)
 32: Call(Method, -)
 33: Call(Getter, toString)
-34: Constant(9: String("-0.0001"))
+34: Constant(9: "-0.0001")
 35: Call(Method, ==(_))
 36: Call(Method, print(_))
 37: Pop

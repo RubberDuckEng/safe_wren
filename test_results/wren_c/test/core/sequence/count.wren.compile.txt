@@ -1,11 +1,11 @@
 Constants:
-00: String("TestSequence")
+00: "TestSequence"
 01: Fn(init new())
 02: Fn()
 03: Fn(iterate(_))
 04: Fn(iteratorValue(_))
 Code:
-00: Constant(0: String("TestSequence"))
+00: Constant(0: "TestSequence")
 01: Load(Module, Class("Sequence"))
 02: Class(0 fields)
 03: Store(Module)

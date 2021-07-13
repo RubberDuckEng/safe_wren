@@ -1,18 +1,18 @@
 Constants:
-00: String("")
-01: String("empty string")
-02: String("")
+00: ""
+01: "empty string"
+02: ""
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
-02: Constant(0: String(""))
-03: Constant(1: String("empty string"))
+02: Constant(0: "")
+03: Constant(1: "empty string")
 04: Call(Method, addCore_(_,_))
 05: Store(Module)
 06: Pop
 07: Load(Module, Class("System"))
 08: Load(Module, Null)
-09: Constant(2: String(""))
+09: Constant(2: "")
 10: Call(Subscript, [_])
 11: Call(Method, print(_))
 12: Pop

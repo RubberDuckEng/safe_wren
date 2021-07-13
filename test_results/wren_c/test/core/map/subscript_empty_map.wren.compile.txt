@@ -1,5 +1,5 @@
 Constants:
-00: String("key")
+00: "key"
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
@@ -7,7 +7,7 @@ Code:
 03: Pop
 04: Load(Module, Class("System"))
 05: Load(Module, Null)
-06: Constant(0: String("key"))
+06: Constant(0: "key")
 07: Call(Subscript, [_])
 08: Call(Method, print(_))
 09: Pop

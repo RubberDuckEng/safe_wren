@@ -4,7 +4,7 @@ Constants:
 02: Fn(new(_) block argument)
 03: Fn(new(_) block argument)
 04: Fn(new(_) block argument)
-05: String("after")
+05: "after"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -35,7 +35,7 @@ Code:
 26: Call(Method, call())
 27: Pop
 28: Load(Module, Class("System"))
-29: Constant(5: String("after"))
+29: Constant(5: "after")
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))

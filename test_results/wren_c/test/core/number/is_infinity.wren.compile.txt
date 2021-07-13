@@ -1,26 +1,26 @@
 Constants:
-00: Num(123)
-01: Num(1)
-02: Num(0)
-03: Num(10)
-04: Num(0)
+00: 123
+01: 1
+02: 0
+03: 10
+04: 0
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(123))
+01: Constant(0: 123)
 02: Call(Getter, isInfinity)
 03: Call(Method, print(_))
 04: Pop
 05: Load(Module, Class("System"))
-06: Constant(1: Num(1))
-07: Constant(2: Num(0))
+06: Constant(1: 1)
+07: Constant(2: 0)
 08: Call(Method, /(_))
 09: Call(Getter, isInfinity)
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(3: Num(10))
+13: Constant(3: 10)
 14: Call(Method, -)
-15: Constant(4: Num(0))
+15: Constant(4: 0)
 16: Call(Method, /(_))
 17: Call(Getter, isInfinity)
 18: Call(Method, print(_))

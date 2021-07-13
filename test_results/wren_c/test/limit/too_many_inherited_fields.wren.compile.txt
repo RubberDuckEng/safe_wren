@@ -1,14 +1,14 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn(foo)
-04: String("Bar")
+04: "Bar"
 05: Fn(init new())
 06: Fn()
 07: Fn(bar)
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(128 fields)
 03: Store(Module)
@@ -22,7 +22,7 @@ Code:
 11: Closure(3, [])
 12: Load(Module, Null)
 13: Method(instance, foo)
-14: Constant(4: String("Bar"))
+14: Constant(4: "Bar")
 15: Load(Module, Null)
 16: Class(128 fields)
 17: Store(Module)

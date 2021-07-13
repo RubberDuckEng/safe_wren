@@ -1,18 +1,18 @@
 Constants:
-00: String("Iter")
+00: "Iter"
 01: Fn(init new(_))
 02: Fn()
 03: Fn(iterate(_))
 04: Fn(iteratorValue(_))
-05: String("bad")
-06: String("bad")
-07: String("true")
-08: Num(0)
-09: Num(0)
-10: String("")
-11: String("string")
+05: "bad"
+06: "bad"
+07: "true"
+08: 0
+09: 0
+10: ""
+11: "string"
 Code:
-00: Constant(0: String("Iter"))
+00: Constant(0: "Iter")
 01: Load(Module, Class("Object"))
 02: Class(1 fields)
 03: Store(Module)
@@ -42,7 +42,7 @@ Code:
 27: Load(Local, 2)
 28: Call(Method, iteratorValue(_))
 29: Load(Module, Class("System"))
-30: Constant(5: String("bad"))
+30: Constant(5: "bad")
 31: Call(Method, print(_))
 32: Pop
 33: Jump(2)
@@ -63,7 +63,7 @@ Code:
 48: Load(Local, 2)
 49: Call(Method, iteratorValue(_))
 50: Load(Module, Class("System"))
-51: Constant(6: String("bad"))
+51: Constant(6: "bad")
 52: Call(Method, print(_))
 53: Pop
 54: Jump(2)
@@ -84,7 +84,7 @@ Code:
 69: Load(Local, 2)
 70: Call(Method, iteratorValue(_))
 71: Load(Module, Class("System"))
-72: Constant(7: String("true"))
+72: Constant(7: "true")
 73: Call(Method, print(_))
 74: Pop
 75: Jump(2)
@@ -93,7 +93,7 @@ Code:
 78: Pop
 79: Pop
 80: Load(Module, Null)
-81: Constant(8: Num(0))
+81: Constant(8: 0)
 82: Call(Method, new(_))
 83: Null
 84: Load(Local, 1)
@@ -105,7 +105,7 @@ Code:
 90: Load(Local, 2)
 91: Call(Method, iteratorValue(_))
 92: Load(Module, Class("System"))
-93: Constant(9: Num(0))
+93: Constant(9: 0)
 94: Call(Method, print(_))
 95: Pop
 96: Jump(2)
@@ -114,7 +114,7 @@ Code:
 99: Pop
 100: Pop
 101: Load(Module, Null)
-102: Constant(10: String(""))
+102: Constant(10: "")
 103: Call(Method, new(_))
 104: Null
 105: Load(Local, 1)
@@ -126,7 +126,7 @@ Code:
 111: Load(Local, 2)
 112: Call(Method, iteratorValue(_))
 113: Load(Module, Class("System"))
-114: Constant(11: String("string"))
+114: Constant(11: "string")
 115: Call(Method, print(_))
 116: Pop
 117: Jump(2)

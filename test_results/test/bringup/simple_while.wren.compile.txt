@@ -1,17 +1,17 @@
 Constants:
-00: Num(0)
-01: Num(2)
-02: Num(1)
+00: 0
+01: 2
+02: 1
 Code:
-00: Constant(0: Num(0))
+00: Constant(0: 0)
 01: Store(Module)
 02: Pop
 03: Load(Module, Null)
-04: Constant(1: Num(2))
+04: Constant(1: 2)
 05: Call(Method, <(_))
 06: JumpIfFalse(6)
 07: Load(Module, Null)
-08: Constant(2: Num(1))
+08: Constant(2: 1)
 09: Call(Method, +(_))
 10: Store(Module)
 11: Pop

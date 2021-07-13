@@ -1,11 +1,11 @@
 Constants:
-00: String("string")
-01: Num(6)
+00: "string"
+01: 6
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: String("string"))
+01: Constant(0: "string")
 02: Call(Getter, codePoints)
-03: Constant(1: Num(6))
+03: Constant(1: 6)
 04: Call(Method, iteratorValue(_))
 05: Call(Method, print(_))
 06: Pop

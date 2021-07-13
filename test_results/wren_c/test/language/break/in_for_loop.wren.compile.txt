@@ -1,22 +1,22 @@
 Constants:
-00: Num(1)
-01: Num(2)
-02: Num(3)
-03: Num(4)
-04: Num(5)
-05: Num(2)
+00: 1
+01: 2
+02: 3
+03: 4
+04: 5
+05: 2
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
-02: Constant(0: Num(1))
+02: Constant(0: 1)
 03: Call(Method, addCore_(_))
-04: Constant(1: Num(2))
+04: Constant(1: 2)
 05: Call(Method, addCore_(_))
-06: Constant(2: Num(3))
+06: Constant(2: 3)
 07: Call(Method, addCore_(_))
-08: Constant(3: Num(4))
+08: Constant(3: 4)
 09: Call(Method, addCore_(_))
-10: Constant(4: Num(5))
+10: Constant(4: 5)
 11: Call(Method, addCore_(_))
 12: Null
 13: Load(Local, 1)
@@ -32,7 +32,7 @@ Code:
 23: Call(Method, print(_))
 24: Pop
 25: Load(Local, 3)
-26: Constant(5: Num(2))
+26: Constant(5: 2)
 27: Call(Method, >(_))
 28: JumpIfFalse(1)
 29: Jump(6)

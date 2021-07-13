@@ -1,8 +1,8 @@
 Constants:
-00: String("value a")
-01: String("value b")
+00: "value a"
+01: "value b"
 Code:
-00: Constant(0: String("value a"))
+00: Constant(0: "value a")
 01: Load(Local, 1)
 02: Load(Local, 2)
 03: Load(Local, 3)
@@ -516,7 +516,7 @@ Code:
 511: Pop
 512: Pop
 513: Pop
-514: Constant(1: String("value b"))
+514: Constant(1: "value b")
 515: Load(Local, 1)
 516: Load(Local, 2)
 517: Load(Local, 3)

@@ -1,16 +1,16 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn(set(_,_,_,_,_))
 04: Fn(write)
-05: Num(1)
-06: Num(2)
-07: Num(3)
-08: Num(4)
-09: Num(5)
+05: 1
+06: 2
+07: 3
+08: 4
+09: 5
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(5 fields)
 03: Store(Module)
@@ -32,11 +32,11 @@ Code:
 19: Store(Module)
 20: Pop
 21: Load(Module, Null)
-22: Constant(5: Num(1))
-23: Constant(6: Num(2))
-24: Constant(7: Num(3))
-25: Constant(8: Num(4))
-26: Constant(9: Num(5))
+22: Constant(5: 1)
+23: Constant(6: 2)
+24: Constant(7: 3)
+25: Constant(8: 4)
+26: Constant(9: 5)
 27: Call(Method, set(_,_,_,_,_))
 28: Pop
 29: Load(Module, Null)

@@ -1,34 +1,34 @@
 Constants:
-00: Num(0)
-01: Num(0)
-02: Num(2863311530)
-03: Num(1431655765)
-04: Num(4042322160)
-05: Num(1010580540)
-06: Num(4294967295)
-07: Num(4294967295)
+00: 0
+01: 0
+02: 2863311530
+03: 1431655765
+04: 4042322160
+05: 1010580540
+06: 4294967295
+07: 4294967295
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(0))
-02: Constant(1: Num(0))
+01: Constant(0: 0)
+02: Constant(1: 0)
 03: Call(Method, &(_))
 04: Call(Method, print(_))
 05: Pop
 06: Load(Module, Class("System"))
-07: Constant(2: Num(2863311530))
-08: Constant(3: Num(1431655765))
+07: Constant(2: 2863311530)
+08: Constant(3: 1431655765)
 09: Call(Method, &(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(4: Num(4042322160))
-14: Constant(5: Num(1010580540))
+13: Constant(4: 4042322160)
+14: Constant(5: 1010580540)
 15: Call(Method, &(_))
 16: Call(Method, print(_))
 17: Pop
 18: Load(Module, Class("System"))
-19: Constant(6: Num(4294967295))
-20: Constant(7: Num(4294967295))
+19: Constant(6: 4294967295)
+20: Constant(7: 4294967295)
 21: Call(Method, &(_))
 22: Call(Method, print(_))
 23: Pop

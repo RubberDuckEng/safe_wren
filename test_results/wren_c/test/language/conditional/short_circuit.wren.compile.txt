@@ -1,27 +1,27 @@
 Constants:
-00: String("ok")
-01: String("no")
-02: String("no")
-03: String("ok")
+00: "ok"
+01: "no"
+02: "no"
+03: "ok"
 Code:
 00: Boolean true
 01: JumpIfFalse(4)
 02: Load(Module, Class("System"))
-03: Constant(0: String("ok"))
+03: Constant(0: "ok")
 04: Call(Method, print(_))
 05: Jump(3)
 06: Load(Module, Class("System"))
-07: Constant(1: String("no"))
+07: Constant(1: "no")
 08: Call(Method, print(_))
 09: Pop
 10: Boolean false
 11: JumpIfFalse(4)
 12: Load(Module, Class("System"))
-13: Constant(2: String("no"))
+13: Constant(2: "no")
 14: Call(Method, print(_))
 15: Jump(3)
 16: Load(Module, Class("System"))
-17: Constant(3: String("ok"))
+17: Constant(3: "ok")
 18: Call(Method, print(_))
 19: Pop
 20: EndModule

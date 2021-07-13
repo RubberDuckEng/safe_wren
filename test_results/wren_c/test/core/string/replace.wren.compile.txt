@@ -1,115 +1,115 @@
 Constants:
-00: String("something")
-01: String("some")
-02: String("no")
-03: String("something")
-04: String("thing")
-05: String("one")
-06: String("something")
-07: String("ometh")
-08: String("umm")
-09: String("something")
-10: String("math")
-11: String("ton")
-12: String("somethingsomething")
-13: String("some")
-14: String("no")
-15: String("abc abc abc")
-16: String(" ")
-17: String("")
-18: String("abcabcabc")
-19: String("abc")
-20: String("")
-21: String("søméthîng")
-22: String("sømé")
-23: String("nø")
-24: String("søméthîng")
-25: String("meth")
-26: String("ton")
-27: String("a\0b\0c")
-28: String("\0")
-29: String("")
-30: String("a\0b\0c")
-31: String("b")
-32: String("")
-33: String("a\0\0c")
+00: "something"
+01: "some"
+02: "no"
+03: "something"
+04: "thing"
+05: "one"
+06: "something"
+07: "ometh"
+08: "umm"
+09: "something"
+10: "math"
+11: "ton"
+12: "somethingsomething"
+13: "some"
+14: "no"
+15: "abc abc abc"
+16: " "
+17: ""
+18: "abcabcabc"
+19: "abc"
+20: ""
+21: "søméthîng"
+22: "sømé"
+23: "nø"
+24: "søméthîng"
+25: "meth"
+26: "ton"
+27: "a\0b\0c"
+28: "\0"
+29: ""
+30: "a\0b\0c"
+31: "b"
+32: ""
+33: "a\0\0c"
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: String("something"))
-02: Constant(1: String("some"))
-03: Constant(2: String("no"))
+01: Constant(0: "something")
+02: Constant(1: "some")
+03: Constant(2: "no")
 04: Call(Method, replace(_,_))
 05: Call(Method, print(_))
 06: Pop
 07: Load(Module, Class("System"))
-08: Constant(3: String("something"))
-09: Constant(4: String("thing"))
-10: Constant(5: String("one"))
+08: Constant(3: "something")
+09: Constant(4: "thing")
+10: Constant(5: "one")
 11: Call(Method, replace(_,_))
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Class("System"))
-15: Constant(6: String("something"))
-16: Constant(7: String("ometh"))
-17: Constant(8: String("umm"))
+15: Constant(6: "something")
+16: Constant(7: "ometh")
+17: Constant(8: "umm")
 18: Call(Method, replace(_,_))
 19: Call(Method, print(_))
 20: Pop
 21: Load(Module, Class("System"))
-22: Constant(9: String("something"))
-23: Constant(10: String("math"))
-24: Constant(11: String("ton"))
+22: Constant(9: "something")
+23: Constant(10: "math")
+24: Constant(11: "ton")
 25: Call(Method, replace(_,_))
 26: Call(Method, print(_))
 27: Pop
 28: Load(Module, Class("System"))
-29: Constant(12: String("somethingsomething"))
-30: Constant(13: String("some"))
-31: Constant(14: String("no"))
+29: Constant(12: "somethingsomething")
+30: Constant(13: "some")
+31: Constant(14: "no")
 32: Call(Method, replace(_,_))
 33: Call(Method, print(_))
 34: Pop
 35: Load(Module, Class("System"))
-36: Constant(15: String("abc abc abc"))
-37: Constant(16: String(" "))
-38: Constant(17: String(""))
+36: Constant(15: "abc abc abc")
+37: Constant(16: " ")
+38: Constant(17: "")
 39: Call(Method, replace(_,_))
 40: Call(Method, print(_))
 41: Pop
 42: Load(Module, Class("System"))
-43: Constant(18: String("abcabcabc"))
-44: Constant(19: String("abc"))
-45: Constant(20: String(""))
+43: Constant(18: "abcabcabc")
+44: Constant(19: "abc")
+45: Constant(20: "")
 46: Call(Method, replace(_,_))
 47: Call(Method, print(_))
 48: Pop
 49: Load(Module, Class("System"))
-50: Constant(21: String("søméthîng"))
-51: Constant(22: String("sømé"))
-52: Constant(23: String("nø"))
+50: Constant(21: "søméthîng")
+51: Constant(22: "sømé")
+52: Constant(23: "nø")
 53: Call(Method, replace(_,_))
 54: Call(Method, print(_))
 55: Pop
 56: Load(Module, Class("System"))
-57: Constant(24: String("søméthîng"))
-58: Constant(25: String("meth"))
-59: Constant(26: String("ton"))
+57: Constant(24: "søméthîng")
+58: Constant(25: "meth")
+59: Constant(26: "ton")
 60: Call(Method, replace(_,_))
 61: Call(Method, print(_))
 62: Pop
 63: Load(Module, Class("System"))
-64: Constant(27: String("a\0b\0c"))
-65: Constant(28: String("\0"))
-66: Constant(29: String(""))
+64: Constant(27: "a\0b\0c")
+65: Constant(28: "\0")
+66: Constant(29: "")
 67: Call(Method, replace(_,_))
 68: Call(Method, print(_))
 69: Pop
 70: Load(Module, Class("System"))
-71: Constant(30: String("a\0b\0c"))
-72: Constant(31: String("b"))
-73: Constant(32: String(""))
+71: Constant(30: "a\0b\0c")
+72: Constant(31: "b")
+73: Constant(32: "")
 74: Call(Method, replace(_,_))
-75: Constant(33: String("a\0\0c"))
+75: Constant(33: "a\0\0c")
 76: Call(Method, ==(_))
 77: Call(Method, print(_))
 78: Pop

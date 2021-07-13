@@ -1,9 +1,9 @@
 Constants:
-00: String("foo")
-01: String("")
+00: "foo"
+01: ""
 Code:
-00: Constant(0: String("foo"))
-01: Constant(1: String(""))
+00: Constant(0: "foo")
+01: Constant(1: "")
 02: Call(Method, split(_))
 03: Pop
 04: EndModule

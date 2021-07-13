@@ -1,6 +1,6 @@
 Constants:
-00: Num(1)
-01: String("InfiniteSequence")
+00: 1
+01: "InfiniteSequence"
 02: Fn(init new())
 03: Fn()
 04: Fn(iterate(_))
@@ -15,12 +15,12 @@ Code:
 06: Load(Module, Class("System"))
 07: Load(Module, Class("List"))
 08: Call(Method, new())
-09: Constant(0: Num(1))
+09: Constant(0: 1)
 10: Call(Method, addCore_(_))
 11: Call(Getter, isEmpty)
 12: Call(Method, print(_))
 13: Pop
-14: Constant(1: String("InfiniteSequence"))
+14: Constant(1: "InfiniteSequence")
 15: Load(Module, Class("Sequence"))
 16: Class(0 fields)
 17: Store(Module)

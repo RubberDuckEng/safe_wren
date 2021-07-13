@@ -1,256 +1,256 @@
 Constants:
-00: String("abcd")
-01: String("")
-02: Num(0)
-03: String("abcd")
-04: String("")
-05: Num(1)
-06: String("abcd")
-07: String("")
-08: Num(2)
-09: String("aaaaa")
-10: String("aaaa")
-11: Num(0)
-12: String("aaaaa")
-13: String("aaaa")
-14: Num(1)
-15: String("aaaaa")
-16: String("aaaa")
-17: Num(2)
-18: String("abcd")
-19: String("abcde")
-20: Num(0)
-21: String("abcd")
-22: String("cde")
-23: Num(3)
-24: String("abcd")
-25: String("cd")
-26: Num(0)
-27: String("abcd")
-28: String("cd")
-29: Num(1)
-30: String("abcd")
-31: String("cd")
-32: Num(2)
-33: String("abcd")
-34: String("cd")
-35: Num(3)
-36: String("abcd")
-37: String("cd")
-38: Num(4)
-39: String("abcd")
-40: String("cd")
-41: Num(3)
-42: String("abcd")
-43: String("cd")
-44: Num(2)
-45: String("abcd")
-46: String("cd")
-47: Num(1)
-48: String("here as well as here")
-49: String("here")
-50: Num(1)
-51: String("søméஃthîng")
-52: String("e")
-53: Num(2)
-54: String("søméஃthîng")
-55: String("m")
-56: Num(2)
-57: String("søméஃthîng")
-58: String("thî")
-59: Num(8)
-60: String("a\0b\0c")
-61: String("\0")
-62: Num(0)
-63: String("a\0b\0c")
-64: String("a")
-65: Num(0)
-66: String("a\0b\0c")
-67: String("b\0c")
-68: Num(1)
-69: String("a\0b\0c")
-70: String("a\0b\0c\0d")
-71: Num(0)
-72: String("a\0b\0a\0b")
-73: String("a\0b")
-74: Num(0)
+00: "abcd"
+01: ""
+02: 0
+03: "abcd"
+04: ""
+05: 1
+06: "abcd"
+07: ""
+08: 2
+09: "aaaaa"
+10: "aaaa"
+11: 0
+12: "aaaaa"
+13: "aaaa"
+14: 1
+15: "aaaaa"
+16: "aaaa"
+17: 2
+18: "abcd"
+19: "abcde"
+20: 0
+21: "abcd"
+22: "cde"
+23: 3
+24: "abcd"
+25: "cd"
+26: 0
+27: "abcd"
+28: "cd"
+29: 1
+30: "abcd"
+31: "cd"
+32: 2
+33: "abcd"
+34: "cd"
+35: 3
+36: "abcd"
+37: "cd"
+38: 4
+39: "abcd"
+40: "cd"
+41: 3
+42: "abcd"
+43: "cd"
+44: 2
+45: "abcd"
+46: "cd"
+47: 1
+48: "here as well as here"
+49: "here"
+50: 1
+51: "søméஃthîng"
+52: "e"
+53: 2
+54: "søméஃthîng"
+55: "m"
+56: 2
+57: "søméஃthîng"
+58: "thî"
+59: 8
+60: "a\0b\0c"
+61: "\0"
+62: 0
+63: "a\0b\0c"
+64: "a"
+65: 0
+66: "a\0b\0c"
+67: "b\0c"
+68: 1
+69: "a\0b\0c"
+70: "a\0b\0c\0d"
+71: 0
+72: "a\0b\0a\0b"
+73: "a\0b"
+74: 0
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: String("abcd"))
-02: Constant(1: String(""))
-03: Constant(2: Num(0))
+01: Constant(0: "abcd")
+02: Constant(1: "")
+03: Constant(2: 0)
 04: Call(Method, indexOf(_,_))
 05: Call(Method, print(_))
 06: Pop
 07: Load(Module, Class("System"))
-08: Constant(3: String("abcd"))
-09: Constant(4: String(""))
-10: Constant(5: Num(1))
+08: Constant(3: "abcd")
+09: Constant(4: "")
+10: Constant(5: 1)
 11: Call(Method, indexOf(_,_))
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Class("System"))
-15: Constant(6: String("abcd"))
-16: Constant(7: String(""))
-17: Constant(8: Num(2))
+15: Constant(6: "abcd")
+16: Constant(7: "")
+17: Constant(8: 2)
 18: Call(Method, indexOf(_,_))
 19: Call(Method, print(_))
 20: Pop
 21: Load(Module, Class("System"))
-22: Constant(9: String("aaaaa"))
-23: Constant(10: String("aaaa"))
-24: Constant(11: Num(0))
+22: Constant(9: "aaaaa")
+23: Constant(10: "aaaa")
+24: Constant(11: 0)
 25: Call(Method, indexOf(_,_))
 26: Call(Method, print(_))
 27: Pop
 28: Load(Module, Class("System"))
-29: Constant(12: String("aaaaa"))
-30: Constant(13: String("aaaa"))
-31: Constant(14: Num(1))
+29: Constant(12: "aaaaa")
+30: Constant(13: "aaaa")
+31: Constant(14: 1)
 32: Call(Method, indexOf(_,_))
 33: Call(Method, print(_))
 34: Pop
 35: Load(Module, Class("System"))
-36: Constant(15: String("aaaaa"))
-37: Constant(16: String("aaaa"))
-38: Constant(17: Num(2))
+36: Constant(15: "aaaaa")
+37: Constant(16: "aaaa")
+38: Constant(17: 2)
 39: Call(Method, indexOf(_,_))
 40: Call(Method, print(_))
 41: Pop
 42: Load(Module, Class("System"))
-43: Constant(18: String("abcd"))
-44: Constant(19: String("abcde"))
-45: Constant(20: Num(0))
+43: Constant(18: "abcd")
+44: Constant(19: "abcde")
+45: Constant(20: 0)
 46: Call(Method, indexOf(_,_))
 47: Call(Method, print(_))
 48: Pop
 49: Load(Module, Class("System"))
-50: Constant(21: String("abcd"))
-51: Constant(22: String("cde"))
-52: Constant(23: Num(3))
+50: Constant(21: "abcd")
+51: Constant(22: "cde")
+52: Constant(23: 3)
 53: Call(Method, indexOf(_,_))
 54: Call(Method, print(_))
 55: Pop
 56: Load(Module, Class("System"))
-57: Constant(24: String("abcd"))
-58: Constant(25: String("cd"))
-59: Constant(26: Num(0))
+57: Constant(24: "abcd")
+58: Constant(25: "cd")
+59: Constant(26: 0)
 60: Call(Method, indexOf(_,_))
 61: Call(Method, print(_))
 62: Pop
 63: Load(Module, Class("System"))
-64: Constant(27: String("abcd"))
-65: Constant(28: String("cd"))
-66: Constant(29: Num(1))
+64: Constant(27: "abcd")
+65: Constant(28: "cd")
+66: Constant(29: 1)
 67: Call(Method, indexOf(_,_))
 68: Call(Method, print(_))
 69: Pop
 70: Load(Module, Class("System"))
-71: Constant(30: String("abcd"))
-72: Constant(31: String("cd"))
-73: Constant(32: Num(2))
+71: Constant(30: "abcd")
+72: Constant(31: "cd")
+73: Constant(32: 2)
 74: Call(Method, indexOf(_,_))
 75: Call(Method, print(_))
 76: Pop
 77: Load(Module, Class("System"))
-78: Constant(33: String("abcd"))
-79: Constant(34: String("cd"))
-80: Constant(35: Num(3))
+78: Constant(33: "abcd")
+79: Constant(34: "cd")
+80: Constant(35: 3)
 81: Call(Method, indexOf(_,_))
 82: Call(Method, print(_))
 83: Pop
 84: Load(Module, Class("System"))
-85: Constant(36: String("abcd"))
-86: Constant(37: String("cd"))
-87: Constant(38: Num(4))
+85: Constant(36: "abcd")
+86: Constant(37: "cd")
+87: Constant(38: 4)
 88: Call(Method, -)
 89: Call(Method, indexOf(_,_))
 90: Call(Method, print(_))
 91: Pop
 92: Load(Module, Class("System"))
-93: Constant(39: String("abcd"))
-94: Constant(40: String("cd"))
-95: Constant(41: Num(3))
+93: Constant(39: "abcd")
+94: Constant(40: "cd")
+95: Constant(41: 3)
 96: Call(Method, -)
 97: Call(Method, indexOf(_,_))
 98: Call(Method, print(_))
 99: Pop
 100: Load(Module, Class("System"))
-101: Constant(42: String("abcd"))
-102: Constant(43: String("cd"))
-103: Constant(44: Num(2))
+101: Constant(42: "abcd")
+102: Constant(43: "cd")
+103: Constant(44: 2)
 104: Call(Method, -)
 105: Call(Method, indexOf(_,_))
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Class("System"))
-109: Constant(45: String("abcd"))
-110: Constant(46: String("cd"))
-111: Constant(47: Num(1))
+109: Constant(45: "abcd")
+110: Constant(46: "cd")
+111: Constant(47: 1)
 112: Call(Method, -)
 113: Call(Method, indexOf(_,_))
 114: Call(Method, print(_))
 115: Pop
 116: Load(Module, Class("System"))
-117: Constant(48: String("here as well as here"))
-118: Constant(49: String("here"))
-119: Constant(50: Num(1))
+117: Constant(48: "here as well as here")
+118: Constant(49: "here")
+119: Constant(50: 1)
 120: Call(Method, indexOf(_,_))
 121: Call(Method, print(_))
 122: Pop
 123: Load(Module, Class("System"))
-124: Constant(51: String("søméஃthîng"))
-125: Constant(52: String("e"))
-126: Constant(53: Num(2))
+124: Constant(51: "søméஃthîng")
+125: Constant(52: "e")
+126: Constant(53: 2)
 127: Call(Method, indexOf(_,_))
 128: Call(Method, print(_))
 129: Pop
 130: Load(Module, Class("System"))
-131: Constant(54: String("søméஃthîng"))
-132: Constant(55: String("m"))
-133: Constant(56: Num(2))
+131: Constant(54: "søméஃthîng")
+132: Constant(55: "m")
+133: Constant(56: 2)
 134: Call(Method, indexOf(_,_))
 135: Call(Method, print(_))
 136: Pop
 137: Load(Module, Class("System"))
-138: Constant(57: String("søméஃthîng"))
-139: Constant(58: String("thî"))
-140: Constant(59: Num(8))
+138: Constant(57: "søméஃthîng")
+139: Constant(58: "thî")
+140: Constant(59: 8)
 141: Call(Method, indexOf(_,_))
 142: Call(Method, print(_))
 143: Pop
 144: Load(Module, Class("System"))
-145: Constant(60: String("a\0b\0c"))
-146: Constant(61: String("\0"))
-147: Constant(62: Num(0))
+145: Constant(60: "a\0b\0c")
+146: Constant(61: "\0")
+147: Constant(62: 0)
 148: Call(Method, indexOf(_,_))
 149: Call(Method, print(_))
 150: Pop
 151: Load(Module, Class("System"))
-152: Constant(63: String("a\0b\0c"))
-153: Constant(64: String("a"))
-154: Constant(65: Num(0))
+152: Constant(63: "a\0b\0c")
+153: Constant(64: "a")
+154: Constant(65: 0)
 155: Call(Method, indexOf(_,_))
 156: Call(Method, print(_))
 157: Pop
 158: Load(Module, Class("System"))
-159: Constant(66: String("a\0b\0c"))
-160: Constant(67: String("b\0c"))
-161: Constant(68: Num(1))
+159: Constant(66: "a\0b\0c")
+160: Constant(67: "b\0c")
+161: Constant(68: 1)
 162: Call(Method, indexOf(_,_))
 163: Call(Method, print(_))
 164: Pop
 165: Load(Module, Class("System"))
-166: Constant(69: String("a\0b\0c"))
-167: Constant(70: String("a\0b\0c\0d"))
-168: Constant(71: Num(0))
+166: Constant(69: "a\0b\0c")
+167: Constant(70: "a\0b\0c\0d")
+168: Constant(71: 0)
 169: Call(Method, indexOf(_,_))
 170: Call(Method, print(_))
 171: Pop
 172: Load(Module, Class("System"))
-173: Constant(72: String("a\0b\0a\0b"))
-174: Constant(73: String("a\0b"))
-175: Constant(74: Num(0))
+173: Constant(72: "a\0b\0a\0b")
+174: Constant(73: "a\0b")
+175: Constant(74: 0)
 176: Call(Method, indexOf(_,_))
 177: Call(Method, print(_))
 178: Pop

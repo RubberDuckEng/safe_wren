@@ -1,12 +1,12 @@
 Constants:
-00: Num(3)
-01: String("value")
-02: Num(0)
-03: String("value")
+00: 3
+01: "value"
+02: 0
+03: "value"
 Code:
 00: Load(Module, Class("List"))
-01: Constant(0: Num(3))
-02: Constant(1: String("value"))
+01: Constant(0: 3)
+02: Constant(1: "value")
 03: Call(Method, filled(_,_))
 04: Store(Module)
 05: Pop
@@ -20,8 +20,8 @@ Code:
 13: Call(Method, print(_))
 14: Pop
 15: Load(Module, Class("List"))
-16: Constant(2: Num(0))
-17: Constant(3: String("value"))
+16: Constant(2: 0)
+17: Constant(3: "value")
 18: Call(Method, filled(_,_))
 19: Store(Module)
 20: Pop

@@ -1,15 +1,15 @@
 Constants:
-00: String("Base")
+00: "Base"
 01: Fn(foo)
 02: Fn(foo(_))
 03: Fn(foo(_,_))
-04: String("Derived")
+04: "Derived"
 05: Fn(init new())
 06: Fn()
 07: Fn(foo(_))
-08: Num(1)
+08: 1
 Code:
-00: Constant(0: String("Base"))
+00: Constant(0: "Base")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -23,7 +23,7 @@ Code:
 11: Closure(3, [])
 12: Load(Module, Null)
 13: Method(instance, foo(_,_))
-14: Constant(4: String("Derived"))
+14: Constant(4: "Derived")
 15: Load(Module, Null)
 16: Class(0 fields)
 17: Store(Module)
@@ -39,7 +39,7 @@ Code:
 27: Method(instance, foo(_))
 28: Load(Module, Null)
 29: Call(Method, new())
-30: Constant(8: Num(1))
+30: Constant(8: 1)
 31: Call(Method, foo(_))
 32: Pop
 33: EndModule

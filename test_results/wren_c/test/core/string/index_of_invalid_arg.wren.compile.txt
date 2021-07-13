@@ -1,8 +1,8 @@
 Constants:
-00: String("abcd")
+00: "abcd"
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: String("abcd"))
+01: Constant(0: "abcd")
 02: Null
 03: Call(Method, indexOf(_))
 04: Call(Method, print(_))

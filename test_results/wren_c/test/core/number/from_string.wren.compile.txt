@@ -1,75 +1,75 @@
 Constants:
-00: String("123")
-01: Num(123)
-02: String("-123")
-03: Num(123)
-04: String("-0")
-05: Num(0)
-06: String("12.34")
-07: Num(12.34)
-08: String("-0.0001")
-09: Num(0.0001)
-10: String(" 12 ")
-11: Num(12)
-12: String("test1")
-13: String("")
-14: String("prefix1.2")
-15: String("1.2suffix")
+00: "123"
+01: 123
+02: "-123"
+03: 123
+04: "-0"
+05: 0
+06: "12.34"
+07: 12.34
+08: "-0.0001"
+09: 0.0001
+10: " 12 "
+11: 12
+12: "test1"
+13: ""
+14: "prefix1.2"
+15: "1.2suffix"
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("Num"))
-02: Constant(0: String("123"))
+02: Constant(0: "123")
 03: Call(Method, fromString(_))
-04: Constant(1: Num(123))
+04: Constant(1: 123)
 05: Call(Method, ==(_))
 06: Call(Method, print(_))
 07: Pop
 08: Load(Module, Class("System"))
 09: Load(Module, Class("Num"))
-10: Constant(2: String("-123"))
+10: Constant(2: "-123")
 11: Call(Method, fromString(_))
-12: Constant(3: Num(123))
+12: Constant(3: 123)
 13: Call(Method, -)
 14: Call(Method, ==(_))
 15: Call(Method, print(_))
 16: Pop
 17: Load(Module, Class("System"))
 18: Load(Module, Class("Num"))
-19: Constant(4: String("-0"))
+19: Constant(4: "-0")
 20: Call(Method, fromString(_))
-21: Constant(5: Num(0))
+21: Constant(5: 0)
 22: Call(Method, -)
 23: Call(Method, ==(_))
 24: Call(Method, print(_))
 25: Pop
 26: Load(Module, Class("System"))
 27: Load(Module, Class("Num"))
-28: Constant(6: String("12.34"))
+28: Constant(6: "12.34")
 29: Call(Method, fromString(_))
-30: Constant(7: Num(12.34))
+30: Constant(7: 12.34)
 31: Call(Method, ==(_))
 32: Call(Method, print(_))
 33: Pop
 34: Load(Module, Class("System"))
 35: Load(Module, Class("Num"))
-36: Constant(8: String("-0.0001"))
+36: Constant(8: "-0.0001")
 37: Call(Method, fromString(_))
-38: Constant(9: Num(0.0001))
+38: Constant(9: 0.0001)
 39: Call(Method, -)
 40: Call(Method, ==(_))
 41: Call(Method, print(_))
 42: Pop
 43: Load(Module, Class("System"))
 44: Load(Module, Class("Num"))
-45: Constant(10: String(" 12 "))
+45: Constant(10: " 12 ")
 46: Call(Method, fromString(_))
-47: Constant(11: Num(12))
+47: Constant(11: 12)
 48: Call(Method, ==(_))
 49: Call(Method, print(_))
 50: Pop
 51: Load(Module, Class("System"))
 52: Load(Module, Class("Num"))
-53: Constant(12: String("test1"))
+53: Constant(12: "test1")
 54: Call(Method, fromString(_))
 55: Null
 56: Call(Method, ==(_))
@@ -77,7 +77,7 @@ Code:
 58: Pop
 59: Load(Module, Class("System"))
 60: Load(Module, Class("Num"))
-61: Constant(13: String(""))
+61: Constant(13: "")
 62: Call(Method, fromString(_))
 63: Null
 64: Call(Method, ==(_))
@@ -85,7 +85,7 @@ Code:
 66: Pop
 67: Load(Module, Class("System"))
 68: Load(Module, Class("Num"))
-69: Constant(14: String("prefix1.2"))
+69: Constant(14: "prefix1.2")
 70: Call(Method, fromString(_))
 71: Null
 72: Call(Method, ==(_))
@@ -93,7 +93,7 @@ Code:
 74: Pop
 75: Load(Module, Class("System"))
 76: Load(Module, Class("Num"))
-77: Constant(15: String("1.2suffix"))
+77: Constant(15: "1.2suffix")
 78: Call(Method, fromString(_))
 79: Null
 80: Call(Method, ==(_))

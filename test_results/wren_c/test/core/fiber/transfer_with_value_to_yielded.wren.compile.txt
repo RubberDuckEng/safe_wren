@@ -1,6 +1,6 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("value")
+01: "value"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -11,7 +11,7 @@ Code:
 06: Call(Method, call())
 07: Pop
 08: Load(Module, Null)
-09: Constant(1: String("value"))
+09: Constant(1: "value")
 10: Call(Method, transfer(_))
 11: Pop
 12: EndModule

@@ -1,10 +1,10 @@
 Constants:
-00: String("baz")
+00: "baz"
 Code:
 00: ImportModule("./module_return")
 01: Pop
 02: Load(Module, Class("System"))
-03: Constant(0: String("baz"))
+03: Constant(0: "baz")
 04: Call(Method, print(_))
 05: Pop
 06: EndModule

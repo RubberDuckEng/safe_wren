@@ -1,8 +1,8 @@
 Constants:
-00: Num(0)
+00: 0
 01: Fn(each(_) block argument)
 Code:
-00: Constant(0: Num(0))
+00: Constant(0: 0)
 01: Store(Module)
 02: Pop
 03: Load(Module, Class("List"))

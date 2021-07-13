@@ -1,10 +1,10 @@
 Constants:
-00: String("outer")
-01: String(" inner")
+00: "outer"
+01: " inner"
 Code:
-00: Constant(0: String("outer"))
+00: Constant(0: "outer")
 01: Load(Local, 1)
-02: Constant(1: String(" inner"))
+02: Constant(1: " inner")
 03: Call(Method, +(_))
 04: Load(Module, Class("System"))
 05: Load(Local, 1)

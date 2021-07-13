@@ -1,44 +1,44 @@
 Constants:
-00: String("")
-01: String("")
-02: String("blah")
-03: String("blah")
-04: String("a\0b\0c")
-05: String("a\0b\0c")
-06: String("a\0b\0c")
-07: String("a")
-08: String("a\0b\0c")
+00: ""
+01: ""
+02: "blah"
+03: "blah"
+04: "a\0b\0c"
+05: "a\0b\0c"
+06: "a\0b\0c"
+07: "a"
+08: "a\0b\0c"
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: String(""))
+01: Constant(0: "")
 02: Call(Getter, toString)
-03: Constant(1: String(""))
+03: Constant(1: "")
 04: Call(Method, ==(_))
 05: Call(Method, print(_))
 06: Pop
 07: Load(Module, Class("System"))
-08: Constant(2: String("blah"))
+08: Constant(2: "blah")
 09: Call(Getter, toString)
-10: Constant(3: String("blah"))
+10: Constant(3: "blah")
 11: Call(Method, ==(_))
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Class("System"))
-15: Constant(4: String("a\0b\0c"))
+15: Constant(4: "a\0b\0c")
 16: Call(Getter, toString)
-17: Constant(5: String("a\0b\0c"))
+17: Constant(5: "a\0b\0c")
 18: Call(Method, ==(_))
 19: Call(Method, print(_))
 20: Pop
 21: Load(Module, Class("System"))
-22: Constant(6: String("a\0b\0c"))
+22: Constant(6: "a\0b\0c")
 23: Call(Getter, toString)
-24: Constant(7: String("a"))
+24: Constant(7: "a")
 25: Call(Method, ==(_))
 26: Call(Method, print(_))
 27: Pop
 28: Load(Module, Class("System"))
-29: Constant(8: String("a\0b\0c"))
+29: Constant(8: "a\0b\0c")
 30: Call(Getter, toString)
 31: Call(Method, print(_))
 32: Pop

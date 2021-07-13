@@ -1,9 +1,9 @@
 Constants:
-00: Num(1)
-01: Num(1)
+00: 1
+01: 1
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(1))
+01: Constant(0: 1)
 02: Or(1)
 03: Boolean true
 04: Call(Method, print(_))
@@ -11,7 +11,7 @@ Code:
 06: Load(Module, Class("System"))
 07: Boolean false
 08: Or(1)
-09: Constant(1: Num(1))
+09: Constant(1: 1)
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))

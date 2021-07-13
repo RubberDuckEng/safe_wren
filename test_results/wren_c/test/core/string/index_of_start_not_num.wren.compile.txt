@@ -1,16 +1,16 @@
 Constants:
-00: String("abcd")
-01: String("bc")
-02: String("not num")
-03: String("after")
+00: "abcd"
+01: "bc"
+02: "not num"
+03: "after"
 Code:
-00: Constant(0: String("abcd"))
-01: Constant(1: String("bc"))
-02: Constant(2: String("not num"))
+00: Constant(0: "abcd")
+01: Constant(1: "bc")
+02: Constant(2: "not num")
 03: Call(Method, indexOf(_,_))
 04: Pop
 05: Load(Module, Class("System"))
-06: Constant(3: String("after"))
+06: Constant(3: "after")
 07: Call(Method, print(_))
 08: Pop
 09: EndModule

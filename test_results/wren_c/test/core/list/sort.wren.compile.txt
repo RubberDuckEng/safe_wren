@@ -1,51 +1,51 @@
 Constants:
-00: Num(4)
-01: Num(1)
-02: Num(3)
-03: Num(2)
-04: Num(10)
-05: Num(7)
-06: Num(8)
-07: Num(9)
-08: Num(1)
-09: Num(5)
+00: 4
+01: 1
+02: 3
+03: 2
+04: 10
+05: 7
+06: 8
+07: 9
+08: 1
+09: 5
 10: Fn(sort(_) block argument)
 11: Fn(sort(_) block argument)
-12: Num(10)
-13: Num(7)
-14: Num(8)
-15: Num(9)
-16: Num(1)
-17: Num(5)
-18: Num(3)
+12: 10
+13: 7
+14: 8
+15: 9
+16: 1
+17: 5
+18: 3
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
 02: Call(Method, new())
-03: Constant(0: Num(4))
+03: Constant(0: 4)
 04: Call(Method, addCore_(_))
-05: Constant(1: Num(1))
+05: Constant(1: 1)
 06: Call(Method, addCore_(_))
-07: Constant(2: Num(3))
+07: Constant(2: 3)
 08: Call(Method, addCore_(_))
-09: Constant(3: Num(2))
+09: Constant(3: 2)
 10: Call(Method, addCore_(_))
 11: Call(Method, sort())
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Class("List"))
 15: Call(Method, new())
-16: Constant(4: Num(10))
+16: Constant(4: 10)
 17: Call(Method, addCore_(_))
-18: Constant(5: Num(7))
+18: Constant(5: 7)
 19: Call(Method, addCore_(_))
-20: Constant(6: Num(8))
+20: Constant(6: 8)
 21: Call(Method, addCore_(_))
-22: Constant(7: Num(9))
+22: Constant(7: 9)
 23: Call(Method, addCore_(_))
-24: Constant(8: Num(1))
+24: Constant(8: 1)
 25: Call(Method, addCore_(_))
-26: Constant(9: Num(5))
+26: Constant(9: 5)
 27: Call(Method, addCore_(_))
 28: Store(Module)
 29: Pop
@@ -67,19 +67,19 @@ Code:
 45: Pop
 46: Load(Module, Class("List"))
 47: Call(Method, new())
-48: Constant(12: Num(10))
+48: Constant(12: 10)
 49: Call(Method, addCore_(_))
-50: Constant(13: Num(7))
+50: Constant(13: 7)
 51: Call(Method, addCore_(_))
-52: Constant(14: Num(8))
+52: Constant(14: 8)
 53: Call(Method, addCore_(_))
-54: Constant(15: Num(9))
+54: Constant(15: 9)
 55: Call(Method, addCore_(_))
-56: Constant(16: Num(1))
+56: Constant(16: 1)
 57: Call(Method, addCore_(_))
-58: Constant(17: Num(5))
+58: Constant(17: 5)
 59: Call(Method, addCore_(_))
-60: Constant(18: Num(3))
+60: Constant(18: 3)
 61: Call(Method, sort(_))
 62: Pop
 63: EndModule

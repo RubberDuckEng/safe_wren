@@ -1,15 +1,15 @@
 Constants:
-00: String("global")
-01: String("Foo")
+00: "global"
+01: "Foo"
 02: Fn(init new())
 03: Fn()
 04: Fn(method)
 05: Fn(classMethod)
 Code:
-00: Constant(0: String("global"))
+00: Constant(0: "global")
 01: Store(Module)
 02: Pop
-03: Constant(1: String("Foo"))
+03: Constant(1: "Foo")
 04: Load(Module, Class("Object"))
 05: Class(0 fields)
 06: Store(Module)

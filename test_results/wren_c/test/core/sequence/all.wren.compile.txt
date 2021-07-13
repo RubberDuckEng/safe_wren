@@ -1,7 +1,7 @@
 Constants:
-00: Num(1)
-01: Num(2)
-02: Num(3)
+00: 1
+01: 2
+02: 3
 03: Fn(all(_) block argument)
 04: Fn(all(_) block argument)
 05: Fn(all(_) block argument)
@@ -10,11 +10,11 @@ Constants:
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
-02: Constant(0: Num(1))
+02: Constant(0: 1)
 03: Call(Method, addCore_(_))
-04: Constant(1: Num(2))
+04: Constant(1: 2)
 05: Call(Method, addCore_(_))
-06: Constant(2: Num(3))
+06: Constant(2: 3)
 07: Call(Method, addCore_(_))
 08: Store(Module)
 09: Pop

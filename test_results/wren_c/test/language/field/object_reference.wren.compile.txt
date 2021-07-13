@@ -1,14 +1,14 @@
 Constants:
-00: String("Node")
+00: "Node"
 01: Fn(init new(_,_,_))
 02: Fn()
 03: Fn(write())
-04: String("a")
-05: String("b")
-06: String("c")
-07: String("d")
+04: "a"
+05: "b"
+06: "c"
+07: "d"
 Code:
-00: Constant(0: String("Node"))
+00: Constant(0: "Node")
 01: Load(Module, Class("Object"))
 02: Class(3 fields)
 03: Store(Module)
@@ -24,21 +24,21 @@ Code:
 13: Method(instance, write())
 14: Load(Module, Null)
 15: Null
-16: Constant(4: String("a"))
+16: Constant(4: "a")
 17: Null
 18: Call(Method, new(_,_,_))
 19: Store(Module)
 20: Pop
 21: Load(Module, Null)
 22: Null
-23: Constant(5: String("b"))
+23: Constant(5: "b")
 24: Null
 25: Call(Method, new(_,_,_))
 26: Store(Module)
 27: Pop
 28: Load(Module, Null)
 29: Load(Module, Null)
-30: Constant(6: String("c"))
+30: Constant(6: "c")
 31: Load(Module, Null)
 32: Call(Method, new(_,_,_))
 33: Store(Module)
@@ -51,7 +51,7 @@ Code:
 40: Pop
 41: Load(Module, Null)
 42: Load(Module, Null)
-43: Constant(7: String("d"))
+43: Constant(7: "d")
 44: Null
 45: Call(Method, new(_,_,_))
 46: Store(Module)

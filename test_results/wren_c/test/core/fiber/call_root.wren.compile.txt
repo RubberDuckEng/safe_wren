@@ -1,5 +1,5 @@
 Constants:
-00: String("begin root")
+00: "begin root"
 01: Fn(new(_) block argument)
 Code:
 00: Load(Module, Class("Fiber"))
@@ -7,7 +7,7 @@ Code:
 02: Store(Module)
 03: Pop
 04: Load(Module, Class("System"))
-05: Constant(0: String("begin root"))
+05: Constant(0: "begin root")
 06: Call(Method, print(_))
 07: Pop
 08: Load(Module, Class("Fiber"))

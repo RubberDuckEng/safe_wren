@@ -1,10 +1,10 @@
 Constants:
-00: String("s")
-01: String("2")
+00: "s"
+01: "2"
 Code:
-00: Constant(0: String("s"))
+00: Constant(0: "s")
 01: Call(Getter, codePoints)
-02: Constant(1: String("2"))
+02: Constant(1: "2")
 03: Call(Method, iterate(_))
 04: Pop
 05: EndModule

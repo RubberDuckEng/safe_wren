@@ -1,18 +1,18 @@
 Constants:
-00: String("A")
+00: "A"
 01: Fn(init new(_))
 02: Fn()
 03: Fn(aField)
-04: String("B")
+04: "B"
 05: Fn(init new(_,_))
 06: Fn()
 07: Fn(bField)
-08: String("C")
+08: "C"
 09: Fn(init new())
 10: Fn()
 11: Fn(cField)
 Code:
-00: Constant(0: String("A"))
+00: Constant(0: "A")
 01: Load(Module, Class("Object"))
 02: Class(1 fields)
 03: Store(Module)
@@ -26,7 +26,7 @@ Code:
 11: Closure(3, [])
 12: Load(Module, Null)
 13: Method(instance, aField)
-14: Constant(4: String("B"))
+14: Constant(4: "B")
 15: Load(Module, Null)
 16: Class(1 fields)
 17: Store(Module)
@@ -40,7 +40,7 @@ Code:
 25: Closure(7, [])
 26: Load(Module, Null)
 27: Method(instance, bField)
-28: Constant(8: String("C"))
+28: Constant(8: "C")
 29: Load(Module, Null)
 30: Class(1 fields)
 31: Store(Module)

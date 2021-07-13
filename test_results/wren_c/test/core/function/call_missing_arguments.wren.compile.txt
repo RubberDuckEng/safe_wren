@@ -1,6 +1,6 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("a")
+01: "a"
 Code:
 00: Load(Module, Class("Fn"))
 01: Closure(0, [])
@@ -8,7 +8,7 @@ Code:
 03: Store(Module)
 04: Pop
 05: Load(Module, Null)
-06: Constant(1: String("a"))
+06: Constant(1: "a")
 07: Call(Method, call(_))
 08: Pop
 09: EndModule

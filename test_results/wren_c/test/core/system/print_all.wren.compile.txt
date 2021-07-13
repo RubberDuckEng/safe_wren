@@ -1,12 +1,12 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn(toString)
-04: Num(1)
-05: String("s")
+04: 1
+05: "s"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -28,14 +28,14 @@ Code:
 19: Load(Module, Class("System"))
 20: Load(Module, Class("List"))
 21: Call(Method, new())
-22: Constant(4: Num(1))
+22: Constant(4: 1)
 23: Call(Method, addCore_(_))
 24: Boolean true
 25: Call(Method, addCore_(_))
 26: Load(Module, Null)
 27: Call(Method, new())
 28: Call(Method, addCore_(_))
-29: Constant(5: String("s"))
+29: Constant(5: "s")
 30: Call(Method, addCore_(_))
 31: Call(Method, printAll(_))
 32: Pop

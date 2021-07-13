@@ -1,17 +1,17 @@
 Constants:
 00: Fn(new(_) block argument)
-01: Num(123)
-02: String("s")
+01: 123
+02: "s"
 03: Fn(new(_) block argument)
-04: String("s")
-05: Num(123)
+04: "s"
+05: 123
 06: Fn(new(_) block argument)
-07: String("s")
-08: Num(123)
+07: "s"
+08: 123
 09: Fn(new(_) block argument)
-10: String("s")
-11: Num(123)
-12: Num(123)
+10: "s"
+11: 123
+12: 123
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("Num"))
@@ -34,7 +34,7 @@ Code:
 18: Call(Method, print(_))
 19: Pop
 20: Load(Module, Class("System"))
-21: Constant(1: Num(123))
+21: Constant(1: 123)
 22: Load(Module, Class("Num"))
 23: Call(Method, is(_))
 24: Call(Method, print(_))
@@ -46,7 +46,7 @@ Code:
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
-33: Constant(2: String("s"))
+33: Constant(2: "s")
 34: Load(Module, Class("String"))
 35: Call(Method, is(_))
 36: Call(Method, print(_))
@@ -78,13 +78,13 @@ Code:
 62: Call(Method, print(_))
 63: Pop
 64: Load(Module, Class("System"))
-65: Constant(4: String("s"))
+65: Constant(4: "s")
 66: Load(Module, Class("Null"))
 67: Call(Method, is(_))
 68: Call(Method, print(_))
 69: Pop
 70: Load(Module, Class("System"))
-71: Constant(5: Num(123))
+71: Constant(5: 123)
 72: Load(Module, Class("String"))
 73: Call(Method, is(_))
 74: Call(Method, print(_))
@@ -116,13 +116,13 @@ Code:
 100: Call(Method, print(_))
 101: Pop
 102: Load(Module, Class("System"))
-103: Constant(7: String("s"))
+103: Constant(7: "s")
 104: Load(Module, Class("Object"))
 105: Call(Method, is(_))
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Class("System"))
-109: Constant(8: Num(123))
+109: Constant(8: 123)
 110: Load(Module, Class("Object"))
 111: Call(Method, is(_))
 112: Call(Method, print(_))
@@ -154,19 +154,19 @@ Code:
 138: Call(Method, print(_))
 139: Pop
 140: Load(Module, Class("System"))
-141: Constant(10: String("s"))
+141: Constant(10: "s")
 142: Load(Module, Class("Class"))
 143: Call(Method, is(_))
 144: Call(Method, print(_))
 145: Pop
 146: Load(Module, Class("System"))
-147: Constant(11: Num(123))
+147: Constant(11: 123)
 148: Load(Module, Class("Class"))
 149: Call(Method, is(_))
 150: Call(Method, print(_))
 151: Pop
 152: Load(Module, Class("System"))
-153: Constant(12: Num(123))
+153: Constant(12: 123)
 154: Load(Module, Class("Num"))
 155: Call(Method, is(_))
 156: Call(Method, print(_))

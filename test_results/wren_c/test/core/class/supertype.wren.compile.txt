@@ -1,19 +1,19 @@
 Constants:
-00: String("Foo")
-01: String("Bar")
-02: String("Baz")
+00: "Foo"
+01: "Bar"
+02: "Baz"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
 04: Pop
-05: Constant(1: String("Bar"))
+05: Constant(1: "Bar")
 06: Load(Module, Null)
 07: Class(0 fields)
 08: Store(Module)
 09: Pop
-10: Constant(2: String("Baz"))
+10: Constant(2: "Baz")
 11: Load(Module, Null)
 12: Class(0 fields)
 13: Store(Module)

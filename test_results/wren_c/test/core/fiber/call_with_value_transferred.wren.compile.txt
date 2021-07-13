@@ -1,7 +1,7 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("main")
-02: String("value")
+01: "main"
+02: "value"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Call(Getter, current)
@@ -16,11 +16,11 @@ Code:
 10: Call(Method, transfer())
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(1: String("main"))
+13: Constant(1: "main")
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Null)
-17: Constant(2: String("value"))
+17: Constant(2: "value")
 18: Call(Method, call(_))
 19: Pop
 20: EndModule

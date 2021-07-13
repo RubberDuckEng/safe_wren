@@ -1,11 +1,11 @@
 Constants:
-00: String("global")
-01: String("shadow")
+00: "global"
+01: "shadow"
 Code:
-00: Constant(0: String("global"))
+00: Constant(0: "global")
 01: Store(Module)
 02: Pop
-03: Constant(1: String("shadow"))
+03: Constant(1: "shadow")
 04: Load(Module, Class("System"))
 05: Load(Local, 1)
 06: Call(Method, print(_))

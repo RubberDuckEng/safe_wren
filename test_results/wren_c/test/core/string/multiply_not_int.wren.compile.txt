@@ -1,9 +1,9 @@
 Constants:
-00: String("abc")
-01: Num(1.2)
+00: "abc"
+01: 1.2
 Code:
-00: Constant(0: String("abc"))
-01: Constant(1: Num(1.2))
+00: Constant(0: "abc")
+01: Constant(1: 1.2)
 02: Call(Method, *(_))
 03: Pop
 04: EndModule

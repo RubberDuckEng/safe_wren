@@ -1,9 +1,9 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(methodOnFoo)
-02: String("Bar")
+02: "Bar"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -11,7 +11,7 @@ Code:
 05: Closure(1, [])
 06: Load(Module, Null)
 07: Method(static, methodOnFoo)
-08: Constant(2: String("Bar"))
+08: Constant(2: "Bar")
 09: Load(Module, Null)
 10: Class(0 fields)
 11: Store(Module)

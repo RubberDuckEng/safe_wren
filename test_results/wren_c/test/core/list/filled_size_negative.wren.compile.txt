@@ -1,8 +1,8 @@
 Constants:
-00: Num(1)
+00: 1
 Code:
 00: Load(Module, Class("List"))
-01: Constant(0: Num(1))
+01: Constant(0: 1)
 02: Call(Method, -)
 03: Null
 04: Call(Method, filled(_,_))

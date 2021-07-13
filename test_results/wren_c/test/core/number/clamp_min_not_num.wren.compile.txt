@@ -1,10 +1,10 @@
 Constants:
-00: Num(1)
-01: Num(2)
+00: 1
+01: 2
 Code:
-00: Constant(0: Num(1))
+00: Constant(0: 1)
 01: Boolean false
-02: Constant(1: Num(2))
+02: Constant(1: 2)
 03: Call(Method, clamp(_,_))
 04: Pop
 05: EndModule

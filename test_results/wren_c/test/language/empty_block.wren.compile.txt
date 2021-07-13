@@ -1,5 +1,5 @@
 Constants:
-00: String("ok")
+00: "ok"
 Code:
 00: Boolean true
 01: JumpIfFalse(0)
@@ -7,7 +7,7 @@ Code:
 03: JumpIfFalse(1)
 04: Jump(0)
 05: Load(Module, Class("System"))
-06: Constant(0: String("ok"))
+06: Constant(0: "ok")
 07: Call(Method, print(_))
 08: Pop
 09: EndModule

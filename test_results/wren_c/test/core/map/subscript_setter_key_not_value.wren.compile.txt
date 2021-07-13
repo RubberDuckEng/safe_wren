@@ -1,11 +1,11 @@
 Constants:
-00: String("value")
+00: "value"
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
 02: Load(Module, Class("List"))
 03: Call(Method, new())
-04: Constant(0: String("value"))
+04: Constant(0: "value")
 05: Call(SubscriptSetter, [_]=(_))
 06: Store(Module)
 07: Pop

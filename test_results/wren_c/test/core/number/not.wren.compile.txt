@@ -1,14 +1,14 @@
 Constants:
-00: Num(123)
-01: Num(0)
+00: 123
+01: 0
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(123))
+01: Constant(0: 123)
 02: Call(Method, !)
 03: Call(Method, print(_))
 04: Pop
 05: Load(Module, Class("System"))
-06: Constant(1: Num(0))
+06: Constant(1: 0)
 07: Call(Method, !)
 08: Call(Method, print(_))
 09: Pop

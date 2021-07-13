@@ -1,8 +1,8 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(bar)
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)

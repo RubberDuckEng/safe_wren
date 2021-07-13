@@ -1,5 +1,5 @@
 Constants:
-00: String("y = 2")
+00: "y = 2"
 Code:
 00: ImportModule("meta")
 01: Pop
@@ -10,7 +10,7 @@ Code:
 06: Store(Module)
 07: Pop
 08: Load(Module, Null)
-09: Constant(0: String("y = 2"))
+09: Constant(0: "y = 2")
 10: Call(Method, eval(_))
 11: Pop
 12: Load(Module, Class("System"))

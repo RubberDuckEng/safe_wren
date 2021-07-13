@@ -1,49 +1,49 @@
 Constants:
-00: Num(1)
-01: Num(2)
-02: Num(3)
-03: Num(4)
-04: String("foo")
-05: Num(2)
-06: Num(5)
-07: String("foo")
-08: String("bar")
+00: 1
+01: 2
+02: 3
+03: 4
+04: "foo"
+05: 2
+06: 5
+07: "foo"
+08: "bar"
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
-02: Constant(0: Num(1))
+02: Constant(0: 1)
 03: Call(Method, addCore_(_))
-04: Constant(1: Num(2))
+04: Constant(1: 2)
 05: Call(Method, addCore_(_))
-06: Constant(2: Num(3))
+06: Constant(2: 3)
 07: Call(Method, addCore_(_))
-08: Constant(3: Num(4))
+08: Constant(3: 4)
 09: Call(Method, addCore_(_))
-10: Constant(4: String("foo"))
+10: Constant(4: "foo")
 11: Call(Method, addCore_(_))
 12: Store(Module)
 13: Pop
 14: Load(Module, Class("System"))
 15: Load(Module, Null)
-16: Constant(5: Num(2))
+16: Constant(5: 2)
 17: Call(Method, contains(_))
 18: Call(Method, print(_))
 19: Pop
 20: Load(Module, Class("System"))
 21: Load(Module, Null)
-22: Constant(6: Num(5))
+22: Constant(6: 5)
 23: Call(Method, contains(_))
 24: Call(Method, print(_))
 25: Pop
 26: Load(Module, Class("System"))
 27: Load(Module, Null)
-28: Constant(7: String("foo"))
+28: Constant(7: "foo")
 29: Call(Method, contains(_))
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
 33: Load(Module, Null)
-34: Constant(8: String("bar"))
+34: Constant(8: "bar")
 35: Call(Method, contains(_))
 36: Call(Method, print(_))
 37: Pop

@@ -1,5 +1,5 @@
 Constants:
-00: Num(1)
+00: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -15,7 +15,7 @@ Code:
 11: Call(Method, print(_))
 12: Pop
 13: Load(Module, Null)
-14: Constant(0: Num(1))
+14: Constant(0: 1)
 15: Call(Method, add(_))
 16: Pop
 17: Load(Module, Class("System"))

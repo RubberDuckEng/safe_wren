@@ -1,7 +1,7 @@
 Constants:
-00: Num(inf)
+00: inf
 Code:
-00: Constant(0: Num(inf))
+00: Constant(0: inf)
 01: Store(Module)
 02: Pop
 03: EndModule

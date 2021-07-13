@@ -1,20 +1,20 @@
 Constants:
-00: String("A")
-01: String("B")
-02: String("C")
+00: "A"
+01: "B"
+02: "C"
 03: Fn(method)
 Code:
-00: Constant(0: String("A"))
+00: Constant(0: "A")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
 04: Pop
-05: Constant(1: String("B"))
+05: Constant(1: "B")
 06: Load(Module, Class("Object"))
 07: Class(0 fields)
 08: Store(Module)
 09: Pop
-10: Constant(2: String("C"))
+10: Constant(2: "C")
 11: Load(Module, Class("Object"))
 12: Class(0 fields)
 13: Store(Module)

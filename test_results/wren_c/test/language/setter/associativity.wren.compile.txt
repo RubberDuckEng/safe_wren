@@ -1,15 +1,15 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new(_))
 02: Fn()
 03: Fn(toString)
 04: Fn(bar=_)
-05: String("a")
-06: String("b")
-07: String("c")
-08: String("d")
+05: "a"
+06: "b"
+07: "c"
+08: "d"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(1 fields)
 03: Store(Module)
@@ -27,24 +27,24 @@ Code:
 15: Load(Module, Null)
 16: Method(instance, bar=_)
 17: Load(Module, Null)
-18: Constant(5: String("a"))
+18: Constant(5: "a")
 19: Call(Method, new(_))
 20: Store(Module)
 21: Pop
 22: Load(Module, Null)
-23: Constant(6: String("b"))
+23: Constant(6: "b")
 24: Call(Method, new(_))
 25: Store(Module)
 26: Pop
 27: Load(Module, Null)
-28: Constant(7: String("c"))
+28: Constant(7: "c")
 29: Call(Method, new(_))
 30: Store(Module)
 31: Pop
 32: Load(Module, Null)
 33: Load(Module, Null)
 34: Load(Module, Null)
-35: Constant(8: String("d"))
+35: Constant(8: "d")
 36: Call(Setter, bar=_)
 37: Call(Setter, bar=_)
 38: Call(Setter, bar=_)

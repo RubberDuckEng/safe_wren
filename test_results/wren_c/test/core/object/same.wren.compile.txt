@@ -1,36 +1,36 @@
 Constants:
-00: Num(1)
-01: Num(2)
-02: Num(2)
-03: Num(1)
-04: Num(1)
-05: Num(2)
-06: Num(2)
-07: Num(2)
-08: Num(1)
-09: Num(2)
-10: Num(1)
-11: Num(2)
-12: Num(1)
-13: Num(2)
-14: Num(1)
-15: Num(3)
-16: String("ab")
-17: String("a")
-18: String("b")
-19: String("ab")
-20: String("a")
-21: String("c")
-22: Num(2)
-23: Num(1)
-24: Num(2)
-25: Num(2)
-26: String("1")
-27: Num(1)
-28: String("Foo")
+00: 1
+01: 2
+02: 2
+03: 1
+04: 1
+05: 2
+06: 2
+07: 2
+08: 1
+09: 2
+10: 1
+11: 2
+12: 1
+13: 2
+14: 1
+15: 3
+16: "ab"
+17: "a"
+18: "b"
+19: "ab"
+20: "a"
+21: "c"
+22: 2
+23: 1
+24: 2
+25: 2
+26: "1"
+27: 1
+28: "Foo"
 29: Fn(init new())
 30: Fn()
-31: String("Bar")
+31: "Bar"
 32: Fn(init new())
 33: Fn()
 34: Fn(==(_))
@@ -58,62 +58,62 @@ Code:
 20: Pop
 21: Load(Module, Class("System"))
 22: Load(Module, Class("Object"))
-23: Constant(0: Num(1))
-24: Constant(1: Num(2))
+23: Constant(0: 1)
+24: Constant(1: 2)
 25: Call(Method, +(_))
-26: Constant(2: Num(2))
-27: Constant(3: Num(1))
+26: Constant(2: 2)
+27: Constant(3: 1)
 28: Call(Method, +(_))
 29: Call(Method, same(_,_))
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
 33: Load(Module, Class("Object"))
-34: Constant(4: Num(1))
-35: Constant(5: Num(2))
+34: Constant(4: 1)
+35: Constant(5: 2)
 36: Call(Method, +(_))
-37: Constant(6: Num(2))
-38: Constant(7: Num(2))
+37: Constant(6: 2)
+38: Constant(7: 2)
 39: Call(Method, +(_))
 40: Call(Method, same(_,_))
 41: Call(Method, print(_))
 42: Pop
 43: Load(Module, Class("System"))
 44: Load(Module, Class("Object"))
-45: Constant(8: Num(1))
-46: Constant(9: Num(2))
+45: Constant(8: 1)
+46: Constant(9: 2)
 47: Call(Method, ..(_))
-48: Constant(10: Num(1))
-49: Constant(11: Num(2))
+48: Constant(10: 1)
+49: Constant(11: 2)
 50: Call(Method, ..(_))
 51: Call(Method, same(_,_))
 52: Call(Method, print(_))
 53: Pop
 54: Load(Module, Class("System"))
 55: Load(Module, Class("Object"))
-56: Constant(12: Num(1))
-57: Constant(13: Num(2))
+56: Constant(12: 1)
+57: Constant(13: 2)
 58: Call(Method, ..(_))
-59: Constant(14: Num(1))
-60: Constant(15: Num(3))
+59: Constant(14: 1)
+60: Constant(15: 3)
 61: Call(Method, ..(_))
 62: Call(Method, same(_,_))
 63: Call(Method, print(_))
 64: Pop
 65: Load(Module, Class("System"))
 66: Load(Module, Class("Object"))
-67: Constant(16: String("ab"))
-68: Constant(17: String("a"))
-69: Constant(18: String("b"))
+67: Constant(16: "ab")
+68: Constant(17: "a")
+69: Constant(18: "b")
 70: Call(Method, +(_))
 71: Call(Method, same(_,_))
 72: Call(Method, print(_))
 73: Pop
 74: Load(Module, Class("System"))
 75: Load(Module, Class("Object"))
-76: Constant(19: String("ab"))
-77: Constant(20: String("a"))
-78: Constant(21: String("c"))
+76: Constant(19: "ab")
+77: Constant(20: "a")
+78: Constant(21: "c")
 79: Call(Method, +(_))
 80: Call(Method, same(_,_))
 81: Call(Method, print(_))
@@ -128,23 +128,23 @@ Code:
 90: Load(Module, Class("System"))
 91: Load(Module, Class("Object"))
 92: Boolean true
-93: Constant(22: Num(2))
+93: Constant(22: 2)
 94: Call(Method, same(_,_))
 95: Call(Method, print(_))
 96: Pop
 97: Load(Module, Class("System"))
 98: Load(Module, Class("Object"))
-99: Constant(23: Num(1))
-100: Constant(24: Num(2))
+99: Constant(23: 1)
+100: Constant(24: 2)
 101: Call(Method, ..(_))
-102: Constant(25: Num(2))
+102: Constant(25: 2)
 103: Call(Method, same(_,_))
 104: Call(Method, print(_))
 105: Pop
 106: Load(Module, Class("System"))
 107: Load(Module, Class("Object"))
-108: Constant(26: String("1"))
-109: Constant(27: Num(1))
+108: Constant(26: "1")
+109: Constant(27: 1)
 110: Call(Method, same(_,_))
 111: Call(Method, print(_))
 112: Pop
@@ -162,7 +162,7 @@ Code:
 124: Call(Method, same(_,_))
 125: Call(Method, print(_))
 126: Pop
-127: Constant(28: String("Foo"))
+127: Constant(28: "Foo")
 128: Load(Module, Class("Object"))
 129: Class(0 fields)
 130: Store(Module)
@@ -192,7 +192,7 @@ Code:
 154: Call(Method, same(_,_))
 155: Call(Method, print(_))
 156: Pop
-157: Constant(31: String("Bar"))
+157: Constant(31: "Bar")
 158: Load(Module, Class("Object"))
 159: Class(0 fields)
 160: Store(Module)

@@ -1,7 +1,7 @@
 Constants:
-00: String("value")
+00: "value"
 Code:
-00: Constant(0: String("value"))
+00: Constant(0: "value")
 01: Store(Module)
 02: Pop
 03: EndModule

@@ -1,34 +1,34 @@
 Constants:
-00: Num(123)
-01: Num(987654)
-02: Num(0)
-03: Num(0)
-04: Num(123.456)
-05: Num(0.001)
+00: 123
+01: 987654
+02: 0
+03: 0
+04: 123.456
+05: 0.001
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(123))
+01: Constant(0: 123)
 02: Call(Method, print(_))
 03: Pop
 04: Load(Module, Class("System"))
-05: Constant(1: Num(987654))
+05: Constant(1: 987654)
 06: Call(Method, print(_))
 07: Pop
 08: Load(Module, Class("System"))
-09: Constant(2: Num(0))
+09: Constant(2: 0)
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(3: Num(0))
+13: Constant(3: 0)
 14: Call(Method, -)
 15: Call(Method, print(_))
 16: Pop
 17: Load(Module, Class("System"))
-18: Constant(4: Num(123.456))
+18: Constant(4: 123.456)
 19: Call(Method, print(_))
 20: Pop
 21: Load(Module, Class("System"))
-22: Constant(5: Num(0.001))
+22: Constant(5: 0.001)
 23: Call(Method, -)
 24: Call(Method, print(_))
 25: Pop

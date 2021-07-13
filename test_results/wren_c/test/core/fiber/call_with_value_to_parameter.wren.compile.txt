@@ -1,8 +1,8 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("before")
-02: String("value")
-03: String("after")
+01: "before"
+02: "value"
+03: "after"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -10,15 +10,15 @@ Code:
 03: Store(Module)
 04: Pop
 05: Load(Module, Class("System"))
-06: Constant(1: String("before"))
+06: Constant(1: "before")
 07: Call(Method, print(_))
 08: Pop
 09: Load(Module, Null)
-10: Constant(2: String("value"))
+10: Constant(2: "value")
 11: Call(Method, call(_))
 12: Pop
 13: Load(Module, Class("System"))
-14: Constant(3: String("after"))
+14: Constant(3: "after")
 15: Call(Method, print(_))
 16: Pop
 17: EndModule

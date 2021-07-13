@@ -1,7 +1,7 @@
 Constants:
-00: Num(0.2)
+00: 0.2
 Code:
-00: Constant(0: Num(0.2))
+00: Constant(0: 0.2)
 01: Call(Method, -)
 02: Store(Module)
 03: Pop

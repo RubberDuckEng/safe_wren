@@ -1,5 +1,5 @@
 Constants:
-00: String("!!")
+00: "!!"
 Code:
 00: ImportModule("meta")
 01: Pop
@@ -7,7 +7,7 @@ Code:
 03: Store(Module)
 04: Pop
 05: Load(Module, Null)
-06: Constant(0: String("!!"))
+06: Constant(0: "!!")
 07: Call(Method, eval(_))
 08: Pop
 09: EndModule

@@ -1,9 +1,9 @@
 Constants:
-00: Num(0)
-01: Num(1)
+00: 0
+01: 1
 Code:
-00: Constant(0: Num(0))
-01: Constant(1: Num(1))
+00: Constant(0: 0)
+01: Constant(1: 1)
 02: Call(Method, ..(_))
 03: Null
 04: Load(Local, 1)

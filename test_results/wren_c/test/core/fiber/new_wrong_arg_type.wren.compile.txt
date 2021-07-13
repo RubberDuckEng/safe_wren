@@ -1,8 +1,8 @@
 Constants:
-00: String("not fn")
+00: "not fn"
 Code:
 00: Load(Module, Class("Fiber"))
-01: Constant(0: String("not fn"))
+01: Constant(0: "not fn")
 02: Call(Method, new(_))
 03: Store(Module)
 04: Pop

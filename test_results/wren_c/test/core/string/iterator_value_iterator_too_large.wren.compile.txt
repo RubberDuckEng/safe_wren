@@ -1,9 +1,9 @@
 Constants:
-00: String("123")
-01: Num(4)
+00: "123"
+01: 4
 Code:
-00: Constant(0: String("123"))
-01: Constant(1: Num(4))
+00: Constant(0: "123")
+01: Constant(1: 4)
 02: Call(Method, iteratorValue(_))
 03: Pop
 04: EndModule

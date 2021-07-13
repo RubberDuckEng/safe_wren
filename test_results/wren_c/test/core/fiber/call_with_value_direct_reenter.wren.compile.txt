@@ -1,6 +1,6 @@
 Constants:
 00: Fn(new(_) block argument)
-01: Num(1)
+01: 1
 Code:
 00: Null
 01: Store(Module)
@@ -11,7 +11,7 @@ Code:
 06: Store(Module)
 07: Pop
 08: Load(Module, Null)
-09: Constant(1: Num(1))
+09: Constant(1: 1)
 10: Call(Method, call(_))
 11: Pop
 12: EndModule

@@ -1,44 +1,44 @@
 Constants:
-00: Num(1)
-01: Num(2)
-02: Num(3)
-03: Num(4)
-04: Num(5)
-05: Num(6)
-06: Num(1)
-07: Num(2)
-08: Num(3)
-09: Num(4)
-10: Num(6)
-11: Num(1)
-12: Num(2)
-13: Num(3)
-14: String("abc")
-15: Num(1)
-16: Num(2)
-17: Num(3)
-18: Num(4)
-19: Num(1)
-20: Num(2)
-21: Num(3)
-22: Num(5)
+00: 1
+01: 2
+02: 3
+03: 4
+04: 5
+05: 6
+06: 1
+07: 2
+08: 3
+09: 4
+10: 6
+11: 1
+12: 2
+13: 3
+14: "abc"
+15: 1
+16: 2
+17: 3
+18: 4
+19: 1
+20: 2
+21: 3
+22: 5
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
 02: Call(Method, new())
-03: Constant(0: Num(1))
+03: Constant(0: 1)
 04: Call(Method, addCore_(_))
-05: Constant(1: Num(2))
+05: Constant(1: 2)
 06: Call(Method, addCore_(_))
-07: Constant(2: Num(3))
+07: Constant(2: 3)
 08: Call(Method, addCore_(_))
 09: Load(Module, Class("List"))
 10: Call(Method, new())
-11: Constant(3: Num(4))
+11: Constant(3: 4)
 12: Call(Method, addCore_(_))
-13: Constant(4: Num(5))
+13: Constant(4: 5)
 14: Call(Method, addCore_(_))
-15: Constant(5: Num(6))
+15: Constant(5: 6)
 16: Call(Method, addCore_(_))
 17: Call(Method, +(_))
 18: Call(Method, print(_))
@@ -46,14 +46,14 @@ Code:
 20: Load(Module, Class("System"))
 21: Load(Module, Class("List"))
 22: Call(Method, new())
-23: Constant(6: Num(1))
+23: Constant(6: 1)
 24: Call(Method, addCore_(_))
-25: Constant(7: Num(2))
+25: Constant(7: 2)
 26: Call(Method, addCore_(_))
-27: Constant(8: Num(3))
+27: Constant(8: 3)
 28: Call(Method, addCore_(_))
-29: Constant(9: Num(4))
-30: Constant(10: Num(6))
+29: Constant(9: 4)
+30: Constant(10: 6)
 31: Call(Method, ..(_))
 32: Call(Method, +(_))
 33: Call(Method, print(_))
@@ -61,13 +61,13 @@ Code:
 35: Load(Module, Class("System"))
 36: Load(Module, Class("List"))
 37: Call(Method, new())
-38: Constant(11: Num(1))
+38: Constant(11: 1)
 39: Call(Method, addCore_(_))
-40: Constant(12: Num(2))
+40: Constant(12: 2)
 41: Call(Method, addCore_(_))
-42: Constant(13: Num(3))
+42: Constant(13: 3)
 43: Call(Method, addCore_(_))
-44: Constant(14: String("abc"))
+44: Constant(14: "abc")
 45: Call(Method, +(_))
 46: Call(Method, print(_))
 47: Pop
@@ -82,9 +82,9 @@ Code:
 56: Load(Module, Class("System"))
 57: Load(Module, Class("List"))
 58: Call(Method, new())
-59: Constant(15: Num(1))
+59: Constant(15: 1)
 60: Call(Method, addCore_(_))
-61: Constant(16: Num(2))
+61: Constant(16: 2)
 62: Call(Method, addCore_(_))
 63: Load(Module, Class("List"))
 64: Call(Method, new())
@@ -96,25 +96,25 @@ Code:
 70: Call(Method, new())
 71: Load(Module, Class("List"))
 72: Call(Method, new())
-73: Constant(17: Num(3))
+73: Constant(17: 3)
 74: Call(Method, addCore_(_))
-75: Constant(18: Num(4))
+75: Constant(18: 4)
 76: Call(Method, addCore_(_))
 77: Call(Method, +(_))
 78: Call(Method, print(_))
 79: Pop
 80: Load(Module, Class("List"))
 81: Call(Method, new())
-82: Constant(19: Num(1))
+82: Constant(19: 1)
 83: Call(Method, addCore_(_))
-84: Constant(20: Num(2))
+84: Constant(20: 2)
 85: Call(Method, addCore_(_))
-86: Constant(21: Num(3))
+86: Constant(21: 3)
 87: Call(Method, addCore_(_))
 88: Store(Module)
 89: Pop
 90: Load(Module, Null)
-91: Constant(22: Num(5))
+91: Constant(22: 5)
 92: Call(Method, *(_))
 93: Pop
 94: Load(Module, Class("System"))

@@ -1,23 +1,23 @@
 Constants:
-00: Num(1)
-01: Num(1000)
-02: Num(1337)
-03: Num(1)
-04: Num(1000)
-05: String("a")
-06: String("b")
-07: Num(1)
-08: Num(1000)
-09: String("a")
+00: 1
+01: 1000
+02: 1337
+03: 1
+04: 1000
+05: "a"
+06: "b"
+07: 1
+08: 1000
+09: "a"
 10: Fn(all(_) block argument)
-11: String("done")
+11: "done"
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
 02: Store(Module)
 03: Pop
-04: Constant(0: Num(1))
-05: Constant(1: Num(1000))
+04: Constant(0: 1)
+05: Constant(1: 1000)
 06: Call(Method, ..(_))
 07: Null
 08: Load(Local, 1)
@@ -28,9 +28,9 @@ Code:
 13: Load(Local, 1)
 14: Load(Local, 2)
 15: Call(Method, iteratorValue(_))
-16: Constant(2: Num(1337))
-17: Constant(3: Num(1))
-18: Constant(4: Num(1000))
+16: Constant(2: 1337)
+17: Constant(3: 1)
+18: Constant(4: 1000)
 19: Call(Method, ..(_))
 20: Null
 21: Load(Local, 5)
@@ -43,10 +43,10 @@ Code:
 28: Call(Method, iteratorValue(_))
 29: Load(Module, Class("Map"))
 30: Call(Method, new())
-31: Constant(5: String("a"))
+31: Constant(5: "a")
 32: Load(Local, 4)
 33: Call(Method, addCore_(_,_))
-34: Constant(6: String("b"))
+34: Constant(6: "b")
 35: Load(Local, 4)
 36: Call(Method, addCore_(_,_))
 37: Store(Local, 4)
@@ -56,8 +56,8 @@ Code:
 41: Pop
 42: Pop
 43: Load(Local, 4)
-44: Constant(7: Num(1))
-45: Constant(8: Num(1000))
+44: Constant(7: 1)
+45: Constant(8: 1000)
 46: Call(Method, ..(_))
 47: Null
 48: Load(Local, 6)
@@ -69,7 +69,7 @@ Code:
 54: Load(Local, 7)
 55: Call(Method, iteratorValue(_))
 56: Load(Local, 5)
-57: Constant(9: String("a"))
+57: Constant(9: "a")
 58: Call(Subscript, [_])
 59: Store(Local, 5)
 60: Pop
@@ -97,7 +97,7 @@ Code:
 82: Call(Method, print(_))
 83: Pop
 84: Load(Module, Class("System"))
-85: Constant(11: String("done"))
+85: Constant(11: "done")
 86: Call(Method, print(_))
 87: Pop
 88: EndModule

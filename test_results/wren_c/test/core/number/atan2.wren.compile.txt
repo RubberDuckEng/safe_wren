@@ -1,26 +1,26 @@
 Constants:
-00: Num(0)
-01: Num(0)
-02: Num(0)
-03: Num(1)
-04: Num(1)
-05: Num(0)
+00: 0
+01: 0
+02: 0
+03: 1
+04: 1
+05: 0
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(0))
-02: Constant(1: Num(0))
+01: Constant(0: 0)
+02: Constant(1: 0)
 03: Call(Method, atan(_))
 04: Call(Method, print(_))
 05: Pop
 06: Load(Module, Class("System"))
-07: Constant(2: Num(0))
-08: Constant(3: Num(1))
+07: Constant(2: 0)
+08: Constant(3: 1)
 09: Call(Method, atan(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(4: Num(1))
-14: Constant(5: Num(0))
+13: Constant(4: 1)
+14: Constant(5: 0)
 15: Call(Method, atan(_))
 16: Call(Method, print(_))
 17: Pop

@@ -1,8 +1,8 @@
 Constants:
-00: Num(1)
+00: 1
 Code:
 00: Load(Module, Class("Num"))
-01: Constant(0: Num(1))
+01: Constant(0: 1)
 02: Call(Method, fromString(_))
 03: Pop
 04: EndModule

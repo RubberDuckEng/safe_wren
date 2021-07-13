@@ -1,7 +1,7 @@
 Constants:
-00: Num(0)
+00: 0
 Code:
-00: Constant(0: Num(0))
+00: Constant(0: 0)
 01: Boolean false
 02: Call(Method, atan(_))
 03: Pop

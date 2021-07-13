@@ -4,21 +4,21 @@ Constants:
 02: Fn(new(_) block argument)
 03: Fn(new(_) block argument)
 04: Fn(new(_) block argument)
-05: Num(1)
+05: 1
 06: Fn(new(_) block argument)
 07: Fn(new(_) block argument)
-08: String("fn 123")
+08: "fn 123"
 09: Fn(new(_) block argument)
-10: Num(1)
+10: 1
 11: Fn(new(_) block argument)
 12: Fn(new(_) block argument)
-13: String("fn 123")
+13: "fn 123"
 14: Fn(new(_) block argument)
-15: Num(1)
-16: Num(2)
+15: 1
+16: 2
 17: Fn(new(_) block argument)
-18: Num(0)
-19: Num(1)
+18: 0
+19: 1
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("Fn"))
@@ -44,7 +44,7 @@ Code:
 21: Load(Module, Class("Fn"))
 22: Closure(4, [])
 23: Call(Method, new(_))
-24: Constant(5: Num(1))
+24: Constant(5: 1)
 25: Call(Method, ==(_))
 26: Call(Method, print(_))
 27: Pop
@@ -60,7 +60,7 @@ Code:
 37: Load(Module, Class("Fn"))
 38: Closure(7, [])
 39: Call(Method, new(_))
-40: Constant(8: String("fn 123"))
+40: Constant(8: "fn 123")
 41: Call(Method, ==(_))
 42: Call(Method, print(_))
 43: Pop
@@ -68,7 +68,7 @@ Code:
 45: Load(Module, Class("Fn"))
 46: Closure(9, [])
 47: Call(Method, new(_))
-48: Constant(10: Num(1))
+48: Constant(10: 1)
 49: Call(Method, !=(_))
 50: Call(Method, print(_))
 51: Pop
@@ -84,7 +84,7 @@ Code:
 61: Load(Module, Class("Fn"))
 62: Closure(12, [])
 63: Call(Method, new(_))
-64: Constant(13: String("fn 123"))
+64: Constant(13: "fn 123")
 65: Call(Method, !=(_))
 66: Call(Method, print(_))
 67: Pop
@@ -109,8 +109,8 @@ Code:
 86: Call(Method, new())
 87: Store(Module)
 88: Pop
-89: Constant(15: Num(1))
-90: Constant(16: Num(2))
+89: Constant(15: 1)
+90: Constant(16: 2)
 91: Call(Method, ..(_))
 92: Null
 93: Load(Local, 1)
@@ -133,10 +133,10 @@ Code:
 110: Pop
 111: Load(Module, Class("System"))
 112: Load(Module, Null)
-113: Constant(18: Num(0))
+113: Constant(18: 0)
 114: Call(Subscript, [_])
 115: Load(Module, Null)
-116: Constant(19: Num(1))
+116: Constant(19: 1)
 117: Call(Subscript, [_])
 118: Call(Method, ==(_))
 119: Call(Method, print(_))

@@ -1,14 +1,14 @@
 Constants:
-00: Num(12345)
-01: Num(0)
-02: Num(1)
-03: Num(100)
-04: Num(2)
-05: Num(5)
-06: Num(2)
-07: String("too low")
-08: Num(5)
-09: String("too high")
+00: 12345
+01: 0
+02: 1
+03: 100
+04: 2
+05: 5
+06: 2
+07: "too low"
+08: 5
+09: "too high"
 Code:
 00: ImportModule("random")
 01: Pop
@@ -16,15 +16,15 @@ Code:
 03: Store(Module)
 04: Pop
 05: Load(Module, Null)
-06: Constant(0: Num(12345))
+06: Constant(0: 12345)
 07: Call(Method, new(_))
 08: Store(Module)
 09: Pop
-10: Constant(1: Num(0))
+10: Constant(1: 0)
 11: Store(Module)
 12: Pop
-13: Constant(2: Num(1))
-14: Constant(3: Num(100))
+13: Constant(2: 1)
+14: Constant(3: 100)
 15: Call(Method, ..(_))
 16: Null
 17: Load(Local, 1)
@@ -36,23 +36,23 @@ Code:
 23: Load(Local, 2)
 24: Call(Method, iteratorValue(_))
 25: Load(Module, Null)
-26: Constant(4: Num(2))
-27: Constant(5: Num(5))
+26: Constant(4: 2)
+27: Constant(5: 5)
 28: Call(Method, float(_,_))
 29: Load(Local, 4)
-30: Constant(6: Num(2))
+30: Constant(6: 2)
 31: Call(Method, <(_))
 32: JumpIfFalse(4)
 33: Load(Module, Class("System"))
-34: Constant(7: String("too low"))
+34: Constant(7: "too low")
 35: Call(Method, print(_))
 36: Pop
 37: Load(Local, 4)
-38: Constant(8: Num(5))
+38: Constant(8: 5)
 39: Call(Method, >=(_))
 40: JumpIfFalse(4)
 41: Load(Module, Class("System"))
-42: Constant(9: String("too high"))
+42: Constant(9: "too high")
 43: Call(Method, print(_))
 44: Pop
 45: Pop

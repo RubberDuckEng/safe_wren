@@ -1,7 +1,7 @@
 Constants:
-00: String("søméஃthîng")
+00: "søméஃthîng"
 Code:
-00: Constant(0: String("søméஃthîng"))
+00: Constant(0: "søméஃthîng")
 01: Store(Module)
 02: Pop
 03: Load(Module, Class("System"))

@@ -1,15 +1,15 @@
 Constants:
-00: Num(0)
-01: Num(1)
-02: Num(2)
+00: 0
+01: 1
+02: 2
 Code:
-00: Constant(0: Num(0))
+00: Constant(0: 0)
 01: Store(Module)
 02: Pop
 03: Boolean true
 04: JumpIfFalse(20)
 05: Load(Module, Null)
-06: Constant(1: Num(1))
+06: Constant(1: 1)
 07: Call(Method, +(_))
 08: Store(Module)
 09: Pop
@@ -18,7 +18,7 @@ Code:
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Null)
-15: Constant(2: Num(2))
+15: Constant(2: 2)
 16: Call(Method, <=(_))
 17: JumpIfFalse(1)
 18: Loop(16)

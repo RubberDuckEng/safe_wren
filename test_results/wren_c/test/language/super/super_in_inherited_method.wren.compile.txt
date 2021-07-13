@@ -1,12 +1,12 @@
 Constants:
-00: String("A")
+00: "A"
 01: Fn(callSuperToString)
 02: Fn(toString)
-03: String("B")
+03: "B"
 04: Fn(init new())
 05: Fn()
 Code:
-00: Constant(0: String("A"))
+00: Constant(0: "A")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -17,7 +17,7 @@ Code:
 08: Closure(2, [])
 09: Load(Module, Null)
 10: Method(instance, toString)
-11: Constant(3: String("B"))
+11: Constant(3: "B")
 12: Load(Module, Null)
 13: Class(0 fields)
 14: Store(Module)

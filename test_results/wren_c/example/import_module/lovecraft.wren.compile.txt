@@ -1,5 +1,5 @@
 Constants:
-00: String("Lovecraft")
+00: "Lovecraft"
 01: Fn(init new())
 02: Fn()
 03: Fn(say())
@@ -9,7 +9,7 @@ Code:
 02: ImportVariable("Cthulu")
 03: Store(Module)
 04: Pop
-05: Constant(0: String("Lovecraft"))
+05: Constant(0: "Lovecraft")
 06: Load(Module, Class("Object"))
 07: Class(0 fields)
 08: Store(Module)

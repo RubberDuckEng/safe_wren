@@ -1,15 +1,15 @@
 Constants:
-00: String("TestSequence")
+00: "TestSequence"
 01: Fn(init new())
 02: Fn()
 03: Fn(iterate(_))
 04: Fn(iteratorValue(_))
-05: Num(3)
-06: Num(0)
-07: Num(1)
-08: Num(4)
+05: 3
+06: 0
+07: 1
+08: 4
 Code:
-00: Constant(0: String("TestSequence"))
+00: Constant(0: "TestSequence")
 01: Load(Module, Class("Sequence"))
 02: Class(0 fields)
 03: Store(Module)
@@ -28,7 +28,7 @@ Code:
 16: Method(instance, iteratorValue(_))
 17: Load(Module, Null)
 18: Call(Method, new())
-19: Constant(5: Num(3))
+19: Constant(5: 3)
 20: Call(Method, take(_))
 21: Store(Module)
 22: Pop
@@ -44,21 +44,21 @@ Code:
 32: Pop
 33: Load(Module, Class("System"))
 34: Load(Module, Null)
-35: Constant(6: Num(0))
+35: Constant(6: 0)
 36: Call(Method, take(_))
 37: Call(Getter, isEmpty)
 38: Call(Method, print(_))
 39: Pop
 40: Load(Module, Class("System"))
 41: Load(Module, Null)
-42: Constant(7: Num(1))
+42: Constant(7: 1)
 43: Call(Method, take(_))
 44: Call(Getter, toList)
 45: Call(Method, print(_))
 46: Pop
 47: Load(Module, Class("System"))
 48: Load(Module, Null)
-49: Constant(8: Num(4))
+49: Constant(8: 4)
 50: Call(Method, take(_))
 51: Call(Getter, toList)
 52: Call(Method, print(_))

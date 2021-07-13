@@ -1,259 +1,259 @@
 Constants:
-00: String("søméஃthîng")
-01: Num(0)
-02: Num(1)
-03: Num(2)
-04: Num(3)
-05: Num(4)
-06: Num(5)
-07: Num(6)
-08: Num(7)
-09: Num(8)
-10: Num(9)
-11: Num(10)
-12: Num(11)
-13: Num(12)
-14: Num(13)
-15: Num(14)
-16: Num(15)
-17: Num(14)
-18: Num(13)
-19: Num(12)
-20: Num(11)
-21: Num(10)
-22: Num(9)
-23: Num(8)
-24: Num(7)
-25: Num(6)
-26: Num(5)
-27: Num(4)
-28: Num(3)
-29: Num(2)
-30: Num(1)
-31: String("\0")
-32: Num(0)
-33: String("\xef\xf7")
-34: Num(0)
-35: String("\xef\xf7")
-36: Num(1)
+00: "søméஃthîng"
+01: 0
+02: 1
+03: 2
+04: 3
+05: 4
+06: 5
+07: 6
+08: 7
+09: 8
+10: 9
+11: 10
+12: 11
+13: 12
+14: 13
+15: 14
+16: 15
+17: 14
+18: 13
+19: 12
+20: 11
+21: 10
+22: 9
+23: 8
+24: 7
+25: 6
+26: 5
+27: 4
+28: 3
+29: 2
+30: 1
+31: "\0"
+32: 0
+33: "\xef\xf7"
+34: 0
+35: "\xef\xf7"
+36: 1
 Code:
-00: Constant(0: String("søméஃthîng"))
+00: Constant(0: "søméஃthîng")
 01: Call(Getter, codePoints)
 02: Store(Module)
 03: Pop
 04: Load(Module, Class("System"))
 05: Load(Module, Null)
-06: Constant(1: Num(0))
+06: Constant(1: 0)
 07: Call(Method, iteratorValue(_))
 08: Call(Method, print(_))
 09: Pop
 10: Load(Module, Class("System"))
 11: Load(Module, Null)
-12: Constant(2: Num(1))
+12: Constant(2: 1)
 13: Call(Method, iteratorValue(_))
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Class("System"))
 17: Load(Module, Null)
-18: Constant(3: Num(2))
+18: Constant(3: 2)
 19: Call(Method, iteratorValue(_))
 20: Call(Method, print(_))
 21: Pop
 22: Load(Module, Class("System"))
 23: Load(Module, Null)
-24: Constant(4: Num(3))
+24: Constant(4: 3)
 25: Call(Method, iteratorValue(_))
 26: Call(Method, print(_))
 27: Pop
 28: Load(Module, Class("System"))
 29: Load(Module, Null)
-30: Constant(5: Num(4))
+30: Constant(5: 4)
 31: Call(Method, iteratorValue(_))
 32: Call(Method, print(_))
 33: Pop
 34: Load(Module, Class("System"))
 35: Load(Module, Null)
-36: Constant(6: Num(5))
+36: Constant(6: 5)
 37: Call(Method, iteratorValue(_))
 38: Call(Method, print(_))
 39: Pop
 40: Load(Module, Class("System"))
 41: Load(Module, Null)
-42: Constant(7: Num(6))
+42: Constant(7: 6)
 43: Call(Method, iteratorValue(_))
 44: Call(Method, print(_))
 45: Pop
 46: Load(Module, Class("System"))
 47: Load(Module, Null)
-48: Constant(8: Num(7))
+48: Constant(8: 7)
 49: Call(Method, iteratorValue(_))
 50: Call(Method, print(_))
 51: Pop
 52: Load(Module, Class("System"))
 53: Load(Module, Null)
-54: Constant(9: Num(8))
+54: Constant(9: 8)
 55: Call(Method, iteratorValue(_))
 56: Call(Method, print(_))
 57: Pop
 58: Load(Module, Class("System"))
 59: Load(Module, Null)
-60: Constant(10: Num(9))
+60: Constant(10: 9)
 61: Call(Method, iteratorValue(_))
 62: Call(Method, print(_))
 63: Pop
 64: Load(Module, Class("System"))
 65: Load(Module, Null)
-66: Constant(11: Num(10))
+66: Constant(11: 10)
 67: Call(Method, iteratorValue(_))
 68: Call(Method, print(_))
 69: Pop
 70: Load(Module, Class("System"))
 71: Load(Module, Null)
-72: Constant(12: Num(11))
+72: Constant(12: 11)
 73: Call(Method, iteratorValue(_))
 74: Call(Method, print(_))
 75: Pop
 76: Load(Module, Class("System"))
 77: Load(Module, Null)
-78: Constant(13: Num(12))
+78: Constant(13: 12)
 79: Call(Method, iteratorValue(_))
 80: Call(Method, print(_))
 81: Pop
 82: Load(Module, Class("System"))
 83: Load(Module, Null)
-84: Constant(14: Num(13))
+84: Constant(14: 13)
 85: Call(Method, iteratorValue(_))
 86: Call(Method, print(_))
 87: Pop
 88: Load(Module, Class("System"))
 89: Load(Module, Null)
-90: Constant(15: Num(14))
+90: Constant(15: 14)
 91: Call(Method, iteratorValue(_))
 92: Call(Method, print(_))
 93: Pop
 94: Load(Module, Class("System"))
 95: Load(Module, Null)
-96: Constant(16: Num(15))
+96: Constant(16: 15)
 97: Call(Method, -)
 98: Call(Method, iteratorValue(_))
 99: Call(Method, print(_))
 100: Pop
 101: Load(Module, Class("System"))
 102: Load(Module, Null)
-103: Constant(17: Num(14))
+103: Constant(17: 14)
 104: Call(Method, -)
 105: Call(Method, iteratorValue(_))
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Class("System"))
 109: Load(Module, Null)
-110: Constant(18: Num(13))
+110: Constant(18: 13)
 111: Call(Method, -)
 112: Call(Method, iteratorValue(_))
 113: Call(Method, print(_))
 114: Pop
 115: Load(Module, Class("System"))
 116: Load(Module, Null)
-117: Constant(19: Num(12))
+117: Constant(19: 12)
 118: Call(Method, -)
 119: Call(Method, iteratorValue(_))
 120: Call(Method, print(_))
 121: Pop
 122: Load(Module, Class("System"))
 123: Load(Module, Null)
-124: Constant(20: Num(11))
+124: Constant(20: 11)
 125: Call(Method, -)
 126: Call(Method, iteratorValue(_))
 127: Call(Method, print(_))
 128: Pop
 129: Load(Module, Class("System"))
 130: Load(Module, Null)
-131: Constant(21: Num(10))
+131: Constant(21: 10)
 132: Call(Method, -)
 133: Call(Method, iteratorValue(_))
 134: Call(Method, print(_))
 135: Pop
 136: Load(Module, Class("System"))
 137: Load(Module, Null)
-138: Constant(22: Num(9))
+138: Constant(22: 9)
 139: Call(Method, -)
 140: Call(Method, iteratorValue(_))
 141: Call(Method, print(_))
 142: Pop
 143: Load(Module, Class("System"))
 144: Load(Module, Null)
-145: Constant(23: Num(8))
+145: Constant(23: 8)
 146: Call(Method, -)
 147: Call(Method, iteratorValue(_))
 148: Call(Method, print(_))
 149: Pop
 150: Load(Module, Class("System"))
 151: Load(Module, Null)
-152: Constant(24: Num(7))
+152: Constant(24: 7)
 153: Call(Method, -)
 154: Call(Method, iteratorValue(_))
 155: Call(Method, print(_))
 156: Pop
 157: Load(Module, Class("System"))
 158: Load(Module, Null)
-159: Constant(25: Num(6))
+159: Constant(25: 6)
 160: Call(Method, -)
 161: Call(Method, iteratorValue(_))
 162: Call(Method, print(_))
 163: Pop
 164: Load(Module, Class("System"))
 165: Load(Module, Null)
-166: Constant(26: Num(5))
+166: Constant(26: 5)
 167: Call(Method, -)
 168: Call(Method, iteratorValue(_))
 169: Call(Method, print(_))
 170: Pop
 171: Load(Module, Class("System"))
 172: Load(Module, Null)
-173: Constant(27: Num(4))
+173: Constant(27: 4)
 174: Call(Method, -)
 175: Call(Method, iteratorValue(_))
 176: Call(Method, print(_))
 177: Pop
 178: Load(Module, Class("System"))
 179: Load(Module, Null)
-180: Constant(28: Num(3))
+180: Constant(28: 3)
 181: Call(Method, -)
 182: Call(Method, iteratorValue(_))
 183: Call(Method, print(_))
 184: Pop
 185: Load(Module, Class("System"))
 186: Load(Module, Null)
-187: Constant(29: Num(2))
+187: Constant(29: 2)
 188: Call(Method, -)
 189: Call(Method, iteratorValue(_))
 190: Call(Method, print(_))
 191: Pop
 192: Load(Module, Class("System"))
 193: Load(Module, Null)
-194: Constant(30: Num(1))
+194: Constant(30: 1)
 195: Call(Method, -)
 196: Call(Method, iteratorValue(_))
 197: Call(Method, print(_))
 198: Pop
 199: Load(Module, Class("System"))
-200: Constant(31: String("\0"))
+200: Constant(31: "\0")
 201: Call(Getter, codePoints)
-202: Constant(32: Num(0))
+202: Constant(32: 0)
 203: Call(Method, iteratorValue(_))
 204: Call(Method, print(_))
 205: Pop
 206: Load(Module, Class("System"))
-207: Constant(33: String("\xef\xf7"))
+207: Constant(33: "\xef\xf7")
 208: Call(Getter, codePoints)
-209: Constant(34: Num(0))
+209: Constant(34: 0)
 210: Call(Method, iteratorValue(_))
 211: Call(Method, print(_))
 212: Pop
 213: Load(Module, Class("System"))
-214: Constant(35: String("\xef\xf7"))
+214: Constant(35: "\xef\xf7")
 215: Call(Getter, codePoints)
-216: Constant(36: Num(1))
+216: Constant(36: 1)
 217: Call(Method, iteratorValue(_))
 218: Call(Method, print(_))
 219: Pop

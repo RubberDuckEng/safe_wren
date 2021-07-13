@@ -1,9 +1,9 @@
 Constants:
-00: Num(1)
-01: Num(0)
+00: 1
+01: 0
 Code:
-00: Constant(0: Num(1))
-01: Constant(1: Num(0))
+00: Constant(0: 1)
+01: Constant(1: 0)
 02: Boolean false
 03: Call(Method, clamp(_,_))
 04: Pop

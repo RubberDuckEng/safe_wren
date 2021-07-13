@@ -1,11 +1,11 @@
 Constants:
-00: String("from here")
-01: String("value C")
+00: "from here"
+01: "value C"
 Code:
-00: Constant(0: String("from here"))
+00: Constant(0: "from here")
 01: Store(Module)
 02: Pop
-03: Constant(1: String("value C"))
+03: Constant(1: "value C")
 04: Store(Module)
 05: Pop
 06: ImportModule("./module")

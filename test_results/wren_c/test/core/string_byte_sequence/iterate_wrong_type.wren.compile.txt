@@ -1,10 +1,10 @@
 Constants:
-00: String("str")
-01: String("not num")
+00: "str"
+01: "not num"
 Code:
-00: Constant(0: String("str"))
+00: Constant(0: "str")
 01: Call(Getter, bytes)
-02: Constant(1: String("not num"))
+02: Constant(1: "not num")
 03: Call(Method, iterate(_))
 04: Pop
 05: EndModule

@@ -1,70 +1,70 @@
 Constants:
-00: String("\x00\x12\x34\x56\x78\xab\xCD\xfFf")
-01: Num(0)
-02: Num(1)
-03: Num(2)
-04: Num(3)
-05: Num(4)
-06: Num(5)
-07: Num(6)
-08: Num(7)
-09: Num(8)
+00: "\x00\x12\x34\x56\x78\xab\xCD\xfFf"
+01: 0
+02: 1
+03: 2
+04: 3
+05: 4
+06: 5
+07: 6
+08: 7
+09: 8
 Code:
-00: Constant(0: String("\x00\x12\x34\x56\x78\xab\xCD\xfFf"))
+00: Constant(0: "\x00\x12\x34\x56\x78\xab\xCD\xfFf")
 01: Call(Getter, bytes)
 02: Store(Module)
 03: Pop
 04: Load(Module, Class("System"))
 05: Load(Module, Null)
-06: Constant(1: Num(0))
+06: Constant(1: 0)
 07: Call(Subscript, [_])
 08: Call(Method, print(_))
 09: Pop
 10: Load(Module, Class("System"))
 11: Load(Module, Null)
-12: Constant(2: Num(1))
+12: Constant(2: 1)
 13: Call(Subscript, [_])
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Class("System"))
 17: Load(Module, Null)
-18: Constant(3: Num(2))
+18: Constant(3: 2)
 19: Call(Subscript, [_])
 20: Call(Method, print(_))
 21: Pop
 22: Load(Module, Class("System"))
 23: Load(Module, Null)
-24: Constant(4: Num(3))
+24: Constant(4: 3)
 25: Call(Subscript, [_])
 26: Call(Method, print(_))
 27: Pop
 28: Load(Module, Class("System"))
 29: Load(Module, Null)
-30: Constant(5: Num(4))
+30: Constant(5: 4)
 31: Call(Subscript, [_])
 32: Call(Method, print(_))
 33: Pop
 34: Load(Module, Class("System"))
 35: Load(Module, Null)
-36: Constant(6: Num(5))
+36: Constant(6: 5)
 37: Call(Subscript, [_])
 38: Call(Method, print(_))
 39: Pop
 40: Load(Module, Class("System"))
 41: Load(Module, Null)
-42: Constant(7: Num(6))
+42: Constant(7: 6)
 43: Call(Subscript, [_])
 44: Call(Method, print(_))
 45: Pop
 46: Load(Module, Class("System"))
 47: Load(Module, Null)
-48: Constant(8: Num(7))
+48: Constant(8: 7)
 49: Call(Subscript, [_])
 50: Call(Method, print(_))
 51: Pop
 52: Load(Module, Class("System"))
 53: Load(Module, Null)
-54: Constant(9: Num(8))
+54: Constant(9: 8)
 55: Call(Subscript, [_])
 56: Call(Method, print(_))
 57: Pop

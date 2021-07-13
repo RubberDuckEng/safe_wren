@@ -1,11 +1,11 @@
 Constants:
-00: String("BadToString")
+00: "BadToString"
 01: Fn(init new())
 02: Fn()
 03: Fn(toString)
-04: String("!")
+04: "!"
 Code:
-00: Constant(0: String("BadToString"))
+00: Constant(0: "BadToString")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -25,7 +25,7 @@ Code:
 17: Call(Method, write(_))
 18: Pop
 19: Load(Module, Class("System"))
-20: Constant(4: String("!"))
+20: Constant(4: "!")
 21: Call(Method, print(_))
 22: Pop
 23: EndModule

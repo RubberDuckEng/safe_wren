@@ -1,29 +1,29 @@
 Constants:
-00: Num(12345)
-01: String("single")
-02: String("a")
-03: String("b")
-04: String("c")
-05: String("d")
-06: String("e")
-07: String("a")
-08: Num(0)
-09: String("b")
-10: Num(0)
-11: String("c")
-12: Num(0)
-13: String("d")
-14: Num(0)
-15: String("e")
-16: Num(0)
-17: Num(1)
-18: Num(1000)
-19: Num(1)
-20: Num(1000)
-21: Num(1)
-22: Num(0.2)
-23: String("!!! ")
-24: String("")
+00: 12345
+01: "single"
+02: "a"
+03: "b"
+04: "c"
+05: "d"
+06: "e"
+07: "a"
+08: 0
+09: "b"
+10: 0
+11: "c"
+12: 0
+13: "d"
+14: 0
+15: "e"
+16: 0
+17: 1
+18: 1000
+19: 1
+20: 1000
+21: 1
+22: 0.2
+23: "!!! "
+24: ""
 Code:
 00: ImportModule("random")
 01: Pop
@@ -31,7 +31,7 @@ Code:
 03: Store(Module)
 04: Pop
 05: Load(Module, Null)
-06: Constant(0: Num(12345))
+06: Constant(0: 12345)
 07: Call(Method, new(_))
 08: Store(Module)
 09: Pop
@@ -39,46 +39,46 @@ Code:
 11: Load(Module, Null)
 12: Load(Module, Class("List"))
 13: Call(Method, new())
-14: Constant(1: String("single"))
+14: Constant(1: "single")
 15: Call(Method, addCore_(_))
 16: Call(Method, sample(_))
 17: Call(Method, print(_))
 18: Pop
 19: Load(Module, Class("List"))
 20: Call(Method, new())
-21: Constant(2: String("a"))
+21: Constant(2: "a")
 22: Call(Method, addCore_(_))
-23: Constant(3: String("b"))
+23: Constant(3: "b")
 24: Call(Method, addCore_(_))
-25: Constant(4: String("c"))
+25: Constant(4: "c")
 26: Call(Method, addCore_(_))
-27: Constant(5: String("d"))
+27: Constant(5: "d")
 28: Call(Method, addCore_(_))
-29: Constant(6: String("e"))
+29: Constant(6: "e")
 30: Call(Method, addCore_(_))
 31: Store(Module)
 32: Pop
 33: Load(Module, Class("Map"))
 34: Call(Method, new())
-35: Constant(7: String("a"))
-36: Constant(8: Num(0))
+35: Constant(7: "a")
+36: Constant(8: 0)
 37: Call(Method, addCore_(_,_))
-38: Constant(9: String("b"))
-39: Constant(10: Num(0))
+38: Constant(9: "b")
+39: Constant(10: 0)
 40: Call(Method, addCore_(_,_))
-41: Constant(11: String("c"))
-42: Constant(12: Num(0))
+41: Constant(11: "c")
+42: Constant(12: 0)
 43: Call(Method, addCore_(_,_))
-44: Constant(13: String("d"))
-45: Constant(14: Num(0))
+44: Constant(13: "d")
+45: Constant(14: 0)
 46: Call(Method, addCore_(_,_))
-47: Constant(15: String("e"))
-48: Constant(16: Num(0))
+47: Constant(15: "e")
+48: Constant(16: 0)
 49: Call(Method, addCore_(_,_))
 50: Store(Module)
 51: Pop
-52: Constant(17: Num(1))
-53: Constant(18: Num(1000))
+52: Constant(17: 1)
+53: Constant(18: 1000)
 54: Call(Method, ..(_))
 55: Null
 56: Load(Local, 1)
@@ -97,7 +97,7 @@ Code:
 69: Load(Module, Null)
 70: Load(Local, 4)
 71: Call(Subscript, [_])
-72: Constant(19: Num(1))
+72: Constant(19: 1)
 73: Call(Method, +(_))
 74: Call(SubscriptSetter, [_]=(_))
 75: Pop
@@ -125,26 +125,26 @@ Code:
 97: Load(Module, Null)
 98: Load(Local, 3)
 99: Call(Subscript, [_])
-100: Constant(20: Num(1000))
+100: Constant(20: 1000)
 101: Load(Module, Null)
 102: Call(Getter, count)
 103: Call(Method, /(_))
 104: Call(Method, /(_))
-105: Constant(21: Num(1))
+105: Constant(21: 1)
 106: Call(Method, -(_))
 107: Call(Getter, abs)
 108: Load(Local, 4)
-109: Constant(22: Num(0.2))
+109: Constant(22: 0.2)
 110: Call(Method, >(_))
 111: JumpIfFalse(12)
 112: Load(Module, Class("System"))
 113: Load(Module, Class("List"))
 114: Call(Method, new())
-115: Constant(23: String("!!! "))
+115: Constant(23: "!!! ")
 116: Call(Method, addCore_(_))
 117: Load(Local, 4)
 118: Call(Method, addCore_(_))
-119: Constant(24: String(""))
+119: Constant(24: "")
 120: Call(Method, addCore_(_))
 121: Call(Method, join())
 122: Call(Method, print(_))

@@ -1,11 +1,11 @@
 Constants:
-00: Num(1114111)
-01: Num(1)
+00: 1114111
+01: 1
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("String"))
-02: Constant(0: Num(1114111))
-03: Constant(1: Num(1))
+02: Constant(0: 1114111)
+03: Constant(1: 1)
 04: Call(Method, +(_))
 05: Call(Method, fromCodePoint(_))
 06: Call(Method, print(_))

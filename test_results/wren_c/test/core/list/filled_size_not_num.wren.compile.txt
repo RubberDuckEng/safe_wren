@@ -1,8 +1,8 @@
 Constants:
-00: String("not num")
+00: "not num"
 Code:
 00: Load(Module, Class("List"))
-01: Constant(0: String("not num"))
+01: Constant(0: "not num")
 02: Null
 03: Call(Method, filled(_,_))
 04: Pop

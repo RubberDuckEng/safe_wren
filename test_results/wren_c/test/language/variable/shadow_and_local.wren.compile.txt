@@ -1,13 +1,13 @@
 Constants:
-00: String("outer")
-01: String("inner")
+00: "outer"
+01: "inner"
 Code:
-00: Constant(0: String("outer"))
+00: Constant(0: "outer")
 01: Load(Module, Class("System"))
 02: Load(Local, 1)
 03: Call(Method, print(_))
 04: Pop
-05: Constant(1: String("inner"))
+05: Constant(1: "inner")
 06: Load(Module, Class("System"))
 07: Load(Local, 1)
 08: Call(Method, print(_))

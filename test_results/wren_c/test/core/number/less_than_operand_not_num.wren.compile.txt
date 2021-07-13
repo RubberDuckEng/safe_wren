@@ -1,7 +1,7 @@
 Constants:
-00: Num(1)
+00: 1
 Code:
-00: Constant(0: Num(1))
+00: Constant(0: 1)
 01: Boolean false
 02: Call(Method, <(_))
 03: Pop

@@ -1,11 +1,11 @@
 Constants:
-00: String("foo")
-01: String("")
-02: String("f")
+00: "foo"
+01: ""
+02: "f"
 Code:
-00: Constant(0: String("foo"))
-01: Constant(1: String(""))
-02: Constant(2: String("f"))
+00: Constant(0: "foo")
+01: Constant(1: "")
+02: Constant(2: "f")
 03: Call(Method, replace(_,_))
 04: Pop
 05: EndModule

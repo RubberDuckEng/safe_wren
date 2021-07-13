@@ -1,8 +1,8 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("main")
-02: String("transfer")
-03: String("nope")
+01: "main"
+02: "transfer"
+03: "nope"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Call(Getter, current)
@@ -17,15 +17,15 @@ Code:
 10: Call(Method, transfer())
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(1: String("main"))
+13: Constant(1: "main")
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Null)
-17: Constant(2: String("transfer"))
+17: Constant(2: "transfer")
 18: Call(Method, transfer(_))
 19: Pop
 20: Load(Module, Class("System"))
-21: Constant(3: String("nope"))
+21: Constant(3: "nope")
 22: Call(Method, print(_))
 23: Pop
 24: EndModule

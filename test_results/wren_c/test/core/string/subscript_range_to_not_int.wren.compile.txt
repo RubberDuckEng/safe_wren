@@ -1,14 +1,14 @@
 Constants:
-00: String("string")
-01: Num(1)
-02: Num(2.5)
+00: "string"
+01: 1
+02: 2.5
 Code:
-00: Constant(0: String("string"))
+00: Constant(0: "string")
 01: Store(Module)
 02: Pop
 03: Load(Module, Null)
-04: Constant(1: Num(1))
-05: Constant(2: Num(2.5))
+04: Constant(1: 1)
+05: Constant(2: 2.5)
 06: Call(Method, ..(_))
 07: Call(Subscript, [_])
 08: Pop

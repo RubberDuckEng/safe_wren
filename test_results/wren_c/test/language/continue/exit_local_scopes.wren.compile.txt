@@ -1,13 +1,13 @@
 Constants:
-00: Num(0)
-01: Num(5)
-02: String("a")
-03: String("b")
-04: String("c")
-05: Num(1)
+00: 0
+01: 5
+02: "a"
+03: "b"
+04: "c"
+05: 1
 Code:
-00: Constant(0: Num(0))
-01: Constant(1: Num(5))
+00: Constant(0: 0)
+01: Constant(1: 5)
 02: Call(Method, ..(_))
 03: Null
 04: Load(Local, 1)
@@ -18,11 +18,11 @@ Code:
 09: Load(Local, 1)
 10: Load(Local, 2)
 11: Call(Method, iteratorValue(_))
-12: Constant(2: String("a"))
-13: Constant(3: String("b"))
-14: Constant(4: String("c"))
+12: Constant(2: "a")
+13: Constant(3: "b")
+14: Constant(4: "c")
 15: Load(Local, 3)
-16: Constant(5: Num(1))
+16: Constant(5: 1)
 17: Call(Method, ==(_))
 18: JumpIfFalse(1)
 19: Loop(16)

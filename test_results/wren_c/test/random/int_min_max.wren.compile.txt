@@ -1,28 +1,28 @@
 Constants:
-00: Num(12345)
-01: Num(0)
-02: Num(0)
-03: Num(0)
-04: Num(0)
-05: Num(0)
-06: Num(0)
-07: Num(0)
-08: Num(0)
-09: Num(1)
-10: Num(10000)
-11: Num(3)
-12: Num(8)
-13: Num(1)
-14: Num(0)
-15: Num(2)
-16: Num(0)
-17: String("too low value")
-18: Num(3)
-19: Num(7)
-20: Num(1900)
-21: String("too few")
-22: Num(2100)
-23: String("too many")
+00: 12345
+01: 0
+02: 0
+03: 0
+04: 0
+05: 0
+06: 0
+07: 0
+08: 0
+09: 1
+10: 10000
+11: 3
+12: 8
+13: 1
+14: 0
+15: 2
+16: 0
+17: "too low value"
+18: 3
+19: 7
+20: 1900
+21: "too few"
+22: 2100
+23: "too many"
 Code:
 00: ImportModule("random")
 01: Pop
@@ -30,32 +30,32 @@ Code:
 03: Store(Module)
 04: Pop
 05: Load(Module, Null)
-06: Constant(0: Num(12345))
+06: Constant(0: 12345)
 07: Call(Method, new(_))
 08: Store(Module)
 09: Pop
 10: Load(Module, Class("List"))
 11: Call(Method, new())
-12: Constant(1: Num(0))
+12: Constant(1: 0)
 13: Call(Method, addCore_(_))
-14: Constant(2: Num(0))
+14: Constant(2: 0)
 15: Call(Method, addCore_(_))
-16: Constant(3: Num(0))
+16: Constant(3: 0)
 17: Call(Method, addCore_(_))
-18: Constant(4: Num(0))
+18: Constant(4: 0)
 19: Call(Method, addCore_(_))
-20: Constant(5: Num(0))
+20: Constant(5: 0)
 21: Call(Method, addCore_(_))
-22: Constant(6: Num(0))
+22: Constant(6: 0)
 23: Call(Method, addCore_(_))
-24: Constant(7: Num(0))
+24: Constant(7: 0)
 25: Call(Method, addCore_(_))
-26: Constant(8: Num(0))
+26: Constant(8: 0)
 27: Call(Method, addCore_(_))
 28: Store(Module)
 29: Pop
-30: Constant(9: Num(1))
-31: Constant(10: Num(10000))
+30: Constant(9: 1)
+31: Constant(10: 10000)
 32: Call(Method, ..(_))
 33: Null
 34: Load(Local, 1)
@@ -67,15 +67,15 @@ Code:
 40: Load(Local, 2)
 41: Call(Method, iteratorValue(_))
 42: Load(Module, Null)
-43: Constant(11: Num(3))
-44: Constant(12: Num(8))
+43: Constant(11: 3)
+44: Constant(12: 8)
 45: Call(Method, int(_,_))
 46: Load(Module, Null)
 47: Load(Local, 4)
 48: Load(Module, Null)
 49: Load(Local, 4)
 50: Call(Subscript, [_])
-51: Constant(13: Num(1))
+51: Constant(13: 1)
 52: Call(Method, +(_))
 53: Call(SubscriptSetter, [_]=(_))
 54: Pop
@@ -84,8 +84,8 @@ Code:
 57: Loop(24)
 58: Pop
 59: Pop
-60: Constant(14: Num(0))
-61: Constant(15: Num(2))
+60: Constant(14: 0)
+61: Constant(15: 2)
 62: Call(Method, ..(_))
 63: Null
 64: Load(Local, 1)
@@ -99,19 +99,19 @@ Code:
 72: Load(Module, Null)
 73: Load(Local, 3)
 74: Call(Subscript, [_])
-75: Constant(16: Num(0))
+75: Constant(16: 0)
 76: Call(Method, !=(_))
 77: JumpIfFalse(4)
 78: Load(Module, Class("System"))
-79: Constant(17: String("too low value"))
+79: Constant(17: "too low value")
 80: Call(Method, print(_))
 81: Pop
 82: Pop
 83: Loop(20)
 84: Pop
 85: Pop
-86: Constant(18: Num(3))
-87: Constant(19: Num(7))
+86: Constant(18: 3)
+87: Constant(19: 7)
 88: Call(Method, ..(_))
 89: Null
 90: Load(Local, 1)
@@ -125,21 +125,21 @@ Code:
 98: Load(Module, Null)
 99: Load(Local, 3)
 100: Call(Subscript, [_])
-101: Constant(20: Num(1900))
+101: Constant(20: 1900)
 102: Call(Method, <(_))
 103: JumpIfFalse(4)
 104: Load(Module, Class("System"))
-105: Constant(21: String("too few"))
+105: Constant(21: "too few")
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Null)
 109: Load(Local, 3)
 110: Call(Subscript, [_])
-111: Constant(22: Num(2100))
+111: Constant(22: 2100)
 112: Call(Method, >(_))
 113: JumpIfFalse(4)
 114: Load(Module, Class("System"))
-115: Constant(23: String("too many"))
+115: Constant(23: "too many")
 116: Call(Method, print(_))
 117: Pop
 118: Pop

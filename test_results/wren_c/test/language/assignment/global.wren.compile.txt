@@ -1,16 +1,16 @@
 Constants:
-00: String("before")
-01: String("after")
-02: String("arg")
+00: "before"
+01: "after"
+02: "arg"
 Code:
-00: Constant(0: String("before"))
+00: Constant(0: "before")
 01: Store(Module)
 02: Pop
 03: Load(Module, Class("System"))
 04: Load(Module, Null)
 05: Call(Method, print(_))
 06: Pop
-07: Constant(1: String("after"))
+07: Constant(1: "after")
 08: Store(Module)
 09: Pop
 10: Load(Module, Class("System"))
@@ -18,7 +18,7 @@ Code:
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Class("System"))
-15: Constant(2: String("arg"))
+15: Constant(2: "arg")
 16: Store(Module)
 17: Call(Method, print(_))
 18: Pop

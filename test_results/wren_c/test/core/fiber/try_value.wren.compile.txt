@@ -1,7 +1,7 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("value")
-02: String("after try")
+01: "value"
+02: "after try"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -10,12 +10,12 @@ Code:
 04: Pop
 05: Load(Module, Class("System"))
 06: Load(Module, Null)
-07: Constant(1: String("value"))
+07: Constant(1: "value")
 08: Call(Method, try(_))
 09: Call(Method, print(_))
 10: Pop
 11: Load(Module, Class("System"))
-12: Constant(2: String("after try"))
+12: Constant(2: "after try")
 13: Call(Method, print(_))
 14: Pop
 15: EndModule

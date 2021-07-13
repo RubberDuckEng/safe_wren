@@ -1,10 +1,10 @@
 Constants:
-00: String("key")
-01: String("value")
+00: "key"
+01: "value"
 Code:
 00: Load(Module, Class("MapEntry"))
-01: Constant(0: String("key"))
-02: Constant(1: String("value"))
+01: Constant(0: "key")
+02: Constant(1: "value")
 03: Call(Method, new(_,_))
 04: Store(Module)
 05: Pop

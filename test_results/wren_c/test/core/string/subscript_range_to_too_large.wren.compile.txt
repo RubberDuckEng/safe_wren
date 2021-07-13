@@ -1,14 +1,14 @@
 Constants:
-00: String("123")
-01: Num(1)
-02: Num(3)
+00: "123"
+01: 1
+02: 3
 Code:
-00: Constant(0: String("123"))
+00: Constant(0: "123")
 01: Store(Module)
 02: Pop
 03: Load(Module, Null)
-04: Constant(1: Num(1))
-05: Constant(2: Num(3))
+04: Constant(1: 1)
+05: Constant(2: 3)
 06: Call(Method, ..(_))
 07: Call(Subscript, [_])
 08: Pop

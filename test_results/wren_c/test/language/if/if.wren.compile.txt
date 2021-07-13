@@ -1,24 +1,24 @@
 Constants:
-00: String("good")
-01: String("bad")
-02: String("block")
+00: "good"
+01: "bad"
+02: "block"
 Code:
 00: Boolean true
 01: JumpIfFalse(4)
 02: Load(Module, Class("System"))
-03: Constant(0: String("good"))
+03: Constant(0: "good")
 04: Call(Method, print(_))
 05: Pop
 06: Boolean false
 07: JumpIfFalse(4)
 08: Load(Module, Class("System"))
-09: Constant(1: String("bad"))
+09: Constant(1: "bad")
 10: Call(Method, print(_))
 11: Pop
 12: Boolean true
 13: JumpIfFalse(4)
 14: Load(Module, Class("System"))
-15: Constant(2: String("block"))
+15: Constant(2: "block")
 16: Call(Method, print(_))
 17: Pop
 18: Boolean false

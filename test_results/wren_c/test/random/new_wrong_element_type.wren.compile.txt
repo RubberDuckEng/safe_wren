@@ -1,5 +1,5 @@
 Constants:
-00: String("wrong type")
+00: "wrong type"
 Code:
 00: ImportModule("random")
 01: Pop
@@ -9,7 +9,7 @@ Code:
 05: Load(Module, Null)
 06: Load(Module, Class("List"))
 07: Call(Method, new())
-08: Constant(0: String("wrong type"))
+08: Constant(0: "wrong type")
 09: Call(Method, addCore_(_))
 10: Call(Method, new(_))
 11: Pop

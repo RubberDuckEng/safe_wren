@@ -1,17 +1,17 @@
 Constants:
-00: String("FibIterator")
+00: "FibIterator"
 01: Fn(init new())
 02: Fn()
 03: Fn(iterate)
 04: Fn(value)
-05: String("Fib")
+05: "Fib"
 06: Fn(init new())
 07: Fn()
 08: Fn(iterate(_))
 09: Fn(iteratorValue(_))
 10: Fn(where(_) block argument)
 Code:
-00: Constant(0: String("FibIterator"))
+00: Constant(0: "FibIterator")
 01: Load(Module, Class("Object"))
 02: Class(2 fields)
 03: Store(Module)
@@ -28,7 +28,7 @@ Code:
 14: Closure(4, [])
 15: Load(Module, Null)
 16: Method(instance, value)
-17: Constant(5: String("Fib"))
+17: Constant(5: "Fib")
 18: Load(Module, Class("Sequence"))
 19: Class(0 fields)
 20: Store(Module)

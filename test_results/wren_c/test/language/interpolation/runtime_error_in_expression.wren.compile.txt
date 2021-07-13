@@ -1,17 +1,17 @@
 Constants:
-00: String("")
-01: Num(123)
-02: String("")
+00: ""
+01: 123
+02: ""
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
 02: Call(Method, new())
-03: Constant(0: String(""))
+03: Constant(0: "")
 04: Call(Method, addCore_(_))
-05: Constant(1: Num(123))
+05: Constant(1: 123)
 06: Call(Getter, badMethod)
 07: Call(Method, addCore_(_))
-08: Constant(2: String(""))
+08: Constant(2: "")
 09: Call(Method, addCore_(_))
 10: Call(Method, join())
 11: Call(Method, print(_))

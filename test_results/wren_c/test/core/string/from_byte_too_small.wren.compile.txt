@@ -1,9 +1,9 @@
 Constants:
-00: Num(1)
+00: 1
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("String"))
-02: Constant(0: Num(1))
+02: Constant(0: 1)
 03: Call(Method, -)
 04: Call(Method, fromByte(_))
 05: Call(Method, print(_))

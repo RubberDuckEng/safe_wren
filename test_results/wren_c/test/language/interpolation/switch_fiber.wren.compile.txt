@@ -1,7 +1,7 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("outer ")
-02: String(" string")
+01: "outer "
+02: " string"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -11,12 +11,12 @@ Code:
 05: Load(Module, Class("System"))
 06: Load(Module, Class("List"))
 07: Call(Method, new())
-08: Constant(1: String("outer "))
+08: Constant(1: "outer ")
 09: Call(Method, addCore_(_))
 10: Load(Module, Null)
 11: Call(Method, call())
 12: Call(Method, addCore_(_))
-13: Constant(2: String(" string"))
+13: Constant(2: " string")
 14: Call(Method, addCore_(_))
 15: Call(Method, join())
 16: Call(Method, print(_))

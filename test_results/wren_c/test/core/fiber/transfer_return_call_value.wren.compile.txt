@@ -1,9 +1,9 @@
 Constants:
 00: Fn(new(_) block argument)
-01: String("main 1")
-02: String("call 1")
-03: String("main 2")
-04: String("main 3")
+01: "main 1"
+02: "call 1"
+03: "main 2"
+04: "main 3"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Call(Getter, current)
@@ -18,15 +18,15 @@ Code:
 10: Call(Method, transfer())
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(1: String("main 1"))
+13: Constant(1: "main 1")
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Null)
-17: Constant(2: String("call 1"))
+17: Constant(2: "call 1")
 18: Call(Method, call(_))
 19: Pop
 20: Load(Module, Class("System"))
-21: Constant(3: String("main 2"))
+21: Constant(3: "main 2")
 22: Call(Method, print(_))
 23: Pop
 24: Load(Module, Null)
@@ -36,7 +36,7 @@ Code:
 28: Call(Method, call())
 29: Pop
 30: Load(Module, Class("System"))
-31: Constant(4: String("main 3"))
+31: Constant(4: "main 3")
 32: Call(Method, print(_))
 33: Pop
 34: EndModule

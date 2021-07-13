@@ -1,16 +1,16 @@
 Constants:
-00: Num(0)
-01: Num(0)
-02: Num(1)
-03: Num(0)
-04: Num(1)
-05: Num(1)
+00: 0
+01: 0
+02: 1
+03: 0
+04: 1
+05: 1
 Code:
-00: Constant(0: Num(0))
+00: Constant(0: 0)
 01: Store(Module)
 02: Pop
-03: Constant(1: Num(0))
-04: Constant(2: Num(1))
+03: Constant(1: 0)
+04: Constant(2: 1)
 05: Call(Method, ..(_))
 06: Null
 07: Load(Local, 1)
@@ -21,8 +21,8 @@ Code:
 12: Load(Local, 1)
 13: Load(Local, 2)
 14: Call(Method, iteratorValue(_))
-15: Constant(3: Num(0))
-16: Constant(4: Num(1))
+15: Constant(3: 0)
+16: Constant(4: 1)
 17: Call(Method, ..(_))
 18: Null
 19: Load(Local, 4)
@@ -34,7 +34,7 @@ Code:
 25: Load(Local, 5)
 26: Call(Method, iteratorValue(_))
 27: Load(Module, Null)
-28: Constant(5: Num(1))
+28: Constant(5: 1)
 29: Call(Method, +(_))
 30: Store(Module)
 31: Pop

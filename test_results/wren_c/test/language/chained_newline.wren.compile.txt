@@ -1,24 +1,24 @@
 Constants:
-00: String("Test")
+00: "Test"
 01: Fn(init new())
 02: Fn()
 03: Fn(test0())
 04: Fn(test1())
 05: Fn(test2())
 06: Fn([_])
-07: String("Tester")
+07: "Tester"
 08: Fn(init new())
 09: Fn()
 10: Fn(getter)
 11: Fn(method())
-12: Num(0)
-13: Num(0)
-14: Num(0)
-15: Num(0)
-16: Num(0)
-17: Num(0)
+12: 0
+13: 0
+14: 0
+15: 0
+16: 0
+17: 0
 Code:
-00: Constant(0: String("Test"))
+00: Constant(0: "Test")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -41,7 +41,7 @@ Code:
 20: Closure(6, [])
 21: Load(Module, Null)
 22: Method(instance, [_])
-23: Constant(7: String("Tester"))
+23: Constant(7: "Tester")
 24: Load(Module, Class("Object"))
 25: Class(1 fields)
 26: Store(Module)
@@ -82,13 +82,13 @@ Code:
 61: Pop
 62: Load(Module, Null)
 63: Call(Getter, getter)
-64: Constant(12: Num(0))
+64: Constant(12: 0)
 65: Call(Subscript, [_])
 66: Call(Method, test0())
 67: Pop
 68: Load(Module, Null)
 69: Call(Getter, getter)
-70: Constant(13: Num(0))
+70: Constant(13: 0)
 71: Call(Subscript, [_])
 72: Call(Method, test0())
 73: Pop
@@ -112,13 +112,13 @@ Code:
 91: Pop
 92: Load(Module, Null)
 93: Call(Method, method())
-94: Constant(14: Num(0))
+94: Constant(14: 0)
 95: Call(Subscript, [_])
 96: Call(Method, test0())
 97: Pop
 98: Load(Module, Null)
 99: Call(Method, method())
-100: Constant(15: Num(0))
+100: Constant(15: 0)
 101: Call(Subscript, [_])
 102: Call(Method, test0())
 103: Pop
@@ -142,12 +142,12 @@ Code:
 121: Call(Method, test2())
 122: Pop
 123: Load(Module, Null)
-124: Constant(16: Num(0))
+124: Constant(16: 0)
 125: Call(Subscript, [_])
 126: Call(Method, test0())
 127: Pop
 128: Load(Module, Null)
-129: Constant(17: Num(0))
+129: Constant(17: 0)
 130: Call(Subscript, [_])
 131: Call(Method, test0())
 132: Pop

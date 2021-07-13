@@ -1,9 +1,9 @@
 Constants:
-00: Num(1)
-01: Num(1)
-02: Num(2)
-03: Num(3)
-04: Num(4)
+00: 1
+01: 1
+02: 2
+03: 3
+04: 4
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
@@ -14,7 +14,7 @@ Code:
 06: Load(Module, Class("System"))
 07: Load(Module, Class("List"))
 08: Call(Method, new())
-09: Constant(0: Num(1))
+09: Constant(0: 1)
 10: Call(Method, addCore_(_))
 11: Call(Getter, count)
 12: Call(Method, print(_))
@@ -22,13 +22,13 @@ Code:
 14: Load(Module, Class("System"))
 15: Load(Module, Class("List"))
 16: Call(Method, new())
-17: Constant(1: Num(1))
+17: Constant(1: 1)
 18: Call(Method, addCore_(_))
-19: Constant(2: Num(2))
+19: Constant(2: 2)
 20: Call(Method, addCore_(_))
-21: Constant(3: Num(3))
+21: Constant(3: 3)
 22: Call(Method, addCore_(_))
-23: Constant(4: Num(4))
+23: Constant(4: 4)
 24: Call(Method, addCore_(_))
 25: Call(Getter, count)
 26: Call(Method, print(_))

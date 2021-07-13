@@ -1,7 +1,7 @@
 Constants:
-00: String("Subclass")
+00: "Subclass"
 Code:
-00: Constant(0: String("Subclass"))
+00: Constant(0: "Subclass")
 01: Load(Module, Class("Fn"))
 02: Class(0 fields)
 03: Store(Module)

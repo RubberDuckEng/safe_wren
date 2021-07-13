@@ -1,45 +1,45 @@
 Constants:
-00: Num(4)
-01: Num(1000000)
-02: Num(1)
-03: Num(0)
-04: Num(0)
-05: Num(2)
-06: Num(4)
+00: 4
+01: 1000000
+02: 1
+03: 0
+04: 0
+05: 2
+06: 4
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(4))
+01: Constant(0: 4)
 02: Call(Getter, sqrt)
 03: Call(Method, print(_))
 04: Pop
 05: Load(Module, Class("System"))
-06: Constant(1: Num(1000000))
+06: Constant(1: 1000000)
 07: Call(Getter, sqrt)
 08: Call(Method, print(_))
 09: Pop
 10: Load(Module, Class("System"))
-11: Constant(2: Num(1))
+11: Constant(2: 1)
 12: Call(Getter, sqrt)
 13: Call(Method, print(_))
 14: Pop
 15: Load(Module, Class("System"))
-16: Constant(3: Num(0))
+16: Constant(3: 0)
 17: Call(Method, -)
 18: Call(Getter, sqrt)
 19: Call(Method, print(_))
 20: Pop
 21: Load(Module, Class("System"))
-22: Constant(4: Num(0))
+22: Constant(4: 0)
 23: Call(Getter, sqrt)
 24: Call(Method, print(_))
 25: Pop
 26: Load(Module, Class("System"))
-27: Constant(5: Num(2))
+27: Constant(5: 2)
 28: Call(Getter, sqrt)
 29: Call(Method, print(_))
 30: Pop
 31: Load(Module, Class("System"))
-32: Constant(6: Num(4))
+32: Constant(6: 4)
 33: Call(Method, -)
 34: Call(Getter, sqrt)
 35: Call(Getter, isNan)

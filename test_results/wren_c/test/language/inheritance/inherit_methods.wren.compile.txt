@@ -1,28 +1,28 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(methodOnFoo)
 02: Fn(method(_))
 03: Fn(method(_,_,_))
 04: Fn(override)
-05: String("Bar")
+05: "Bar"
 06: Fn(init new())
 07: Fn()
 08: Fn(methodOnBar)
 09: Fn(method(_,_))
 10: Fn(method(_,_,_,_))
 11: Fn(override)
-12: Num(1)
-13: Num(1)
-14: Num(2)
-15: Num(1)
-16: Num(2)
-17: Num(3)
-18: Num(1)
-19: Num(2)
-20: Num(3)
-21: Num(4)
+12: 1
+13: 1
+14: 2
+15: 1
+16: 2
+17: 3
+18: 1
+19: 2
+20: 3
+21: 4
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -39,7 +39,7 @@ Code:
 14: Closure(4, [])
 15: Load(Module, Null)
 16: Method(instance, override)
-17: Constant(5: String("Bar"))
+17: Constant(5: "Bar")
 18: Load(Module, Null)
 19: Class(0 fields)
 20: Store(Module)
@@ -73,25 +73,25 @@ Code:
 48: Call(Getter, methodOnBar)
 49: Pop
 50: Load(Module, Null)
-51: Constant(12: Num(1))
+51: Constant(12: 1)
 52: Call(Method, method(_))
 53: Pop
 54: Load(Module, Null)
-55: Constant(13: Num(1))
-56: Constant(14: Num(2))
+55: Constant(13: 1)
+56: Constant(14: 2)
 57: Call(Method, method(_,_))
 58: Pop
 59: Load(Module, Null)
-60: Constant(15: Num(1))
-61: Constant(16: Num(2))
-62: Constant(17: Num(3))
+60: Constant(15: 1)
+61: Constant(16: 2)
+62: Constant(17: 3)
 63: Call(Method, method(_,_,_))
 64: Pop
 65: Load(Module, Null)
-66: Constant(18: Num(1))
-67: Constant(19: Num(2))
-68: Constant(20: Num(3))
-69: Constant(21: Num(4))
+66: Constant(18: 1)
+67: Constant(19: 2)
+68: Constant(20: 3)
+69: Constant(21: 4)
 70: Call(Method, method(_,_,_,_))
 71: Pop
 72: Load(Module, Null)

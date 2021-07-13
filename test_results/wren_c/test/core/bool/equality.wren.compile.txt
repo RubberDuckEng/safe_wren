@@ -1,14 +1,14 @@
 Constants:
-00: Num(1)
-01: Num(0)
-02: String("true")
-03: String("false")
-04: String("")
-05: Num(1)
-06: Num(0)
-07: String("true")
-08: String("false")
-09: String("")
+00: 1
+01: 0
+02: "true"
+03: "false"
+04: ""
+05: 1
+06: 0
+07: "true"
+08: "false"
+09: ""
 Code:
 00: Load(Module, Class("System"))
 01: Boolean true
@@ -36,31 +36,31 @@ Code:
 23: Pop
 24: Load(Module, Class("System"))
 25: Boolean true
-26: Constant(0: Num(1))
+26: Constant(0: 1)
 27: Call(Method, ==(_))
 28: Call(Method, print(_))
 29: Pop
 30: Load(Module, Class("System"))
 31: Boolean false
-32: Constant(1: Num(0))
+32: Constant(1: 0)
 33: Call(Method, ==(_))
 34: Call(Method, print(_))
 35: Pop
 36: Load(Module, Class("System"))
 37: Boolean true
-38: Constant(2: String("true"))
+38: Constant(2: "true")
 39: Call(Method, ==(_))
 40: Call(Method, print(_))
 41: Pop
 42: Load(Module, Class("System"))
 43: Boolean false
-44: Constant(3: String("false"))
+44: Constant(3: "false")
 45: Call(Method, ==(_))
 46: Call(Method, print(_))
 47: Pop
 48: Load(Module, Class("System"))
 49: Boolean false
-50: Constant(4: String(""))
+50: Constant(4: "")
 51: Call(Method, ==(_))
 52: Call(Method, print(_))
 53: Pop
@@ -90,31 +90,31 @@ Code:
 77: Pop
 78: Load(Module, Class("System"))
 79: Boolean true
-80: Constant(5: Num(1))
+80: Constant(5: 1)
 81: Call(Method, !=(_))
 82: Call(Method, print(_))
 83: Pop
 84: Load(Module, Class("System"))
 85: Boolean false
-86: Constant(6: Num(0))
+86: Constant(6: 0)
 87: Call(Method, !=(_))
 88: Call(Method, print(_))
 89: Pop
 90: Load(Module, Class("System"))
 91: Boolean true
-92: Constant(7: String("true"))
+92: Constant(7: "true")
 93: Call(Method, !=(_))
 94: Call(Method, print(_))
 95: Pop
 96: Load(Module, Class("System"))
 97: Boolean false
-98: Constant(8: String("false"))
+98: Constant(8: "false")
 99: Call(Method, !=(_))
 100: Call(Method, print(_))
 101: Pop
 102: Load(Module, Class("System"))
 103: Boolean false
-104: Constant(9: String(""))
+104: Constant(9: "")
 105: Call(Method, !=(_))
 106: Call(Method, print(_))
 107: Pop

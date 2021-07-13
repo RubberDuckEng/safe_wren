@@ -1,14 +1,14 @@
 Constants:
-00: String("first")
-01: String("second")
+00: "first"
+01: "second"
 Code:
-00: Constant(0: String("first"))
+00: Constant(0: "first")
 01: Load(Module, Class("System"))
 02: Load(Local, 1)
 03: Call(Method, print(_))
 04: Pop
 05: Pop
-06: Constant(1: String("second"))
+06: Constant(1: "second")
 07: Load(Module, Class("System"))
 08: Load(Local, 1)
 09: Call(Method, print(_))

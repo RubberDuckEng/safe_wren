@@ -1,5 +1,5 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn(method000)
@@ -1002,9 +1002,9 @@ Constants:
 1000: Fn(method997)
 1001: Fn(method998)
 1002: Fn(method999)
-1003: Num(0)
+1003: 0
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -4019,7 +4019,7 @@ Code:
 3012: Call(Method, new())
 3013: Store(Module)
 3014: Pop
-3015: Constant(1003: Num(0))
+3015: Constant(1003: 0)
 3016: Store(Module)
 3017: Pop
 3018: Load(Module, Null)

@@ -114,13 +114,13 @@ impl core::fmt::Debug for Value {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             Value::Null => write!(f, "Null"),
-            Value::Num(n) => write!(f, "Num({})", n),
-            Value::Boolean(b) => write!(f, "Boolean({})", b),
-            Value::String(s) => write!(f, "String(\"{}\")", s),
+            Value::Num(n) => write!(f, "{}", n),
+            Value::Boolean(b) => write!(f, "{}", b),
+            Value::String(s) => write!(f, "\"{}\"", s),
             Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
-            Value::Range(r) => write!(f, "Range({:?})", r),
-            Value::List(_) => write!(f, "List()"),
-            Value::Map(_) => write!(f, "Map()"),
+            Value::Range(r) => write!(f, "{:?}", r.borrow()),
+            Value::List(l) => write!(f, "List(len: {})", l.borrow().elements.len()),
+            Value::Map(m) => write!(f, "Map(len: {})", m.borrow().data.len()),
             Value::Fiber(_) => write!(f, "Fiber()"),
             Value::Fn(c) => write!(f, "Fn({})", c.borrow().debug.name),
             Value::Closure(c) => write!(f, "Closure({})", c.borrow().fn_obj.borrow().debug.name),
@@ -939,16 +939,10 @@ impl WrenVM {
                 // Grab the "dynamic" scope (top module) since that
                 // makes the most sense as the "owner" of the stack.
                 let top_module_name = match &fiber.call_stack.first() {
-                    None => fn_obj.module.borrow().name.clone(),
-                    Some(top_frame) => top_frame
-                        .closure
-                        .borrow()
-                        .fn_obj
-                        .borrow()
-                        .module
-                        .borrow()
-                        .name
-                        .clone(),
+                    None => module_name_and_line(&fn_obj, frame.pc),
+                    Some(top_frame) => {
+                        module_name_and_line(&top_frame.closure.borrow().fn_obj.borrow(), frame.pc)
+                    }
                 };
                 frame.dump_stack(&top_module_name);
                 dump_instruction(
@@ -1224,6 +1218,18 @@ enum DumpMode {
     HideSymbols,
 }
 
+fn module_name_and_line(fn_obj: &ObjFn, pc: usize) -> String {
+    format!(
+        "{}:{}",
+        std::path::Path::new(&fn_obj.module.borrow().name)
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap(),
+        fn_obj.debug.line_for_pc(pc)
+    )
+}
+
 fn dump_instruction(
     pc: usize,
     op: &Ops,
@@ -1235,7 +1241,7 @@ fn dump_instruction(
     let fn_obj = &closure.fn_obj.borrow();
     println!(
         "{}:{} {:02}: {}",
-        fn_obj.module.borrow().name,
+        module_name_and_line(fn_obj, pc),
         fn_obj.debug.name,
         pc,
         op_debug_string(op, methods, closure, frame, mode)

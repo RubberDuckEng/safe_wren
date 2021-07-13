@@ -1,9 +1,9 @@
 Constants:
-00: String("Foo")
+00: "Foo"
 01: Fn(bar=_)
-02: String("value")
+02: "value"
 Code:
-00: Constant(0: String("Foo"))
+00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
 02: Class(0 fields)
 03: Store(Module)
@@ -12,7 +12,7 @@ Code:
 06: Load(Module, Null)
 07: Method(static, bar=_)
 08: Load(Module, Null)
-09: Constant(2: String("value"))
+09: Constant(2: "value")
 10: Call(Setter, bar=_)
 11: Pop
 12: EndModule

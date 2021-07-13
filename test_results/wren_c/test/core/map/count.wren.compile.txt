@@ -1,12 +1,12 @@
 Constants:
-00: String("one")
-01: String("value")
-02: String("two")
-03: String("value")
-04: String("three")
-05: String("value")
-06: String("two")
-07: String("new value")
+00: "one"
+01: "value"
+02: "two"
+03: "value"
+04: "three"
+05: "value"
+06: "two"
+07: "new value"
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
@@ -18,8 +18,8 @@ Code:
 07: Call(Method, print(_))
 08: Pop
 09: Load(Module, Null)
-10: Constant(0: String("one"))
-11: Constant(1: String("value"))
+10: Constant(0: "one")
+11: Constant(1: "value")
 12: Call(SubscriptSetter, [_]=(_))
 13: Pop
 14: Load(Module, Class("System"))
@@ -28,8 +28,8 @@ Code:
 17: Call(Method, print(_))
 18: Pop
 19: Load(Module, Null)
-20: Constant(2: String("two"))
-21: Constant(3: String("value"))
+20: Constant(2: "two")
+21: Constant(3: "value")
 22: Call(SubscriptSetter, [_]=(_))
 23: Pop
 24: Load(Module, Class("System"))
@@ -38,8 +38,8 @@ Code:
 27: Call(Method, print(_))
 28: Pop
 29: Load(Module, Null)
-30: Constant(4: String("three"))
-31: Constant(5: String("value"))
+30: Constant(4: "three")
+31: Constant(5: "value")
 32: Call(SubscriptSetter, [_]=(_))
 33: Pop
 34: Load(Module, Class("System"))
@@ -48,8 +48,8 @@ Code:
 37: Call(Method, print(_))
 38: Pop
 39: Load(Module, Null)
-40: Constant(6: String("two"))
-41: Constant(7: String("new value"))
+40: Constant(6: "two")
+41: Constant(7: "new value")
 42: Call(SubscriptSetter, [_]=(_))
 43: Pop
 44: Load(Module, Class("System"))

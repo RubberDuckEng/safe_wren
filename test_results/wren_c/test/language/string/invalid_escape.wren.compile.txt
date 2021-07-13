@@ -1,7 +1,7 @@
 Constants:
-00: String("not a \m real escape")
+00: "not a \m real escape"
 Code:
-00: Constant(0: String("not a \m real escape"))
+00: Constant(0: "not a \m real escape")
 01: Pop
 02: EndModule
 03: Return

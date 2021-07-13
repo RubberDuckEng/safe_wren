@@ -1,12 +1,12 @@
 Constants:
-00: Num(1)
-01: Num(3)
-02: String("")
+00: 1
+01: 3
+02: ""
 Code:
-00: Constant(0: Num(1))
-01: Constant(1: Num(3))
+00: Constant(0: 1)
+01: Constant(1: 3)
 02: Call(Method, ..(_))
-03: Constant(2: String(""))
+03: Constant(2: "")
 04: Call(Method, iterate(_))
 05: Pop
 06: EndModule

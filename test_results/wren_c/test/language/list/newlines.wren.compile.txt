@@ -1,40 +1,40 @@
 Constants:
-00: String("a")
-01: String("b")
-02: Num(0)
-03: Num(1)
-04: String("c")
-05: Num(0)
+00: "a"
+01: "b"
+02: 0
+03: 1
+04: "c"
+05: 0
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
-02: Constant(0: String("a"))
+02: Constant(0: "a")
 03: Call(Method, addCore_(_))
-04: Constant(1: String("b"))
+04: Constant(1: "b")
 05: Call(Method, addCore_(_))
 06: Store(Module)
 07: Pop
 08: Load(Module, Class("System"))
 09: Load(Module, Null)
-10: Constant(2: Num(0))
+10: Constant(2: 0)
 11: Call(Subscript, [_])
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Class("System"))
 15: Load(Module, Null)
-16: Constant(3: Num(1))
+16: Constant(3: 1)
 17: Call(Subscript, [_])
 18: Call(Method, print(_))
 19: Pop
 20: Load(Module, Class("List"))
 21: Call(Method, new())
-22: Constant(4: String("c"))
+22: Constant(4: "c")
 23: Call(Method, addCore_(_))
 24: Store(Module)
 25: Pop
 26: Load(Module, Class("System"))
 27: Load(Module, Null)
-28: Constant(5: Num(0))
+28: Constant(5: 0)
 29: Call(Subscript, [_])
 30: Call(Method, print(_))
 31: Pop

@@ -1,10 +1,10 @@
 Constants:
-00: Num(12345)
-01: Num(0)
-02: Num(1)
-03: Num(2)
-04: Num(3)
-05: Num(0)
+00: 12345
+01: 0
+02: 1
+03: 2
+04: 3
+05: 0
 Code:
 00: ImportModule("random")
 01: Pop
@@ -12,7 +12,7 @@ Code:
 03: Store(Module)
 04: Pop
 05: Load(Module, Null)
-06: Constant(0: Num(12345))
+06: Constant(0: 12345)
 07: Call(Method, new(_))
 08: Store(Module)
 09: Pop
@@ -20,7 +20,7 @@ Code:
 11: Load(Module, Null)
 12: Load(Module, Class("List"))
 13: Call(Method, new())
-14: Constant(1: Num(0))
+14: Constant(1: 0)
 15: Call(Method, sample(_,_))
 16: Call(Method, print(_))
 17: Pop
@@ -28,13 +28,13 @@ Code:
 19: Load(Module, Null)
 20: Load(Module, Class("List"))
 21: Call(Method, new())
-22: Constant(2: Num(1))
+22: Constant(2: 1)
 23: Call(Method, addCore_(_))
-24: Constant(3: Num(2))
+24: Constant(3: 2)
 25: Call(Method, addCore_(_))
-26: Constant(4: Num(3))
+26: Constant(4: 3)
 27: Call(Method, addCore_(_))
-28: Constant(5: Num(0))
+28: Constant(5: 0)
 29: Call(Method, sample(_,_))
 30: Call(Method, print(_))
 31: Pop

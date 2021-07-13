@@ -1,8 +1,8 @@
 Constants:
-00: Num(123)
+00: 123
 Code:
 00: Load(Module, Class("System"))
-01: Constant(0: Num(123))
+01: Constant(0: 123)
 02: Call(Method, printAll(_))
 03: Pop
 04: EndModule

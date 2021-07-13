@@ -1,14 +1,14 @@
 Constants:
-00: Num(1)
-01: Num(2)
-02: Num(3)
-03: Num(1)
-04: Num(2)
-05: Num(3)
-06: Num(0)
-07: Num(1)
-08: Num(100)
-09: Num(1)
+00: 1
+01: 2
+02: 3
+03: 1
+04: 2
+05: 3
+06: 0
+07: 1
+08: 100
+09: 1
 Code:
 00: ImportModule("random")
 01: Pop
@@ -18,11 +18,11 @@ Code:
 05: Load(Module, Null)
 06: Load(Module, Class("List"))
 07: Call(Method, new())
-08: Constant(0: Num(1))
+08: Constant(0: 1)
 09: Call(Method, addCore_(_))
-10: Constant(1: Num(2))
+10: Constant(1: 2)
 11: Call(Method, addCore_(_))
-12: Constant(2: Num(3))
+12: Constant(2: 3)
 13: Call(Method, addCore_(_))
 14: Call(Method, new(_))
 15: Store(Module)
@@ -30,20 +30,20 @@ Code:
 17: Load(Module, Null)
 18: Load(Module, Class("List"))
 19: Call(Method, new())
-20: Constant(3: Num(1))
+20: Constant(3: 1)
 21: Call(Method, addCore_(_))
-22: Constant(4: Num(2))
+22: Constant(4: 2)
 23: Call(Method, addCore_(_))
-24: Constant(5: Num(3))
+24: Constant(5: 3)
 25: Call(Method, addCore_(_))
 26: Call(Method, new(_))
 27: Store(Module)
 28: Pop
-29: Constant(6: Num(0))
+29: Constant(6: 0)
 30: Store(Module)
 31: Pop
-32: Constant(7: Num(1))
-33: Constant(8: Num(100))
+32: Constant(7: 1)
+33: Constant(8: 100)
 34: Call(Method, ..(_))
 35: Null
 36: Load(Local, 1)
@@ -61,7 +61,7 @@ Code:
 48: Call(Method, ==(_))
 49: JumpIfFalse(5)
 50: Load(Module, Null)
-51: Constant(9: Num(1))
+51: Constant(9: 1)
 52: Call(Method, +(_))
 53: Store(Module)
 54: Pop

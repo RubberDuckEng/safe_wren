@@ -1,9 +1,9 @@
 Constants:
-00: Num(2)
-01: Num(5)
+00: 2
+01: 5
 Code:
-00: Constant(0: Num(2))
-01: Constant(1: Num(5))
+00: Constant(0: 2)
+01: Constant(1: 5)
 02: Call(Method, ..(_))
 03: Store(Module)
 04: Pop
