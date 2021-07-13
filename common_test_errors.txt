@@ -55,7 +55,6 @@ occurances : error text
 4 : Fiber does not implement 'try(_)'.
 4 : Map does not implement 'keyIteratorValue_(_)'.
 4 : Num metaclass does not implement 'fromString(_)'.
-4 : Right operand must be a number.
 4 : String does not implement 'iterateByte_(_)'.
 4 : String does not implement 'split(_)'.
 4 : in
@@ -69,7 +68,6 @@ occurances : error text
 3 : Expected output "1.5707963267949" on line  and got "1.5707963267948966".
 3 : List does not implement 'skip(_)'.
 3 : List does not implement 'take(_)'.
-2 : Argument must be a function
 2 : B does not implement 'super'.
 2 : C does not implement 'super'.
 2 : C does not implement 'super(_,_)'.
@@ -91,7 +89,6 @@ occurances : error text
 2 : Expected output "-1" on line  and got "120".
 2 : Expected output "2" on line  and got "3".
 2 : Expected output "true" on line  and got "false".
-2 : Expected runtime error "Argument must be a function." and got:
 2 : Expected runtime error "Cannot call a finished fiber." and got:
 2 : Expected runtime error "Cannot call an aborted fiber." and got:
 2 : Expected runtime error "Cannot call root fiber." and got:
@@ -99,7 +96,6 @@ occurances : error text
 2 : Expected runtime error "Cannot transfer to an aborted fiber." and got:
 2 : Expected runtime error "Delimiter must be a non-empty string." and got:
 2 : Expected runtime error "Not enough elements to sample." and got:
-2 : Expected runtime error "Other value must be a number." and got:
 2 : Expected runtime error "Range start out of bounds." and got:
 2 : Expected runtime error "Subscript out of bounds." and got:
 2 : Failed to open file "wren_c/test/regression/442-000005.wren": stream did not contain valid UTF-8
@@ -241,7 +237,6 @@ occurances : error text
 1 : Expected runtime error "Function expects more arguments." and got:
 1 : Expected runtime error "Module name must be a string." and got:
 1 : Expected runtime error "Number literal is too large." and got:
-1 : Expected runtime error "Power value must be a number." and got:
 1 : Expected runtime error "Range end must be an integer." and got:
 1 : Expected runtime error "Range start must be an integer." and got:
 1 : Expected runtime error "Right operand must be a string." and got:
@@ -252,7 +247,6 @@ occurances : error text
 1 : Expected runtime error "Subscript must be a number or a range." and got:
 1 : Expected runtime error "Subscript must be an integer." and got:
 1 : Expected runtime error "To must be a string." and got:
-1 : Expected runtime error "x value must be a number." and got:
 1 : Got output "ok" when none was expected.
 1 : Right operand must be a string.
 1 : Timed out.

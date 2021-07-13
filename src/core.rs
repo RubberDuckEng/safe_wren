@@ -57,10 +57,10 @@ macro_rules! infix_num_op {
 
 // This is identical to infix_num_op except the borrow for b. :/
 macro_rules! num_binary_op {
-    ($func:ident, $method:ident, $return_type:ident) => {
+    ($func:ident, $method:ident, $return_type:ident, $msg:expr) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")?;
-            let b = validate_num(&args[1], "Right operand")?;
+            let b = validate_num(&args[1], $msg)?;
             Ok(Value::$return_type(a.$method(b)))
         }
     };
@@ -128,8 +128,8 @@ fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let end = validate_num(&args[1], "Right hand side of range")?;
     Ok(Value::Range(wren_new_range(vm, start, end, false)))
 }
-num_binary_op!(num_atan2, atan2, Num);
-num_binary_op!(num_pow, powf, Num);
+num_binary_op!(num_atan2, atan2, Num, "x value");
+num_binary_op!(num_pow, powf, Num, "Power value");
 num_unary_op!(num_unary_minus, neg, Num);
 
 fn num_fraction(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -172,8 +172,8 @@ num_unary_op!(num_cos, cos, Num);
 num_unary_op!(num_floor, floor, Num);
 
 num_unary_op!(num_round, round, Num);
-num_binary_op!(num_min, min, Num);
-num_binary_op!(num_max, max, Num);
+num_binary_op!(num_min, min, Num, "Other value");
+num_binary_op!(num_max, max, Num, "Other value");
 
 fn num_clamp(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let value = validate_num(&args[0], "this")?;
@@ -188,7 +188,7 @@ num_unary_op!(num_tan, tan, Num);
 num_unary_op!(num_log, ln, Num);
 num_unary_op!(num_log2, log2, Num);
 num_unary_op!(num_exp, exp, Num);
-num_binary_op!(num_mod, rem, Num);
+num_binary_op!(num_mod, rem, Num, "Right operand");
 num_bitwise_unary_op!(num_bitwise_not, not);
 
 fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -536,7 +536,7 @@ fn string_starts_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn validate_fn(arg: &Value, arg_name: &str) -> Result<Handle<ObjClosure>> {
     arg.try_into_closure()
-        .ok_or_else(|| VMError::from_string(format!("{} must be a function", arg_name)))
+        .ok_or_else(|| VMError::from_string(format!("{} must be a function.", arg_name)))
 }
 
 fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
