@@ -66,18 +66,26 @@ pub(crate) enum Value {
 }
 
 impl Hash for Value {
+    // See hashObject in wren_c wren_value.c
     fn hash<H: Hasher>(&self, state: &mut H) {
+        fn hash_f64<H: Hasher>(num: f64, state: &mut H) {
+            let bits: u64 = unsafe { std::mem::transmute(num) };
+            bits.hash(state);
+        }
         match self {
-            Value::Null => Value::Null.hash(state),
-            Value::Num(f64_ref) => {
-                let bits: u64 = unsafe { std::mem::transmute(*f64_ref) };
-                bits.hash(state);
-            }
+            Value::Null => 0.hash(state),
+            Value::Num(f64_ref) => hash_f64(*f64_ref, state),
             Value::Boolean(v) => v.hash(state),
             Value::String(v) => v.hash(state),
-            Value::Class(v) => v.as_ptr().hash(state),
-            Value::Range(v) => v.as_ptr().hash(state),
+            Value::Class(v) => v.borrow().name.hash(state),
+            Value::Range(v) => {
+                hash_f64(v.borrow().from, state);
+                hash_f64(v.borrow().to, state);
+                // wren_c doesn't hash inclusive, but we could?
+            }
+            // FIXME: wren_c defines a hash for Fn for internal usage?
             Value::Fn(v) => v.as_ptr().hash(state),
+            // FIXME: The rest of these may be wrong?
             Value::Closure(v) => v.as_ptr().hash(state),
             Value::List(v) => v.as_ptr().hash(state),
             Value::Map(v) => v.as_ptr().hash(state),

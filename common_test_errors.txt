@@ -135,7 +135,6 @@ occurances : error text
 2 : TestSequence does not implement 'skip(_)'.
 2 : TestSequence does not implement 'take(_)'.
 2 : TestSequence does not implement 'toList'.
-2 : Timed out.
 2 : Without metaclass does not implement 'attributes'.
 2 : in +(_)
 2 : in bar
@@ -256,3 +255,4 @@ occurances : error text
 1 : Expected runtime error "x value must be a number." and got:
 1 : Got output "ok" when none was expected.
 1 : Right operand must be a string.
+1 : Timed out.

@@ -111,6 +111,7 @@ wren_c/test/core/map/contains_key.wren
 wren_c/test/core/map/contains_key_not_value.wren
 wren_c/test/core/map/count.wren
 wren_c/test/core/map/empty_string_key.wren
+wren_c/test/core/map/key_types.wren
 wren_c/test/core/map/remove.wren
 wren_c/test/core/map/remove_key_not_value.wren
 wren_c/test/core/map/reuse_tombstone.wren
