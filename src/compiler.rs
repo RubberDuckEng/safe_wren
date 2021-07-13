@@ -46,7 +46,7 @@ pub(crate) const MAX_VARIABLE_NAME: usize = 64;
 // const MAX_UPVALUES: usize = 256;
 
 // The maximum number of distinct constants that a function can contain.
-// const MAX_CONSTANTS: usize = 1 << 16;
+const MAX_CONSTANTS: usize = 1 << 16;
 
 // The maximum distance a Ops::Jump or Ops::JumpIfFalse instruction can move the
 // instruction pointer.
@@ -952,10 +952,10 @@ impl ConstantsBuilder {
         self.hash.get(value)
     }
 
-    // fn len(&self) -> usize {
-    //     // self.list.len() and self.hash.len() should both be the same.
-    //     self.list.len()
-    // }
+    fn len(&self) -> usize {
+        // self.list.len() and self.hash.len() should both be the same.
+        self.list.len()
+    }
 
     // This makes no attempt to check if it's already in the map
     // callers are expected to lookup first.
@@ -1137,15 +1137,14 @@ impl fmt::Debug for Compiler {
 fn ensure_constant(ctx: &mut ParseContext, constant: Value) -> Result<usize, WrenError> {
     if let Some(index) = ctx.compiler().constants.lookup(&constant) {
         return Ok(*index);
+    } else if ctx.compiler().constants.len() < MAX_CONSTANTS {
+        Ok(ctx.compiler_mut().constants.add(constant))
+    } else {
+        Err(ctx.error_string(format!(
+            "A function may only contain {} unique constants.",
+            MAX_CONSTANTS
+        )))
     }
-    // else if ctx.compiler().constants.len() < MAX_CONSTANTS {
-    Ok(ctx.compiler_mut().constants.add(constant))
-    // } else {
-    //     Err(ctx.error_string(format!(
-    //         "A function may only contain {} unique constants.",
-    //         MAX_CONSTANTS
-    //     )))
-    // }
 }
 
 // Takes an InputManager.  Knows how to use a Tokenizer to break it up into

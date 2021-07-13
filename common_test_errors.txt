@@ -8,7 +8,7 @@ occurances : error text
 27 : String does not implement 'iterate(_)'.
 22 : Error at 'static': Expect '{' to begin method body.
 22 : Map does not implement 'iterate(_)'.
-21 : Expected return code 65 and got 0. Stderr:
+20 : Expected return code 65 and got 0. Stderr:
 18 : Fiber does not implement 'try()'.
 18 : String does not implement '[_]'.
 17 : Expected return code 65 and got 66. Stderr:
