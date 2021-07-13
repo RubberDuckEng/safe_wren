@@ -1,98 +1,88 @@
 Constants:
 00: ""
-01: ""
-02: "anything"
-03: ""
-04: "something"
-05: "meth"
-06: "something"
-07: "some"
-08: "something"
-09: "ing"
-10: "something"
-11: "math"
-12: "søméthîng"
-13: "méth"
-14: "søméthîng"
-15: "meth"
-16: "a\0b\0c"
-17: "\0"
-18: "a\0b\0c"
-19: "b"
-20: "a\0b\0c"
-21: "b\0c"
-22: "a\0b\0c"
-23: "bc"
+01: "anything"
+02: "something"
+03: "meth"
+04: "some"
+05: "ing"
+06: "math"
+07: "søméthîng"
+08: "méth"
+09: "a\0b\0c"
+10: "\0"
+11: "b"
+12: "b\0c"
+13: "bc"
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: "")
-02: Constant(1: "")
+02: Constant(0: "")
 03: Call(Method, contains(_))
 04: Call(Method, print(_))
 05: Pop
 06: Load(Module, Class("System"))
-07: Constant(2: "anything")
-08: Constant(3: "")
+07: Constant(1: "anything")
+08: Constant(0: "")
 09: Call(Method, contains(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(4: "something")
-14: Constant(5: "meth")
+13: Constant(2: "something")
+14: Constant(3: "meth")
 15: Call(Method, contains(_))
 16: Call(Method, print(_))
 17: Pop
 18: Load(Module, Class("System"))
-19: Constant(6: "something")
-20: Constant(7: "some")
+19: Constant(2: "something")
+20: Constant(4: "some")
 21: Call(Method, contains(_))
 22: Call(Method, print(_))
 23: Pop
 24: Load(Module, Class("System"))
-25: Constant(8: "something")
-26: Constant(9: "ing")
+25: Constant(2: "something")
+26: Constant(5: "ing")
 27: Call(Method, contains(_))
 28: Call(Method, print(_))
 29: Pop
 30: Load(Module, Class("System"))
-31: Constant(10: "something")
-32: Constant(11: "math")
+31: Constant(2: "something")
+32: Constant(6: "math")
 33: Call(Method, contains(_))
 34: Call(Method, print(_))
 35: Pop
 36: Load(Module, Class("System"))
-37: Constant(12: "søméthîng")
-38: Constant(13: "méth")
+37: Constant(7: "søméthîng")
+38: Constant(8: "méth")
 39: Call(Method, contains(_))
 40: Call(Method, print(_))
 41: Pop
 42: Load(Module, Class("System"))
-43: Constant(14: "søméthîng")
-44: Constant(15: "meth")
+43: Constant(7: "søméthîng")
+44: Constant(3: "meth")
 45: Call(Method, contains(_))
 46: Call(Method, print(_))
 47: Pop
 48: Load(Module, Class("System"))
-49: Constant(16: "a\0b\0c")
-50: Constant(17: "\0")
+49: Constant(9: "a\0b\0c")
+50: Constant(10: "\0")
 51: Call(Method, contains(_))
 52: Call(Method, print(_))
 53: Pop
 54: Load(Module, Class("System"))
-55: Constant(18: "a\0b\0c")
-56: Constant(19: "b")
+55: Constant(9: "a\0b\0c")
+56: Constant(11: "b")
 57: Call(Method, contains(_))
 58: Call(Method, print(_))
 59: Pop
 60: Load(Module, Class("System"))
-61: Constant(20: "a\0b\0c")
-62: Constant(21: "b\0c")
+61: Constant(9: "a\0b\0c")
+62: Constant(12: "b\0c")
 63: Call(Method, contains(_))
 64: Call(Method, print(_))
 65: Pop
 66: Load(Module, Class("System"))
-67: Constant(22: "a\0b\0c")
-68: Constant(23: "bc")
+67: Constant(9: "a\0b\0c")
+68: Constant(13: "bc")
 69: Call(Method, contains(_))
 70: Call(Method, print(_))
 71: Pop

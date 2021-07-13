@@ -1,6 +1,5 @@
 Constants:
 00: 1
-01: 1
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("Map"))
@@ -12,7 +11,7 @@ Code:
 07: Load(Module, Class("Map"))
 08: Call(Method, new())
 09: Constant(0: 1)
-10: Constant(1: 1)
+10: Constant(0: 1)
 11: Call(Method, addCore_(_,_))
 12: Call(Getter, isEmpty)
 13: Call(Method, print(_))

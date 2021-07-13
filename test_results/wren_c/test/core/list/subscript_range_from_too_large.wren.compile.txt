@@ -2,8 +2,6 @@ Constants:
 00: 1
 01: 2
 02: 3
-03: 3
-04: 2
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -16,8 +14,8 @@ Code:
 08: Store(Module)
 09: Pop
 10: Load(Module, Null)
-11: Constant(3: 3)
-12: Constant(4: 2)
+11: Constant(2: 3)
+12: Constant(1: 2)
 13: Call(Method, ..(_))
 14: Call(Subscript, [_])
 15: Pop

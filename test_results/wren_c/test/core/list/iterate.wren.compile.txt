@@ -8,7 +8,6 @@ Constants:
 06: 2
 07: 3
 08: 123
-09: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -60,7 +59,7 @@ Code:
 47: Pop
 48: Load(Module, Class("System"))
 49: Load(Module, Null)
-50: Constant(9: 1)
+50: Constant(5: 1)
 51: Call(Method, -)
 52: Call(Method, iterate(_))
 53: Call(Method, print(_))

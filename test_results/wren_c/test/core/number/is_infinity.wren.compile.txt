@@ -3,7 +3,6 @@ Constants:
 01: 1
 02: 0
 03: 10
-04: 0
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 123)
@@ -20,7 +19,7 @@ Code:
 12: Load(Module, Class("System"))
 13: Constant(3: 10)
 14: Call(Method, -)
-15: Constant(4: 0)
+15: Constant(2: 0)
 16: Call(Method, /(_))
 17: Call(Getter, isInfinity)
 18: Call(Method, print(_))

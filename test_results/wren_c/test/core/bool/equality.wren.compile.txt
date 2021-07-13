@@ -4,11 +4,6 @@ Constants:
 02: "true"
 03: "false"
 04: ""
-05: 1
-06: 0
-07: "true"
-08: "false"
-09: ""
 Code:
 00: Load(Module, Class("System"))
 01: Boolean true
@@ -90,31 +85,31 @@ Code:
 77: Pop
 78: Load(Module, Class("System"))
 79: Boolean true
-80: Constant(5: 1)
+80: Constant(0: 1)
 81: Call(Method, !=(_))
 82: Call(Method, print(_))
 83: Pop
 84: Load(Module, Class("System"))
 85: Boolean false
-86: Constant(6: 0)
+86: Constant(1: 0)
 87: Call(Method, !=(_))
 88: Call(Method, print(_))
 89: Pop
 90: Load(Module, Class("System"))
 91: Boolean true
-92: Constant(7: "true")
+92: Constant(2: "true")
 93: Call(Method, !=(_))
 94: Call(Method, print(_))
 95: Pop
 96: Load(Module, Class("System"))
 97: Boolean false
-98: Constant(8: "false")
+98: Constant(3: "false")
 99: Call(Method, !=(_))
 100: Call(Method, print(_))
 101: Pop
 102: Load(Module, Class("System"))
 103: Boolean false
-104: Constant(9: "")
+104: Constant(4: "")
 105: Call(Method, !=(_))
 106: Call(Method, print(_))
 107: Pop

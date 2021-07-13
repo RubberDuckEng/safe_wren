@@ -1,7 +1,7 @@
 // analog to wren_compiler.c from wren_c.
 
 use std::cell::RefCell;
-// use std::collections::HashMap;
+use std::collections::HashMap;
 use std::error;
 use std::fmt;
 use std::ops::Range;
@@ -934,7 +934,7 @@ impl FnDebug {
 // as well as fast copy from the compiler into the final function.
 // wren_c allows up to 65k constants.
 pub(crate) struct ConstantsBuilder {
-    // hash: HashMap<Value, usize>,
+    hash: HashMap<Value, usize>,
 
     // public for deconstruction in end_compiler.
     pub(crate) list: Vec<Value>,
@@ -943,14 +943,13 @@ pub(crate) struct ConstantsBuilder {
 impl ConstantsBuilder {
     fn new() -> ConstantsBuilder {
         ConstantsBuilder {
-            // hash: HashMap::new(),
+            hash: HashMap::new(),
             list: Vec::new(),
         }
     }
 
-    fn lookup(&self, _value: &Value) -> Option<&usize> {
-        None
-        // self.hash.get(value)
+    fn lookup(&self, value: &Value) -> Option<&usize> {
+        self.hash.get(value)
     }
 
     // fn len(&self) -> usize {
@@ -963,7 +962,7 @@ impl ConstantsBuilder {
     fn add(&mut self, value: Value) -> usize {
         let index = self.list.len();
         self.list.push(value.clone());
-        // self.hash.insert(value, index);
+        self.hash.insert(value, index);
         index
     }
 }

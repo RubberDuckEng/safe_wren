@@ -1,7 +1,6 @@
 Constants:
 00: ""
 01: "empty string"
-02: ""
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
@@ -12,7 +11,7 @@ Code:
 06: Pop
 07: Load(Module, Class("System"))
 08: Load(Module, Null)
-09: Constant(2: "")
+09: Constant(0: "")
 10: Call(Subscript, [_])
 11: Call(Method, print(_))
 12: Pop

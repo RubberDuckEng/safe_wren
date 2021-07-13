@@ -1,7 +1,6 @@
 Constants:
 00: 0
 01: 4
-02: 4
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 0)
@@ -20,7 +19,7 @@ Code:
 14: Load(Module, Class("Num"))
 15: Call(Getter, pi)
 16: Call(Method, -)
-17: Constant(2: 4)
+17: Constant(1: 4)
 18: Call(Method, /(_))
 19: Call(Getter, tan)
 20: Call(Method, print(_))

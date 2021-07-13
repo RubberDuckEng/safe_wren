@@ -1,7 +1,6 @@
 Constants:
 00: 0
 01: 1
-02: 1
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 0)
@@ -14,7 +13,7 @@ Code:
 08: Call(Method, print(_))
 09: Pop
 10: Load(Module, Class("System"))
-11: Constant(2: 1)
+11: Constant(1: 1)
 12: Call(Method, -)
 13: Call(Getter, asin)
 14: Call(Method, print(_))

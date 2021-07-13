@@ -3,9 +3,7 @@ Constants:
 01: ""
 02: ", "
 03: "a\0b\0c"
-04: ""
-05: ", "
-06: "a, \0, b, \0, c"
+04: "a, \0, b, \0, c"
 Code:
 00: Constant(0: "string")
 01: Store(Module)
@@ -29,7 +27,7 @@ Code:
 19: Pop
 20: Load(Module, Class("System"))
 21: Load(Module, Null)
-22: Constant(4: "")
+22: Constant(1: "")
 23: Call(Method, join(_))
 24: Load(Module, Null)
 25: Call(Method, ==(_))
@@ -37,9 +35,9 @@ Code:
 27: Pop
 28: Load(Module, Class("System"))
 29: Load(Module, Null)
-30: Constant(5: ", ")
+30: Constant(2: ", ")
 31: Call(Method, join(_))
-32: Constant(6: "a, \0, b, \0, c")
+32: Constant(4: "a, \0, b, \0, c")
 33: Call(Method, ==(_))
 34: Call(Method, print(_))
 35: Pop

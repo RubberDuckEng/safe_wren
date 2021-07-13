@@ -1,10 +1,9 @@
 Constants:
 00: 2
 01: 4
-02: 2
-03: 10
-04: 1
-05: 0
+02: 10
+03: 1
+04: 0
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 2)
@@ -13,14 +12,14 @@ Code:
 04: Call(Method, print(_))
 05: Pop
 06: Load(Module, Class("System"))
-07: Constant(2: 2)
-08: Constant(3: 10)
+07: Constant(0: 2)
+08: Constant(2: 10)
 09: Call(Method, pow(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(4: 1)
-14: Constant(5: 0)
+13: Constant(3: 1)
+14: Constant(4: 0)
 15: Call(Method, pow(_))
 16: Call(Method, print(_))
 17: Pop

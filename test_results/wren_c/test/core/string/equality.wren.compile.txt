@@ -1,152 +1,128 @@
 Constants:
 00: ""
-01: ""
-02: "abcd"
-03: "abcd"
-04: "abcd"
-05: "d"
-06: "e"
-07: "abcd"
-08: ""
-09: "abcd"
-10: "1"
-11: 1
-12: "true"
-13: ""
-14: ""
-15: "abcd"
-16: "abcd"
-17: "abcd"
-18: "d"
-19: "e"
-20: "abcd"
-21: ""
-22: "abcd"
-23: "1"
-24: 1
-25: "true"
-26: "vålue"
-27: "value"
-28: "vålue"
-29: "vålue"
-30: "a\0b\0c"
-31: "a"
-32: "a\0b\0c"
-33: "abc"
-34: "a\0b\0c"
-35: "a\0b\0c"
+01: "abcd"
+02: "d"
+03: "e"
+04: "1"
+05: 1
+06: "true"
+07: "vålue"
+08: "value"
+09: "a\0b\0c"
+10: "a"
+11: "abc"
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: "")
-02: Constant(1: "")
+02: Constant(0: "")
 03: Call(Method, ==(_))
 04: Call(Method, print(_))
 05: Pop
 06: Load(Module, Class("System"))
-07: Constant(2: "abcd")
-08: Constant(3: "abcd")
+07: Constant(1: "abcd")
+08: Constant(1: "abcd")
 09: Call(Method, ==(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(4: "abcd")
-14: Constant(5: "d")
+13: Constant(1: "abcd")
+14: Constant(2: "d")
 15: Call(Method, ==(_))
 16: Call(Method, print(_))
 17: Pop
 18: Load(Module, Class("System"))
-19: Constant(6: "e")
-20: Constant(7: "abcd")
+19: Constant(3: "e")
+20: Constant(1: "abcd")
 21: Call(Method, ==(_))
 22: Call(Method, print(_))
 23: Pop
 24: Load(Module, Class("System"))
-25: Constant(8: "")
-26: Constant(9: "abcd")
+25: Constant(0: "")
+26: Constant(1: "abcd")
 27: Call(Method, ==(_))
 28: Call(Method, print(_))
 29: Pop
 30: Load(Module, Class("System"))
-31: Constant(10: "1")
-32: Constant(11: 1)
+31: Constant(4: "1")
+32: Constant(5: 1)
 33: Call(Method, ==(_))
 34: Call(Method, print(_))
 35: Pop
 36: Load(Module, Class("System"))
-37: Constant(12: "true")
+37: Constant(6: "true")
 38: Boolean true
 39: Call(Method, ==(_))
 40: Call(Method, print(_))
 41: Pop
 42: Load(Module, Class("System"))
-43: Constant(13: "")
-44: Constant(14: "")
+43: Constant(0: "")
+44: Constant(0: "")
 45: Call(Method, !=(_))
 46: Call(Method, print(_))
 47: Pop
 48: Load(Module, Class("System"))
-49: Constant(15: "abcd")
-50: Constant(16: "abcd")
+49: Constant(1: "abcd")
+50: Constant(1: "abcd")
 51: Call(Method, !=(_))
 52: Call(Method, print(_))
 53: Pop
 54: Load(Module, Class("System"))
-55: Constant(17: "abcd")
-56: Constant(18: "d")
+55: Constant(1: "abcd")
+56: Constant(2: "d")
 57: Call(Method, !=(_))
 58: Call(Method, print(_))
 59: Pop
 60: Load(Module, Class("System"))
-61: Constant(19: "e")
-62: Constant(20: "abcd")
+61: Constant(3: "e")
+62: Constant(1: "abcd")
 63: Call(Method, !=(_))
 64: Call(Method, print(_))
 65: Pop
 66: Load(Module, Class("System"))
-67: Constant(21: "")
-68: Constant(22: "abcd")
+67: Constant(0: "")
+68: Constant(1: "abcd")
 69: Call(Method, !=(_))
 70: Call(Method, print(_))
 71: Pop
 72: Load(Module, Class("System"))
-73: Constant(23: "1")
-74: Constant(24: 1)
+73: Constant(4: "1")
+74: Constant(5: 1)
 75: Call(Method, !=(_))
 76: Call(Method, print(_))
 77: Pop
 78: Load(Module, Class("System"))
-79: Constant(25: "true")
+79: Constant(6: "true")
 80: Boolean true
 81: Call(Method, !=(_))
 82: Call(Method, print(_))
 83: Pop
 84: Load(Module, Class("System"))
-85: Constant(26: "vålue")
-86: Constant(27: "value")
+85: Constant(7: "vålue")
+86: Constant(8: "value")
 87: Call(Method, ==(_))
 88: Call(Method, print(_))
 89: Pop
 90: Load(Module, Class("System"))
-91: Constant(28: "vålue")
-92: Constant(29: "vålue")
+91: Constant(7: "vålue")
+92: Constant(7: "vålue")
 93: Call(Method, ==(_))
 94: Call(Method, print(_))
 95: Pop
 96: Load(Module, Class("System"))
-97: Constant(30: "a\0b\0c")
-98: Constant(31: "a")
+97: Constant(9: "a\0b\0c")
+98: Constant(10: "a")
 99: Call(Method, ==(_))
 100: Call(Method, print(_))
 101: Pop
 102: Load(Module, Class("System"))
-103: Constant(32: "a\0b\0c")
-104: Constant(33: "abc")
+103: Constant(9: "a\0b\0c")
+104: Constant(11: "abc")
 105: Call(Method, ==(_))
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Class("System"))
-109: Constant(34: "a\0b\0c")
-110: Constant(35: "a\0b\0c")
+109: Constant(9: "a\0b\0c")
+110: Constant(9: "a\0b\0c")
 111: Call(Method, ==(_))
 112: Call(Method, print(_))
 113: Pop

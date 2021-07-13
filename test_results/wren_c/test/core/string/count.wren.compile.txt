@@ -4,10 +4,8 @@ Constants:
 02: "\0"
 03: "a\0b"
 04: "\0c"
-05: "a\0b"
-06: "\0c"
-07: "søméஃthîng"
-08: "\xefok\xf7"
+05: "søméஃthîng"
+06: "\xefok\xf7"
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: "")
@@ -35,19 +33,19 @@ Code:
 23: Call(Method, print(_))
 24: Pop
 25: Load(Module, Class("System"))
-26: Constant(5: "a\0b")
-27: Constant(6: "\0c")
+26: Constant(3: "a\0b")
+27: Constant(4: "\0c")
 28: Call(Method, +(_))
 29: Call(Getter, count)
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
-33: Constant(7: "søméஃthîng")
+33: Constant(5: "søméஃthîng")
 34: Call(Getter, count)
 35: Call(Method, print(_))
 36: Pop
 37: Load(Module, Class("System"))
-38: Constant(8: "\xefok\xf7")
+38: Constant(6: "\xefok\xf7")
 39: Call(Getter, count)
 40: Call(Method, print(_))
 41: Pop

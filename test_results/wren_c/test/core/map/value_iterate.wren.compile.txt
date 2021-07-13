@@ -8,21 +8,7 @@ Constants:
 06: "four"
 07: 4
 08: 0
-09: 0
-10: 0
-11: 0
-12: 1
-13: 1
-14: 0
-15: 2
-16: 2
-17: 0
-18: 3
-19: 3
-20: 0
-21: 1
-22: 16
-23: 1
+09: 16
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
@@ -59,7 +45,7 @@ Code:
 32: Pop
 33: Load(Module, Class("System"))
 34: Load(Module, Null)
-35: Constant(9: 0)
+35: Constant(8: 0)
 36: Call(Method, iterate(_))
 37: Load(Module, Class("Num"))
 38: Call(Method, is(_))
@@ -67,15 +53,15 @@ Code:
 40: Pop
 41: Load(Module, Class("System"))
 42: Load(Module, Null)
-43: Constant(10: 0)
+43: Constant(8: 0)
 44: Call(Method, iterate(_))
-45: Constant(11: 0)
+45: Constant(8: 0)
 46: Call(Method, >(_))
 47: Call(Method, print(_))
 48: Pop
 49: Load(Module, Class("System"))
 50: Load(Module, Null)
-51: Constant(12: 1)
+51: Constant(1: 1)
 52: Call(Method, iterate(_))
 53: Load(Module, Class("Num"))
 54: Call(Method, is(_))
@@ -83,15 +69,15 @@ Code:
 56: Pop
 57: Load(Module, Class("System"))
 58: Load(Module, Null)
-59: Constant(13: 1)
+59: Constant(1: 1)
 60: Call(Method, iterate(_))
-61: Constant(14: 0)
+61: Constant(8: 0)
 62: Call(Method, >(_))
 63: Call(Method, print(_))
 64: Pop
 65: Load(Module, Class("System"))
 66: Load(Module, Null)
-67: Constant(15: 2)
+67: Constant(3: 2)
 68: Call(Method, iterate(_))
 69: Load(Module, Class("Num"))
 70: Call(Method, is(_))
@@ -99,15 +85,15 @@ Code:
 72: Pop
 73: Load(Module, Class("System"))
 74: Load(Module, Null)
-75: Constant(16: 2)
+75: Constant(3: 2)
 76: Call(Method, iterate(_))
-77: Constant(17: 0)
+77: Constant(8: 0)
 78: Call(Method, >(_))
 79: Call(Method, print(_))
 80: Pop
 81: Load(Module, Class("System"))
 82: Load(Module, Null)
-83: Constant(18: 3)
+83: Constant(5: 3)
 84: Call(Method, iterate(_))
 85: Load(Module, Class("Num"))
 86: Call(Method, is(_))
@@ -115,13 +101,13 @@ Code:
 88: Pop
 89: Load(Module, Class("System"))
 90: Load(Module, Null)
-91: Constant(19: 3)
+91: Constant(5: 3)
 92: Call(Method, iterate(_))
-93: Constant(20: 0)
+93: Constant(8: 0)
 94: Call(Method, >(_))
 95: Call(Method, print(_))
 96: Pop
-97: Constant(21: 1)
+97: Constant(1: 1)
 98: Call(Method, -)
 99: Store(Module)
 100: Pop
@@ -155,13 +141,13 @@ Code:
 128: Loop(23)
 129: Load(Module, Class("System"))
 130: Load(Module, Null)
-131: Constant(22: 16)
+131: Constant(9: 16)
 132: Call(Method, iterate(_))
 133: Call(Method, print(_))
 134: Pop
 135: Load(Module, Class("System"))
 136: Load(Module, Null)
-137: Constant(23: 1)
+137: Constant(1: 1)
 138: Call(Method, -)
 139: Call(Method, iterate(_))
 140: Call(Method, print(_))

@@ -1,8 +1,7 @@
 Constants:
 00: 1
 01: Fn(reduce(_) block argument)
-02: 1
-03: Fn(reduce(_,_) block argument)
+02: Fn(reduce(_,_) block argument)
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
@@ -16,8 +15,8 @@ Code:
 09: Load(Module, Class("System"))
 10: Load(Module, Class("List"))
 11: Call(Method, new())
-12: Constant(2: 1)
-13: Closure(3, [])
+12: Constant(0: 1)
+13: Closure(2, [])
 14: Call(Method, reduce(_,_))
 15: Call(Method, print(_))
 16: Pop

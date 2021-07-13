@@ -4,26 +4,14 @@ Constants:
 02: 1
 03: 2
 04: 3
-05: ""
-06: 1
-07: 2
-08: 3
-09: 1
-10: "2"
-11: ","
-12: 1
-13: 2
-14: 3
-15: 4
-16: 5
-17: ","
-18: "Foo"
-19: Fn(init new())
-20: Fn()
-21: Fn(toString)
-22: 1
-23: 2
-24: ", "
+05: "2"
+06: 4
+07: 5
+08: "Foo"
+09: Fn(init new())
+10: Fn()
+11: Fn(toString)
+12: ", "
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
@@ -43,18 +31,18 @@ Code:
 15: Call(Method, addCore_(_))
 16: Constant(4: 3)
 17: Call(Method, addCore_(_))
-18: Constant(5: "")
+18: Constant(1: "")
 19: Call(Method, join(_))
 20: Call(Method, print(_))
 21: Pop
 22: Load(Module, Class("System"))
 23: Load(Module, Class("List"))
 24: Call(Method, new())
-25: Constant(6: 1)
+25: Constant(2: 1)
 26: Call(Method, addCore_(_))
-27: Constant(7: 2)
+27: Constant(3: 2)
 28: Call(Method, addCore_(_))
-29: Constant(8: 3)
+29: Constant(4: 3)
 30: Call(Method, addCore_(_))
 31: Call(Method, join())
 32: Call(Method, print(_))
@@ -62,64 +50,64 @@ Code:
 34: Load(Module, Class("System"))
 35: Load(Module, Class("List"))
 36: Call(Method, new())
-37: Constant(9: 1)
+37: Constant(2: 1)
 38: Call(Method, addCore_(_))
-39: Constant(10: "2")
+39: Constant(5: "2")
 40: Call(Method, addCore_(_))
 41: Boolean true
 42: Call(Method, addCore_(_))
-43: Constant(11: ",")
+43: Constant(0: ",")
 44: Call(Method, join(_))
 45: Call(Method, print(_))
 46: Pop
 47: Load(Module, Class("System"))
 48: Load(Module, Class("List"))
 49: Call(Method, new())
-50: Constant(12: 1)
+50: Constant(2: 1)
 51: Call(Method, addCore_(_))
 52: Load(Module, Class("List"))
 53: Call(Method, new())
-54: Constant(13: 2)
+54: Constant(3: 2)
 55: Call(Method, addCore_(_))
 56: Load(Module, Class("List"))
 57: Call(Method, new())
-58: Constant(14: 3)
+58: Constant(4: 3)
 59: Call(Method, addCore_(_))
 60: Call(Method, addCore_(_))
-61: Constant(15: 4)
+61: Constant(6: 4)
 62: Call(Method, addCore_(_))
 63: Call(Method, addCore_(_))
-64: Constant(16: 5)
+64: Constant(7: 5)
 65: Call(Method, addCore_(_))
-66: Constant(17: ",")
+66: Constant(0: ",")
 67: Call(Method, join(_))
 68: Call(Method, print(_))
 69: Pop
-70: Constant(18: "Foo")
+70: Constant(8: "Foo")
 71: Load(Module, Class("Object"))
 72: Class(0 fields)
 73: Store(Module)
 74: Pop
-75: Closure(19, [])
+75: Closure(9, [])
 76: Load(Module, Null)
 77: Method(instance, init new())
-78: Closure(20, [])
+78: Closure(10, [])
 79: Load(Module, Null)
 80: Method(static, new())
-81: Closure(21, [])
+81: Closure(11, [])
 82: Load(Module, Null)
 83: Method(instance, toString)
 84: Load(Module, Class("System"))
 85: Load(Module, Class("List"))
 86: Call(Method, new())
-87: Constant(22: 1)
+87: Constant(2: 1)
 88: Call(Method, addCore_(_))
 89: Load(Module, Null)
 90: Call(Method, new())
 91: Call(Method, addCore_(_))
-92: Constant(23: 2)
+92: Constant(3: 2)
 93: Call(Method, addCore_(_))
-94: Constant(24: ", ")
+94: Constant(12: ", ")
 95: Call(Method, join(_))
 96: Call(Method, print(_))
 97: Pop

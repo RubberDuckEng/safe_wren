@@ -2,15 +2,8 @@ Constants:
 00: 1
 01: 3
 02: 12345.6789
-03: 12345.6789
-04: 100
-05: 300
-06: 1
-07: 3
-08: 12345.6789
-09: 12345.6789
-10: 100
-11: 300
+03: 100
+04: 300
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 1)
@@ -20,34 +13,34 @@ Code:
 05: Pop
 06: Load(Module, Class("System"))
 07: Constant(2: 12345.6789)
-08: Constant(3: 12345.6789)
+08: Constant(2: 12345.6789)
 09: Call(Method, ..(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(4: 100)
+13: Constant(3: 100)
 14: Call(Method, -)
-15: Constant(5: 300)
+15: Constant(4: 300)
 16: Call(Method, -)
 17: Call(Method, ..(_))
 18: Call(Method, print(_))
 19: Pop
 20: Load(Module, Class("System"))
-21: Constant(6: 1)
-22: Constant(7: 3)
+21: Constant(0: 1)
+22: Constant(1: 3)
 23: Call(Method, ...(_))
 24: Call(Method, print(_))
 25: Pop
 26: Load(Module, Class("System"))
-27: Constant(8: 12345.6789)
-28: Constant(9: 12345.6789)
+27: Constant(2: 12345.6789)
+28: Constant(2: 12345.6789)
 29: Call(Method, ...(_))
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
-33: Constant(10: 100)
+33: Constant(3: 100)
 34: Call(Method, -)
-35: Constant(11: 300)
+35: Constant(4: 300)
 36: Call(Method, -)
 37: Call(Method, ...(_))
 38: Call(Method, print(_))

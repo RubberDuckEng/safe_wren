@@ -3,7 +3,6 @@ Constants:
 01: 2
 02: 3
 03: 4
-04: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -17,7 +16,7 @@ Code:
 09: Pop
 10: Load(Module, Null)
 11: Constant(3: 4)
-12: Constant(4: 1)
+12: Constant(0: 1)
 13: Call(SubscriptSetter, [_]=(_))
 14: Pop
 15: EndModule

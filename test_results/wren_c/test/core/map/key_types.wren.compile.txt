@@ -13,33 +13,17 @@ Constants:
 11: 1
 12: 3
 13: "1 to 3"
-14: 0
-15: 1.2
-16: "null"
-17: 1
-18: 3
-19: "new null value"
-20: "new true value"
-21: "new false value"
-22: 2
-23: 2
-24: "new zero"
-25: 1.2
-26: "new 1 point 2"
-27: "new list class"
-28: "nu"
-29: "ll"
-30: "new string value"
-31: 3
-32: 2
-33: 1
-34: 2
-35: "new 1 to 3"
-36: 0
-37: 1.2
-38: "null"
-39: 1
-40: 3
+14: "new null value"
+15: "new true value"
+16: "new false value"
+17: 2
+18: "new zero"
+19: "new 1 point 2"
+20: "new list class"
+21: "nu"
+22: "ll"
+23: "new string value"
+24: "new 1 to 3"
 Code:
 00: Load(Module, Class("Fiber"))
 01: Closure(0, [])
@@ -96,13 +80,13 @@ Code:
 52: Pop
 53: Load(Module, Class("System"))
 54: Load(Module, Null)
-55: Constant(14: 0)
+55: Constant(4: 0)
 56: Call(Subscript, [_])
 57: Call(Method, print(_))
 58: Pop
 59: Load(Module, Class("System"))
 60: Load(Module, Null)
-61: Constant(15: 1.2)
+61: Constant(6: 1.2)
 62: Call(Subscript, [_])
 63: Call(Method, print(_))
 64: Pop
@@ -114,14 +98,14 @@ Code:
 70: Pop
 71: Load(Module, Class("System"))
 72: Load(Module, Null)
-73: Constant(16: "null")
+73: Constant(9: "null")
 74: Call(Subscript, [_])
 75: Call(Method, print(_))
 76: Pop
 77: Load(Module, Class("System"))
 78: Load(Module, Null)
-79: Constant(17: 1)
-80: Constant(18: 3)
+79: Constant(11: 1)
+80: Constant(12: 3)
 81: Call(Method, ..(_))
 82: Call(Subscript, [_])
 83: Call(Method, print(_))
@@ -133,56 +117,56 @@ Code:
 89: Pop
 90: Load(Module, Null)
 91: Null
-92: Constant(19: "new null value")
+92: Constant(14: "new null value")
 93: Call(SubscriptSetter, [_]=(_))
 94: Pop
 95: Load(Module, Null)
 96: Boolean false
 97: Call(Method, !)
-98: Constant(20: "new true value")
+98: Constant(15: "new true value")
 99: Call(SubscriptSetter, [_]=(_))
 100: Pop
 101: Load(Module, Null)
 102: Boolean true
 103: Call(Method, !)
-104: Constant(21: "new false value")
+104: Constant(16: "new false value")
 105: Call(SubscriptSetter, [_]=(_))
 106: Pop
 107: Load(Module, Null)
-108: Constant(22: 2)
-109: Constant(23: 2)
+108: Constant(17: 2)
+109: Constant(17: 2)
 110: Call(Method, -(_))
-111: Constant(24: "new zero")
+111: Constant(18: "new zero")
 112: Call(SubscriptSetter, [_]=(_))
 113: Pop
 114: Load(Module, Null)
-115: Constant(25: 1.2)
-116: Constant(26: "new 1 point 2")
+115: Constant(6: 1.2)
+116: Constant(19: "new 1 point 2")
 117: Call(SubscriptSetter, [_]=(_))
 118: Pop
 119: Load(Module, Null)
 120: Load(Module, Class("List"))
 121: Call(Method, new())
 122: Call(Getter, type)
-123: Constant(27: "new list class")
+123: Constant(20: "new list class")
 124: Call(SubscriptSetter, [_]=(_))
 125: Pop
 126: Load(Module, Null)
-127: Constant(28: "nu")
-128: Constant(29: "ll")
+127: Constant(21: "nu")
+128: Constant(22: "ll")
 129: Call(Method, +(_))
-130: Constant(30: "new string value")
+130: Constant(23: "new string value")
 131: Call(SubscriptSetter, [_]=(_))
 132: Pop
 133: Load(Module, Null)
-134: Constant(31: 3)
-135: Constant(32: 2)
+134: Constant(12: 3)
+135: Constant(17: 2)
 136: Call(Method, -(_))
-137: Constant(33: 1)
-138: Constant(34: 2)
+137: Constant(11: 1)
+138: Constant(17: 2)
 139: Call(Method, +(_))
 140: Call(Method, ..(_))
-141: Constant(35: "new 1 to 3")
+141: Constant(24: "new 1 to 3")
 142: Call(SubscriptSetter, [_]=(_))
 143: Pop
 144: Load(Module, Class("System"))
@@ -205,13 +189,13 @@ Code:
 161: Pop
 162: Load(Module, Class("System"))
 163: Load(Module, Null)
-164: Constant(36: 0)
+164: Constant(4: 0)
 165: Call(Subscript, [_])
 166: Call(Method, print(_))
 167: Pop
 168: Load(Module, Class("System"))
 169: Load(Module, Null)
-170: Constant(37: 1.2)
+170: Constant(6: 1.2)
 171: Call(Subscript, [_])
 172: Call(Method, print(_))
 173: Pop
@@ -223,14 +207,14 @@ Code:
 179: Pop
 180: Load(Module, Class("System"))
 181: Load(Module, Null)
-182: Constant(38: "null")
+182: Constant(9: "null")
 183: Call(Subscript, [_])
 184: Call(Method, print(_))
 185: Pop
 186: Load(Module, Class("System"))
 187: Load(Module, Null)
-188: Constant(39: 1)
-189: Constant(40: 3)
+188: Constant(11: 1)
+189: Constant(12: 3)
 190: Call(Method, ..(_))
 191: Call(Subscript, [_])
 192: Call(Method, print(_))

@@ -2,18 +2,16 @@ Constants:
 00: 1
 01: 4
 02: 2
-03: 1
-04: 5
-05: "W"
-06: "o"
-07: "r"
-08: "l"
-09: "d"
+03: 5
+04: "W"
+05: "o"
+06: "r"
+07: "l"
+08: "d"
+09: Fn(new(_) block argument)
 10: Fn(new(_) block argument)
-11: Fn(new(_) block argument)
-12: 10
-13: 1
-14: "Hello "
+11: 10
+12: "Hello "
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -23,33 +21,33 @@ Code:
 05: Call(Method, addCore_(_))
 06: Constant(2: 2)
 07: Call(Method, addCore_(_))
-08: Constant(3: 1)
+08: Constant(0: 1)
 09: Call(Method, addCore_(_))
-10: Constant(4: 5)
+10: Constant(3: 5)
 11: Call(Method, addCore_(_))
 12: Store(Module)
 13: Pop
 14: Load(Module, Class("List"))
 15: Call(Method, new())
-16: Constant(5: "W")
+16: Constant(4: "W")
 17: Call(Method, addCore_(_))
-18: Constant(6: "o")
+18: Constant(5: "o")
 19: Call(Method, addCore_(_))
-20: Constant(7: "r")
+20: Constant(6: "r")
 21: Call(Method, addCore_(_))
-22: Constant(8: "l")
+22: Constant(7: "l")
 23: Call(Method, addCore_(_))
-24: Constant(9: "d")
+24: Constant(8: "d")
 25: Call(Method, addCore_(_))
 26: Store(Module)
 27: Pop
 28: Load(Module, Class("Fn"))
-29: Closure(10, [])
+29: Closure(9, [])
 30: Call(Method, new(_))
 31: Store(Module)
 32: Pop
 33: Load(Module, Class("Fn"))
-34: Closure(11, [])
+34: Closure(10, [])
 35: Call(Method, new(_))
 36: Store(Module)
 37: Pop
@@ -61,7 +59,7 @@ Code:
 43: Pop
 44: Load(Module, Class("System"))
 45: Load(Module, Null)
-46: Constant(12: 10)
+46: Constant(11: 10)
 47: Load(Module, Null)
 48: Call(Method, reduce(_,_))
 49: Call(Method, print(_))
@@ -74,7 +72,7 @@ Code:
 56: Pop
 57: Load(Module, Class("System"))
 58: Load(Module, Null)
-59: Constant(13: 1)
+59: Constant(0: 1)
 60: Call(Method, -)
 61: Load(Module, Null)
 62: Call(Method, reduce(_,_))
@@ -82,7 +80,7 @@ Code:
 64: Pop
 65: Load(Module, Class("System"))
 66: Load(Module, Null)
-67: Constant(14: "Hello ")
+67: Constant(12: "Hello ")
 68: Load(Module, Null)
 69: Call(Method, reduce(_,_))
 70: Call(Method, print(_))

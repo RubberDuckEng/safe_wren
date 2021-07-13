@@ -4,12 +4,7 @@ Constants:
 02: 2
 03: 3
 04: 4
-05: 0
-06: 3
-07: 1
-08: 2
-09: 8
-10: 0
+05: 8
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -26,8 +21,8 @@ Code:
 12: Store(Module)
 13: Pop
 14: Load(Module, Null)
-15: Constant(5: 0)
-16: Constant(6: 3)
+15: Constant(0: 0)
+16: Constant(3: 3)
 17: Call(Method, swap(_,_))
 18: Pop
 19: Load(Module, Class("System"))
@@ -35,9 +30,9 @@ Code:
 21: Call(Method, print(_))
 22: Pop
 23: Load(Module, Null)
-24: Constant(7: 1)
+24: Constant(1: 1)
 25: Call(Method, -)
-26: Constant(8: 2)
+26: Constant(2: 2)
 27: Call(Method, swap(_,_))
 28: Pop
 29: Load(Module, Class("System"))
@@ -45,8 +40,8 @@ Code:
 31: Call(Method, print(_))
 32: Pop
 33: Load(Module, Null)
-34: Constant(9: 8)
-35: Constant(10: 0)
+34: Constant(5: 8)
+35: Constant(0: 0)
 36: Call(Method, swap(_,_))
 37: Pop
 38: EndModule

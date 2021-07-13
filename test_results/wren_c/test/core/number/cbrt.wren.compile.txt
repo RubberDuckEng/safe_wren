@@ -3,8 +3,7 @@ Constants:
 01: 1000000
 02: 1
 03: 0
-04: 0
-05: 2
+04: 2
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 8)
@@ -28,12 +27,12 @@ Code:
 19: Call(Method, print(_))
 20: Pop
 21: Load(Module, Class("System"))
-22: Constant(4: 0)
+22: Constant(3: 0)
 23: Call(Getter, cbrt)
 24: Call(Method, print(_))
 25: Pop
 26: Load(Module, Class("System"))
-27: Constant(5: 2)
+27: Constant(4: 2)
 28: Call(Getter, cbrt)
 29: Call(Method, -)
 30: Call(Method, print(_))

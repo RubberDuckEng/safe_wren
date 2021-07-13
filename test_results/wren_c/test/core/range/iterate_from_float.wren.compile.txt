@@ -1,10 +1,7 @@
 Constants:
 00: 1.3
 01: 4.5
-02: 1.3
-03: 4.5
-04: 1.3
-05: 4.3
+02: 4.3
 Code:
 00: Constant(0: 1.3)
 01: Constant(1: 4.5)
@@ -26,8 +23,8 @@ Code:
 17: Loop(14)
 18: Pop
 19: Pop
-20: Constant(2: 1.3)
-21: Constant(3: 4.5)
+20: Constant(0: 1.3)
+21: Constant(1: 4.5)
 22: Call(Method, ...(_))
 23: Null
 24: Load(Local, 1)
@@ -46,8 +43,8 @@ Code:
 37: Loop(14)
 38: Pop
 39: Pop
-40: Constant(4: 1.3)
-41: Constant(5: 4.3)
+40: Constant(0: 1.3)
+41: Constant(2: 4.3)
 42: Call(Method, ...(_))
 43: Null
 44: Load(Local, 1)

@@ -1,6 +1,5 @@
 Constants:
 00: 123
-01: 123
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("Num"))
@@ -40,7 +39,7 @@ Code:
 35: Pop
 36: Load(Module, Class("System"))
 37: Load(Module, Class("Num"))
-38: Constant(1: 123)
+38: Constant(0: 123)
 39: Call(Method, !=(_))
 40: Call(Method, print(_))
 41: Pop

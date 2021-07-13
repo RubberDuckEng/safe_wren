@@ -4,29 +4,10 @@ Constants:
 02: Fn(new(_) block argument)
 03: Fn(new(_) block argument)
 04: "a"
-05: "a"
-06: "b"
-07: "a"
-08: "b"
-09: "a"
-10: "b"
-11: "c"
-12: "a"
-13: "b"
-14: "c"
-15: "a"
-16: "b"
-17: "c"
-18: "d"
-19: "a"
-20: "b"
-21: "c"
-22: "d"
-23: "a"
-24: "b"
-25: "c"
-26: "d"
-27: "e"
+05: "b"
+06: "c"
+07: "d"
+08: "e"
 Code:
 00: Load(Module, Class("Fn"))
 01: Closure(0, [])
@@ -53,47 +34,47 @@ Code:
 22: Call(Method, call(_))
 23: Pop
 24: Load(Module, Null)
-25: Constant(5: "a")
-26: Constant(6: "b")
+25: Constant(4: "a")
+26: Constant(5: "b")
 27: Call(Method, call(_,_))
 28: Pop
 29: Load(Module, Null)
-30: Constant(7: "a")
-31: Constant(8: "b")
+30: Constant(4: "a")
+31: Constant(5: "b")
 32: Call(Method, call(_,_))
 33: Pop
 34: Load(Module, Null)
-35: Constant(9: "a")
-36: Constant(10: "b")
-37: Constant(11: "c")
+35: Constant(4: "a")
+36: Constant(5: "b")
+37: Constant(6: "c")
 38: Call(Method, call(_,_,_))
 39: Pop
 40: Load(Module, Null)
-41: Constant(12: "a")
-42: Constant(13: "b")
-43: Constant(14: "c")
+41: Constant(4: "a")
+42: Constant(5: "b")
+43: Constant(6: "c")
 44: Call(Method, call(_,_,_))
 45: Pop
 46: Load(Module, Null)
-47: Constant(15: "a")
-48: Constant(16: "b")
-49: Constant(17: "c")
-50: Constant(18: "d")
+47: Constant(4: "a")
+48: Constant(5: "b")
+49: Constant(6: "c")
+50: Constant(7: "d")
 51: Call(Method, call(_,_,_,_))
 52: Pop
 53: Load(Module, Null)
-54: Constant(19: "a")
-55: Constant(20: "b")
-56: Constant(21: "c")
-57: Constant(22: "d")
+54: Constant(4: "a")
+55: Constant(5: "b")
+56: Constant(6: "c")
+57: Constant(7: "d")
 58: Call(Method, call(_,_,_,_))
 59: Pop
 60: Load(Module, Null)
-61: Constant(23: "a")
-62: Constant(24: "b")
-63: Constant(25: "c")
-64: Constant(26: "d")
-65: Constant(27: "e")
+61: Constant(4: "a")
+62: Constant(5: "b")
+63: Constant(6: "c")
+64: Constant(7: "d")
+65: Constant(8: "e")
 66: Call(Method, call(_,_,_,_,_))
 67: Pop
 68: EndModule

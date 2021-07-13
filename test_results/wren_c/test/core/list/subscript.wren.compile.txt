@@ -8,9 +8,6 @@ Constants:
 06: 2
 07: 3
 08: 4
-09: 3
-10: 2
-11: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -57,21 +54,21 @@ Code:
 42: Pop
 43: Load(Module, Class("System"))
 44: Load(Module, Null)
-45: Constant(9: 3)
+45: Constant(7: 3)
 46: Call(Method, -)
 47: Call(Subscript, [_])
 48: Call(Method, print(_))
 49: Pop
 50: Load(Module, Class("System"))
 51: Load(Module, Null)
-52: Constant(10: 2)
+52: Constant(6: 2)
 53: Call(Method, -)
 54: Call(Subscript, [_])
 55: Call(Method, print(_))
 56: Pop
 57: Load(Module, Class("System"))
 58: Load(Module, Null)
-59: Constant(11: 1)
+59: Constant(5: 1)
 60: Call(Method, -)
 61: Call(Subscript, [_])
 62: Call(Method, print(_))

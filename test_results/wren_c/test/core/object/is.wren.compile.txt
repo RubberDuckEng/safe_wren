@@ -3,15 +3,8 @@ Constants:
 01: 123
 02: "s"
 03: Fn(new(_) block argument)
-04: "s"
-05: 123
-06: Fn(new(_) block argument)
-07: "s"
-08: 123
-09: Fn(new(_) block argument)
-10: "s"
-11: 123
-12: 123
+04: Fn(new(_) block argument)
+05: Fn(new(_) block argument)
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("Num"))
@@ -78,13 +71,13 @@ Code:
 62: Call(Method, print(_))
 63: Pop
 64: Load(Module, Class("System"))
-65: Constant(4: "s")
+65: Constant(2: "s")
 66: Load(Module, Class("Null"))
 67: Call(Method, is(_))
 68: Call(Method, print(_))
 69: Pop
 70: Load(Module, Class("System"))
-71: Constant(5: 123)
+71: Constant(1: 123)
 72: Load(Module, Class("String"))
 73: Call(Method, is(_))
 74: Call(Method, print(_))
@@ -109,20 +102,20 @@ Code:
 93: Pop
 94: Load(Module, Class("System"))
 95: Load(Module, Class("Fn"))
-96: Closure(6, [])
+96: Closure(4, [])
 97: Call(Method, new(_))
 98: Load(Module, Class("Object"))
 99: Call(Method, is(_))
 100: Call(Method, print(_))
 101: Pop
 102: Load(Module, Class("System"))
-103: Constant(7: "s")
+103: Constant(2: "s")
 104: Load(Module, Class("Object"))
 105: Call(Method, is(_))
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Class("System"))
-109: Constant(8: 123)
+109: Constant(1: 123)
 110: Load(Module, Class("Object"))
 111: Call(Method, is(_))
 112: Call(Method, print(_))
@@ -147,26 +140,26 @@ Code:
 131: Pop
 132: Load(Module, Class("System"))
 133: Load(Module, Class("Fn"))
-134: Closure(9, [])
+134: Closure(5, [])
 135: Call(Method, new(_))
 136: Load(Module, Class("Class"))
 137: Call(Method, is(_))
 138: Call(Method, print(_))
 139: Pop
 140: Load(Module, Class("System"))
-141: Constant(10: "s")
+141: Constant(2: "s")
 142: Load(Module, Class("Class"))
 143: Call(Method, is(_))
 144: Call(Method, print(_))
 145: Pop
 146: Load(Module, Class("System"))
-147: Constant(11: 123)
+147: Constant(1: 123)
 148: Load(Module, Class("Class"))
 149: Call(Method, is(_))
 150: Call(Method, print(_))
 151: Pop
 152: Load(Module, Class("System"))
-153: Constant(12: 123)
+153: Constant(1: 123)
 154: Load(Module, Class("Num"))
 155: Call(Method, is(_))
 156: Call(Method, print(_))

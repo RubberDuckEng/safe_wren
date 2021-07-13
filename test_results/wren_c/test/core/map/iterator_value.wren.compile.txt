@@ -1,8 +1,7 @@
 Constants:
 00: 1
 01: "one"
-02: 1
-03: "updated"
+02: "updated"
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
@@ -38,8 +37,8 @@ Code:
 31: Call(Method, print(_))
 32: Pop
 33: Load(Module, Null)
-34: Constant(2: 1)
-35: Constant(3: "updated")
+34: Constant(0: 1)
+35: Constant(2: "updated")
 36: Call(SubscriptSetter, [_]=(_))
 37: Pop
 38: Load(Module, Class("System"))

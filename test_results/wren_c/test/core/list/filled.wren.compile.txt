@@ -2,7 +2,6 @@ Constants:
 00: 3
 01: "value"
 02: 0
-03: "value"
 Code:
 00: Load(Module, Class("List"))
 01: Constant(0: 3)
@@ -21,7 +20,7 @@ Code:
 14: Pop
 15: Load(Module, Class("List"))
 16: Constant(2: 0)
-17: Constant(3: "value")
+17: Constant(1: "value")
 18: Call(Method, filled(_,_))
 19: Store(Module)
 20: Pop

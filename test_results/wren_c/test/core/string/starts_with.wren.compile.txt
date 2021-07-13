@@ -1,24 +1,15 @@
 Constants:
 00: "abcd"
 01: "cd"
-02: "abcd"
-03: "a"
-04: "abcd"
-05: "abcd"
-06: "abcd"
-07: "abcde"
-08: "abcd"
-09: ""
-10: "søméthîng"
-11: "sømé"
-12: "søméthîng"
-13: "some"
-14: "a\0b\0c"
-15: "a"
-16: "a\0b\0c"
-17: "a\0"
-18: "a\0b\0c"
-19: "b\0"
+02: "a"
+03: "abcde"
+04: ""
+05: "søméthîng"
+06: "sømé"
+07: "some"
+08: "a\0b\0c"
+09: "a\0"
+10: "b\0"
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: "abcd")
@@ -27,56 +18,56 @@ Code:
 04: Call(Method, print(_))
 05: Pop
 06: Load(Module, Class("System"))
-07: Constant(2: "abcd")
-08: Constant(3: "a")
+07: Constant(0: "abcd")
+08: Constant(2: "a")
 09: Call(Method, startsWith(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(4: "abcd")
-14: Constant(5: "abcd")
+13: Constant(0: "abcd")
+14: Constant(0: "abcd")
 15: Call(Method, startsWith(_))
 16: Call(Method, print(_))
 17: Pop
 18: Load(Module, Class("System"))
-19: Constant(6: "abcd")
-20: Constant(7: "abcde")
+19: Constant(0: "abcd")
+20: Constant(3: "abcde")
 21: Call(Method, startsWith(_))
 22: Call(Method, print(_))
 23: Pop
 24: Load(Module, Class("System"))
-25: Constant(8: "abcd")
-26: Constant(9: "")
+25: Constant(0: "abcd")
+26: Constant(4: "")
 27: Call(Method, startsWith(_))
 28: Call(Method, print(_))
 29: Pop
 30: Load(Module, Class("System"))
-31: Constant(10: "søméthîng")
-32: Constant(11: "sømé")
+31: Constant(5: "søméthîng")
+32: Constant(6: "sømé")
 33: Call(Method, startsWith(_))
 34: Call(Method, print(_))
 35: Pop
 36: Load(Module, Class("System"))
-37: Constant(12: "søméthîng")
-38: Constant(13: "some")
+37: Constant(5: "søméthîng")
+38: Constant(7: "some")
 39: Call(Method, startsWith(_))
 40: Call(Method, print(_))
 41: Pop
 42: Load(Module, Class("System"))
-43: Constant(14: "a\0b\0c")
-44: Constant(15: "a")
+43: Constant(8: "a\0b\0c")
+44: Constant(2: "a")
 45: Call(Method, startsWith(_))
 46: Call(Method, print(_))
 47: Pop
 48: Load(Module, Class("System"))
-49: Constant(16: "a\0b\0c")
-50: Constant(17: "a\0")
+49: Constant(8: "a\0b\0c")
+50: Constant(9: "a\0")
 51: Call(Method, startsWith(_))
 52: Call(Method, print(_))
 53: Pop
 54: Load(Module, Class("System"))
-55: Constant(18: "a\0b\0c")
-56: Constant(19: "b\0")
+55: Constant(8: "a\0b\0c")
+56: Constant(10: "b\0")
 57: Call(Method, startsWith(_))
 58: Call(Method, print(_))
 59: Pop

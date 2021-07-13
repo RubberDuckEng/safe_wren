@@ -2,7 +2,6 @@ Constants:
 00: 0
 01: 100
 02: 10
-03: 10
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
@@ -31,7 +30,7 @@ Code:
 24: JumpIfFalse(6)
 25: Load(Module, Null)
 26: Load(Local, 3)
-27: Constant(3: 10)
+27: Constant(2: 10)
 28: Call(Method, -(_))
 29: Call(Method, remove(_))
 30: Pop

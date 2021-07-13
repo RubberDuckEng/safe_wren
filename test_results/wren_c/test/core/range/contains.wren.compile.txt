@@ -2,51 +2,7 @@ Constants:
 00: 2
 01: 5
 02: 1
-03: 2
-04: 5
-05: 2
-06: 2
-07: 5
-08: 5
-09: 2
-10: 5
-11: 6
-12: 5
-13: 2
-14: 1
-15: 5
-16: 2
-17: 2
-18: 5
-19: 2
-20: 5
-21: 5
-22: 2
-23: 6
-24: 2
-25: 5
-26: 1
-27: 2
-28: 5
-29: 2
-30: 2
-31: 5
-32: 5
-33: 2
-34: 5
-35: 6
-36: 5
-37: 2
-38: 1
-39: 5
-40: 2
-41: 2
-42: 5
-43: 2
-44: 5
-45: 5
-46: 2
-47: 6
+03: 6
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 2)
@@ -57,122 +13,122 @@ Code:
 06: Call(Method, print(_))
 07: Pop
 08: Load(Module, Class("System"))
-09: Constant(3: 2)
-10: Constant(4: 5)
+09: Constant(0: 2)
+10: Constant(1: 5)
 11: Call(Method, ..(_))
-12: Constant(5: 2)
+12: Constant(0: 2)
 13: Call(Method, contains(_))
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Class("System"))
-17: Constant(6: 2)
-18: Constant(7: 5)
+17: Constant(0: 2)
+18: Constant(1: 5)
 19: Call(Method, ..(_))
-20: Constant(8: 5)
+20: Constant(1: 5)
 21: Call(Method, contains(_))
 22: Call(Method, print(_))
 23: Pop
 24: Load(Module, Class("System"))
-25: Constant(9: 2)
-26: Constant(10: 5)
+25: Constant(0: 2)
+26: Constant(1: 5)
 27: Call(Method, ..(_))
-28: Constant(11: 6)
+28: Constant(3: 6)
 29: Call(Method, contains(_))
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
-33: Constant(12: 5)
-34: Constant(13: 2)
+33: Constant(1: 5)
+34: Constant(0: 2)
 35: Call(Method, ..(_))
-36: Constant(14: 1)
+36: Constant(2: 1)
 37: Call(Method, contains(_))
 38: Call(Method, print(_))
 39: Pop
 40: Load(Module, Class("System"))
-41: Constant(15: 5)
-42: Constant(16: 2)
+41: Constant(1: 5)
+42: Constant(0: 2)
 43: Call(Method, ..(_))
-44: Constant(17: 2)
+44: Constant(0: 2)
 45: Call(Method, contains(_))
 46: Call(Method, print(_))
 47: Pop
 48: Load(Module, Class("System"))
-49: Constant(18: 5)
-50: Constant(19: 2)
+49: Constant(1: 5)
+50: Constant(0: 2)
 51: Call(Method, ..(_))
-52: Constant(20: 5)
+52: Constant(1: 5)
 53: Call(Method, contains(_))
 54: Call(Method, print(_))
 55: Pop
 56: Load(Module, Class("System"))
-57: Constant(21: 5)
-58: Constant(22: 2)
+57: Constant(1: 5)
+58: Constant(0: 2)
 59: Call(Method, ..(_))
-60: Constant(23: 6)
+60: Constant(3: 6)
 61: Call(Method, contains(_))
 62: Call(Method, print(_))
 63: Pop
 64: Load(Module, Class("System"))
-65: Constant(24: 2)
-66: Constant(25: 5)
+65: Constant(0: 2)
+66: Constant(1: 5)
 67: Call(Method, ...(_))
-68: Constant(26: 1)
+68: Constant(2: 1)
 69: Call(Method, contains(_))
 70: Call(Method, print(_))
 71: Pop
 72: Load(Module, Class("System"))
-73: Constant(27: 2)
-74: Constant(28: 5)
+73: Constant(0: 2)
+74: Constant(1: 5)
 75: Call(Method, ...(_))
-76: Constant(29: 2)
+76: Constant(0: 2)
 77: Call(Method, contains(_))
 78: Call(Method, print(_))
 79: Pop
 80: Load(Module, Class("System"))
-81: Constant(30: 2)
-82: Constant(31: 5)
+81: Constant(0: 2)
+82: Constant(1: 5)
 83: Call(Method, ...(_))
-84: Constant(32: 5)
+84: Constant(1: 5)
 85: Call(Method, contains(_))
 86: Call(Method, print(_))
 87: Pop
 88: Load(Module, Class("System"))
-89: Constant(33: 2)
-90: Constant(34: 5)
+89: Constant(0: 2)
+90: Constant(1: 5)
 91: Call(Method, ...(_))
-92: Constant(35: 6)
+92: Constant(3: 6)
 93: Call(Method, contains(_))
 94: Call(Method, print(_))
 95: Pop
 96: Load(Module, Class("System"))
-97: Constant(36: 5)
-98: Constant(37: 2)
+97: Constant(1: 5)
+98: Constant(0: 2)
 99: Call(Method, ...(_))
-100: Constant(38: 1)
+100: Constant(2: 1)
 101: Call(Method, contains(_))
 102: Call(Method, print(_))
 103: Pop
 104: Load(Module, Class("System"))
-105: Constant(39: 5)
-106: Constant(40: 2)
+105: Constant(1: 5)
+106: Constant(0: 2)
 107: Call(Method, ...(_))
-108: Constant(41: 2)
+108: Constant(0: 2)
 109: Call(Method, contains(_))
 110: Call(Method, print(_))
 111: Pop
 112: Load(Module, Class("System"))
-113: Constant(42: 5)
-114: Constant(43: 2)
+113: Constant(1: 5)
+114: Constant(0: 2)
 115: Call(Method, ...(_))
-116: Constant(44: 5)
+116: Constant(1: 5)
 117: Call(Method, contains(_))
 118: Call(Method, print(_))
 119: Pop
 120: Load(Module, Class("System"))
-121: Constant(45: 5)
-122: Constant(46: 2)
+121: Constant(1: 5)
+122: Constant(0: 2)
 123: Call(Method, ...(_))
-124: Constant(47: 6)
+124: Constant(3: 6)
 125: Call(Method, contains(_))
 126: Call(Method, print(_))
 127: Pop

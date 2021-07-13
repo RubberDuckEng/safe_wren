@@ -1,12 +1,8 @@
 Constants:
 00: 123
-01: 123
-02: 0
-03: 0
-04: 0.123
-05: 12.3
-06: 0.123
-07: 12.3
+01: 0
+02: 0.123
+03: 12.3
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 123)
@@ -14,40 +10,40 @@ Code:
 03: Call(Method, print(_))
 04: Pop
 05: Load(Module, Class("System"))
-06: Constant(1: 123)
+06: Constant(0: 123)
 07: Call(Method, -)
 08: Call(Getter, round)
 09: Call(Method, print(_))
 10: Pop
 11: Load(Module, Class("System"))
-12: Constant(2: 0)
+12: Constant(1: 0)
 13: Call(Getter, round)
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Class("System"))
-17: Constant(3: 0)
+17: Constant(1: 0)
 18: Call(Method, -)
 19: Call(Getter, round)
 20: Call(Method, print(_))
 21: Pop
 22: Load(Module, Class("System"))
-23: Constant(4: 0.123)
+23: Constant(2: 0.123)
 24: Call(Getter, round)
 25: Call(Method, print(_))
 26: Pop
 27: Load(Module, Class("System"))
-28: Constant(5: 12.3)
+28: Constant(3: 12.3)
 29: Call(Getter, round)
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
-33: Constant(6: 0.123)
+33: Constant(2: 0.123)
 34: Call(Method, -)
 35: Call(Getter, round)
 36: Call(Method, print(_))
 37: Pop
 38: Load(Module, Class("System"))
-39: Constant(7: 12.3)
+39: Constant(3: 12.3)
 40: Call(Method, -)
 41: Call(Getter, round)
 42: Call(Method, print(_))
