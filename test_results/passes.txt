@@ -15,6 +15,7 @@ test/bringup/range.wren
 test/bringup/scopes.wren
 test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
+test/num/sign_edge.wren
 wren_c/example/hello.wren
 wren_c/example/import_module/cthulu.wren
 wren_c/example/import_module/lovecraft.wren
@@ -162,6 +163,7 @@ wren_c/test/core/number/plus.wren
 wren_c/test/core/number/plus_operand_not_num.wren
 wren_c/test/core/number/pow.wren
 wren_c/test/core/number/round.wren
+wren_c/test/core/number/sign.wren
 wren_c/test/core/number/to_string.wren
 wren_c/test/core/number/truncate.wren
 wren_c/test/core/number/type.wren

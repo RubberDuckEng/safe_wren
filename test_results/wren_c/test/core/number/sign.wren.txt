@@ -1,2 +1,0 @@
-Expected output "0" on line 3 and got "1".
-Expected output "0" on line 4 and got "-1".

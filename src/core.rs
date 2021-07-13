@@ -146,7 +146,20 @@ fn num_fraction(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 num_unary_op!(num_is_infinity, is_infinite, Boolean);
 num_unary_op!(num_is_nan, is_nan, Boolean);
-num_unary_op!(num_sign, signum, Num);
+
+fn num_sign(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    // wren_c Num.sign behavior differs from f64.signum at 0 and nan
+    let a = validate_num(&args[0], "this")?;
+    let sign = if a == 0.0 || a.is_nan() {
+        0.0
+    } else if a == -0.0 {
+        -0.0
+    } else {
+        a.signum()
+    };
+    Ok(Value::Num(sign))
+}
+
 num_unary_op!(num_truncate, trunc, Num);
 
 num_unary_op!(num_abs, abs, Num);

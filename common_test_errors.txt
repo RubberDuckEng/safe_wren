@@ -38,7 +38,6 @@ occurances : error text
 6 : in foo
 6 : in toString
 6 : in trim_(_,_,_)
-6 : thread 'main' has overflowed its stack
 5 : Expected return code 70 and got 65. Stderr:
 5 : Expected stack trace and got:
 4 : Error at 'F': Undeclared variable 'F'
@@ -64,6 +63,7 @@ occurances : error text
 4 : in isEmpty
 4 : in print(_)
 4 : in writeObject_(_)
+4 : thread 'main' has overflowed its stack
 3 : Bar does not implement 'super()'.
 3 : Expected output "0" on line  and got "92".
 3 : Expected output "1.5707963267949" on line  and got "1.5707963267948966".
@@ -135,6 +135,7 @@ occurances : error text
 2 : TestSequence does not implement 'skip(_)'.
 2 : TestSequence does not implement 'take(_)'.
 2 : TestSequence does not implement 'toList'.
+2 : Timed out.
 2 : Without metaclass does not implement 'attributes'.
 2 : in +(_)
 2 : in bar
@@ -158,8 +159,6 @@ occurances : error text
 1 : Expected output "-1.5707963267949" on line  and got "-1.5707963267948966".
 1 : Expected output "-30.85" on line  and got "-30.849999999999998".
 1 : Expected output "-9.007199254741e+15" on line  and got "-9.007199254740991e15".
-1 : Expected output "0" on line  and got "-1".
-1 : Expected output "0" on line  and got "1".
 1 : Expected output "0.23456789012345" on line  and got "0.23456789012345003".
 1 : Expected output "0.3" on line  and got "0.3000000000000007".
 1 : Expected output "0.36787944117144" on line  and got "0.36787944117144233".
@@ -257,4 +256,3 @@ occurances : error text
 1 : Expected runtime error "x value must be a number." and got:
 1 : Got output "ok" when none was expected.
 1 : Right operand must be a string.
-1 : Timed out.
