@@ -1,7 +1,5 @@
 Constants:
 00: 1
-01: 1
-02: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -26,7 +24,7 @@ Code:
 20: Pop
 21: Load(Module, Class("List"))
 22: Call(Method, new())
-23: Constant(1: 1)
+23: Constant(0: 1)
 24: Call(Method, addCore_(_))
 25: Null
 26: Load(Local, 1)
@@ -47,7 +45,7 @@ Code:
 41: Pop
 42: Load(Module, Class("List"))
 43: Call(Method, new())
-44: Constant(2: 1)
+44: Constant(0: 1)
 45: Call(Method, addCore_(_))
 46: Null
 47: Load(Local, 1)

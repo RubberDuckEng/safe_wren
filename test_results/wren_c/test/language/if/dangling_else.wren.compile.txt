@@ -1,8 +1,6 @@
 Constants:
 00: "bad"
 01: "good"
-02: "bad"
-03: "bad"
 Code:
 00: Boolean true
 01: JumpIfFalse(11)
@@ -22,12 +20,12 @@ Code:
 15: Boolean true
 16: JumpIfFalse(5)
 17: Load(Module, Class("System"))
-18: Constant(2: "bad")
+18: Constant(0: "bad")
 19: Call(Method, print(_))
 20: Pop
 21: Jump(4)
 22: Load(Module, Class("System"))
-23: Constant(3: "bad")
+23: Constant(0: "bad")
 24: Call(Method, print(_))
 25: Pop
 26: EndModule

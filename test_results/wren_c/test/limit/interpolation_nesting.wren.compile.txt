@@ -9,13 +9,6 @@ Constants:
 07: "7 "
 08: 8
 09: ""
-10: ""
-11: ""
-12: ""
-13: ""
-14: ""
-15: ""
-16: ""
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
@@ -56,31 +49,31 @@ Code:
 36: Call(Method, addCore_(_))
 37: Call(Method, join())
 38: Call(Method, addCore_(_))
-39: Constant(10: "")
+39: Constant(9: "")
 40: Call(Method, addCore_(_))
 41: Call(Method, join())
 42: Call(Method, addCore_(_))
-43: Constant(11: "")
+43: Constant(9: "")
 44: Call(Method, addCore_(_))
 45: Call(Method, join())
 46: Call(Method, addCore_(_))
-47: Constant(12: "")
+47: Constant(9: "")
 48: Call(Method, addCore_(_))
 49: Call(Method, join())
 50: Call(Method, addCore_(_))
-51: Constant(13: "")
+51: Constant(9: "")
 52: Call(Method, addCore_(_))
 53: Call(Method, join())
 54: Call(Method, addCore_(_))
-55: Constant(14: "")
+55: Constant(9: "")
 56: Call(Method, addCore_(_))
 57: Call(Method, join())
 58: Call(Method, addCore_(_))
-59: Constant(15: "")
+59: Constant(9: "")
 60: Call(Method, addCore_(_))
 61: Call(Method, join())
 62: Call(Method, addCore_(_))
-63: Constant(16: "")
+63: Constant(9: "")
 64: Call(Method, addCore_(_))
 65: Call(Method, join())
 66: Call(Method, print(_))

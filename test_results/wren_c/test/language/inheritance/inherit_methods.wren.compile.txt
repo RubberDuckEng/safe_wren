@@ -12,15 +12,9 @@ Constants:
 10: Fn(method(_,_,_,_))
 11: Fn(override)
 12: 1
-13: 1
-14: 2
-15: 1
-16: 2
-17: 3
-18: 1
-19: 2
-20: 3
-21: 4
+13: 2
+14: 3
+15: 4
 Code:
 00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
@@ -77,21 +71,21 @@ Code:
 52: Call(Method, method(_))
 53: Pop
 54: Load(Module, Null)
-55: Constant(13: 1)
-56: Constant(14: 2)
+55: Constant(12: 1)
+56: Constant(13: 2)
 57: Call(Method, method(_,_))
 58: Pop
 59: Load(Module, Null)
-60: Constant(15: 1)
-61: Constant(16: 2)
-62: Constant(17: 3)
+60: Constant(12: 1)
+61: Constant(13: 2)
+62: Constant(14: 3)
 63: Call(Method, method(_,_,_))
 64: Pop
 65: Load(Module, Null)
-66: Constant(18: 1)
-67: Constant(19: 2)
-68: Constant(20: 3)
-69: Constant(21: 4)
+66: Constant(12: 1)
+67: Constant(13: 2)
+68: Constant(14: 3)
+69: Constant(15: 4)
 70: Call(Method, method(_,_,_,_))
 71: Pop
 72: Load(Module, Null)

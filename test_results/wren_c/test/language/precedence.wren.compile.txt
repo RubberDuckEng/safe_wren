@@ -3,37 +3,10 @@ Constants:
 01: 3
 02: 4
 03: 20
-04: 3
-05: 4
-06: 2
-07: 6
-08: 3
-09: 2
-10: 6
-11: 3
-12: 2
-13: 1
-14: 1
-15: 2
-16: 2
-17: 1
-18: 1
-19: 2
-20: 10
-21: 10
-22: "abc"
-23: 1
-24: 1
-25: 1
-26: 1
-27: 1
-28: 1
-29: 1
-30: 1
-31: 2
-32: 6
-33: 2
-34: 2
+04: 6
+05: 1
+06: 10
+07: "abc"
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: 2)
@@ -45,70 +18,70 @@ Code:
 07: Pop
 08: Load(Module, Class("System"))
 09: Constant(3: 20)
-10: Constant(4: 3)
-11: Constant(5: 4)
+10: Constant(1: 3)
+11: Constant(2: 4)
 12: Call(Method, *(_))
 13: Call(Method, -(_))
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Class("System"))
-17: Constant(6: 2)
-18: Constant(7: 6)
-19: Constant(8: 3)
+17: Constant(0: 2)
+18: Constant(4: 6)
+19: Constant(1: 3)
 20: Call(Method, /(_))
 21: Call(Method, +(_))
 22: Call(Method, print(_))
 23: Pop
 24: Load(Module, Class("System"))
-25: Constant(9: 2)
-26: Constant(10: 6)
-27: Constant(11: 3)
+25: Constant(0: 2)
+26: Constant(4: 6)
+27: Constant(1: 3)
 28: Call(Method, /(_))
 29: Call(Method, -(_))
 30: Call(Method, print(_))
 31: Pop
 32: Load(Module, Class("System"))
 33: Boolean false
-34: Constant(12: 2)
-35: Constant(13: 1)
+34: Constant(0: 2)
+35: Constant(5: 1)
 36: Call(Method, <(_))
 37: Call(Method, ==(_))
 38: Call(Method, print(_))
 39: Pop
 40: Load(Module, Class("System"))
 41: Boolean false
-42: Constant(14: 1)
-43: Constant(15: 2)
+42: Constant(5: 1)
+43: Constant(0: 2)
 44: Call(Method, >(_))
 45: Call(Method, ==(_))
 46: Call(Method, print(_))
 47: Pop
 48: Load(Module, Class("System"))
 49: Boolean false
-50: Constant(16: 2)
-51: Constant(17: 1)
+50: Constant(0: 2)
+51: Constant(5: 1)
 52: Call(Method, <=(_))
 53: Call(Method, ==(_))
 54: Call(Method, print(_))
 55: Pop
 56: Load(Module, Class("System"))
 57: Boolean false
-58: Constant(18: 1)
-59: Constant(19: 2)
+58: Constant(5: 1)
+59: Constant(0: 2)
 60: Call(Method, >=(_))
 61: Call(Method, ==(_))
 62: Call(Method, print(_))
 63: Pop
 64: Load(Module, Class("System"))
 65: Boolean true
-66: Constant(20: 10)
+66: Constant(6: 10)
 67: Load(Module, Class("Num"))
 68: Call(Method, is(_))
 69: Call(Method, ==(_))
 70: Call(Method, print(_))
 71: Pop
 72: Load(Module, Class("System"))
-73: Constant(21: 10)
+73: Constant(6: 10)
 74: Load(Module, Class("Num"))
 75: Call(Method, is(_))
 76: Boolean false
@@ -116,40 +89,40 @@ Code:
 78: Call(Method, print(_))
 79: Pop
 80: Load(Module, Class("System"))
-81: Constant(22: "abc")
+81: Constant(7: "abc")
 82: Call(Getter, count)
 83: Call(Method, -)
 84: Call(Method, print(_))
 85: Pop
 86: Load(Module, Class("System"))
-87: Constant(23: 1)
-88: Constant(24: 1)
+87: Constant(5: 1)
+88: Constant(5: 1)
 89: Call(Method, -(_))
 90: Call(Method, print(_))
 91: Pop
 92: Load(Module, Class("System"))
-93: Constant(25: 1)
-94: Constant(26: 1)
+93: Constant(5: 1)
+94: Constant(5: 1)
 95: Call(Method, -(_))
 96: Call(Method, print(_))
 97: Pop
 98: Load(Module, Class("System"))
-99: Constant(27: 1)
-100: Constant(28: 1)
+99: Constant(5: 1)
+100: Constant(5: 1)
 101: Call(Method, -(_))
 102: Call(Method, print(_))
 103: Pop
 104: Load(Module, Class("System"))
-105: Constant(29: 1)
-106: Constant(30: 1)
+105: Constant(5: 1)
+106: Constant(5: 1)
 107: Call(Method, -(_))
 108: Call(Method, print(_))
 109: Pop
 110: Load(Module, Class("System"))
-111: Constant(31: 2)
-112: Constant(32: 6)
-113: Constant(33: 2)
-114: Constant(34: 2)
+111: Constant(0: 2)
+112: Constant(4: 6)
+113: Constant(0: 2)
+114: Constant(0: 2)
 115: Call(Method, +(_))
 116: Call(Method, -(_))
 117: Call(Method, *(_))

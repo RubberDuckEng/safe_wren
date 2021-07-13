@@ -7,7 +7,6 @@ Constants:
 05: Fn(bar(_))
 06: Fn(bar(_))
 07: "arg"
-08: "arg"
 Code:
 00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
@@ -52,7 +51,7 @@ Code:
 40: Pop
 41: Load(Module, Class("System"))
 42: Load(Module, Null)
-43: Constant(8: "arg")
+43: Constant(7: "arg")
 44: Call(Method, bar(_))
 45: Call(Method, print(_))
 46: Pop

@@ -7,16 +7,11 @@ Constants:
 05: "c"
 06: "d"
 07: "e"
-08: 1
-09: 5000
-10: 1
-11: 0
-12: 1
-13: 5000
-14: 1
-15: 0.1
-16: "!!! "
-17: ""
+08: 5000
+09: 0
+10: 0.1
+11: "!!! "
+12: ""
 Code:
 00: ImportModule("random")
 01: Pop
@@ -56,8 +51,8 @@ Code:
 35: Call(Method, new())
 36: Store(Module)
 37: Pop
-38: Constant(8: 1)
-39: Constant(9: 5000)
+38: Constant(2: 1)
+39: Constant(8: 5000)
 40: Call(Method, ..(_))
 41: Null
 42: Load(Local, 1)
@@ -70,7 +65,7 @@ Code:
 49: Call(Method, iteratorValue(_))
 50: Load(Module, Null)
 51: Load(Module, Null)
-52: Constant(10: 1)
+52: Constant(2: 1)
 53: Call(Method, sample(_,_))
 54: Load(Local, 4)
 55: Call(Getter, toString)
@@ -81,7 +76,7 @@ Code:
 60: JumpIfFalse(5)
 61: Load(Module, Null)
 62: Load(Local, 5)
-63: Constant(11: 0)
+63: Constant(9: 0)
 64: Call(SubscriptSetter, [_]=(_))
 65: Pop
 66: Load(Module, Null)
@@ -89,7 +84,7 @@ Code:
 68: Load(Module, Null)
 69: Load(Local, 5)
 70: Call(Subscript, [_])
-71: Constant(12: 1)
+71: Constant(2: 1)
 72: Call(Method, +(_))
 73: Call(SubscriptSetter, [_]=(_))
 74: Pop
@@ -118,26 +113,26 @@ Code:
 97: Load(Module, Null)
 98: Load(Local, 3)
 99: Call(Subscript, [_])
-100: Constant(13: 5000)
+100: Constant(8: 5000)
 101: Load(Module, Null)
 102: Call(Getter, count)
 103: Call(Method, /(_))
 104: Call(Method, /(_))
-105: Constant(14: 1)
+105: Constant(2: 1)
 106: Call(Method, -(_))
 107: Call(Getter, abs)
 108: Load(Local, 4)
-109: Constant(15: 0.1)
+109: Constant(10: 0.1)
 110: Call(Method, >(_))
 111: JumpIfFalse(12)
 112: Load(Module, Class("System"))
 113: Load(Module, Class("List"))
 114: Call(Method, new())
-115: Constant(16: "!!! ")
+115: Constant(11: "!!! ")
 116: Call(Method, addCore_(_))
 117: Load(Local, 4)
 118: Call(Method, addCore_(_))
-119: Constant(17: "")
+119: Constant(12: "")
 120: Call(Method, addCore_(_))
 121: Call(Method, join())
 122: Call(Method, print(_))

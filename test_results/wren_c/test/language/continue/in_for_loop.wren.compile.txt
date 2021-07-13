@@ -4,7 +4,6 @@ Constants:
 02: 3
 03: 4
 04: 5
-05: 2
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -32,7 +31,7 @@ Code:
 23: Call(Method, print(_))
 24: Pop
 25: Load(Local, 3)
-26: Constant(5: 2)
+26: Constant(1: 2)
 27: Call(Method, >(_))
 28: JumpIfFalse(1)
 29: Loop(17)

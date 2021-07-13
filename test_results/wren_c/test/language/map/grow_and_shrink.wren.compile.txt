@@ -250,10 +250,8 @@ Constants:
 248: "Cutthroat trout"
 249: 0
 250: 150
-251: 0
-252: 150
-253: 249
-254: 1
+251: 249
+252: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -813,11 +811,11 @@ Code:
 555: Call(Getter, count)
 556: Call(Method, print(_))
 557: Pop
-558: Constant(251: 0)
+558: Constant(249: 0)
 559: Store(Module)
 560: Pop
-561: Constant(252: 150)
-562: Constant(253: 249)
+561: Constant(250: 150)
+562: Constant(251: 249)
 563: Call(Method, ...(_))
 564: Null
 565: Load(Local, 1)
@@ -835,7 +833,7 @@ Code:
 577: Call(Method, containsKey(_))
 578: JumpIfFalse(5)
 579: Load(Module, Null)
-580: Constant(254: 1)
+580: Constant(252: 1)
 581: Call(Method, +(_))
 582: Store(Module)
 583: Pop

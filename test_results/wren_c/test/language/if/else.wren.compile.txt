@@ -1,9 +1,7 @@
 Constants:
 00: "good"
 01: "bad"
-02: "bad"
-03: "good"
-04: "block"
+02: "block"
 Code:
 00: Boolean true
 01: JumpIfFalse(5)
@@ -19,12 +17,12 @@ Code:
 11: Boolean false
 12: JumpIfFalse(5)
 13: Load(Module, Class("System"))
-14: Constant(2: "bad")
+14: Constant(1: "bad")
 15: Call(Method, print(_))
 16: Pop
 17: Jump(4)
 18: Load(Module, Class("System"))
-19: Constant(3: "good")
+19: Constant(0: "good")
 20: Call(Method, print(_))
 21: Pop
 22: Boolean false
@@ -33,7 +31,7 @@ Code:
 25: Pop
 26: Jump(4)
 27: Load(Module, Class("System"))
-28: Constant(4: "block")
+28: Constant(2: "block")
 29: Call(Method, print(_))
 30: Pop
 31: EndModule

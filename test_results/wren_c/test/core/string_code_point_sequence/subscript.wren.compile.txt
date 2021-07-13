@@ -16,26 +16,8 @@ Constants:
 14: 13
 15: 14
 16: 15
-17: 14
-18: 13
-19: 12
-20: 11
-21: 10
-22: 9
-23: 8
-24: 7
-25: 6
-26: 5
-27: 4
-28: 3
-29: 2
-30: 1
-31: "\0"
-32: 0
-33: "\xef\xf7"
-34: 0
-35: "\xef\xf7"
-36: 1
+17: "\0"
+18: "\xef\xf7"
 Code:
 00: Constant(0: "søméஃthîng")
 01: Call(Getter, codePoints)
@@ -140,120 +122,120 @@ Code:
 100: Pop
 101: Load(Module, Class("System"))
 102: Load(Module, Null)
-103: Constant(17: 14)
+103: Constant(15: 14)
 104: Call(Method, -)
 105: Call(Subscript, [_])
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Class("System"))
 109: Load(Module, Null)
-110: Constant(18: 13)
+110: Constant(14: 13)
 111: Call(Method, -)
 112: Call(Subscript, [_])
 113: Call(Method, print(_))
 114: Pop
 115: Load(Module, Class("System"))
 116: Load(Module, Null)
-117: Constant(19: 12)
+117: Constant(13: 12)
 118: Call(Method, -)
 119: Call(Subscript, [_])
 120: Call(Method, print(_))
 121: Pop
 122: Load(Module, Class("System"))
 123: Load(Module, Null)
-124: Constant(20: 11)
+124: Constant(12: 11)
 125: Call(Method, -)
 126: Call(Subscript, [_])
 127: Call(Method, print(_))
 128: Pop
 129: Load(Module, Class("System"))
 130: Load(Module, Null)
-131: Constant(21: 10)
+131: Constant(11: 10)
 132: Call(Method, -)
 133: Call(Subscript, [_])
 134: Call(Method, print(_))
 135: Pop
 136: Load(Module, Class("System"))
 137: Load(Module, Null)
-138: Constant(22: 9)
+138: Constant(10: 9)
 139: Call(Method, -)
 140: Call(Subscript, [_])
 141: Call(Method, print(_))
 142: Pop
 143: Load(Module, Class("System"))
 144: Load(Module, Null)
-145: Constant(23: 8)
+145: Constant(9: 8)
 146: Call(Method, -)
 147: Call(Subscript, [_])
 148: Call(Method, print(_))
 149: Pop
 150: Load(Module, Class("System"))
 151: Load(Module, Null)
-152: Constant(24: 7)
+152: Constant(8: 7)
 153: Call(Method, -)
 154: Call(Subscript, [_])
 155: Call(Method, print(_))
 156: Pop
 157: Load(Module, Class("System"))
 158: Load(Module, Null)
-159: Constant(25: 6)
+159: Constant(7: 6)
 160: Call(Method, -)
 161: Call(Subscript, [_])
 162: Call(Method, print(_))
 163: Pop
 164: Load(Module, Class("System"))
 165: Load(Module, Null)
-166: Constant(26: 5)
+166: Constant(6: 5)
 167: Call(Method, -)
 168: Call(Subscript, [_])
 169: Call(Method, print(_))
 170: Pop
 171: Load(Module, Class("System"))
 172: Load(Module, Null)
-173: Constant(27: 4)
+173: Constant(5: 4)
 174: Call(Method, -)
 175: Call(Subscript, [_])
 176: Call(Method, print(_))
 177: Pop
 178: Load(Module, Class("System"))
 179: Load(Module, Null)
-180: Constant(28: 3)
+180: Constant(4: 3)
 181: Call(Method, -)
 182: Call(Subscript, [_])
 183: Call(Method, print(_))
 184: Pop
 185: Load(Module, Class("System"))
 186: Load(Module, Null)
-187: Constant(29: 2)
+187: Constant(3: 2)
 188: Call(Method, -)
 189: Call(Subscript, [_])
 190: Call(Method, print(_))
 191: Pop
 192: Load(Module, Class("System"))
 193: Load(Module, Null)
-194: Constant(30: 1)
+194: Constant(2: 1)
 195: Call(Method, -)
 196: Call(Subscript, [_])
 197: Call(Method, print(_))
 198: Pop
 199: Load(Module, Class("System"))
-200: Constant(31: "\0")
+200: Constant(17: "\0")
 201: Call(Getter, codePoints)
-202: Constant(32: 0)
+202: Constant(1: 0)
 203: Call(Subscript, [_])
 204: Call(Method, print(_))
 205: Pop
 206: Load(Module, Class("System"))
-207: Constant(33: "\xef\xf7")
+207: Constant(18: "\xef\xf7")
 208: Call(Getter, codePoints)
-209: Constant(34: 0)
+209: Constant(1: 0)
 210: Call(Subscript, [_])
 211: Call(Method, print(_))
 212: Pop
 213: Load(Module, Class("System"))
-214: Constant(35: "\xef\xf7")
+214: Constant(18: "\xef\xf7")
 215: Call(Getter, codePoints)
-216: Constant(36: 1)
+216: Constant(2: 1)
 217: Call(Subscript, [_])
 218: Call(Method, print(_))
 219: Pop

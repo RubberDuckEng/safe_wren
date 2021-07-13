@@ -4,10 +4,8 @@ Constants:
 02: 1
 03: 100
 04: 5
-05: 0
-06: "too low"
-07: 5
-08: "too high"
+05: "too low"
+06: "too high"
 Code:
 00: ImportModule("random")
 01: Pop
@@ -38,19 +36,19 @@ Code:
 26: Constant(4: 5)
 27: Call(Method, float(_))
 28: Load(Local, 4)
-29: Constant(5: 0)
+29: Constant(1: 0)
 30: Call(Method, <(_))
 31: JumpIfFalse(4)
 32: Load(Module, Class("System"))
-33: Constant(6: "too low")
+33: Constant(5: "too low")
 34: Call(Method, print(_))
 35: Pop
 36: Load(Local, 4)
-37: Constant(7: 5)
+37: Constant(4: 5)
 38: Call(Method, >=(_))
 39: JumpIfFalse(4)
 40: Load(Module, Class("System"))
-41: Constant(8: "too high")
+41: Constant(6: "too high")
 42: Call(Method, print(_))
 43: Pop
 44: Pop

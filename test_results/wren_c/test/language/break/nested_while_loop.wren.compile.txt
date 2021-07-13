@@ -3,12 +3,7 @@ Constants:
 01: "outer "
 02: ""
 03: 1
-04: 0
-05: "inner "
-06: ""
-07: 1
-08: 1
-09: 1
+04: "inner "
 Code:
 00: Constant(0: 0)
 01: Store(Module)
@@ -32,34 +27,34 @@ Code:
 19: Call(Method, >(_))
 20: JumpIfFalse(1)
 21: Jump(33)
-22: Constant(4: 0)
+22: Constant(0: 0)
 23: Boolean true
 24: JumpIfFalse(23)
 25: Load(Module, Class("System"))
 26: Load(Module, Class("List"))
 27: Call(Method, new())
-28: Constant(5: "inner ")
+28: Constant(4: "inner ")
 29: Call(Method, addCore_(_))
 30: Load(Local, 1)
 31: Call(Method, addCore_(_))
-32: Constant(6: "")
+32: Constant(2: "")
 33: Call(Method, addCore_(_))
 34: Call(Method, join())
 35: Call(Method, print(_))
 36: Pop
 37: Load(Local, 1)
-38: Constant(7: 1)
+38: Constant(3: 1)
 39: Call(Method, >(_))
 40: JumpIfFalse(1)
 41: Jump(6)
 42: Load(Local, 1)
-43: Constant(8: 1)
+43: Constant(3: 1)
 44: Call(Method, +(_))
 45: Store(Local, 1)
 46: Pop
 47: Loop(25)
 48: Load(Module, Null)
-49: Constant(9: 1)
+49: Constant(3: 1)
 50: Call(Method, +(_))
 51: Store(Module)
 52: Pop

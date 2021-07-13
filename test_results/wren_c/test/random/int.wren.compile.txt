@@ -4,9 +4,8 @@ Constants:
 02: 1
 03: 1000
 04: 2147483648
-05: 1
-06: 450
-07: 550
+05: 450
+06: 550
 Code:
 00: ImportModule("random")
 01: Pop
@@ -40,7 +39,7 @@ Code:
 29: Call(Method, <(_))
 30: JumpIfFalse(5)
 31: Load(Module, Null)
-32: Constant(5: 1)
+32: Constant(2: 1)
 33: Call(Method, +(_))
 34: Store(Module)
 35: Pop
@@ -51,13 +50,13 @@ Code:
 40: Pop
 41: Load(Module, Class("System"))
 42: Load(Module, Null)
-43: Constant(6: 450)
+43: Constant(5: 450)
 44: Call(Method, >(_))
 45: Call(Method, print(_))
 46: Pop
 47: Load(Module, Class("System"))
 48: Load(Module, Null)
-49: Constant(7: 550)
+49: Constant(6: 550)
 50: Call(Method, <(_))
 51: Call(Method, print(_))
 52: Pop

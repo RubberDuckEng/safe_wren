@@ -1,7 +1,6 @@
 Constants:
 00: 1
-01: 1
-02: 2
+01: 2
 Code:
 00: Constant(0: 1)
 01: Store(Module)
@@ -12,7 +11,7 @@ Code:
 06: Pop
 07: Load(Module, Class("System"))
 08: Load(Module, Null)
-09: Constant(1: 1)
+09: Constant(0: 1)
 10: Call(Method, +(_))
 11: Call(Method, print(_))
 12: Pop
@@ -23,7 +22,7 @@ Code:
 17: Load(Module, Null)
 18: Call(Method, print(_))
 19: Pop
-20: Constant(2: 2)
+20: Constant(1: 2)
 21: Store(Module)
 22: Pop
 23: Load(Module, Class("System"))

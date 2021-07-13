@@ -6,8 +6,6 @@ Constants:
 04: Fn([_,_])
 05: "a"
 06: "b"
-07: "a"
-08: "b"
 Code:
 00: Constant(0: "Foo")
 01: Load(Module, Class("Object"))
@@ -39,8 +37,8 @@ Code:
 27: Pop
 28: Load(Module, Class("System"))
 29: Load(Module, Null)
-30: Constant(7: "a")
-31: Constant(8: "b")
+30: Constant(5: "a")
+31: Constant(6: "b")
 32: Call(Subscript, [_,_])
 33: Call(Method, print(_))
 34: Pop

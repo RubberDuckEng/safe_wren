@@ -1,10 +1,8 @@
 Constants:
 00: 255
 01: 1
-02: 255
-03: 9
-04: 255
-05: 3735928559
+02: 9
+03: 3735928559
 Code:
 00: Constant(0: 255)
 01: Store(Module)
@@ -21,12 +19,12 @@ Code:
 12: Pop
 13: Load(Module, Class("System"))
 14: Load(Module, Null)
-15: Constant(2: 255)
+15: Constant(0: 255)
 16: Call(Method, ==(_))
 17: Call(Method, print(_))
 18: Pop
 19: Load(Module, Class("System"))
-20: Constant(3: 9)
+20: Constant(2: 9)
 21: Load(Module, Class("Num"))
 22: Call(Method, is(_))
 23: Call(Method, print(_))
@@ -38,12 +36,12 @@ Code:
 29: Call(Method, print(_))
 30: Pop
 31: Load(Module, Class("System"))
-32: Constant(4: 255)
+32: Constant(0: 255)
 33: Call(Method, -)
 34: Call(Method, print(_))
 35: Pop
 36: Load(Module, Class("System"))
-37: Constant(5: 3735928559)
+37: Constant(3: 3735928559)
 38: Call(Method, print(_))
 39: Pop
 40: EndModule

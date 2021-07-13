@@ -1,11 +1,9 @@
 Constants:
 00: "bad"
-01: "bad"
-02: "true"
-03: 0
-04: 0
-05: ""
-06: "string"
+01: "true"
+02: 0
+03: ""
+04: "string"
 Code:
 00: Boolean false
 01: JumpIfFalse(6)
@@ -18,7 +16,7 @@ Code:
 08: Null
 09: JumpIfFalse(6)
 10: Load(Module, Class("System"))
-11: Constant(1: "bad")
+11: Constant(0: "bad")
 12: Call(Method, print(_))
 13: Pop
 14: Jump(1)
@@ -26,23 +24,23 @@ Code:
 16: Boolean true
 17: JumpIfFalse(6)
 18: Load(Module, Class("System"))
-19: Constant(2: "true")
+19: Constant(1: "true")
 20: Call(Method, print(_))
 21: Pop
 22: Jump(1)
 23: Loop(8)
-24: Constant(3: 0)
+24: Constant(2: 0)
 25: JumpIfFalse(6)
 26: Load(Module, Class("System"))
-27: Constant(4: 0)
+27: Constant(2: 0)
 28: Call(Method, print(_))
 29: Pop
 30: Jump(1)
 31: Loop(8)
-32: Constant(5: "")
+32: Constant(3: "")
 33: JumpIfFalse(6)
 34: Load(Module, Class("System"))
-35: Constant(6: "string")
+35: Constant(4: "string")
 36: Call(Method, print(_))
 37: Pop
 38: Jump(1)

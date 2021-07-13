@@ -11,7 +11,6 @@ Constants:
 09: 7
 10: 8
 11: 123
-12: 1
 Code:
 00: Constant(0: "søméஃ")
 01: Call(Getter, bytes)
@@ -92,7 +91,7 @@ Code:
 76: Pop
 77: Load(Module, Class("System"))
 78: Load(Module, Null)
-79: Constant(12: 1)
+79: Constant(3: 1)
 80: Call(Method, -)
 81: Call(Method, iterate(_))
 82: Call(Method, print(_))

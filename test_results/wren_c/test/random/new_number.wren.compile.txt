@@ -1,10 +1,8 @@
 Constants:
 00: 123
-01: 123
-02: 0
-03: 1
-04: 100
-05: 1
+01: 0
+02: 1
+03: 100
 Code:
 00: ImportModule("random")
 01: Pop
@@ -17,15 +15,15 @@ Code:
 08: Store(Module)
 09: Pop
 10: Load(Module, Null)
-11: Constant(1: 123)
+11: Constant(0: 123)
 12: Call(Method, new(_))
 13: Store(Module)
 14: Pop
-15: Constant(2: 0)
+15: Constant(1: 0)
 16: Store(Module)
 17: Pop
-18: Constant(3: 1)
-19: Constant(4: 100)
+18: Constant(2: 1)
+19: Constant(3: 100)
 20: Call(Method, ..(_))
 21: Null
 22: Load(Local, 1)
@@ -43,7 +41,7 @@ Code:
 34: Call(Method, ==(_))
 35: JumpIfFalse(5)
 36: Load(Module, Null)
-37: Constant(5: 1)
+37: Constant(2: 1)
 38: Call(Method, +(_))
 39: Store(Module)
 40: Pop

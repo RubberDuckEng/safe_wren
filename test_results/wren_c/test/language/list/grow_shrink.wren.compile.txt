@@ -1,9 +1,8 @@
 Constants:
 00: 0
 01: 200
-02: 0
-03: 195
-04: 1
+02: 195
+03: 1
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -29,8 +28,8 @@ Code:
 21: Loop(14)
 22: Pop
 23: Pop
-24: Constant(2: 0)
-25: Constant(3: 195)
+24: Constant(0: 0)
+25: Constant(2: 195)
 26: Call(Method, ..(_))
 27: Null
 28: Load(Local, 1)
@@ -42,7 +41,7 @@ Code:
 34: Load(Local, 2)
 35: Call(Method, iteratorValue(_))
 36: Load(Module, Null)
-37: Constant(4: 1)
+37: Constant(3: 1)
 38: Call(Method, -)
 39: Call(Method, removeAt(_))
 40: Pop

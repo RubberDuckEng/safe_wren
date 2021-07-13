@@ -1,9 +1,7 @@
 Constants:
 00: "out"
 01: "in"
-02: "out"
-03: "dummy"
-04: "in"
+02: "dummy"
 Code:
 00: Constant(0: "out")
 01: Store(Module)
@@ -16,15 +14,15 @@ Code:
 08: Load(Module, Null)
 09: Call(Method, print(_))
 10: Pop
-11: Constant(2: "out")
+11: Constant(0: "out")
 12: Store(Module)
 13: Pop
 14: Boolean false
 15: JumpIfFalse(3)
-16: Constant(3: "dummy")
+16: Constant(2: "dummy")
 17: Pop
 18: Jump(2)
-19: Constant(4: "in")
+19: Constant(1: "in")
 20: Pop
 21: Load(Module, Class("System"))
 22: Load(Module, Null)

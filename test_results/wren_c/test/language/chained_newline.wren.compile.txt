@@ -12,11 +12,6 @@ Constants:
 10: Fn(getter)
 11: Fn(method())
 12: 0
-13: 0
-14: 0
-15: 0
-16: 0
-17: 0
 Code:
 00: Constant(0: "Test")
 01: Load(Module, Class("Object"))
@@ -88,7 +83,7 @@ Code:
 67: Pop
 68: Load(Module, Null)
 69: Call(Getter, getter)
-70: Constant(13: 0)
+70: Constant(12: 0)
 71: Call(Subscript, [_])
 72: Call(Method, test0())
 73: Pop
@@ -112,13 +107,13 @@ Code:
 91: Pop
 92: Load(Module, Null)
 93: Call(Method, method())
-94: Constant(14: 0)
+94: Constant(12: 0)
 95: Call(Subscript, [_])
 96: Call(Method, test0())
 97: Pop
 98: Load(Module, Null)
 99: Call(Method, method())
-100: Constant(15: 0)
+100: Constant(12: 0)
 101: Call(Subscript, [_])
 102: Call(Method, test0())
 103: Pop
@@ -142,12 +137,12 @@ Code:
 121: Call(Method, test2())
 122: Pop
 123: Load(Module, Null)
-124: Constant(16: 0)
+124: Constant(12: 0)
 125: Call(Subscript, [_])
 126: Call(Method, test0())
 127: Pop
 128: Load(Module, Null)
-129: Constant(17: 0)
+129: Constant(12: 0)
 130: Call(Subscript, [_])
 131: Call(Method, test0())
 132: Pop

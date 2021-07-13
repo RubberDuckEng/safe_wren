@@ -5,17 +5,13 @@ Constants:
 03: 1.1
 04: 0
 05: 24
-06: 24
-07: 0
-08: 80
-09: 79
-10: " "
-11: 0
-12: 80
-13: 2
-14: 4
-15: " .:;+=xX$&"
-16: 8
+06: 80
+07: 79
+08: " "
+09: 2
+10: 4
+11: " .:;+=xX$&"
+12: 8
 Code:
 00: Constant(0: 0.2)
 01: Call(Method, -)
@@ -45,7 +41,7 @@ Code:
 25: Load(Local, 2)
 26: Call(Method, iteratorValue(_))
 27: Load(Local, 3)
-28: Constant(6: 24)
+28: Constant(5: 24)
 29: Call(Method, /(_))
 30: Load(Module, Null)
 31: Load(Module, Null)
@@ -53,8 +49,8 @@ Code:
 33: Call(Method, *(_))
 34: Load(Module, Null)
 35: Call(Method, +(_))
-36: Constant(7: 0)
-37: Constant(8: 80)
+36: Constant(4: 0)
+37: Constant(6: 80)
 38: Call(Method, ...(_))
 39: Null
 40: Load(Local, 5)
@@ -66,7 +62,7 @@ Code:
 46: Load(Local, 6)
 47: Call(Method, iteratorValue(_))
 48: Load(Local, 7)
-49: Constant(9: 79)
+49: Constant(7: 79)
 50: Call(Method, /(_))
 51: Load(Module, Null)
 52: Load(Module, Null)
@@ -74,11 +70,11 @@ Code:
 54: Call(Method, *(_))
 55: Load(Module, Null)
 56: Call(Method, +(_))
-57: Constant(10: " ")
+57: Constant(8: " ")
 58: Load(Local, 8)
 59: Load(Local, 4)
-60: Constant(11: 0)
-61: Constant(12: 80)
+60: Constant(4: 0)
+61: Constant(6: 80)
 62: Call(Method, ...(_))
 63: Null
 64: Load(Local, 12)
@@ -96,7 +92,7 @@ Code:
 76: Load(Local, 11)
 77: Call(Method, *(_))
 78: Call(Method, -(_))
-79: Constant(13: 2)
+79: Constant(9: 2)
 80: Load(Local, 10)
 81: Call(Method, *(_))
 82: Load(Local, 11)
@@ -125,12 +121,12 @@ Code:
 105: Call(Method, *(_))
 106: Call(Method, +(_))
 107: Load(Local, 17)
-108: Constant(14: 4)
+108: Constant(10: 4)
 109: Call(Method, >(_))
 110: JumpIfFalse(9)
-111: Constant(15: " .:;+=xX$&")
+111: Constant(11: " .:;+=xX$&")
 112: Load(Local, 14)
-113: Constant(16: 8)
+113: Constant(12: 8)
 114: Call(Method, /(_))
 115: Call(Getter, floor)
 116: Call(Subscript, [_])

@@ -1,12 +1,7 @@
 Constants:
 00: 1
-01: 1
-02: 1
-03: 2
-04: 1
-05: 1
-06: 2
-07: 3
+01: 2
+02: 3
 Code:
 00: Load(Module, Class("System"))
 01: Boolean false
@@ -17,29 +12,29 @@ Code:
 06: Load(Module, Class("System"))
 07: Boolean true
 08: And(1)
-09: Constant(1: 1)
+09: Constant(0: 1)
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(2: 1)
+13: Constant(0: 1)
 14: And(1)
-15: Constant(3: 2)
+15: Constant(1: 2)
 16: And(1)
 17: Boolean false
 18: Call(Method, print(_))
 19: Pop
 20: Load(Module, Class("System"))
-21: Constant(4: 1)
+21: Constant(0: 1)
 22: And(1)
 23: Boolean true
 24: Call(Method, print(_))
 25: Pop
 26: Load(Module, Class("System"))
-27: Constant(5: 1)
+27: Constant(0: 1)
 28: And(1)
-29: Constant(6: 2)
+29: Constant(1: 2)
 30: And(1)
-31: Constant(7: 3)
+31: Constant(2: 3)
 32: Call(Method, print(_))
 33: Pop
 34: Load(Module, Class("System"))

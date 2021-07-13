@@ -4,7 +4,6 @@ Constants:
 02: 0
 03: 1
 04: "c"
-05: 0
 Code:
 00: Load(Module, Class("List"))
 01: Call(Method, new())
@@ -34,7 +33,7 @@ Code:
 25: Pop
 26: Load(Module, Class("System"))
 27: Load(Module, Null)
-28: Constant(5: 0)
+28: Constant(2: 0)
 29: Call(Subscript, [_])
 30: Call(Method, print(_))
 31: Pop

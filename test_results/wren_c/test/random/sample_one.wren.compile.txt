@@ -6,24 +6,12 @@ Constants:
 04: "c"
 05: "d"
 06: "e"
-07: "a"
-08: 0
-09: "b"
-10: 0
-11: "c"
-12: 0
-13: "d"
-14: 0
-15: "e"
-16: 0
-17: 1
-18: 1000
-19: 1
-20: 1000
-21: 1
-22: 0.2
-23: "!!! "
-24: ""
+07: 0
+08: 1
+09: 1000
+10: 0.2
+11: "!!! "
+12: ""
 Code:
 00: ImportModule("random")
 01: Pop
@@ -60,25 +48,25 @@ Code:
 32: Pop
 33: Load(Module, Class("Map"))
 34: Call(Method, new())
-35: Constant(7: "a")
-36: Constant(8: 0)
+35: Constant(2: "a")
+36: Constant(7: 0)
 37: Call(Method, addCore_(_,_))
-38: Constant(9: "b")
-39: Constant(10: 0)
+38: Constant(3: "b")
+39: Constant(7: 0)
 40: Call(Method, addCore_(_,_))
-41: Constant(11: "c")
-42: Constant(12: 0)
+41: Constant(4: "c")
+42: Constant(7: 0)
 43: Call(Method, addCore_(_,_))
-44: Constant(13: "d")
-45: Constant(14: 0)
+44: Constant(5: "d")
+45: Constant(7: 0)
 46: Call(Method, addCore_(_,_))
-47: Constant(15: "e")
-48: Constant(16: 0)
+47: Constant(6: "e")
+48: Constant(7: 0)
 49: Call(Method, addCore_(_,_))
 50: Store(Module)
 51: Pop
-52: Constant(17: 1)
-53: Constant(18: 1000)
+52: Constant(8: 1)
+53: Constant(9: 1000)
 54: Call(Method, ..(_))
 55: Null
 56: Load(Local, 1)
@@ -97,7 +85,7 @@ Code:
 69: Load(Module, Null)
 70: Load(Local, 4)
 71: Call(Subscript, [_])
-72: Constant(19: 1)
+72: Constant(8: 1)
 73: Call(Method, +(_))
 74: Call(SubscriptSetter, [_]=(_))
 75: Pop
@@ -125,26 +113,26 @@ Code:
 97: Load(Module, Null)
 98: Load(Local, 3)
 99: Call(Subscript, [_])
-100: Constant(20: 1000)
+100: Constant(9: 1000)
 101: Load(Module, Null)
 102: Call(Getter, count)
 103: Call(Method, /(_))
 104: Call(Method, /(_))
-105: Constant(21: 1)
+105: Constant(8: 1)
 106: Call(Method, -(_))
 107: Call(Getter, abs)
 108: Load(Local, 4)
-109: Constant(22: 0.2)
+109: Constant(10: 0.2)
 110: Call(Method, >(_))
 111: JumpIfFalse(12)
 112: Load(Module, Class("System"))
 113: Load(Module, Class("List"))
 114: Call(Method, new())
-115: Constant(23: "!!! ")
+115: Constant(11: "!!! ")
 116: Call(Method, addCore_(_))
 117: Load(Local, 4)
 118: Call(Method, addCore_(_))
-119: Constant(24: "")
+119: Constant(12: "")
 120: Call(Method, addCore_(_))
 121: Call(Method, join())
 122: Call(Method, print(_))

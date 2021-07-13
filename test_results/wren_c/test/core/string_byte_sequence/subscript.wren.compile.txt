@@ -10,14 +10,6 @@ Constants:
 08: 7
 09: 8
 10: 9
-11: 8
-12: 7
-13: 6
-14: 5
-15: 4
-16: 3
-17: 2
-18: 1
 Code:
 00: Constant(0: "søméஃ")
 01: Call(Getter, bytes)
@@ -86,56 +78,56 @@ Code:
 64: Pop
 65: Load(Module, Class("System"))
 66: Load(Module, Null)
-67: Constant(11: 8)
+67: Constant(9: 8)
 68: Call(Method, -)
 69: Call(Subscript, [_])
 70: Call(Method, print(_))
 71: Pop
 72: Load(Module, Class("System"))
 73: Load(Module, Null)
-74: Constant(12: 7)
+74: Constant(8: 7)
 75: Call(Method, -)
 76: Call(Subscript, [_])
 77: Call(Method, print(_))
 78: Pop
 79: Load(Module, Class("System"))
 80: Load(Module, Null)
-81: Constant(13: 6)
+81: Constant(7: 6)
 82: Call(Method, -)
 83: Call(Subscript, [_])
 84: Call(Method, print(_))
 85: Pop
 86: Load(Module, Class("System"))
 87: Load(Module, Null)
-88: Constant(14: 5)
+88: Constant(6: 5)
 89: Call(Method, -)
 90: Call(Subscript, [_])
 91: Call(Method, print(_))
 92: Pop
 93: Load(Module, Class("System"))
 94: Load(Module, Null)
-95: Constant(15: 4)
+95: Constant(5: 4)
 96: Call(Method, -)
 97: Call(Subscript, [_])
 98: Call(Method, print(_))
 99: Pop
 100: Load(Module, Class("System"))
 101: Load(Module, Null)
-102: Constant(16: 3)
+102: Constant(4: 3)
 103: Call(Method, -)
 104: Call(Subscript, [_])
 105: Call(Method, print(_))
 106: Pop
 107: Load(Module, Class("System"))
 108: Load(Module, Null)
-109: Constant(17: 2)
+109: Constant(3: 2)
 110: Call(Method, -)
 111: Call(Subscript, [_])
 112: Call(Method, print(_))
 113: Pop
 114: Load(Module, Class("System"))
 115: Load(Module, Null)
-116: Constant(18: 1)
+116: Constant(2: 1)
 117: Call(Method, -)
 118: Call(Subscript, [_])
 119: Call(Method, print(_))

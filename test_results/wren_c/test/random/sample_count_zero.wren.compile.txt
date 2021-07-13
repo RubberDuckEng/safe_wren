@@ -4,7 +4,6 @@ Constants:
 02: 1
 03: 2
 04: 3
-05: 0
 Code:
 00: ImportModule("random")
 01: Pop
@@ -34,7 +33,7 @@ Code:
 25: Call(Method, addCore_(_))
 26: Constant(4: 3)
 27: Call(Method, addCore_(_))
-28: Constant(5: 0)
+28: Constant(1: 0)
 29: Call(Method, sample(_,_))
 30: Call(Method, print(_))
 31: Pop

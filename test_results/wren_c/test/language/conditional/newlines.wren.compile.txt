@@ -1,8 +1,6 @@
 Constants:
 00: "yes"
 01: "no"
-02: "yes"
-03: "no"
 Code:
 00: Load(Module, Class("System"))
 01: Boolean true
@@ -15,9 +13,9 @@ Code:
 08: Load(Module, Class("System"))
 09: Boolean false
 10: JumpIfFalse(2)
-11: Constant(2: "yes")
+11: Constant(0: "yes")
 12: Jump(1)
-13: Constant(3: "no")
+13: Constant(1: "no")
 14: Call(Method, print(_))
 15: Pop
 16: EndModule

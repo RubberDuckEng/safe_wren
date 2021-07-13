@@ -1,7 +1,6 @@
 Constants:
 00: ""
 01: 123
-02: ""
 Code:
 00: Load(Module, Class("System"))
 01: Load(Module, Class("List"))
@@ -11,7 +10,7 @@ Code:
 05: Constant(1: 123)
 06: Call(Getter, badMethod)
 07: Call(Method, addCore_(_))
-08: Constant(2: "")
+08: Constant(0: "")
 09: Call(Method, addCore_(_))
 10: Call(Method, join())
 11: Call(Method, print(_))

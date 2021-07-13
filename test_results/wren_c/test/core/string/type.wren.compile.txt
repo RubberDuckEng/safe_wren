@@ -1,8 +1,5 @@
 Constants:
 00: "s"
-01: "s"
-02: "s"
-03: "s"
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: "s")
@@ -11,19 +8,19 @@ Code:
 04: Call(Method, print(_))
 05: Pop
 06: Load(Module, Class("System"))
-07: Constant(1: "s")
+07: Constant(0: "s")
 08: Load(Module, Class("Object"))
 09: Call(Method, is(_))
 10: Call(Method, print(_))
 11: Pop
 12: Load(Module, Class("System"))
-13: Constant(2: "s")
+13: Constant(0: "s")
 14: Load(Module, Class("Num"))
 15: Call(Method, is(_))
 16: Call(Method, print(_))
 17: Pop
 18: Load(Module, Class("System"))
-19: Constant(3: "s")
+19: Constant(0: "s")
 20: Call(Getter, type)
 21: Load(Module, Class("String"))
 22: Call(Method, ==(_))

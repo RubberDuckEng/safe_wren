@@ -2,8 +2,7 @@ Constants:
 00: "outer"
 01: 0
 02: 1
-03: 1
-04: "inner"
+03: "inner"
 Code:
 00: Constant(0: "outer")
 01: Store(Module)
@@ -15,10 +14,10 @@ Code:
 07: Constant(2: 1)
 08: Call(Method, +(_))
 09: Store(Module)
-10: Constant(3: 1)
+10: Constant(2: 1)
 11: Call(Method, <=(_))
 12: JumpIfFalse(3)
-13: Constant(4: "inner")
+13: Constant(3: "inner")
 14: Pop
 15: Loop(10)
 16: Load(Module, Class("System"))

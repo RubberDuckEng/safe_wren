@@ -2,9 +2,7 @@ Constants:
 00: "\xc0"
 01: 0
 02: "\xe0"
-03: 0
-04: "\xe0\xae"
-05: 0
+03: "\xe0\xae"
 Code:
 00: Load(Module, Class("System"))
 01: Constant(0: "\xc0")
@@ -16,14 +14,14 @@ Code:
 07: Load(Module, Class("System"))
 08: Constant(2: "\xe0")
 09: Call(Getter, codePoints)
-10: Constant(3: 0)
+10: Constant(1: 0)
 11: Call(Method, iteratorValue(_))
 12: Call(Method, print(_))
 13: Pop
 14: Load(Module, Class("System"))
-15: Constant(4: "\xe0\xae")
+15: Constant(3: "\xe0\xae")
 16: Call(Getter, codePoints)
-17: Constant(5: 0)
+17: Constant(1: 0)
 18: Call(Method, iteratorValue(_))
 19: Call(Method, print(_))
 20: Pop

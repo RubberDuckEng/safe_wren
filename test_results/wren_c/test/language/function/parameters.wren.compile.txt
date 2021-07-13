@@ -3,155 +3,35 @@ Constants:
 01: Fn(new(_) block argument)
 02: 1
 03: Fn(new(_) block argument)
-04: 1
-05: 2
-06: Fn(new(_) block argument)
-07: 1
-08: 2
-09: 3
-10: Fn(new(_) block argument)
-11: 1
-12: 2
-13: 3
-14: 4
+04: 2
+05: Fn(new(_) block argument)
+06: 3
+07: Fn(new(_) block argument)
+08: 4
+09: Fn(new(_) block argument)
+10: 5
+11: Fn(new(_) block argument)
+12: 6
+13: Fn(new(_) block argument)
+14: 7
 15: Fn(new(_) block argument)
-16: 1
-17: 2
-18: 3
-19: 4
-20: 5
+16: 8
+17: Fn(new(_) block argument)
+18: 9
+19: Fn(new(_) block argument)
+20: 10
 21: Fn(new(_) block argument)
-22: 1
-23: 2
-24: 3
-25: 4
-26: 5
-27: 6
-28: Fn(new(_) block argument)
-29: 1
-30: 2
-31: 3
-32: 4
-33: 5
-34: 6
-35: 7
-36: Fn(new(_) block argument)
-37: 1
-38: 2
-39: 3
-40: 4
-41: 5
-42: 6
-43: 7
-44: 8
-45: Fn(new(_) block argument)
-46: 1
-47: 2
-48: 3
-49: 4
-50: 5
-51: 6
-52: 7
-53: 8
-54: 9
-55: Fn(new(_) block argument)
-56: 1
-57: 2
-58: 3
-59: 4
-60: 5
-61: 6
-62: 7
-63: 8
-64: 9
-65: 10
-66: Fn(new(_) block argument)
-67: 1
-68: 2
-69: 3
-70: 4
-71: 5
-72: 6
-73: 7
-74: 8
-75: 9
-76: 10
-77: 11
-78: Fn(new(_) block argument)
-79: 1
-80: 2
-81: 3
-82: 4
-83: 5
-84: 6
-85: 7
-86: 8
-87: 9
-88: 10
-89: 11
-90: 12
-91: Fn(new(_) block argument)
-92: 1
-93: 2
-94: 3
-95: 4
-96: 5
-97: 6
-98: 7
-99: 8
-100: 9
-101: 10
-102: 11
-103: 12
-104: 13
-105: Fn(new(_) block argument)
-106: 1
-107: 2
-108: 3
-109: 4
-110: 5
-111: 6
-112: 7
-113: 8
-114: 9
-115: 10
-116: 11
-117: 12
-118: 13
-119: 14
-120: Fn(new(_) block argument)
-121: 1
-122: 2
-123: 3
-124: 4
-125: 5
-126: 6
-127: 7
-128: 8
-129: 9
-130: 10
-131: 11
-132: 12
-133: 13
-134: 14
-135: 15
-136: Fn(new(_) block argument)
-137: 1
-138: 2
-139: 3
-140: 4
-141: 5
-142: 6
-143: 7
-144: 8
-145: 9
-146: 10
-147: 11
-148: 12
-149: 13
-150: 14
-151: 15
-152: 16
+22: 11
+23: Fn(new(_) block argument)
+24: 12
+25: Fn(new(_) block argument)
+26: 13
+27: Fn(new(_) block argument)
+28: 14
+29: Fn(new(_) block argument)
+30: 15
+31: Fn(new(_) block argument)
+32: 16
 Code:
 00: Load(Module, Class("Fn"))
 01: Closure(0, [])
@@ -181,281 +61,281 @@ Code:
 25: Pop
 26: Load(Module, Class("System"))
 27: Load(Module, Null)
-28: Constant(4: 1)
-29: Constant(5: 2)
+28: Constant(2: 1)
+29: Constant(4: 2)
 30: Call(Method, call(_,_))
 31: Call(Method, print(_))
 32: Pop
 33: Load(Module, Class("Fn"))
-34: Closure(6, [])
+34: Closure(5, [])
 35: Call(Method, new(_))
 36: Store(Module)
 37: Pop
 38: Load(Module, Class("System"))
 39: Load(Module, Null)
-40: Constant(7: 1)
-41: Constant(8: 2)
-42: Constant(9: 3)
+40: Constant(2: 1)
+41: Constant(4: 2)
+42: Constant(6: 3)
 43: Call(Method, call(_,_,_))
 44: Call(Method, print(_))
 45: Pop
 46: Load(Module, Class("Fn"))
-47: Closure(10, [])
+47: Closure(7, [])
 48: Call(Method, new(_))
 49: Store(Module)
 50: Pop
 51: Load(Module, Class("System"))
 52: Load(Module, Null)
-53: Constant(11: 1)
-54: Constant(12: 2)
-55: Constant(13: 3)
-56: Constant(14: 4)
+53: Constant(2: 1)
+54: Constant(4: 2)
+55: Constant(6: 3)
+56: Constant(8: 4)
 57: Call(Method, call(_,_,_,_))
 58: Call(Method, print(_))
 59: Pop
 60: Load(Module, Class("Fn"))
-61: Closure(15, [])
+61: Closure(9, [])
 62: Call(Method, new(_))
 63: Store(Module)
 64: Pop
 65: Load(Module, Class("System"))
 66: Load(Module, Null)
-67: Constant(16: 1)
-68: Constant(17: 2)
-69: Constant(18: 3)
-70: Constant(19: 4)
-71: Constant(20: 5)
+67: Constant(2: 1)
+68: Constant(4: 2)
+69: Constant(6: 3)
+70: Constant(8: 4)
+71: Constant(10: 5)
 72: Call(Method, call(_,_,_,_,_))
 73: Call(Method, print(_))
 74: Pop
 75: Load(Module, Class("Fn"))
-76: Closure(21, [])
+76: Closure(11, [])
 77: Call(Method, new(_))
 78: Store(Module)
 79: Pop
 80: Load(Module, Class("System"))
 81: Load(Module, Null)
-82: Constant(22: 1)
-83: Constant(23: 2)
-84: Constant(24: 3)
-85: Constant(25: 4)
-86: Constant(26: 5)
-87: Constant(27: 6)
+82: Constant(2: 1)
+83: Constant(4: 2)
+84: Constant(6: 3)
+85: Constant(8: 4)
+86: Constant(10: 5)
+87: Constant(12: 6)
 88: Call(Method, call(_,_,_,_,_,_))
 89: Call(Method, print(_))
 90: Pop
 91: Load(Module, Class("Fn"))
-92: Closure(28, [])
+92: Closure(13, [])
 93: Call(Method, new(_))
 94: Store(Module)
 95: Pop
 96: Load(Module, Class("System"))
 97: Load(Module, Null)
-98: Constant(29: 1)
-99: Constant(30: 2)
-100: Constant(31: 3)
-101: Constant(32: 4)
-102: Constant(33: 5)
-103: Constant(34: 6)
-104: Constant(35: 7)
+98: Constant(2: 1)
+99: Constant(4: 2)
+100: Constant(6: 3)
+101: Constant(8: 4)
+102: Constant(10: 5)
+103: Constant(12: 6)
+104: Constant(14: 7)
 105: Call(Method, call(_,_,_,_,_,_,_))
 106: Call(Method, print(_))
 107: Pop
 108: Load(Module, Class("Fn"))
-109: Closure(36, [])
+109: Closure(15, [])
 110: Call(Method, new(_))
 111: Store(Module)
 112: Pop
 113: Load(Module, Class("System"))
 114: Load(Module, Null)
-115: Constant(37: 1)
-116: Constant(38: 2)
-117: Constant(39: 3)
-118: Constant(40: 4)
-119: Constant(41: 5)
-120: Constant(42: 6)
-121: Constant(43: 7)
-122: Constant(44: 8)
+115: Constant(2: 1)
+116: Constant(4: 2)
+117: Constant(6: 3)
+118: Constant(8: 4)
+119: Constant(10: 5)
+120: Constant(12: 6)
+121: Constant(14: 7)
+122: Constant(16: 8)
 123: Call(Method, call(_,_,_,_,_,_,_,_))
 124: Call(Method, print(_))
 125: Pop
 126: Load(Module, Class("Fn"))
-127: Closure(45, [])
+127: Closure(17, [])
 128: Call(Method, new(_))
 129: Store(Module)
 130: Pop
 131: Load(Module, Class("System"))
 132: Load(Module, Null)
-133: Constant(46: 1)
-134: Constant(47: 2)
-135: Constant(48: 3)
-136: Constant(49: 4)
-137: Constant(50: 5)
-138: Constant(51: 6)
-139: Constant(52: 7)
-140: Constant(53: 8)
-141: Constant(54: 9)
+133: Constant(2: 1)
+134: Constant(4: 2)
+135: Constant(6: 3)
+136: Constant(8: 4)
+137: Constant(10: 5)
+138: Constant(12: 6)
+139: Constant(14: 7)
+140: Constant(16: 8)
+141: Constant(18: 9)
 142: Call(Method, call(_,_,_,_,_,_,_,_,_))
 143: Call(Method, print(_))
 144: Pop
 145: Load(Module, Class("Fn"))
-146: Closure(55, [])
+146: Closure(19, [])
 147: Call(Method, new(_))
 148: Store(Module)
 149: Pop
 150: Load(Module, Class("System"))
 151: Load(Module, Null)
-152: Constant(56: 1)
-153: Constant(57: 2)
-154: Constant(58: 3)
-155: Constant(59: 4)
-156: Constant(60: 5)
-157: Constant(61: 6)
-158: Constant(62: 7)
-159: Constant(63: 8)
-160: Constant(64: 9)
-161: Constant(65: 10)
+152: Constant(2: 1)
+153: Constant(4: 2)
+154: Constant(6: 3)
+155: Constant(8: 4)
+156: Constant(10: 5)
+157: Constant(12: 6)
+158: Constant(14: 7)
+159: Constant(16: 8)
+160: Constant(18: 9)
+161: Constant(20: 10)
 162: Call(Method, call(_,_,_,_,_,_,_,_,_,_))
 163: Call(Method, print(_))
 164: Pop
 165: Load(Module, Class("Fn"))
-166: Closure(66, [])
+166: Closure(21, [])
 167: Call(Method, new(_))
 168: Store(Module)
 169: Pop
 170: Load(Module, Class("System"))
 171: Load(Module, Null)
-172: Constant(67: 1)
-173: Constant(68: 2)
-174: Constant(69: 3)
-175: Constant(70: 4)
-176: Constant(71: 5)
-177: Constant(72: 6)
-178: Constant(73: 7)
-179: Constant(74: 8)
-180: Constant(75: 9)
-181: Constant(76: 10)
-182: Constant(77: 11)
+172: Constant(2: 1)
+173: Constant(4: 2)
+174: Constant(6: 3)
+175: Constant(8: 4)
+176: Constant(10: 5)
+177: Constant(12: 6)
+178: Constant(14: 7)
+179: Constant(16: 8)
+180: Constant(18: 9)
+181: Constant(20: 10)
+182: Constant(22: 11)
 183: Call(Method, call(_,_,_,_,_,_,_,_,_,_,_))
 184: Call(Method, print(_))
 185: Pop
 186: Load(Module, Class("Fn"))
-187: Closure(78, [])
+187: Closure(23, [])
 188: Call(Method, new(_))
 189: Store(Module)
 190: Pop
 191: Load(Module, Class("System"))
 192: Load(Module, Null)
-193: Constant(79: 1)
-194: Constant(80: 2)
-195: Constant(81: 3)
-196: Constant(82: 4)
-197: Constant(83: 5)
-198: Constant(84: 6)
-199: Constant(85: 7)
-200: Constant(86: 8)
-201: Constant(87: 9)
-202: Constant(88: 10)
-203: Constant(89: 11)
-204: Constant(90: 12)
+193: Constant(2: 1)
+194: Constant(4: 2)
+195: Constant(6: 3)
+196: Constant(8: 4)
+197: Constant(10: 5)
+198: Constant(12: 6)
+199: Constant(14: 7)
+200: Constant(16: 8)
+201: Constant(18: 9)
+202: Constant(20: 10)
+203: Constant(22: 11)
+204: Constant(24: 12)
 205: Call(Method, call(_,_,_,_,_,_,_,_,_,_,_,_))
 206: Call(Method, print(_))
 207: Pop
 208: Load(Module, Class("Fn"))
-209: Closure(91, [])
+209: Closure(25, [])
 210: Call(Method, new(_))
 211: Store(Module)
 212: Pop
 213: Load(Module, Class("System"))
 214: Load(Module, Null)
-215: Constant(92: 1)
-216: Constant(93: 2)
-217: Constant(94: 3)
-218: Constant(95: 4)
-219: Constant(96: 5)
-220: Constant(97: 6)
-221: Constant(98: 7)
-222: Constant(99: 8)
-223: Constant(100: 9)
-224: Constant(101: 10)
-225: Constant(102: 11)
-226: Constant(103: 12)
-227: Constant(104: 13)
+215: Constant(2: 1)
+216: Constant(4: 2)
+217: Constant(6: 3)
+218: Constant(8: 4)
+219: Constant(10: 5)
+220: Constant(12: 6)
+221: Constant(14: 7)
+222: Constant(16: 8)
+223: Constant(18: 9)
+224: Constant(20: 10)
+225: Constant(22: 11)
+226: Constant(24: 12)
+227: Constant(26: 13)
 228: Call(Method, call(_,_,_,_,_,_,_,_,_,_,_,_,_))
 229: Call(Method, print(_))
 230: Pop
 231: Load(Module, Class("Fn"))
-232: Closure(105, [])
+232: Closure(27, [])
 233: Call(Method, new(_))
 234: Store(Module)
 235: Pop
 236: Load(Module, Class("System"))
 237: Load(Module, Null)
-238: Constant(106: 1)
-239: Constant(107: 2)
-240: Constant(108: 3)
-241: Constant(109: 4)
-242: Constant(110: 5)
-243: Constant(111: 6)
-244: Constant(112: 7)
-245: Constant(113: 8)
-246: Constant(114: 9)
-247: Constant(115: 10)
-248: Constant(116: 11)
-249: Constant(117: 12)
-250: Constant(118: 13)
-251: Constant(119: 14)
+238: Constant(2: 1)
+239: Constant(4: 2)
+240: Constant(6: 3)
+241: Constant(8: 4)
+242: Constant(10: 5)
+243: Constant(12: 6)
+244: Constant(14: 7)
+245: Constant(16: 8)
+246: Constant(18: 9)
+247: Constant(20: 10)
+248: Constant(22: 11)
+249: Constant(24: 12)
+250: Constant(26: 13)
+251: Constant(28: 14)
 252: Call(Method, call(_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 253: Call(Method, print(_))
 254: Pop
 255: Load(Module, Class("Fn"))
-256: Closure(120, [])
+256: Closure(29, [])
 257: Call(Method, new(_))
 258: Store(Module)
 259: Pop
 260: Load(Module, Class("System"))
 261: Load(Module, Null)
-262: Constant(121: 1)
-263: Constant(122: 2)
-264: Constant(123: 3)
-265: Constant(124: 4)
-266: Constant(125: 5)
-267: Constant(126: 6)
-268: Constant(127: 7)
-269: Constant(128: 8)
-270: Constant(129: 9)
-271: Constant(130: 10)
-272: Constant(131: 11)
-273: Constant(132: 12)
-274: Constant(133: 13)
-275: Constant(134: 14)
-276: Constant(135: 15)
+262: Constant(2: 1)
+263: Constant(4: 2)
+264: Constant(6: 3)
+265: Constant(8: 4)
+266: Constant(10: 5)
+267: Constant(12: 6)
+268: Constant(14: 7)
+269: Constant(16: 8)
+270: Constant(18: 9)
+271: Constant(20: 10)
+272: Constant(22: 11)
+273: Constant(24: 12)
+274: Constant(26: 13)
+275: Constant(28: 14)
+276: Constant(30: 15)
 277: Call(Method, call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 278: Call(Method, print(_))
 279: Pop
 280: Load(Module, Class("Fn"))
-281: Closure(136, [])
+281: Closure(31, [])
 282: Call(Method, new(_))
 283: Store(Module)
 284: Pop
 285: Load(Module, Class("System"))
 286: Load(Module, Null)
-287: Constant(137: 1)
-288: Constant(138: 2)
-289: Constant(139: 3)
-290: Constant(140: 4)
-291: Constant(141: 5)
-292: Constant(142: 6)
-293: Constant(143: 7)
-294: Constant(144: 8)
-295: Constant(145: 9)
-296: Constant(146: 10)
-297: Constant(147: 11)
-298: Constant(148: 12)
-299: Constant(149: 13)
-300: Constant(150: 14)
-301: Constant(151: 15)
-302: Constant(152: 16)
+287: Constant(2: 1)
+288: Constant(4: 2)
+289: Constant(6: 3)
+290: Constant(8: 4)
+291: Constant(10: 5)
+292: Constant(12: 6)
+293: Constant(14: 7)
+294: Constant(16: 8)
+295: Constant(18: 9)
+296: Constant(20: 10)
+297: Constant(22: 11)
+298: Constant(24: 12)
+299: Constant(26: 13)
+300: Constant(28: 14)
+301: Constant(30: 15)
+302: Constant(32: 16)
 303: Call(Method, call(_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_))
 304: Call(Method, print(_))
 305: Pop

@@ -2,18 +2,9 @@ Constants:
 00: "value"
 01: 1
 02: 0
-03: 1
-04: 1
-05: 2
-06: 3
-07: "key"
-08: 1
-09: 2
-10: 1
-11: 0
-12: 1
-13: 3
-14: "key"
+03: 2
+04: 3
+05: "key"
 Code:
 00: Constant(0: "value")
 01: Store(Module)
@@ -35,25 +26,25 @@ Code:
 17: Constant(2: 0)
 18: Call(Subscript, [_])
 19: Load(Module, Null)
-20: Constant(3: 1)
+20: Constant(1: 1)
 21: Call(Subscript, [_])
 22: Call(Method, addCore_(_,_))
-23: Constant(4: 1)
+23: Constant(1: 1)
 24: Call(Method, -)
-25: Constant(5: 2)
+25: Constant(3: 2)
 26: Call(Method, -)
 27: Call(Method, addCore_(_,_))
-28: Constant(6: 3)
+28: Constant(4: 3)
 29: Call(Method, ~)
 30: Boolean false
 31: Call(Method, !)
 32: Call(Method, addCore_(_,_))
-33: Constant(7: "key")
+33: Constant(5: "key")
 34: Boolean true
 35: JumpIfFalse(2)
-36: Constant(8: 1)
+36: Constant(1: 1)
 37: Jump(1)
-38: Constant(9: 2)
+38: Constant(3: 2)
 39: Call(Method, addCore_(_,_))
 40: Store(Module)
 41: Pop
@@ -65,7 +56,7 @@ Code:
 47: Pop
 48: Load(Module, Class("System"))
 49: Load(Module, Null)
-50: Constant(10: 1)
+50: Constant(1: 1)
 51: Call(Subscript, [_])
 52: Call(Method, print(_))
 53: Pop
@@ -79,28 +70,28 @@ Code:
 61: Load(Module, Class("System"))
 62: Load(Module, Null)
 63: Load(Module, Null)
-64: Constant(11: 0)
+64: Constant(2: 0)
 65: Call(Subscript, [_])
 66: Call(Subscript, [_])
 67: Call(Method, print(_))
 68: Pop
 69: Load(Module, Class("System"))
 70: Load(Module, Null)
-71: Constant(12: 1)
+71: Constant(1: 1)
 72: Call(Method, -)
 73: Call(Subscript, [_])
 74: Call(Method, print(_))
 75: Pop
 76: Load(Module, Class("System"))
 77: Load(Module, Null)
-78: Constant(13: 3)
+78: Constant(4: 3)
 79: Call(Method, ~)
 80: Call(Subscript, [_])
 81: Call(Method, print(_))
 82: Pop
 83: Load(Module, Class("System"))
 84: Load(Module, Null)
-85: Constant(14: "key")
+85: Constant(5: "key")
 86: Call(Subscript, [_])
 87: Call(Method, print(_))
 88: Pop

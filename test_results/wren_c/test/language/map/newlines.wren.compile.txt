@@ -3,11 +3,8 @@ Constants:
 01: "a value"
 02: "b"
 03: "b value"
-04: "a"
-05: "b"
-06: "c"
-07: "c value"
-08: "c"
+04: "c"
+05: "c value"
 Code:
 00: Load(Module, Class("Map"))
 01: Call(Method, new())
@@ -21,26 +18,26 @@ Code:
 09: Pop
 10: Load(Module, Class("System"))
 11: Load(Module, Null)
-12: Constant(4: "a")
+12: Constant(0: "a")
 13: Call(Subscript, [_])
 14: Call(Method, print(_))
 15: Pop
 16: Load(Module, Class("System"))
 17: Load(Module, Null)
-18: Constant(5: "b")
+18: Constant(2: "b")
 19: Call(Subscript, [_])
 20: Call(Method, print(_))
 21: Pop
 22: Load(Module, Class("Map"))
 23: Call(Method, new())
-24: Constant(6: "c")
-25: Constant(7: "c value")
+24: Constant(4: "c")
+25: Constant(5: "c value")
 26: Call(Method, addCore_(_,_))
 27: Store(Module)
 28: Pop
 29: Load(Module, Class("System"))
 30: Load(Module, Null)
-31: Constant(8: "c")
+31: Constant(4: "c")
 32: Call(Subscript, [_])
 33: Call(Method, print(_))
 34: Pop
