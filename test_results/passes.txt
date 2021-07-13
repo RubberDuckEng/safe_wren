@@ -35,6 +35,7 @@ wren_c/test/core/fiber/new_wrong_arity.wren
 wren_c/test/core/fiber/type.wren
 wren_c/test/core/function/arity.wren
 wren_c/test/core/function/call_extra_arguments.wren
+wren_c/test/core/function/call_missing_arguments.wren
 wren_c/test/core/function/call_runtime_error.wren
 wren_c/test/core/function/new_wrong_arg_type.wren
 wren_c/test/core/function/to_string.wren
@@ -80,6 +81,7 @@ wren_c/test/core/list/plus_not_iterable.wren
 wren_c/test/core/list/reduce.wren
 wren_c/test/core/list/reduce_no_items.wren
 wren_c/test/core/list/reduce_single_item.wren
+wren_c/test/core/list/reduce_wrong_arity.wren
 wren_c/test/core/list/remove.wren
 wren_c/test/core/list/remove_at_index_not_int.wren
 wren_c/test/core/list/remove_at_index_not_num.wren

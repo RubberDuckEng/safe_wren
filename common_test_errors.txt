@@ -4,8 +4,8 @@ occurances : error text
 208 : in <script>
 35 : Fiber does not implement 'call()'.
 31 : Could not load module 'random'.
-27 : Expected runtime error on line  but was on line .
 27 : String does not implement 'iterate(_)'.
+26 : Expected runtime error on line  but was on line .
 22 : Error at 'static': Expect '{' to begin method body.
 22 : Map does not implement 'iterate(_)'.
 18 : Expected return code 65 and got 0. Stderr:
@@ -62,7 +62,6 @@ occurances : error text
 4 : in isEmpty
 4 : in print(_)
 4 : in writeObject_(_)
-4 : thread 'main' has overflowed its stack
 3 : Bar does not implement 'super()'.
 3 : Expected output "0" on line  and got "92".
 3 : Expected output "1.5707963267949" on line  and got "1.5707963267948966".
@@ -131,6 +130,7 @@ occurances : error text
 2 : TestSequence does not implement 'skip(_)'.
 2 : TestSequence does not implement 'take(_)'.
 2 : TestSequence does not implement 'toList'.
+2 : Timed out.
 2 : Without metaclass does not implement 'attributes'.
 2 : in +(_)
 2 : in bar
@@ -142,6 +142,7 @@ occurances : error text
 2 : in trim()
 2 : in trimEnd()
 2 : in trimStart()
+2 : thread 'main' has overflowed its stack
 1 : Could not compile module 'wren_c/test/language/module/compile_error/module'.
 1 : Could not find a variable named 'DoesNotExist' in module 'wren_c/test/language/module/unknown_variable/module'.
 1 : Could not load module 'wren_c/test/language/module/does_not_exist'.
@@ -208,8 +209,6 @@ occurances : error text
 1 : Expected output "Þ" on line  and got "\u00de".
 1 : Expected output "ॐ" on line  and got "\u0950".
 1 : Expected output "ஃ" on line  and got "\u0b83".
-1 : Expected return code 65 and got 3221225725. Stderr:
-1 : Expected return code 70 and got 0. Stderr:
 1 : Expected runtime error "Abort!" and got none.
 1 : Expected runtime error "Argument must be a string." and got:
 1 : Expected runtime error "Base does not implement 'doesNotExist(_)'." and got:
@@ -233,8 +232,6 @@ occurances : error text
 1 : Expected runtime error "Could not load module './test/language/module/does_not_exist'." and got:
 1 : Expected runtime error "Foreign class 'Bar' may not inherit from a class with fields." and got:
 1 : Expected runtime error "From must be a non-empty string." and got:
-1 : Expected runtime error "Function expects more arguments." and got none.
-1 : Expected runtime error "Function expects more arguments." and got:
 1 : Expected runtime error "Module name must be a string." and got:
 1 : Expected runtime error "Number literal is too large." and got:
 1 : Expected runtime error "Range end must be an integer." and got:
@@ -248,5 +245,3 @@ occurances : error text
 1 : Expected runtime error "Subscript must be an integer." and got:
 1 : Expected runtime error "To must be a string." and got:
 1 : Got output "ok" when none was expected.
-1 : Right operand must be a string.
-1 : Timed out.

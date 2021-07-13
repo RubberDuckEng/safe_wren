@@ -1181,20 +1181,19 @@ impl WrenVM {
     }
 }
 
-fn check_arity(value: &Value, _num_args: usize) -> Result<Handle<ObjClosure>> {
+fn check_arity(value: &Value, num_args: usize) -> Result<Handle<ObjClosure>> {
     let closure = value
         .try_into_closure()
         .expect("Receiver must be a closure.");
-    Ok(closure)
 
-    // FIXME: Enable in a separate change.
-    // // num_args includes implicit this, not counted in arity.
-    // if num_args - 1 >= closure.borrow().fn_obj.borrow().arity {
-    //     Ok(closure)
-    // } else {
-    //     Err(VMError::from_str("Function expects more arguments."))?
-    //     // I guess too many arguments is OK?
-    // }
+    // num_args includes implicit this, not counted in arity.
+    let arity = closure.borrow().fn_obj.borrow().arity as usize;
+    if num_args >= arity + 1 {
+        Ok(closure)
+    } else {
+        Err(VMError::from_str("Function expects more arguments."))
+        // I guess too many arguments is OK?
+    }
 }
 
 impl CallFrame {

@@ -1,3 +1,0 @@
-Expected runtime error "Function expects more arguments." and got:
-Right operand must be a string.
-Expected runtime error on line 2 but was on line 1.
