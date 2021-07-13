@@ -39,7 +39,7 @@ pub(crate) const MAX_VARIABLE_NAME: usize = 64;
 // The maximum number of local (i.e. not module level) variables that can be
 // declared in a single function, method, or chunk of top level code. This is
 // the maximum number of variables in scope at one time, and spans block scopes.
-// const MAX_LOCALS: usize = 256;
+const MAX_LOCALS: usize = 256;
 
 // The maximum number of upvalues (i.e. variables from enclosing functions)
 // that a function can close over.
@@ -2230,7 +2230,13 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
     // variable.
     expression(ctx)?;
 
-    // FIXME: Ensure there is enough local space.
+    // Verify that there is space to hidden local variables.
+    // Note that we expect only two addLocal calls next to each other in the
+    // following code.
+    if ctx.compiler().locals.len() + 2 > MAX_LOCALS {
+        return Err(ctx.error_string(format!("Cannot declare more than {} variables in one scope. (Not enough space for for-loops internal variables)",
+          MAX_LOCALS)));
+    }
 
     let seq_slot = add_local(ctx, "seq ".into());
 
@@ -2641,7 +2647,14 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
     }
 
     // TODO: Check to see if another local with the same name exists
-    // TODO: Enforce max number of local variables.
+
+    if ctx.compiler().locals.len() >= MAX_LOCALS {
+        return Err(ctx.error_string(format!(
+            "Cannot declare more than {} variables in one scope.",
+            MAX_LOCALS,
+        )));
+    }
+
     Ok(add_local(ctx, name))
 }
 

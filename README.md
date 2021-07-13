@@ -28,10 +28,7 @@ with error text from any failed tests.  `test.py` will also update
 * String codepoint APIs (including String.iterate)
 * Map.iterate
 * foreign functions
-* rename consume_expecting_msg to consume()
-* Add typedef Result<T> to compiler.rs
 * remove stub_core from core initialization.
-* Fix ensure_constant to lookup before making new ones.
 * Give different types to Symbol, Constant, etc.
 * attributes
 * Full wren_core.wren parsing
@@ -39,14 +36,11 @@ with error text from any failed tests.  `test.py` will also update
 * Scientific notation
 * super / superclass calls
 * Fiber APIs (try, etc.)
-* imports
 * static fields
 * Raw strings
 * C API
 * Garbage Collection
-* System.clock
 * Sort methods to match wren_c order?
-* What happens if you pass too many values to a function?
 
 ## Most failing tests
 * Maps/map lookup, but requires object allocation

@@ -485,6 +485,8 @@ wren_c/test/language/variable/scope_if.wren
 wren_c/test/language/variable/scope_reuse_in_different_blocks.wren
 wren_c/test/language/variable/scope_while.wren
 wren_c/test/language/variable/shadow_global.wren
+wren_c/test/language/variable/too_many_locals.wren
+wren_c/test/language/variable/too_many_locals_nested.wren
 wren_c/test/language/variable/undefined_global.wren
 wren_c/test/language/variable/undefined_local.wren
 wren_c/test/language/variable/use_false_as_var.wren
