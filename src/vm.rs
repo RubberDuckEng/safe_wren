@@ -69,8 +69,8 @@ impl Hash for Value {
     fn hash<H: Hasher>(&self, state: &mut H) {
         match self {
             Value::Null => Value::Null.hash(state),
-            Value::Num(v) => {
-                let bits: u64 = unsafe { std::mem::transmute(v) };
+            Value::Num(f64_ref) => {
+                let bits: u64 = unsafe { std::mem::transmute(*f64_ref) };
                 bits.hash(state);
             }
             Value::Boolean(v) => v.hash(state),
@@ -1443,7 +1443,7 @@ impl ObjFn {
     ) -> ObjFn {
         ObjFn {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
-            constants: compiler.constants,
+            constants: compiler.constants.list,
             code: compiler.code,
             arity: arity,
             debug: compiler.fn_debug,
@@ -1599,5 +1599,24 @@ impl Obj for ObjClass {
     fn class_obj(&self) -> Handle<ObjClass> {
         // FIXME: Fix to be non-Option and remove unwrap.
         self.class.as_ref().unwrap().clone()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn value_num_hash_unique() {
+        fn hash_as_value(num: f64) -> u64 {
+            use std::hash::{Hash, Hasher};
+            let value = super::Value::Num(num);
+            let mut s = std::collections::hash_map::DefaultHasher::new();
+            value.hash(&mut s);
+            s.finish()
+        }
+        assert_ne!(hash_as_value(1.0), hash_as_value(2.0));
+        assert_eq!(hash_as_value(1.0), hash_as_value(1.0));
+        assert_eq!(hash_as_value(3.0), hash_as_value(1.0 + 2.0));
+        // Floats equality is hard.  We don't try to fix that:
+        assert_ne!(hash_as_value(0.3), hash_as_value(0.1 + 0.2));
     }
 }

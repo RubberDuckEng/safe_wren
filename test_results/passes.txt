@@ -105,6 +105,7 @@ wren_c/test/core/list/subscript_wrong_type.wren
 wren_c/test/core/list/swap.wren
 wren_c/test/core/list/to_string.wren
 wren_c/test/core/list/type.wren
+wren_c/test/core/map/churn.wren
 wren_c/test/core/map/contains_key.wren
 wren_c/test/core/map/contains_key_not_value.wren
 wren_c/test/core/map/count.wren

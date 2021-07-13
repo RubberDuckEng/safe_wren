@@ -168,7 +168,6 @@ occurances : error text
 1 : Expected output "1.0986122886681" on line  and got "1.0986122886681098".
 1 : Expected output "1.4142135623731" on line  and got "1.4142135623730951".
 1 : Expected output "1.7976931348623e+308" on line  and got "1.7976931348623157e+308".
-1 : Expected output "10" on line  and got "100".
 1 : Expected output "102" on line  and got "92".
 1 : Expected output "120" on line  and got "92".
 1 : Expected output "148.41315910258" on line  and got "148.4131591025766".

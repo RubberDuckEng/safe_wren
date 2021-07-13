@@ -1,6 +1,7 @@
 // analog to wren_compiler.c from wren_c.
 
 use std::cell::RefCell;
+// use std::collections::HashMap;
 use std::error;
 use std::fmt;
 use std::ops::Range;
@@ -928,10 +929,56 @@ impl FnDebug {
     }
 }
 
+// wren_c uses both a hash and a list when building constants
+// to allow both fast lookup (when there are lots of constants)
+// as well as fast copy from the compiler into the final function.
+// wren_c allows up to 65k constants.
+pub(crate) struct ConstantsBuilder {
+    // hash: HashMap<Value, usize>,
+
+    // public for deconstruction in end_compiler.
+    pub(crate) list: Vec<Value>,
+}
+
+impl ConstantsBuilder {
+    fn new() -> ConstantsBuilder {
+        ConstantsBuilder {
+            // hash: HashMap::new(),
+            list: Vec::new(),
+        }
+    }
+
+    fn lookup(&self, _value: &Value) -> Option<&usize> {
+        None
+        // self.hash.get(value)
+    }
+
+    // fn len(&self) -> usize {
+    //     // self.list.len() and self.hash.len() should both be the same.
+    //     self.list.len()
+    // }
+
+    // This makes no attempt to check if it's already in the map
+    // callers are expected to lookup first.
+    fn add(&mut self, value: Value) -> usize {
+        let index = self.list.len();
+        self.list.push(value.clone());
+        // self.hash.insert(value, index);
+        index
+    }
+}
+
+impl fmt::Debug for ConstantsBuilder {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self.list)
+    }
+}
+
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
 pub(crate) struct Compiler {
-    pub(crate) constants: Vec<Value>,
+    // Public for deconstruction by ObjFn::new()
+    pub(crate) constants: ConstantsBuilder,
     locals: Vec<Local>, // A fixed size array in wren_c
     pub(crate) code: Vec<Ops>,
     scope_depth: ScopeDepth,
@@ -961,7 +1008,7 @@ pub(crate) struct Compiler {
 impl Compiler {
     fn _with_parent_and_arg0_name(parent: Option<Box<Compiler>>, arg0_name: &str) -> Compiler {
         Compiler {
-            constants: Vec::new(),
+            constants: ConstantsBuilder::new(),
             locals: vec![Local {
                 name: arg0_name.into(),
                 // wren_c has a funny hack here by setting depth to -1 (module)
@@ -998,15 +1045,6 @@ impl Compiler {
         Compiler::_with_parent_and_arg0_name(parent, "this")
     }
 
-    // named addConstant in wren_c
-    fn ensure_constant(&mut self, value: Value) -> usize {
-        // FIXME: This should check if we already have this value stored!
-        let index = self.constants.len();
-        self.constants.push(value);
-        // FIXME: Also needs to check that we haven't hit limit.
-        index
-    }
-
     fn nested_local_scope_count(&self) -> usize {
         match self.scope_depth {
             ScopeDepth::Module => panic!("No local scopes."),
@@ -1041,9 +1079,10 @@ impl Compiler {
     // }
 }
 
-fn emit_constant(ctx: &mut ParseContext, value: Value) {
-    let index = ctx.compiler_mut().ensure_constant(value);
+fn emit_constant(ctx: &mut ParseContext, value: Value) -> Result<(), WrenError> {
+    let index = ensure_constant(ctx, value)?;
     emit(ctx, Ops::Constant(index));
+    Ok(())
 }
 
 fn emit(ctx: &mut ParseContext, op: Ops) -> usize {
@@ -1092,6 +1131,22 @@ impl fmt::Debug for Compiler {
             .field(&self.code)
             .finish()
     }
+}
+
+// Adds [constant] to the constant pool and returns its index.
+// wren_c calls this addConstant
+fn ensure_constant(ctx: &mut ParseContext, constant: Value) -> Result<usize, WrenError> {
+    if let Some(index) = ctx.compiler().constants.lookup(&constant) {
+        return Ok(*index);
+    }
+    // else if ctx.compiler().constants.len() < MAX_CONSTANTS {
+    Ok(ctx.compiler_mut().constants.add(constant))
+    // } else {
+    //     Err(ctx.error_string(format!(
+    //         "A function may only contain {} unique constants.",
+    //         MAX_CONSTANTS
+    //     )))
+    // }
 }
 
 // Takes an InputManager.  Knows how to use a Tokenizer to break it up into
@@ -1224,7 +1279,7 @@ fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
             return Err(ctx.error_string(format!("Invalid literal {}", name)));
         }
     };
-    emit_constant(ctx, value);
+    emit_constant(ctx, value)?;
     Ok(())
 }
 
@@ -1579,7 +1634,7 @@ fn end_compiler(
     ending: Box<Compiler>,
     arity: u8,
     name: String,
-) -> Handle<ObjFn> {
+) -> Result<Handle<ObjFn>, WrenError> {
     let mut compiler = ending;
     // Mark the end of the bytecode. Since it may contain multiple early returns,
     // we can't rely on CODE_RETURN to tell us we're at the end.
@@ -1602,13 +1657,11 @@ fn end_compiler(
         // makes creating a function a little slower, but makes invoking them
         // faster. Given that functions are invoked more often than they are
         // created, this is a win.
-        let constant = ctx
-            .compiler_mut()
-            .ensure_constant(Value::Fn(fn_obj.clone()));
+        let constant = ensure_constant(ctx, Value::Fn(fn_obj.clone()))?;
         emit(ctx, Ops::Closure(constant, upvalues));
     }
 
-    fn_obj
+    Ok(fn_obj)
 }
 
 // Parses a method or function body, after the initial "{" has been consumed.
@@ -1750,7 +1803,7 @@ fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenE
         // Name the function based on the method its passed to.
         let name = called.full_name() + " block argument";
         let compiler = scope.pop();
-        end_compiler(scope.ctx, compiler, fn_signature.arity, name);
+        end_compiler(scope.ctx, compiler, fn_signature.arity, name)?;
     }
 
     // Handle SIG_INITIALIZER?
@@ -2527,7 +2580,7 @@ fn create_constructor(
 
     let compiler = scope.pop();
     // FIXME: Where does this closure get put?
-    end_compiler(scope.ctx, compiler, 0, "".into());
+    end_compiler(scope.ctx, compiler, 0, "".into())?;
     Ok(())
 }
 
@@ -2894,7 +2947,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
         finish_body(scope.ctx)?;
         let compiler = scope.pop();
         // FIXME: Where does the closure go?
-        end_compiler(scope.ctx, compiler, signature.arity, signature.full_name());
+        end_compiler(scope.ctx, compiler, signature.arity, signature.full_name())?;
     }
 
     // Define the method. For a constructor, this defines the instance
@@ -2929,7 +2982,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     let class_name = Value::String(Rc::new(name.clone()));
 
     // Make a string constant for the name.
-    emit_constant(ctx, class_name);
+    emit_constant(ctx, class_name)?;
     // FIXME: Handle superclasses, TOKEN_IS
 
     // Load the superclass (if there is one).
@@ -3429,7 +3482,7 @@ pub(crate) fn wren_compile<'a>(
 
     let compiler = scope.pop();
     // wren_c uses (script) :shrug:
-    let fn_obj = end_compiler(scope.ctx, compiler, 0, "<script>".into());
+    let fn_obj = end_compiler(scope.ctx, compiler, 0, "<script>".into())?;
     let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
     Ok(closure)
 }
