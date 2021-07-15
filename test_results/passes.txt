@@ -520,3 +520,4 @@ wren_c/test/limit/too_many_constants.wren
 wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
 wren_c/test/regression/429.wren
+wren_c/test/regression/561.wren

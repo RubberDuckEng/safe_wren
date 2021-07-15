@@ -24,21 +24,22 @@ is_debug = args.suffix.startswith('_d')
 
 WREN_RUST_DIR = dirname(dirname(realpath(__file__)))
 WREN_DIR = join(WREN_RUST_DIR, 'wren_c')
-WREN_APP = join(WREN_RUST_DIR, 'target', 'debug', 'wren_rust' + args.suffix)
+WREN_TEST = join(WREN_RUST_DIR, 'target', 'debug', 'wren_test' + args.suffix)
+WREN_DEBUG = join(WREN_RUST_DIR, 'target', 'debug', 'wren_debug' + args.suffix)
 
 RESULTS_DIR = join(WREN_RUST_DIR, 'test_results')
 
-WREN_APP_WITH_EXT = WREN_APP
+WREN_TEST_WITH_EXT = WREN_TEST
 if platform.system() == "Windows":
-    WREN_APP_WITH_EXT += ".exe"
+    WREN_TEST_WITH_EXT += ".exe"
 
-if not isfile(WREN_APP_WITH_EXT):
-    print("The binary file 'wren_test' was not found, expected it to be at " + WREN_APP)
+if not isfile(WREN_TEST_WITH_EXT):
+    print("The binary file 'wren_test' was not found, expected it to be at " + WREN_TEST)
     print("In order to run the tests, you need to build Wren first!")
     sys.exit(1)
 
 # print("Wren Test Directory - " + WREN_DIR)
-# print("Wren Test App - " + WREN_APP)
+# print("Wren Test App - " + WREN_TEST)
 
 EXPECT_PATTERN = re.compile(r'// expect: ?(.*)')
 EXPECT_ERROR_PATTERN = re.compile(r'// expect error(?! line)')
@@ -161,9 +162,9 @@ class Test:
         # If we got here, it's a valid test.
         return True
 
-    def compile_bytecode(self, app):
+    def compile_bytecode(self):
         test_arg = self.path
-        proc = Popen([app, '--compile', test_arg],
+        proc = Popen([WREN_DEBUG, '--compile', test_arg],
                      stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
         out, err = proc.communicate(self.input_bytes)
@@ -436,15 +437,15 @@ def run_script(app, path, type):
         print('')
 
     compile_file = open(compile_path, mode="wb")
-    compile_file.write(test.compile_bytecode(app).encode("utf8"))
+    compile_file.write(test.compile_bytecode().encode("utf8"))
 
 
 def run_test(path, example=False):
-    run_script(WREN_APP, path, "test")
+    run_script(WREN_TEST, path, "test")
 
 
 def run_api_test(path):
-    run_script(WREN_APP, path, "api test")
+    run_script(WREN_TEST, path, "api test")
 
 
 def run_example(path):
@@ -458,7 +459,7 @@ def run_example(path):
     if "skynet" in path:
         return
 
-    run_script(WREN_APP, path, "example")
+    run_script(WREN_TEST, path, "example")
 
 
 walk(join(WREN_DIR, 'test'), run_test, ignored=['api', 'benchmark'])

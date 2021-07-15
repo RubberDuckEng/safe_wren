@@ -7,22 +7,10 @@
 use std::env;
 use std::fs;
 
-#[macro_use]
-extern crate num_derive;
-extern crate num_traits;
+extern crate wren_rust;
 
-mod compiler;
-mod core;
-mod vm;
-mod wren;
-
-mod test;
-mod wren_debug;
-
-use crate::test::test_config;
-use crate::wren_debug::{interpret_and_print_vm, print_bytecode, print_tokens};
-
-use crate::wren::*;
+use wren_rust::test::test_config;
+use wren_rust::wren::*;
 
 enum ExitCode {
     Success = 0,
@@ -83,22 +71,9 @@ fn run_file(path: &String) -> ! {
     }
 }
 
-fn wren_test_main(args: &Vec<String>) {
+fn main() {
+    let args: Vec<_> = env::args().collect();
     handle_usage(&args);
     // handle API tests.
     run_file(&args[1]);
-}
-
-fn main() {
-    let args: Vec<_> = env::args().collect();
-    if args.len() > 1 && args[1] == "--tokenize" {
-        print_tokens(&args[2]);
-    } else if args.len() > 1 && args[1] == "--compile" {
-        print_bytecode(&args[2]);
-    } else if args.len() > 1 && args[1] == "--interpret" {
-        interpret_and_print_vm(&args[2]);
-    } else {
-        wren_test_main(&args);
-    }
-    exit(ExitCode::Success);
 }

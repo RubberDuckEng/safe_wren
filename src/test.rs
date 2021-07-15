@@ -1,4 +1,7 @@
 // analog to test.c in wren_test from wren_c
+// FIXME: Should not be part of wren_rust library.
+// This is only here to share test_config between
+// wren_debug.rs and wren_test.rs.
 
 use std::fs;
 use std::path::{Component, Path, PathBuf};

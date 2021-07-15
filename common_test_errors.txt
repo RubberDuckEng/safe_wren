@@ -142,7 +142,6 @@ occurances : error text
 2 : in trim()
 2 : in trimEnd()
 2 : in trimStart()
-2 : thread 'main' has overflowed its stack
 1 : Could not compile module 'wren_c/test/language/module/compile_error/module'.
 1 : Could not find a variable named 'DoesNotExist' in module 'wren_c/test/language/module/unknown_variable/module'.
 1 : Could not load module 'wren_c/test/language/module/does_not_exist'.
@@ -151,7 +150,7 @@ occurances : error text
 1 : Expected output "-0.23456789012345" on line  and got "-0.23456789012345003".
 1 : Expected output "-0.3" on line  and got "-0.3000000000000007".
 1 : Expected output "-1" on line  and got "-0.9999999999999999".
-1 : Expected output "-1.2599210498949" on line  and got "-1.259921049894873".
+1 : Expected output "-1.2599210498949" on line  and got "-1.2599210498948734".
 1 : Expected output "-1.5707963267949" on line  and got "-1.5707963267948966".
 1 : Expected output "-30.85" on line  and got "-30.849999999999998".
 1 : Expected output "-9.007199254741e+15" on line  and got "-9.007199254740991e15".
