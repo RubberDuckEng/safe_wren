@@ -1,1 +1,56 @@
-[wren_c/test/api/resolution line 2] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "Resolution"
+01: "noResolver()"
+02: "returnsNull()"
+03: "changesString()"
+04: "shared()"
+05: "importer()"
+Code:
+00: Constant(0: "Resolution")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "noResolver()")
+06: Load(Module, Null)
+07: Method(static, noResolver())
+08: Constant(2: "returnsNull()")
+09: Load(Module, Null)
+10: Method(static, returnsNull())
+11: Constant(3: "changesString()")
+12: Load(Module, Null)
+13: Method(static, changesString())
+14: Constant(4: "shared()")
+15: Load(Module, Null)
+16: Method(static, shared())
+17: Constant(5: "importer()")
+18: Load(Module, Null)
+19: Method(static, importer())
+20: Load(Module, Class("System"))
+21: Load(Module, Null)
+22: Call(Method, noResolver())
+23: Call(Method, print(_))
+24: Pop
+25: Load(Module, Class("System"))
+26: Load(Module, Null)
+27: Call(Method, returnsNull())
+28: Call(Method, print(_))
+29: Pop
+30: Load(Module, Class("System"))
+31: Load(Module, Null)
+32: Call(Method, changesString())
+33: Call(Method, print(_))
+34: Pop
+35: Load(Module, Class("System"))
+36: Load(Module, Null)
+37: Call(Method, shared())
+38: Call(Method, print(_))
+39: Pop
+40: Load(Module, Class("System"))
+41: Load(Module, Null)
+42: Call(Method, importer())
+43: Call(Method, print(_))
+44: Pop
+45: EndModule
+46: Return
+47: End

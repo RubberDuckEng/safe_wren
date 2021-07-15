@@ -1,1 +1,19 @@
-[wren_c/test/api/call_calls_foreign line 7] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "CallCallsForeign"
+01: "api()"
+02: Fn(call(_))
+Code:
+00: Constant(0: "CallCallsForeign")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "api()")
+06: Load(Module, Null)
+07: Method(static, api())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, call(_))
+11: EndModule
+12: Return
+13: End

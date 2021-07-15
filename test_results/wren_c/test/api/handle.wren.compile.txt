@@ -1,1 +1,15 @@
-[wren_c/test/api/handle line 2] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "Handle"
+01: "value=_"
+Code:
+00: Constant(0: "Handle")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "value=_")
+06: Load(Module, Null)
+07: Method(static, value=_)
+08: EndModule
+09: Return
+10: End

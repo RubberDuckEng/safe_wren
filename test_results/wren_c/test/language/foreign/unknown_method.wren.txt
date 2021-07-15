@@ -1,6 +1,3 @@
 Expected runtime error "Could not find foreign method 'someUnknownMethod' for class Foo in module './test/language/foreign/unknown_method'." and got:
-
-Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[wren_c/test/language/foreign/unknown_method line 2] Error at 'someUnknownMethod': Expect '{' to begin method body.
-
+Could not find foreign method 'someUnknownMethod' for class Foo in module 'wren_c/test/language/foreign/unknown_method'.
+Expected runtime error on line 2 but was on line 4.

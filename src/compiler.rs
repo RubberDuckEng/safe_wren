@@ -108,6 +108,7 @@ pub enum Token {
     Break,
     Continue,
     Return,
+    Foreign,
     Static,
     Import,
     As,
@@ -694,6 +695,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "if" => Some(Token::If),
         "else" => Some(Token::Else),
         "construct" => Some(Token::Construct),
+        "foreign" => Some(Token::Foreign),
         "static" => Some(Token::Static),
         "import" => Some(Token::Import),
         "as" => Some(Token::As),
@@ -850,8 +852,10 @@ pub(crate) enum Ops {
     Store(Variable),
     ClassPlaceholder,
     Class(usize),
+    ForeignClass,
     Closure(usize, Vec<Upvalue>),
     Construct,
+    ForeignConstruct,
     Method(bool, usize), // METHOD_STATIC and METHOD_INSTANCE from wren_c
 
     ImportModule(String),
@@ -2596,11 +2600,21 @@ fn create_constructor(
     signature: Signature,
     initializer_symbol: usize, // Isn't this the same as signature?
 ) -> Result<(), WrenError> {
-    let mut scope = PushCompiler::push_method(ctx);
+    let is_foreign_class = ctx
+        .compiler()
+        .enclosing_class
+        .as_ref()
+        .unwrap()
+        .borrow()
+        .is_foreign_class;
 
+    let mut scope = PushCompiler::push_method(ctx);
     // Allocate the instance.
-    // FIXME: handle foreign
-    emit(scope.ctx, Ops::Construct);
+    if is_foreign_class {
+        emit(scope.ctx, Ops::ForeignConstruct);
+    } else {
+        emit(scope.ctx, Ops::Construct);
+    }
 
     // Run its initializer.
     emit(scope.ctx, Ops::Call(signature, initializer_symbol));
@@ -2941,8 +2955,8 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
     //     return method(compiler, classVariable);
     //   }
 
-    // TODO: What about foreign constructors?
-    // let is_foreign = match_current(ctx, Token::Foreign);
+    // wren_c TODO: What about foreign constructors?
+    let is_foreign = match_current(ctx, Token::Foreign)?;
     let is_static = match_current(ctx, Token::Static)?;
     ctx.compiler_mut()
         .enclosing_class
@@ -2986,15 +3000,22 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
 
         // FIXME: handle foreign.
 
-        consume_expecting(
-            scope.ctx,
-            Token::LeftCurlyBrace,
-            "Expect '{' to begin method body.",
-        )?;
-        finish_body(scope.ctx)?;
-        let compiler = scope.pop();
-        // FIXME: Where does the closure go?
-        end_compiler(scope.ctx, compiler, signature.arity, signature.full_name())?;
+        if !is_foreign {
+            consume_expecting(
+                scope.ctx,
+                Token::LeftCurlyBrace,
+                "Expect '{' to begin method body.",
+            )?;
+            finish_body(scope.ctx)?;
+            let compiler = scope.pop();
+            // FIXME: Where does the closure go?
+            end_compiler(scope.ctx, compiler, signature.arity, signature.full_name())?;
+        }
+    }
+
+    // Outside the scope block so we can emit to the outer compiler:
+    if is_foreign {
+        emit_constant(ctx, Value::from_string(signature.full_name()))?;
     }
 
     // Define the method. For a constructor, this defines the instance
@@ -3042,7 +3063,12 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
 
     // Store a placeholder for the number of fields argument. We don't know the
     // count until we've compiled all the methods to see which fields are used.
-    let class_instruction = emit(ctx, Ops::ClassPlaceholder);
+    let class_instruction = if !is_foreign {
+        emit(ctx, Ops::ClassPlaceholder)
+    } else {
+        emit(ctx, Ops::ForeignClass);
+        usize::MAX // Unused
+    };
 
     // Store it in its name. (in the module case)
     define_variable(ctx, class_symbol);
@@ -3100,16 +3126,18 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
         //   }
 
         // FIXME::Clear symbol tables for tracking field and method names.
-        let num_fields = scope
-            .ctx
-            .compiler()
-            .enclosing_class
-            .as_ref()
-            .unwrap()
-            .borrow()
-            .fields
-            .count();
-        scope.ctx.compiler_mut().code[class_instruction] = Ops::Class(num_fields);
+        if !is_foreign {
+            let num_fields = scope
+                .ctx
+                .compiler()
+                .enclosing_class
+                .as_ref()
+                .unwrap()
+                .borrow()
+                .fields
+                .count();
+            scope.ctx.compiler_mut().code[class_instruction] = Ops::Class(num_fields);
+        }
         scope.pop(); // Making explicit what leaving the block is about to do.
     }
     Ok(())
@@ -3121,6 +3149,9 @@ fn definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
     if match_current(ctx, Token::Class)? {
         return class_definition(ctx, false);
+    } else if match_current(ctx, Token::Foreign)? {
+        consume_expecting(ctx, Token::Class, "Expect 'class' after 'foreign'.")?;
+        return class_definition(ctx, true);
     }
 
     // Fall through to the "statement" case.
@@ -3269,6 +3300,7 @@ impl Token {
                 signature: Some(constructor_signature),
                 precedence: Precedence::None,
             },
+            Token::Foreign => GrammarRule::unused(),
             Token::Static => GrammarRule::unused(),
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),

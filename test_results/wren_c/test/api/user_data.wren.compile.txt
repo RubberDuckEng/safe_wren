@@ -1,1 +1,20 @@
-[wren_c/test/api/user_data line 2] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "UserData"
+01: "test"
+Code:
+00: Constant(0: "UserData")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "test")
+06: Load(Module, Null)
+07: Method(static, test)
+08: Load(Module, Class("System"))
+09: Load(Module, Null)
+10: Call(Getter, test)
+11: Call(Method, print(_))
+12: Pop
+13: EndModule
+14: Return
+15: End

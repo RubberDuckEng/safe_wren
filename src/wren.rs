@@ -6,7 +6,7 @@ pub static WREN_VERSION_STRING: &str = "wren_rust-0.1";
 
 // A function callable from Wren code, but implemented in another language.
 // FIXME: How does this report errors?
-type WrenForeignMethodFn = fn(vm: &WrenVM);
+pub type WrenForeignMethodFn = fn(vm: &WrenVM);
 
 // Gives the host a chance to canonicalize the imported module name,
 // potentially taking into account the (previously resolved) name of the module
@@ -61,6 +61,24 @@ pub enum WrenErrorType {
 // the name of the method or function.
 type WrenErrorFn =
     fn(vm: &WrenVM, error_type: WrenErrorType, module: &str, line: usize, message: &str);
+
+pub struct WrenForeignClassMethods {
+    // The callback invoked when the foreign object is created.
+    //
+    // This must be provided. Inside the body of this, it must call
+    // [wrenSetSlotNewForeign()] exactly once.
+    pub allocate: WrenForeignMethodFn,
+    // The callback invoked when the garbage collector is about to collect a
+    // foreign object's memory.
+    //
+    // This may be `None` if the foreign class does not need to finalize.
+    // pub finalize: Option<WrenFinalizerFn>,
+}
+
+// Returns a pair of pointers to the foreign methods used to allocate and
+// finalize the data for instances of [className] in resolved [module].
+pub type WrenBindForeignClassFn =
+    fn(vm: &WrenVM, module_name: &str, class_name: &str) -> WrenForeignClassMethods;
 
 // FIXME: derive Default is a hack for now.
 #[derive(Default)]
@@ -125,7 +143,7 @@ pub struct WrenConfiguration {
     // module and name when the class body is executed. It should return the
     // foreign functions uses to allocate and (optionally) finalize the bytes
     // stored in the foreign object when an instance is created.
-    // bind_foreign_class_fn: WrenBindForeignClassFn,
+    pub bind_foreign_class_fn: Option<WrenBindForeignClassFn>,
 
     // The callback Wren uses to display text when `System.print()` or the other
     // related functions are called.

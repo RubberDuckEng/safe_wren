@@ -1,1 +1,259 @@
-[wren_c/test/api/maps line 6] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "ForeignClass"
+01: Fn(init new())
+02: Fn()
+03: "Maps"
+04: "newMap()"
+05: "insert()"
+06: "contains(_,_)"
+07: "contains()"
+08: "containsFalse()"
+09: "count()"
+10: "count(_)"
+11: "remove(_)"
+12: "invalidInsert(_)"
+13: "England"
+14: "Empty"
+15: 1
+16: "key"
+17: "value"
+18: "other"
+19: "data"
+20: 4
+21: "number key"
+22: "fake"
+Code:
+00: Constant(0: "ForeignClass")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new())
+11: Constant(3: "Maps")
+12: Load(Module, Class("Object"))
+13: Class(0 fields)
+14: Store(Module)
+15: Pop
+16: Constant(4: "newMap()")
+17: Load(Module, Null)
+18: Method(static, newMap())
+19: Constant(5: "insert()")
+20: Load(Module, Null)
+21: Method(static, insert())
+22: Constant(6: "contains(_,_)")
+23: Load(Module, Null)
+24: Method(static, contains(_,_))
+25: Constant(7: "contains()")
+26: Load(Module, Null)
+27: Method(static, contains())
+28: Constant(8: "containsFalse()")
+29: Load(Module, Null)
+30: Method(static, containsFalse())
+31: Constant(9: "count()")
+32: Load(Module, Null)
+33: Method(static, count())
+34: Constant(10: "count(_)")
+35: Load(Module, Null)
+36: Method(static, count(_))
+37: Constant(11: "remove(_)")
+38: Load(Module, Null)
+39: Method(static, remove(_))
+40: Constant(12: "invalidInsert(_)")
+41: Load(Module, Null)
+42: Method(static, invalidInsert(_))
+43: Load(Module, Null)
+44: Call(Method, newMap())
+45: Store(Module)
+46: Pop
+47: Load(Module, Class("System"))
+48: Load(Module, Null)
+49: Load(Module, Class("Map"))
+50: Call(Method, is(_))
+51: Call(Method, print(_))
+52: Pop
+53: Load(Module, Class("System"))
+54: Load(Module, Null)
+55: Call(Getter, count)
+56: Call(Method, print(_))
+57: Pop
+58: Load(Module, Null)
+59: Call(Method, insert())
+60: Store(Module)
+61: Pop
+62: Load(Module, Class("System"))
+63: Load(Module, Null)
+64: Constant(13: "England")
+65: Call(Subscript, [_])
+66: Call(Method, print(_))
+67: Pop
+68: Load(Module, Class("System"))
+69: Load(Module, Null)
+70: Constant(14: "Empty")
+71: Call(Subscript, [_])
+72: Call(Method, print(_))
+73: Pop
+74: Load(Module, Class("System"))
+75: Load(Module, Null)
+76: Constant(15: 1)
+77: Call(Subscript, [_])
+78: Call(Method, print(_))
+79: Pop
+80: Load(Module, Class("System"))
+81: Load(Module, Null)
+82: Boolean false
+83: Call(Subscript, [_])
+84: Call(Method, print(_))
+85: Pop
+86: Load(Module, Class("System"))
+87: Load(Module, Null)
+88: Null
+89: Call(Subscript, [_])
+90: Call(Method, print(_))
+91: Pop
+92: Load(Module, Null)
+93: Load(Module, Class("Map"))
+94: Call(Method, new())
+95: Constant(16: "key")
+96: Constant(17: "value")
+97: Call(Method, addCore_(_,_))
+98: Constant(18: "other")
+99: Constant(19: "data")
+100: Call(Method, addCore_(_,_))
+101: Call(Method, remove(_))
+102: Store(Module)
+103: Pop
+104: Load(Module, Class("System"))
+105: Load(Module, Null)
+106: Call(Method, print(_))
+107: Pop
+108: Load(Module, Null)
+109: Load(Module, Class("Map"))
+110: Call(Method, new())
+111: Call(Method, remove(_))
+112: Store(Module)
+113: Pop
+114: Load(Module, Class("System"))
+115: Load(Module, Null)
+116: Call(Method, print(_))
+117: Pop
+118: Load(Module, Class("Map"))
+119: Call(Method, new())
+120: Constant(16: "key")
+121: Constant(17: "value")
+122: Call(Method, addCore_(_,_))
+123: Constant(18: "other")
+124: Constant(19: "data")
+125: Call(Method, addCore_(_,_))
+126: Constant(20: 4)
+127: Constant(21: "number key")
+128: Call(Method, addCore_(_,_))
+129: Store(Module)
+130: Pop
+131: Load(Module, Class("System"))
+132: Load(Module, Null)
+133: Load(Module, Null)
+134: Call(Method, count(_))
+135: Call(Method, print(_))
+136: Pop
+137: Load(Module, Null)
+138: Load(Module, Null)
+139: Call(Method, remove(_))
+140: Pop
+141: Load(Module, Class("System"))
+142: Load(Module, Null)
+143: Load(Module, Null)
+144: Call(Method, count(_))
+145: Call(Method, print(_))
+146: Pop
+147: Load(Module, Null)
+148: Constant(18: "other")
+149: Call(Method, remove(_))
+150: Pop
+151: Load(Module, Class("System"))
+152: Load(Module, Null)
+153: Load(Module, Null)
+154: Call(Method, count(_))
+155: Call(Method, print(_))
+156: Pop
+157: Load(Module, Null)
+158: Call(Method, count())
+159: Store(Module)
+160: Pop
+161: Load(Module, Class("System"))
+162: Load(Module, Null)
+163: Call(Method, print(_))
+164: Pop
+165: Load(Module, Class("Map"))
+166: Call(Method, new())
+167: Constant(16: "key")
+168: Constant(17: "value")
+169: Call(Method, addCore_(_,_))
+170: Constant(18: "other")
+171: Constant(19: "data")
+172: Call(Method, addCore_(_,_))
+173: Constant(20: 4)
+174: Constant(21: "number key")
+175: Call(Method, addCore_(_,_))
+176: Store(Module)
+177: Pop
+178: Load(Module, Class("System"))
+179: Load(Module, Null)
+180: Load(Module, Null)
+181: Constant(16: "key")
+182: Call(Method, contains(_,_))
+183: Call(Method, print(_))
+184: Pop
+185: Load(Module, Class("System"))
+186: Load(Module, Null)
+187: Load(Module, Null)
+188: Constant(22: "fake")
+189: Call(Method, contains(_,_))
+190: Call(Method, print(_))
+191: Pop
+192: Load(Module, Class("System"))
+193: Load(Module, Null)
+194: Load(Module, Null)
+195: Constant(18: "other")
+196: Call(Method, contains(_,_))
+197: Call(Method, print(_))
+198: Pop
+199: Load(Module, Null)
+200: Load(Module, Null)
+201: Call(Method, remove(_))
+202: Pop
+203: Load(Module, Class("System"))
+204: Load(Module, Null)
+205: Load(Module, Null)
+206: Constant(16: "key")
+207: Call(Method, contains(_,_))
+208: Call(Method, print(_))
+209: Pop
+210: Load(Module, Null)
+211: Constant(18: "other")
+212: Call(Method, remove(_))
+213: Pop
+214: Load(Module, Class("System"))
+215: Load(Module, Null)
+216: Load(Module, Null)
+217: Constant(18: "other")
+218: Call(Method, contains(_,_))
+219: Call(Method, print(_))
+220: Pop
+221: Load(Module, Class("System"))
+222: Load(Module, Null)
+223: Call(Method, contains())
+224: Call(Method, print(_))
+225: Pop
+226: Load(Module, Class("System"))
+227: Load(Module, Null)
+228: Call(Method, containsFalse())
+229: Call(Method, print(_))
+230: Pop
+231: EndModule
+232: Return
+233: End

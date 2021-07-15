@@ -1,4 +1,1 @@
-Unexpected error:
-[wren_c/test/language/class/field_in_foreign_class line 1] Error at 'class': Expect end of file.
-Missing expected error on line 4.
 Missing expected error on line 7.

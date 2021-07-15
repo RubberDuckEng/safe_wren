@@ -1,1 +1,21 @@
-[wren_c/test/language/class/foreign_class_inherit_fields line 7] Error at 'class': Expect end of file.
+Constants:
+00: "Foo"
+01: Fn(method())
+02: "Bar"
+Code:
+00: Constant(0: "Foo")
+01: Load(Module, Class("Object"))
+02: Class(1 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, method())
+08: Constant(2: "Bar")
+09: Load(Module, Null)
+10: ForeignClass
+11: Store(Module)
+12: Pop
+13: EndModule
+14: Return
+15: End

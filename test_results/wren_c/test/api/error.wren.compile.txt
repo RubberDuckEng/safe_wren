@@ -1,1 +1,39 @@
-[wren_c/test/api/error line 2] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "Error"
+01: "runtimeError"
+02: Fn(new(_) block argument)
+Code:
+00: Constant(0: "Error")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "runtimeError")
+06: Load(Module, Null)
+07: Method(static, runtimeError)
+08: Load(Module, Class("Fiber"))
+09: Closure(2, [])
+10: Call(Method, new(_))
+11: Store(Module)
+12: Pop
+13: Load(Module, Null)
+14: Call(Method, try())
+15: Store(Module)
+16: Pop
+17: Load(Module, Class("System"))
+18: Load(Module, Null)
+19: Call(Method, print(_))
+20: Pop
+21: Load(Module, Class("System"))
+22: Load(Module, Null)
+23: Call(Getter, isDone)
+24: Call(Method, print(_))
+25: Pop
+26: Load(Module, Class("System"))
+27: Load(Module, Null)
+28: Call(Getter, error)
+29: Call(Method, print(_))
+30: Pop
+31: EndModule
+32: Return
+33: End

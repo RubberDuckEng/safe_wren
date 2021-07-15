@@ -1,1 +1,1 @@
-[wren_c/test/language/foreign/foreign_after_static line 2] Error at 'method': Expect '{' to begin method body.
+[wren_c/test/language/foreign/foreign_after_static line 2] Error at 'foreign': Expect method definition.

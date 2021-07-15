@@ -8,7 +8,7 @@ use std::{str, usize};
 
 use crate::compiler::{compile_in_module, wren_is_local_name, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-use crate::wren::{DebugLevel, WrenConfiguration};
+use crate::wren::{DebugLevel, WrenConfiguration, WrenForeignMethodFn};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -365,7 +365,7 @@ pub struct SymbolTable {
 impl SymbolTable {
     // This is called methodSymbol or wrenSymbolTableEnsure in wren_c
     pub fn ensure_symbol(&mut self, name: &str) -> usize {
-        if let Some(index) = self.names.iter().position(|n| n.eq(name)) {
+        if let Some(index) = self.symbol_for_name(name) {
             return index;
         }
 
@@ -374,7 +374,11 @@ impl SymbolTable {
         self.names.len() - 1
     }
 
-    pub fn lookup_symbol(&self, symbol: usize) -> String {
+    fn symbol_for_name(&self, name: &str) -> Option<usize> {
+        self.names.iter().position(|n| n.eq(name))
+    }
+
+    pub fn name_for_symbol(&self, symbol: usize) -> String {
         match self.names.get(symbol) {
             None => "<not found>".into(),
             Some(name) => name.clone(),
@@ -557,6 +561,10 @@ pub struct WrenVM {
     pub(crate) start_time: std::time::Instant,
     pub(crate) last_imported_module: Option<Handle<Module>>,
     pub(crate) config: WrenConfiguration,
+
+    // Args for the foreign function being called.
+    // wren_c calls this apiStack
+    foreign_args: Option<Vec<Value>>,
 }
 
 pub trait Clear {
@@ -720,14 +728,14 @@ pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<
     }
 }
 
-fn wren_new_single_class(num_fields: usize, name: String) -> Handle<ObjClass> {
+fn wren_new_single_class(source: ClassSource, name: String) -> Handle<ObjClass> {
     // the wren_c version does a lot more?  Unclear if this should.
     new_handle(ObjClass {
         name: name,
         methods: Vec::new(),
         class: None,
         superclass: None,
-        num_fields: num_fields,
+        source: source,
     })
 }
 
@@ -737,7 +745,7 @@ fn wren_new_single_class(num_fields: usize, name: String) -> Handle<ObjClass> {
 // Keeping it for now in case it's useful later.
 fn wren_new_class_with_class_class(
     superclass: &Handle<ObjClass>,
-    num_fields: usize,
+    source: ClassSource,
     name_string: String,
     class_class: &Handle<ObjClass>,
 ) -> Result<Handle<ObjClass>> {
@@ -746,14 +754,14 @@ fn wren_new_class_with_class_class(
     let metaclass_name_string = format!("{} metaclass", name_string);
     // let metaclass_name = Value::from_string(metaclass_name_string);
 
-    let metaclass = wren_new_single_class(0, metaclass_name_string);
+    let metaclass = wren_new_single_class(ClassSource::Internal, metaclass_name_string);
     metaclass.borrow_mut().class = Some(class_class.clone());
 
     // Metaclasses always inherit Class and do not parallel the non-metaclass
     // hierarchy.
     wren_bind_superclass(&mut metaclass.borrow_mut(), class_class);
 
-    let class = wren_new_single_class(num_fields, name_string);
+    let class = wren_new_single_class(source, name_string);
     class.borrow_mut().class = Some(metaclass);
     wren_bind_superclass(&mut class.borrow_mut(), superclass);
 
@@ -763,15 +771,10 @@ fn wren_new_class_with_class_class(
 pub(crate) fn wren_new_class(
     vm: &WrenVM,
     superclass: &Handle<ObjClass>,
-    num_fields: usize,
+    source: ClassSource,
     name: String,
 ) -> Result<Handle<ObjClass>> {
-    wren_new_class_with_class_class(
-        superclass,
-        num_fields,
-        name,
-        &vm.class_class.as_ref().unwrap(),
-    )
+    wren_new_class_with_class_class(superclass, source, name, &vm.class_class.as_ref().unwrap())
 }
 
 fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<ObjClass>> {
@@ -822,7 +825,36 @@ fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<Obj
     Ok(superclass)
 }
 
-fn create_class(vm: &WrenVM, frame: &mut CallFrame, num_fields: usize) -> Result<()> {
+fn bind_foreign_class(vm: &mut WrenVM, class: &mut ObjClass, module: &Module) {
+    // Add the symbol even if there is no allocator so we can ensure that the
+    // symbol itself is always in the symbol table.
+    let allocate_symbol = vm.methods.ensure_symbol("<allocate>");
+    // Add the symbol even if there is no finalizer so we can ensure that the
+    // symbol itself is always in the symbol table.
+    // let finalize_symbol = vm.methods.ensure_symbol("<finalize>");
+
+    // Check the optional built-in module first so the host can override it.
+    if let Some(bind_class) = vm.config.bind_foreign_class_fn {
+        let methods = bind_class(vm, &module.name, &class.name);
+        class.set_method(allocate_symbol, Method::ForeignFunction(methods.allocate));
+        // if Some(finalize) = methods.finalize {
+        //     class.set_method(finalize_symbol, Method::ForeignFunction(finalize));
+        // }
+    } else {
+        // wren_c does not, but we could error here, since we know we have
+        // no <allocate> for the class.
+        // assert!("Allocator required for foreign classes");
+    }
+
+    // FIXME: Support opt_random.
+}
+
+fn create_class(
+    vm: &mut WrenVM,
+    frame: &mut CallFrame,
+    source: ClassSource,
+    module: &Module,
+) -> Result<()> {
     // Pull the name and superclass off the stack.
     let superclass_value = frame.pop()?;
     let name_value = frame.pop()?;
@@ -832,7 +864,12 @@ fn create_class(vm: &WrenVM, frame: &mut CallFrame, num_fields: usize) -> Result
         .ok_or_else(|| VMError::from_str("Class name not string."))?;
     let superclass = validate_superclass(&name, superclass_value)?;
 
-    let class = wren_new_class(vm, &superclass, num_fields, name)?;
+    let class = wren_new_class(vm, &superclass, source.clone(), name)?;
+    match source {
+        ClassSource::Foreign => bind_foreign_class(vm, &mut class.borrow_mut(), module),
+        _ => (),
+    }
+    // After bind_foreign_class to avoid a clone, should not make a differnce.
     frame.push(Value::Class(class));
     Ok(())
 }
@@ -905,7 +942,7 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
         methods: Vec::new(),
         class: None,
         superclass: None,
-        num_fields: 0,
+        source: ClassSource::Internal,
     });
 
     wren_define_variable(module, name, Value::Class(class.clone())).expect("defined");
@@ -932,8 +969,26 @@ enum FunctionNext {
     FiberAction(FiberAction),
 }
 
-fn wren_new_instance(_vm: &mut WrenVM, class: Handle<ObjClass>) -> Value {
-    Value::Instance(new_handle(ObjInstance::new(class)))
+// Looks up a foreign method in [moduleName] on [className] with [signature].
+//
+// This will try the host's foreign method binder first. If that fails, it
+// falls back to handling the built-in modules.
+fn find_foreign_method(
+    vm: &WrenVM,
+    module_name: &str,
+    class_name: &str,
+    is_static: bool,
+    signature: &str,
+) -> Option<WrenForeignMethodFn> {
+    if let Some(bind_foreign_method) = vm.config.bind_foreign_method_fn {
+        if let Some(method_fn) =
+            bind_foreign_method(vm, module_name, class_name, is_static, signature)
+        {
+            return Some(method_fn);
+        }
+    }
+    // FIXME: support opt_meta and opt_random modules.
+    None
 }
 
 // Defines [methodValue] as a method on [classObj].
@@ -944,17 +999,35 @@ fn wren_new_instance(_vm: &mut WrenVM, class: Handle<ObjClass>) -> Value {
 // Aborts the current fiber if the method is a foreign method that could not be
 // found.
 fn bind_method(
-    _vm: &mut WrenVM,
+    vm: &mut WrenVM,
     is_static: bool,
     symbol: usize,
+    module: &Module,
     class: &mut ObjClass,
     method_value: Value,
 ) -> Result<()> {
-    let method = Method::Block(
-        method_value
-            .try_into_closure()
-            .ok_or_else(|| VMError::from_str("method body not closure"))?,
-    );
+    let method = match method_value {
+        Value::String(signature) => {
+            let module_name = &module.name;
+            let class_name = &class.name;
+            let foreign_fn =
+                find_foreign_method(vm, module_name, class_name, is_static, &signature)
+                    .ok_or_else(|| {
+                        VMError::from_string(format!(
+                            "Could not find foreign method '{}' for class {} in module '{}'.",
+                            signature, class_name, module_name
+                        ))
+                    })?;
+            Method::ForeignFunction(foreign_fn)
+        }
+        Value::Closure(closure) => Method::Block(closure),
+        // Is this a compiler error?  Should this panic?
+        _ => {
+            return Err(VMError::from_str(
+                "method value not a string (foreign) or closure (block",
+            ))
+        }
+    };
 
     // FIXME: Need to patch the closure code!
     // Patch up the bytecode now that we know the superclass.
@@ -1037,6 +1110,7 @@ impl WrenVM {
             start_time: std::time::Instant::now(),
             last_imported_module: None,
             config: config,
+            foreign_args: None,
         };
 
         // FIXME: This shouldn't be needed anymore.  We no longer
@@ -1119,7 +1193,7 @@ impl WrenVM {
                 _ => {
                     println!(
                         "{} ({}) => {:?}",
-                        self.methods.lookup_symbol(symbol),
+                        self.methods.name_for_symbol(symbol),
                         symbol,
                         method
                     );
@@ -1129,7 +1203,7 @@ impl WrenVM {
     }
 
     fn method_not_found(&self, class: &ObjClass, symbol: usize) -> VMError {
-        let name = self.methods.lookup_symbol(symbol);
+        let name = self.methods.name_for_symbol(symbol);
         VMError::from_string(format!("{} does not implement '{}'.", class.name, name))
     }
 
@@ -1157,6 +1231,19 @@ impl WrenVM {
                 .map(frame_info)
                 .collect(),
         }
+    }
+
+    fn call_foreign(&mut self, foreign: &WrenForeignMethodFn, args: Vec<Value>) -> Value {
+        assert!(
+            self.foreign_args.is_none(),
+            "Cannot already be in foreign call."
+        );
+        self.foreign_args = Some(args);
+        foreign(self);
+        // Take the value w/o copy
+        let args = self.foreign_args.take();
+        let value = args.unwrap().into_iter().nth(0).unwrap();
+        value
     }
 
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
@@ -1292,6 +1379,38 @@ impl WrenVM {
         }
     }
 
+    fn create_foreign(&mut self, class_handle: &Handle<ObjClass>) -> Result<Value> {
+        // wren_c makes these all asserts, but I'm not sure why?
+        fn vm_assert(condition: bool, msg: &str) -> Result<()> {
+            if condition {
+                Err(VMError::from_str(msg))
+            } else {
+                Ok(())
+            }
+        }
+
+        let class = class_handle.borrow();
+        vm_assert(class.is_foreign(), "Class must be a foreign class.")?;
+
+        // wren_c TODO: Don't look up every time.
+        let symbol = self
+            .methods
+            .symbol_for_name("<allocate>")
+            .ok_or_else(|| VMError::from_str("Should have defined <allocate> symbol."))?;
+
+        vm_assert(class.methods.len() > symbol, "Class should have allocator.")?;
+        let method = &class.methods[symbol];
+
+        // Pass the constructor arguments to the allocator as well.
+        match method {
+            Method::ForeignFunction(foreign) => {
+                let args = vec![Value::Class(class_handle.clone())];
+                Ok(self.call_foreign(foreign, args))
+            }
+            _ => Err(VMError::from_str("Allocator should be foreign.")),
+        }
+    }
+
     fn run_frame_in_fiber(
         &mut self,
         frame: &mut CallFrame,
@@ -1375,6 +1494,9 @@ impl WrenVM {
                                 stack: args,
                             }));
                         }
+                        Method::ForeignFunction(foreign) => {
+                            self.call_foreign(foreign, args);
+                        }
                         Method::Block(closure) => {
                             // Pushes a new stack frame.
                             // wren_rust (currently) keeps a separate stack
@@ -1401,8 +1523,13 @@ impl WrenVM {
                 Ops::Construct => {
                     let this = frame.stack[0].clone();
                     let class = this.try_into_class().expect("'this' should be a class.");
-                    let instance = wren_new_instance(self, class);
+                    let instance = Value::Instance(new_handle(ObjInstance::new(class)));
                     frame.stack[0] = instance;
+                }
+                Ops::ForeignConstruct => {
+                    let this = frame.stack[0].clone();
+                    let class = this.try_into_class().expect("'this' should be a class.");
+                    frame.stack[0] = self.create_foreign(&class)?;
                 }
                 Ops::Closure(constant_index, _upvalues) => {
                     let fn_value = fn_obj.constants[*constant_index].clone();
@@ -1424,8 +1551,15 @@ impl WrenVM {
                     return Ok(FunctionNext::Return(frame.pop()?));
                 }
                 Ops::Class(num_fields) => {
-                    // FIXME: Pass module?
-                    create_class(self, frame, *num_fields)?;
+                    create_class(
+                        self,
+                        frame,
+                        ClassSource::Source(*num_fields),
+                        &fn_obj.module.borrow(),
+                    )?;
+                }
+                Ops::ForeignClass => {
+                    create_class(self, frame, ClassSource::Foreign, &fn_obj.module.borrow())?;
                 }
                 Ops::Load(variable) => {
                     let value = match variable.scope {
@@ -1472,7 +1606,14 @@ impl WrenVM {
                     // wren_c peeks first then drops after bind, unclear why
                     let class = frame.pop()?.try_into_class().unwrap();
                     let method = frame.pop()?;
-                    bind_method(self, *is_static, *symbol, &mut class.borrow_mut(), method)?;
+                    bind_method(
+                        self,
+                        *is_static,
+                        *symbol,
+                        &fn_obj.module.borrow(),
+                        &mut class.borrow_mut(),
+                        method,
+                    )?;
                 }
                 Ops::End => {
                     panic!("Compile error: END instruction should never be reached.");
@@ -1658,7 +1799,7 @@ fn op_debug_string(
                 "Call({:?}, {}{})",
                 sig.call_type,
                 unstable_num_arrow(*symbol),
-                methods.lookup_symbol(*symbol)
+                methods.name_for_symbol(*symbol)
             )
         }
         Ops::Load(v) => match v.scope {
@@ -1692,17 +1833,19 @@ fn op_debug_string(
         Ops::OrPlaceholder => format!("{:?}", op),
         Ops::ClassPlaceholder => format!("{:?}", op),
         Ops::Construct => format!("{:?}", op),
+        Ops::ForeignConstruct => format!("{:?}", op),
         Ops::Method(is_static, symbol) => {
             let dispatch = if *is_static { "static" } else { "instance" };
             format!(
                 "Method({}, {}{})",
                 dispatch,
                 unstable_num_arrow(*symbol),
-                methods.lookup_symbol(*symbol)
+                methods.name_for_symbol(*symbol)
             )
         }
         Ops::Closure(_, _) => format!("{:?}", op),
         Ops::Class(num_fields) => format!("Class({} fields)", num_fields),
+        Ops::ForeignClass => format!("{:?}", op),
         Ops::Jump(_) => format!("{:?}", op),
         Ops::Loop(_) => format!("{:?}", op),
         Ops::Pop => format!("{:?}", op),
@@ -1846,7 +1989,11 @@ pub(crate) struct ObjInstance {
 
 impl ObjInstance {
     pub(crate) fn new(class: Handle<ObjClass>) -> ObjInstance {
-        let fields = vec![Value::Null; class.borrow().num_fields];
+        let num_fields = class
+            .borrow()
+            .num_fields()
+            .expect("Compiler emitted Construct for non-source class.");
+        let fields = vec![Value::Null; num_fields];
         ObjInstance {
             class_obj: class,
             fields: fields,
@@ -1902,8 +2049,8 @@ pub(crate) enum Method {
     // A primitive that handles .call on Fn.
     FunctionCall,
 
-    // A externally-defined C method.
-    //   ForeignFunction(String),
+    // A externally-defined method.
+    ForeignFunction(WrenForeignMethodFn),
 
     // A normal user-defined method.
     Block(Handle<ObjClosure>),
@@ -1918,9 +2065,25 @@ impl core::fmt::Debug for Method {
             Method::ValuePrimitive(_) => write!(f, "ValuePrimitive"),
             Method::FiberActionPrimitive(_) => write!(f, "FiberActionPrimitive"),
             Method::FunctionCall => write!(f, "FunctionCall"),
-            Method::Block(_) => write!(f, "Block"),
+            Method::Block(closure) => {
+                write!(f, "Block {}", closure.borrow().fn_obj.borrow().debug.name)
+            }
+            Method::ForeignFunction(_) => write!(f, "ForeignFunction"),
             Method::None => write!(f, "None"),
         }
+    }
+}
+#[derive(Clone)]
+pub(crate) enum ClassSource {
+    Internal,      // vm defined, no fields.
+    Source(usize), // source defined, fields allowed
+    Foreign,       // api defined, fields opaque to vm.
+}
+
+// Implement Default to allow take() to work during clear().
+impl Default for ClassSource {
+    fn default() -> Self {
+        ClassSource::Internal
     }
 }
 
@@ -1936,9 +2099,9 @@ pub struct ObjClass {
     // Class is the only class w/o a superclass, all others this is Some(class).
     pub(crate) superclass: Option<Handle<ObjClass>>,
 
-    // The number of fields needed for an instance of this class, including all
-    // of its superclass fields.
-    num_fields: usize,
+    // What created this class.  Including the number of fields it has if it
+    // was created from source, rather than internal or foreign.
+    source: ClassSource,
 
     // The table of methods that are defined in or inherited by this class.
     // Methods are called by symbol, and the symbol directly maps to an index in
@@ -1955,6 +2118,22 @@ pub struct ObjClass {
 
                              // The ClassAttribute for the class, if any
                              //   Value attributes;
+}
+
+impl ObjClass {
+    fn num_fields(&self) -> Option<usize> {
+        match self.source {
+            ClassSource::Source(num_fields) => Some(num_fields),
+            _ => None, // Not a valid question to ask.
+        }
+    }
+
+    fn is_foreign(&self) -> bool {
+        match self.source {
+            ClassSource::Foreign => true,
+            _ => false,
+        }
+    }
 }
 
 // FIXME: This is a hack?  for object_is
@@ -1983,12 +2162,17 @@ impl core::fmt::Debug for ObjClass {
 }
 
 impl ObjClass {
+    // wren_c calls this wrenBindMethod
     pub(crate) fn set_method(&mut self, symbol: usize, method: Method) {
         if symbol >= self.methods.len() {
             self.methods.resize(symbol + 1, Method::None);
         }
         self.methods[symbol] = method;
     }
+
+    // pub(crate) fn lookup_method(&self, symbol: usize) -> Option<&Method> {
+    //     self.methods.get(symbol)
+    // }
 }
 
 impl Obj for ObjClass {

@@ -1,1 +1,33 @@
-[wren_c/test/api/reset_stack_after_foreign_construct line 6] Error at 'class': Expect end of file.
+Constants:
+00: "ResetStackForeign"
+01: Fn(init new(_))
+02: Fn()
+03: "Test"
+04: Fn(callConstruct())
+05: Fn(afterConstruct(_,_))
+Code:
+00: Constant(0: "ResetStackForeign")
+01: Load(Module, Class("Object"))
+02: ForeignClass
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new(_))
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new(_))
+11: Constant(3: "Test")
+12: Load(Module, Class("Object"))
+13: Class(0 fields)
+14: Store(Module)
+15: Pop
+16: Closure(4, [])
+17: Load(Module, Null)
+18: Method(static, callConstruct())
+19: Closure(5, [])
+20: Load(Module, Null)
+21: Method(static, afterConstruct(_,_))
+22: EndModule
+23: Return
+24: End

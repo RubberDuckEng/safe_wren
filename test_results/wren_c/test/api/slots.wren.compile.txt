@@ -1,1 +1,213 @@
-[wren_c/test/api/slots line 2] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "Slots"
+01: "noSet"
+02: "getSlots(_,_,_,_,_)"
+03: "setSlots(_,_,_,_,_)"
+04: "slotTypes(_,_,_,_,_,_,_,_)"
+05: "ensure()"
+06: "ensureOutsideForeign()"
+07: "getListCount(_)"
+08: "getListElement(_,_)"
+09: "getMapValue(_,_)"
+10: "ForeignType"
+11: Fn(init new())
+12: Fn()
+13: "value"
+14: "by\0te"
+15: 1.5
+16: "str"
+17: 0
+18: 1.2
+19: 1
+20: 2
+21: "Huey"
+22: "Dewey"
+23: "Louie"
+24: "England"
+25: "London"
+26: "Scotland"
+27: "Edinburgh"
+28: "Wales"
+29: "Cardiff"
+30: "N. Ireland"
+31: "Belfast"
+32: "S. Ireland"
+Code:
+00: Constant(0: "Slots")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "noSet")
+06: Load(Module, Null)
+07: Method(static, noSet)
+08: Constant(2: "getSlots(_,_,_,_,_)")
+09: Load(Module, Null)
+10: Method(static, getSlots(_,_,_,_,_))
+11: Constant(3: "setSlots(_,_,_,_,_)")
+12: Load(Module, Null)
+13: Method(static, setSlots(_,_,_,_,_))
+14: Constant(4: "slotTypes(_,_,_,_,_,_,_,_)")
+15: Load(Module, Null)
+16: Method(static, slotTypes(_,_,_,_,_,_,_,_))
+17: Constant(5: "ensure()")
+18: Load(Module, Null)
+19: Method(static, ensure())
+20: Constant(6: "ensureOutsideForeign()")
+21: Load(Module, Null)
+22: Method(static, ensureOutsideForeign())
+23: Constant(7: "getListCount(_)")
+24: Load(Module, Null)
+25: Method(static, getListCount(_))
+26: Constant(8: "getListElement(_,_)")
+27: Load(Module, Null)
+28: Method(static, getListElement(_,_))
+29: Constant(9: "getMapValue(_,_)")
+30: Load(Module, Null)
+31: Method(static, getMapValue(_,_))
+32: Constant(10: "ForeignType")
+33: Load(Module, Class("Object"))
+34: ForeignClass
+35: Store(Module)
+36: Pop
+37: Closure(11, [])
+38: Load(Module, Null)
+39: Method(instance, init new())
+40: Closure(12, [])
+41: Load(Module, Null)
+42: Method(static, new())
+43: Load(Module, Class("System"))
+44: Load(Module, Null)
+45: Call(Getter, noSet)
+46: Load(Module, Null)
+47: Call(Method, ==(_))
+48: Call(Method, print(_))
+49: Pop
+50: Load(Module, Class("List"))
+51: Call(Method, new())
+52: Constant(13: "value")
+53: Call(Method, addCore_(_))
+54: Store(Module)
+55: Pop
+56: Load(Module, Class("System"))
+57: Load(Module, Null)
+58: Boolean true
+59: Constant(14: "by\0te")
+60: Constant(15: 1.5)
+61: Constant(16: "str")
+62: Load(Module, Null)
+63: Call(Method, getSlots(_,_,_,_,_))
+64: Load(Module, Null)
+65: Call(Method, ==(_))
+66: Call(Method, print(_))
+67: Pop
+68: Load(Module, Class("System"))
+69: Load(Module, Null)
+70: Load(Module, Null)
+71: Constant(17: 0)
+72: Constant(17: 0)
+73: Constant(17: 0)
+74: Constant(17: 0)
+75: Call(Method, setSlots(_,_,_,_,_))
+76: Load(Module, Null)
+77: Call(Method, ==(_))
+78: Call(Method, print(_))
+79: Pop
+80: Load(Module, Class("System"))
+81: Load(Module, Null)
+82: Boolean false
+83: Load(Module, Null)
+84: Call(Method, new())
+85: Load(Module, Class("List"))
+86: Call(Method, new())
+87: Load(Module, Class("Map"))
+88: Call(Method, new())
+89: Null
+90: Constant(18: 1.2)
+91: Constant(16: "str")
+92: Constant(19: 1)
+93: Constant(20: 2)
+94: Call(Method, ..(_))
+95: Call(Method, slotTypes(_,_,_,_,_,_,_,_))
+96: Call(Method, print(_))
+97: Pop
+98: Load(Module, Class("System"))
+99: Load(Module, Null)
+100: Call(Method, ensure())
+101: Call(Method, print(_))
+102: Pop
+103: Load(Module, Class("System"))
+104: Load(Module, Null)
+105: Call(Method, ensureOutsideForeign())
+106: Call(Method, print(_))
+107: Pop
+108: Load(Module, Class("List"))
+109: Call(Method, new())
+110: Constant(21: "Huey")
+111: Call(Method, addCore_(_))
+112: Constant(22: "Dewey")
+113: Call(Method, addCore_(_))
+114: Constant(23: "Louie")
+115: Call(Method, addCore_(_))
+116: Store(Module)
+117: Pop
+118: Load(Module, Class("System"))
+119: Load(Module, Null)
+120: Load(Module, Null)
+121: Call(Method, getListCount(_))
+122: Call(Method, print(_))
+123: Pop
+124: Load(Module, Class("System"))
+125: Load(Module, Null)
+126: Load(Module, Null)
+127: Constant(17: 0)
+128: Call(Method, getListElement(_,_))
+129: Call(Method, print(_))
+130: Pop
+131: Load(Module, Class("System"))
+132: Load(Module, Null)
+133: Load(Module, Null)
+134: Constant(19: 1)
+135: Call(Method, getListElement(_,_))
+136: Call(Method, print(_))
+137: Pop
+138: Load(Module, Class("Map"))
+139: Call(Method, new())
+140: Constant(24: "England")
+141: Constant(25: "London")
+142: Call(Method, addCore_(_,_))
+143: Constant(26: "Scotland")
+144: Constant(27: "Edinburgh")
+145: Call(Method, addCore_(_,_))
+146: Constant(28: "Wales")
+147: Constant(29: "Cardiff")
+148: Call(Method, addCore_(_,_))
+149: Constant(30: "N. Ireland")
+150: Constant(31: "Belfast")
+151: Call(Method, addCore_(_,_))
+152: Store(Module)
+153: Pop
+154: Load(Module, Class("System"))
+155: Load(Module, Null)
+156: Load(Module, Null)
+157: Constant(24: "England")
+158: Call(Method, getMapValue(_,_))
+159: Call(Method, print(_))
+160: Pop
+161: Load(Module, Class("System"))
+162: Load(Module, Null)
+163: Load(Module, Null)
+164: Constant(28: "Wales")
+165: Call(Method, getMapValue(_,_))
+166: Call(Method, print(_))
+167: Pop
+168: Load(Module, Class("System"))
+169: Load(Module, Null)
+170: Load(Module, Null)
+171: Constant(32: "S. Ireland")
+172: Call(Method, getMapValue(_,_))
+173: Call(Method, print(_))
+174: Pop
+175: EndModule
+176: Return
+177: End

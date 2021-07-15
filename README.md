@@ -26,19 +26,16 @@ with error text from any failed tests.  `test.py` will also update
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
 * Time the tests / make faster
-* Forward-declared module variables. (wren_c has this magic where all module.variables are either classes, null or numbers during compile time.  Numbers = line numbers meaning "this hasn't been declared", null = declared, and classes are declared and set to that class via class declarations.) (blocks wren_core.wren)
 * Upvalues
+* validateSuperclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
 * Map.iterate
 * foreign functions
-* remove stub_core from core initialization.
 * Give different types to Symbol, Constant, etc.
 * attributes
-* Full wren_core.wren parsing
 * Limit tests
 * Scientific notation
 * super / superclass calls
-* Fiber APIs (try, etc.)
 * static fields
 * Raw strings
 * C API

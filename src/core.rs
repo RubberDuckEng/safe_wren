@@ -1171,7 +1171,7 @@ fn create_and_define_class(
     name: &str,
     superclass: &Handle<ObjClass>,
 ) -> Handle<ObjClass> {
-    let class = wren_new_class(vm, &superclass, 0, name.into()).unwrap();
+    let class = wren_new_class(vm, &superclass, ClassSource::Internal, name.into()).unwrap();
     wren_define_variable(module, name, Value::Class(class.clone())).unwrap();
     class
 }

@@ -1,1 +1,89 @@
-[wren_c/test/api/lists line 2] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "Lists"
+01: "newList()"
+02: "insert()"
+03: "set()"
+04: "get(_,_)"
+05: 1
+06: 2
+07: 3
+08: 4
+Code:
+00: Constant(0: "Lists")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "newList()")
+06: Load(Module, Null)
+07: Method(static, newList())
+08: Constant(2: "insert()")
+09: Load(Module, Null)
+10: Method(static, insert())
+11: Constant(3: "set()")
+12: Load(Module, Null)
+13: Method(static, set())
+14: Constant(4: "get(_,_)")
+15: Load(Module, Null)
+16: Method(static, get(_,_))
+17: Load(Module, Null)
+18: Call(Method, newList())
+19: Store(Module)
+20: Pop
+21: Load(Module, Class("System"))
+22: Load(Module, Null)
+23: Load(Module, Class("List"))
+24: Call(Method, is(_))
+25: Call(Method, print(_))
+26: Pop
+27: Load(Module, Class("System"))
+28: Load(Module, Null)
+29: Call(Getter, count)
+30: Call(Method, print(_))
+31: Pop
+32: Load(Module, Class("System"))
+33: Load(Module, Null)
+34: Call(Method, insert())
+35: Call(Method, print(_))
+36: Pop
+37: Load(Module, Class("System"))
+38: Load(Module, Null)
+39: Call(Method, set())
+40: Call(Method, print(_))
+41: Pop
+42: Load(Module, Class("System"))
+43: Load(Module, Null)
+44: Load(Module, Class("List"))
+45: Call(Method, new())
+46: Constant(5: 1)
+47: Call(Method, addCore_(_))
+48: Constant(6: 2)
+49: Call(Method, addCore_(_))
+50: Constant(7: 3)
+51: Call(Method, addCore_(_))
+52: Constant(8: 4)
+53: Call(Method, addCore_(_))
+54: Constant(6: 2)
+55: Call(Method, -)
+56: Call(Method, get(_,_))
+57: Call(Method, print(_))
+58: Pop
+59: Load(Module, Class("System"))
+60: Load(Module, Null)
+61: Load(Module, Class("List"))
+62: Call(Method, new())
+63: Constant(5: 1)
+64: Call(Method, addCore_(_))
+65: Constant(6: 2)
+66: Call(Method, addCore_(_))
+67: Constant(7: 3)
+68: Call(Method, addCore_(_))
+69: Constant(8: 4)
+70: Call(Method, addCore_(_))
+71: Constant(5: 1)
+72: Call(Method, get(_,_))
+73: Call(Method, print(_))
+74: Pop
+75: EndModule
+76: Return
+77: End

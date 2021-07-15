@@ -1,1 +1,15 @@
-[wren_c/test/language/foreign/unknown_method line 2] Error at 'someUnknownMethod': Expect '{' to begin method body.
+Constants:
+00: "Foo"
+01: "someUnknownMethod"
+Code:
+00: Constant(0: "Foo")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "someUnknownMethod")
+06: Load(Module, Null)
+07: Method(instance, someUnknownMethod)
+08: EndModule
+09: Return
+10: End

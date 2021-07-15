@@ -1,1 +1,238 @@
-[wren_c/test/api/foreign_class line 2] Error at 'static': Expect '{' to begin method body.
+Constants:
+00: "ForeignClass"
+01: "finalized"
+02: "Counter"
+03: Fn(init new())
+04: Fn()
+05: "increment(_)"
+06: "value"
+07: 3.1
+08: 1.2
+09: "PointBase"
+10: Fn(inherited())
+11: "Point"
+12: Fn(init new())
+13: Fn()
+14: Fn(init new(_,_,_))
+15: Fn()
+16: "translate(_,_,_)"
+17: "toString"
+18: 1
+19: 2
+20: 3
+21: 4
+22: 5
+23: Fn(new(_) block argument)
+24: "Resource"
+25: Fn(init new())
+26: Fn()
+27: "BadClass"
+28: Fn(init new())
+29: Fn()
+30: Fn(new(_) block argument)
+Code:
+00: Constant(0: "ForeignClass")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Constant(1: "finalized")
+06: Load(Module, Null)
+07: Method(static, finalized)
+08: Constant(2: "Counter")
+09: Load(Module, Class("Object"))
+10: ForeignClass
+11: Store(Module)
+12: Pop
+13: Closure(3, [])
+14: Load(Module, Null)
+15: Method(instance, init new())
+16: Closure(4, [])
+17: Load(Module, Null)
+18: Method(static, new())
+19: Constant(5: "increment(_)")
+20: Load(Module, Null)
+21: Method(instance, increment(_))
+22: Constant(6: "value")
+23: Load(Module, Null)
+24: Method(instance, value)
+25: Load(Module, Null)
+26: Call(Method, new())
+27: Store(Module)
+28: Pop
+29: Load(Module, Class("System"))
+30: Load(Module, Null)
+31: Call(Getter, value)
+32: Call(Method, print(_))
+33: Pop
+34: Load(Module, Null)
+35: Constant(7: 3.1)
+36: Call(Method, increment(_))
+37: Pop
+38: Load(Module, Class("System"))
+39: Load(Module, Null)
+40: Call(Getter, value)
+41: Call(Method, print(_))
+42: Pop
+43: Load(Module, Null)
+44: Constant(8: 1.2)
+45: Call(Method, increment(_))
+46: Pop
+47: Load(Module, Class("System"))
+48: Load(Module, Null)
+49: Call(Getter, value)
+50: Call(Method, print(_))
+51: Pop
+52: Constant(9: "PointBase")
+53: Load(Module, Class("Object"))
+54: Class(0 fields)
+55: Store(Module)
+56: Pop
+57: Closure(10, [])
+58: Load(Module, Null)
+59: Method(instance, inherited())
+60: Constant(11: "Point")
+61: Load(Module, Null)
+62: ForeignClass
+63: Store(Module)
+64: Pop
+65: Closure(12, [])
+66: Load(Module, Null)
+67: Method(instance, init new())
+68: Closure(13, [])
+69: Load(Module, Null)
+70: Method(static, new())
+71: Closure(14, [])
+72: Load(Module, Null)
+73: Method(instance, init new(_,_,_))
+74: Closure(15, [])
+75: Load(Module, Null)
+76: Method(static, new(_,_,_))
+77: Constant(16: "translate(_,_,_)")
+78: Load(Module, Null)
+79: Method(instance, translate(_,_,_))
+80: Constant(17: "toString")
+81: Load(Module, Null)
+82: Method(instance, toString)
+83: Load(Module, Null)
+84: Constant(18: 1)
+85: Constant(19: 2)
+86: Constant(20: 3)
+87: Call(Method, new(_,_,_))
+88: Store(Module)
+89: Pop
+90: Load(Module, Class("System"))
+91: Load(Module, Null)
+92: Call(Method, print(_))
+93: Pop
+94: Load(Module, Null)
+95: Constant(20: 3)
+96: Constant(21: 4)
+97: Constant(22: 5)
+98: Call(Method, translate(_,_,_))
+99: Pop
+100: Load(Module, Class("System"))
+101: Load(Module, Null)
+102: Call(Method, print(_))
+103: Pop
+104: Load(Module, Null)
+105: Call(Method, new())
+106: Store(Module)
+107: Pop
+108: Load(Module, Class("System"))
+109: Load(Module, Null)
+110: Call(Method, print(_))
+111: Pop
+112: Load(Module, Null)
+113: Call(Method, inherited())
+114: Pop
+115: Load(Module, Class("Fiber"))
+116: Closure(23, [])
+117: Call(Method, new(_))
+118: Call(Method, try())
+119: Store(Module)
+120: Pop
+121: Load(Module, Class("System"))
+122: Load(Module, Null)
+123: Call(Method, print(_))
+124: Pop
+125: Constant(24: "Resource")
+126: Load(Module, Class("Object"))
+127: ForeignClass
+128: Store(Module)
+129: Pop
+130: Closure(25, [])
+131: Load(Module, Null)
+132: Method(instance, init new())
+133: Closure(26, [])
+134: Load(Module, Null)
+135: Method(static, new())
+136: Load(Module, Class("List"))
+137: Call(Method, new())
+138: Load(Module, Null)
+139: Call(Method, new())
+140: Call(Method, addCore_(_))
+141: Load(Module, Null)
+142: Call(Method, new())
+143: Call(Method, addCore_(_))
+144: Load(Module, Null)
+145: Call(Method, new())
+146: Call(Method, addCore_(_))
+147: Store(Module)
+148: Pop
+149: Load(Module, Class("System"))
+150: Call(Method, gc())
+151: Pop
+152: Load(Module, Class("System"))
+153: Load(Module, Null)
+154: Call(Getter, finalized)
+155: Call(Method, print(_))
+156: Pop
+157: Load(Module, Null)
+158: Constant(18: 1)
+159: Call(Method, -)
+160: Call(Method, removeAt(_))
+161: Pop
+162: Load(Module, Class("System"))
+163: Call(Method, gc())
+164: Pop
+165: Load(Module, Class("System"))
+166: Load(Module, Null)
+167: Call(Getter, finalized)
+168: Call(Method, print(_))
+169: Pop
+170: Load(Module, Null)
+171: Call(Method, clear())
+172: Pop
+173: Load(Module, Class("System"))
+174: Call(Method, gc())
+175: Pop
+176: Load(Module, Class("System"))
+177: Load(Module, Null)
+178: Call(Getter, finalized)
+179: Call(Method, print(_))
+180: Pop
+181: Constant(27: "BadClass")
+182: Load(Module, Class("Object"))
+183: ForeignClass
+184: Store(Module)
+185: Pop
+186: Closure(28, [])
+187: Load(Module, Null)
+188: Method(instance, init new())
+189: Closure(29, [])
+190: Load(Module, Null)
+191: Method(static, new())
+192: Load(Module, Class("Fiber"))
+193: Closure(30, [])
+194: Call(Method, new(_))
+195: Call(Method, try())
+196: Store(Module)
+197: Pop
+198: Load(Module, Class("System"))
+199: Load(Module, Null)
+200: Call(Method, print(_))
+201: Pop
+202: EndModule
+203: Return
+204: End
