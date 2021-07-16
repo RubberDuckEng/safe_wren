@@ -76,6 +76,16 @@ macro_rules! bitwise_num_op {
     };
 }
 
+macro_rules! overflowing_bitwise_num_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+            let a = validate_num(&args[0], "this")? as u32;
+            let b = validate_num(&args[1], "Right operand")? as u32;
+            Ok(Value::from_u32(a.$method(b).0))
+        }
+    };
+}
+
 macro_rules! num_bitwise_unary_op {
     ($func:ident, $method:ident) => {
         fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -115,8 +125,8 @@ infix_num_op!(num_gte, ge, Boolean);
 bitwise_num_op!(num_bitwise_and, bitand, Num);
 bitwise_num_op!(num_bitwise_or, bitor, Num);
 bitwise_num_op!(num_bitwise_xor, bitxor, Num);
-bitwise_num_op!(num_bitwise_shl, shl, Num);
-bitwise_num_op!(num_bitwise_shr, shr, Num);
+overflowing_bitwise_num_op!(num_bitwise_shl, overflowing_shl, Num);
+overflowing_bitwise_num_op!(num_bitwise_shr, overflowing_shr, Num);
 
 fn num_range_inclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let start = validate_num(&args[0], "Left hand side of range")?;
