@@ -404,6 +404,117 @@ pub struct WrenVM {
     pub(crate) config: WrenConfiguration,
 }
 
+pub trait Clear {
+    fn clear(&mut self);
+}
+
+impl Clear for Module {
+    fn clear(&mut self) {
+        self.variables.clear();
+        self.variable_names.clear();
+    }
+}
+
+impl Clear for ObjFiber {
+    fn clear(&mut self) {
+        self.call_stack.clear();
+    }
+}
+
+impl Clear for ObjClass {
+    fn clear(&mut self) {
+        clear_class(self.class.take());
+        clear_class(self.superclass.take());
+        self.methods.clear();
+    }
+}
+
+fn clear_class(maybe_class: Option<Handle<ObjClass>>) {
+    if let Some(class) = maybe_class {
+        class.take().clear();
+    }
+}
+
+impl Clear for ObjInstance {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
+        self.fields.clear();
+    }
+}
+
+impl Clear for ObjList {
+    fn clear(&mut self) {
+        self.elements.clear();
+    }
+}
+
+impl Clear for ObjMap {
+    fn clear(&mut self) {
+        self.data.clear();
+    }
+}
+
+impl Clear for ObjRange {
+    fn clear(&mut self) {
+        // No object references held.
+    }
+}
+
+impl Clear for ObjFn {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
+        self.constants.clear();
+        self.code.clear();
+        self.module.borrow_mut().clear();
+    }
+}
+
+impl Clear for ObjClosure {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
+        self.fn_obj.borrow_mut().clear();
+    }
+}
+
+fn clear_maybe_module(maybe_module: Option<Handle<Module>>) {
+    if let Some(module) = maybe_module {
+        module.borrow_mut().clear();
+    }
+}
+
+impl Drop for WrenVM {
+    fn drop(&mut self) {
+        // Tear down all fibers, including all stacks.
+        // Eventually code will be able to hold onto fibers.
+        if let Some(fiber) = &self.fiber {
+            fiber.borrow_mut().clear();
+        }
+
+        // Modules keep references to functions
+        // functions keep references to modules.
+        clear_maybe_module(self.core_module.take());
+        clear_maybe_module(self.last_imported_module.take());
+        for (_, module) in &self.modules {
+            module.borrow_mut().clear();
+        }
+
+        // Classes hold onto Methods, which include Functions.
+        clear_class(self.class_class.take());
+        clear_class(self.fn_class.take());
+        clear_class(self.fiber_class.take());
+
+        if let Some(core) = self.core.take() {
+            core.num.borrow_mut().clear();
+            core.bool_class.borrow_mut().clear();
+            core.null.borrow_mut().clear();
+            core.string.borrow_mut().clear();
+            core.range.borrow_mut().clear();
+            core.list.borrow_mut().clear();
+            core.map.borrow_mut().clear();
+        }
+    }
+}
+
 impl core::fmt::Debug for WrenVM {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "WrenVM {{ ")?;
@@ -1361,7 +1472,7 @@ fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     }
 }
 
-pub trait Obj {
+pub trait Obj: Clear {
     // The object's class.
     fn class_obj(&self) -> Handle<ObjClass>;
 }
@@ -1538,9 +1649,12 @@ impl core::fmt::Debug for Method {
     }
 }
 
+// Derive from Default to allow take() to work during clear().
+#[derive(Default)]
 pub struct ObjClass {
-    // FIXME: class is only Option due to Object and Class and Object metaclass
+    // Class is option Option due to Object and Class and Object metaclass
     // initialization starting with class = None and then filling in.
+    // The Option is also used during clear() teardown during WrenVM::drop.
     // We could use a dummy class to start intead and make this non-optional.
     pub(crate) class: Option<Handle<ObjClass>>,
 
