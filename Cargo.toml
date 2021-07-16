@@ -3,6 +3,7 @@ name = "wren_rust"
 version = "0.1.0"
 authors = ["Eric Seidel <github@eseidel.com>"]
 edition = "2018"
+default-run = "wren_test"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

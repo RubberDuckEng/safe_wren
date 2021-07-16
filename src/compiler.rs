@@ -10,6 +10,11 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
+// Maximum times grammar is allowed to recurse through parse_precedence
+// used to turn fuzz test cases (like 100x '[' in a row) into errors
+// rather than stack overflows.
+const MAX_GRAMMAR_NESTING: usize = 64;
+
 // The maximum name of a method, not including the signature. This is an
 // arbitrary but enforced maximum just so we know how long the method name
 // strings need to be in the parser.
@@ -1163,6 +1168,7 @@ struct ParseContext<'a> {
     _compiler: Option<Box<Compiler>>,
     vm: &'a mut WrenVM,
     module: Handle<Module>,
+    nesting: usize,
 }
 
 impl<'a> ParseContext<'a> {
@@ -3390,15 +3396,40 @@ fn consume_expecting(
     Ok(())
 }
 
+struct NestingScope<'a, 'b> {
+    ctx: &'a mut ParseContext<'b>,
+}
+
+impl<'a, 'b> NestingScope<'a, 'b> {
+    fn push(ctx: &'a mut ParseContext<'b>) -> NestingScope<'a, 'b> {
+        ctx.nesting += 1;
+        NestingScope { ctx: ctx }
+    }
+}
+
+impl<'a, 'b> Drop for NestingScope<'a, 'b> {
+    fn drop(&mut self) {
+        self.ctx.nesting -= 1;
+    }
+}
+
 fn parse_precendence(ctx: &mut ParseContext, precedence: Precedence) -> Result<(), WrenError> {
-    consume(ctx)?;
-    let prefix_parser = ctx
+    if ctx.nesting > MAX_GRAMMAR_NESTING {
+        return Err(ctx.error_string(format!(
+            "Maximum grammar nesting ({}) exceeded.",
+            MAX_GRAMMAR_NESTING
+        )));
+    }
+    let scope = NestingScope::push(ctx);
+    consume(scope.ctx)?;
+    let prefix_parser = scope
+        .ctx
         .parser
         .previous
         .token
         .grammar_rule()
         .prefix
-        .ok_or_else(|| ctx.error_str("Expected expression."))?;
+        .ok_or_else(|| scope.ctx.error_str("Expected expression."))?;
 
     // Track if the precendence of the surrounding expression is low enough to
     // allow an assignment inside this one. We can't compile an assignment like
@@ -3408,18 +3439,19 @@ fn parse_precendence(ctx: &mut ParseContext, precedence: Precedence) -> Result<(
     // we pass in whether or not it appears in a context loose enough to allow
     // "=". If so, it will parse the "=" itself and handle it appropriately.
     let can_assign = precedence <= Precedence::Conditional;
-    prefix_parser(ctx, can_assign)?;
+    prefix_parser(scope.ctx, can_assign)?;
 
-    while precedence <= ctx.parser.current.token.grammar_rule().precedence {
-        consume(ctx)?;
-        let infix_parser = ctx
+    while precedence <= scope.ctx.parser.current.token.grammar_rule().precedence {
+        consume(scope.ctx)?;
+        let infix_parser = scope
+            .ctx
             .parser
             .previous
             .token
             .grammar_rule()
             .infix
             .expect("Invalid token");
-        infix_parser(ctx, can_assign)?;
+        infix_parser(scope.ctx, can_assign)?;
     }
     Ok(())
 }
@@ -3464,6 +3496,7 @@ pub(crate) fn wren_compile<'a>(
         _compiler: None,
         module: module,
         vm: vm,
+        nesting: 0,
     };
 
     let mut scope = PushCompiler::push_root(&mut parse_context);
