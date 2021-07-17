@@ -30,6 +30,9 @@ fn this_as_list(args: &Vec<Value>) -> Handle<ObjList> {
 fn this_as_class(args: &Vec<Value>) -> Handle<ObjClass> {
     args[0].try_into_class().unwrap()
 }
+fn this_as_fiber(args: &Vec<Value>) -> Handle<ObjFiber> {
+    args[0].try_into_fiber().unwrap()
+}
 
 macro_rules! num_constant {
     ($func:ident, $value:expr) => {
@@ -443,6 +446,18 @@ fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn fiber_current(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Fiber(vm.fiber.as_ref().unwrap().clone()))
+}
+
+fn fiber_error(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_fiber(&args);
+    let error = this.borrow().error.clone();
+    Ok(error)
+}
+
+fn fiber_is_done(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let this = this_as_fiber(&args);
+    let is_done = this.borrow().is_done();
+    Ok(Value::Boolean(is_done))
 }
 
 fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
@@ -1087,8 +1102,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
     // primitive!(vm, fiber, "call()", fiber_call);
     // primitive!(vm, fiber, "call(_)", fiber_call1);
-    // primitive!(vm, fiber, "error", fiber_error);
-    // primitive!(vm, fiber, "isDone", fiber_is_done);
+    primitive!(vm, fiber, "error", fiber_error);
+    primitive!(vm, fiber, "isDone", fiber_is_done);
     // primitive!(vm, fiber, "transfer()", fiber_transfer);
     // primitive!(vm, fiber, "transfer(_)", fiber_transfer1);
     // primitive!(vm, fiber, "transferError(_)", fiber_transfer_error);

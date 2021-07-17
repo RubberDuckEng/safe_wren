@@ -15,6 +15,7 @@ test/bringup/range.wren
 test/bringup/scopes.wren
 test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
+test/fuzz/grammar_nesting.wren
 test/num/shift_overflow.wren
 test/num/sign_edge.wren
 wren_c/example/hello.wren

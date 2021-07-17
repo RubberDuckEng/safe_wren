@@ -284,6 +284,7 @@ impl Value {
     try_into!(try_into_fn, Fn, ObjFn);
     try_into!(try_into_closure, Closure, ObjClosure);
     try_into!(try_into_instance, Instance, ObjInstance);
+    try_into!(try_into_fiber, Fiber, ObjFiber);
 }
 
 #[derive(Debug, Default)]
@@ -347,6 +348,14 @@ impl core::fmt::Debug for CallFrame {
 pub struct ObjFiber {
     class_obj: Handle<ObjClass>,
     call_stack: Vec<CallFrame>,
+    pub(crate) error: Value,
+}
+
+impl ObjFiber {
+    // This probably belongs as an explicit state enum?
+    pub fn is_done(&self) -> bool {
+        self.call_stack.is_empty() || !self.error.is_null()
+    }
 }
 
 impl Obj for ObjFiber {
@@ -363,6 +372,7 @@ impl ObjFiber {
         ObjFiber {
             class_obj: vm.fiber_class.as_ref().unwrap().clone(),
             call_stack: vec![frame],
+            error: Value::Null,
         }
     }
 }
