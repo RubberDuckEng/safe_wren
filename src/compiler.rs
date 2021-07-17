@@ -152,8 +152,12 @@ pub struct ParseToken {
 }
 
 impl ParseToken {
+    // FIXME: This should not be a Result.
+    // FIXME: This should ideally return a &str
     pub fn name(&self, input: &InputManager) -> Result<String, LexError> {
         // There must be a nicer way to do this into-error on a single line?
+        // FIXME: Why can this ever error?  If we decoded it the first time
+        // we can clearly do so again, no?
         let name = String::from_utf8(input.source[self.bytes_range.clone()].into())?;
         Ok(name)
     }
@@ -2122,7 +2126,7 @@ fn expression(ctx: &mut ParseContext) -> Result<(), WrenError> {
 }
 
 // Bookkeeping information for the current loop being compiled.
-#[derive(Default, Copy, Clone, Debug)]
+#[derive(Copy, Clone)]
 struct LoopOffsets {
     // Index of the instruction that the loop should jump back to.
     start: usize,
