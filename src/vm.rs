@@ -342,11 +342,13 @@ pub struct CallFrame {
 }
 
 impl CallFrame {
-    fn new(closure: Handle<ObjClosure>) -> CallFrame {
+    fn new_root(closure: Handle<ObjClosure>) -> CallFrame {
+        // The root frame (for an import or interpret)
+        // always has the closure at the bottom of the stack.
         CallFrame {
             pc: 0,
-            closure: closure,
-            stack: Vec::new(),
+            closure: closure.clone(),
+            stack: vec![Value::Closure(closure)],
         }
     }
 }
@@ -406,10 +408,9 @@ impl ObjFiber {
         }
     }
 
-    fn end_call_take_caller(&mut self) -> Option<Handle<ObjFiber>> {
-        assert_eq!(self.call_stack.borrow().len(), 0);
+    fn return_from_fiber_take_caller(&mut self) -> Option<Handle<ObjFiber>> {
         let caller = self.caller.take();
-        self.completed_normally_cache = true;
+        self.completed_normally_cache = self.call_stack.borrow().is_empty();
         caller
     }
 
@@ -449,16 +450,13 @@ impl ObjFiber {
         closure: Handle<ObjClosure>,
         run_source: FiberRunSource,
     ) -> ObjFiber {
-        let mut frame = CallFrame::new(closure.clone());
-        // In wrenNewFiber, the first slot always holds the root closure.
-        frame.push(Value::Closure(closure));
         ObjFiber {
             class_obj: vm.fiber_class.as_ref().unwrap().clone(),
             error: Value::Null,
             caller: None,
             run_source: run_source,
             completed_normally_cache: false,
-            call_stack: RefCell::new(vec![frame]),
+            call_stack: RefCell::new(vec![CallFrame::new_root(closure)]),
         }
     }
 }
@@ -855,11 +853,6 @@ enum FunctionNext {
     FiberAction(FiberAction),
 }
 
-enum FiberNext {
-    Return(Value),
-    Action(FiberAction),
-}
-
 fn wren_new_instance(_vm: &mut WrenVM, class: Handle<ObjClass>) -> Value {
     Value::Instance(new_handle(ObjInstance::new(class)))
 }
@@ -1097,7 +1090,7 @@ impl WrenVM {
             let fiber = self.fiber.clone().unwrap();
             let result = self.run_in_fiber(&fiber.borrow());
             match result {
-                Ok(FiberNext::Action(action)) => match action {
+                Ok(action) => match action {
                     FiberAction::Call(fiber, arg) => {
                         fiber.borrow_mut().caller = self.fiber.take();
                         fiber.borrow_mut().push_fiber_argument(arg);
@@ -1107,26 +1100,26 @@ impl WrenVM {
                         fiber.borrow_mut().push_fiber_argument(arg);
                         self.fiber = Some(fiber.clone());
                     }
-                },
-                Ok(FiberNext::Return(value)) => {
-                    let caller = if let Some(fiber) = &self.fiber {
-                        fiber.borrow_mut().end_call_take_caller()
-                    } else {
-                        // This should never be reached?
-                        None
-                    };
-                    self.fiber = caller;
-                    match &self.fiber {
-                        Some(fiber) => fiber.borrow_mut().push_fiber_return(value),
-                        None => return Ok(value),
+                    FiberAction::Return(value) => {
+                        let caller = if let Some(fiber) = &self.fiber {
+                            fiber.borrow_mut().return_from_fiber_take_caller()
+                        } else {
+                            // This should never be reached?
+                            None
+                        };
+                        self.fiber = caller;
+                        match &self.fiber {
+                            Some(fiber) => fiber.borrow_mut().push_fiber_return(value),
+                            None => return Ok(value),
+                        }
                     }
-                }
+                },
                 Err(error) => return Err(error),
             }
         }
     }
 
-    fn run_in_fiber(&mut self, fiber: &ObjFiber) -> Result<FiberNext, RuntimeError> {
+    fn run_in_fiber(&mut self, fiber: &ObjFiber) -> Result<FiberAction, RuntimeError> {
         loop {
             // FIXME: I suspect we no longer need to pop the active frame since
             // the call_stack is held in a RefCell and can be passed with
@@ -1146,7 +1139,7 @@ impl WrenVM {
                 }
                 Ok(FunctionNext::Return(value)) => {
                     if fiber.call_stack.borrow().is_empty() {
-                        return Ok(FiberNext::Return(value));
+                        return Ok(FiberAction::Return(value));
                     } else {
                         // Take the return value and push it onto the calling stack.
                         fiber
@@ -1159,7 +1152,7 @@ impl WrenVM {
                 }
                 Ok(FunctionNext::FiberAction(action)) => {
                     fiber.call_stack.borrow_mut().push(frame); // FIXME?
-                    return Ok(FiberNext::Action(action));
+                    return Ok(action);
                 }
                 Err(vm_error) => {
                     // Push the current frame back onto the fiber so we can
@@ -1206,7 +1199,8 @@ impl WrenVM {
                         module_name_and_line(&top_frame.closure.borrow().fn_obj.borrow(), frame.pc)
                     }
                 };
-                frame.dump_stack(&top_module_name);
+                let frame_depth = fiber.call_stack.borrow().len(); // Does not include current frame.
+                frame.dump_stack(&top_module_name, frame_depth);
                 dump_instruction(
                     frame.pc,
                     op,
@@ -1381,8 +1375,7 @@ impl WrenVM {
                     // If we get a closure, call it to execute the module body.
                     match result {
                         ImportResult::New(closure) => {
-                            frame.push(Value::Closure(closure.clone()));
-                            return Ok(FunctionNext::Call(CallFrame::new(closure)));
+                            return Ok(FunctionNext::Call(CallFrame::new_root(closure)));
                         }
                         ImportResult::Existing(module) => {
                             // The module has already been loaded. Remember it so we can import
@@ -1468,14 +1461,19 @@ impl CallFrame {
         self.stack.last().ok_or(VMError::StackUnderflow)
     }
 
-    fn dump_stack(&self, active_module: &str) {
+    fn dump_stack(&self, active_module: &str, frame_depth: usize) {
         // Print the stack left (top) to right (bottom)
         let mut as_string = Vec::new();
         for value in &self.stack {
             as_string.push(format!("{:?}", value));
         }
         as_string.reverse();
-        println!("{}  Stack: [{}]", active_module, as_string.join(", "));
+        println!(
+            "{}  Stack({}): [{}]",
+            active_module,
+            frame_depth,
+            as_string.join(", ")
+        );
     }
 }
 
@@ -1767,6 +1765,8 @@ impl Obj for ObjRange {
 pub(crate) enum FiberAction {
     Call(Handle<ObjFiber>, Value),
     Transfer(Handle<ObjFiber>, Value),
+    // AFAICT, Return and Yield are the same.
+    Return(Value),
 }
 
 // Unclear if this should take Vec or a slice?

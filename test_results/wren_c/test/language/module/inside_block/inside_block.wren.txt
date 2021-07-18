@@ -1,1 +1,0 @@
-Expected output "from module" on line 7 and got "<fn>".

@@ -3,22 +3,25 @@
 
 ## Usage
 
-`cargo run FILENAME_OR_STRING`
+There are two binaries:
+- wren_test -- used for testing uses only public API
+- wren_debug -- used for debugging vm, uses private calls.
 
-Options:
-`--tokenize` Dumps token stream.
-`--compile`  Dumps compiler bytecode.
-`--interpret` Similar to no arguments, excepts prints VM state after run.
+`cargo run FILENAME_OR_STRING`
+will run wren_test against a file or string.
+
+
+`cargo run --bin=wren_debug FILENAME_OR_STRING` will run wren_debug
+
+wren_debug sub-commands:
+`tokenize` Dumps token stream.
+`compile`  Dumps compiler bytecode.
+`interpret` Similar to no arguments, excepts prints VM state after run.
+
 
 `python3 util/test.py` will run the tests, including updating `test_results/*`
 with error text from any failed tests.  `test.py` will also update
 `test_results/passes.txt` with the list of passing tests.
-
-## Ideas
-* use Drop for auto-scope
-* Split Value into Value<Object> and TypedObject which can be returned from Obj trait.
-* Pull the module off the VM and hand it to the parser during parsing.
-* pull the symbol table off the vm durign compile?
 
 ## Ordered goals?
 * Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
@@ -42,15 +45,8 @@ with error text from any failed tests.  `test.py` will also update
 * Garbage Collection
 * Sort methods to match wren_c order?
 
-## Most failing tests
-* Maps/map lookup, but requires object allocation
-* "construct" keyword, missing function declarations.
-
 ## Future bugs
 * Push/Pop of scopes does not work with Result pattern.
-* Fn is defined twice once in code and once in wren_core.wren
-* Object/Class are not set as global variables?
-* call_runtime_error is seeing Fn as this rather than Bool, why?
 
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?
@@ -59,3 +55,5 @@ with error text from any failed tests.  `test.py` will also update
 
 ### wren_c bugs
 * closures/functions defined in wren_core.wren end up with a null class pointer?
+* If you yield from the root, it gets set to state=OTHER, presumably later you
+might be able to call things on it?

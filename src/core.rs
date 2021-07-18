@@ -448,6 +448,14 @@ fn fiber_current(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Fiber(vm.fiber.as_ref().unwrap().clone()))
 }
 
+fn fiber_yield(_vm: &WrenVM, _args: Vec<Value>) -> Result<FiberAction> {
+    Ok(FiberAction::Return(Value::Null))
+}
+
+fn fiber_yield1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+    Ok(FiberAction::Return(args[1].clone()))
+}
+
 fn fiber_call(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
     let this = this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), true, "call")?;
@@ -523,19 +531,6 @@ fn validate_fiber_action(fiber: &ObjFiber, is_call: bool, verb: &str) -> Result<
             verb
         )));
     }
-
-    // if fiber.just_started() {
-    //     // The fiber is being started for the first time.
-    //     // If its function takes a parameter, bind an argument to it.
-    //     if fiber.takes_one_argument() {
-    //         fiber.call_stack[0].push(value);
-    //     }
-    // } else {
-    //     // The fiber is being resumed, make yield() or transfer()
-    //     // return the result.
-    //     // fiber.pop(); // FIXME: Seems wrong.
-    //     // fiber.push(value);
-    // }
     Ok(())
 }
 
@@ -1071,6 +1066,17 @@ macro_rules! fiber_primitive {
     };
 }
 
+macro_rules! fiber_primitive_static {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        let symbol = $vm.methods.ensure_symbol($sig);
+        $class
+            .borrow_mut()
+            .class_obj()
+            .borrow_mut()
+            .set_method(symbol, Method::FiberActionPrimitive($func));
+    };
+}
+
 macro_rules! primitive_static {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
         let symbol = $vm.methods.ensure_symbol($sig);
@@ -1186,8 +1192,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive_static!(vm, fiber, "abort(_)", fiber_abort);
     primitive_static!(vm, fiber, "current", fiber_current);
     // primitive_static!(vm, fiber, "suspend()", fiber_suspend);
-    // primitive_static!(vm, fiber, "yield()", fiber_yield);
-    // primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
+    fiber_primitive_static!(vm, fiber, "yield()", fiber_yield);
+    fiber_primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
     fiber_primitive!(vm, fiber, "call()", fiber_call);
     fiber_primitive!(vm, fiber, "call(_)", fiber_call1);
     primitive!(vm, fiber, "error", fiber_error);

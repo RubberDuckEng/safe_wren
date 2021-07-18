@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-Fiber metaclass does not implement 'yield(_)'.
-Unexpected output on stderr:
-[wren_c/test/core/fiber/yield_with_value_from_main line 2] in <script>
-Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'yield(_)'.
-[wren_c/test/core/fiber/yield_with_value_from_main line 2] in <script>
-
