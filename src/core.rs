@@ -431,6 +431,9 @@ fn fiber_new(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+// This method sometimes causes a FiberAction (abort) and sometimes
+// returns a value.  So for now it has to be a ValuePrimitive
+// and use the Err result to cause the abort
 fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let is_abort = !args[1].is_null();
     // wren_c just records the error string and continues?
@@ -446,6 +449,10 @@ fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn fiber_current(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Fiber(vm.fiber.as_ref().unwrap().clone()))
+}
+
+fn fiber_suspend(_vm: &WrenVM, _args: Vec<Value>) -> Result<FiberAction> {
+    Ok(FiberAction::Suspend)
 }
 
 fn fiber_yield(_vm: &WrenVM, _args: Vec<Value>) -> Result<FiberAction> {
@@ -1203,7 +1210,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive_static!(vm, fiber, "new(_)", fiber_new);
     primitive_static!(vm, fiber, "abort(_)", fiber_abort);
     primitive_static!(vm, fiber, "current", fiber_current);
-    // primitive_static!(vm, fiber, "suspend()", fiber_suspend);
+    fiber_primitive_static!(vm, fiber, "suspend()", fiber_suspend);
     fiber_primitive_static!(vm, fiber, "yield()", fiber_yield);
     fiber_primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
     fiber_primitive!(vm, fiber, "call()", fiber_call);

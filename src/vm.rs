@@ -1118,6 +1118,12 @@ impl WrenVM {
                         fiber.borrow_mut().push_fiber_argument(arg);
                         self.fiber = Some(fiber.clone());
                     }
+                    FiberAction::Suspend => {
+                        self.fiber = None;
+                        // FIXME: This return value is wrong.
+                        // The api should not return a value for Fiber.suspend.
+                        return Ok(Value::Null);
+                    }
                     FiberAction::Return(value) => {
                         let caller = if let Some(fiber) = &self.fiber {
                             fiber.borrow_mut().return_from_fiber_take_caller()
@@ -1812,6 +1818,7 @@ pub(crate) enum FiberAction {
     // AFAICT, Return and Yield are the same.
     Return(Value),
     Try(Handle<ObjFiber>, Value),
+    Suspend,
 }
 
 // Unclear if this should take Vec or a slice?
