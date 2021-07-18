@@ -15,7 +15,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 pub(crate) const CORE_MODULE_NAME: &str = "#core";
 
 // The maximum number of module-level variables that may be defined at one time.
-// const MAX_MODULE_VARS: usize = 65536;
+const MAX_MODULE_VARS: usize = 65536;
 
 // The maximum number of arguments that can be passed to a method. Note that
 // this limit may be hardcoded in other places in the VM.
@@ -260,9 +260,13 @@ impl Module {
         name: &str,
         value: Value,
     ) -> Result<u16, ModuleLimitError> {
-        self.variable_names.push(name.into());
-        self.variables.push(value);
-        Ok((self.variable_names.len() - 1) as u16)
+        if self.variables.len() == MAX_MODULE_VARS {
+            Err(ModuleLimitError::TooManyVariables)
+        } else {
+            self.variable_names.push(name.into());
+            self.variables.push(value);
+            Ok((self.variable_names.len() - 1) as u16)
+        }
     }
 
     pub(crate) fn variable_by_name(&self, name: &str) -> Option<Value> {
