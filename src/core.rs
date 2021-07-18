@@ -454,6 +454,12 @@ fn fiber_call(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
     Ok(FiberAction::Call(this, Value::Null))
 }
 
+fn fiber_call1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+    let this = this_as_fiber(&args);
+    validate_fiber_action(&this.borrow(), true, "call")?;
+    Ok(FiberAction::Call(this, args[1].clone()))
+}
+
 fn fiber_error(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let this = this_as_fiber(&args);
     let error = this.borrow().error();
@@ -1171,7 +1177,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive_static!(vm, fiber, "yield()", fiber_yield);
     // primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
     fiber_primitive!(vm, fiber, "call()", fiber_call);
-    // primitive!(vm, fiber, "call(_)", fiber_call1);
+    fiber_primitive!(vm, fiber, "call(_)", fiber_call1);
     primitive!(vm, fiber, "error", fiber_error);
     primitive!(vm, fiber, "isDone", fiber_is_done);
     // primitive!(vm, fiber, "transfer()", fiber_transfer);
