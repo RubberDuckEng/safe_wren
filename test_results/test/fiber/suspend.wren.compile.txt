@@ -1,0 +1,18 @@
+Constants:
+00: 1
+01: 2
+Code:
+00: Load(Module, Class("System"))
+01: Constant(0: 1)
+02: Call(Method, print(_))
+03: Pop
+04: Load(Module, Class("Fiber"))
+05: Call(Method, suspend())
+06: Pop
+07: Load(Module, Class("System"))
+08: Constant(1: 2)
+09: Call(Method, print(_))
+10: Pop
+11: EndModule
+12: Return
+13: End

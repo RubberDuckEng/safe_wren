@@ -16,6 +16,7 @@ test/bringup/scopes.wren
 test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
 test/fiber/return_as_yield.wren
+test/fiber/suspend.wren
 test/fuzz/grammar_nesting.wren
 test/num/shift_overflow.wren
 test/num/sign_edge.wren
