@@ -6,7 +6,7 @@ use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::{str, usize};
 
-use crate::compiler::{compile_in_module, FnDebug, InputManager, Ops, Scope};
+use crate::compiler::{compile_in_module, wren_is_local_name, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 use crate::wren::{DebugLevel, WrenConfiguration};
 
@@ -196,6 +196,12 @@ impl Value {
             _ => false,
         }
     }
+    pub(crate) fn is_num(&self) -> bool {
+        match self {
+            Value::Num(_) => true,
+            _ => false,
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -205,6 +211,12 @@ pub(crate) struct Module {
     // Should this just be a map?  wren_utils.h suggests so?
     variables: Vec<Value>,
     variable_names: Vec<String>,
+}
+
+// FIXME: Will turn on in a separate change.
+#[allow(dead_code)]
+pub(crate) enum ModuleLimitError {
+    TooManyVariables,
 }
 
 impl Module {
@@ -225,21 +237,32 @@ impl Module {
         f: F,
     ) -> Result<(), E>
     where
-        F: Fn(String, usize) -> Result<(), E>,
+        F: Fn(&str, usize) -> Result<(), E>,
     {
         for i in since_index..self.variables.len() {
             let value = &self.variables[i];
+            let name = &self.variable_names[i];
             if let Some(line_number) = value.try_into_num() {
-                f("foo".into(), line_number as usize)?;
+                f(name, line_number as usize)?;
             }
         }
         Ok(())
     }
 
-    pub(crate) fn define_variable(&mut self, name: &str, value: Value) -> usize {
+    pub(crate) fn replace_implicit_definition(&mut self, symbol: u16, value: Value) {
+        let index = symbol as usize;
+        assert!(self.variables[index].is_num());
+        self.variables[index] = value;
+    }
+
+    pub(crate) fn define_variable(
+        &mut self,
+        name: &str,
+        value: Value,
+    ) -> Result<u16, ModuleLimitError> {
         self.variable_names.push(name.into());
         self.variables.push(value);
-        self.variable_names.len() - 1
+        Ok((self.variable_names.len() - 1) as u16)
     }
 
     pub(crate) fn variable_by_name(&self, name: &str) -> Option<Value> {
@@ -828,25 +851,44 @@ pub(crate) struct CoreClasses {
 }
 
 #[derive(Debug)]
-pub enum ModuleError {
-    VariableAlreadyDefined,
+pub enum DefinitionError {
+    VariableAlreadyDefined,           // -1 in wren_c
+    TooManyVariables,                 // -2 in wren_c
+    LocalUsedBeforeDefinition(usize), // -3 in wren_c
+}
+
+impl From<ModuleLimitError> for DefinitionError {
+    fn from(err: ModuleLimitError) -> DefinitionError {
+        match err {
+            ModuleLimitError::TooManyVariables => DefinitionError::TooManyVariables,
+        }
+    }
 }
 
 pub(crate) fn wren_define_variable(
     module: &mut Module,
     name: &str,
     value: Value,
-) -> Result<usize, ModuleError> {
+) -> Result<u16, DefinitionError> {
     // See if the variable is already explicitly or implicitly declared.
     match module.lookup_symbol(name) {
         None => {
             // New variable!
-            Ok(module.define_variable(name, value))
+            module.define_variable(name, value).map_err(From::from)
         }
-        Some(_) => {
-            Err(ModuleError::VariableAlreadyDefined)
-            // FIXME: Handle fixing implicit variables.
-            // Which are currently their line numer?
+        Some(symbol) => {
+            let existing_value = &module.variables[symbol as usize];
+            if let Some(line) = existing_value.try_into_num() {
+                if wren_is_local_name(name) {
+                    return Err(DefinitionError::LocalUsedBeforeDefinition(line as usize));
+                }
+                // An implicitly declared variable's value will always be a number.
+                // Now we have a real definition.
+                module.replace_implicit_definition(symbol, value);
+                Ok(symbol)
+            } else {
+                Err(DefinitionError::VariableAlreadyDefined)
+            }
         }
     }
 }

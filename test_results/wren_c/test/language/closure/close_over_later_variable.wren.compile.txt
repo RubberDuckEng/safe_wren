@@ -1,1 +1,1 @@
-[wren_c/test/language/closure/close_over_later_variable line 10] Error at 'b': Undeclared variable 'b'
+[wren_c/test/language/closure/close_over_later_variable line 10] Error at 'b': Variable is used but not defined.

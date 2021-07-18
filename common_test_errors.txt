@@ -9,20 +9,19 @@ occurances : error text
 18 : Expected return code 65 and got 0. Stderr:
 18 : String does not implement '[_]'.
 17 : Expected return code 65 and got 66. Stderr:
-14 : Error at 'a': Undeclared variable 'a'
-14 : Error at 'i': Undeclared variable 'i'
+14 : Error at 'i': Variable is used but not defined.
 14 : in iterate(_)
+13 : Error at 'a': Variable is used but not defined.
 12 : Error at '#': Expected expression.
 12 : in count
 10 : Expected runtime error on line  but was on line .
 9 : Derived does not implement 'super'.
-9 : Error at 'B': Undeclared variable 'B'
 8 : Could not load module 'meta'.
 8 : Error at '__field': Expected expression.
 8 : Expected output "-1" on line  and got "92".
 8 : Expected runtime error "Iterator must be a number." and got:
 8 : Expected runtime error "Iterator must be an integer." and got:
-6 : Error at 'local': Undeclared variable 'local'
+6 : Error at 'local': Variable is used but not defined.
 6 : Error: Expect '(' after '%%'.
 6 : Error: Unterminated Scientific Notation
 6 : Expected runtime error "Count must be a non-negative integer." and got:
@@ -31,21 +30,21 @@ occurances : error text
 6 : String metaclass does not implement 'fromCodePoint(_)'.
 6 : StringCodePointSequence does not implement 'toList'.
 6 : in foo
+6 : in new(_) block argument
 6 : in toString
 6 : in trim_(_,_,_)
-5 : Expected return code 70 and got 65. Stderr:
-5 : Expected stack trace and got:
-4 : Error at 'F': Undeclared variable 'F'
-4 : Error at 'Global': Undeclared variable 'Global'
 4 : Error at '__a': Expected expression.
 4 : Error at '_field': Could not resolve 'this'
-4 : Error at 'foreign': Undeclared variable 'foreign'
-4 : Error at 'j': Undeclared variable 'j'
+4 : Error at 'class': Expect end of file.
+4 : Error at 'j': Variable is used but not defined.
 4 : Error at 'super': Could not resolve 'this'
 4 : Error at 'toString': Could not resolve 'this'
 4 : Error: Unterminated String
+4 : Expected return code 70 and got 65. Stderr:
 4 : Expected runtime error "Iterator out of bounds." and got:
 4 : Expected runtime error "Range end out of bounds." and got:
+4 : Expected stack trace and got:
+4 : Fiber does not implement 'transferError(_)'.
 4 : Map does not implement 'keyIteratorValue_(_)'.
 4 : Num metaclass does not implement 'fromString(_)'.
 4 : String does not implement 'iterateByte_(_)'.
@@ -68,15 +67,12 @@ occurances : error text
 2 : Error at '")     // expect: "': Expect ')' after arguments.
 2 : Error at '"A raw string"': Expect ')' after arguments.
 2 : Error at '#': Expect method definition.
-2 : Error at 'A': Undeclared variable 'A'
-2 : Error at 'Bar': Undeclared variable 'Bar'
-2 : Error at 'Foo': Undeclared variable 'Foo'
-2 : Error at 'b': Undeclared variable 'b'
-2 : Error at 'bitmask': Undeclared variable 'bitmask'
+2 : Error at 'b': Variable is used but not defined.
+2 : Error at 'bitmask': Variable is used but not defined.
 2 : Error at 'block': Could not resolve 'this'
-2 : Error at 'foo': Undeclared variable 'foo'
+2 : Error at 'foo': Variable is used but not defined.
 2 : Error at 'param': Could not resolve 'this'
-2 : Error at 'param': Undeclared variable 'param'
+2 : Error at 'param': Variable is used but not defined.
 2 : Error at 'this': Could not resolve 'this'
 2 : Error: Unexpected char '\'
 2 : Error: Unterminated Block Comment
@@ -123,7 +119,6 @@ occurances : error text
 2 : in foo(_)
 2 : in join(_)
 2 : in name
-2 : in new(_) block argument
 2 : in replace(_,_)
 2 : in trim()
 2 : in trimEnd()
@@ -214,7 +209,6 @@ occurances : error text
 1 : Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got:
 1 : Expected runtime error "Could not find foreign method 'someUnknownMethod' for class Foo in module './test/language/foreign/unknown_method'." and got:
 1 : Expected runtime error "Could not load module './test/language/module/does_not_exist'." and got:
-1 : Expected runtime error "Fiber has already been called." and got:
 1 : Expected runtime error "Foreign class 'Bar' may not inherit from a class with fields." and got:
 1 : Expected runtime error "From must be a non-empty string." and got:
 1 : Expected runtime error "Module name must be a string." and got:

@@ -1,1 +1,1 @@
-[wren_c/test/api/reset_stack_after_foreign_construct line 6] Error at 'foreign': Undeclared variable 'foreign'
+[wren_c/test/api/reset_stack_after_foreign_construct line 6] Error at 'class': Expect end of file.

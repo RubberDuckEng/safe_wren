@@ -1,1 +1,1 @@
-[wren_c/test/language/super/super_in_top_level_function line 2] Error at 'super': Undeclared variable 'super'
+[wren_c/test/language/super/super_in_top_level_function line 2] Error at 'super': Variable is used but not defined.

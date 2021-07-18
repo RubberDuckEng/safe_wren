@@ -1,1 +1,1 @@
-[wren_c/test/regression/428 line 6] Error at 'isDone': Undeclared variable 'isDone'
+[wren_c/test/regression/428 line 6] Error: Unexpected char 'Ã'

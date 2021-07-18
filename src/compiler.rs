@@ -10,6 +10,11 @@ use std::str;
 
 use num_traits::FromPrimitive;
 
+use crate::vm::{
+    new_handle, wren_define_variable, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn,
+    SymbolTable, Value, WrenVM,
+};
+
 // Maximum times grammar is allowed to recurse through parse_precedence
 // used to turn fuzz test cases (like 100x '[' in a row) into errors
 // rather than stack overflows.
@@ -62,11 +67,6 @@ const MAX_CONSTANTS: usize = 1 << 16;
 //
 //      "outside %(one + "%(two + "%(three)")")"
 const MAX_INTERPOLATION_NESTING: usize = 8;
-
-use crate::vm::{
-    new_handle, wren_define_variable, Module, ModuleError, ObjClosure, ObjFn, SymbolTable, Value,
-    WrenVM,
-};
 
 // Token lifetimes should be tied to the Parser or InputManager.
 #[derive(Debug, Clone, PartialEq)]
@@ -174,6 +174,9 @@ impl ParseToken {
 pub struct InputManager {
     source: Vec<u8>,
     offset: usize,
+    // You never want to read this through parser.input.line_number
+    // As the parser reads ahead a couple tokens.
+    // Rather you probably want parser.previous.line
     line_number: usize,
     token_start_offset: usize,
 
@@ -1201,13 +1204,6 @@ impl<'a> ParseContext<'a> {
         }
     }
 
-    fn module_error(&self, e: ModuleError) -> WrenError {
-        let message = match e {
-            ModuleError::VariableAlreadyDefined => "Module variable is already defined.",
-        };
-        self.error_str(message)
-    }
-
     fn error_str(&self, msg: &str) -> WrenError {
         self.error_string(msg.into())
     }
@@ -2047,7 +2043,8 @@ fn resolve_non_module(ctx: &ParseContext, name: &str) -> Option<Variable> {
 }
 
 // wren_c just checks if the first byte is lowercase.
-fn wren_is_local_name(name: &String) -> bool {
+// this exists to be shared with vm.rs.
+pub(crate) fn wren_is_local_name(name: &str) -> bool {
     matches!(name.bytes().nth(0).unwrap(), b'a'..=b'z')
 }
 
@@ -2109,15 +2106,15 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     let maybe_index = ctx.module.borrow().lookup_symbol(&name);
     let symbol = match maybe_index {
         None => {
-            // Otherwise define a variable and hope it's filled in later (by what?)
-            //     // Implicitly define a module-level variable in
-            // // the hopes that we get a real definition later.
-            // variable.index = wrenDeclareVariable(compiler->parser->vm,
-            //     compiler->parser->module,
-            //     token->start, token->length,
-            //     token->line);
-            // loadVariable(compiler, variable);
-            return Err(ctx.error_string(format!("Undeclared variable '{}'", name)));
+            // Implicitly define a module-level variable in
+            // the hopes that we get a real definition later.
+            let line_value = Value::from_usize(ctx.parser.previous.line);
+            match ctx.module.borrow_mut().define_variable(&name, line_value) {
+                Ok(index) => index,
+                Err(ModuleLimitError::TooManyVariables) => {
+                    return Err(ctx.error_str("Too many module variables defined."));
+                }
+            }
         }
         Some(index) => index,
     };
@@ -2656,8 +2653,21 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
         // Error handling missing.
         // Error handling should occur inside wren_define_variable, no?
         let result = wren_define_variable(&mut ctx.module.borrow_mut(), &name, Value::Null);
-        let symbol = result.map_err(|e| ctx.module_error(e))?;
-        return Ok(symbol as u16);
+        let symbol = result.map_err(|e| {
+            let msg = match e {
+                DefinitionError::LocalUsedBeforeDefinition(line) => format!(
+                    "Variable '{}' referenced before this definition (first use at line {}).",
+                    name, line
+                ),
+                DefinitionError::TooManyVariables => "Too many module variables defined.".into(),
+                DefinitionError::VariableAlreadyDefined => {
+                    "Module variable is already defined.".into()
+                }
+            };
+            ctx.error_string(msg)
+        })?;
+
+        return Ok(symbol);
     }
 
     // TODO: Check to see if another local with the same name exists
@@ -3529,7 +3539,7 @@ pub(crate) fn wren_compile<'a>(
     emit(scope.ctx, Ops::EndModule);
     emit(scope.ctx, Ops::Return);
 
-    let handle_undefined = |name: String, line_number: usize| -> Result<(), WrenError> {
+    let handle_undefined = |name: &str, line_number: usize| -> Result<(), WrenError> {
         Err(WrenError {
             line: line_number,
             module: scope.ctx.module_name(),

@@ -1,1 +1,1 @@
-[wren_c/test/language/for/closure_in_body line 5] Error at 'j': Undeclared variable 'j'
+[wren_c/test/language/for/closure_in_body line 5] Error at 'j': Variable is used but not defined.

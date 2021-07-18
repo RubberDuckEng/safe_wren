@@ -1,1 +1,1 @@
-[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Undeclared variable 'foo'
+[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Variable is used but not defined.

@@ -1,1 +1,1 @@
-[wren_c/test/language/this/this_in_top_level_function line 2] Error at 'this': Undeclared variable 'this'
+[wren_c/test/language/this/this_in_top_level_function line 2] Error at 'this': Variable is used but not defined.

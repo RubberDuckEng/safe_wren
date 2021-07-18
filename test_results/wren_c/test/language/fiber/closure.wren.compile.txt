@@ -1,1 +1,1 @@
-[wren_c/test/language/fiber/closure line 7] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/fiber/closure line 7] Error at 'a': Variable is used but not defined.

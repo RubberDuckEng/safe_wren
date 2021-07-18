@@ -1,1 +1,38 @@
-[wren_c/test/language/nonlocal/use_in_method_before_definition line 5] Error at 'Global': Undeclared variable 'Global'
+Constants:
+00: "Foo"
+01: Fn(init new())
+02: Fn()
+03: Fn(method)
+04: Fn(classMethod)
+05: "global"
+Code:
+00: Constant(0: "Foo")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new())
+11: Closure(3, [])
+12: Load(Module, Null)
+13: Method(instance, method)
+14: Closure(4, [])
+15: Load(Module, Null)
+16: Method(static, classMethod)
+17: Constant(5: "global")
+18: Store(Module)
+19: Pop
+20: Load(Module, Null)
+21: Call(Method, new())
+22: Call(Getter, method)
+23: Pop
+24: Load(Module, Null)
+25: Call(Getter, classMethod)
+26: Pop
+27: EndModule
+28: Return
+29: End

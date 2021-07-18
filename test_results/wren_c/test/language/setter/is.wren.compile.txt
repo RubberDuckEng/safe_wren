@@ -1,1 +1,1 @@
-[wren_c/test/language/setter/is line 6] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/setter/is line 6] Error at '=': Expect end of file.

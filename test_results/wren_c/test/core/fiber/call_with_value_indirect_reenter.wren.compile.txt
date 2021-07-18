@@ -1,1 +1,22 @@
-[wren_c/test/core/fiber/call_with_value_indirect_reenter line 2] Error at 'B': Undeclared variable 'B'
+Constants:
+00: Fn(new(_) block argument)
+01: Fn(new(_) block argument)
+02: 1
+Code:
+00: Load(Module, Class("Fiber"))
+01: Closure(0, [])
+02: Call(Method, new(_))
+03: Store(Module)
+04: Pop
+05: Load(Module, Class("Fiber"))
+06: Closure(1, [])
+07: Call(Method, new(_))
+08: Store(Module)
+09: Pop
+10: Load(Module, Null)
+11: Constant(2: 1)
+12: Call(Method, call(_))
+13: Pop
+14: EndModule
+15: Return
+16: End

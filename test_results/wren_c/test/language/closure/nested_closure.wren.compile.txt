@@ -1,1 +1,1 @@
-[wren_c/test/language/closure/nested_closure line 10] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/closure/nested_closure line 10] Error at 'a': Variable is used but not defined.

@@ -1,1 +1,1 @@
-[wren_c/test/language/class/missing_class_after_foreign line 2] Error at 'foreign': Undeclared variable 'foreign'
+[wren_c/test/language/class/missing_class_after_foreign line 2] Error at 'blah': Expect end of file.

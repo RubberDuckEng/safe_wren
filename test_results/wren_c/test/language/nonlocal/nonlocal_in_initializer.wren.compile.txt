@@ -1,1 +1,14 @@
-[wren_c/test/language/nonlocal/nonlocal_in_initializer line 1] Error at 'A': Undeclared variable 'A'
+Constants:
+Code:
+00: Load(Module, Null)
+01: Null
+02: Call(Method, ==(_))
+03: Store(Module)
+04: Pop
+05: Load(Module, Class("System"))
+06: Load(Module, Null)
+07: Call(Method, print(_))
+08: Pop
+09: EndModule
+10: Return
+11: End

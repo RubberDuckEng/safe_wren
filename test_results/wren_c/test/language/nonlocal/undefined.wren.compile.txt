@@ -1,1 +1,1 @@
-[wren_c/test/language/nonlocal/undefined line 2] Error at 'Foo': Undeclared variable 'Foo'
+[wren_c/test/language/nonlocal/undefined line 2] Error at 'Foo': Variable is used but not defined.

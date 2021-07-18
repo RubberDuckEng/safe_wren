@@ -1,1 +1,1 @@
-[wren_c/test/language/break/closure_in_while line 4] Error at 'i': Undeclared variable 'i'
+[wren_c/test/language/break/closure_in_while line 4] Error at 'i': Variable is used but not defined.

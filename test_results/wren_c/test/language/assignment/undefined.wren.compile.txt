@@ -1,1 +1,1 @@
-[wren_c/test/language/assignment/undefined line 1] Error at 'unknown': Undeclared variable 'unknown'
+[wren_c/test/language/assignment/undefined line 1] Error at 'unknown': Variable is used but not defined.

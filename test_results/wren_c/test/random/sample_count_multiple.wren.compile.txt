@@ -1,1 +1,1 @@
-[wren_c/test/random/sample_count_multiple line 17] Error at 'bitmask': Undeclared variable 'bitmask'
+[wren_c/test/random/sample_count_multiple line 17] Error at 'bitmask': Variable is used but not defined.

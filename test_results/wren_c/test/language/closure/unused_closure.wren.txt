@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/closure/unused_closure line 7] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/closure/unused_closure line 7] Error at 'a': Variable is used but not defined.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/closure/unused_closure line 7] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/closure/unused_closure line 7] Error at 'a': Variable is used but not defined.
 
 Missing expected output "ok" on line 11.

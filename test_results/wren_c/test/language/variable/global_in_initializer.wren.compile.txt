@@ -1,1 +1,1 @@
-[wren_c/test/language/variable/global_in_initializer line 1] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/variable/global_in_initializer line 1] Error at 'null': Variable 'a' referenced before this definition (first use at line 1).

@@ -1,1 +1,18 @@
-[wren_c/test/language/nonlocal/use_in_function_before_definition line 2] Error at 'Global': Undeclared variable 'Global'
+Constants:
+00: Fn(new(_) block argument)
+01: "global"
+Code:
+00: Load(Module, Class("Fn"))
+01: Closure(0, [])
+02: Call(Method, new(_))
+03: Store(Module)
+04: Pop
+05: Constant(1: "global")
+06: Store(Module)
+07: Pop
+08: Load(Module, Null)
+09: Call(Method, call())
+10: Pop
+11: EndModule
+12: Return
+13: End

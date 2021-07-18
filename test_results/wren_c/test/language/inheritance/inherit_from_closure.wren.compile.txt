@@ -1,1 +1,1 @@
-[wren_c/test/language/inheritance/inherit_from_closure line 5] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/inheritance/inherit_from_closure line 5] Error at 'a': Variable is used but not defined.

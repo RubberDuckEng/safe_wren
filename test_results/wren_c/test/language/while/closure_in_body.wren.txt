@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/while/closure_in_body line 6] Error at 'j': Undeclared variable 'j'
+[wren_c/test/language/while/closure_in_body line 6] Error at 'j': Variable is used but not defined.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/while/closure_in_body line 6] Error at 'j': Undeclared variable 'j'
+[wren_c/test/language/while/closure_in_body line 6] Error at 'j': Variable is used but not defined.
 
 Missing expected output "2" on line 11.
 Missing expected output "3" on line 12.

@@ -1,1 +1,25 @@
-[wren_c/test/core/fiber/transfer_error line 3] Error at 'B': Undeclared variable 'B'
+Constants:
+00: Fn(new(_) block argument)
+01: Fn(new(_) block argument)
+Code:
+00: Load(Module, Class("Fiber"))
+01: Closure(0, [])
+02: Call(Method, new(_))
+03: Store(Module)
+04: Pop
+05: Load(Module, Class("Fiber"))
+06: Closure(1, [])
+07: Call(Method, new(_))
+08: Store(Module)
+09: Pop
+10: Load(Module, Null)
+11: Call(Method, try())
+12: Pop
+13: Load(Module, Class("System"))
+14: Load(Module, Null)
+15: Call(Getter, error)
+16: Call(Method, print(_))
+17: Pop
+18: EndModule
+19: Return
+20: End

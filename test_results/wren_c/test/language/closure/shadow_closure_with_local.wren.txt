@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Undeclared variable 'foo'
+[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Variable is used but not defined.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Undeclared variable 'foo'
+[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Variable is used but not defined.
 
 Missing expected output "closure" on line 5.
 Missing expected output "shadow" on line 7.

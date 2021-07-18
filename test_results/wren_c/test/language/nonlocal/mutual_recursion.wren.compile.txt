@@ -1,1 +1,51 @@
-[wren_c/test/language/nonlocal/mutual_recursion line 3] Error at 'Bar': Undeclared variable 'Bar'
+Constants:
+00: "Foo"
+01: Fn(init new())
+02: Fn()
+03: Fn(bar)
+04: "Bar"
+05: Fn(init new())
+06: Fn()
+07: Fn(foo)
+Code:
+00: Constant(0: "Foo")
+01: Load(Module, Class("Object"))
+02: Class(0 fields)
+03: Store(Module)
+04: Pop
+05: Closure(1, [])
+06: Load(Module, Null)
+07: Method(instance, init new())
+08: Closure(2, [])
+09: Load(Module, Null)
+10: Method(static, new())
+11: Closure(3, [])
+12: Load(Module, Null)
+13: Method(static, bar)
+14: Constant(4: "Bar")
+15: Load(Module, Class("Object"))
+16: Class(0 fields)
+17: Store(Module)
+18: Pop
+19: Closure(5, [])
+20: Load(Module, Null)
+21: Method(instance, init new())
+22: Closure(6, [])
+23: Load(Module, Null)
+24: Method(static, new())
+25: Closure(7, [])
+26: Load(Module, Null)
+27: Method(static, foo)
+28: Load(Module, Class("System"))
+29: Load(Module, Null)
+30: Call(Getter, bar)
+31: Call(Method, print(_))
+32: Pop
+33: Load(Module, Class("System"))
+34: Load(Module, Null)
+35: Call(Getter, foo)
+36: Call(Method, print(_))
+37: Pop
+38: EndModule
+39: Return
+40: End

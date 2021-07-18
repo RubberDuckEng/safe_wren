@@ -1,9 +1,0 @@
-Unexpected error:
-[wren_c/test/core/fiber/transfer_with_value_indirect_reenter line 3] Error at 'B': Undeclared variable 'B'
-Expected return code 0 and got 65. Stderr:
-[wren_c/test/core/fiber/transfer_with_value_indirect_reenter line 3] Error at 'B': Undeclared variable 'B'
-
-Missing expected output "1" on line 14.
-Missing expected output "2" on line 15.
-Missing expected output "3" on line 16.
-Missing expected output "4" on line 17.

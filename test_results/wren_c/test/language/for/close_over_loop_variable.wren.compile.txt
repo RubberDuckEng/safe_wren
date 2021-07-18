@@ -1,1 +1,1 @@
-[wren_c/test/language/for/close_over_loop_variable line 4] Error at 'i': Undeclared variable 'i'
+[wren_c/test/language/for/close_over_loop_variable line 4] Error at 'i': Variable is used but not defined.

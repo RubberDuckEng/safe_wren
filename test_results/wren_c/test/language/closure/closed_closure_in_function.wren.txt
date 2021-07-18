@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/closure/closed_closure_in_function line 6] Error at 'local': Undeclared variable 'local'
+[wren_c/test/language/closure/closed_closure_in_function line 6] Error at 'local': Variable is used but not defined.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/closure/closed_closure_in_function line 6] Error at 'local': Undeclared variable 'local'
+[wren_c/test/language/closure/closed_closure_in_function line 6] Error at 'local': Variable is used but not defined.
 
 Missing expected output "local" on line 10.

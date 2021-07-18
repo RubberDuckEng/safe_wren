@@ -1,1 +1,1 @@
-[wren_c/test/language/variable/undefined_global line 1] Error at 'notDefined': Undeclared variable 'notDefined'
+[wren_c/test/language/variable/undefined_global line 1] Error at 'notDefined': Variable is used but not defined.

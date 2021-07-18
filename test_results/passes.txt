@@ -51,6 +51,7 @@ wren_c/test/core/fiber/call_with_value.wren
 wren_c/test/core/fiber/call_with_value_direct_reenter.wren
 wren_c/test/core/fiber/call_with_value_done.wren
 wren_c/test/core/fiber/call_with_value_error.wren
+wren_c/test/core/fiber/call_with_value_indirect_reenter.wren
 wren_c/test/core/fiber/call_with_value_to_parameter.wren
 wren_c/test/core/fiber/call_with_value_transferred.wren
 wren_c/test/core/fiber/is_done.wren
@@ -58,6 +59,8 @@ wren_c/test/core/fiber/new_wrong_arg_type.wren
 wren_c/test/core/fiber/new_wrong_arity.wren
 wren_c/test/core/fiber/resume_caller.wren
 wren_c/test/core/fiber/transfer.wren
+wren_c/test/core/fiber/transfer_direct_reenter.wren
+wren_c/test/core/fiber/transfer_indirect_reenter.wren
 wren_c/test/core/fiber/transfer_return_call_value.wren
 wren_c/test/core/fiber/transfer_return_transfer_value.wren
 wren_c/test/core/fiber/transfer_to_done.wren
@@ -65,6 +68,8 @@ wren_c/test/core/fiber/transfer_to_error.wren
 wren_c/test/core/fiber/transfer_to_parameter.wren
 wren_c/test/core/fiber/transfer_to_yielded.wren
 wren_c/test/core/fiber/transfer_with_value.wren
+wren_c/test/core/fiber/transfer_with_value_direct_reenter.wren
+wren_c/test/core/fiber/transfer_with_value_indirect_reenter.wren
 wren_c/test/core/fiber/transfer_with_value_to_done.wren
 wren_c/test/core/fiber/transfer_with_value_to_error.wren
 wren_c/test/core/fiber/transfer_with_value_to_parameter.wren
@@ -497,9 +502,15 @@ wren_c/test/language/module/simple_import/simple_import.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/nonlocal/assignment.wren
 wren_c/test/language/nonlocal/in_block_scope.wren
+wren_c/test/language/nonlocal/localname_forward_declare.wren
+wren_c/test/language/nonlocal/mutual_recursion.wren
+wren_c/test/language/nonlocal/nonlocal_in_initializer.wren
 wren_c/test/language/nonlocal/nonlocal_without_initializer.wren
+wren_c/test/language/nonlocal/null_before_defined.wren
 wren_c/test/language/nonlocal/use_in_function.wren
+wren_c/test/language/nonlocal/use_in_function_before_definition.wren
 wren_c/test/language/nonlocal/use_in_method.wren
+wren_c/test/language/nonlocal/use_in_method_before_definition.wren
 wren_c/test/language/null/literal.wren
 wren_c/test/language/number/hex_literals.wren
 wren_c/test/language/number/hex_too_large.wren

@@ -1,1 +1,1 @@
-[wren_c/test/language/closure/reference_closure_multiple_times line 6] Error at 'a': Undeclared variable 'a'
+[wren_c/test/language/closure/reference_closure_multiple_times line 6] Error at 'a': Variable is used but not defined.

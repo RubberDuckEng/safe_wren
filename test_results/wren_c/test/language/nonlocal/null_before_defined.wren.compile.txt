@@ -1,1 +1,17 @@
-[wren_c/test/language/nonlocal/null_before_defined line 1] Error at 'Foo': Undeclared variable 'Foo'
+Constants:
+00: "value"
+Code:
+00: Load(Module, Class("System"))
+01: Load(Module, Null)
+02: Call(Method, print(_))
+03: Pop
+04: Constant(0: "value")
+05: Store(Module)
+06: Pop
+07: Load(Module, Class("System"))
+08: Load(Module, Null)
+09: Call(Method, print(_))
+10: Pop
+11: EndModule
+12: Return
+13: End
