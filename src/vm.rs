@@ -418,6 +418,12 @@ impl ObjFiber {
         self.call_stack.borrow_mut()[0].push(arg);
     }
 
+    fn push_fiber_return(&mut self, arg: Value) {
+        // Push the return value from a yeild or transfer
+        // onto the top-most frame of the callstack.
+        self.call_stack.borrow_mut().last_mut().unwrap().push(arg);
+    }
+
     pub(crate) fn error(&self) -> Value {
         self.error.clone()
     }
@@ -1110,8 +1116,9 @@ impl WrenVM {
                         None
                     };
                     self.fiber = caller;
-                    if self.fiber.is_none() {
-                        return Ok(value);
+                    match &self.fiber {
+                        Some(fiber) => fiber.borrow_mut().push_fiber_return(value),
+                        None => return Ok(value),
                     }
                 }
                 Err(error) => return Err(error),

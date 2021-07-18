@@ -36,6 +36,8 @@ wren_c/test/core/fiber/call.wren
 wren_c/test/core/fiber/call_direct_reenter.wren
 wren_c/test/core/fiber/call_done.wren
 wren_c/test/core/fiber/call_indirect_reenter.wren
+wren_c/test/core/fiber/call_return_implicit_null.wren
+wren_c/test/core/fiber/call_return_value.wren
 wren_c/test/core/fiber/call_root.wren
 wren_c/test/core/fiber/call_to_parameter.wren
 wren_c/test/core/fiber/call_transferred.wren

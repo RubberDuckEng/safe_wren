@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Fn does not implement 'print(_)'.
-Unexpected output on stderr:
-[wren_c/test/core/fiber/call_return_value line 6] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn does not implement 'print(_)'.
-[wren_c/test/core/fiber/call_return_value line 6] in <script>
-
-Missing expected output "result" on line 6.
