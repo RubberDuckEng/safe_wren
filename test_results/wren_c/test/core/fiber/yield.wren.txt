@@ -1,12 +1,11 @@
 Unexpected output on stderr:
-Fiber does not implement 'call()'.
+Fiber metaclass does not implement 'yield()'.
 Unexpected output on stderr:
-[wren_c/test/core/fiber/yield line 9] in <script>
+[wren_c/test/core/fiber/yield line 3] in new(_) block argument
 Expected return code 0 and got 70. Stderr:
-Fiber does not implement 'call()'.
-[wren_c/test/core/fiber/yield line 9] in <script>
+Fiber metaclass does not implement 'yield()'.
+[wren_c/test/core/fiber/yield line 3] in new(_) block argument
 
-Missing expected output "fiber 1" on line 9.
 Missing expected output "main 1" on line 10.
 Missing expected output "fiber 2" on line 11.
 Missing expected output "main 2" on line 12.

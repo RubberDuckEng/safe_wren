@@ -448,16 +448,77 @@ fn fiber_current(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Fiber(vm.fiber.as_ref().unwrap().clone()))
 }
 
+fn fiber_call(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+    let this = this_as_fiber(&args);
+    validate_fiber_action(&this.borrow(), true, "call")?;
+    Ok(FiberAction::Call(this, Value::Null))
+}
+
 fn fiber_error(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let this = this_as_fiber(&args);
-    let error = this.borrow().error.clone();
+    let error = this.borrow().error();
     Ok(error)
 }
 
 fn fiber_is_done(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let this = this_as_fiber(&args);
-    let is_done = this.borrow().is_done();
+    let this_handle = this_as_fiber(&args);
+    let this = this_handle.borrow();
+    // We can't get a refernce to the (possibly currently running) stack
+    // to check if empty, so use the completed_normally_cache.
+    let is_done = this.has_error() || this.completed_normally_cache;
     Ok(Value::Boolean(is_done))
+}
+
+// Prepare to transfer execution to [fiber] coming from the current fiber whose
+// stack has [args].
+//
+// [isCall] is true if [fiber] is being called and not transferred.
+//
+// [hasValue] is true if a value in [args] is being passed to the new fiber.
+// Otherwise, `null` is implicitly being passed.
+// This is called runFiber in wren_c.
+fn validate_fiber_action(fiber: &ObjFiber, is_call: bool, verb: &str) -> Result<()> {
+    if fiber.has_error() {
+        return Err(VMError::from_string(format!(
+            "Cannot {} an aborted fiber.",
+            verb
+        )));
+    }
+
+    if is_call {
+        // You can't call a called fiber, but you can transfer directly to it,
+        // which is why this check is gated on `isCall`. This way, after
+        // resuming a suspended fiber, it will run and then return to the fiber
+        // that called it and so on.
+        if fiber.caller.is_some() {
+            return Err(VMError::from_str("Fiber has already been called."));
+        }
+
+        if fiber.is_root() {
+            return Err(VMError::from_str("Cannot call root fiber."));
+        }
+    }
+
+    if fiber.completed_normally_cache {
+        return Err(VMError::from_string(format!(
+            "Cannot {} a finished fiber.",
+            verb
+        )));
+    }
+
+    // if fiber.just_started() {
+    //     // The fiber is being started for the first time.
+    //     // If its function takes a parameter, bind an argument to it.
+    //     if fiber.takes_one_argument() {
+    //         fiber.call_stack[0].push(value);
+    //     }
+    // } else {
+    //     // The fiber is being resumed, make yield() or transfer()
+    //     // return the result.
+    //     // fiber.pop(); // FIXME: Seems wrong.
+    //     // fiber.push(value);
+    // }
+    Ok(())
 }
 
 fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
@@ -979,7 +1040,16 @@ macro_rules! primitive {
         let symbol = $vm.methods.ensure_symbol($sig);
         $class
             .borrow_mut()
-            .set_method(symbol, Method::Primitive($func));
+            .set_method(symbol, Method::ValuePrimitive($func));
+    };
+}
+
+macro_rules! fiber_primitive {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        let symbol = $vm.methods.ensure_symbol($sig);
+        $class
+            .borrow_mut()
+            .set_method(symbol, Method::FiberActionPrimitive($func));
     };
 }
 
@@ -990,7 +1060,7 @@ macro_rules! primitive_static {
             .borrow_mut()
             .class_obj()
             .borrow_mut()
-            .set_method(symbol, Method::Primitive($func));
+            .set_method(symbol, Method::ValuePrimitive($func));
     };
 }
 
@@ -1100,7 +1170,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive_static!(vm, fiber, "suspend()", fiber_suspend);
     // primitive_static!(vm, fiber, "yield()", fiber_yield);
     // primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
-    // primitive!(vm, fiber, "call()", fiber_call);
+    fiber_primitive!(vm, fiber, "call()", fiber_call);
     // primitive!(vm, fiber, "call(_)", fiber_call1);
     primitive!(vm, fiber, "error", fiber_error);
     primitive!(vm, fiber, "isDone", fiber_is_done);

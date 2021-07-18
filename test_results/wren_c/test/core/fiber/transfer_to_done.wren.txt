@@ -1,4 +1,2 @@
 Expected runtime error "Cannot transfer to a finished fiber." and got:
-Fiber does not implement 'call()'.
-Expected runtime error on line 6 but was on line 5.
-Missing expected output "run" on line 5.
+Fiber does not implement 'transfer()'.

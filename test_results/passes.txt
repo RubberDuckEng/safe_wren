@@ -32,8 +32,14 @@ wren_c/test/core/class/no_constructor.wren
 wren_c/test/core/class/supertype.wren
 wren_c/test/core/class/type.wren
 wren_c/test/core/fiber/abort_main_fiber.wren
+wren_c/test/core/fiber/call.wren
+wren_c/test/core/fiber/call_direct_reenter.wren
+wren_c/test/core/fiber/call_done.wren
+wren_c/test/core/fiber/call_indirect_reenter.wren
+wren_c/test/core/fiber/call_to_parameter.wren
 wren_c/test/core/fiber/new_wrong_arg_type.wren
 wren_c/test/core/fiber/new_wrong_arity.wren
+wren_c/test/core/fiber/resume_caller.wren
 wren_c/test/core/fiber/type.wren
 wren_c/test/core/function/arity.wren
 wren_c/test/core/function/call_extra_arguments.wren
