@@ -1,6 +1,8 @@
 class Bool {}
 // Fn and Fiber can't be defined in wren_core, because they're needed
 // to be the class for the Fiber and for all closures here.
+// class Fiber {}
+// class Fn {}
 class Null {}
 class Num {}
 
@@ -181,30 +183,6 @@ class WhereSequence is Sequence {
   iteratorValue(iterator) { _sequence.iteratorValue(iterator) }
 }
 
-class StringByteSequence is Sequence {
-  construct new(string) {
-    _string = string
-  }
-
-  [index] { _string.byteAt_(index) }
-  iterate(iterator) { _string.iterateByte_(iterator) }
-  iteratorValue(iterator) { _string.byteAt_(iterator) }
-
-  count { _string.byteCount_ }
-}
-
-class StringCodePointSequence is Sequence {
-  construct new(string) {
-    _string = string
-  }
-
-  [index] { _string.codePointAt_(index) }
-  iterate(iterator) { _string.iterate(iterator) }
-  iteratorValue(iterator) { _string.codePointAt_(iterator) }
-
-  count { _string.count }
-}
-
 class String is Sequence {
   bytes { StringByteSequence.new(this) }
   codePoints { StringCodePointSequence.new(this) }
@@ -315,6 +293,30 @@ class String is Sequence {
   }
 }
 
+class StringByteSequence is Sequence {
+  construct new(string) {
+    _string = string
+  }
+
+  [index] { _string.byteAt_(index) }
+  iterate(iterator) { _string.iterateByte_(iterator) }
+  iteratorValue(iterator) { _string.byteAt_(iterator) }
+
+  count { _string.byteCount_ }
+}
+
+class StringCodePointSequence is Sequence {
+  construct new(string) {
+    _string = string
+  }
+
+  [index] { _string.codePointAt_(index) }
+  iterate(iterator) { _string.iterate(iterator) }
+  iteratorValue(iterator) { _string.codePointAt_(iterator) }
+
+  count { _string.count }
+}
+
 class List is Sequence {
   addAll(other) {
     for (element in other) {
@@ -381,6 +383,29 @@ class List is Sequence {
   }
 }
 
+class Map is Sequence {
+  keys { MapKeySequence.new(this) }
+  values { MapValueSequence.new(this) }
+
+  toString {
+    var first = true
+    var result = "{"
+
+    for (key in keys) {
+      if (!first) result = result + ", "
+      first = false
+      result = result + "%(key): %(this[key])"
+    }
+
+    return result + "}"
+  }
+
+  iteratorValue(iterator) {
+    return MapEntry.new(
+        keyIteratorValue_(iterator),
+        valueIteratorValue_(iterator))
+  }
+}
 
 class MapEntry {
   construct new(key, value) {
@@ -410,30 +435,6 @@ class MapValueSequence is Sequence {
 
   iterate(n) { _map.iterate(n) }
   iteratorValue(iterator) { _map.valueIteratorValue_(iterator) }
-}
-
-class Map is Sequence {
-  keys { MapKeySequence.new(this) }
-  values { MapValueSequence.new(this) }
-
-  toString {
-    var first = true
-    var result = "{"
-
-    for (key in keys) {
-      if (!first) result = result + ", "
-      first = false
-      result = result + "%(key): %(this[key])"
-    }
-
-    return result + "}"
-  }
-
-  iteratorValue(iterator) {
-    return MapEntry.new(
-        keyIteratorValue_(iterator),
-        valueIteratorValue_(iterator))
-  }
 }
 
 class Range is Sequence {}

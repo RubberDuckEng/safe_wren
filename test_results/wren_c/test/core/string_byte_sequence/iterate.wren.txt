@@ -1,12 +1,12 @@
 Unexpected output on stderr:
 String does not implement 'iterateByte_(_)'.
 Unexpected output on stderr:
-[#core line 190] in iterate(_)
+[#core line 302] in iterate(_)
 Unexpected output on stderr:
 [wren_c/test/core/string_byte_sequence/iterate line 6] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterateByte_(_)'.
-[#core line 190] in iterate(_)
+[#core line 302] in iterate(_)
 [wren_c/test/core/string_byte_sequence/iterate line 6] in <script>
 
 Missing expected output "0" on line 6.
