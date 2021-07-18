@@ -10,13 +10,30 @@ extern crate wren_rust;
 
 use wren_rust::wren_debug::{interpret_and_print_vm, print_bytecode, print_tokens};
 
+fn print_usage() {
+    println!("Usage:");
+    println!("wren_debug MODE PATH_OR_STRING");
+    println!("");
+    println!("MODE        DESCRIPTION");
+    println!("tokenize -> print token stream");
+    println!("compile  -> print bytecode stream");
+    println!("interpet -> interpet with debugging enabled");
+}
+
 fn main() {
     let args: Vec<_> = env::args().collect();
-    if args.len() > 1 && args[1] == "--tokenize" {
+    if args.len() < 2 {
+        print_usage();
+        return;
+    }
+    let command = &args[1];
+    if command.eq("tokenize") {
         print_tokens(&args[2]);
-    } else if args.len() > 1 && args[1] == "--compile" {
+    } else if command.eq("compile") {
         print_bytecode(&args[2]);
-    } else if args.len() > 1 && args[1] == "--interpret" {
+    } else if command.eq("interpret") {
         interpret_and_print_vm(&args[2]);
+    } else {
+        print_usage();
     }
 }

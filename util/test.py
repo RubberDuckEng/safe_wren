@@ -164,7 +164,7 @@ class Test:
 
     def compile_bytecode(self):
         test_arg = self.path
-        proc = Popen([WREN_DEBUG, '--compile', test_arg],
+        proc = Popen([WREN_DEBUG, 'compile', test_arg],
                      stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
         out, err = proc.communicate(self.input_bytes)
