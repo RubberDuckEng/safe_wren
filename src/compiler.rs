@@ -8,8 +8,6 @@ use std::ops::Range;
 use std::rc::Rc;
 use std::str;
 
-use num_traits::FromPrimitive;
-
 use crate::vm::{
     new_handle, wren_define_variable, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn,
     SymbolTable, Value, WrenVM,
@@ -788,7 +786,8 @@ pub fn lex(input: &mut InputManager) -> Result<Vec<ParseToken>, WrenError> {
     Ok(tokens)
 }
 
-#[derive(Debug, Copy, Clone, PartialOrd, PartialEq, FromPrimitive)]
+// NOTE: Keep in sync with Precendence::one_higher!
+#[derive(Debug, Copy, Clone, PartialOrd, PartialEq)]
 enum Precedence {
     None = 0, // Newlines, EOF, etc.
     Lowest,
@@ -812,8 +811,30 @@ enum Precedence {
 }
 
 impl Precedence {
+    // There are crates to convert from enums to numbers
+    // but doing this manually to avoid any dependencies.
     fn one_higher(self) -> Precedence {
-        FromPrimitive::from_u8(self as u8 + 1).unwrap()
+        match self {
+            Precedence::None => Precedence::Lowest,
+            Precedence::Lowest => Precedence::Assignment,
+            Precedence::Assignment => Precedence::Conditional,
+            Precedence::Conditional => Precedence::LogicalOr,
+            Precedence::LogicalOr => Precedence::LogicalAnd,
+            Precedence::LogicalAnd => Precedence::Equality,
+            Precedence::Equality => Precedence::Is,
+            Precedence::Is => Precedence::Comparison,
+            Precedence::Comparison => Precedence::BitwiseOr,
+            Precedence::BitwiseOr => Precedence::BitwiseXor,
+            Precedence::BitwiseXor => Precedence::BitwiseAnd,
+            Precedence::BitwiseAnd => Precedence::BitwiseShift,
+            Precedence::BitwiseShift => Precedence::Range,
+            Precedence::Range => Precedence::Term,
+            Precedence::Term => Precedence::Factor,
+            Precedence::Factor => Precedence::Unary,
+            Precedence::Unary => Precedence::Call,
+            Precedence::Call => Precedence::Primary,
+            Precedence::Primary => panic!("Primary is the highest precedence!"),
+        }
     }
 }
 

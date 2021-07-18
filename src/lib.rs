@@ -1,9 +1,5 @@
 // public API for wren_rust
 
-#[macro_use]
-extern crate num_derive;
-extern crate num_traits;
-
 mod compiler;
 mod core;
 mod vm;
