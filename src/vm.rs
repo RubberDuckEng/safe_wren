@@ -4,7 +4,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::rc::Rc;
-use std::str;
+use std::{str, usize};
 
 use crate::compiler::{compile_in_module, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
@@ -213,6 +213,27 @@ impl Module {
             .iter()
             .position(|e| e.eq(name))
             .map(|s| s as u16)
+    }
+
+    pub(crate) fn variable_count(&self) -> usize {
+        self.variables.len()
+    }
+
+    pub(crate) fn check_for_undefined_variables<F, E>(
+        &self,
+        since_index: usize,
+        f: F,
+    ) -> Result<(), E>
+    where
+        F: Fn(String, usize) -> Result<(), E>,
+    {
+        for i in since_index..self.variables.len() {
+            let value = &self.variables[i];
+            if let Some(line_number) = value.try_into_num() {
+                f("foo".into(), line_number as usize)?;
+            }
+        }
+        Ok(())
     }
 
     pub(crate) fn define_variable(&mut self, name: &str, value: Value) -> usize {

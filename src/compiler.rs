@@ -152,14 +152,10 @@ pub struct ParseToken {
 }
 
 impl ParseToken {
-    // FIXME: This should not be a Result.
-    // FIXME: This should ideally return a &str
-    pub fn name(&self, input: &InputManager) -> Result<String, LexError> {
-        // There must be a nicer way to do this into-error on a single line?
-        // FIXME: Why can this ever error?  If we decoded it the first time
-        // we can clearly do so again, no?
-        let name = String::from_utf8(input.source[self.bytes_range.clone()].into())?;
-        Ok(name)
+    // FIXME: This should return a &str
+    pub fn name(&self, input: &InputManager) -> String {
+        // If we decoded it to parse it, we can decode it again w/o error.
+        String::from_utf8(input.source[self.bytes_range.clone()].into()).unwrap()
     }
 
     fn before_file() -> ParseToken {
@@ -1171,6 +1167,11 @@ struct ParseContext<'a> {
     parser: Parser,
     _compiler: Option<Box<Compiler>>,
     vm: &'a mut WrenVM,
+    // We have the module during parse-time in order to be able to
+    // make ObjFn objects (which hold a pointer to the module) as
+    // well as be able to look-up and define variables on the module.
+    // IIRC, we only ever define functions on the module during parse time
+    // all other variables are placeholders.
     module: Handle<Module>,
     nesting: usize,
 }
@@ -1211,23 +1212,26 @@ impl<'a> ParseContext<'a> {
         self.error_string(msg.into())
     }
 
-    // Outputs a compile or syntax error.
-    fn error_string(&self, msg: String) -> WrenError {
-        let token = &self.parser.previous.token;
-
-        let label = if token == &Token::Newline {
+    fn label_for_token(&self, token: &Token) -> String {
+        if token == &Token::Newline {
             "Error at newline".into()
         } else if token == &Token::EndOfFile {
             "Error at end of file".into()
         } else {
-            let name = previous_token_name(self).unwrap();
+            let name = previous_token_name(self);
             // Match wren_c's variable name limits.
             if name.len() <= MAX_VARIABLE_NAME {
                 format!("Error at '{}'", name)
             } else {
                 format!("Error at '{:.*}...'", MAX_VARIABLE_NAME, name)
             }
-        };
+        }
+    }
+
+    // Outputs a compile or syntax error.
+    fn error_string(&self, msg: String) -> WrenError {
+        let token = &self.parser.previous.token;
+        let label = self.label_for_token(token);
         self.grammar_error(&label, msg)
     }
 
@@ -1283,7 +1287,7 @@ fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
         Token::String(s) => Value::from_str(s),
         Token::Interpolation(s) => Value::from_str(s),
         _ => {
-            let name = previous_token_name(ctx)?;
+            let name = previous_token_name(ctx);
             return Err(ctx.error_string(format!("Invalid literal {}", name)));
         }
     };
@@ -1413,7 +1417,7 @@ impl Signature {
 
 fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     let rule = ctx.parser.previous.token.grammar_rule();
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
     ignore_newlines(ctx)?;
     // Compile the right-hand side.
     parse_precendence(ctx, rule.precedence.one_higher())?;
@@ -1550,7 +1554,7 @@ fn map(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
 }
 
 fn unary_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
 
     ignore_newlines(ctx)?;
     // Compile the argument.
@@ -1565,7 +1569,7 @@ fn signature_from_token(
     ctx: &ParseContext,
     call_type: SignatureType,
 ) -> Result<Signature, WrenError> {
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
 
     // wren_c measures in bytes so we do too.
     if name.len() > MAX_METHOD_NAME {
@@ -1927,7 +1931,7 @@ fn allow_line_before_dot(ctx: &mut ParseContext) -> Result<(), WrenError> {
 }
 
 fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
 
     let field_lookup = |ctx: &ParseContext, maybe_class_info: &Option<RefCell<ClassInfo>>| {
         match maybe_class_info {
@@ -2087,7 +2091,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     // This needs to be much more complicated to handle module
     // lookups as well as setters.
 
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
     if let Some(variable) = resolve_non_module(ctx, &name) {
         bare_name(ctx, can_assign, variable)?;
         return Ok(());
@@ -2230,7 +2234,7 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
     consume_expecting_name(ctx, "Expect for loop variable name.")?;
 
     // Remember the name of the loop variable.
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
 
     consume_expecting(ctx, Token::In, "Expect 'in' after loop variable.")?;
     ignore_newlines(ctx)?;
@@ -2672,7 +2676,7 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
 // name. Returns its slot.
 fn declare_named_variable(ctx: &mut ParseContext) -> Result<u16, WrenError> {
     consume_expecting_name(ctx, "Expect variable name.")?;
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
     declare_variable(ctx, name)
 }
 
@@ -2713,7 +2717,7 @@ fn import(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
         // We need to hold onto the source variable,
         // in order to reference it in the import later
-        let variable_name = previous_token_name(ctx)?;
+        let variable_name = previous_token_name(ctx);
 
         // Store the symbol we care about for the variable
         let slot = if match_current(ctx, Token::As)? {
@@ -2739,18 +2743,15 @@ fn import(ctx: &mut ParseContext) -> Result<(), WrenError> {
     Ok(())
 }
 
-fn previous_token_name(ctx: &ParseContext) -> Result<String, WrenError> {
-    ctx.parser
-        .previous
-        .name(&ctx.parser.input)
-        .map_err(|e| ctx.parse_error(e.into()))
+fn previous_token_name(ctx: &ParseContext) -> String {
+    ctx.parser.previous.name(&ctx.parser.input)
 }
 
 fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
     // Grab its name, but don't declare it yet. A (local) variable shouldn't be
     // in scope in its own initializer.
     consume_expecting_name(ctx, "Expect variable name.")?;
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
 
     // Compile the initializer.
     if match_current(ctx, Token::Equals)? {
@@ -2997,7 +2998,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
         index: class_symbol as usize,
     };
     // FIXME: Should declare_named_variable return the name too?
-    let name = previous_token_name(ctx)?;
+    let name = previous_token_name(ctx);
 
     // FIXME: Clone shouldn't be needed.
     let class_name = Value::String(Rc::new(name.clone()));
@@ -3489,6 +3490,8 @@ pub(crate) fn wren_compile<'a>(
     input: InputManager,
     module: Handle<Module>,
 ) -> Result<Handle<ObjClosure>, WrenError> {
+    let num_existing_variables = module.borrow().variable_count();
+
     // Init the parser & compiler
     let mut parse_context = ParseContext {
         parser: Parser {
@@ -3526,7 +3529,23 @@ pub(crate) fn wren_compile<'a>(
     emit(scope.ctx, Ops::EndModule);
     emit(scope.ctx, Ops::Return);
 
-    // FIXME: Check for undefined implicit variables and throw errors.
+    let handle_undefined = |name: String, line_number: usize| -> Result<(), WrenError> {
+        Err(WrenError {
+            line: line_number,
+            module: scope.ctx.module_name(),
+            // FIXME: Manual generation of label here is hacky.
+            error: ParserError::Grammar(format!(
+                "Error at '{}': {}",
+                name, "Variable is used but not defined."
+            )),
+        })
+    };
+
+    scope
+        .ctx
+        .module
+        .borrow()
+        .check_for_undefined_variables(num_existing_variables, handle_undefined)?;
 
     let compiler = scope.pop();
     // wren_c uses (script) :shrug:

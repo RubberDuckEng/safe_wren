@@ -56,11 +56,7 @@ pub fn print_tokens(source_or_path: &String) {
     if let Ok(tokens) = result {
         let mut as_string = Vec::new();
         for token in tokens {
-            as_string.push(format!(
-                "{:?} '{}'",
-                token.token,
-                token.name(&input.input).expect("input")
-            ));
+            as_string.push(format!("{:?} '{}'", token.token, token.name(&input.input)));
         }
         println!("Tokens: [{}]", as_string.join(", "));
     } else {
