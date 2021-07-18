@@ -130,6 +130,7 @@ wren_c/test/core/list/iterator_value_iterator_too_large.wren
 wren_c/test/core/list/iterator_value_iterator_too_small.wren
 wren_c/test/core/list/join.wren
 wren_c/test/core/list/join_separator_not_string.wren
+wren_c/test/core/list/map.wren
 wren_c/test/core/list/multiply.wren
 wren_c/test/core/list/multiply_negative.wren
 wren_c/test/core/list/multiply_not_int.wren
@@ -169,6 +170,7 @@ wren_c/test/core/list/subscript_wrong_type.wren
 wren_c/test/core/list/swap.wren
 wren_c/test/core/list/to_string.wren
 wren_c/test/core/list/type.wren
+wren_c/test/core/list/where.wren
 wren_c/test/core/map/churn.wren
 wren_c/test/core/map/contains_key.wren
 wren_c/test/core/map/contains_key_not_value.wren
@@ -254,6 +256,7 @@ wren_c/test/core/range/iterate_wrong_type.wren
 wren_c/test/core/range/iterator_value.wren
 wren_c/test/core/range/join.wren
 wren_c/test/core/range/join_separator_not_string.wren
+wren_c/test/core/range/map.wren
 wren_c/test/core/range/max.wren
 wren_c/test/core/range/min.wren
 wren_c/test/core/range/no_constructor.wren
@@ -261,13 +264,25 @@ wren_c/test/core/range/reduce.wren
 wren_c/test/core/range/to.wren
 wren_c/test/core/range/to_string.wren
 wren_c/test/core/range/type.wren
+wren_c/test/core/range/where.wren
 wren_c/test/core/sequence/all.wren
 wren_c/test/core/sequence/all_non_function_arg.wren
 wren_c/test/core/sequence/any.wren
 wren_c/test/core/sequence/any_non_function_arg.wren
 wren_c/test/core/sequence/count.wren
 wren_c/test/core/sequence/is_empty.wren
+wren_c/test/core/sequence/map.wren
 wren_c/test/core/sequence/no_constructor.wren
+wren_c/test/core/sequence/skip.wren
+wren_c/test/core/sequence/skip_negative.wren
+wren_c/test/core/sequence/skip_not_int.wren
+wren_c/test/core/sequence/skip_not_num.wren
+wren_c/test/core/sequence/take.wren
+wren_c/test/core/sequence/take_negative.wren
+wren_c/test/core/sequence/take_not_int.wren
+wren_c/test/core/sequence/take_not_num.wren
+wren_c/test/core/sequence/to_list.wren
+wren_c/test/core/sequence/where.wren
 wren_c/test/core/string/bytes.wren
 wren_c/test/core/string/concatenation.wren
 wren_c/test/core/string/concatenation_wrong_arg_type.wren
@@ -288,6 +303,7 @@ wren_c/test/core/string/multiply_not_num.wren
 wren_c/test/core/string/no_constructor.wren
 wren_c/test/core/string/not.wren
 wren_c/test/core/string/replace_old_not_string.wren
+wren_c/test/core/string/split_argument_not_string.wren
 wren_c/test/core/string/starts_with.wren
 wren_c/test/core/string/starts_with_invalid_arg.wren
 wren_c/test/core/string/to_string.wren

@@ -1,15 +1,15 @@
 Unexpected output on stderr:
 Map does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[#core line 343] in iterate(_)
+[#core line 402] in iterate(_)
 Unexpected output on stderr:
-[#core line 364] in toString
+[#core line 423] in toString
 Unexpected output on stderr:
 [wren_c/test/core/map/to_string line 2] in <script>
 Expected return code 0 and got 70. Stderr:
 Map does not implement 'iterate(_)'.
-[#core line 343] in iterate(_)
-[#core line 364] in toString
+[#core line 402] in iterate(_)
+[#core line 423] in toString
 [wren_c/test/core/map/to_string line 2] in <script>
 
 Missing expected output "{}" on line 2.
