@@ -1,2 +1,0 @@
-Expected runtime error "Cannot transfer to a finished fiber." and got:
-Fiber does not implement 'transfer(_)'.

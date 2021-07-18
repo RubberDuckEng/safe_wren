@@ -413,8 +413,7 @@ impl ObjFiber {
         caller
     }
 
-    fn setup_for_call(&mut self, caller: Handle<ObjFiber>, arg: Value) {
-        self.caller = Some(caller);
+    fn push_fiber_argument(&mut self, arg: Value) {
         // A bit hacky way to pass the arg.
         self.call_stack.borrow_mut()[0].push(arg);
     }
@@ -1094,8 +1093,12 @@ impl WrenVM {
             match result {
                 Ok(FiberNext::Action(action)) => match action {
                     FiberAction::Call(fiber, arg) => {
-                        let caller = self.fiber.take().unwrap();
-                        fiber.borrow_mut().setup_for_call(caller, arg);
+                        fiber.borrow_mut().caller = self.fiber.take();
+                        fiber.borrow_mut().push_fiber_argument(arg);
+                        self.fiber = Some(fiber.clone());
+                    }
+                    FiberAction::Transfer(fiber, arg) => {
+                        fiber.borrow_mut().push_fiber_argument(arg);
                         self.fiber = Some(fiber.clone());
                     }
                 },
@@ -1756,6 +1759,7 @@ impl Obj for ObjRange {
 
 pub(crate) enum FiberAction {
     Call(Handle<ObjFiber>, Value),
+    Transfer(Handle<ObjFiber>, Value),
 }
 
 // Unclear if this should take Vec or a slice?

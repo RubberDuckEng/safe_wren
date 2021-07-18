@@ -1,14 +1,11 @@
 Unexpected output on stderr:
-Fiber does not implement 'transfer()'.
+Fiber metaclass does not implement 'yield()'.
 Unexpected output on stderr:
-[wren_c/test/core/fiber/transfer_return_call_value line 14] in <script>
+[wren_c/test/core/fiber/transfer_return_call_value line 9] in new(_) block argument
 Expected return code 0 and got 70. Stderr:
-Fiber does not implement 'transfer()'.
-[wren_c/test/core/fiber/transfer_return_call_value line 14] in <script>
+Fiber metaclass does not implement 'yield()'.
+[wren_c/test/core/fiber/transfer_return_call_value line 9] in new(_) block argument
 
-Missing expected output "fiber 1" on line 14.
-Missing expected output "main 1" on line 15.
-Missing expected output "call 1" on line 16.
 Missing expected output "main 2" on line 18.
 Missing expected output "null" on line 22.
 Missing expected output "main 3" on line 23.

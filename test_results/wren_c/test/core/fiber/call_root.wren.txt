@@ -1,4 +1,0 @@
-Expected runtime error "Cannot call root fiber." and got:
-Fiber does not implement 'transfer()'.
-Expected runtime error on line 6 but was on line 8.
-Missing expected output "in new fiber" on line 5.
