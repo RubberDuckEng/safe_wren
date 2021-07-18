@@ -33,7 +33,6 @@ pub(crate) const MAX_PARAMETERS: usize = 16;
 pub(crate) enum VMError {
     Error(String),
     FiberAbort(Value),
-    StackUnderflow,
 }
 
 impl VMError {
@@ -45,6 +44,13 @@ impl VMError {
     // Rename to error_string?
     pub(crate) fn from_string(msg: String) -> VMError {
         VMError::Error(msg)
+    }
+
+    fn into_try_return_value(self) -> Value {
+        match self {
+            VMError::Error(string) => Value::from_string(string),
+            VMError::FiberAbort(value) => value,
+        }
     }
 }
 
@@ -259,7 +265,6 @@ impl RuntimeError {
                 let maybe_msg = value.try_into_string();
                 maybe_msg.unwrap_or("Fiber Abort <non-string>".to_string())
             }
-            VMError::StackUnderflow => "stack underflow".into(),
         };
         RuntimeError {
             msg: msg,
@@ -369,7 +374,7 @@ impl core::fmt::Debug for CallFrame {
 // detected from the state of other fields in the fiber.
 pub enum FiberRunSource {
     // The fiber is being run from another fiber using a call to `try()`.
-    // Try,
+    Try,
 
     // The fiber was directly invoked by `runInterpreter()`. This means it's the
     // initial fiber used by a call to `wrenCall()` or `wrenInterpret()`.
@@ -404,6 +409,13 @@ impl ObjFiber {
     pub fn is_root(&self) -> bool {
         match self.run_source {
             FiberRunSource::Root => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_try(&self) -> bool {
+        match self.run_source {
+            FiberRunSource::Try => true,
             _ => false,
         }
     }
@@ -1096,6 +1108,12 @@ impl WrenVM {
                         fiber.borrow_mut().push_fiber_argument(arg);
                         self.fiber = Some(fiber.clone());
                     }
+                    FiberAction::Try(fiber, arg) => {
+                        fiber.borrow_mut().caller = self.fiber.take();
+                        fiber.borrow_mut().push_fiber_argument(arg);
+                        fiber.borrow_mut().run_source = FiberRunSource::Try;
+                        self.fiber = Some(fiber.clone());
+                    }
                     FiberAction::Transfer(fiber, arg) => {
                         fiber.borrow_mut().push_fiber_argument(arg);
                         self.fiber = Some(fiber.clone());
@@ -1114,12 +1132,39 @@ impl WrenVM {
                         }
                     }
                 },
-                Err(error) => return Err(error),
+                Err(error) => {
+                    // Set Fiber.error on the current fiber.  We can't do this
+                    // deeper in the stack because we can't borrow_mut there.
+                    match &error {
+                        VMError::FiberAbort(value) => fiber.borrow_mut().error = value.clone(),
+                        _ => {}
+                    }
+                    // If we are a tried fiber and we have a caller
+                    let caller = match &self.fiber {
+                        Some(fiber) if fiber.borrow().is_try() => {
+                            fiber.borrow_mut().return_from_fiber_take_caller()
+                        }
+                        _ => None,
+                    };
+                    // transfer the string to the caller.
+                    self.fiber = caller;
+                    match &self.fiber {
+                        Some(fiber) => fiber
+                            .borrow_mut()
+                            .push_fiber_return(error.into_try_return_value()),
+                        None => {
+                            return Err(RuntimeError::from_vm_error(
+                                error,
+                                self.stack_trace(&fiber.borrow()),
+                            ))
+                        }
+                    }
+                }
             }
         }
     }
 
-    fn run_in_fiber(&mut self, fiber: &ObjFiber) -> Result<FiberAction, RuntimeError> {
+    fn run_in_fiber(&mut self, fiber: &ObjFiber) -> Result<FiberAction, VMError> {
         loop {
             // FIXME: I suspect we no longer need to pop the active frame since
             // the call_stack is held in a RefCell and can be passed with
@@ -1158,10 +1203,7 @@ impl WrenVM {
                     // Push the current frame back onto the fiber so we can
                     // see it in error reporting.
                     fiber.call_stack.borrow_mut().push(frame);
-                    return Err(RuntimeError::from_vm_error(
-                        vm_error,
-                        self.stack_trace(&fiber),
-                    ));
+                    return Err(vm_error);
                 }
             }
         }
@@ -1453,12 +1495,14 @@ impl CallFrame {
         self.stack.push(value);
     }
 
+    // FIXME: No longer needs to be Result, now that Stack Underflow panics
     fn pop(&mut self) -> Result<Value> {
-        self.stack.pop().ok_or(VMError::StackUnderflow)
+        Ok(self.stack.pop().expect("Stack underflow"))
     }
 
+    // FIXME: No longer needs to be Result, now that Stack Underflow panics
     fn peek(&mut self) -> Result<&Value> {
-        self.stack.last().ok_or(VMError::StackUnderflow)
+        Ok(self.stack.last().expect("Stack underflow"))
     }
 
     fn dump_stack(&self, active_module: &str, frame_depth: usize) {
@@ -1767,6 +1811,7 @@ pub(crate) enum FiberAction {
     Transfer(Handle<ObjFiber>, Value),
     // AFAICT, Return and Yield are the same.
     Return(Value),
+    Try(Handle<ObjFiber>, Value),
 }
 
 // Unclear if this should take Vec or a slice?

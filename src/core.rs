@@ -480,6 +480,18 @@ fn fiber_transfer1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
     Ok(FiberAction::Transfer(this, args[1].clone()))
 }
 
+fn fiber_try(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+    let this = this_as_fiber(&args);
+    validate_fiber_action(&this.borrow(), true, "try")?;
+    Ok(FiberAction::Try(this, Value::Null))
+}
+
+fn fiber_try1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+    let this = this_as_fiber(&args);
+    validate_fiber_action(&this.borrow(), true, "try")?;
+    Ok(FiberAction::Try(this, args[1].clone()))
+}
+
 fn fiber_error(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let this = this_as_fiber(&args);
     let error = this.borrow().error();
@@ -1201,8 +1213,8 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     fiber_primitive!(vm, fiber, "transfer()", fiber_transfer);
     fiber_primitive!(vm, fiber, "transfer(_)", fiber_transfer1);
     // primitive!(vm, fiber, "transferError(_)", fiber_transfer_error);
-    // primitive!(vm, fiber, "try()", fiber_try);
-    // primitive!(vm, fiber, "try(_)", fiber_try1);
+    fiber_primitive!(vm, fiber, "try()", fiber_try);
+    fiber_primitive!(vm, fiber, "try(_)", fiber_try1);
 
     let fn_class = vm.fn_class.as_ref().unwrap();
     primitive_static!(vm, fn_class, "new(_)", fn_new);

@@ -1,3 +1,0 @@
-Expected runtime error "Cannot transfer to an aborted fiber." and got:
-Fiber does not implement 'try()'.
-Expected runtime error on line 7 but was on line 6.

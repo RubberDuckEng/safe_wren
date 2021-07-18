@@ -1,2 +1,0 @@
-Expected runtime error "Fiber has already been called." and got:
-Fiber does not implement 'try()'.

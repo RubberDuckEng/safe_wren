@@ -1,10 +1,1 @@
-Unexpected output on stderr:
-Fiber does not implement 'try()'.
-Unexpected output on stderr:
-[wren_c/test/core/fiber/error line 6] in <script>
-Expected return code 0 and got 70. Stderr:
-Fiber does not implement 'try()'.
-[wren_c/test/core/fiber/error line 6] in <script>
-
-Missing expected output "String does not implement 'unknown'." on line 6.
-Missing expected output "String does not implement 'unknown'." on line 7.
+Expected output "String does not implement 'unknown'." on line 7 and got "null".
