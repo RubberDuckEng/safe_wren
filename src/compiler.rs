@@ -1019,17 +1019,11 @@ pub(crate) struct Compiler {
 
     // Unclear if this will be used?
     is_initializer: bool,
-    // The current number of slots (locals and temporaries) in use.
-    //
-    // We use this and maxSlots to track the maximum number of additional slots
-    // a function may need while executing. When the function is called, the
-    // fiber will check to ensure its stack has enough room to cover that worst
-    // case and grow the stack if needed.
-    //
-    // This value here doesn't include parameters to the function. Since those
-    // are already pushed onto the stack by the caller and tracked there, we
-    // don't need to double count them here.
-    // num_slots: usize,
+    // wren_c has a numSlots / maxSlots optimization for recording from
+    // the compiler how much stack space a given function will need
+    // This allows wren_c to pre-grow the Fiber's (shared) stack ahead
+    // of fn execution and not have to check with each push/pop if it
+    // needs to grow more.
     pub(crate) fn_debug: FnDebug,
 }
 

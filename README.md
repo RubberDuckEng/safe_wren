@@ -52,6 +52,8 @@ with error text from any failed tests.  `test.py` will also update
 * Making InputManager an Iterator, could make easier the "skip until" pattern?
 * https://docs.rs/once_cell/1.8.0/once_cell/
 * https://docs.rs/anyhow/1.0.41/anyhow/
+* Try optimizing for size: https://github.com/johnthagen/min-sized-rust
+* To try for really-small size, no-std + https://doc.rust-lang.org/alloc/
 
 ### wren_c bugs
 * closures/functions defined in wren_core.wren end up with a null class pointer?
