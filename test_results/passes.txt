@@ -137,6 +137,7 @@ wren_c/test/core/list/multiply_not_int.wren
 wren_c/test/core/list/multiply_not_num.wren
 wren_c/test/core/list/new.wren
 wren_c/test/core/list/not.wren
+wren_c/test/core/list/plus.wren
 wren_c/test/core/list/plus_not_iterable.wren
 wren_c/test/core/list/reduce.wren
 wren_c/test/core/list/reduce_no_items.wren
@@ -312,6 +313,11 @@ wren_c/test/core/string/index_of_start_too_large.wren
 wren_c/test/core/string/index_of_start_too_small.wren
 wren_c/test/core/string/iterate_iterator_not_int.wren
 wren_c/test/core/string/iterate_iterator_not_num.wren
+wren_c/test/core/string/iterator_value_iterator_not_int.wren
+wren_c/test/core/string/iterator_value_iterator_not_num.wren
+wren_c/test/core/string/iterator_value_iterator_too_large.wren
+wren_c/test/core/string/iterator_value_iterator_too_small.wren
+wren_c/test/core/string/join_separator_not_string.wren
 wren_c/test/core/string/multiply.wren
 wren_c/test/core/string/multiply_negative.wren
 wren_c/test/core/string/multiply_not_int.wren
@@ -498,6 +504,7 @@ wren_c/test/language/map/eof_after_colon.wren
 wren_c/test/language/map/eof_after_comma.wren
 wren_c/test/language/map/eof_after_key.wren
 wren_c/test/language/map/eof_after_value.wren
+wren_c/test/language/map/grow_and_shrink.wren
 wren_c/test/language/map/newlines.wren
 wren_c/test/language/map/trailing_comma.wren
 wren_c/test/language/method/arity.wren
@@ -565,6 +572,7 @@ wren_c/test/language/number/scientific_missing_exponent.wren
 wren_c/test/language/number/scientific_missing_fractional_part.wren
 wren_c/test/language/number/scientific_multiple_exponants.wren
 wren_c/test/language/number/scientific_multiple_exponent_signs.wren
+wren_c/test/language/precedence.wren
 wren_c/test/language/return/after_else.wren
 wren_c/test/language/return/after_if.wren
 wren_c/test/language/return/after_while.wren

@@ -702,6 +702,31 @@ fn string_iterate_byte(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     });
 }
 
+// Is this API?
+fn wren_string_code_point_at(string: String, index: usize) -> Value {
+    let mut chars = string.char_indices();
+    let mut previous: char = char::default();
+    // FIXME: This does not implement the "return an invalid byte"
+    // behavior, since that's incompatible with using rust Strings
+    // as storage.
+    loop {
+        if let Some((start, c)) = chars.next() {
+            if start <= index {
+                previous = c;
+                continue;
+            }
+        }
+        return Value::from_string(previous.to_string());
+    }
+}
+
+fn string_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let string = this_as_string(&args);
+    let index = validate_index(&args[1], string.len(), "Iterator")?;
+
+    return Ok(wren_string_code_point_at(string, index));
+}
+
 fn string_starts_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
@@ -1416,7 +1441,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.string, "indexOf(_,_)", string_index_of2);
     primitive!(vm, core.string, "iterate(_)", string_iterate);
     primitive!(vm, core.string, "iterateByte_(_)", string_iterate_byte);
-    // primitive!(vm, core.string, "iteratorValue(_)", string_iterator_value);
+    primitive!(vm, core.string, "iteratorValue(_)", string_iterator_value);
     primitive!(vm, core.string, "startsWith(_)", string_starts_with);
     primitive!(vm, core.string, "toString", string_to_string);
 

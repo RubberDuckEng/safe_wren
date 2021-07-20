@@ -1,13 +1,10 @@
 Unexpected output on stderr:
-String does not implement 'iteratorValue(_)'.
+String does not implement '[_]'.
 Unexpected output on stderr:
-[#core line 35] in count
-Unexpected output on stderr:
-[./test/language/map/precedence line 9] in <script>
+[./test/language/map/precedence line 10] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'iteratorValue(_)'.
-[#core line 35] in count
-[./test/language/map/precedence line 9] in <script>
+String does not implement '[_]'.
+[./test/language/map/precedence line 10] in <script>
 
 Missing expected output "value" on line 20.
 Missing expected output "true" on line 21.
