@@ -1,38 +1,11 @@
 Unexpected output on stderr:
-String does not implement '[_]'.
+Range must start and end on character boundaries.
 Unexpected output on stderr:
-[./test/core/string/subscript_range line 2] in <script>
+[./test/core/string/subscript_range line 49] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement '[_]'.
-[./test/core/string/subscript_range line 2] in <script>
+Range must start and end on character boundaries.
+[./test/core/string/subscript_range line 49] in <script>
 
-Missing expected output "a" on line 2.
-Missing expected output "true" on line 3.
-Missing expected output "bc" on line 4.
-Missing expected output "b" on line 5.
-Missing expected output "cde" on line 6.
-Missing expected output "cde" on line 7.
-Missing expected output "dcb" on line 10.
-Missing expected output "dc" on line 11.
-Missing expected output "true" on line 12.
-Missing expected output "abcd" on line 15.
-Missing expected output "abc" on line 16.
-Missing expected output "cba" on line 17.
-Missing expected output "cba" on line 18.
-Missing expected output "abcd" on line 22.
-Missing expected output "cde" on line 23.
-Missing expected output "dcb" on line 24.
-Missing expected output "dcb" on line 25.
-Missing expected output "bcd" on line 27.
-Missing expected output "cd" on line 28.
-Missing expected output "edcba" on line 29.
-Missing expected output "dcba" on line 30.
-Missing expected output "true" on line 33.
-Missing expected output "true" on line 34.
-Missing expected output "true" on line 37.
-Missing expected output "true" on line 38.
-Missing expected output "søm" on line 45.
-Missing expected output "méஃt" on line 46.
 Missing expected output "méஃ" on line 49.
 Missing expected output "mé" on line 50.
 Missing expected output "méஃ" on line 51.

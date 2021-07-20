@@ -567,12 +567,44 @@ fn validate_string(arg: &Value, arg_name: &str) -> Result<String> {
 }
 
 fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
-    let a = args[0]
-        .try_into_string()
-        .ok_or_else(|| VMError::from_str("this must be string"))?;
+    let a = this_as_string(&args);
     let b = validate_string(&args[1], "Right operand")?;
-
     Ok(Value::from_string(a + &b))
+}
+
+fn string_subscript(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let string = this_as_string(&args);
+
+    match &args[1] {
+        Value::Num(_) => {
+            let index = validate_index(&args[1], string.len(), "Subscript".into())?;
+            Ok(wren_string_code_point_at(string, index))
+        }
+        Value::Range(r) => {
+            let range = calculate_range(&r.borrow(), string.len())?;
+            if range.range.is_empty() {
+                return Ok(Value::from_str(""));
+            }
+            // This is not part of wren_c, but prevents rust from panicking.
+            // wren_c strings are byte arrays, rust strings must always be
+            // valid utf8, and it makes no sense to index within codepoints.
+            if !string.is_char_boundary(*range.range.start())
+                || !string.is_char_boundary(*range.range.end())
+            {
+                return Err(VMError::from_str(
+                    "Range must start and end on character boundaries.",
+                ));
+            }
+            let slice = &string[range.range];
+            // This doesn't match the wren_c backwards range behavaior.
+            if range.reverse {
+                Ok(Value::from_string(slice.chars().rev().collect()))
+            } else {
+                Ok(Value::from_str(slice))
+            }
+        }
+        _ => Err(VMError::from_str("Subscript must be a number or a range.")),
+    }
 }
 
 fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -1431,7 +1463,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     // primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
     // primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);
     primitive!(vm, core.string, "+(_)", string_plus);
-    // primitive!(vm, core.string, "[_]", string_subscript);
+    primitive!(vm, core.string, "[_]", string_subscript);
     primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
     primitive!(vm, core.string, "byteCount_", string_byte_count);
     primitive!(vm, core.string, "codePointAt_(_)", string_code_point_at);
