@@ -1221,8 +1221,7 @@ impl WrenVM {
                 // In an executing frame, the pc points to the *next*
                 // instruction to execute, the error is from the
                 // previous instruction.
-                // FIXME: Fixing in a separate change.
-                line: fn_obj.debug.line_for_pc(frame.pc),
+                line: fn_obj.debug.line_for_pc(frame.pc - 1),
                 fn_name: fn_obj.debug.name.clone(),
             }
         }

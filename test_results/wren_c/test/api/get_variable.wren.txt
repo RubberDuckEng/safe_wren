@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 Could not find foreign method 'beforeDefined()' for class GetVariable in module 'wren_c/test/api/get_variable'.
 Unexpected output on stderr:
-[wren_c/test/api/get_variable line 5] in <script>
+[wren_c/test/api/get_variable line 4] in <script>
 Expected return code 0 and got 70. Stderr:
 Could not find foreign method 'beforeDefined()' for class GetVariable in module 'wren_c/test/api/get_variable'.
-[wren_c/test/api/get_variable line 5] in <script>
+[wren_c/test/api/get_variable line 4] in <script>
 
 Missing expected output "null" on line 16.
 Missing expected output "a" on line 20.
