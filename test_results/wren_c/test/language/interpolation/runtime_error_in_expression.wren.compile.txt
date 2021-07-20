@@ -2,19 +2,19 @@ Constants:
 00: ""
 01: 123
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("List"))
-02: Call(Method, new())
-03: Constant(0: "")
-04: Call(Method, addCore_(_))
-05: Constant(1: 123)
-06: Call(Getter, badMethod)
-07: Call(Method, addCore_(_))
-08: Constant(0: "")
-09: Call(Method, addCore_(_))
-10: Call(Method, join())
-11: Call(Method, print(_))
-12: Pop
-13: EndModule
-14: Return
-15: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("List"))
+02 (ln 1): Call(Method, new())
+03 (ln 1): Constant(0: "")
+04 (ln 1): Call(Method, addCore_(_))
+05 (ln 1): Constant(1: 123)
+06 (ln 1): Call(Getter, badMethod)
+07 (ln 1): Call(Method, addCore_(_))
+08 (ln 1): Constant(0: "")
+09 (ln 1): Call(Method, addCore_(_))
+10 (ln 1): Call(Method, join())
+11 (ln 1): Call(Method, print(_))
+12 (ln 1): Pop
+13 (ln 2): EndModule
+14 (ln 2): Return
+15 (ln 2): End

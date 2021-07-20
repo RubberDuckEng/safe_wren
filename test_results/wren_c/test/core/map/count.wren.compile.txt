@@ -5,55 +5,55 @@ Constants:
 03: "three"
 04: "new value"
 Code:
-00: Load(Module, Class("Map"))
-01: Call(Method, new())
-02: Store(Module)
-03: Pop
-04: Load(Module, Class("System"))
-05: Load(Module, Null)
-06: Call(Getter, count)
-07: Call(Method, print(_))
-08: Pop
-09: Load(Module, Null)
-10: Constant(0: "one")
-11: Constant(1: "value")
-12: Call(SubscriptSetter, [_]=(_))
-13: Pop
-14: Load(Module, Class("System"))
-15: Load(Module, Null)
-16: Call(Getter, count)
-17: Call(Method, print(_))
-18: Pop
-19: Load(Module, Null)
-20: Constant(2: "two")
-21: Constant(1: "value")
-22: Call(SubscriptSetter, [_]=(_))
-23: Pop
-24: Load(Module, Class("System"))
-25: Load(Module, Null)
-26: Call(Getter, count)
-27: Call(Method, print(_))
-28: Pop
-29: Load(Module, Null)
-30: Constant(3: "three")
-31: Constant(1: "value")
-32: Call(SubscriptSetter, [_]=(_))
-33: Pop
-34: Load(Module, Class("System"))
-35: Load(Module, Null)
-36: Call(Getter, count)
-37: Call(Method, print(_))
-38: Pop
-39: Load(Module, Null)
-40: Constant(2: "two")
-41: Constant(4: "new value")
-42: Call(SubscriptSetter, [_]=(_))
-43: Pop
-44: Load(Module, Class("System"))
-45: Load(Module, Null)
-46: Call(Getter, count)
-47: Call(Method, print(_))
-48: Pop
-49: EndModule
-50: Return
-51: End
+00 (ln 1): Load(Module, Class("Map"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Store(Module)
+03 (ln 1): Pop
+04 (ln 2): Load(Module, Class("System"))
+05 (ln 2): Load(Module, Null)
+06 (ln 2): Call(Getter, count)
+07 (ln 2): Call(Method, print(_))
+08 (ln 2): Pop
+09 (ln 3): Load(Module, Null)
+10 (ln 3): Constant(0: "one")
+11 (ln 3): Constant(1: "value")
+12 (ln 3): Call(SubscriptSetter, [_]=(_))
+13 (ln 3): Pop
+14 (ln 4): Load(Module, Class("System"))
+15 (ln 4): Load(Module, Null)
+16 (ln 4): Call(Getter, count)
+17 (ln 4): Call(Method, print(_))
+18 (ln 4): Pop
+19 (ln 5): Load(Module, Null)
+20 (ln 5): Constant(2: "two")
+21 (ln 5): Constant(1: "value")
+22 (ln 5): Call(SubscriptSetter, [_]=(_))
+23 (ln 5): Pop
+24 (ln 6): Load(Module, Class("System"))
+25 (ln 6): Load(Module, Null)
+26 (ln 6): Call(Getter, count)
+27 (ln 6): Call(Method, print(_))
+28 (ln 6): Pop
+29 (ln 7): Load(Module, Null)
+30 (ln 7): Constant(3: "three")
+31 (ln 7): Constant(1: "value")
+32 (ln 7): Call(SubscriptSetter, [_]=(_))
+33 (ln 7): Pop
+34 (ln 8): Load(Module, Class("System"))
+35 (ln 8): Load(Module, Null)
+36 (ln 8): Call(Getter, count)
+37 (ln 8): Call(Method, print(_))
+38 (ln 8): Pop
+39 (ln 11): Load(Module, Null)
+40 (ln 11): Constant(2: "two")
+41 (ln 11): Constant(4: "new value")
+42 (ln 11): Call(SubscriptSetter, [_]=(_))
+43 (ln 11): Pop
+44 (ln 12): Load(Module, Class("System"))
+45 (ln 12): Load(Module, Null)
+46 (ln 12): Call(Getter, count)
+47 (ln 12): Call(Method, print(_))
+48 (ln 12): Pop
+49 (ln 13): EndModule
+50 (ln 13): Return
+51 (ln 13): End

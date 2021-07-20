@@ -9,44 +9,44 @@ Constants:
 07: 0.0001
 08: "-0.0001"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: 123)
-02: Call(Getter, toString)
-03: Constant(1: "123")
-04: Call(Method, ==(_))
-05: Call(Method, print(_))
-06: Pop
-07: Load(Module, Class("System"))
-08: Constant(0: 123)
-09: Call(Method, -)
-10: Call(Getter, toString)
-11: Constant(2: "-123")
-12: Call(Method, ==(_))
-13: Call(Method, print(_))
-14: Pop
-15: Load(Module, Class("System"))
-16: Constant(3: 0)
-17: Call(Method, -)
-18: Call(Getter, toString)
-19: Constant(4: "-0")
-20: Call(Method, ==(_))
-21: Call(Method, print(_))
-22: Pop
-23: Load(Module, Class("System"))
-24: Constant(5: 12.34)
-25: Call(Getter, toString)
-26: Constant(6: "12.34")
-27: Call(Method, ==(_))
-28: Call(Method, print(_))
-29: Pop
-30: Load(Module, Class("System"))
-31: Constant(7: 0.0001)
-32: Call(Method, -)
-33: Call(Getter, toString)
-34: Constant(8: "-0.0001")
-35: Call(Method, ==(_))
-36: Call(Method, print(_))
-37: Pop
-38: EndModule
-39: Return
-40: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: 123)
+02 (ln 1): Call(Getter, toString)
+03 (ln 1): Constant(1: "123")
+04 (ln 1): Call(Method, ==(_))
+05 (ln 1): Call(Method, print(_))
+06 (ln 1): Pop
+07 (ln 2): Load(Module, Class("System"))
+08 (ln 2): Constant(0: 123)
+09 (ln 2): Call(Method, -)
+10 (ln 2): Call(Getter, toString)
+11 (ln 2): Constant(2: "-123")
+12 (ln 2): Call(Method, ==(_))
+13 (ln 2): Call(Method, print(_))
+14 (ln 2): Pop
+15 (ln 3): Load(Module, Class("System"))
+16 (ln 3): Constant(3: 0)
+17 (ln 3): Call(Method, -)
+18 (ln 3): Call(Getter, toString)
+19 (ln 3): Constant(4: "-0")
+20 (ln 3): Call(Method, ==(_))
+21 (ln 3): Call(Method, print(_))
+22 (ln 3): Pop
+23 (ln 4): Load(Module, Class("System"))
+24 (ln 4): Constant(5: 12.34)
+25 (ln 4): Call(Getter, toString)
+26 (ln 4): Constant(6: "12.34")
+27 (ln 4): Call(Method, ==(_))
+28 (ln 4): Call(Method, print(_))
+29 (ln 4): Pop
+30 (ln 5): Load(Module, Class("System"))
+31 (ln 5): Constant(7: 0.0001)
+32 (ln 5): Call(Method, -)
+33 (ln 5): Call(Getter, toString)
+34 (ln 5): Constant(8: "-0.0001")
+35 (ln 5): Call(Method, ==(_))
+36 (ln 5): Call(Method, print(_))
+37 (ln 5): Pop
+38 (ln 6): EndModule
+39 (ln 6): Return
+40 (ln 6): End

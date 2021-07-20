@@ -4,23 +4,23 @@ Constants:
 02: "value"
 03: "after"
 Code:
-00: Load(Module, Class("Fiber"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Constant(1: "before")
-07: Call(Method, print(_))
-08: Pop
-09: Load(Module, Null)
-10: Constant(2: "value")
-11: Call(Method, call(_))
-12: Pop
-13: Load(Module, Class("System"))
-14: Constant(3: "after")
-15: Call(Method, print(_))
-16: Pop
-17: EndModule
-18: Return
-19: End
+00 (ln 1): Load(Module, Class("Fiber"))
+01 (ln 3): Closure(0, [])
+02 (ln 3): Call(Method, new(_))
+03 (ln 3): Store(Module)
+04 (ln 3): Pop
+05 (ln 5): Load(Module, Class("System"))
+06 (ln 5): Constant(1: "before")
+07 (ln 5): Call(Method, print(_))
+08 (ln 5): Pop
+09 (ln 6): Load(Module, Null)
+10 (ln 6): Constant(2: "value")
+11 (ln 6): Call(Method, call(_))
+12 (ln 6): Pop
+13 (ln 7): Load(Module, Class("System"))
+14 (ln 7): Constant(3: "after")
+15 (ln 7): Call(Method, print(_))
+16 (ln 7): Pop
+17 (ln 8): EndModule
+18 (ln 8): Return
+19 (ln 8): End

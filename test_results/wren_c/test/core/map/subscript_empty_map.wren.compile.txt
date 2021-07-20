@@ -1,16 +1,16 @@
 Constants:
 00: "key"
 Code:
-00: Load(Module, Class("Map"))
-01: Call(Method, new())
-02: Store(Module)
-03: Pop
-04: Load(Module, Class("System"))
-05: Load(Module, Null)
-06: Constant(0: "key")
-07: Call(Subscript, [_])
-08: Call(Method, print(_))
-09: Pop
-10: EndModule
-11: Return
-12: End
+00 (ln 3): Load(Module, Class("Map"))
+01 (ln 3): Call(Method, new())
+02 (ln 3): Store(Module)
+03 (ln 3): Pop
+04 (ln 4): Load(Module, Class("System"))
+05 (ln 4): Load(Module, Null)
+06 (ln 4): Constant(0: "key")
+07 (ln 4): Call(Subscript, [_])
+08 (ln 4): Call(Method, print(_))
+09 (ln 4): Pop
+10 (ln 5): EndModule
+11 (ln 5): Return
+12 (ln 5): End

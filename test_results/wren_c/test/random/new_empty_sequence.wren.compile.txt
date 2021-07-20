@@ -1,15 +1,15 @@
 Constants:
 Code:
-00: ImportModule("random")
-01: Pop
-02: ImportVariable("Random")
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Load(Module, Class("List"))
-07: Call(Method, new())
-08: Call(Method, new(_))
-09: Pop
-10: EndModule
-11: Return
-12: End
+00 (ln 1): ImportModule("random")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Random")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Load(Module, Null)
+06 (ln 3): Load(Module, Class("List"))
+07 (ln 3): Call(Method, new())
+08 (ln 3): Call(Method, new(_))
+09 (ln 3): Pop
+10 (ln 4): EndModule
+11 (ln 4): Return
+12 (ln 4): End

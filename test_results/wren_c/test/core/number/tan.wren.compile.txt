@@ -2,28 +2,28 @@ Constants:
 00: 0
 01: 4
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: 0)
-02: Call(Getter, tan)
-03: Call(Method, print(_))
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Class("Num"))
-07: Call(Getter, pi)
-08: Constant(1: 4)
-09: Call(Method, /(_))
-10: Call(Getter, tan)
-11: Call(Method, print(_))
-12: Pop
-13: Load(Module, Class("System"))
-14: Load(Module, Class("Num"))
-15: Call(Getter, pi)
-16: Call(Method, -)
-17: Constant(1: 4)
-18: Call(Method, /(_))
-19: Call(Getter, tan)
-20: Call(Method, print(_))
-21: Pop
-22: EndModule
-23: Return
-24: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: 0)
+02 (ln 1): Call(Getter, tan)
+03 (ln 1): Call(Method, print(_))
+04 (ln 1): Pop
+05 (ln 2): Load(Module, Class("System"))
+06 (ln 2): Load(Module, Class("Num"))
+07 (ln 2): Call(Getter, pi)
+08 (ln 2): Constant(1: 4)
+09 (ln 2): Call(Method, /(_))
+10 (ln 2): Call(Getter, tan)
+11 (ln 2): Call(Method, print(_))
+12 (ln 2): Pop
+13 (ln 3): Load(Module, Class("System"))
+14 (ln 3): Load(Module, Class("Num"))
+15 (ln 3): Call(Getter, pi)
+16 (ln 3): Call(Method, -)
+17 (ln 3): Constant(1: 4)
+18 (ln 3): Call(Method, /(_))
+19 (ln 3): Call(Getter, tan)
+20 (ln 3): Call(Method, print(_))
+21 (ln 3): Pop
+22 (ln 4): EndModule
+23 (ln 4): Return
+24 (ln 4): End

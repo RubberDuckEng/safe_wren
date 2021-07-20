@@ -5,42 +5,42 @@ Constants:
 03: "a\0b\0c"
 04: "a, \0, b, \0, c"
 Code:
-00: Constant(0: "string")
-01: Store(Module)
-02: Pop
-03: Load(Module, Class("System"))
-04: Load(Module, Null)
-05: Constant(1: "")
-06: Call(Method, join(_))
-07: Load(Module, Null)
-08: Call(Method, ==(_))
-09: Call(Method, print(_))
-10: Pop
-11: Load(Module, Class("System"))
-12: Load(Module, Null)
-13: Constant(2: ", ")
-14: Call(Method, join(_))
-15: Call(Method, print(_))
-16: Pop
-17: Constant(3: "a\0b\0c")
-18: Store(Module)
-19: Pop
-20: Load(Module, Class("System"))
-21: Load(Module, Null)
-22: Constant(1: "")
-23: Call(Method, join(_))
-24: Load(Module, Null)
-25: Call(Method, ==(_))
-26: Call(Method, print(_))
-27: Pop
-28: Load(Module, Class("System"))
-29: Load(Module, Null)
-30: Constant(2: ", ")
-31: Call(Method, join(_))
-32: Constant(4: "a, \0, b, \0, c")
-33: Call(Method, ==(_))
-34: Call(Method, print(_))
-35: Pop
-36: EndModule
-37: Return
-38: End
+00 (ln 1): Constant(0: "string")
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 3): Load(Module, Class("System"))
+04 (ln 3): Load(Module, Null)
+05 (ln 3): Constant(1: "")
+06 (ln 3): Call(Method, join(_))
+07 (ln 3): Load(Module, Null)
+08 (ln 3): Call(Method, ==(_))
+09 (ln 3): Call(Method, print(_))
+10 (ln 3): Pop
+11 (ln 5): Load(Module, Class("System"))
+12 (ln 5): Load(Module, Null)
+13 (ln 5): Constant(2: ", ")
+14 (ln 5): Call(Method, join(_))
+15 (ln 5): Call(Method, print(_))
+16 (ln 5): Pop
+17 (ln 8): Constant(3: "a\0b\0c")
+18 (ln 8): Store(Module)
+19 (ln 8): Pop
+20 (ln 9): Load(Module, Class("System"))
+21 (ln 9): Load(Module, Null)
+22 (ln 9): Constant(1: "")
+23 (ln 9): Call(Method, join(_))
+24 (ln 9): Load(Module, Null)
+25 (ln 9): Call(Method, ==(_))
+26 (ln 9): Call(Method, print(_))
+27 (ln 9): Pop
+28 (ln 10): Load(Module, Class("System"))
+29 (ln 10): Load(Module, Null)
+30 (ln 10): Constant(2: ", ")
+31 (ln 10): Call(Method, join(_))
+32 (ln 10): Constant(4: "a, \0, b, \0, c")
+33 (ln 10): Call(Method, ==(_))
+34 (ln 10): Call(Method, print(_))
+35 (ln 10): Pop
+36 (ln 11): EndModule
+37 (ln 11): Return
+38 (ln 11): End

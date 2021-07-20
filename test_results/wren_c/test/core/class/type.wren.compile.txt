@@ -1,62 +1,62 @@
 Constants:
 00: "Foo"
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Null)
-07: Load(Module, Class("Class"))
-08: Call(Method, is(_))
-09: Call(Method, print(_))
-10: Pop
-11: Load(Module, Class("System"))
-12: Load(Module, Null)
-13: Call(Getter, type)
-14: Load(Module, Class("Class"))
-15: Call(Method, is(_))
-16: Call(Method, print(_))
-17: Pop
-18: Load(Module, Class("System"))
-19: Load(Module, Null)
-20: Call(Getter, type)
-21: Call(Getter, type)
-22: Load(Module, Class("Class"))
-23: Call(Method, ==(_))
-24: Call(Method, print(_))
-25: Pop
-26: Load(Module, Class("System"))
-27: Load(Module, Null)
-28: Call(Getter, type)
-29: Call(Getter, type)
-30: Call(Getter, type)
-31: Load(Module, Class("Class"))
-32: Call(Method, ==(_))
-33: Call(Method, print(_))
-34: Pop
-35: Load(Module, Class("System"))
-36: Load(Module, Null)
-37: Call(Getter, type)
-38: Call(Getter, type)
-39: Call(Getter, type)
-40: Call(Getter, type)
-41: Load(Module, Class("Class"))
-42: Call(Method, ==(_))
-43: Call(Method, print(_))
-44: Pop
-45: Load(Module, Class("System"))
-46: Load(Module, Null)
-47: Call(Getter, type)
-48: Call(Getter, type)
-49: Call(Getter, type)
-50: Call(Getter, type)
-51: Call(Getter, type)
-52: Load(Module, Class("Class"))
-53: Call(Method, ==(_))
-54: Call(Method, print(_))
-55: Pop
-56: EndModule
-57: Return
-58: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 4): Load(Module, Class("System"))
+06 (ln 4): Load(Module, Null)
+07 (ln 4): Load(Module, Class("Class"))
+08 (ln 4): Call(Method, is(_))
+09 (ln 4): Call(Method, print(_))
+10 (ln 4): Pop
+11 (ln 7): Load(Module, Class("System"))
+12 (ln 7): Load(Module, Null)
+13 (ln 7): Call(Getter, type)
+14 (ln 7): Load(Module, Class("Class"))
+15 (ln 7): Call(Method, is(_))
+16 (ln 7): Call(Method, print(_))
+17 (ln 7): Pop
+18 (ln 10): Load(Module, Class("System"))
+19 (ln 10): Load(Module, Null)
+20 (ln 10): Call(Getter, type)
+21 (ln 10): Call(Getter, type)
+22 (ln 10): Load(Module, Class("Class"))
+23 (ln 10): Call(Method, ==(_))
+24 (ln 10): Call(Method, print(_))
+25 (ln 10): Pop
+26 (ln 13): Load(Module, Class("System"))
+27 (ln 13): Load(Module, Null)
+28 (ln 13): Call(Getter, type)
+29 (ln 13): Call(Getter, type)
+30 (ln 13): Call(Getter, type)
+31 (ln 13): Load(Module, Class("Class"))
+32 (ln 13): Call(Method, ==(_))
+33 (ln 13): Call(Method, print(_))
+34 (ln 13): Pop
+35 (ln 14): Load(Module, Class("System"))
+36 (ln 14): Load(Module, Null)
+37 (ln 14): Call(Getter, type)
+38 (ln 14): Call(Getter, type)
+39 (ln 14): Call(Getter, type)
+40 (ln 14): Call(Getter, type)
+41 (ln 14): Load(Module, Class("Class"))
+42 (ln 14): Call(Method, ==(_))
+43 (ln 14): Call(Method, print(_))
+44 (ln 14): Pop
+45 (ln 15): Load(Module, Class("System"))
+46 (ln 15): Load(Module, Null)
+47 (ln 15): Call(Getter, type)
+48 (ln 15): Call(Getter, type)
+49 (ln 15): Call(Getter, type)
+50 (ln 15): Call(Getter, type)
+51 (ln 15): Call(Getter, type)
+52 (ln 15): Load(Module, Class("Class"))
+53 (ln 15): Call(Method, ==(_))
+54 (ln 15): Call(Method, print(_))
+55 (ln 15): Pop
+56 (ln 16): EndModule
+57 (ln 16): Return
+58 (ln 16): End

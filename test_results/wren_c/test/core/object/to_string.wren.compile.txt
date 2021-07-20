@@ -4,25 +4,25 @@ Constants:
 02: Fn()
 03: "instance of Foo"
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new())
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new())
-11: Load(Module, Class("System"))
-12: Load(Module, Null)
-13: Call(Method, new())
-14: Call(Getter, toString)
-15: Constant(3: "instance of Foo")
-16: Call(Method, ==(_))
-17: Call(Method, print(_))
-18: Pop
-19: EndModule
-20: Return
-21: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(instance, init new())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, Null)
+10 (ln 2): Method(static, new())
+11 (ln 4): Load(Module, Class("System"))
+12 (ln 4): Load(Module, Null)
+13 (ln 4): Call(Method, new())
+14 (ln 4): Call(Getter, toString)
+15 (ln 4): Constant(3: "instance of Foo")
+16 (ln 4): Call(Method, ==(_))
+17 (ln 4): Call(Method, print(_))
+18 (ln 4): Pop
+19 (ln 5): EndModule
+20 (ln 5): Return
+21 (ln 5): End

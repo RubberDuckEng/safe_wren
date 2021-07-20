@@ -2,17 +2,17 @@ Constants:
 00: "before"
 01: "not reached"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "before")
-02: Call(Method, print(_))
-03: Pop
-04: Load(Module, Class("Fiber"))
-05: Call(Method, yield())
-06: Pop
-07: Load(Module, Class("System"))
-08: Constant(1: "not reached")
-09: Call(Method, print(_))
-10: Pop
-11: EndModule
-12: Return
-13: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: "before")
+02 (ln 1): Call(Method, print(_))
+03 (ln 1): Pop
+04 (ln 2): Load(Module, Class("Fiber"))
+05 (ln 2): Call(Method, yield())
+06 (ln 2): Pop
+07 (ln 3): Load(Module, Class("System"))
+08 (ln 3): Constant(1: "not reached")
+09 (ln 3): Call(Method, print(_))
+10 (ln 3): Pop
+11 (ln 4): EndModule
+12 (ln 4): Return
+13 (ln 4): End

@@ -2,19 +2,19 @@ Constants:
 00: "UserData"
 01: "test"
 Code:
-00: Constant(0: "UserData")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Constant(1: "test")
-06: Load(Module, Null)
-07: Method(static, test)
-08: Load(Module, Class("System"))
-09: Load(Module, Null)
-10: Call(Getter, test)
-11: Call(Method, print(_))
-12: Pop
-13: EndModule
-14: Return
-15: End
+00 (ln 1): Constant(0: "UserData")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Constant(1: "test")
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(static, test)
+08 (ln 5): Load(Module, Class("System"))
+09 (ln 5): Load(Module, Null)
+10 (ln 5): Call(Getter, test)
+11 (ln 5): Call(Method, print(_))
+12 (ln 5): Pop
+13 (ln 6): EndModule
+14 (ln 6): Return
+15 (ln 6): End

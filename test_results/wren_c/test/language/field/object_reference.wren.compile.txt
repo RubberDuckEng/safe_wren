@@ -8,60 +8,60 @@ Constants:
 06: "c"
 07: "d"
 Code:
-00: Constant(0: "Node")
-01: Load(Module, Class("Object"))
-02: Class(3 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new(_,_,_))
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new(_,_,_))
-11: Closure(3, [])
-12: Load(Module, Null)
-13: Method(instance, write())
-14: Load(Module, Null)
-15: Null
-16: Constant(4: "a")
-17: Null
-18: Call(Method, new(_,_,_))
-19: Store(Module)
-20: Pop
-21: Load(Module, Null)
-22: Null
-23: Constant(5: "b")
-24: Null
-25: Call(Method, new(_,_,_))
-26: Store(Module)
-27: Pop
-28: Load(Module, Null)
-29: Load(Module, Null)
-30: Constant(6: "c")
-31: Load(Module, Null)
-32: Call(Method, new(_,_,_))
-33: Store(Module)
-34: Pop
-35: Null
-36: Store(Module)
-37: Pop
-38: Null
-39: Store(Module)
-40: Pop
-41: Load(Module, Null)
-42: Load(Module, Null)
-43: Constant(7: "d")
-44: Null
-45: Call(Method, new(_,_,_))
-46: Store(Module)
-47: Pop
-48: Null
-49: Store(Module)
-50: Pop
-51: Load(Module, Null)
-52: Call(Method, write())
-53: Pop
-54: EndModule
-55: Return
-56: End
+00 (ln 2): Constant(0: "Node")
+01 (ln 2): Load(Module, Class("Object"))
+02 (ln 2): Class(3 fields)
+03 (ln 2): Store(Module)
+04 (ln 2): Pop
+05 (ln 7): Closure(1, [])
+06 (ln 7): Load(Module, Null)
+07 (ln 7): Method(instance, init new(_,_,_))
+08 (ln 7): Closure(2, [])
+09 (ln 7): Load(Module, Null)
+10 (ln 7): Method(static, new(_,_,_))
+11 (ln 19): Closure(3, [])
+12 (ln 19): Load(Module, Null)
+13 (ln 19): Method(instance, write())
+14 (ln 22): Load(Module, Null)
+15 (ln 22): Null
+16 (ln 22): Constant(4: "a")
+17 (ln 22): Null
+18 (ln 22): Call(Method, new(_,_,_))
+19 (ln 22): Store(Module)
+20 (ln 22): Pop
+21 (ln 23): Load(Module, Null)
+22 (ln 23): Null
+23 (ln 23): Constant(5: "b")
+24 (ln 23): Null
+25 (ln 23): Call(Method, new(_,_,_))
+26 (ln 23): Store(Module)
+27 (ln 23): Pop
+28 (ln 24): Load(Module, Null)
+29 (ln 24): Load(Module, Null)
+30 (ln 24): Constant(6: "c")
+31 (ln 24): Load(Module, Null)
+32 (ln 24): Call(Method, new(_,_,_))
+33 (ln 24): Store(Module)
+34 (ln 24): Pop
+35 (ln 25): Null
+36 (ln 25): Store(Module)
+37 (ln 25): Pop
+38 (ln 26): Null
+39 (ln 26): Store(Module)
+40 (ln 26): Pop
+41 (ln 27): Load(Module, Null)
+42 (ln 27): Load(Module, Null)
+43 (ln 27): Constant(7: "d")
+44 (ln 27): Null
+45 (ln 27): Call(Method, new(_,_,_))
+46 (ln 27): Store(Module)
+47 (ln 27): Pop
+48 (ln 28): Null
+49 (ln 28): Store(Module)
+50 (ln 28): Pop
+51 (ln 29): Load(Module, Null)
+52 (ln 29): Call(Method, write())
+53 (ln 29): Pop
+54 (ln 34): EndModule
+55 (ln 34): Return
+56 (ln 34): End

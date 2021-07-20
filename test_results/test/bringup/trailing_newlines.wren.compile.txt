@@ -1,8 +1,8 @@
 Constants:
 00: 1
 Code:
-00: Constant(0: 1)
-01: Pop
-02: EndModule
-03: Return
-04: End
+00 (ln 1): Constant(0: 1)
+01 (ln 1): Pop
+02 (ln 3): EndModule
+03 (ln 3): Return
+04 (ln 3): End

@@ -1,11 +1,11 @@
 Constants:
 00: "Subclass"
 Code:
-00: Constant(0: "Subclass")
-01: Load(Module, Class("Class"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: EndModule
-06: Return
-07: End
+00 (ln 1): Constant(0: "Subclass")
+01 (ln 1): Load(Module, Class("Class"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): EndModule
+06 (ln 2): Return
+07 (ln 2): End

@@ -2,16 +2,16 @@ Constants:
 00: "outer"
 01: " inner"
 Code:
-00: Constant(0: "outer")
-01: Load(Local, 1)
-02: Constant(1: " inner")
-03: Call(Method, +(_))
-04: Load(Module, Class("System"))
-05: Load(Local, 1)
-06: Call(Method, print(_))
-07: Pop
-08: Pop
-09: Pop
-10: EndModule
-11: Return
-12: End
+00 (ln 2): Constant(0: "outer")
+01 (ln 4): Load(Local, 1)
+02 (ln 4): Constant(1: " inner")
+03 (ln 4): Call(Method, +(_))
+04 (ln 5): Load(Module, Class("System"))
+05 (ln 5): Load(Local, 1)
+06 (ln 5): Call(Method, print(_))
+07 (ln 5): Pop
+08 (ln 6): Pop
+09 (ln 7): Pop
+10 (ln 8): EndModule
+11 (ln 8): Return
+12 (ln 8): End

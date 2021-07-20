@@ -2,22 +2,22 @@ Constants:
 00: "yes"
 01: "no"
 Code:
-00: Load(Module, Class("System"))
-01: Boolean true
-02: JumpIfFalse(2)
-03: Constant(0: "yes")
-04: Jump(1)
-05: Constant(1: "no")
-06: Call(Method, print(_))
-07: Pop
-08: Load(Module, Class("System"))
-09: Boolean false
-10: JumpIfFalse(2)
-11: Constant(0: "yes")
-12: Jump(1)
-13: Constant(1: "no")
-14: Call(Method, print(_))
-15: Pop
-16: EndModule
-17: Return
-18: End
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Boolean true
+02 (ln 2): JumpIfFalse(2)
+03 (ln 3): Constant(0: "yes")
+04 (ln 3): Jump(1)
+05 (ln 3): Constant(1: "no")
+06 (ln 3): Call(Method, print(_))
+07 (ln 3): Pop
+08 (ln 6): Load(Module, Class("System"))
+09 (ln 6): Boolean false
+10 (ln 6): JumpIfFalse(2)
+11 (ln 6): Constant(0: "yes")
+12 (ln 6): Jump(1)
+13 (ln 7): Constant(1: "no")
+14 (ln 7): Call(Method, print(_))
+15 (ln 7): Pop
+16 (ln 8): EndModule
+17 (ln 8): Return
+18 (ln 8): End

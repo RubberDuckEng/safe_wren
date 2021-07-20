@@ -8,44 +8,44 @@ Constants:
 06: Fn()
 07: Fn(bar)
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(128 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new())
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new())
-11: Closure(3, [])
-12: Load(Module, Null)
-13: Method(instance, foo)
-14: Constant(4: "Bar")
-15: Load(Module, Null)
-16: Class(128 fields)
-17: Store(Module)
-18: Pop
-19: Closure(5, [])
-20: Load(Module, Null)
-21: Method(instance, init new())
-22: Closure(6, [])
-23: Load(Module, Null)
-24: Method(static, new())
-25: Closure(7, [])
-26: Load(Module, Null)
-27: Method(instance, bar)
-28: Load(Module, Null)
-29: Call(Method, new())
-30: Store(Module)
-31: Pop
-32: Load(Module, Null)
-33: Call(Getter, foo)
-34: Pop
-35: Load(Module, Null)
-36: Call(Getter, bar)
-37: Pop
-38: EndModule
-39: Return
-40: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(128 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 131): Closure(1, [])
+06 (ln 131): Load(Module, Null)
+07 (ln 131): Method(instance, init new())
+08 (ln 131): Closure(2, [])
+09 (ln 131): Load(Module, Null)
+10 (ln 131): Method(static, new())
+11 (ln 136): Closure(3, [])
+12 (ln 136): Load(Module, Null)
+13 (ln 136): Method(instance, foo)
+14 (ln 139): Constant(4: "Bar")
+15 (ln 139): Load(Module, Null)
+16 (ln 139): Class(128 fields)
+17 (ln 139): Store(Module)
+18 (ln 139): Pop
+19 (ln 270): Closure(5, [])
+20 (ln 270): Load(Module, Null)
+21 (ln 270): Method(instance, init new())
+22 (ln 270): Closure(6, [])
+23 (ln 270): Load(Module, Null)
+24 (ln 270): Method(static, new())
+25 (ln 275): Closure(7, [])
+26 (ln 275): Load(Module, Null)
+27 (ln 275): Method(instance, bar)
+28 (ln 278): Load(Module, Null)
+29 (ln 278): Call(Method, new())
+30 (ln 278): Store(Module)
+31 (ln 278): Pop
+32 (ln 279): Load(Module, Null)
+33 (ln 279): Call(Getter, foo)
+34 (ln 279): Pop
+35 (ln 280): Load(Module, Null)
+36 (ln 280): Call(Getter, bar)
+37 (ln 280): Pop
+38 (ln 281): EndModule
+39 (ln 281): Return
+40 (ln 281): End

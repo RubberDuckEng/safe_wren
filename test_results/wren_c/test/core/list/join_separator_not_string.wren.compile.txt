@@ -3,17 +3,17 @@ Constants:
 01: 2
 02: 3
 Code:
-00: Load(Module, Class("List"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Call(Method, addCore_(_))
-04: Constant(1: 2)
-05: Call(Method, addCore_(_))
-06: Constant(2: 3)
-07: Call(Method, addCore_(_))
-08: Constant(1: 2)
-09: Call(Method, join(_))
-10: Pop
-11: EndModule
-12: Return
-13: End
+00 (ln 1): Load(Module, Class("List"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Call(Method, addCore_(_))
+04 (ln 1): Constant(1: 2)
+05 (ln 1): Call(Method, addCore_(_))
+06 (ln 1): Constant(2: 3)
+07 (ln 1): Call(Method, addCore_(_))
+08 (ln 1): Constant(1: 2)
+09 (ln 1): Call(Method, join(_))
+10 (ln 1): Pop
+11 (ln 2): EndModule
+12 (ln 2): Return
+13 (ln 2): End

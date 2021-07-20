@@ -6,50 +6,50 @@ Constants:
 04: "c"
 05: "c value"
 Code:
-00: Load(Module, Class("Map"))
-01: Call(Method, new())
-02: Constant(0: "a")
-03: Constant(1: "a value")
-04: Call(Method, addCore_(_,_))
-05: Constant(2: "b")
-06: Constant(3: "b value")
-07: Call(Method, addCore_(_,_))
-08: Store(Module)
-09: Pop
-10: Load(Module, Class("System"))
-11: Load(Module, Null)
-12: Constant(0: "a")
-13: Call(Subscript, [_])
-14: Call(Method, print(_))
-15: Pop
-16: Load(Module, Class("System"))
-17: Load(Module, Null)
-18: Constant(2: "b")
-19: Call(Subscript, [_])
-20: Call(Method, print(_))
-21: Pop
-22: Load(Module, Class("Map"))
-23: Call(Method, new())
-24: Constant(4: "c")
-25: Constant(5: "c value")
-26: Call(Method, addCore_(_,_))
-27: Store(Module)
-28: Pop
-29: Load(Module, Class("System"))
-30: Load(Module, Null)
-31: Constant(4: "c")
-32: Call(Subscript, [_])
-33: Call(Method, print(_))
-34: Pop
-35: Load(Module, Class("Map"))
-36: Call(Method, new())
-37: Store(Module)
-38: Pop
-39: Load(Module, Class("System"))
-40: Load(Module, Null)
-41: Call(Getter, count)
-42: Call(Method, print(_))
-43: Pop
-44: EndModule
-45: Return
-46: End
+00 (ln 2): Load(Module, Class("Map"))
+01 (ln 2): Call(Method, new())
+02 (ln 4): Constant(0: "a")
+03 (ln 6): Constant(1: "a value")
+04 (ln 6): Call(Method, addCore_(_,_))
+05 (ln 8): Constant(2: "b")
+06 (ln 8): Constant(3: "b value")
+07 (ln 8): Call(Method, addCore_(_,_))
+08 (ln 10): Store(Module)
+09 (ln 10): Pop
+10 (ln 12): Load(Module, Class("System"))
+11 (ln 12): Load(Module, Null)
+12 (ln 12): Constant(0: "a")
+13 (ln 12): Call(Subscript, [_])
+14 (ln 12): Call(Method, print(_))
+15 (ln 12): Pop
+16 (ln 13): Load(Module, Class("System"))
+17 (ln 13): Load(Module, Null)
+18 (ln 13): Constant(2: "b")
+19 (ln 13): Call(Subscript, [_])
+20 (ln 13): Call(Method, print(_))
+21 (ln 13): Pop
+22 (ln 16): Load(Module, Class("Map"))
+23 (ln 16): Call(Method, new())
+24 (ln 16): Constant(4: "c")
+25 (ln 16): Constant(5: "c value")
+26 (ln 16): Call(Method, addCore_(_,_))
+27 (ln 18): Store(Module)
+28 (ln 18): Pop
+29 (ln 20): Load(Module, Class("System"))
+30 (ln 20): Load(Module, Null)
+31 (ln 20): Constant(4: "c")
+32 (ln 20): Call(Subscript, [_])
+33 (ln 20): Call(Method, print(_))
+34 (ln 20): Pop
+35 (ln 23): Load(Module, Class("Map"))
+36 (ln 23): Call(Method, new())
+37 (ln 25): Store(Module)
+38 (ln 25): Pop
+39 (ln 27): Load(Module, Class("System"))
+40 (ln 27): Load(Module, Null)
+41 (ln 27): Call(Getter, count)
+42 (ln 27): Call(Method, print(_))
+43 (ln 27): Pop
+44 (ln 28): EndModule
+45 (ln 28): Return
+46 (ln 28): End

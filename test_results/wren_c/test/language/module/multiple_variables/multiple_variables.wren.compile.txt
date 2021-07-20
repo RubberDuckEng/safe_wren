@@ -1,42 +1,42 @@
 Constants:
 Code:
-00: ImportModule("./module")
-01: Pop
-02: ImportVariable("Module1")
-03: Store(Module)
-04: Pop
-05: ImportVariable("Module2")
-06: Store(Module)
-07: Pop
-08: ImportVariable("Module3")
-09: Store(Module)
-10: Pop
-11: ImportVariable("Module4")
-12: Store(Module)
-13: Pop
-14: ImportVariable("Module5")
-15: Store(Module)
-16: Pop
-17: Load(Module, Class("System"))
-18: Load(Module, Null)
-19: Call(Method, print(_))
-20: Pop
-21: Load(Module, Class("System"))
-22: Load(Module, Null)
-23: Call(Method, print(_))
-24: Pop
-25: Load(Module, Class("System"))
-26: Load(Module, Null)
-27: Call(Method, print(_))
-28: Pop
-29: Load(Module, Class("System"))
-30: Load(Module, Null)
-31: Call(Method, print(_))
-32: Pop
-33: Load(Module, Class("System"))
-34: Load(Module, Null)
-35: Call(Method, print(_))
-36: Pop
-37: EndModule
-38: Return
-39: End
+00 (ln 1): ImportModule("./module")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Module1")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 1): ImportVariable("Module2")
+06 (ln 1): Store(Module)
+07 (ln 1): Pop
+08 (ln 1): ImportVariable("Module3")
+09 (ln 1): Store(Module)
+10 (ln 1): Pop
+11 (ln 1): ImportVariable("Module4")
+12 (ln 1): Store(Module)
+13 (ln 1): Pop
+14 (ln 1): ImportVariable("Module5")
+15 (ln 1): Store(Module)
+16 (ln 1): Pop
+17 (ln 6): Load(Module, Class("System"))
+18 (ln 6): Load(Module, Null)
+19 (ln 6): Call(Method, print(_))
+20 (ln 6): Pop
+21 (ln 7): Load(Module, Class("System"))
+22 (ln 7): Load(Module, Null)
+23 (ln 7): Call(Method, print(_))
+24 (ln 7): Pop
+25 (ln 8): Load(Module, Class("System"))
+26 (ln 8): Load(Module, Null)
+27 (ln 8): Call(Method, print(_))
+28 (ln 8): Pop
+29 (ln 9): Load(Module, Class("System"))
+30 (ln 9): Load(Module, Null)
+31 (ln 9): Call(Method, print(_))
+32 (ln 9): Pop
+33 (ln 10): Load(Module, Class("System"))
+34 (ln 10): Load(Module, Null)
+35 (ln 10): Call(Method, print(_))
+36 (ln 10): Pop
+37 (ln 11): EndModule
+38 (ln 11): Return
+39 (ln 11): End

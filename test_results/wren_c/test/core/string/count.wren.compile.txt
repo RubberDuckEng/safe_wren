@@ -7,48 +7,48 @@ Constants:
 05: "søméஃthîng"
 06: "\xefok\xf7"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "")
-02: Call(Getter, count)
-03: Call(Method, print(_))
-04: Pop
-05: Load(Module, Class("System"))
-06: Constant(1: "a string")
-07: Call(Getter, count)
-08: Call(Method, print(_))
-09: Pop
-10: Load(Module, Class("System"))
-11: Constant(2: "\0")
-12: Call(Getter, count)
-13: Call(Method, print(_))
-14: Pop
-15: Load(Module, Class("System"))
-16: Constant(3: "a\0b")
-17: Call(Getter, count)
-18: Call(Method, print(_))
-19: Pop
-20: Load(Module, Class("System"))
-21: Constant(4: "\0c")
-22: Call(Getter, count)
-23: Call(Method, print(_))
-24: Pop
-25: Load(Module, Class("System"))
-26: Constant(3: "a\0b")
-27: Constant(4: "\0c")
-28: Call(Method, +(_))
-29: Call(Getter, count)
-30: Call(Method, print(_))
-31: Pop
-32: Load(Module, Class("System"))
-33: Constant(5: "søméஃthîng")
-34: Call(Getter, count)
-35: Call(Method, print(_))
-36: Pop
-37: Load(Module, Class("System"))
-38: Constant(6: "\xefok\xf7")
-39: Call(Getter, count)
-40: Call(Method, print(_))
-41: Pop
-42: EndModule
-43: Return
-44: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: "")
+02 (ln 1): Call(Getter, count)
+03 (ln 1): Call(Method, print(_))
+04 (ln 1): Pop
+05 (ln 2): Load(Module, Class("System"))
+06 (ln 2): Constant(1: "a string")
+07 (ln 2): Call(Getter, count)
+08 (ln 2): Call(Method, print(_))
+09 (ln 2): Pop
+10 (ln 5): Load(Module, Class("System"))
+11 (ln 5): Constant(2: "\0")
+12 (ln 5): Call(Getter, count)
+13 (ln 5): Call(Method, print(_))
+14 (ln 5): Pop
+15 (ln 6): Load(Module, Class("System"))
+16 (ln 6): Constant(3: "a\0b")
+17 (ln 6): Call(Getter, count)
+18 (ln 6): Call(Method, print(_))
+19 (ln 6): Pop
+20 (ln 7): Load(Module, Class("System"))
+21 (ln 7): Constant(4: "\0c")
+22 (ln 7): Call(Getter, count)
+23 (ln 7): Call(Method, print(_))
+24 (ln 7): Pop
+25 (ln 8): Load(Module, Class("System"))
+26 (ln 8): Constant(3: "a\0b")
+27 (ln 8): Constant(4: "\0c")
+28 (ln 8): Call(Method, +(_))
+29 (ln 8): Call(Getter, count)
+30 (ln 8): Call(Method, print(_))
+31 (ln 8): Pop
+32 (ln 15): Load(Module, Class("System"))
+33 (ln 15): Constant(5: "søméஃthîng")
+34 (ln 15): Call(Getter, count)
+35 (ln 15): Call(Method, print(_))
+36 (ln 15): Pop
+37 (ln 18): Load(Module, Class("System"))
+38 (ln 18): Constant(6: "\xefok\xf7")
+39 (ln 18): Call(Getter, count)
+40 (ln 18): Call(Method, print(_))
+41 (ln 18): Pop
+42 (ln 19): EndModule
+43 (ln 19): Return
+44 (ln 19): End

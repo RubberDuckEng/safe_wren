@@ -3,27 +3,27 @@ Constants:
 01: "nullConfig()"
 02: "multipleInterpretCalls()"
 Code:
-00: Constant(0: "VM")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Constant(1: "nullConfig()")
-06: Load(Module, Null)
-07: Method(static, nullConfig())
-08: Constant(2: "multipleInterpretCalls()")
-09: Load(Module, Null)
-10: Method(static, multipleInterpretCalls())
-11: Load(Module, Class("System"))
-12: Load(Module, Null)
-13: Call(Method, nullConfig())
-14: Call(Method, print(_))
-15: Pop
-16: Load(Module, Class("System"))
-17: Load(Module, Null)
-18: Call(Method, multipleInterpretCalls())
-19: Call(Method, print(_))
-20: Pop
-21: EndModule
-22: Return
-23: End
+00 (ln 1): Constant(0: "VM")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Constant(1: "nullConfig()")
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(static, nullConfig())
+08 (ln 3): Constant(2: "multipleInterpretCalls()")
+09 (ln 3): Load(Module, Null)
+10 (ln 3): Method(static, multipleInterpretCalls())
+11 (ln 7): Load(Module, Class("System"))
+12 (ln 7): Load(Module, Null)
+13 (ln 7): Call(Method, nullConfig())
+14 (ln 7): Call(Method, print(_))
+15 (ln 7): Pop
+16 (ln 8): Load(Module, Class("System"))
+17 (ln 8): Load(Module, Null)
+18 (ln 8): Call(Method, multipleInterpretCalls())
+19 (ln 8): Call(Method, print(_))
+20 (ln 8): Pop
+21 (ln 9): EndModule
+22 (ln 9): Return
+23 (ln 9): End

@@ -2,25 +2,25 @@ Constants:
 00: 1
 01: 0
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: 1)
-02: Call(Getter, isNan)
-03: Call(Method, print(_))
-04: Pop
-05: Load(Module, Class("System"))
-06: Constant(1: 0)
-07: Constant(1: 0)
-08: Call(Method, /(_))
-09: Call(Getter, isNan)
-10: Call(Method, print(_))
-11: Pop
-12: Load(Module, Class("System"))
-13: Constant(0: 1)
-14: Constant(1: 0)
-15: Call(Method, /(_))
-16: Call(Getter, isNan)
-17: Call(Method, print(_))
-18: Pop
-19: EndModule
-20: Return
-21: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: 1)
+02 (ln 1): Call(Getter, isNan)
+03 (ln 1): Call(Method, print(_))
+04 (ln 1): Pop
+05 (ln 2): Load(Module, Class("System"))
+06 (ln 2): Constant(1: 0)
+07 (ln 2): Constant(1: 0)
+08 (ln 2): Call(Method, /(_))
+09 (ln 2): Call(Getter, isNan)
+10 (ln 2): Call(Method, print(_))
+11 (ln 2): Pop
+12 (ln 5): Load(Module, Class("System"))
+13 (ln 5): Constant(0: 1)
+14 (ln 5): Constant(1: 0)
+15 (ln 5): Call(Method, /(_))
+16 (ln 5): Call(Getter, isNan)
+17 (ln 5): Call(Method, print(_))
+18 (ln 5): Pop
+19 (ln 6): EndModule
+20 (ln 6): Return
+21 (ln 6): End

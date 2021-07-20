@@ -3,37 +3,37 @@ Constants:
 01: "runtimeError"
 02: Fn(new(_) block argument)
 Code:
-00: Constant(0: "Error")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Constant(1: "runtimeError")
-06: Load(Module, Null)
-07: Method(static, runtimeError)
-08: Load(Module, Class("Fiber"))
-09: Closure(2, [])
-10: Call(Method, new(_))
-11: Store(Module)
-12: Pop
-13: Load(Module, Null)
-14: Call(Method, try())
-15: Store(Module)
-16: Pop
-17: Load(Module, Class("System"))
-18: Load(Module, Null)
-19: Call(Method, print(_))
-20: Pop
-21: Load(Module, Class("System"))
-22: Load(Module, Null)
-23: Call(Getter, isDone)
-24: Call(Method, print(_))
-25: Pop
-26: Load(Module, Class("System"))
-27: Load(Module, Null)
-28: Call(Getter, error)
-29: Call(Method, print(_))
-30: Pop
-31: EndModule
-32: Return
-33: End
+00 (ln 1): Constant(0: "Error")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Constant(1: "runtimeError")
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(static, runtimeError)
+08 (ln 5): Load(Module, Class("Fiber"))
+09 (ln 7): Closure(2, [])
+10 (ln 7): Call(Method, new(_))
+11 (ln 7): Store(Module)
+12 (ln 7): Pop
+13 (ln 9): Load(Module, Null)
+14 (ln 9): Call(Method, try())
+15 (ln 9): Store(Module)
+16 (ln 9): Pop
+17 (ln 10): Load(Module, Class("System"))
+18 (ln 10): Load(Module, Null)
+19 (ln 10): Call(Method, print(_))
+20 (ln 10): Pop
+21 (ln 11): Load(Module, Class("System"))
+22 (ln 11): Load(Module, Null)
+23 (ln 11): Call(Getter, isDone)
+24 (ln 11): Call(Method, print(_))
+25 (ln 11): Pop
+26 (ln 12): Load(Module, Class("System"))
+27 (ln 12): Load(Module, Null)
+28 (ln 12): Call(Getter, error)
+29 (ln 12): Call(Method, print(_))
+30 (ln 12): Pop
+31 (ln 13): EndModule
+32 (ln 13): Return
+33 (ln 13): End

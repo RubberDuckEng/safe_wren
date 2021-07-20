@@ -6,68 +6,68 @@ Constants:
 04: "three"
 05: 3
 Code:
-00: Load(Module, Class("Map"))
-01: Call(Method, new())
-02: Constant(0: "one")
-03: Constant(1: 1)
-04: Call(Method, addCore_(_,_))
-05: Constant(2: "two")
-06: Constant(3: 2)
-07: Call(Method, addCore_(_,_))
-08: Constant(4: "three")
-09: Constant(5: 3)
-10: Call(Method, addCore_(_,_))
-11: Store(Module)
-12: Pop
-13: Load(Module, Class("System"))
-14: Load(Module, Null)
-15: Call(Getter, count)
-16: Call(Method, print(_))
-17: Pop
-18: Load(Module, Class("System"))
-19: Load(Module, Null)
-20: Constant(2: "two")
-21: Call(Method, remove(_))
-22: Call(Method, print(_))
-23: Pop
-24: Load(Module, Class("System"))
-25: Load(Module, Null)
-26: Call(Getter, count)
-27: Call(Method, print(_))
-28: Pop
-29: Load(Module, Class("System"))
-30: Load(Module, Null)
-31: Constant(4: "three")
-32: Call(Method, remove(_))
-33: Call(Method, print(_))
-34: Pop
-35: Load(Module, Class("System"))
-36: Load(Module, Null)
-37: Call(Getter, count)
-38: Call(Method, print(_))
-39: Pop
-40: Load(Module, Class("System"))
-41: Load(Module, Null)
-42: Constant(2: "two")
-43: Call(Method, remove(_))
-44: Call(Method, print(_))
-45: Pop
-46: Load(Module, Class("System"))
-47: Load(Module, Null)
-48: Call(Getter, count)
-49: Call(Method, print(_))
-50: Pop
-51: Load(Module, Class("System"))
-52: Load(Module, Null)
-53: Constant(0: "one")
-54: Call(Method, remove(_))
-55: Call(Method, print(_))
-56: Pop
-57: Load(Module, Class("System"))
-58: Load(Module, Null)
-59: Call(Getter, count)
-60: Call(Method, print(_))
-61: Pop
-62: EndModule
-63: Return
-64: End
+00 (ln 1): Load(Module, Class("Map"))
+01 (ln 1): Call(Method, new())
+02 (ln 2): Constant(0: "one")
+03 (ln 2): Constant(1: 1)
+04 (ln 2): Call(Method, addCore_(_,_))
+05 (ln 3): Constant(2: "two")
+06 (ln 3): Constant(3: 2)
+07 (ln 3): Call(Method, addCore_(_,_))
+08 (ln 4): Constant(4: "three")
+09 (ln 4): Constant(5: 3)
+10 (ln 4): Call(Method, addCore_(_,_))
+11 (ln 5): Store(Module)
+12 (ln 5): Pop
+13 (ln 7): Load(Module, Class("System"))
+14 (ln 7): Load(Module, Null)
+15 (ln 7): Call(Getter, count)
+16 (ln 7): Call(Method, print(_))
+17 (ln 7): Pop
+18 (ln 8): Load(Module, Class("System"))
+19 (ln 8): Load(Module, Null)
+20 (ln 8): Constant(2: "two")
+21 (ln 8): Call(Method, remove(_))
+22 (ln 8): Call(Method, print(_))
+23 (ln 8): Pop
+24 (ln 9): Load(Module, Class("System"))
+25 (ln 9): Load(Module, Null)
+26 (ln 9): Call(Getter, count)
+27 (ln 9): Call(Method, print(_))
+28 (ln 9): Pop
+29 (ln 10): Load(Module, Class("System"))
+30 (ln 10): Load(Module, Null)
+31 (ln 10): Constant(4: "three")
+32 (ln 10): Call(Method, remove(_))
+33 (ln 10): Call(Method, print(_))
+34 (ln 10): Pop
+35 (ln 11): Load(Module, Class("System"))
+36 (ln 11): Load(Module, Null)
+37 (ln 11): Call(Getter, count)
+38 (ln 11): Call(Method, print(_))
+39 (ln 11): Pop
+40 (ln 14): Load(Module, Class("System"))
+41 (ln 14): Load(Module, Null)
+42 (ln 14): Constant(2: "two")
+43 (ln 14): Call(Method, remove(_))
+44 (ln 14): Call(Method, print(_))
+45 (ln 14): Pop
+46 (ln 15): Load(Module, Class("System"))
+47 (ln 15): Load(Module, Null)
+48 (ln 15): Call(Getter, count)
+49 (ln 15): Call(Method, print(_))
+50 (ln 15): Pop
+51 (ln 17): Load(Module, Class("System"))
+52 (ln 17): Load(Module, Null)
+53 (ln 17): Constant(0: "one")
+54 (ln 17): Call(Method, remove(_))
+55 (ln 17): Call(Method, print(_))
+56 (ln 17): Pop
+57 (ln 18): Load(Module, Class("System"))
+58 (ln 18): Load(Module, Null)
+59 (ln 18): Call(Getter, count)
+60 (ln 18): Call(Method, print(_))
+61 (ln 18): Pop
+62 (ln 19): EndModule
+63 (ln 19): Return
+64 (ln 19): End

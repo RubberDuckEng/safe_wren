@@ -3,15 +3,15 @@ Constants:
 01: 1
 02: 2.5
 Code:
-00: Constant(0: "string")
-01: Store(Module)
-02: Pop
-03: Load(Module, Null)
-04: Constant(1: 1)
-05: Constant(2: 2.5)
-06: Call(Method, ..(_))
-07: Call(Subscript, [_])
-08: Pop
-09: EndModule
-10: Return
-11: End
+00 (ln 1): Constant(0: "string")
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 2): Load(Module, Null)
+04 (ln 2): Constant(1: 1)
+05 (ln 2): Constant(2: 2.5)
+06 (ln 2): Call(Method, ..(_))
+07 (ln 2): Call(Subscript, [_])
+08 (ln 2): Pop
+09 (ln 3): EndModule
+10 (ln 3): Return
+11 (ln 3): End

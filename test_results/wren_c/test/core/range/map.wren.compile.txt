@@ -3,21 +3,21 @@ Constants:
 01: 3
 02: Fn(map(_) block argument)
 Code:
-00: Constant(0: 1)
-01: Constant(1: 3)
-02: Call(Method, ..(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Closure(2, [])
-07: Call(Method, map(_))
-08: Call(Getter, toList)
-09: Store(Module)
-10: Pop
-11: Load(Module, Class("System"))
-12: Load(Module, Null)
-13: Call(Method, print(_))
-14: Pop
-15: EndModule
-16: Return
-17: End
+00 (ln 1): Constant(0: 1)
+01 (ln 1): Constant(1: 3)
+02 (ln 1): Call(Method, ..(_))
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Load(Module, Null)
+06 (ln 2): Closure(2, [])
+07 (ln 2): Call(Method, map(_))
+08 (ln 2): Call(Getter, toList)
+09 (ln 2): Store(Module)
+10 (ln 2): Pop
+11 (ln 3): Load(Module, Class("System"))
+12 (ln 3): Load(Module, Null)
+13 (ln 3): Call(Method, print(_))
+14 (ln 3): Pop
+15 (ln 4): EndModule
+16 (ln 4): Return
+17 (ln 4): End

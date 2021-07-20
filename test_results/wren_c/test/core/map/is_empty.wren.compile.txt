@@ -1,21 +1,21 @@
 Constants:
 00: 1
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("Map"))
-02: Call(Method, new())
-03: Call(Getter, isEmpty)
-04: Call(Method, print(_))
-05: Pop
-06: Load(Module, Class("System"))
-07: Load(Module, Class("Map"))
-08: Call(Method, new())
-09: Constant(0: 1)
-10: Constant(0: 1)
-11: Call(Method, addCore_(_,_))
-12: Call(Getter, isEmpty)
-13: Call(Method, print(_))
-14: Pop
-15: EndModule
-16: Return
-17: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("Map"))
+02 (ln 1): Call(Method, new())
+03 (ln 1): Call(Getter, isEmpty)
+04 (ln 1): Call(Method, print(_))
+05 (ln 1): Pop
+06 (ln 2): Load(Module, Class("System"))
+07 (ln 2): Load(Module, Class("Map"))
+08 (ln 2): Call(Method, new())
+09 (ln 2): Constant(0: 1)
+10 (ln 2): Constant(0: 1)
+11 (ln 2): Call(Method, addCore_(_,_))
+12 (ln 2): Call(Getter, isEmpty)
+13 (ln 2): Call(Method, print(_))
+14 (ln 2): Pop
+15 (ln 3): EndModule
+16 (ln 3): Return
+17 (ln 3): End

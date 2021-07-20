@@ -4,26 +4,26 @@ Constants:
 02: Fn()
 03: Fn(method)
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new())
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new())
-11: Closure(3, [])
-12: Load(Module, Null)
-13: Method(instance, method)
-14: Load(Module, Class("System"))
-15: Load(Module, Null)
-16: Call(Method, new())
-17: Call(Getter, method)
-18: Call(Method, print(_))
-19: Pop
-20: EndModule
-21: Return
-22: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(instance, init new())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, Null)
+10 (ln 2): Method(static, new())
+11 (ln 7): Closure(3, [])
+12 (ln 7): Load(Module, Null)
+13 (ln 7): Method(instance, method)
+14 (ln 10): Load(Module, Class("System"))
+15 (ln 10): Load(Module, Null)
+16 (ln 10): Call(Method, new())
+17 (ln 10): Call(Getter, method)
+18 (ln 10): Call(Method, print(_))
+19 (ln 10): Pop
+20 (ln 11): EndModule
+21 (ln 11): Return
+22 (ln 11): End

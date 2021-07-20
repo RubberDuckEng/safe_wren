@@ -1,34 +1,34 @@
 Constants:
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("Map"))
-02: Call(Method, new())
-03: Load(Module, Class("Map"))
-04: Call(Method, is(_))
-05: Call(Method, print(_))
-06: Pop
-07: Load(Module, Class("System"))
-08: Load(Module, Class("Map"))
-09: Call(Method, new())
-10: Load(Module, Class("Object"))
-11: Call(Method, is(_))
-12: Call(Method, print(_))
-13: Pop
-14: Load(Module, Class("System"))
-15: Load(Module, Class("Map"))
-16: Call(Method, new())
-17: Load(Module, Class("Bool"))
-18: Call(Method, is(_))
-19: Call(Method, print(_))
-20: Pop
-21: Load(Module, Class("System"))
-22: Load(Module, Class("Map"))
-23: Call(Method, new())
-24: Call(Getter, type)
-25: Load(Module, Class("Map"))
-26: Call(Method, ==(_))
-27: Call(Method, print(_))
-28: Pop
-29: EndModule
-30: Return
-31: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("Map"))
+02 (ln 1): Call(Method, new())
+03 (ln 1): Load(Module, Class("Map"))
+04 (ln 1): Call(Method, is(_))
+05 (ln 1): Call(Method, print(_))
+06 (ln 1): Pop
+07 (ln 3): Load(Module, Class("System"))
+08 (ln 3): Load(Module, Class("Map"))
+09 (ln 3): Call(Method, new())
+10 (ln 3): Load(Module, Class("Object"))
+11 (ln 3): Call(Method, is(_))
+12 (ln 3): Call(Method, print(_))
+13 (ln 3): Pop
+14 (ln 4): Load(Module, Class("System"))
+15 (ln 4): Load(Module, Class("Map"))
+16 (ln 4): Call(Method, new())
+17 (ln 4): Load(Module, Class("Bool"))
+18 (ln 4): Call(Method, is(_))
+19 (ln 4): Call(Method, print(_))
+20 (ln 4): Pop
+21 (ln 5): Load(Module, Class("System"))
+22 (ln 5): Load(Module, Class("Map"))
+23 (ln 5): Call(Method, new())
+24 (ln 5): Call(Getter, type)
+25 (ln 5): Load(Module, Class("Map"))
+26 (ln 5): Call(Method, ==(_))
+27 (ln 5): Call(Method, print(_))
+28 (ln 5): Pop
+29 (ln 6): EndModule
+30 (ln 6): Return
+31 (ln 6): End

@@ -1,8 +1,8 @@
 Constants:
 00: "\U0060"
 Code:
-00: Constant(0: "\U0060")
-01: Pop
-02: EndModule
-03: Return
-04: End
+00 (ln 2): Constant(0: "\U0060")
+01 (ln 2): Pop
+02 (ln 3): EndModule
+03 (ln 3): Return
+04 (ln 3): End

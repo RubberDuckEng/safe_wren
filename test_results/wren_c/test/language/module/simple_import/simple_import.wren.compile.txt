@@ -1,14 +1,14 @@
 Constants:
 Code:
-00: ImportModule("./module")
-01: Pop
-02: ImportVariable("Module")
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Null)
-07: Call(Method, print(_))
-08: Pop
-09: EndModule
-10: Return
-11: End
+00 (ln 1): ImportModule("./module")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Module")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 4): Load(Module, Class("System"))
+06 (ln 4): Load(Module, Null)
+07 (ln 4): Call(Method, print(_))
+08 (ln 4): Pop
+09 (ln 5): EndModule
+10 (ln 5): Return
+11 (ln 5): End

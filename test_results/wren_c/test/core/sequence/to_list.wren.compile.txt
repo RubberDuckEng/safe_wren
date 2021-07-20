@@ -5,29 +5,29 @@ Constants:
 03: Fn(iterate(_))
 04: Fn(iteratorValue(_))
 Code:
-00: Constant(0: "TestSequence")
-01: Load(Module, Class("Sequence"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new())
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new())
-11: Closure(3, [])
-12: Load(Module, Null)
-13: Method(instance, iterate(_))
-14: Closure(4, [])
-15: Load(Module, Null)
-16: Method(instance, iteratorValue(_))
-17: Load(Module, Class("System"))
-18: Load(Module, Null)
-19: Call(Method, new())
-20: Call(Getter, toList)
-21: Call(Method, print(_))
-22: Pop
-23: EndModule
-24: Return
-25: End
+00 (ln 1): Constant(0: "TestSequence")
+01 (ln 1): Load(Module, Class("Sequence"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(instance, init new())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, Null)
+10 (ln 2): Method(static, new())
+11 (ln 8): Closure(3, [])
+12 (ln 8): Load(Module, Null)
+13 (ln 8): Method(instance, iterate(_))
+14 (ln 10): Closure(4, [])
+15 (ln 10): Load(Module, Null)
+16 (ln 10): Method(instance, iteratorValue(_))
+17 (ln 13): Load(Module, Class("System"))
+18 (ln 13): Load(Module, Null)
+19 (ln 13): Call(Method, new())
+20 (ln 13): Call(Getter, toList)
+21 (ln 13): Call(Method, print(_))
+22 (ln 13): Pop
+23 (ln 14): EndModule
+24 (ln 14): Return
+25 (ln 14): End

@@ -3,49 +3,49 @@ Constants:
 01: "one"
 02: "updated"
 Code:
-00: Load(Module, Class("Map"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Constant(1: "one")
-04: Call(Method, addCore_(_,_))
-05: Store(Module)
-06: Pop
-07: Load(Module, Null)
-08: Null
-09: Call(Method, iterate(_))
-10: Store(Module)
-11: Pop
-12: Load(Module, Null)
-13: Load(Module, Null)
-14: Call(Method, iteratorValue(_))
-15: Store(Module)
-16: Pop
-17: Load(Module, Class("System"))
-18: Load(Module, Null)
-19: Load(Module, Class("MapEntry"))
-20: Call(Method, is(_))
-21: Call(Method, print(_))
-22: Pop
-23: Load(Module, Class("System"))
-24: Load(Module, Null)
-25: Call(Getter, key)
-26: Call(Method, print(_))
-27: Pop
-28: Load(Module, Class("System"))
-29: Load(Module, Null)
-30: Call(Getter, value)
-31: Call(Method, print(_))
-32: Pop
-33: Load(Module, Null)
-34: Constant(0: 1)
-35: Constant(2: "updated")
-36: Call(SubscriptSetter, [_]=(_))
-37: Pop
-38: Load(Module, Class("System"))
-39: Load(Module, Null)
-40: Call(Getter, value)
-41: Call(Method, print(_))
-42: Pop
-43: EndModule
-44: Return
-45: End
+00 (ln 1): Load(Module, Class("Map"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Constant(1: "one")
+04 (ln 1): Call(Method, addCore_(_,_))
+05 (ln 1): Store(Module)
+06 (ln 1): Pop
+07 (ln 4): Load(Module, Null)
+08 (ln 4): Null
+09 (ln 4): Call(Method, iterate(_))
+10 (ln 4): Store(Module)
+11 (ln 4): Pop
+12 (ln 5): Load(Module, Null)
+13 (ln 5): Load(Module, Null)
+14 (ln 5): Call(Method, iteratorValue(_))
+15 (ln 5): Store(Module)
+16 (ln 5): Pop
+17 (ln 7): Load(Module, Class("System"))
+18 (ln 7): Load(Module, Null)
+19 (ln 7): Load(Module, Class("MapEntry"))
+20 (ln 7): Call(Method, is(_))
+21 (ln 7): Call(Method, print(_))
+22 (ln 7): Pop
+23 (ln 8): Load(Module, Class("System"))
+24 (ln 8): Load(Module, Null)
+25 (ln 8): Call(Getter, key)
+26 (ln 8): Call(Method, print(_))
+27 (ln 8): Pop
+28 (ln 9): Load(Module, Class("System"))
+29 (ln 9): Load(Module, Null)
+30 (ln 9): Call(Getter, value)
+31 (ln 9): Call(Method, print(_))
+32 (ln 9): Pop
+33 (ln 12): Load(Module, Null)
+34 (ln 12): Constant(0: 1)
+35 (ln 12): Constant(2: "updated")
+36 (ln 12): Call(SubscriptSetter, [_]=(_))
+37 (ln 12): Pop
+38 (ln 13): Load(Module, Class("System"))
+39 (ln 13): Load(Module, Null)
+40 (ln 13): Call(Getter, value)
+41 (ln 13): Call(Method, print(_))
+42 (ln 13): Pop
+43 (ln 14): EndModule
+44 (ln 14): Return
+45 (ln 14): End

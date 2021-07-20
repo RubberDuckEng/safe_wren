@@ -5,46 +5,46 @@ Constants:
 03: 100
 04: 300
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: 1)
-02: Constant(1: 3)
-03: Call(Method, ..(_))
-04: Call(Method, print(_))
-05: Pop
-06: Load(Module, Class("System"))
-07: Constant(2: 12345.6789)
-08: Constant(2: 12345.6789)
-09: Call(Method, ..(_))
-10: Call(Method, print(_))
-11: Pop
-12: Load(Module, Class("System"))
-13: Constant(3: 100)
-14: Call(Method, -)
-15: Constant(4: 300)
-16: Call(Method, -)
-17: Call(Method, ..(_))
-18: Call(Method, print(_))
-19: Pop
-20: Load(Module, Class("System"))
-21: Constant(0: 1)
-22: Constant(1: 3)
-23: Call(Method, ...(_))
-24: Call(Method, print(_))
-25: Pop
-26: Load(Module, Class("System"))
-27: Constant(2: 12345.6789)
-28: Constant(2: 12345.6789)
-29: Call(Method, ...(_))
-30: Call(Method, print(_))
-31: Pop
-32: Load(Module, Class("System"))
-33: Constant(3: 100)
-34: Call(Method, -)
-35: Constant(4: 300)
-36: Call(Method, -)
-37: Call(Method, ...(_))
-38: Call(Method, print(_))
-39: Pop
-40: EndModule
-41: Return
-42: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: 1)
+02 (ln 1): Constant(1: 3)
+03 (ln 1): Call(Method, ..(_))
+04 (ln 1): Call(Method, print(_))
+05 (ln 1): Pop
+06 (ln 2): Load(Module, Class("System"))
+07 (ln 2): Constant(2: 12345.6789)
+08 (ln 2): Constant(2: 12345.6789)
+09 (ln 2): Call(Method, ..(_))
+10 (ln 2): Call(Method, print(_))
+11 (ln 2): Pop
+12 (ln 3): Load(Module, Class("System"))
+13 (ln 3): Constant(3: 100)
+14 (ln 3): Call(Method, -)
+15 (ln 3): Constant(4: 300)
+16 (ln 3): Call(Method, -)
+17 (ln 3): Call(Method, ..(_))
+18 (ln 3): Call(Method, print(_))
+19 (ln 3): Pop
+20 (ln 5): Load(Module, Class("System"))
+21 (ln 5): Constant(0: 1)
+22 (ln 5): Constant(1: 3)
+23 (ln 5): Call(Method, ...(_))
+24 (ln 5): Call(Method, print(_))
+25 (ln 5): Pop
+26 (ln 6): Load(Module, Class("System"))
+27 (ln 6): Constant(2: 12345.6789)
+28 (ln 6): Constant(2: 12345.6789)
+29 (ln 6): Call(Method, ...(_))
+30 (ln 6): Call(Method, print(_))
+31 (ln 6): Pop
+32 (ln 7): Load(Module, Class("System"))
+33 (ln 7): Constant(3: 100)
+34 (ln 7): Call(Method, -)
+35 (ln 7): Constant(4: 300)
+36 (ln 7): Call(Method, -)
+37 (ln 7): Call(Method, ...(_))
+38 (ln 7): Call(Method, print(_))
+39 (ln 7): Pop
+40 (ln 8): EndModule
+41 (ln 8): Return
+42 (ln 8): End

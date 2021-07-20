@@ -1,5 +1,5 @@
 Constants:
 Code:
-00: EndModule
-01: Return
-02: End
+00 (ln 1): EndModule
+01 (ln 1): Return
+02 (ln 1): End

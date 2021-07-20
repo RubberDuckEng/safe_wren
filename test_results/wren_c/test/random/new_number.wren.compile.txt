@@ -4,55 +4,55 @@ Constants:
 02: 1
 03: 100
 Code:
-00: ImportModule("random")
-01: Pop
-02: ImportVariable("Random")
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Constant(0: 123)
-07: Call(Method, new(_))
-08: Store(Module)
-09: Pop
-10: Load(Module, Null)
-11: Constant(0: 123)
-12: Call(Method, new(_))
-13: Store(Module)
-14: Pop
-15: Constant(1: 0)
-16: Store(Module)
-17: Pop
-18: Constant(2: 1)
-19: Constant(3: 100)
-20: Call(Method, ..(_))
-21: Null
-22: Load(Local, 1)
-23: Load(Local, 2)
-24: Call(Method, iterate(_))
-25: Store(Local, 2)
-26: JumpIfFalse(16)
-27: Load(Local, 1)
-28: Load(Local, 2)
-29: Call(Method, iteratorValue(_))
-30: Load(Module, Null)
-31: Call(Method, float())
-32: Load(Module, Null)
-33: Call(Method, float())
-34: Call(Method, ==(_))
-35: JumpIfFalse(5)
-36: Load(Module, Null)
-37: Constant(2: 1)
-38: Call(Method, +(_))
-39: Store(Module)
-40: Pop
-41: Pop
-42: Loop(21)
-43: Pop
-44: Pop
-45: Load(Module, Class("System"))
-46: Load(Module, Null)
-47: Call(Method, print(_))
-48: Pop
-49: EndModule
-50: Return
-51: End
+00 (ln 1): ImportModule("random")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Random")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Load(Module, Null)
+06 (ln 3): Constant(0: 123)
+07 (ln 3): Call(Method, new(_))
+08 (ln 3): Store(Module)
+09 (ln 3): Pop
+10 (ln 4): Load(Module, Null)
+11 (ln 4): Constant(0: 123)
+12 (ln 4): Call(Method, new(_))
+13 (ln 4): Store(Module)
+14 (ln 4): Pop
+15 (ln 6): Constant(1: 0)
+16 (ln 6): Store(Module)
+17 (ln 6): Pop
+18 (ln 7): Constant(2: 1)
+19 (ln 7): Constant(3: 100)
+20 (ln 7): Call(Method, ..(_))
+21 (ln 7): Null
+22 (ln 7): Load(Local, 1)
+23 (ln 7): Load(Local, 2)
+24 (ln 7): Call(Method, iterate(_))
+25 (ln 7): Store(Local, 2)
+26 (ln 7): JumpIfFalse(16)
+27 (ln 7): Load(Local, 1)
+28 (ln 7): Load(Local, 2)
+29 (ln 7): Call(Method, iteratorValue(_))
+30 (ln 9): Load(Module, Null)
+31 (ln 9): Call(Method, float())
+32 (ln 9): Load(Module, Null)
+33 (ln 9): Call(Method, float())
+34 (ln 9): Call(Method, ==(_))
+35 (ln 9): JumpIfFalse(5)
+36 (ln 9): Load(Module, Null)
+37 (ln 9): Constant(2: 1)
+38 (ln 9): Call(Method, +(_))
+39 (ln 9): Store(Module)
+40 (ln 9): Pop
+41 (ln 10): Pop
+42 (ln 10): Loop(21)
+43 (ln 10): Pop
+44 (ln 10): Pop
+45 (ln 12): Load(Module, Class("System"))
+46 (ln 12): Load(Module, Null)
+47 (ln 12): Call(Method, print(_))
+48 (ln 12): Pop
+49 (ln 13): EndModule
+50 (ln 13): Return
+51 (ln 13): End

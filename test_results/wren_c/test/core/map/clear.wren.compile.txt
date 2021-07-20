@@ -3,40 +3,40 @@ Constants:
 01: 2
 02: 3
 Code:
-00: Load(Module, Class("Map"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Constant(0: 1)
-04: Call(Method, addCore_(_,_))
-05: Constant(1: 2)
-06: Constant(1: 2)
-07: Call(Method, addCore_(_,_))
-08: Constant(2: 3)
-09: Constant(2: 3)
-10: Call(Method, addCore_(_,_))
-11: Store(Module)
-12: Pop
-13: Load(Module, Null)
-14: Call(Method, clear())
-15: Pop
-16: Load(Module, Class("System"))
-17: Load(Module, Null)
-18: Call(Method, print(_))
-19: Pop
-20: Load(Module, Class("System"))
-21: Load(Module, Null)
-22: Call(Getter, count)
-23: Call(Method, print(_))
-24: Pop
-25: Load(Module, Class("System"))
-26: Load(Module, Class("Map"))
-27: Call(Method, new())
-28: Constant(0: 1)
-29: Constant(1: 2)
-30: Call(Method, addCore_(_,_))
-31: Call(Method, clear())
-32: Call(Method, print(_))
-33: Pop
-34: EndModule
-35: Return
-36: End
+00 (ln 1): Load(Module, Class("Map"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Constant(0: 1)
+04 (ln 1): Call(Method, addCore_(_,_))
+05 (ln 1): Constant(1: 2)
+06 (ln 1): Constant(1: 2)
+07 (ln 1): Call(Method, addCore_(_,_))
+08 (ln 1): Constant(2: 3)
+09 (ln 1): Constant(2: 3)
+10 (ln 1): Call(Method, addCore_(_,_))
+11 (ln 1): Store(Module)
+12 (ln 1): Pop
+13 (ln 2): Load(Module, Null)
+14 (ln 2): Call(Method, clear())
+15 (ln 2): Pop
+16 (ln 3): Load(Module, Class("System"))
+17 (ln 3): Load(Module, Null)
+18 (ln 3): Call(Method, print(_))
+19 (ln 3): Pop
+20 (ln 4): Load(Module, Class("System"))
+21 (ln 4): Load(Module, Null)
+22 (ln 4): Call(Getter, count)
+23 (ln 4): Call(Method, print(_))
+24 (ln 4): Pop
+25 (ln 7): Load(Module, Class("System"))
+26 (ln 7): Load(Module, Class("Map"))
+27 (ln 7): Call(Method, new())
+28 (ln 7): Constant(0: 1)
+29 (ln 7): Constant(1: 2)
+30 (ln 7): Call(Method, addCore_(_,_))
+31 (ln 7): Call(Method, clear())
+32 (ln 7): Call(Method, print(_))
+33 (ln 7): Pop
+34 (ln 8): EndModule
+35 (ln 8): Return
+36 (ln 8): End

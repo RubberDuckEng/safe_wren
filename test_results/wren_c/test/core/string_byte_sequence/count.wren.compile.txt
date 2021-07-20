@@ -5,36 +5,36 @@ Constants:
 03: "\0\0\0"
 04: "\xef\xf7"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "")
-02: Call(Getter, bytes)
-03: Call(Getter, count)
-04: Call(Method, print(_))
-05: Pop
-06: Load(Module, Class("System"))
-07: Constant(1: "123")
-08: Call(Getter, bytes)
-09: Call(Getter, count)
-10: Call(Method, print(_))
-11: Pop
-12: Load(Module, Class("System"))
-13: Constant(2: "søméஃ")
-14: Call(Getter, bytes)
-15: Call(Getter, count)
-16: Call(Method, print(_))
-17: Pop
-18: Load(Module, Class("System"))
-19: Constant(3: "\0\0\0")
-20: Call(Getter, bytes)
-21: Call(Getter, count)
-22: Call(Method, print(_))
-23: Pop
-24: Load(Module, Class("System"))
-25: Constant(4: "\xef\xf7")
-26: Call(Getter, bytes)
-27: Call(Getter, count)
-28: Call(Method, print(_))
-29: Pop
-30: EndModule
-31: Return
-32: End
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "")
+02 (ln 2): Call(Getter, bytes)
+03 (ln 2): Call(Getter, count)
+04 (ln 2): Call(Method, print(_))
+05 (ln 2): Pop
+06 (ln 3): Load(Module, Class("System"))
+07 (ln 3): Constant(1: "123")
+08 (ln 3): Call(Getter, bytes)
+09 (ln 3): Call(Getter, count)
+10 (ln 3): Call(Method, print(_))
+11 (ln 3): Pop
+12 (ln 9): Load(Module, Class("System"))
+13 (ln 9): Constant(2: "søméஃ")
+14 (ln 9): Call(Getter, bytes)
+15 (ln 9): Call(Getter, count)
+16 (ln 9): Call(Method, print(_))
+17 (ln 9): Pop
+18 (ln 12): Load(Module, Class("System"))
+19 (ln 12): Constant(3: "\0\0\0")
+20 (ln 12): Call(Getter, bytes)
+21 (ln 12): Call(Getter, count)
+22 (ln 12): Call(Method, print(_))
+23 (ln 12): Pop
+24 (ln 15): Load(Module, Class("System"))
+25 (ln 15): Constant(4: "\xef\xf7")
+26 (ln 15): Call(Getter, bytes)
+27 (ln 15): Call(Getter, count)
+28 (ln 15): Call(Method, print(_))
+29 (ln 15): Pop
+30 (ln 16): EndModule
+31 (ln 16): Return
+32 (ln 16): End

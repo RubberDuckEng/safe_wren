@@ -1,9 +1,9 @@
 Constants:
 Code:
-00: ImportModule("./sub/module")
-01: Pop
-02: ImportModule("./sub/././///dir/module")
-03: Pop
-04: EndModule
-05: Return
-06: End
+00 (ln 1): ImportModule("./sub/module")
+01 (ln 1): Pop
+02 (ln 2): ImportModule("./sub/././///dir/module")
+03 (ln 2): Pop
+04 (ln 9): EndModule
+05 (ln 9): Return
+06 (ln 9): End

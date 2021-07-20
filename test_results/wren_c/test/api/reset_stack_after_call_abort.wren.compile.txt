@@ -3,17 +3,17 @@ Constants:
 01: Fn(abortFiber())
 02: Fn(afterAbort(_,_))
 Code:
-00: Constant(0: "Test")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(static, abortFiber())
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, afterAbort(_,_))
-11: EndModule
-12: Return
-13: End
+00 (ln 6): Constant(0: "Test")
+01 (ln 6): Load(Module, Class("Object"))
+02 (ln 6): Class(0 fields)
+03 (ln 6): Store(Module)
+04 (ln 6): Pop
+05 (ln 9): Closure(1, [])
+06 (ln 9): Load(Module, Null)
+07 (ln 9): Method(static, abortFiber())
+08 (ln 13): Closure(2, [])
+09 (ln 13): Load(Module, Null)
+10 (ln 13): Method(static, afterAbort(_,_))
+11 (ln 15): EndModule
+12 (ln 15): Return
+13 (ln 15): End

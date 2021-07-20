@@ -311,7 +311,8 @@ impl RuntimeError {
             VMError::Error(msg) => msg,
             VMError::FiberAbort(value) => {
                 let maybe_msg = value.try_into_string();
-                maybe_msg.unwrap_or("Fiber Abort <non-string>".to_string())
+                // [error object] matches wren_c wrenDebugPrintStackTrace
+                maybe_msg.unwrap_or("[error object]".to_string())
             }
         };
         RuntimeError {
@@ -1217,6 +1218,10 @@ impl WrenVM {
             let module = fn_obj.module.borrow().name.clone();
             FrameInfo {
                 module: module,
+                // In an executing frame, the pc points to the *next*
+                // instruction to execute, the error is from the
+                // previous instruction.
+                // FIXME: Fixing in a separate change.
                 line: fn_obj.debug.line_for_pc(frame.pc),
                 fn_name: fn_obj.debug.name.clone(),
             }
@@ -1871,11 +1876,14 @@ fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     for (pc, op) in func.code.iter().enumerate() {
         // Don't share with dump_instruction for now.
         println!(
-            "{:02}: {}",
+            "{:02} (ln {}): {}",
             pc,
+            func.debug.line_for_pc(pc),
             op_debug_string(op, &vm.methods, closure, None, DumpMode::HideSymbols)
         );
     }
+    // Walk module-level constants looking for code?
+    // Walk functions/closures looking for code?
 }
 
 pub trait Obj: Clear {

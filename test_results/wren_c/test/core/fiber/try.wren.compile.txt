@@ -2,20 +2,20 @@ Constants:
 00: Fn(new(_) block argument)
 01: "after try"
 Code:
-00: Load(Module, Class("Fiber"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Null)
-07: Call(Method, try())
-08: Call(Method, print(_))
-09: Pop
-10: Load(Module, Class("System"))
-11: Constant(1: "after try")
-12: Call(Method, print(_))
-13: Pop
-14: EndModule
-15: Return
-16: End
+00 (ln 1): Load(Module, Class("Fiber"))
+01 (ln 5): Closure(0, [])
+02 (ln 5): Call(Method, new(_))
+03 (ln 5): Store(Module)
+04 (ln 5): Pop
+05 (ln 7): Load(Module, Class("System"))
+06 (ln 7): Load(Module, Null)
+07 (ln 7): Call(Method, try())
+08 (ln 7): Call(Method, print(_))
+09 (ln 7): Pop
+10 (ln 10): Load(Module, Class("System"))
+11 (ln 10): Constant(1: "after try")
+12 (ln 10): Call(Method, print(_))
+13 (ln 10): Pop
+14 (ln 11): EndModule
+15 (ln 11): Return
+16 (ln 11): End

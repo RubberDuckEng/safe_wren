@@ -1,14 +1,14 @@
 Constants:
 00: "ok"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "ok")
-02: Call(Method, print(_))
-03: Pop
-04: Load(Module, Class("System"))
-05: Constant(0: "ok")
-06: Call(Method, print(_))
-07: Pop
-08: EndModule
-09: Return
-10: End
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "ok")
+02 (ln 2): Call(Method, print(_))
+03 (ln 2): Pop
+04 (ln 5): Load(Module, Class("System"))
+05 (ln 5): Constant(0: "ok")
+06 (ln 5): Call(Method, print(_))
+07 (ln 5): Pop
+08 (ln 6): EndModule
+09 (ln 6): Return
+10 (ln 6): End

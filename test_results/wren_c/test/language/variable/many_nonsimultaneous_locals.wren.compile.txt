@@ -2,1034 +2,1034 @@ Constants:
 00: "value a"
 01: "value b"
 Code:
-00: Constant(0: "value a")
-01: Load(Local, 1)
-02: Load(Local, 2)
-03: Load(Local, 3)
-04: Load(Local, 4)
-05: Load(Local, 5)
-06: Load(Local, 6)
-07: Load(Local, 7)
-08: Load(Local, 8)
-09: Load(Local, 9)
-10: Load(Local, 10)
-11: Load(Local, 11)
-12: Load(Local, 12)
-13: Load(Local, 13)
-14: Load(Local, 14)
-15: Load(Local, 15)
-16: Load(Local, 16)
-17: Load(Local, 17)
-18: Load(Local, 18)
-19: Load(Local, 19)
-20: Load(Local, 20)
-21: Load(Local, 21)
-22: Load(Local, 22)
-23: Load(Local, 23)
-24: Load(Local, 24)
-25: Load(Local, 25)
-26: Load(Local, 26)
-27: Load(Local, 27)
-28: Load(Local, 28)
-29: Load(Local, 29)
-30: Load(Local, 30)
-31: Load(Local, 31)
-32: Load(Local, 32)
-33: Load(Local, 33)
-34: Load(Local, 34)
-35: Load(Local, 35)
-36: Load(Local, 36)
-37: Load(Local, 37)
-38: Load(Local, 38)
-39: Load(Local, 39)
-40: Load(Local, 40)
-41: Load(Local, 41)
-42: Load(Local, 42)
-43: Load(Local, 43)
-44: Load(Local, 44)
-45: Load(Local, 45)
-46: Load(Local, 46)
-47: Load(Local, 47)
-48: Load(Local, 48)
-49: Load(Local, 49)
-50: Load(Local, 50)
-51: Load(Local, 51)
-52: Load(Local, 52)
-53: Load(Local, 53)
-54: Load(Local, 54)
-55: Load(Local, 55)
-56: Load(Local, 56)
-57: Load(Local, 57)
-58: Load(Local, 58)
-59: Load(Local, 59)
-60: Load(Local, 60)
-61: Load(Local, 61)
-62: Load(Local, 62)
-63: Load(Local, 63)
-64: Load(Local, 64)
-65: Load(Local, 65)
-66: Load(Local, 66)
-67: Load(Local, 67)
-68: Load(Local, 68)
-69: Load(Local, 69)
-70: Load(Local, 70)
-71: Load(Local, 71)
-72: Load(Local, 72)
-73: Load(Local, 73)
-74: Load(Local, 74)
-75: Load(Local, 75)
-76: Load(Local, 76)
-77: Load(Local, 77)
-78: Load(Local, 78)
-79: Load(Local, 79)
-80: Load(Local, 80)
-81: Load(Local, 81)
-82: Load(Local, 82)
-83: Load(Local, 83)
-84: Load(Local, 84)
-85: Load(Local, 85)
-86: Load(Local, 86)
-87: Load(Local, 87)
-88: Load(Local, 88)
-89: Load(Local, 89)
-90: Load(Local, 90)
-91: Load(Local, 91)
-92: Load(Local, 92)
-93: Load(Local, 93)
-94: Load(Local, 94)
-95: Load(Local, 95)
-96: Load(Local, 96)
-97: Load(Local, 97)
-98: Load(Local, 98)
-99: Load(Local, 99)
-100: Load(Local, 100)
-101: Load(Local, 101)
-102: Load(Local, 102)
-103: Load(Local, 103)
-104: Load(Local, 104)
-105: Load(Local, 105)
-106: Load(Local, 106)
-107: Load(Local, 107)
-108: Load(Local, 108)
-109: Load(Local, 109)
-110: Load(Local, 110)
-111: Load(Local, 111)
-112: Load(Local, 112)
-113: Load(Local, 113)
-114: Load(Local, 114)
-115: Load(Local, 115)
-116: Load(Local, 116)
-117: Load(Local, 117)
-118: Load(Local, 118)
-119: Load(Local, 119)
-120: Load(Local, 120)
-121: Load(Local, 121)
-122: Load(Local, 122)
-123: Load(Local, 123)
-124: Load(Local, 124)
-125: Load(Local, 125)
-126: Load(Local, 126)
-127: Load(Local, 127)
-128: Load(Local, 128)
-129: Load(Local, 129)
-130: Load(Local, 130)
-131: Load(Local, 131)
-132: Load(Local, 132)
-133: Load(Local, 133)
-134: Load(Local, 134)
-135: Load(Local, 135)
-136: Load(Local, 136)
-137: Load(Local, 137)
-138: Load(Local, 138)
-139: Load(Local, 139)
-140: Load(Local, 140)
-141: Load(Local, 141)
-142: Load(Local, 142)
-143: Load(Local, 143)
-144: Load(Local, 144)
-145: Load(Local, 145)
-146: Load(Local, 146)
-147: Load(Local, 147)
-148: Load(Local, 148)
-149: Load(Local, 149)
-150: Load(Local, 150)
-151: Load(Local, 151)
-152: Load(Local, 152)
-153: Load(Local, 153)
-154: Load(Local, 154)
-155: Load(Local, 155)
-156: Load(Local, 156)
-157: Load(Local, 157)
-158: Load(Local, 158)
-159: Load(Local, 159)
-160: Load(Local, 160)
-161: Load(Local, 161)
-162: Load(Local, 162)
-163: Load(Local, 163)
-164: Load(Local, 164)
-165: Load(Local, 165)
-166: Load(Local, 166)
-167: Load(Local, 167)
-168: Load(Local, 168)
-169: Load(Local, 169)
-170: Load(Local, 170)
-171: Load(Local, 171)
-172: Load(Local, 172)
-173: Load(Local, 173)
-174: Load(Local, 174)
-175: Load(Local, 175)
-176: Load(Local, 176)
-177: Load(Local, 177)
-178: Load(Local, 178)
-179: Load(Local, 179)
-180: Load(Local, 180)
-181: Load(Local, 181)
-182: Load(Local, 182)
-183: Load(Local, 183)
-184: Load(Local, 184)
-185: Load(Local, 185)
-186: Load(Local, 186)
-187: Load(Local, 187)
-188: Load(Local, 188)
-189: Load(Local, 189)
-190: Load(Local, 190)
-191: Load(Local, 191)
-192: Load(Local, 192)
-193: Load(Local, 193)
-194: Load(Local, 194)
-195: Load(Local, 195)
-196: Load(Local, 196)
-197: Load(Local, 197)
-198: Load(Local, 198)
-199: Load(Local, 199)
-200: Load(Local, 200)
-201: Load(Local, 201)
-202: Load(Local, 202)
-203: Load(Local, 203)
-204: Load(Local, 204)
-205: Load(Local, 205)
-206: Load(Local, 206)
-207: Load(Local, 207)
-208: Load(Local, 208)
-209: Load(Local, 209)
-210: Load(Local, 210)
-211: Load(Local, 211)
-212: Load(Local, 212)
-213: Load(Local, 213)
-214: Load(Local, 214)
-215: Load(Local, 215)
-216: Load(Local, 216)
-217: Load(Local, 217)
-218: Load(Local, 218)
-219: Load(Local, 219)
-220: Load(Local, 220)
-221: Load(Local, 221)
-222: Load(Local, 222)
-223: Load(Local, 223)
-224: Load(Local, 224)
-225: Load(Local, 225)
-226: Load(Local, 226)
-227: Load(Local, 227)
-228: Load(Local, 228)
-229: Load(Local, 229)
-230: Load(Local, 230)
-231: Load(Local, 231)
-232: Load(Local, 232)
-233: Load(Local, 233)
-234: Load(Local, 234)
-235: Load(Local, 235)
-236: Load(Local, 236)
-237: Load(Local, 237)
-238: Load(Local, 238)
-239: Load(Local, 239)
-240: Load(Local, 240)
-241: Load(Local, 241)
-242: Load(Local, 242)
-243: Load(Local, 243)
-244: Load(Local, 244)
-245: Load(Local, 245)
-246: Load(Local, 246)
-247: Load(Local, 247)
-248: Load(Local, 248)
-249: Load(Local, 249)
-250: Load(Local, 250)
-251: Load(Local, 251)
-252: Load(Local, 252)
-253: Load(Local, 253)
-254: Load(Local, 254)
-255: Load(Module, Class("System"))
-256: Load(Local, 255)
-257: Call(Method, print(_))
-258: Pop
-259: Pop
-260: Pop
-261: Pop
-262: Pop
-263: Pop
-264: Pop
-265: Pop
-266: Pop
-267: Pop
-268: Pop
-269: Pop
-270: Pop
-271: Pop
-272: Pop
-273: Pop
-274: Pop
-275: Pop
-276: Pop
-277: Pop
-278: Pop
-279: Pop
-280: Pop
-281: Pop
-282: Pop
-283: Pop
-284: Pop
-285: Pop
-286: Pop
-287: Pop
-288: Pop
-289: Pop
-290: Pop
-291: Pop
-292: Pop
-293: Pop
-294: Pop
-295: Pop
-296: Pop
-297: Pop
-298: Pop
-299: Pop
-300: Pop
-301: Pop
-302: Pop
-303: Pop
-304: Pop
-305: Pop
-306: Pop
-307: Pop
-308: Pop
-309: Pop
-310: Pop
-311: Pop
-312: Pop
-313: Pop
-314: Pop
-315: Pop
-316: Pop
-317: Pop
-318: Pop
-319: Pop
-320: Pop
-321: Pop
-322: Pop
-323: Pop
-324: Pop
-325: Pop
-326: Pop
-327: Pop
-328: Pop
-329: Pop
-330: Pop
-331: Pop
-332: Pop
-333: Pop
-334: Pop
-335: Pop
-336: Pop
-337: Pop
-338: Pop
-339: Pop
-340: Pop
-341: Pop
-342: Pop
-343: Pop
-344: Pop
-345: Pop
-346: Pop
-347: Pop
-348: Pop
-349: Pop
-350: Pop
-351: Pop
-352: Pop
-353: Pop
-354: Pop
-355: Pop
-356: Pop
-357: Pop
-358: Pop
-359: Pop
-360: Pop
-361: Pop
-362: Pop
-363: Pop
-364: Pop
-365: Pop
-366: Pop
-367: Pop
-368: Pop
-369: Pop
-370: Pop
-371: Pop
-372: Pop
-373: Pop
-374: Pop
-375: Pop
-376: Pop
-377: Pop
-378: Pop
-379: Pop
-380: Pop
-381: Pop
-382: Pop
-383: Pop
-384: Pop
-385: Pop
-386: Pop
-387: Pop
-388: Pop
-389: Pop
-390: Pop
-391: Pop
-392: Pop
-393: Pop
-394: Pop
-395: Pop
-396: Pop
-397: Pop
-398: Pop
-399: Pop
-400: Pop
-401: Pop
-402: Pop
-403: Pop
-404: Pop
-405: Pop
-406: Pop
-407: Pop
-408: Pop
-409: Pop
-410: Pop
-411: Pop
-412: Pop
-413: Pop
-414: Pop
-415: Pop
-416: Pop
-417: Pop
-418: Pop
-419: Pop
-420: Pop
-421: Pop
-422: Pop
-423: Pop
-424: Pop
-425: Pop
-426: Pop
-427: Pop
-428: Pop
-429: Pop
-430: Pop
-431: Pop
-432: Pop
-433: Pop
-434: Pop
-435: Pop
-436: Pop
-437: Pop
-438: Pop
-439: Pop
-440: Pop
-441: Pop
-442: Pop
-443: Pop
-444: Pop
-445: Pop
-446: Pop
-447: Pop
-448: Pop
-449: Pop
-450: Pop
-451: Pop
-452: Pop
-453: Pop
-454: Pop
-455: Pop
-456: Pop
-457: Pop
-458: Pop
-459: Pop
-460: Pop
-461: Pop
-462: Pop
-463: Pop
-464: Pop
-465: Pop
-466: Pop
-467: Pop
-468: Pop
-469: Pop
-470: Pop
-471: Pop
-472: Pop
-473: Pop
-474: Pop
-475: Pop
-476: Pop
-477: Pop
-478: Pop
-479: Pop
-480: Pop
-481: Pop
-482: Pop
-483: Pop
-484: Pop
-485: Pop
-486: Pop
-487: Pop
-488: Pop
-489: Pop
-490: Pop
-491: Pop
-492: Pop
-493: Pop
-494: Pop
-495: Pop
-496: Pop
-497: Pop
-498: Pop
-499: Pop
-500: Pop
-501: Pop
-502: Pop
-503: Pop
-504: Pop
-505: Pop
-506: Pop
-507: Pop
-508: Pop
-509: Pop
-510: Pop
-511: Pop
-512: Pop
-513: Pop
-514: Constant(1: "value b")
-515: Load(Local, 1)
-516: Load(Local, 2)
-517: Load(Local, 3)
-518: Load(Local, 4)
-519: Load(Local, 5)
-520: Load(Local, 6)
-521: Load(Local, 7)
-522: Load(Local, 8)
-523: Load(Local, 9)
-524: Load(Local, 10)
-525: Load(Local, 11)
-526: Load(Local, 12)
-527: Load(Local, 13)
-528: Load(Local, 14)
-529: Load(Local, 15)
-530: Load(Local, 16)
-531: Load(Local, 17)
-532: Load(Local, 18)
-533: Load(Local, 19)
-534: Load(Local, 20)
-535: Load(Local, 21)
-536: Load(Local, 22)
-537: Load(Local, 23)
-538: Load(Local, 24)
-539: Load(Local, 25)
-540: Load(Local, 26)
-541: Load(Local, 27)
-542: Load(Local, 28)
-543: Load(Local, 29)
-544: Load(Local, 30)
-545: Load(Local, 31)
-546: Load(Local, 32)
-547: Load(Local, 33)
-548: Load(Local, 34)
-549: Load(Local, 35)
-550: Load(Local, 36)
-551: Load(Local, 37)
-552: Load(Local, 38)
-553: Load(Local, 39)
-554: Load(Local, 40)
-555: Load(Local, 41)
-556: Load(Local, 42)
-557: Load(Local, 43)
-558: Load(Local, 44)
-559: Load(Local, 45)
-560: Load(Local, 46)
-561: Load(Local, 47)
-562: Load(Local, 48)
-563: Load(Local, 49)
-564: Load(Local, 50)
-565: Load(Local, 51)
-566: Load(Local, 52)
-567: Load(Local, 53)
-568: Load(Local, 54)
-569: Load(Local, 55)
-570: Load(Local, 56)
-571: Load(Local, 57)
-572: Load(Local, 58)
-573: Load(Local, 59)
-574: Load(Local, 60)
-575: Load(Local, 61)
-576: Load(Local, 62)
-577: Load(Local, 63)
-578: Load(Local, 64)
-579: Load(Local, 65)
-580: Load(Local, 66)
-581: Load(Local, 67)
-582: Load(Local, 68)
-583: Load(Local, 69)
-584: Load(Local, 70)
-585: Load(Local, 71)
-586: Load(Local, 72)
-587: Load(Local, 73)
-588: Load(Local, 74)
-589: Load(Local, 75)
-590: Load(Local, 76)
-591: Load(Local, 77)
-592: Load(Local, 78)
-593: Load(Local, 79)
-594: Load(Local, 80)
-595: Load(Local, 81)
-596: Load(Local, 82)
-597: Load(Local, 83)
-598: Load(Local, 84)
-599: Load(Local, 85)
-600: Load(Local, 86)
-601: Load(Local, 87)
-602: Load(Local, 88)
-603: Load(Local, 89)
-604: Load(Local, 90)
-605: Load(Local, 91)
-606: Load(Local, 92)
-607: Load(Local, 93)
-608: Load(Local, 94)
-609: Load(Local, 95)
-610: Load(Local, 96)
-611: Load(Local, 97)
-612: Load(Local, 98)
-613: Load(Local, 99)
-614: Load(Local, 100)
-615: Load(Local, 101)
-616: Load(Local, 102)
-617: Load(Local, 103)
-618: Load(Local, 104)
-619: Load(Local, 105)
-620: Load(Local, 106)
-621: Load(Local, 107)
-622: Load(Local, 108)
-623: Load(Local, 109)
-624: Load(Local, 110)
-625: Load(Local, 111)
-626: Load(Local, 112)
-627: Load(Local, 113)
-628: Load(Local, 114)
-629: Load(Local, 115)
-630: Load(Local, 116)
-631: Load(Local, 117)
-632: Load(Local, 118)
-633: Load(Local, 119)
-634: Load(Local, 120)
-635: Load(Local, 121)
-636: Load(Local, 122)
-637: Load(Local, 123)
-638: Load(Local, 124)
-639: Load(Local, 125)
-640: Load(Local, 126)
-641: Load(Local, 127)
-642: Load(Local, 128)
-643: Load(Local, 129)
-644: Load(Local, 130)
-645: Load(Local, 131)
-646: Load(Local, 132)
-647: Load(Local, 133)
-648: Load(Local, 134)
-649: Load(Local, 135)
-650: Load(Local, 136)
-651: Load(Local, 137)
-652: Load(Local, 138)
-653: Load(Local, 139)
-654: Load(Local, 140)
-655: Load(Local, 141)
-656: Load(Local, 142)
-657: Load(Local, 143)
-658: Load(Local, 144)
-659: Load(Local, 145)
-660: Load(Local, 146)
-661: Load(Local, 147)
-662: Load(Local, 148)
-663: Load(Local, 149)
-664: Load(Local, 150)
-665: Load(Local, 151)
-666: Load(Local, 152)
-667: Load(Local, 153)
-668: Load(Local, 154)
-669: Load(Local, 155)
-670: Load(Local, 156)
-671: Load(Local, 157)
-672: Load(Local, 158)
-673: Load(Local, 159)
-674: Load(Local, 160)
-675: Load(Local, 161)
-676: Load(Local, 162)
-677: Load(Local, 163)
-678: Load(Local, 164)
-679: Load(Local, 165)
-680: Load(Local, 166)
-681: Load(Local, 167)
-682: Load(Local, 168)
-683: Load(Local, 169)
-684: Load(Local, 170)
-685: Load(Local, 171)
-686: Load(Local, 172)
-687: Load(Local, 173)
-688: Load(Local, 174)
-689: Load(Local, 175)
-690: Load(Local, 176)
-691: Load(Local, 177)
-692: Load(Local, 178)
-693: Load(Local, 179)
-694: Load(Local, 180)
-695: Load(Local, 181)
-696: Load(Local, 182)
-697: Load(Local, 183)
-698: Load(Local, 184)
-699: Load(Local, 185)
-700: Load(Local, 186)
-701: Load(Local, 187)
-702: Load(Local, 188)
-703: Load(Local, 189)
-704: Load(Local, 190)
-705: Load(Local, 191)
-706: Load(Local, 192)
-707: Load(Local, 193)
-708: Load(Local, 194)
-709: Load(Local, 195)
-710: Load(Local, 196)
-711: Load(Local, 197)
-712: Load(Local, 198)
-713: Load(Local, 199)
-714: Load(Local, 200)
-715: Load(Local, 201)
-716: Load(Local, 202)
-717: Load(Local, 203)
-718: Load(Local, 204)
-719: Load(Local, 205)
-720: Load(Local, 206)
-721: Load(Local, 207)
-722: Load(Local, 208)
-723: Load(Local, 209)
-724: Load(Local, 210)
-725: Load(Local, 211)
-726: Load(Local, 212)
-727: Load(Local, 213)
-728: Load(Local, 214)
-729: Load(Local, 215)
-730: Load(Local, 216)
-731: Load(Local, 217)
-732: Load(Local, 218)
-733: Load(Local, 219)
-734: Load(Local, 220)
-735: Load(Local, 221)
-736: Load(Local, 222)
-737: Load(Local, 223)
-738: Load(Local, 224)
-739: Load(Local, 225)
-740: Load(Local, 226)
-741: Load(Local, 227)
-742: Load(Local, 228)
-743: Load(Local, 229)
-744: Load(Local, 230)
-745: Load(Local, 231)
-746: Load(Local, 232)
-747: Load(Local, 233)
-748: Load(Local, 234)
-749: Load(Local, 235)
-750: Load(Local, 236)
-751: Load(Local, 237)
-752: Load(Local, 238)
-753: Load(Local, 239)
-754: Load(Local, 240)
-755: Load(Local, 241)
-756: Load(Local, 242)
-757: Load(Local, 243)
-758: Load(Local, 244)
-759: Load(Local, 245)
-760: Load(Local, 246)
-761: Load(Local, 247)
-762: Load(Local, 248)
-763: Load(Local, 249)
-764: Load(Local, 250)
-765: Load(Local, 251)
-766: Load(Local, 252)
-767: Load(Local, 253)
-768: Load(Local, 254)
-769: Load(Module, Class("System"))
-770: Load(Local, 255)
-771: Call(Method, print(_))
-772: Pop
-773: Pop
-774: Pop
-775: Pop
-776: Pop
-777: Pop
-778: Pop
-779: Pop
-780: Pop
-781: Pop
-782: Pop
-783: Pop
-784: Pop
-785: Pop
-786: Pop
-787: Pop
-788: Pop
-789: Pop
-790: Pop
-791: Pop
-792: Pop
-793: Pop
-794: Pop
-795: Pop
-796: Pop
-797: Pop
-798: Pop
-799: Pop
-800: Pop
-801: Pop
-802: Pop
-803: Pop
-804: Pop
-805: Pop
-806: Pop
-807: Pop
-808: Pop
-809: Pop
-810: Pop
-811: Pop
-812: Pop
-813: Pop
-814: Pop
-815: Pop
-816: Pop
-817: Pop
-818: Pop
-819: Pop
-820: Pop
-821: Pop
-822: Pop
-823: Pop
-824: Pop
-825: Pop
-826: Pop
-827: Pop
-828: Pop
-829: Pop
-830: Pop
-831: Pop
-832: Pop
-833: Pop
-834: Pop
-835: Pop
-836: Pop
-837: Pop
-838: Pop
-839: Pop
-840: Pop
-841: Pop
-842: Pop
-843: Pop
-844: Pop
-845: Pop
-846: Pop
-847: Pop
-848: Pop
-849: Pop
-850: Pop
-851: Pop
-852: Pop
-853: Pop
-854: Pop
-855: Pop
-856: Pop
-857: Pop
-858: Pop
-859: Pop
-860: Pop
-861: Pop
-862: Pop
-863: Pop
-864: Pop
-865: Pop
-866: Pop
-867: Pop
-868: Pop
-869: Pop
-870: Pop
-871: Pop
-872: Pop
-873: Pop
-874: Pop
-875: Pop
-876: Pop
-877: Pop
-878: Pop
-879: Pop
-880: Pop
-881: Pop
-882: Pop
-883: Pop
-884: Pop
-885: Pop
-886: Pop
-887: Pop
-888: Pop
-889: Pop
-890: Pop
-891: Pop
-892: Pop
-893: Pop
-894: Pop
-895: Pop
-896: Pop
-897: Pop
-898: Pop
-899: Pop
-900: Pop
-901: Pop
-902: Pop
-903: Pop
-904: Pop
-905: Pop
-906: Pop
-907: Pop
-908: Pop
-909: Pop
-910: Pop
-911: Pop
-912: Pop
-913: Pop
-914: Pop
-915: Pop
-916: Pop
-917: Pop
-918: Pop
-919: Pop
-920: Pop
-921: Pop
-922: Pop
-923: Pop
-924: Pop
-925: Pop
-926: Pop
-927: Pop
-928: Pop
-929: Pop
-930: Pop
-931: Pop
-932: Pop
-933: Pop
-934: Pop
-935: Pop
-936: Pop
-937: Pop
-938: Pop
-939: Pop
-940: Pop
-941: Pop
-942: Pop
-943: Pop
-944: Pop
-945: Pop
-946: Pop
-947: Pop
-948: Pop
-949: Pop
-950: Pop
-951: Pop
-952: Pop
-953: Pop
-954: Pop
-955: Pop
-956: Pop
-957: Pop
-958: Pop
-959: Pop
-960: Pop
-961: Pop
-962: Pop
-963: Pop
-964: Pop
-965: Pop
-966: Pop
-967: Pop
-968: Pop
-969: Pop
-970: Pop
-971: Pop
-972: Pop
-973: Pop
-974: Pop
-975: Pop
-976: Pop
-977: Pop
-978: Pop
-979: Pop
-980: Pop
-981: Pop
-982: Pop
-983: Pop
-984: Pop
-985: Pop
-986: Pop
-987: Pop
-988: Pop
-989: Pop
-990: Pop
-991: Pop
-992: Pop
-993: Pop
-994: Pop
-995: Pop
-996: Pop
-997: Pop
-998: Pop
-999: Pop
-1000: Pop
-1001: Pop
-1002: Pop
-1003: Pop
-1004: Pop
-1005: Pop
-1006: Pop
-1007: Pop
-1008: Pop
-1009: Pop
-1010: Pop
-1011: Pop
-1012: Pop
-1013: Pop
-1014: Pop
-1015: Pop
-1016: Pop
-1017: Pop
-1018: Pop
-1019: Pop
-1020: Pop
-1021: Pop
-1022: Pop
-1023: Pop
-1024: Pop
-1025: Pop
-1026: Pop
-1027: Pop
-1028: EndModule
-1029: Return
-1030: End
+00 (ln 7): Constant(0: "value a")
+01 (ln 8): Load(Local, 1)
+02 (ln 9): Load(Local, 2)
+03 (ln 10): Load(Local, 3)
+04 (ln 11): Load(Local, 4)
+05 (ln 12): Load(Local, 5)
+06 (ln 13): Load(Local, 6)
+07 (ln 14): Load(Local, 7)
+08 (ln 15): Load(Local, 8)
+09 (ln 16): Load(Local, 9)
+10 (ln 17): Load(Local, 10)
+11 (ln 18): Load(Local, 11)
+12 (ln 19): Load(Local, 12)
+13 (ln 20): Load(Local, 13)
+14 (ln 21): Load(Local, 14)
+15 (ln 22): Load(Local, 15)
+16 (ln 23): Load(Local, 16)
+17 (ln 24): Load(Local, 17)
+18 (ln 25): Load(Local, 18)
+19 (ln 26): Load(Local, 19)
+20 (ln 27): Load(Local, 20)
+21 (ln 28): Load(Local, 21)
+22 (ln 29): Load(Local, 22)
+23 (ln 30): Load(Local, 23)
+24 (ln 31): Load(Local, 24)
+25 (ln 32): Load(Local, 25)
+26 (ln 33): Load(Local, 26)
+27 (ln 34): Load(Local, 27)
+28 (ln 35): Load(Local, 28)
+29 (ln 36): Load(Local, 29)
+30 (ln 37): Load(Local, 30)
+31 (ln 38): Load(Local, 31)
+32 (ln 39): Load(Local, 32)
+33 (ln 40): Load(Local, 33)
+34 (ln 41): Load(Local, 34)
+35 (ln 42): Load(Local, 35)
+36 (ln 43): Load(Local, 36)
+37 (ln 44): Load(Local, 37)
+38 (ln 45): Load(Local, 38)
+39 (ln 46): Load(Local, 39)
+40 (ln 47): Load(Local, 40)
+41 (ln 48): Load(Local, 41)
+42 (ln 49): Load(Local, 42)
+43 (ln 50): Load(Local, 43)
+44 (ln 51): Load(Local, 44)
+45 (ln 52): Load(Local, 45)
+46 (ln 53): Load(Local, 46)
+47 (ln 54): Load(Local, 47)
+48 (ln 55): Load(Local, 48)
+49 (ln 56): Load(Local, 49)
+50 (ln 57): Load(Local, 50)
+51 (ln 58): Load(Local, 51)
+52 (ln 59): Load(Local, 52)
+53 (ln 60): Load(Local, 53)
+54 (ln 61): Load(Local, 54)
+55 (ln 62): Load(Local, 55)
+56 (ln 63): Load(Local, 56)
+57 (ln 64): Load(Local, 57)
+58 (ln 65): Load(Local, 58)
+59 (ln 66): Load(Local, 59)
+60 (ln 67): Load(Local, 60)
+61 (ln 68): Load(Local, 61)
+62 (ln 69): Load(Local, 62)
+63 (ln 70): Load(Local, 63)
+64 (ln 71): Load(Local, 64)
+65 (ln 72): Load(Local, 65)
+66 (ln 73): Load(Local, 66)
+67 (ln 74): Load(Local, 67)
+68 (ln 75): Load(Local, 68)
+69 (ln 76): Load(Local, 69)
+70 (ln 77): Load(Local, 70)
+71 (ln 78): Load(Local, 71)
+72 (ln 79): Load(Local, 72)
+73 (ln 80): Load(Local, 73)
+74 (ln 81): Load(Local, 74)
+75 (ln 82): Load(Local, 75)
+76 (ln 83): Load(Local, 76)
+77 (ln 84): Load(Local, 77)
+78 (ln 85): Load(Local, 78)
+79 (ln 86): Load(Local, 79)
+80 (ln 87): Load(Local, 80)
+81 (ln 88): Load(Local, 81)
+82 (ln 89): Load(Local, 82)
+83 (ln 90): Load(Local, 83)
+84 (ln 91): Load(Local, 84)
+85 (ln 92): Load(Local, 85)
+86 (ln 93): Load(Local, 86)
+87 (ln 94): Load(Local, 87)
+88 (ln 95): Load(Local, 88)
+89 (ln 96): Load(Local, 89)
+90 (ln 97): Load(Local, 90)
+91 (ln 98): Load(Local, 91)
+92 (ln 99): Load(Local, 92)
+93 (ln 100): Load(Local, 93)
+94 (ln 101): Load(Local, 94)
+95 (ln 102): Load(Local, 95)
+96 (ln 103): Load(Local, 96)
+97 (ln 104): Load(Local, 97)
+98 (ln 105): Load(Local, 98)
+99 (ln 106): Load(Local, 99)
+100 (ln 107): Load(Local, 100)
+101 (ln 108): Load(Local, 101)
+102 (ln 109): Load(Local, 102)
+103 (ln 110): Load(Local, 103)
+104 (ln 111): Load(Local, 104)
+105 (ln 112): Load(Local, 105)
+106 (ln 113): Load(Local, 106)
+107 (ln 114): Load(Local, 107)
+108 (ln 115): Load(Local, 108)
+109 (ln 116): Load(Local, 109)
+110 (ln 117): Load(Local, 110)
+111 (ln 118): Load(Local, 111)
+112 (ln 119): Load(Local, 112)
+113 (ln 120): Load(Local, 113)
+114 (ln 121): Load(Local, 114)
+115 (ln 122): Load(Local, 115)
+116 (ln 123): Load(Local, 116)
+117 (ln 124): Load(Local, 117)
+118 (ln 125): Load(Local, 118)
+119 (ln 126): Load(Local, 119)
+120 (ln 127): Load(Local, 120)
+121 (ln 128): Load(Local, 121)
+122 (ln 129): Load(Local, 122)
+123 (ln 130): Load(Local, 123)
+124 (ln 131): Load(Local, 124)
+125 (ln 132): Load(Local, 125)
+126 (ln 133): Load(Local, 126)
+127 (ln 134): Load(Local, 127)
+128 (ln 135): Load(Local, 128)
+129 (ln 136): Load(Local, 129)
+130 (ln 137): Load(Local, 130)
+131 (ln 138): Load(Local, 131)
+132 (ln 139): Load(Local, 132)
+133 (ln 140): Load(Local, 133)
+134 (ln 141): Load(Local, 134)
+135 (ln 142): Load(Local, 135)
+136 (ln 143): Load(Local, 136)
+137 (ln 144): Load(Local, 137)
+138 (ln 145): Load(Local, 138)
+139 (ln 146): Load(Local, 139)
+140 (ln 147): Load(Local, 140)
+141 (ln 148): Load(Local, 141)
+142 (ln 149): Load(Local, 142)
+143 (ln 150): Load(Local, 143)
+144 (ln 151): Load(Local, 144)
+145 (ln 152): Load(Local, 145)
+146 (ln 153): Load(Local, 146)
+147 (ln 154): Load(Local, 147)
+148 (ln 155): Load(Local, 148)
+149 (ln 156): Load(Local, 149)
+150 (ln 157): Load(Local, 150)
+151 (ln 158): Load(Local, 151)
+152 (ln 159): Load(Local, 152)
+153 (ln 160): Load(Local, 153)
+154 (ln 161): Load(Local, 154)
+155 (ln 162): Load(Local, 155)
+156 (ln 163): Load(Local, 156)
+157 (ln 164): Load(Local, 157)
+158 (ln 165): Load(Local, 158)
+159 (ln 166): Load(Local, 159)
+160 (ln 167): Load(Local, 160)
+161 (ln 168): Load(Local, 161)
+162 (ln 169): Load(Local, 162)
+163 (ln 170): Load(Local, 163)
+164 (ln 171): Load(Local, 164)
+165 (ln 172): Load(Local, 165)
+166 (ln 173): Load(Local, 166)
+167 (ln 174): Load(Local, 167)
+168 (ln 175): Load(Local, 168)
+169 (ln 176): Load(Local, 169)
+170 (ln 177): Load(Local, 170)
+171 (ln 178): Load(Local, 171)
+172 (ln 179): Load(Local, 172)
+173 (ln 180): Load(Local, 173)
+174 (ln 181): Load(Local, 174)
+175 (ln 182): Load(Local, 175)
+176 (ln 183): Load(Local, 176)
+177 (ln 184): Load(Local, 177)
+178 (ln 185): Load(Local, 178)
+179 (ln 186): Load(Local, 179)
+180 (ln 187): Load(Local, 180)
+181 (ln 188): Load(Local, 181)
+182 (ln 189): Load(Local, 182)
+183 (ln 190): Load(Local, 183)
+184 (ln 191): Load(Local, 184)
+185 (ln 192): Load(Local, 185)
+186 (ln 193): Load(Local, 186)
+187 (ln 194): Load(Local, 187)
+188 (ln 195): Load(Local, 188)
+189 (ln 196): Load(Local, 189)
+190 (ln 197): Load(Local, 190)
+191 (ln 198): Load(Local, 191)
+192 (ln 199): Load(Local, 192)
+193 (ln 200): Load(Local, 193)
+194 (ln 201): Load(Local, 194)
+195 (ln 202): Load(Local, 195)
+196 (ln 203): Load(Local, 196)
+197 (ln 204): Load(Local, 197)
+198 (ln 205): Load(Local, 198)
+199 (ln 206): Load(Local, 199)
+200 (ln 207): Load(Local, 200)
+201 (ln 208): Load(Local, 201)
+202 (ln 209): Load(Local, 202)
+203 (ln 210): Load(Local, 203)
+204 (ln 211): Load(Local, 204)
+205 (ln 212): Load(Local, 205)
+206 (ln 213): Load(Local, 206)
+207 (ln 214): Load(Local, 207)
+208 (ln 215): Load(Local, 208)
+209 (ln 216): Load(Local, 209)
+210 (ln 217): Load(Local, 210)
+211 (ln 218): Load(Local, 211)
+212 (ln 219): Load(Local, 212)
+213 (ln 220): Load(Local, 213)
+214 (ln 221): Load(Local, 214)
+215 (ln 222): Load(Local, 215)
+216 (ln 223): Load(Local, 216)
+217 (ln 224): Load(Local, 217)
+218 (ln 225): Load(Local, 218)
+219 (ln 226): Load(Local, 219)
+220 (ln 227): Load(Local, 220)
+221 (ln 228): Load(Local, 221)
+222 (ln 229): Load(Local, 222)
+223 (ln 230): Load(Local, 223)
+224 (ln 231): Load(Local, 224)
+225 (ln 232): Load(Local, 225)
+226 (ln 233): Load(Local, 226)
+227 (ln 234): Load(Local, 227)
+228 (ln 235): Load(Local, 228)
+229 (ln 236): Load(Local, 229)
+230 (ln 237): Load(Local, 230)
+231 (ln 238): Load(Local, 231)
+232 (ln 239): Load(Local, 232)
+233 (ln 240): Load(Local, 233)
+234 (ln 241): Load(Local, 234)
+235 (ln 242): Load(Local, 235)
+236 (ln 243): Load(Local, 236)
+237 (ln 244): Load(Local, 237)
+238 (ln 245): Load(Local, 238)
+239 (ln 246): Load(Local, 239)
+240 (ln 247): Load(Local, 240)
+241 (ln 248): Load(Local, 241)
+242 (ln 249): Load(Local, 242)
+243 (ln 250): Load(Local, 243)
+244 (ln 251): Load(Local, 244)
+245 (ln 252): Load(Local, 245)
+246 (ln 253): Load(Local, 246)
+247 (ln 254): Load(Local, 247)
+248 (ln 255): Load(Local, 248)
+249 (ln 256): Load(Local, 249)
+250 (ln 257): Load(Local, 250)
+251 (ln 258): Load(Local, 251)
+252 (ln 259): Load(Local, 252)
+253 (ln 260): Load(Local, 253)
+254 (ln 261): Load(Local, 254)
+255 (ln 262): Load(Module, Class("System"))
+256 (ln 262): Load(Local, 255)
+257 (ln 262): Call(Method, print(_))
+258 (ln 262): Pop
+259 (ln 263): Pop
+260 (ln 263): Pop
+261 (ln 263): Pop
+262 (ln 263): Pop
+263 (ln 263): Pop
+264 (ln 263): Pop
+265 (ln 263): Pop
+266 (ln 263): Pop
+267 (ln 263): Pop
+268 (ln 263): Pop
+269 (ln 263): Pop
+270 (ln 263): Pop
+271 (ln 263): Pop
+272 (ln 263): Pop
+273 (ln 263): Pop
+274 (ln 263): Pop
+275 (ln 263): Pop
+276 (ln 263): Pop
+277 (ln 263): Pop
+278 (ln 263): Pop
+279 (ln 263): Pop
+280 (ln 263): Pop
+281 (ln 263): Pop
+282 (ln 263): Pop
+283 (ln 263): Pop
+284 (ln 263): Pop
+285 (ln 263): Pop
+286 (ln 263): Pop
+287 (ln 263): Pop
+288 (ln 263): Pop
+289 (ln 263): Pop
+290 (ln 263): Pop
+291 (ln 263): Pop
+292 (ln 263): Pop
+293 (ln 263): Pop
+294 (ln 263): Pop
+295 (ln 263): Pop
+296 (ln 263): Pop
+297 (ln 263): Pop
+298 (ln 263): Pop
+299 (ln 263): Pop
+300 (ln 263): Pop
+301 (ln 263): Pop
+302 (ln 263): Pop
+303 (ln 263): Pop
+304 (ln 263): Pop
+305 (ln 263): Pop
+306 (ln 263): Pop
+307 (ln 263): Pop
+308 (ln 263): Pop
+309 (ln 263): Pop
+310 (ln 263): Pop
+311 (ln 263): Pop
+312 (ln 263): Pop
+313 (ln 263): Pop
+314 (ln 263): Pop
+315 (ln 263): Pop
+316 (ln 263): Pop
+317 (ln 263): Pop
+318 (ln 263): Pop
+319 (ln 263): Pop
+320 (ln 263): Pop
+321 (ln 263): Pop
+322 (ln 263): Pop
+323 (ln 263): Pop
+324 (ln 263): Pop
+325 (ln 263): Pop
+326 (ln 263): Pop
+327 (ln 263): Pop
+328 (ln 263): Pop
+329 (ln 263): Pop
+330 (ln 263): Pop
+331 (ln 263): Pop
+332 (ln 263): Pop
+333 (ln 263): Pop
+334 (ln 263): Pop
+335 (ln 263): Pop
+336 (ln 263): Pop
+337 (ln 263): Pop
+338 (ln 263): Pop
+339 (ln 263): Pop
+340 (ln 263): Pop
+341 (ln 263): Pop
+342 (ln 263): Pop
+343 (ln 263): Pop
+344 (ln 263): Pop
+345 (ln 263): Pop
+346 (ln 263): Pop
+347 (ln 263): Pop
+348 (ln 263): Pop
+349 (ln 263): Pop
+350 (ln 263): Pop
+351 (ln 263): Pop
+352 (ln 263): Pop
+353 (ln 263): Pop
+354 (ln 263): Pop
+355 (ln 263): Pop
+356 (ln 263): Pop
+357 (ln 263): Pop
+358 (ln 263): Pop
+359 (ln 263): Pop
+360 (ln 263): Pop
+361 (ln 263): Pop
+362 (ln 263): Pop
+363 (ln 263): Pop
+364 (ln 263): Pop
+365 (ln 263): Pop
+366 (ln 263): Pop
+367 (ln 263): Pop
+368 (ln 263): Pop
+369 (ln 263): Pop
+370 (ln 263): Pop
+371 (ln 263): Pop
+372 (ln 263): Pop
+373 (ln 263): Pop
+374 (ln 263): Pop
+375 (ln 263): Pop
+376 (ln 263): Pop
+377 (ln 263): Pop
+378 (ln 263): Pop
+379 (ln 263): Pop
+380 (ln 263): Pop
+381 (ln 263): Pop
+382 (ln 263): Pop
+383 (ln 263): Pop
+384 (ln 263): Pop
+385 (ln 263): Pop
+386 (ln 263): Pop
+387 (ln 263): Pop
+388 (ln 263): Pop
+389 (ln 263): Pop
+390 (ln 263): Pop
+391 (ln 263): Pop
+392 (ln 263): Pop
+393 (ln 263): Pop
+394 (ln 263): Pop
+395 (ln 263): Pop
+396 (ln 263): Pop
+397 (ln 263): Pop
+398 (ln 263): Pop
+399 (ln 263): Pop
+400 (ln 263): Pop
+401 (ln 263): Pop
+402 (ln 263): Pop
+403 (ln 263): Pop
+404 (ln 263): Pop
+405 (ln 263): Pop
+406 (ln 263): Pop
+407 (ln 263): Pop
+408 (ln 263): Pop
+409 (ln 263): Pop
+410 (ln 263): Pop
+411 (ln 263): Pop
+412 (ln 263): Pop
+413 (ln 263): Pop
+414 (ln 263): Pop
+415 (ln 263): Pop
+416 (ln 263): Pop
+417 (ln 263): Pop
+418 (ln 263): Pop
+419 (ln 263): Pop
+420 (ln 263): Pop
+421 (ln 263): Pop
+422 (ln 263): Pop
+423 (ln 263): Pop
+424 (ln 263): Pop
+425 (ln 263): Pop
+426 (ln 263): Pop
+427 (ln 263): Pop
+428 (ln 263): Pop
+429 (ln 263): Pop
+430 (ln 263): Pop
+431 (ln 263): Pop
+432 (ln 263): Pop
+433 (ln 263): Pop
+434 (ln 263): Pop
+435 (ln 263): Pop
+436 (ln 263): Pop
+437 (ln 263): Pop
+438 (ln 263): Pop
+439 (ln 263): Pop
+440 (ln 263): Pop
+441 (ln 263): Pop
+442 (ln 263): Pop
+443 (ln 263): Pop
+444 (ln 263): Pop
+445 (ln 263): Pop
+446 (ln 263): Pop
+447 (ln 263): Pop
+448 (ln 263): Pop
+449 (ln 263): Pop
+450 (ln 263): Pop
+451 (ln 263): Pop
+452 (ln 263): Pop
+453 (ln 263): Pop
+454 (ln 263): Pop
+455 (ln 263): Pop
+456 (ln 263): Pop
+457 (ln 263): Pop
+458 (ln 263): Pop
+459 (ln 263): Pop
+460 (ln 263): Pop
+461 (ln 263): Pop
+462 (ln 263): Pop
+463 (ln 263): Pop
+464 (ln 263): Pop
+465 (ln 263): Pop
+466 (ln 263): Pop
+467 (ln 263): Pop
+468 (ln 263): Pop
+469 (ln 263): Pop
+470 (ln 263): Pop
+471 (ln 263): Pop
+472 (ln 263): Pop
+473 (ln 263): Pop
+474 (ln 263): Pop
+475 (ln 263): Pop
+476 (ln 263): Pop
+477 (ln 263): Pop
+478 (ln 263): Pop
+479 (ln 263): Pop
+480 (ln 263): Pop
+481 (ln 263): Pop
+482 (ln 263): Pop
+483 (ln 263): Pop
+484 (ln 263): Pop
+485 (ln 263): Pop
+486 (ln 263): Pop
+487 (ln 263): Pop
+488 (ln 263): Pop
+489 (ln 263): Pop
+490 (ln 263): Pop
+491 (ln 263): Pop
+492 (ln 263): Pop
+493 (ln 263): Pop
+494 (ln 263): Pop
+495 (ln 263): Pop
+496 (ln 263): Pop
+497 (ln 263): Pop
+498 (ln 263): Pop
+499 (ln 263): Pop
+500 (ln 263): Pop
+501 (ln 263): Pop
+502 (ln 263): Pop
+503 (ln 263): Pop
+504 (ln 263): Pop
+505 (ln 263): Pop
+506 (ln 263): Pop
+507 (ln 263): Pop
+508 (ln 263): Pop
+509 (ln 263): Pop
+510 (ln 263): Pop
+511 (ln 263): Pop
+512 (ln 263): Pop
+513 (ln 263): Pop
+514 (ln 267): Constant(1: "value b")
+515 (ln 268): Load(Local, 1)
+516 (ln 269): Load(Local, 2)
+517 (ln 270): Load(Local, 3)
+518 (ln 271): Load(Local, 4)
+519 (ln 272): Load(Local, 5)
+520 (ln 273): Load(Local, 6)
+521 (ln 274): Load(Local, 7)
+522 (ln 275): Load(Local, 8)
+523 (ln 276): Load(Local, 9)
+524 (ln 277): Load(Local, 10)
+525 (ln 278): Load(Local, 11)
+526 (ln 279): Load(Local, 12)
+527 (ln 280): Load(Local, 13)
+528 (ln 281): Load(Local, 14)
+529 (ln 282): Load(Local, 15)
+530 (ln 283): Load(Local, 16)
+531 (ln 284): Load(Local, 17)
+532 (ln 285): Load(Local, 18)
+533 (ln 286): Load(Local, 19)
+534 (ln 287): Load(Local, 20)
+535 (ln 288): Load(Local, 21)
+536 (ln 289): Load(Local, 22)
+537 (ln 290): Load(Local, 23)
+538 (ln 291): Load(Local, 24)
+539 (ln 292): Load(Local, 25)
+540 (ln 293): Load(Local, 26)
+541 (ln 294): Load(Local, 27)
+542 (ln 295): Load(Local, 28)
+543 (ln 296): Load(Local, 29)
+544 (ln 297): Load(Local, 30)
+545 (ln 298): Load(Local, 31)
+546 (ln 299): Load(Local, 32)
+547 (ln 300): Load(Local, 33)
+548 (ln 301): Load(Local, 34)
+549 (ln 302): Load(Local, 35)
+550 (ln 303): Load(Local, 36)
+551 (ln 304): Load(Local, 37)
+552 (ln 305): Load(Local, 38)
+553 (ln 306): Load(Local, 39)
+554 (ln 307): Load(Local, 40)
+555 (ln 308): Load(Local, 41)
+556 (ln 309): Load(Local, 42)
+557 (ln 310): Load(Local, 43)
+558 (ln 311): Load(Local, 44)
+559 (ln 312): Load(Local, 45)
+560 (ln 313): Load(Local, 46)
+561 (ln 314): Load(Local, 47)
+562 (ln 315): Load(Local, 48)
+563 (ln 316): Load(Local, 49)
+564 (ln 317): Load(Local, 50)
+565 (ln 318): Load(Local, 51)
+566 (ln 319): Load(Local, 52)
+567 (ln 320): Load(Local, 53)
+568 (ln 321): Load(Local, 54)
+569 (ln 322): Load(Local, 55)
+570 (ln 323): Load(Local, 56)
+571 (ln 324): Load(Local, 57)
+572 (ln 325): Load(Local, 58)
+573 (ln 326): Load(Local, 59)
+574 (ln 327): Load(Local, 60)
+575 (ln 328): Load(Local, 61)
+576 (ln 329): Load(Local, 62)
+577 (ln 330): Load(Local, 63)
+578 (ln 331): Load(Local, 64)
+579 (ln 332): Load(Local, 65)
+580 (ln 333): Load(Local, 66)
+581 (ln 334): Load(Local, 67)
+582 (ln 335): Load(Local, 68)
+583 (ln 336): Load(Local, 69)
+584 (ln 337): Load(Local, 70)
+585 (ln 338): Load(Local, 71)
+586 (ln 339): Load(Local, 72)
+587 (ln 340): Load(Local, 73)
+588 (ln 341): Load(Local, 74)
+589 (ln 342): Load(Local, 75)
+590 (ln 343): Load(Local, 76)
+591 (ln 344): Load(Local, 77)
+592 (ln 345): Load(Local, 78)
+593 (ln 346): Load(Local, 79)
+594 (ln 347): Load(Local, 80)
+595 (ln 348): Load(Local, 81)
+596 (ln 349): Load(Local, 82)
+597 (ln 350): Load(Local, 83)
+598 (ln 351): Load(Local, 84)
+599 (ln 352): Load(Local, 85)
+600 (ln 353): Load(Local, 86)
+601 (ln 354): Load(Local, 87)
+602 (ln 355): Load(Local, 88)
+603 (ln 356): Load(Local, 89)
+604 (ln 357): Load(Local, 90)
+605 (ln 358): Load(Local, 91)
+606 (ln 359): Load(Local, 92)
+607 (ln 360): Load(Local, 93)
+608 (ln 361): Load(Local, 94)
+609 (ln 362): Load(Local, 95)
+610 (ln 363): Load(Local, 96)
+611 (ln 364): Load(Local, 97)
+612 (ln 365): Load(Local, 98)
+613 (ln 366): Load(Local, 99)
+614 (ln 367): Load(Local, 100)
+615 (ln 368): Load(Local, 101)
+616 (ln 369): Load(Local, 102)
+617 (ln 370): Load(Local, 103)
+618 (ln 371): Load(Local, 104)
+619 (ln 372): Load(Local, 105)
+620 (ln 373): Load(Local, 106)
+621 (ln 374): Load(Local, 107)
+622 (ln 375): Load(Local, 108)
+623 (ln 376): Load(Local, 109)
+624 (ln 377): Load(Local, 110)
+625 (ln 378): Load(Local, 111)
+626 (ln 379): Load(Local, 112)
+627 (ln 380): Load(Local, 113)
+628 (ln 381): Load(Local, 114)
+629 (ln 382): Load(Local, 115)
+630 (ln 383): Load(Local, 116)
+631 (ln 384): Load(Local, 117)
+632 (ln 385): Load(Local, 118)
+633 (ln 386): Load(Local, 119)
+634 (ln 387): Load(Local, 120)
+635 (ln 388): Load(Local, 121)
+636 (ln 389): Load(Local, 122)
+637 (ln 390): Load(Local, 123)
+638 (ln 391): Load(Local, 124)
+639 (ln 392): Load(Local, 125)
+640 (ln 393): Load(Local, 126)
+641 (ln 394): Load(Local, 127)
+642 (ln 395): Load(Local, 128)
+643 (ln 396): Load(Local, 129)
+644 (ln 397): Load(Local, 130)
+645 (ln 398): Load(Local, 131)
+646 (ln 399): Load(Local, 132)
+647 (ln 400): Load(Local, 133)
+648 (ln 401): Load(Local, 134)
+649 (ln 402): Load(Local, 135)
+650 (ln 403): Load(Local, 136)
+651 (ln 404): Load(Local, 137)
+652 (ln 405): Load(Local, 138)
+653 (ln 406): Load(Local, 139)
+654 (ln 407): Load(Local, 140)
+655 (ln 408): Load(Local, 141)
+656 (ln 409): Load(Local, 142)
+657 (ln 410): Load(Local, 143)
+658 (ln 411): Load(Local, 144)
+659 (ln 412): Load(Local, 145)
+660 (ln 413): Load(Local, 146)
+661 (ln 414): Load(Local, 147)
+662 (ln 415): Load(Local, 148)
+663 (ln 416): Load(Local, 149)
+664 (ln 417): Load(Local, 150)
+665 (ln 418): Load(Local, 151)
+666 (ln 419): Load(Local, 152)
+667 (ln 420): Load(Local, 153)
+668 (ln 421): Load(Local, 154)
+669 (ln 422): Load(Local, 155)
+670 (ln 423): Load(Local, 156)
+671 (ln 424): Load(Local, 157)
+672 (ln 425): Load(Local, 158)
+673 (ln 426): Load(Local, 159)
+674 (ln 427): Load(Local, 160)
+675 (ln 428): Load(Local, 161)
+676 (ln 429): Load(Local, 162)
+677 (ln 430): Load(Local, 163)
+678 (ln 431): Load(Local, 164)
+679 (ln 432): Load(Local, 165)
+680 (ln 433): Load(Local, 166)
+681 (ln 434): Load(Local, 167)
+682 (ln 435): Load(Local, 168)
+683 (ln 436): Load(Local, 169)
+684 (ln 437): Load(Local, 170)
+685 (ln 438): Load(Local, 171)
+686 (ln 439): Load(Local, 172)
+687 (ln 440): Load(Local, 173)
+688 (ln 441): Load(Local, 174)
+689 (ln 442): Load(Local, 175)
+690 (ln 443): Load(Local, 176)
+691 (ln 444): Load(Local, 177)
+692 (ln 445): Load(Local, 178)
+693 (ln 446): Load(Local, 179)
+694 (ln 447): Load(Local, 180)
+695 (ln 448): Load(Local, 181)
+696 (ln 449): Load(Local, 182)
+697 (ln 450): Load(Local, 183)
+698 (ln 451): Load(Local, 184)
+699 (ln 452): Load(Local, 185)
+700 (ln 453): Load(Local, 186)
+701 (ln 454): Load(Local, 187)
+702 (ln 455): Load(Local, 188)
+703 (ln 456): Load(Local, 189)
+704 (ln 457): Load(Local, 190)
+705 (ln 458): Load(Local, 191)
+706 (ln 459): Load(Local, 192)
+707 (ln 460): Load(Local, 193)
+708 (ln 461): Load(Local, 194)
+709 (ln 462): Load(Local, 195)
+710 (ln 463): Load(Local, 196)
+711 (ln 464): Load(Local, 197)
+712 (ln 465): Load(Local, 198)
+713 (ln 466): Load(Local, 199)
+714 (ln 467): Load(Local, 200)
+715 (ln 468): Load(Local, 201)
+716 (ln 469): Load(Local, 202)
+717 (ln 470): Load(Local, 203)
+718 (ln 471): Load(Local, 204)
+719 (ln 472): Load(Local, 205)
+720 (ln 473): Load(Local, 206)
+721 (ln 474): Load(Local, 207)
+722 (ln 475): Load(Local, 208)
+723 (ln 476): Load(Local, 209)
+724 (ln 477): Load(Local, 210)
+725 (ln 478): Load(Local, 211)
+726 (ln 479): Load(Local, 212)
+727 (ln 480): Load(Local, 213)
+728 (ln 481): Load(Local, 214)
+729 (ln 482): Load(Local, 215)
+730 (ln 483): Load(Local, 216)
+731 (ln 484): Load(Local, 217)
+732 (ln 485): Load(Local, 218)
+733 (ln 486): Load(Local, 219)
+734 (ln 487): Load(Local, 220)
+735 (ln 488): Load(Local, 221)
+736 (ln 489): Load(Local, 222)
+737 (ln 490): Load(Local, 223)
+738 (ln 491): Load(Local, 224)
+739 (ln 492): Load(Local, 225)
+740 (ln 493): Load(Local, 226)
+741 (ln 494): Load(Local, 227)
+742 (ln 495): Load(Local, 228)
+743 (ln 496): Load(Local, 229)
+744 (ln 497): Load(Local, 230)
+745 (ln 498): Load(Local, 231)
+746 (ln 499): Load(Local, 232)
+747 (ln 500): Load(Local, 233)
+748 (ln 501): Load(Local, 234)
+749 (ln 502): Load(Local, 235)
+750 (ln 503): Load(Local, 236)
+751 (ln 504): Load(Local, 237)
+752 (ln 505): Load(Local, 238)
+753 (ln 506): Load(Local, 239)
+754 (ln 507): Load(Local, 240)
+755 (ln 508): Load(Local, 241)
+756 (ln 509): Load(Local, 242)
+757 (ln 510): Load(Local, 243)
+758 (ln 511): Load(Local, 244)
+759 (ln 512): Load(Local, 245)
+760 (ln 513): Load(Local, 246)
+761 (ln 514): Load(Local, 247)
+762 (ln 515): Load(Local, 248)
+763 (ln 516): Load(Local, 249)
+764 (ln 517): Load(Local, 250)
+765 (ln 518): Load(Local, 251)
+766 (ln 519): Load(Local, 252)
+767 (ln 520): Load(Local, 253)
+768 (ln 521): Load(Local, 254)
+769 (ln 522): Load(Module, Class("System"))
+770 (ln 522): Load(Local, 255)
+771 (ln 522): Call(Method, print(_))
+772 (ln 522): Pop
+773 (ln 523): Pop
+774 (ln 523): Pop
+775 (ln 523): Pop
+776 (ln 523): Pop
+777 (ln 523): Pop
+778 (ln 523): Pop
+779 (ln 523): Pop
+780 (ln 523): Pop
+781 (ln 523): Pop
+782 (ln 523): Pop
+783 (ln 523): Pop
+784 (ln 523): Pop
+785 (ln 523): Pop
+786 (ln 523): Pop
+787 (ln 523): Pop
+788 (ln 523): Pop
+789 (ln 523): Pop
+790 (ln 523): Pop
+791 (ln 523): Pop
+792 (ln 523): Pop
+793 (ln 523): Pop
+794 (ln 523): Pop
+795 (ln 523): Pop
+796 (ln 523): Pop
+797 (ln 523): Pop
+798 (ln 523): Pop
+799 (ln 523): Pop
+800 (ln 523): Pop
+801 (ln 523): Pop
+802 (ln 523): Pop
+803 (ln 523): Pop
+804 (ln 523): Pop
+805 (ln 523): Pop
+806 (ln 523): Pop
+807 (ln 523): Pop
+808 (ln 523): Pop
+809 (ln 523): Pop
+810 (ln 523): Pop
+811 (ln 523): Pop
+812 (ln 523): Pop
+813 (ln 523): Pop
+814 (ln 523): Pop
+815 (ln 523): Pop
+816 (ln 523): Pop
+817 (ln 523): Pop
+818 (ln 523): Pop
+819 (ln 523): Pop
+820 (ln 523): Pop
+821 (ln 523): Pop
+822 (ln 523): Pop
+823 (ln 523): Pop
+824 (ln 523): Pop
+825 (ln 523): Pop
+826 (ln 523): Pop
+827 (ln 523): Pop
+828 (ln 523): Pop
+829 (ln 523): Pop
+830 (ln 523): Pop
+831 (ln 523): Pop
+832 (ln 523): Pop
+833 (ln 523): Pop
+834 (ln 523): Pop
+835 (ln 523): Pop
+836 (ln 523): Pop
+837 (ln 523): Pop
+838 (ln 523): Pop
+839 (ln 523): Pop
+840 (ln 523): Pop
+841 (ln 523): Pop
+842 (ln 523): Pop
+843 (ln 523): Pop
+844 (ln 523): Pop
+845 (ln 523): Pop
+846 (ln 523): Pop
+847 (ln 523): Pop
+848 (ln 523): Pop
+849 (ln 523): Pop
+850 (ln 523): Pop
+851 (ln 523): Pop
+852 (ln 523): Pop
+853 (ln 523): Pop
+854 (ln 523): Pop
+855 (ln 523): Pop
+856 (ln 523): Pop
+857 (ln 523): Pop
+858 (ln 523): Pop
+859 (ln 523): Pop
+860 (ln 523): Pop
+861 (ln 523): Pop
+862 (ln 523): Pop
+863 (ln 523): Pop
+864 (ln 523): Pop
+865 (ln 523): Pop
+866 (ln 523): Pop
+867 (ln 523): Pop
+868 (ln 523): Pop
+869 (ln 523): Pop
+870 (ln 523): Pop
+871 (ln 523): Pop
+872 (ln 523): Pop
+873 (ln 523): Pop
+874 (ln 523): Pop
+875 (ln 523): Pop
+876 (ln 523): Pop
+877 (ln 523): Pop
+878 (ln 523): Pop
+879 (ln 523): Pop
+880 (ln 523): Pop
+881 (ln 523): Pop
+882 (ln 523): Pop
+883 (ln 523): Pop
+884 (ln 523): Pop
+885 (ln 523): Pop
+886 (ln 523): Pop
+887 (ln 523): Pop
+888 (ln 523): Pop
+889 (ln 523): Pop
+890 (ln 523): Pop
+891 (ln 523): Pop
+892 (ln 523): Pop
+893 (ln 523): Pop
+894 (ln 523): Pop
+895 (ln 523): Pop
+896 (ln 523): Pop
+897 (ln 523): Pop
+898 (ln 523): Pop
+899 (ln 523): Pop
+900 (ln 523): Pop
+901 (ln 523): Pop
+902 (ln 523): Pop
+903 (ln 523): Pop
+904 (ln 523): Pop
+905 (ln 523): Pop
+906 (ln 523): Pop
+907 (ln 523): Pop
+908 (ln 523): Pop
+909 (ln 523): Pop
+910 (ln 523): Pop
+911 (ln 523): Pop
+912 (ln 523): Pop
+913 (ln 523): Pop
+914 (ln 523): Pop
+915 (ln 523): Pop
+916 (ln 523): Pop
+917 (ln 523): Pop
+918 (ln 523): Pop
+919 (ln 523): Pop
+920 (ln 523): Pop
+921 (ln 523): Pop
+922 (ln 523): Pop
+923 (ln 523): Pop
+924 (ln 523): Pop
+925 (ln 523): Pop
+926 (ln 523): Pop
+927 (ln 523): Pop
+928 (ln 523): Pop
+929 (ln 523): Pop
+930 (ln 523): Pop
+931 (ln 523): Pop
+932 (ln 523): Pop
+933 (ln 523): Pop
+934 (ln 523): Pop
+935 (ln 523): Pop
+936 (ln 523): Pop
+937 (ln 523): Pop
+938 (ln 523): Pop
+939 (ln 523): Pop
+940 (ln 523): Pop
+941 (ln 523): Pop
+942 (ln 523): Pop
+943 (ln 523): Pop
+944 (ln 523): Pop
+945 (ln 523): Pop
+946 (ln 523): Pop
+947 (ln 523): Pop
+948 (ln 523): Pop
+949 (ln 523): Pop
+950 (ln 523): Pop
+951 (ln 523): Pop
+952 (ln 523): Pop
+953 (ln 523): Pop
+954 (ln 523): Pop
+955 (ln 523): Pop
+956 (ln 523): Pop
+957 (ln 523): Pop
+958 (ln 523): Pop
+959 (ln 523): Pop
+960 (ln 523): Pop
+961 (ln 523): Pop
+962 (ln 523): Pop
+963 (ln 523): Pop
+964 (ln 523): Pop
+965 (ln 523): Pop
+966 (ln 523): Pop
+967 (ln 523): Pop
+968 (ln 523): Pop
+969 (ln 523): Pop
+970 (ln 523): Pop
+971 (ln 523): Pop
+972 (ln 523): Pop
+973 (ln 523): Pop
+974 (ln 523): Pop
+975 (ln 523): Pop
+976 (ln 523): Pop
+977 (ln 523): Pop
+978 (ln 523): Pop
+979 (ln 523): Pop
+980 (ln 523): Pop
+981 (ln 523): Pop
+982 (ln 523): Pop
+983 (ln 523): Pop
+984 (ln 523): Pop
+985 (ln 523): Pop
+986 (ln 523): Pop
+987 (ln 523): Pop
+988 (ln 523): Pop
+989 (ln 523): Pop
+990 (ln 523): Pop
+991 (ln 523): Pop
+992 (ln 523): Pop
+993 (ln 523): Pop
+994 (ln 523): Pop
+995 (ln 523): Pop
+996 (ln 523): Pop
+997 (ln 523): Pop
+998 (ln 523): Pop
+999 (ln 523): Pop
+1000 (ln 523): Pop
+1001 (ln 523): Pop
+1002 (ln 523): Pop
+1003 (ln 523): Pop
+1004 (ln 523): Pop
+1005 (ln 523): Pop
+1006 (ln 523): Pop
+1007 (ln 523): Pop
+1008 (ln 523): Pop
+1009 (ln 523): Pop
+1010 (ln 523): Pop
+1011 (ln 523): Pop
+1012 (ln 523): Pop
+1013 (ln 523): Pop
+1014 (ln 523): Pop
+1015 (ln 523): Pop
+1016 (ln 523): Pop
+1017 (ln 523): Pop
+1018 (ln 523): Pop
+1019 (ln 523): Pop
+1020 (ln 523): Pop
+1021 (ln 523): Pop
+1022 (ln 523): Pop
+1023 (ln 523): Pop
+1024 (ln 523): Pop
+1025 (ln 523): Pop
+1026 (ln 523): Pop
+1027 (ln 523): Pop
+1028 (ln 525): EndModule
+1029 (ln 525): Return
+1030 (ln 525): End

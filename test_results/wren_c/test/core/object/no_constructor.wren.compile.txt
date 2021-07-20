@@ -1,8 +1,8 @@
 Constants:
 Code:
-00: Load(Module, Class("Object"))
-01: Call(Method, new())
-02: Pop
-03: EndModule
-04: Return
-05: End
+00 (ln 1): Load(Module, Class("Object"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Pop
+03 (ln 2): EndModule
+04 (ln 2): Return
+05 (ln 2): End

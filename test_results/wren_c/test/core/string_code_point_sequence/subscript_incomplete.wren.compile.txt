@@ -4,27 +4,27 @@ Constants:
 02: "\xe0"
 03: "\xe0\xae"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "\xc0")
-02: Call(Getter, codePoints)
-03: Constant(1: 0)
-04: Call(Subscript, [_])
-05: Call(Method, print(_))
-06: Pop
-07: Load(Module, Class("System"))
-08: Constant(2: "\xe0")
-09: Call(Getter, codePoints)
-10: Constant(1: 0)
-11: Call(Subscript, [_])
-12: Call(Method, print(_))
-13: Pop
-14: Load(Module, Class("System"))
-15: Constant(3: "\xe0\xae")
-16: Call(Getter, codePoints)
-17: Constant(1: 0)
-18: Call(Subscript, [_])
-19: Call(Method, print(_))
-20: Pop
-21: EndModule
-22: Return
-23: End
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "\xc0")
+02 (ln 2): Call(Getter, codePoints)
+03 (ln 2): Constant(1: 0)
+04 (ln 2): Call(Subscript, [_])
+05 (ln 2): Call(Method, print(_))
+06 (ln 2): Pop
+07 (ln 5): Load(Module, Class("System"))
+08 (ln 5): Constant(2: "\xe0")
+09 (ln 5): Call(Getter, codePoints)
+10 (ln 5): Constant(1: 0)
+11 (ln 5): Call(Subscript, [_])
+12 (ln 5): Call(Method, print(_))
+13 (ln 5): Pop
+14 (ln 8): Load(Module, Class("System"))
+15 (ln 8): Constant(3: "\xe0\xae")
+16 (ln 8): Call(Getter, codePoints)
+17 (ln 8): Constant(1: 0)
+18 (ln 8): Call(Subscript, [_])
+19 (ln 8): Call(Method, print(_))
+20 (ln 8): Pop
+21 (ln 9): EndModule
+22 (ln 9): Return
+23 (ln 9): End

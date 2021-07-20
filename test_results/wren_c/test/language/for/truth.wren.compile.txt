@@ -10,128 +10,128 @@ Constants:
 08: ""
 09: "string"
 Code:
-00: Constant(0: "Iter")
-01: Load(Module, Class("Object"))
-02: Class(1 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new(_))
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new(_))
-11: Closure(3, [])
-12: Load(Module, Null)
-13: Method(instance, iterate(_))
-14: Closure(4, [])
-15: Load(Module, Null)
-16: Method(instance, iteratorValue(_))
-17: Load(Module, Null)
-18: Boolean false
-19: Call(Method, new(_))
-20: Null
-21: Load(Local, 1)
-22: Load(Local, 2)
-23: Call(Method, iterate(_))
-24: Store(Local, 2)
-25: JumpIfFalse(10)
-26: Load(Local, 1)
-27: Load(Local, 2)
-28: Call(Method, iteratorValue(_))
-29: Load(Module, Class("System"))
-30: Constant(5: "bad")
-31: Call(Method, print(_))
-32: Pop
-33: Jump(2)
-34: Pop
-35: Loop(15)
-36: Pop
-37: Pop
-38: Load(Module, Null)
-39: Null
-40: Call(Method, new(_))
-41: Null
-42: Load(Local, 1)
-43: Load(Local, 2)
-44: Call(Method, iterate(_))
-45: Store(Local, 2)
-46: JumpIfFalse(10)
-47: Load(Local, 1)
-48: Load(Local, 2)
-49: Call(Method, iteratorValue(_))
-50: Load(Module, Class("System"))
-51: Constant(5: "bad")
-52: Call(Method, print(_))
-53: Pop
-54: Jump(2)
-55: Pop
-56: Loop(15)
-57: Pop
-58: Pop
-59: Load(Module, Null)
-60: Boolean true
-61: Call(Method, new(_))
-62: Null
-63: Load(Local, 1)
-64: Load(Local, 2)
-65: Call(Method, iterate(_))
-66: Store(Local, 2)
-67: JumpIfFalse(10)
-68: Load(Local, 1)
-69: Load(Local, 2)
-70: Call(Method, iteratorValue(_))
-71: Load(Module, Class("System"))
-72: Constant(6: "true")
-73: Call(Method, print(_))
-74: Pop
-75: Jump(2)
-76: Pop
-77: Loop(15)
-78: Pop
-79: Pop
-80: Load(Module, Null)
-81: Constant(7: 0)
-82: Call(Method, new(_))
-83: Null
-84: Load(Local, 1)
-85: Load(Local, 2)
-86: Call(Method, iterate(_))
-87: Store(Local, 2)
-88: JumpIfFalse(10)
-89: Load(Local, 1)
-90: Load(Local, 2)
-91: Call(Method, iteratorValue(_))
-92: Load(Module, Class("System"))
-93: Constant(7: 0)
-94: Call(Method, print(_))
-95: Pop
-96: Jump(2)
-97: Pop
-98: Loop(15)
-99: Pop
-100: Pop
-101: Load(Module, Null)
-102: Constant(8: "")
-103: Call(Method, new(_))
-104: Null
-105: Load(Local, 1)
-106: Load(Local, 2)
-107: Call(Method, iterate(_))
-108: Store(Local, 2)
-109: JumpIfFalse(10)
-110: Load(Local, 1)
-111: Load(Local, 2)
-112: Call(Method, iteratorValue(_))
-113: Load(Module, Class("System"))
-114: Constant(9: "string")
-115: Call(Method, print(_))
-116: Pop
-117: Jump(2)
-118: Pop
-119: Loop(15)
-120: Pop
-121: Pop
-122: EndModule
-123: Return
-124: End
+00 (ln 1): Constant(0: "Iter")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(1 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(instance, init new(_))
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, Null)
+10 (ln 2): Method(static, new(_))
+11 (ln 3): Closure(3, [])
+12 (ln 3): Load(Module, Null)
+13 (ln 3): Method(instance, iterate(_))
+14 (ln 4): Closure(4, [])
+15 (ln 4): Load(Module, Null)
+16 (ln 4): Method(instance, iteratorValue(_))
+17 (ln 8): Load(Module, Null)
+18 (ln 8): Boolean false
+19 (ln 8): Call(Method, new(_))
+20 (ln 8): Null
+21 (ln 8): Load(Local, 1)
+22 (ln 8): Load(Local, 2)
+23 (ln 8): Call(Method, iterate(_))
+24 (ln 8): Store(Local, 2)
+25 (ln 8): JumpIfFalse(10)
+26 (ln 8): Load(Local, 1)
+27 (ln 8): Load(Local, 2)
+28 (ln 8): Call(Method, iteratorValue(_))
+29 (ln 9): Load(Module, Class("System"))
+30 (ln 9): Constant(5: "bad")
+31 (ln 9): Call(Method, print(_))
+32 (ln 9): Pop
+33 (ln 10): Jump(2)
+34 (ln 11): Pop
+35 (ln 11): Loop(15)
+36 (ln 11): Pop
+37 (ln 11): Pop
+38 (ln 13): Load(Module, Null)
+39 (ln 13): Null
+40 (ln 13): Call(Method, new(_))
+41 (ln 13): Null
+42 (ln 13): Load(Local, 1)
+43 (ln 13): Load(Local, 2)
+44 (ln 13): Call(Method, iterate(_))
+45 (ln 13): Store(Local, 2)
+46 (ln 13): JumpIfFalse(10)
+47 (ln 13): Load(Local, 1)
+48 (ln 13): Load(Local, 2)
+49 (ln 13): Call(Method, iteratorValue(_))
+50 (ln 14): Load(Module, Class("System"))
+51 (ln 14): Constant(5: "bad")
+52 (ln 14): Call(Method, print(_))
+53 (ln 14): Pop
+54 (ln 15): Jump(2)
+55 (ln 16): Pop
+56 (ln 16): Loop(15)
+57 (ln 16): Pop
+58 (ln 16): Pop
+59 (ln 19): Load(Module, Null)
+60 (ln 19): Boolean true
+61 (ln 19): Call(Method, new(_))
+62 (ln 19): Null
+63 (ln 19): Load(Local, 1)
+64 (ln 19): Load(Local, 2)
+65 (ln 19): Call(Method, iterate(_))
+66 (ln 19): Store(Local, 2)
+67 (ln 19): JumpIfFalse(10)
+68 (ln 19): Load(Local, 1)
+69 (ln 19): Load(Local, 2)
+70 (ln 19): Call(Method, iteratorValue(_))
+71 (ln 20): Load(Module, Class("System"))
+72 (ln 20): Constant(6: "true")
+73 (ln 20): Call(Method, print(_))
+74 (ln 20): Pop
+75 (ln 21): Jump(2)
+76 (ln 22): Pop
+77 (ln 22): Loop(15)
+78 (ln 22): Pop
+79 (ln 22): Pop
+80 (ln 24): Load(Module, Null)
+81 (ln 24): Constant(7: 0)
+82 (ln 24): Call(Method, new(_))
+83 (ln 24): Null
+84 (ln 24): Load(Local, 1)
+85 (ln 24): Load(Local, 2)
+86 (ln 24): Call(Method, iterate(_))
+87 (ln 24): Store(Local, 2)
+88 (ln 24): JumpIfFalse(10)
+89 (ln 24): Load(Local, 1)
+90 (ln 24): Load(Local, 2)
+91 (ln 24): Call(Method, iteratorValue(_))
+92 (ln 25): Load(Module, Class("System"))
+93 (ln 25): Constant(7: 0)
+94 (ln 25): Call(Method, print(_))
+95 (ln 25): Pop
+96 (ln 26): Jump(2)
+97 (ln 27): Pop
+98 (ln 27): Loop(15)
+99 (ln 27): Pop
+100 (ln 27): Pop
+101 (ln 29): Load(Module, Null)
+102 (ln 29): Constant(8: "")
+103 (ln 29): Call(Method, new(_))
+104 (ln 29): Null
+105 (ln 29): Load(Local, 1)
+106 (ln 29): Load(Local, 2)
+107 (ln 29): Call(Method, iterate(_))
+108 (ln 29): Store(Local, 2)
+109 (ln 29): JumpIfFalse(10)
+110 (ln 29): Load(Local, 1)
+111 (ln 29): Load(Local, 2)
+112 (ln 29): Call(Method, iteratorValue(_))
+113 (ln 30): Load(Module, Class("System"))
+114 (ln 30): Constant(9: "string")
+115 (ln 30): Call(Method, print(_))
+116 (ln 30): Pop
+117 (ln 31): Jump(2)
+118 (ln 32): Pop
+119 (ln 32): Loop(15)
+120 (ln 32): Pop
+121 (ln 32): Pop
+122 (ln 33): EndModule
+123 (ln 33): Return
+124 (ln 33): End

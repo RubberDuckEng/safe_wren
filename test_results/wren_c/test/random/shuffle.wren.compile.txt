@@ -11,146 +11,146 @@ Constants:
 09: "!!! "
 10: ""
 Code:
-00: ImportModule("random")
-01: Pop
-02: ImportVariable("Random")
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Constant(0: 12345)
-07: Call(Method, new(_))
-08: Store(Module)
-09: Pop
-10: Load(Module, Class("List"))
-11: Call(Method, new())
-12: Store(Module)
-13: Pop
-14: Load(Module, Null)
-15: Load(Module, Null)
-16: Call(Method, shuffle(_))
-17: Pop
-18: Load(Module, Class("System"))
-19: Load(Module, Null)
-20: Call(Method, print(_))
-21: Pop
-22: Load(Module, Class("List"))
-23: Call(Method, new())
-24: Constant(1: 1)
-25: Call(Method, addCore_(_))
-26: Store(Module)
-27: Pop
-28: Load(Module, Null)
-29: Load(Module, Null)
-30: Call(Method, shuffle(_))
-31: Pop
-32: Load(Module, Class("System"))
-33: Load(Module, Null)
-34: Call(Method, print(_))
-35: Pop
-36: Load(Module, Class("Map"))
-37: Call(Method, new())
-38: Store(Module)
-39: Pop
-40: Constant(1: 1)
-41: Constant(2: 5000)
-42: Call(Method, ..(_))
-43: Null
-44: Load(Local, 1)
-45: Load(Local, 2)
-46: Call(Method, iterate(_))
-47: Store(Local, 2)
-48: JumpIfFalse(42)
-49: Load(Local, 1)
-50: Load(Local, 2)
-51: Call(Method, iteratorValue(_))
-52: Load(Module, Class("List"))
-53: Call(Method, new())
-54: Constant(1: 1)
-55: Call(Method, addCore_(_))
-56: Constant(3: 2)
-57: Call(Method, addCore_(_))
-58: Constant(4: 3)
-59: Call(Method, addCore_(_))
-60: Constant(5: 4)
-61: Call(Method, addCore_(_))
-62: Load(Module, Null)
-63: Load(Local, 4)
-64: Call(Method, shuffle(_))
-65: Pop
-66: Load(Local, 4)
-67: Call(Getter, toString)
-68: Load(Module, Null)
-69: Load(Local, 5)
-70: Call(Method, containsKey(_))
-71: Call(Method, !)
-72: JumpIfFalse(5)
-73: Load(Module, Null)
-74: Load(Local, 5)
-75: Constant(6: 0)
-76: Call(SubscriptSetter, [_]=(_))
-77: Pop
-78: Load(Module, Null)
-79: Load(Local, 5)
-80: Load(Module, Null)
-81: Load(Local, 5)
-82: Call(Subscript, [_])
-83: Constant(1: 1)
-84: Call(Method, +(_))
-85: Call(SubscriptSetter, [_]=(_))
-86: Pop
-87: Pop
-88: Pop
-89: Pop
-90: Loop(47)
-91: Pop
-92: Pop
-93: Load(Module, Class("System"))
-94: Load(Module, Null)
-95: Call(Getter, count)
-96: Call(Method, print(_))
-97: Pop
-98: Load(Module, Null)
-99: Call(Getter, keys)
-100: Null
-101: Load(Local, 1)
-102: Load(Local, 2)
-103: Call(Method, iterate(_))
-104: Store(Local, 2)
-105: JumpIfFalse(32)
-106: Load(Local, 1)
-107: Load(Local, 2)
-108: Call(Method, iteratorValue(_))
-109: Load(Module, Null)
-110: Load(Local, 3)
-111: Call(Subscript, [_])
-112: Constant(2: 5000)
-113: Constant(7: 24)
-114: Call(Method, /(_))
-115: Call(Method, /(_))
-116: Constant(1: 1)
-117: Call(Method, -(_))
-118: Call(Getter, abs)
-119: Load(Local, 4)
-120: Constant(8: 0.21)
-121: Call(Method, >(_))
-122: JumpIfFalse(12)
-123: Load(Module, Class("System"))
-124: Load(Module, Class("List"))
-125: Call(Method, new())
-126: Constant(9: "!!! ")
-127: Call(Method, addCore_(_))
-128: Load(Local, 4)
-129: Call(Method, addCore_(_))
-130: Constant(10: "")
-131: Call(Method, addCore_(_))
-132: Call(Method, join())
-133: Call(Method, print(_))
-134: Pop
-135: Pop
-136: Pop
-137: Loop(37)
-138: Pop
-139: Pop
-140: EndModule
-141: Return
-142: End
+00 (ln 1): ImportModule("random")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Random")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Load(Module, Null)
+06 (ln 3): Constant(0: 12345)
+07 (ln 3): Call(Method, new(_))
+08 (ln 3): Store(Module)
+09 (ln 3): Pop
+10 (ln 6): Load(Module, Class("List"))
+11 (ln 6): Call(Method, new())
+12 (ln 6): Store(Module)
+13 (ln 6): Pop
+14 (ln 7): Load(Module, Null)
+15 (ln 7): Load(Module, Null)
+16 (ln 7): Call(Method, shuffle(_))
+17 (ln 7): Pop
+18 (ln 8): Load(Module, Class("System"))
+19 (ln 8): Load(Module, Null)
+20 (ln 8): Call(Method, print(_))
+21 (ln 8): Pop
+22 (ln 11): Load(Module, Class("List"))
+23 (ln 11): Call(Method, new())
+24 (ln 11): Constant(1: 1)
+25 (ln 11): Call(Method, addCore_(_))
+26 (ln 11): Store(Module)
+27 (ln 11): Pop
+28 (ln 12): Load(Module, Null)
+29 (ln 12): Load(Module, Null)
+30 (ln 12): Call(Method, shuffle(_))
+31 (ln 12): Pop
+32 (ln 13): Load(Module, Class("System"))
+33 (ln 13): Load(Module, Null)
+34 (ln 13): Call(Method, print(_))
+35 (ln 13): Pop
+36 (ln 17): Load(Module, Class("Map"))
+37 (ln 17): Call(Method, new())
+38 (ln 17): Store(Module)
+39 (ln 17): Pop
+40 (ln 18): Constant(1: 1)
+41 (ln 18): Constant(2: 5000)
+42 (ln 18): Call(Method, ..(_))
+43 (ln 18): Null
+44 (ln 18): Load(Local, 1)
+45 (ln 18): Load(Local, 2)
+46 (ln 18): Call(Method, iterate(_))
+47 (ln 18): Store(Local, 2)
+48 (ln 18): JumpIfFalse(42)
+49 (ln 18): Load(Local, 1)
+50 (ln 18): Load(Local, 2)
+51 (ln 18): Call(Method, iteratorValue(_))
+52 (ln 19): Load(Module, Class("List"))
+53 (ln 19): Call(Method, new())
+54 (ln 19): Constant(1: 1)
+55 (ln 19): Call(Method, addCore_(_))
+56 (ln 19): Constant(3: 2)
+57 (ln 19): Call(Method, addCore_(_))
+58 (ln 19): Constant(4: 3)
+59 (ln 19): Call(Method, addCore_(_))
+60 (ln 19): Constant(5: 4)
+61 (ln 19): Call(Method, addCore_(_))
+62 (ln 20): Load(Module, Null)
+63 (ln 20): Load(Local, 4)
+64 (ln 20): Call(Method, shuffle(_))
+65 (ln 20): Pop
+66 (ln 22): Load(Local, 4)
+67 (ln 22): Call(Getter, toString)
+68 (ln 23): Load(Module, Null)
+69 (ln 23): Load(Local, 5)
+70 (ln 23): Call(Method, containsKey(_))
+71 (ln 23): Call(Method, !)
+72 (ln 23): JumpIfFalse(5)
+73 (ln 23): Load(Module, Null)
+74 (ln 23): Load(Local, 5)
+75 (ln 23): Constant(6: 0)
+76 (ln 23): Call(SubscriptSetter, [_]=(_))
+77 (ln 23): Pop
+78 (ln 24): Load(Module, Null)
+79 (ln 24): Load(Local, 5)
+80 (ln 24): Load(Module, Null)
+81 (ln 24): Load(Local, 5)
+82 (ln 24): Call(Subscript, [_])
+83 (ln 24): Constant(1: 1)
+84 (ln 24): Call(Method, +(_))
+85 (ln 24): Call(SubscriptSetter, [_]=(_))
+86 (ln 24): Pop
+87 (ln 25): Pop
+88 (ln 25): Pop
+89 (ln 25): Pop
+90 (ln 25): Loop(47)
+91 (ln 25): Pop
+92 (ln 25): Pop
+93 (ln 27): Load(Module, Class("System"))
+94 (ln 27): Load(Module, Null)
+95 (ln 27): Call(Getter, count)
+96 (ln 27): Call(Method, print(_))
+97 (ln 27): Pop
+98 (ln 28): Load(Module, Null)
+99 (ln 28): Call(Getter, keys)
+100 (ln 28): Null
+101 (ln 28): Load(Local, 1)
+102 (ln 28): Load(Local, 2)
+103 (ln 28): Call(Method, iterate(_))
+104 (ln 28): Store(Local, 2)
+105 (ln 28): JumpIfFalse(32)
+106 (ln 28): Load(Local, 1)
+107 (ln 28): Load(Local, 2)
+108 (ln 28): Call(Method, iteratorValue(_))
+109 (ln 29): Load(Module, Null)
+110 (ln 29): Load(Local, 3)
+111 (ln 29): Call(Subscript, [_])
+112 (ln 29): Constant(2: 5000)
+113 (ln 29): Constant(7: 24)
+114 (ln 29): Call(Method, /(_))
+115 (ln 29): Call(Method, /(_))
+116 (ln 29): Constant(1: 1)
+117 (ln 29): Call(Method, -(_))
+118 (ln 29): Call(Getter, abs)
+119 (ln 30): Load(Local, 4)
+120 (ln 30): Constant(8: 0.21)
+121 (ln 30): Call(Method, >(_))
+122 (ln 30): JumpIfFalse(12)
+123 (ln 30): Load(Module, Class("System"))
+124 (ln 30): Load(Module, Class("List"))
+125 (ln 30): Call(Method, new())
+126 (ln 30): Constant(9: "!!! ")
+127 (ln 30): Call(Method, addCore_(_))
+128 (ln 30): Load(Local, 4)
+129 (ln 30): Call(Method, addCore_(_))
+130 (ln 30): Constant(10: "")
+131 (ln 30): Call(Method, addCore_(_))
+132 (ln 30): Call(Method, join())
+133 (ln 30): Call(Method, print(_))
+134 (ln 30): Pop
+135 (ln 31): Pop
+136 (ln 31): Pop
+137 (ln 31): Loop(37)
+138 (ln 31): Pop
+139 (ln 31): Pop
+140 (ln 33): EndModule
+141 (ln 33): Return
+142 (ln 33): End

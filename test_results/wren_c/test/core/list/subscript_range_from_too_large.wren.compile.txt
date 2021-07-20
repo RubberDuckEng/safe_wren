@@ -3,22 +3,22 @@ Constants:
 01: 2
 02: 3
 Code:
-00: Load(Module, Class("List"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Call(Method, addCore_(_))
-04: Constant(1: 2)
-05: Call(Method, addCore_(_))
-06: Constant(2: 3)
-07: Call(Method, addCore_(_))
-08: Store(Module)
-09: Pop
-10: Load(Module, Null)
-11: Constant(2: 3)
-12: Constant(1: 2)
-13: Call(Method, ..(_))
-14: Call(Subscript, [_])
-15: Pop
-16: EndModule
-17: Return
-18: End
+00 (ln 1): Load(Module, Class("List"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Call(Method, addCore_(_))
+04 (ln 1): Constant(1: 2)
+05 (ln 1): Call(Method, addCore_(_))
+06 (ln 1): Constant(2: 3)
+07 (ln 1): Call(Method, addCore_(_))
+08 (ln 1): Store(Module)
+09 (ln 1): Pop
+10 (ln 2): Load(Module, Null)
+11 (ln 2): Constant(2: 3)
+12 (ln 2): Constant(1: 2)
+13 (ln 2): Call(Method, ..(_))
+14 (ln 2): Call(Subscript, [_])
+15 (ln 2): Pop
+16 (ln 3): EndModule
+17 (ln 3): Return
+18 (ln 3): End

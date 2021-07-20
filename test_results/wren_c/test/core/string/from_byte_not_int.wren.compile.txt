@@ -1,12 +1,12 @@
 Constants:
 00: 12.34
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("String"))
-02: Constant(0: 12.34)
-03: Call(Method, fromByte(_))
-04: Call(Method, print(_))
-05: Pop
-06: EndModule
-07: Return
-08: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("String"))
+02 (ln 1): Constant(0: 12.34)
+03 (ln 1): Call(Method, fromByte(_))
+04 (ln 1): Call(Method, print(_))
+05 (ln 1): Pop
+06 (ln 2): EndModule
+07 (ln 2): Return
+08 (ln 2): End

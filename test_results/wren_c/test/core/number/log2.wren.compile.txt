@@ -4,27 +4,27 @@ Constants:
 02: 100
 03: 1
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: 1024)
-02: Call(Getter, log2)
-03: Call(Method, print(_))
-04: Pop
-05: Load(Module, Class("System"))
-06: Constant(1: 2048)
-07: Call(Getter, log2)
-08: Call(Method, print(_))
-09: Pop
-10: Load(Module, Class("System"))
-11: Constant(2: 100)
-12: Call(Getter, log2)
-13: Call(Method, print(_))
-14: Pop
-15: Load(Module, Class("System"))
-16: Constant(3: 1)
-17: Call(Method, -)
-18: Call(Getter, log2)
-19: Call(Method, print(_))
-20: Pop
-21: EndModule
-22: Return
-23: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: 1024)
+02 (ln 1): Call(Getter, log2)
+03 (ln 1): Call(Method, print(_))
+04 (ln 1): Pop
+05 (ln 2): Load(Module, Class("System"))
+06 (ln 2): Constant(1: 2048)
+07 (ln 2): Call(Getter, log2)
+08 (ln 2): Call(Method, print(_))
+09 (ln 2): Pop
+10 (ln 3): Load(Module, Class("System"))
+11 (ln 3): Constant(2: 100)
+12 (ln 3): Call(Getter, log2)
+13 (ln 3): Call(Method, print(_))
+14 (ln 3): Pop
+15 (ln 4): Load(Module, Class("System"))
+16 (ln 4): Constant(3: 1)
+17 (ln 4): Call(Method, -)
+18 (ln 4): Call(Getter, log2)
+19 (ln 4): Call(Method, print(_))
+20 (ln 4): Pop
+21 (ln 5): EndModule
+22 (ln 5): Return
+23 (ln 5): End

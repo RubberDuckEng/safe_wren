@@ -1,30 +1,30 @@
 Constants:
 00: Fn(new(_) block argument)
 Code:
-00: Load(Module, Class("Fn"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Call(Method, call())
-07: Null
-08: Load(Local, 1)
-09: Load(Local, 2)
-10: Call(Method, iterate(_))
-11: Store(Local, 2)
-12: JumpIfFalse(9)
-13: Load(Local, 1)
-14: Load(Local, 2)
-15: Call(Method, iteratorValue(_))
-16: Load(Module, Class("System"))
-17: Load(Local, 3)
-18: Call(Method, print(_))
-19: Pop
-20: Pop
-21: Loop(14)
-22: Pop
-23: Pop
-24: EndModule
-25: Return
-26: End
+00 (ln 1): Load(Module, Class("Fn"))
+01 (ln 4): Closure(0, [])
+02 (ln 4): Call(Method, new(_))
+03 (ln 4): Store(Module)
+04 (ln 4): Pop
+05 (ln 6): Load(Module, Null)
+06 (ln 6): Call(Method, call())
+07 (ln 6): Null
+08 (ln 6): Load(Local, 1)
+09 (ln 6): Load(Local, 2)
+10 (ln 6): Call(Method, iterate(_))
+11 (ln 6): Store(Local, 2)
+12 (ln 6): JumpIfFalse(9)
+13 (ln 6): Load(Local, 1)
+14 (ln 6): Load(Local, 2)
+15 (ln 6): Call(Method, iteratorValue(_))
+16 (ln 6): Load(Module, Class("System"))
+17 (ln 6): Load(Local, 3)
+18 (ln 6): Call(Method, print(_))
+19 (ln 6): Pop
+20 (ln 6): Pop
+21 (ln 6): Loop(14)
+22 (ln 6): Pop
+23 (ln 6): Pop
+24 (ln 11): EndModule
+25 (ln 11): Return
+26 (ln 11): End

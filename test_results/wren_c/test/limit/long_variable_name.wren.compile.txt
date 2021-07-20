@@ -2,14 +2,14 @@ Constants:
 00: "value"
 01: "c234567890c234567890c234567890c234567890c234567890c234567890c234"
 Code:
-00: Constant(0: "value")
-01: Store(Module)
-02: Pop
-03: Constant(1: "c234567890c234567890c234567890c234567890c234567890c234567890c234")
-04: Load(Module, Class("Object"))
-05: Class(0 fields)
-06: Store(Module)
-07: Pop
-08: EndModule
-09: Return
-10: End
+00 (ln 1): Constant(0: "value")
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 2): Constant(1: "c234567890c234567890c234567890c234567890c234567890c234567890c234")
+04 (ln 2): Load(Module, Class("Object"))
+05 (ln 2): Class(0 fields)
+06 (ln 2): Store(Module)
+07 (ln 2): Pop
+08 (ln 3): EndModule
+09 (ln 3): Return
+10 (ln 3): End

@@ -5,24 +5,24 @@ Constants:
 03: "Three"
 04: Fn(each(_) block argument)
 Code:
-00: Constant(0: "")
-01: Store(Module)
-02: Pop
-03: Load(Module, Class("List"))
-04: Call(Method, new())
-05: Constant(1: "One")
-06: Call(Method, addCore_(_))
-07: Constant(2: "Two")
-08: Call(Method, addCore_(_))
-09: Constant(3: "Three")
-10: Call(Method, addCore_(_))
-11: Closure(4, [])
-12: Call(Method, each(_))
-13: Pop
-14: Load(Module, Class("System"))
-15: Load(Module, Null)
-16: Call(Method, print(_))
-17: Pop
-18: EndModule
-19: Return
-20: End
+00 (ln 1): Constant(0: "")
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 2): Load(Module, Class("List"))
+04 (ln 2): Call(Method, new())
+05 (ln 2): Constant(1: "One")
+06 (ln 2): Call(Method, addCore_(_))
+07 (ln 2): Constant(2: "Two")
+08 (ln 2): Call(Method, addCore_(_))
+09 (ln 2): Constant(3: "Three")
+10 (ln 2): Call(Method, addCore_(_))
+11 (ln 2): Closure(4, [])
+12 (ln 2): Call(Method, each(_))
+13 (ln 2): Pop
+14 (ln 3): Load(Module, Class("System"))
+15 (ln 3): Load(Module, Null)
+16 (ln 3): Call(Method, print(_))
+17 (ln 3): Pop
+18 (ln 4): EndModule
+19 (ln 4): Return
+20 (ln 4): End

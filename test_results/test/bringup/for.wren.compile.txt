@@ -2,26 +2,26 @@ Constants:
 00: 0
 01: 1
 Code:
-00: Constant(0: 0)
-01: Constant(1: 1)
-02: Call(Method, ..(_))
-03: Null
-04: Load(Local, 1)
-05: Load(Local, 2)
-06: Call(Method, iterate(_))
-07: Store(Local, 2)
-08: JumpIfFalse(9)
-09: Load(Local, 1)
-10: Load(Local, 2)
-11: Call(Method, iteratorValue(_))
-12: Load(Module, Class("System"))
-13: Load(Local, 3)
-14: Call(Method, print(_))
-15: Pop
-16: Pop
-17: Loop(14)
-18: Pop
-19: Pop
-20: EndModule
-21: Return
-22: End
+00 (ln 1): Constant(0: 0)
+01 (ln 1): Constant(1: 1)
+02 (ln 1): Call(Method, ..(_))
+03 (ln 1): Null
+04 (ln 1): Load(Local, 1)
+05 (ln 1): Load(Local, 2)
+06 (ln 1): Call(Method, iterate(_))
+07 (ln 1): Store(Local, 2)
+08 (ln 1): JumpIfFalse(9)
+09 (ln 1): Load(Local, 1)
+10 (ln 1): Load(Local, 2)
+11 (ln 1): Call(Method, iteratorValue(_))
+12 (ln 2): Load(Module, Class("System"))
+13 (ln 2): Load(Local, 3)
+14 (ln 2): Call(Method, print(_))
+15 (ln 2): Pop
+16 (ln 3): Pop
+17 (ln 3): Loop(14)
+18 (ln 3): Pop
+19 (ln 3): Pop
+20 (ln 6): EndModule
+21 (ln 6): Return
+22 (ln 6): End

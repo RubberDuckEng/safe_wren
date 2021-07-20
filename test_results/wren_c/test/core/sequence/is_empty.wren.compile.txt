@@ -6,43 +6,43 @@ Constants:
 04: Fn(iterate(_))
 05: Fn(iteratorValue(_))
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("List"))
-02: Call(Method, new())
-03: Call(Getter, isEmpty)
-04: Call(Method, print(_))
-05: Pop
-06: Load(Module, Class("System"))
-07: Load(Module, Class("List"))
-08: Call(Method, new())
-09: Constant(0: 1)
-10: Call(Method, addCore_(_))
-11: Call(Getter, isEmpty)
-12: Call(Method, print(_))
-13: Pop
-14: Constant(1: "InfiniteSequence")
-15: Load(Module, Class("Sequence"))
-16: Class(0 fields)
-17: Store(Module)
-18: Pop
-19: Closure(2, [])
-20: Load(Module, Null)
-21: Method(instance, init new())
-22: Closure(3, [])
-23: Load(Module, Null)
-24: Method(static, new())
-25: Closure(4, [])
-26: Load(Module, Null)
-27: Method(instance, iterate(_))
-28: Closure(5, [])
-29: Load(Module, Null)
-30: Method(instance, iteratorValue(_))
-31: Load(Module, Class("System"))
-32: Load(Module, Null)
-33: Call(Method, new())
-34: Call(Getter, isEmpty)
-35: Call(Method, print(_))
-36: Pop
-37: EndModule
-38: Return
-39: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("List"))
+02 (ln 1): Call(Method, new())
+03 (ln 1): Call(Getter, isEmpty)
+04 (ln 1): Call(Method, print(_))
+05 (ln 1): Pop
+06 (ln 2): Load(Module, Class("System"))
+07 (ln 2): Load(Module, Class("List"))
+08 (ln 2): Call(Method, new())
+09 (ln 2): Constant(0: 1)
+10 (ln 2): Call(Method, addCore_(_))
+11 (ln 2): Call(Getter, isEmpty)
+12 (ln 2): Call(Method, print(_))
+13 (ln 2): Pop
+14 (ln 4): Constant(1: "InfiniteSequence")
+15 (ln 4): Load(Module, Class("Sequence"))
+16 (ln 4): Class(0 fields)
+17 (ln 4): Store(Module)
+18 (ln 4): Pop
+19 (ln 5): Closure(2, [])
+20 (ln 5): Load(Module, Null)
+21 (ln 5): Method(instance, init new())
+22 (ln 5): Closure(3, [])
+23 (ln 5): Load(Module, Null)
+24 (ln 5): Method(static, new())
+25 (ln 6): Closure(4, [])
+26 (ln 6): Load(Module, Null)
+27 (ln 6): Method(instance, iterate(_))
+28 (ln 7): Closure(5, [])
+29 (ln 7): Load(Module, Null)
+30 (ln 7): Method(instance, iteratorValue(_))
+31 (ln 11): Load(Module, Class("System"))
+32 (ln 11): Load(Module, Null)
+33 (ln 11): Call(Method, new())
+34 (ln 11): Call(Getter, isEmpty)
+35 (ln 11): Call(Method, print(_))
+36 (ln 11): Pop
+37 (ln 12): EndModule
+38 (ln 12): Return
+39 (ln 12): End

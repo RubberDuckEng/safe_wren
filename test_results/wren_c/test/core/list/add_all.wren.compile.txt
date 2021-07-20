@@ -7,57 +7,57 @@ Constants:
 05: 7
 06: 9
 Code:
-00: Load(Module, Class("List"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Call(Method, addCore_(_))
-04: Store(Module)
-05: Pop
-06: Load(Module, Null)
-07: Load(Module, Class("List"))
-08: Call(Method, new())
-09: Constant(1: 2)
-10: Call(Method, addCore_(_))
-11: Constant(2: 3)
-12: Call(Method, addCore_(_))
-13: Call(Method, addAll(_))
-14: Pop
-15: Load(Module, Class("System"))
-16: Load(Module, Null)
-17: Call(Method, print(_))
-18: Pop
-19: Load(Module, Null)
-20: Load(Module, Class("List"))
-21: Call(Method, new())
-22: Call(Method, addAll(_))
-23: Pop
-24: Load(Module, Class("System"))
-25: Load(Module, Null)
-26: Call(Method, print(_))
-27: Pop
-28: Load(Module, Null)
-29: Constant(3: 4)
-30: Constant(4: 6)
-31: Call(Method, ..(_))
-32: Call(Method, addAll(_))
-33: Pop
-34: Load(Module, Class("System"))
-35: Load(Module, Null)
-36: Call(Method, print(_))
-37: Pop
-38: Constant(5: 7)
-39: Constant(6: 9)
-40: Call(Method, ..(_))
-41: Store(Module)
-42: Pop
-43: Load(Module, Class("System"))
-44: Load(Module, Null)
-45: Load(Module, Null)
-46: Call(Method, addAll(_))
-47: Load(Module, Null)
-48: Call(Method, ==(_))
-49: Call(Method, print(_))
-50: Pop
-51: EndModule
-52: Return
-53: End
+00 (ln 1): Load(Module, Class("List"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Call(Method, addCore_(_))
+04 (ln 1): Store(Module)
+05 (ln 1): Pop
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Load(Module, Class("List"))
+08 (ln 2): Call(Method, new())
+09 (ln 2): Constant(1: 2)
+10 (ln 2): Call(Method, addCore_(_))
+11 (ln 2): Constant(2: 3)
+12 (ln 2): Call(Method, addCore_(_))
+13 (ln 2): Call(Method, addAll(_))
+14 (ln 2): Pop
+15 (ln 3): Load(Module, Class("System"))
+16 (ln 3): Load(Module, Null)
+17 (ln 3): Call(Method, print(_))
+18 (ln 3): Pop
+19 (ln 4): Load(Module, Null)
+20 (ln 4): Load(Module, Class("List"))
+21 (ln 4): Call(Method, new())
+22 (ln 4): Call(Method, addAll(_))
+23 (ln 4): Pop
+24 (ln 5): Load(Module, Class("System"))
+25 (ln 5): Load(Module, Null)
+26 (ln 5): Call(Method, print(_))
+27 (ln 5): Pop
+28 (ln 6): Load(Module, Null)
+29 (ln 6): Constant(3: 4)
+30 (ln 6): Constant(4: 6)
+31 (ln 6): Call(Method, ..(_))
+32 (ln 6): Call(Method, addAll(_))
+33 (ln 6): Pop
+34 (ln 7): Load(Module, Class("System"))
+35 (ln 7): Load(Module, Null)
+36 (ln 7): Call(Method, print(_))
+37 (ln 7): Pop
+38 (ln 10): Constant(5: 7)
+39 (ln 10): Constant(6: 9)
+40 (ln 10): Call(Method, ..(_))
+41 (ln 10): Store(Module)
+42 (ln 10): Pop
+43 (ln 11): Load(Module, Class("System"))
+44 (ln 11): Load(Module, Null)
+45 (ln 11): Load(Module, Null)
+46 (ln 11): Call(Method, addAll(_))
+47 (ln 11): Load(Module, Null)
+48 (ln 11): Call(Method, ==(_))
+49 (ln 11): Call(Method, print(_))
+50 (ln 11): Pop
+51 (ln 12): EndModule
+52 (ln 12): Return
+53 (ln 12): End

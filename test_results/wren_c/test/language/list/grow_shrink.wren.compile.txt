@@ -4,55 +4,55 @@ Constants:
 02: 195
 03: 1
 Code:
-00: Load(Module, Class("List"))
-01: Call(Method, new())
-02: Store(Module)
-03: Pop
-04: Constant(0: 0)
-05: Constant(1: 200)
-06: Call(Method, ..(_))
-07: Null
-08: Load(Local, 1)
-09: Load(Local, 2)
-10: Call(Method, iterate(_))
-11: Store(Local, 2)
-12: JumpIfFalse(9)
-13: Load(Local, 1)
-14: Load(Local, 2)
-15: Call(Method, iteratorValue(_))
-16: Load(Module, Null)
-17: Load(Local, 3)
-18: Call(Method, add(_))
-19: Pop
-20: Pop
-21: Loop(14)
-22: Pop
-23: Pop
-24: Constant(0: 0)
-25: Constant(2: 195)
-26: Call(Method, ..(_))
-27: Null
-28: Load(Local, 1)
-29: Load(Local, 2)
-30: Call(Method, iterate(_))
-31: Store(Local, 2)
-32: JumpIfFalse(10)
-33: Load(Local, 1)
-34: Load(Local, 2)
-35: Call(Method, iteratorValue(_))
-36: Load(Module, Null)
-37: Constant(3: 1)
-38: Call(Method, -)
-39: Call(Method, removeAt(_))
-40: Pop
-41: Pop
-42: Loop(15)
-43: Pop
-44: Pop
-45: Load(Module, Class("System"))
-46: Load(Module, Null)
-47: Call(Method, print(_))
-48: Pop
-49: EndModule
-50: Return
-51: End
+00 (ln 2): Load(Module, Class("List"))
+01 (ln 2): Call(Method, new())
+02 (ln 2): Store(Module)
+03 (ln 2): Pop
+04 (ln 3): Constant(0: 0)
+05 (ln 3): Constant(1: 200)
+06 (ln 3): Call(Method, ..(_))
+07 (ln 3): Null
+08 (ln 3): Load(Local, 1)
+09 (ln 3): Load(Local, 2)
+10 (ln 3): Call(Method, iterate(_))
+11 (ln 3): Store(Local, 2)
+12 (ln 3): JumpIfFalse(9)
+13 (ln 3): Load(Local, 1)
+14 (ln 3): Load(Local, 2)
+15 (ln 3): Call(Method, iteratorValue(_))
+16 (ln 4): Load(Module, Null)
+17 (ln 4): Load(Local, 3)
+18 (ln 4): Call(Method, add(_))
+19 (ln 4): Pop
+20 (ln 5): Pop
+21 (ln 5): Loop(14)
+22 (ln 5): Pop
+23 (ln 5): Pop
+24 (ln 7): Constant(0: 0)
+25 (ln 7): Constant(2: 195)
+26 (ln 7): Call(Method, ..(_))
+27 (ln 7): Null
+28 (ln 7): Load(Local, 1)
+29 (ln 7): Load(Local, 2)
+30 (ln 7): Call(Method, iterate(_))
+31 (ln 7): Store(Local, 2)
+32 (ln 7): JumpIfFalse(10)
+33 (ln 7): Load(Local, 1)
+34 (ln 7): Load(Local, 2)
+35 (ln 7): Call(Method, iteratorValue(_))
+36 (ln 8): Load(Module, Null)
+37 (ln 8): Constant(3: 1)
+38 (ln 8): Call(Method, -)
+39 (ln 8): Call(Method, removeAt(_))
+40 (ln 8): Pop
+41 (ln 9): Pop
+42 (ln 9): Loop(15)
+43 (ln 9): Pop
+44 (ln 9): Pop
+45 (ln 11): Load(Module, Class("System"))
+46 (ln 11): Load(Module, Null)
+47 (ln 11): Call(Method, print(_))
+48 (ln 11): Pop
+49 (ln 12): EndModule
+50 (ln 12): Return
+51 (ln 12): End

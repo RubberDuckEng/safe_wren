@@ -8,37 +8,37 @@ Constants:
 06: Fn(foo)
 07: Fn(classMethod)
 Code:
-00: Constant(0: "variable")
-01: Constant(1: "Foo")
-02: Load(Module, Class("Object"))
-03: Class(0 fields)
-04: Closure(2, [])
-05: Load(Local, 2)
-06: Method(instance, init new())
-07: Closure(3, [])
-08: Load(Local, 2)
-09: Method(static, new())
-10: Closure(4, [])
-11: Load(Local, 2)
-12: Method(instance, foo)
-13: Closure(5, [])
-14: Load(Local, 2)
-15: Method(instance, method)
-16: Closure(6, [])
-17: Load(Local, 2)
-18: Method(static, foo)
-19: Closure(7, [])
-20: Load(Local, 2)
-21: Method(static, classMethod)
-22: Load(Local, 2)
-23: Call(Method, new())
-24: Call(Getter, method)
-25: Pop
-26: Load(Local, 2)
-27: Call(Getter, classMethod)
-28: Pop
-29: Pop
-30: Pop
-31: EndModule
-32: Return
-33: End
+00 (ln 2): Constant(0: "variable")
+01 (ln 4): Constant(1: "Foo")
+02 (ln 4): Load(Module, Class("Object"))
+03 (ln 4): Class(0 fields)
+04 (ln 5): Closure(2, [])
+05 (ln 5): Load(Local, 2)
+06 (ln 5): Method(instance, init new())
+07 (ln 5): Closure(3, [])
+08 (ln 5): Load(Local, 2)
+09 (ln 5): Method(static, new())
+10 (ln 7): Closure(4, [])
+11 (ln 7): Load(Local, 2)
+12 (ln 7): Method(instance, foo)
+13 (ln 11): Closure(5, [])
+14 (ln 11): Load(Local, 2)
+15 (ln 11): Method(instance, method)
+16 (ln 13): Closure(6, [])
+17 (ln 13): Load(Local, 2)
+18 (ln 13): Method(static, foo)
+19 (ln 17): Closure(7, [])
+20 (ln 17): Load(Local, 2)
+21 (ln 17): Method(static, classMethod)
+22 (ln 20): Load(Local, 2)
+23 (ln 20): Call(Method, new())
+24 (ln 20): Call(Getter, method)
+25 (ln 20): Pop
+26 (ln 21): Load(Local, 2)
+27 (ln 21): Call(Getter, classMethod)
+28 (ln 21): Pop
+29 (ln 22): Pop
+30 (ln 22): Pop
+31 (ln 23): EndModule
+32 (ln 23): Return
+33 (ln 23): End

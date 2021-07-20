@@ -1,24 +1,24 @@
 Constants:
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("Num"))
-02: Call(Getter, nan)
-03: Call(Getter, sign)
-04: Call(Method, print(_))
-05: Pop
-06: Load(Module, Class("System"))
-07: Load(Module, Class("Num"))
-08: Call(Getter, infinity)
-09: Call(Method, -)
-10: Call(Getter, sign)
-11: Call(Method, print(_))
-12: Pop
-13: Load(Module, Class("System"))
-14: Load(Module, Class("Num"))
-15: Call(Getter, infinity)
-16: Call(Getter, sign)
-17: Call(Method, print(_))
-18: Pop
-19: EndModule
-20: Return
-21: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("Num"))
+02 (ln 1): Call(Getter, nan)
+03 (ln 1): Call(Getter, sign)
+04 (ln 1): Call(Method, print(_))
+05 (ln 1): Pop
+06 (ln 2): Load(Module, Class("System"))
+07 (ln 2): Load(Module, Class("Num"))
+08 (ln 2): Call(Getter, infinity)
+09 (ln 2): Call(Method, -)
+10 (ln 2): Call(Getter, sign)
+11 (ln 2): Call(Method, print(_))
+12 (ln 2): Pop
+13 (ln 3): Load(Module, Class("System"))
+14 (ln 3): Load(Module, Class("Num"))
+15 (ln 3): Call(Getter, infinity)
+16 (ln 3): Call(Getter, sign)
+17 (ln 3): Call(Method, print(_))
+18 (ln 3): Pop
+19 (ln 4): EndModule
+20 (ln 4): Return
+21 (ln 4): End

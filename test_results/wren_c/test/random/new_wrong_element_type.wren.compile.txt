@@ -1,18 +1,18 @@
 Constants:
 00: "wrong type"
 Code:
-00: ImportModule("random")
-01: Pop
-02: ImportVariable("Random")
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Load(Module, Class("List"))
-07: Call(Method, new())
-08: Constant(0: "wrong type")
-09: Call(Method, addCore_(_))
-10: Call(Method, new(_))
-11: Pop
-12: EndModule
-13: Return
-14: End
+00 (ln 1): ImportModule("random")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Random")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Load(Module, Null)
+06 (ln 3): Load(Module, Class("List"))
+07 (ln 3): Call(Method, new())
+08 (ln 3): Constant(0: "wrong type")
+09 (ln 3): Call(Method, addCore_(_))
+10 (ln 3): Call(Method, new(_))
+11 (ln 3): Pop
+12 (ln 4): EndModule
+13 (ln 4): Return
+14 (ln 4): End

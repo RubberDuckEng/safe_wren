@@ -1,14 +1,14 @@
 Constants:
 00: Fn(new(_) block argument)
 Code:
-00: Load(Module, Class("Fn"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Call(Method, call())
-07: Pop
-08: EndModule
-09: Return
-10: End
+00 (ln 1): Load(Module, Class("Fn"))
+01 (ln 65548): Closure(0, [])
+02 (ln 65548): Call(Method, new(_))
+03 (ln 65548): Store(Module)
+04 (ln 65548): Pop
+05 (ln 65550): Load(Module, Null)
+06 (ln 65550): Call(Method, call())
+07 (ln 65550): Pop
+08 (ln 65551): EndModule
+09 (ln 65551): Return
+10 (ln 65551): End

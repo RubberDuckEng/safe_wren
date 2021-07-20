@@ -8,47 +8,47 @@ Constants:
 06: Fn(any(_) block argument)
 07: Fn(any(_) block argument)
 Code:
-00: Load(Module, Class("List"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Call(Method, addCore_(_))
-04: Constant(1: 2)
-05: Call(Method, addCore_(_))
-06: Constant(2: 3)
-07: Call(Method, addCore_(_))
-08: Store(Module)
-09: Pop
-10: Load(Module, Class("System"))
-11: Load(Module, Null)
-12: Closure(3, [])
-13: Call(Method, any(_))
-14: Call(Method, print(_))
-15: Pop
-16: Load(Module, Class("System"))
-17: Load(Module, Null)
-18: Closure(4, [])
-19: Call(Method, any(_))
-20: Call(Method, print(_))
-21: Pop
-22: Load(Module, Class("System"))
-23: Load(Module, Class("List"))
-24: Call(Method, new())
-25: Closure(5, [])
-26: Call(Method, any(_))
-27: Call(Method, print(_))
-28: Pop
-29: Load(Module, Class("System"))
-30: Load(Module, Null)
-31: Closure(6, [])
-32: Call(Method, any(_))
-33: Call(Method, print(_))
-34: Pop
-35: Load(Module, Class("System"))
-36: Load(Module, Null)
-37: Closure(7, [])
-38: Call(Method, any(_))
-39: Call(Method, print(_))
-40: Pop
-41: EndModule
-42: Return
-43: End
+00 (ln 1): Load(Module, Class("List"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Call(Method, addCore_(_))
+04 (ln 1): Constant(1: 2)
+05 (ln 1): Call(Method, addCore_(_))
+06 (ln 1): Constant(2: 3)
+07 (ln 1): Call(Method, addCore_(_))
+08 (ln 1): Store(Module)
+09 (ln 1): Pop
+10 (ln 2): Load(Module, Class("System"))
+11 (ln 2): Load(Module, Null)
+12 (ln 2): Closure(3, [])
+13 (ln 2): Call(Method, any(_))
+14 (ln 2): Call(Method, print(_))
+15 (ln 2): Pop
+16 (ln 3): Load(Module, Class("System"))
+17 (ln 3): Load(Module, Null)
+18 (ln 3): Closure(4, [])
+19 (ln 3): Call(Method, any(_))
+20 (ln 3): Call(Method, print(_))
+21 (ln 3): Pop
+22 (ln 4): Load(Module, Class("System"))
+23 (ln 4): Load(Module, Class("List"))
+24 (ln 4): Call(Method, new())
+25 (ln 4): Closure(5, [])
+26 (ln 4): Call(Method, any(_))
+27 (ln 4): Call(Method, print(_))
+28 (ln 4): Pop
+29 (ln 7): Load(Module, Class("System"))
+30 (ln 7): Load(Module, Null)
+31 (ln 7): Closure(6, [])
+32 (ln 7): Call(Method, any(_))
+33 (ln 7): Call(Method, print(_))
+34 (ln 7): Pop
+35 (ln 10): Load(Module, Class("System"))
+36 (ln 10): Load(Module, Null)
+37 (ln 10): Closure(7, [])
+38 (ln 10): Call(Method, any(_))
+39 (ln 10): Call(Method, print(_))
+40 (ln 10): Pop
+41 (ln 11): EndModule
+42 (ln 11): Return
+43 (ln 11): End

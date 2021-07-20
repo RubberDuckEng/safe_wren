@@ -3,29 +3,29 @@ Constants:
 01: "after"
 02: "arg"
 Code:
-00: Constant(0: "before")
-01: Store(Module)
-02: Pop
-03: Load(Module, Class("System"))
-04: Load(Module, Null)
-05: Call(Method, print(_))
-06: Pop
-07: Constant(1: "after")
-08: Store(Module)
-09: Pop
-10: Load(Module, Class("System"))
-11: Load(Module, Null)
-12: Call(Method, print(_))
-13: Pop
-14: Load(Module, Class("System"))
-15: Constant(2: "arg")
-16: Store(Module)
-17: Call(Method, print(_))
-18: Pop
-19: Load(Module, Class("System"))
-20: Load(Module, Null)
-21: Call(Method, print(_))
-22: Pop
-23: EndModule
-24: Return
-25: End
+00 (ln 1): Constant(0: "before")
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 2): Load(Module, Class("System"))
+04 (ln 2): Load(Module, Null)
+05 (ln 2): Call(Method, print(_))
+06 (ln 2): Pop
+07 (ln 4): Constant(1: "after")
+08 (ln 4): Store(Module)
+09 (ln 4): Pop
+10 (ln 5): Load(Module, Class("System"))
+11 (ln 5): Load(Module, Null)
+12 (ln 5): Call(Method, print(_))
+13 (ln 5): Pop
+14 (ln 7): Load(Module, Class("System"))
+15 (ln 7): Constant(2: "arg")
+16 (ln 7): Store(Module)
+17 (ln 7): Call(Method, print(_))
+18 (ln 7): Pop
+19 (ln 8): Load(Module, Class("System"))
+20 (ln 8): Load(Module, Null)
+21 (ln 8): Call(Method, print(_))
+22 (ln 8): Pop
+23 (ln 9): EndModule
+24 (ln 9): Return
+25 (ln 9): End

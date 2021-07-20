@@ -1,26 +1,26 @@
 Constants:
 00: Fn(new(_) block argument)
 Code:
-00: Load(Module, Class("Fiber"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Null)
-07: Call(Getter, error)
-08: Call(Method, print(_))
-09: Pop
-10: Load(Module, Class("System"))
-11: Load(Module, Null)
-12: Call(Method, try())
-13: Call(Method, print(_))
-14: Pop
-15: Load(Module, Class("System"))
-16: Load(Module, Null)
-17: Call(Getter, error)
-18: Call(Method, print(_))
-19: Pop
-20: EndModule
-21: Return
-22: End
+00 (ln 1): Load(Module, Class("Fiber"))
+01 (ln 3): Closure(0, [])
+02 (ln 3): Call(Method, new(_))
+03 (ln 3): Store(Module)
+04 (ln 3): Pop
+05 (ln 5): Load(Module, Class("System"))
+06 (ln 5): Load(Module, Null)
+07 (ln 5): Call(Getter, error)
+08 (ln 5): Call(Method, print(_))
+09 (ln 5): Pop
+10 (ln 6): Load(Module, Class("System"))
+11 (ln 6): Load(Module, Null)
+12 (ln 6): Call(Method, try())
+13 (ln 6): Call(Method, print(_))
+14 (ln 6): Pop
+15 (ln 7): Load(Module, Class("System"))
+16 (ln 7): Load(Module, Null)
+17 (ln 7): Call(Getter, error)
+18 (ln 7): Call(Method, print(_))
+19 (ln 7): Pop
+20 (ln 8): EndModule
+21 (ln 8): Return
+22 (ln 8): End

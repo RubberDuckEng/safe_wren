@@ -1,18 +1,18 @@
 Constants:
 00: "Without"
 Code:
-00: Constant(0: "Without")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Null)
-07: Call(Getter, attributes)
-08: Null
-09: Call(Method, ==(_))
-10: Call(Method, print(_))
-11: Pop
-12: EndModule
-13: Return
-14: End
+00 (ln 3): Constant(0: "Without")
+01 (ln 3): Load(Module, Class("Object"))
+02 (ln 3): Class(0 fields)
+03 (ln 3): Store(Module)
+04 (ln 3): Pop
+05 (ln 4): Load(Module, Class("System"))
+06 (ln 4): Load(Module, Null)
+07 (ln 4): Call(Getter, attributes)
+08 (ln 4): Null
+09 (ln 4): Call(Method, ==(_))
+10 (ln 4): Call(Method, print(_))
+11 (ln 4): Pop
+12 (ln 5): EndModule
+13 (ln 5): Return
+14 (ln 5): End

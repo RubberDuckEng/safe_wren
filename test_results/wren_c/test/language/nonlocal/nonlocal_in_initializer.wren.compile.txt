@@ -1,14 +1,14 @@
 Constants:
 Code:
-00: Load(Module, Null)
-01: Null
-02: Call(Method, ==(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Null)
-07: Call(Method, print(_))
-08: Pop
-09: EndModule
-10: Return
-11: End
+00 (ln 1): Load(Module, Null)
+01 (ln 1): Null
+02 (ln 1): Call(Method, ==(_))
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Load(Module, Class("System"))
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Call(Method, print(_))
+08 (ln 2): Pop
+09 (ln 3): EndModule
+10 (ln 3): Return
+11 (ln 3): End

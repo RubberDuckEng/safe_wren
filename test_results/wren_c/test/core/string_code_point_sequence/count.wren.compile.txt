@@ -7,56 +7,56 @@ Constants:
 05: "søméஃthîng"
 06: "\xefok\xf7"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "")
-02: Call(Getter, codePoints)
-03: Call(Getter, count)
-04: Call(Method, print(_))
-05: Pop
-06: Load(Module, Class("System"))
-07: Constant(1: "a string")
-08: Call(Getter, codePoints)
-09: Call(Getter, count)
-10: Call(Method, print(_))
-11: Pop
-12: Load(Module, Class("System"))
-13: Constant(2: "\0")
-14: Call(Getter, codePoints)
-15: Call(Getter, count)
-16: Call(Method, print(_))
-17: Pop
-18: Load(Module, Class("System"))
-19: Constant(3: "a\0b")
-20: Call(Getter, codePoints)
-21: Call(Getter, count)
-22: Call(Method, print(_))
-23: Pop
-24: Load(Module, Class("System"))
-25: Constant(4: "\0c")
-26: Call(Getter, codePoints)
-27: Call(Getter, count)
-28: Call(Method, print(_))
-29: Pop
-30: Load(Module, Class("System"))
-31: Constant(3: "a\0b")
-32: Constant(4: "\0c")
-33: Call(Method, +(_))
-34: Call(Getter, codePoints)
-35: Call(Getter, count)
-36: Call(Method, print(_))
-37: Pop
-38: Load(Module, Class("System"))
-39: Constant(5: "søméஃthîng")
-40: Call(Getter, codePoints)
-41: Call(Getter, count)
-42: Call(Method, print(_))
-43: Pop
-44: Load(Module, Class("System"))
-45: Constant(6: "\xefok\xf7")
-46: Call(Getter, codePoints)
-47: Call(Getter, count)
-48: Call(Method, print(_))
-49: Pop
-50: EndModule
-51: Return
-52: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: "")
+02 (ln 1): Call(Getter, codePoints)
+03 (ln 1): Call(Getter, count)
+04 (ln 1): Call(Method, print(_))
+05 (ln 1): Pop
+06 (ln 2): Load(Module, Class("System"))
+07 (ln 2): Constant(1: "a string")
+08 (ln 2): Call(Getter, codePoints)
+09 (ln 2): Call(Getter, count)
+10 (ln 2): Call(Method, print(_))
+11 (ln 2): Pop
+12 (ln 5): Load(Module, Class("System"))
+13 (ln 5): Constant(2: "\0")
+14 (ln 5): Call(Getter, codePoints)
+15 (ln 5): Call(Getter, count)
+16 (ln 5): Call(Method, print(_))
+17 (ln 5): Pop
+18 (ln 6): Load(Module, Class("System"))
+19 (ln 6): Constant(3: "a\0b")
+20 (ln 6): Call(Getter, codePoints)
+21 (ln 6): Call(Getter, count)
+22 (ln 6): Call(Method, print(_))
+23 (ln 6): Pop
+24 (ln 7): Load(Module, Class("System"))
+25 (ln 7): Constant(4: "\0c")
+26 (ln 7): Call(Getter, codePoints)
+27 (ln 7): Call(Getter, count)
+28 (ln 7): Call(Method, print(_))
+29 (ln 7): Pop
+30 (ln 8): Load(Module, Class("System"))
+31 (ln 8): Constant(3: "a\0b")
+32 (ln 8): Constant(4: "\0c")
+33 (ln 8): Call(Method, +(_))
+34 (ln 8): Call(Getter, codePoints)
+35 (ln 8): Call(Getter, count)
+36 (ln 8): Call(Method, print(_))
+37 (ln 8): Pop
+38 (ln 15): Load(Module, Class("System"))
+39 (ln 15): Constant(5: "søméஃthîng")
+40 (ln 15): Call(Getter, codePoints)
+41 (ln 15): Call(Getter, count)
+42 (ln 15): Call(Method, print(_))
+43 (ln 15): Pop
+44 (ln 18): Load(Module, Class("System"))
+45 (ln 18): Constant(6: "\xefok\xf7")
+46 (ln 18): Call(Getter, codePoints)
+47 (ln 18): Call(Getter, count)
+48 (ln 18): Call(Method, print(_))
+49 (ln 18): Pop
+50 (ln 19): EndModule
+51 (ln 19): Return
+52 (ln 19): End

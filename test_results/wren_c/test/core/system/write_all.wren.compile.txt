@@ -6,45 +6,45 @@ Constants:
 04: 1
 05: "s"
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new())
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new())
-11: Closure(3, [])
-12: Load(Module, Null)
-13: Method(instance, toString)
-14: Load(Module, Class("System"))
-15: Load(Module, Class("List"))
-16: Call(Method, new())
-17: Call(Method, writeAll(_))
-18: Pop
-19: Load(Module, Class("System"))
-20: Call(Method, print())
-21: Pop
-22: Load(Module, Class("System"))
-23: Load(Module, Class("List"))
-24: Call(Method, new())
-25: Constant(4: 1)
-26: Call(Method, addCore_(_))
-27: Boolean true
-28: Call(Method, addCore_(_))
-29: Load(Module, Null)
-30: Call(Method, new())
-31: Call(Method, addCore_(_))
-32: Constant(5: "s")
-33: Call(Method, addCore_(_))
-34: Call(Method, writeAll(_))
-35: Pop
-36: Load(Module, Class("System"))
-37: Call(Method, print())
-38: Pop
-39: EndModule
-40: Return
-41: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(instance, init new())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, Null)
+10 (ln 2): Method(static, new())
+11 (ln 4): Closure(3, [])
+12 (ln 4): Load(Module, Null)
+13 (ln 4): Method(instance, toString)
+14 (ln 7): Load(Module, Class("System"))
+15 (ln 7): Load(Module, Class("List"))
+16 (ln 7): Call(Method, new())
+17 (ln 7): Call(Method, writeAll(_))
+18 (ln 7): Pop
+19 (ln 8): Load(Module, Class("System"))
+20 (ln 8): Call(Method, print())
+21 (ln 8): Pop
+22 (ln 9): Load(Module, Class("System"))
+23 (ln 9): Load(Module, Class("List"))
+24 (ln 9): Call(Method, new())
+25 (ln 9): Constant(4: 1)
+26 (ln 9): Call(Method, addCore_(_))
+27 (ln 9): Boolean true
+28 (ln 9): Call(Method, addCore_(_))
+29 (ln 9): Load(Module, Null)
+30 (ln 9): Call(Method, new())
+31 (ln 9): Call(Method, addCore_(_))
+32 (ln 9): Constant(5: "s")
+33 (ln 9): Call(Method, addCore_(_))
+34 (ln 9): Call(Method, writeAll(_))
+35 (ln 9): Pop
+36 (ln 10): Load(Module, Class("System"))
+37 (ln 10): Call(Method, print())
+38 (ln 10): Pop
+39 (ln 11): EndModule
+40 (ln 11): Return
+41 (ln 11): End

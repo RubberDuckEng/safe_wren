@@ -1,8 +1,8 @@
 Constants:
 00: "\x0"
 Code:
-00: Constant(0: "\x0")
-01: Pop
-02: EndModule
-03: Return
-04: End
+00 (ln 2): Constant(0: "\x0")
+01 (ln 2): Pop
+02 (ln 2): EndModule
+03 (ln 2): Return
+04 (ln 2): End

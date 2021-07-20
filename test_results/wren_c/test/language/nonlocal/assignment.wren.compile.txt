@@ -5,44 +5,44 @@ Constants:
 03: Fn(method)
 04: Fn(new(_) block argument)
 Code:
-00: Constant(0: "before")
-01: Store(Module)
-02: Pop
-03: Load(Module, Class("System"))
-04: Load(Module, Null)
-05: Call(Method, print(_))
-06: Pop
-07: Constant(1: "after")
-08: Store(Module)
-09: Pop
-10: Load(Module, Class("System"))
-11: Load(Module, Null)
-12: Call(Method, print(_))
-13: Pop
-14: Constant(2: "Foo")
-15: Load(Module, Class("Object"))
-16: Class(0 fields)
-17: Store(Module)
-18: Pop
-19: Closure(3, [])
-20: Load(Module, Null)
-21: Method(static, method)
-22: Load(Module, Null)
-23: Call(Getter, method)
-24: Pop
-25: Load(Module, Class("System"))
-26: Load(Module, Null)
-27: Call(Method, print(_))
-28: Pop
-29: Load(Module, Class("Fn"))
-30: Closure(4, [])
-31: Call(Method, new(_))
-32: Call(Method, call())
-33: Pop
-34: Load(Module, Class("System"))
-35: Load(Module, Null)
-36: Call(Method, print(_))
-37: Pop
-38: EndModule
-39: Return
-40: End
+00 (ln 1): Constant(0: "before")
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 2): Load(Module, Class("System"))
+04 (ln 2): Load(Module, Null)
+05 (ln 2): Call(Method, print(_))
+06 (ln 2): Pop
+07 (ln 3): Constant(1: "after")
+08 (ln 3): Store(Module)
+09 (ln 3): Pop
+10 (ln 4): Load(Module, Class("System"))
+11 (ln 4): Load(Module, Null)
+12 (ln 4): Call(Method, print(_))
+13 (ln 4): Pop
+14 (ln 6): Constant(2: "Foo")
+15 (ln 6): Load(Module, Class("Object"))
+16 (ln 6): Class(0 fields)
+17 (ln 6): Store(Module)
+18 (ln 6): Pop
+19 (ln 9): Closure(3, [])
+20 (ln 9): Load(Module, Null)
+21 (ln 9): Method(static, method)
+22 (ln 12): Load(Module, Null)
+23 (ln 12): Call(Getter, method)
+24 (ln 12): Pop
+25 (ln 13): Load(Module, Class("System"))
+26 (ln 13): Load(Module, Null)
+27 (ln 13): Call(Method, print(_))
+28 (ln 13): Pop
+29 (ln 15): Load(Module, Class("Fn"))
+30 (ln 17): Closure(4, [])
+31 (ln 17): Call(Method, new(_))
+32 (ln 17): Call(Method, call())
+33 (ln 17): Pop
+34 (ln 18): Load(Module, Class("System"))
+35 (ln 18): Load(Module, Null)
+36 (ln 18): Call(Method, print(_))
+37 (ln 18): Pop
+38 (ln 19): EndModule
+39 (ln 19): Return
+40 (ln 19): End

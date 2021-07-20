@@ -2,24 +2,24 @@ Constants:
 00: 4
 01: 6
 Code:
-00: Constant(0: 4)
-01: Store(Module)
-02: Pop
-03: Constant(1: 6)
-04: Store(Module)
-05: Pop
-06: Load(Module, Class("System"))
-07: Load(Module, Null)
-08: Load(Module, Null)
-09: Call(Method, max(_))
-10: Call(Method, print(_))
-11: Pop
-12: Load(Module, Class("System"))
-13: Load(Module, Null)
-14: Load(Module, Null)
-15: Call(Method, min(_))
-16: Call(Method, print(_))
-17: Pop
-18: EndModule
-19: Return
-20: End
+00 (ln 1): Constant(0: 4)
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 2): Constant(1: 6)
+04 (ln 2): Store(Module)
+05 (ln 2): Pop
+06 (ln 4): Load(Module, Class("System"))
+07 (ln 4): Load(Module, Null)
+08 (ln 4): Load(Module, Null)
+09 (ln 4): Call(Method, max(_))
+10 (ln 4): Call(Method, print(_))
+11 (ln 4): Pop
+12 (ln 5): Load(Module, Class("System"))
+13 (ln 5): Load(Module, Null)
+14 (ln 5): Load(Module, Null)
+15 (ln 5): Call(Method, min(_))
+16 (ln 5): Call(Method, print(_))
+17 (ln 5): Pop
+18 (ln 5): EndModule
+19 (ln 5): Return
+20 (ln 5): End

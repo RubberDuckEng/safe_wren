@@ -2,13 +2,13 @@ Constants:
 00: "string"
 01: 6
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "string")
-02: Call(Getter, codePoints)
-03: Constant(1: 6)
-04: Call(Subscript, [_])
-05: Call(Method, print(_))
-06: Pop
-07: EndModule
-08: Return
-09: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: "string")
+02 (ln 1): Call(Getter, codePoints)
+03 (ln 1): Constant(1: 6)
+04 (ln 1): Call(Subscript, [_])
+05 (ln 1): Call(Method, print(_))
+06 (ln 1): Pop
+07 (ln 2): EndModule
+08 (ln 2): Return
+09 (ln 2): End

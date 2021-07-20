@@ -1,12 +1,12 @@
 Constants:
 00: 1
 Code:
-00: Load(Module, Class("List"))
-01: Constant(0: 1)
-02: Call(Method, -)
-03: Null
-04: Call(Method, filled(_,_))
-05: Pop
-06: EndModule
-07: Return
-08: End
+00 (ln 1): Load(Module, Class("List"))
+01 (ln 1): Constant(0: 1)
+02 (ln 1): Call(Method, -)
+03 (ln 1): Null
+04 (ln 1): Call(Method, filled(_,_))
+05 (ln 1): Pop
+06 (ln 2): EndModule
+07 (ln 2): Return
+08 (ln 2): End

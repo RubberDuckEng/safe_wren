@@ -9,60 +9,60 @@ Constants:
 07: 1
 08: 4
 Code:
-00: Constant(0: "TestSequence")
-01: Load(Module, Class("Sequence"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, init new())
-08: Closure(2, [])
-09: Load(Module, Null)
-10: Method(static, new())
-11: Closure(3, [])
-12: Load(Module, Null)
-13: Method(instance, iterate(_))
-14: Closure(4, [])
-15: Load(Module, Null)
-16: Method(instance, iteratorValue(_))
-17: Load(Module, Null)
-18: Call(Method, new())
-19: Constant(5: 3)
-20: Call(Method, take(_))
-21: Store(Module)
-22: Pop
-23: Load(Module, Class("System"))
-24: Load(Module, Null)
-25: Load(Module, Class("Sequence"))
-26: Call(Method, is(_))
-27: Call(Method, print(_))
-28: Pop
-29: Load(Module, Class("System"))
-30: Load(Module, Null)
-31: Call(Method, print(_))
-32: Pop
-33: Load(Module, Class("System"))
-34: Load(Module, Null)
-35: Constant(6: 0)
-36: Call(Method, take(_))
-37: Call(Getter, isEmpty)
-38: Call(Method, print(_))
-39: Pop
-40: Load(Module, Class("System"))
-41: Load(Module, Null)
-42: Constant(7: 1)
-43: Call(Method, take(_))
-44: Call(Getter, toList)
-45: Call(Method, print(_))
-46: Pop
-47: Load(Module, Class("System"))
-48: Load(Module, Null)
-49: Constant(8: 4)
-50: Call(Method, take(_))
-51: Call(Getter, toList)
-52: Call(Method, print(_))
-53: Pop
-54: EndModule
-55: Return
-56: End
+00 (ln 1): Constant(0: "TestSequence")
+01 (ln 1): Load(Module, Class("Sequence"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(instance, init new())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, Null)
+10 (ln 2): Method(static, new())
+11 (ln 8): Closure(3, [])
+12 (ln 8): Load(Module, Null)
+13 (ln 8): Method(instance, iterate(_))
+14 (ln 10): Closure(4, [])
+15 (ln 10): Load(Module, Null)
+16 (ln 10): Method(instance, iteratorValue(_))
+17 (ln 13): Load(Module, Null)
+18 (ln 13): Call(Method, new())
+19 (ln 13): Constant(5: 3)
+20 (ln 13): Call(Method, take(_))
+21 (ln 13): Store(Module)
+22 (ln 13): Pop
+23 (ln 15): Load(Module, Class("System"))
+24 (ln 15): Load(Module, Null)
+25 (ln 15): Load(Module, Class("Sequence"))
+26 (ln 15): Call(Method, is(_))
+27 (ln 15): Call(Method, print(_))
+28 (ln 15): Pop
+29 (ln 16): Load(Module, Class("System"))
+30 (ln 16): Load(Module, Null)
+31 (ln 16): Call(Method, print(_))
+32 (ln 16): Pop
+33 (ln 19): Load(Module, Class("System"))
+34 (ln 19): Load(Module, Null)
+35 (ln 19): Constant(6: 0)
+36 (ln 19): Call(Method, take(_))
+37 (ln 19): Call(Getter, isEmpty)
+38 (ln 19): Call(Method, print(_))
+39 (ln 19): Pop
+40 (ln 22): Load(Module, Class("System"))
+41 (ln 22): Load(Module, Null)
+42 (ln 22): Constant(7: 1)
+43 (ln 22): Call(Method, take(_))
+44 (ln 22): Call(Getter, toList)
+45 (ln 22): Call(Method, print(_))
+46 (ln 22): Pop
+47 (ln 25): Load(Module, Class("System"))
+48 (ln 25): Load(Module, Null)
+49 (ln 25): Constant(8: 4)
+50 (ln 25): Call(Method, take(_))
+51 (ln 25): Call(Getter, toList)
+52 (ln 25): Call(Method, print(_))
+53 (ln 25): Pop
+54 (ln 26): EndModule
+55 (ln 26): Return
+56 (ln 26): End

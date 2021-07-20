@@ -5,36 +5,36 @@ Constants:
 03: Fn(where(_) block argument)
 04: Fn(where(_) block argument)
 Code:
-00: Load(Module, Class("List"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Call(Method, addCore_(_))
-04: Constant(1: 2)
-05: Call(Method, addCore_(_))
-06: Constant(2: 3)
-07: Call(Method, addCore_(_))
-08: Store(Module)
-09: Pop
-10: Load(Module, Null)
-11: Closure(3, [])
-12: Call(Method, where(_))
-13: Call(Getter, toList)
-14: Store(Module)
-15: Pop
-16: Load(Module, Class("System"))
-17: Load(Module, Null)
-18: Call(Method, print(_))
-19: Pop
-20: Load(Module, Null)
-21: Closure(4, [])
-22: Call(Method, where(_))
-23: Call(Getter, toList)
-24: Store(Module)
-25: Pop
-26: Load(Module, Class("System"))
-27: Load(Module, Null)
-28: Call(Method, print(_))
-29: Pop
-30: EndModule
-31: Return
-32: End
+00 (ln 1): Load(Module, Class("List"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Call(Method, addCore_(_))
+04 (ln 1): Constant(1: 2)
+05 (ln 1): Call(Method, addCore_(_))
+06 (ln 1): Constant(2: 3)
+07 (ln 1): Call(Method, addCore_(_))
+08 (ln 1): Store(Module)
+09 (ln 1): Pop
+10 (ln 2): Load(Module, Null)
+11 (ln 2): Closure(3, [])
+12 (ln 2): Call(Method, where(_))
+13 (ln 2): Call(Getter, toList)
+14 (ln 2): Store(Module)
+15 (ln 2): Pop
+16 (ln 3): Load(Module, Class("System"))
+17 (ln 3): Load(Module, Null)
+18 (ln 3): Call(Method, print(_))
+19 (ln 3): Pop
+20 (ln 5): Load(Module, Null)
+21 (ln 5): Closure(4, [])
+22 (ln 5): Call(Method, where(_))
+23 (ln 5): Call(Getter, toList)
+24 (ln 5): Store(Module)
+25 (ln 5): Pop
+26 (ln 6): Load(Module, Class("System"))
+27 (ln 6): Load(Module, Null)
+28 (ln 6): Call(Method, print(_))
+29 (ln 6): Pop
+30 (ln 7): EndModule
+31 (ln 7): Return
+32 (ln 7): End

@@ -3,21 +3,21 @@ Constants:
 01: "value"
 02: "after try"
 Code:
-00: Load(Module, Class("Fiber"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("System"))
-06: Load(Module, Null)
-07: Constant(1: "value")
-08: Call(Method, try(_))
-09: Call(Method, print(_))
-10: Pop
-11: Load(Module, Class("System"))
-12: Constant(2: "after try")
-13: Call(Method, print(_))
-14: Pop
-15: EndModule
-16: Return
-17: End
+00 (ln 1): Load(Module, Class("Fiber"))
+01 (ln 6): Closure(0, [])
+02 (ln 6): Call(Method, new(_))
+03 (ln 6): Store(Module)
+04 (ln 6): Pop
+05 (ln 8): Load(Module, Class("System"))
+06 (ln 8): Load(Module, Null)
+07 (ln 8): Constant(1: "value")
+08 (ln 8): Call(Method, try(_))
+09 (ln 8): Call(Method, print(_))
+10 (ln 8): Pop
+11 (ln 12): Load(Module, Class("System"))
+12 (ln 12): Constant(2: "after try")
+13 (ln 12): Call(Method, print(_))
+14 (ln 12): Pop
+15 (ln 13): EndModule
+16 (ln 13): Return
+17 (ln 13): End

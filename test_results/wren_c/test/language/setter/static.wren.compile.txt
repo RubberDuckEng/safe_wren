@@ -3,18 +3,18 @@ Constants:
 01: Fn(bar=_)
 02: "value"
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(static, bar=_)
-08: Load(Module, Null)
-09: Constant(2: "value")
-10: Call(Setter, bar=_)
-11: Pop
-12: EndModule
-13: Return
-14: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 4): Closure(1, [])
+06 (ln 4): Load(Module, Null)
+07 (ln 4): Method(static, bar=_)
+08 (ln 7): Load(Module, Null)
+09 (ln 7): Constant(2: "value")
+10 (ln 7): Call(Setter, bar=_)
+11 (ln 7): Pop
+12 (ln 8): EndModule
+13 (ln 8): Return
+14 (ln 8): End

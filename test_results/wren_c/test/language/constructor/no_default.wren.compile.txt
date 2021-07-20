@@ -1,15 +1,15 @@
 Constants:
 00: "Foo"
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Call(Method, new())
-07: Store(Module)
-08: Pop
-09: EndModule
-10: Return
-11: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 4): Load(Module, Null)
+06 (ln 4): Call(Method, new())
+07 (ln 4): Store(Module)
+08 (ln 4): Pop
+09 (ln 5): EndModule
+10 (ln 5): Return
+11 (ln 5): End

@@ -2,11 +2,11 @@ Constants:
 00: "123"
 01: 5
 Code:
-00: Constant(0: "123")
-01: Constant(1: 5)
-02: Call(Method, -)
-03: Call(Method, iteratorValue(_))
-04: Pop
-05: EndModule
-06: Return
-07: End
+00 (ln 1): Constant(0: "123")
+01 (ln 1): Constant(1: 5)
+02 (ln 1): Call(Method, -)
+03 (ln 1): Call(Method, iteratorValue(_))
+04 (ln 1): Pop
+05 (ln 2): EndModule
+06 (ln 2): Return
+07 (ln 2): End

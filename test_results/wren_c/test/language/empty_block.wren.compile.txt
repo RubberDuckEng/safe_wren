@@ -1,15 +1,15 @@
 Constants:
 00: "ok"
 Code:
-00: Boolean true
-01: JumpIfFalse(0)
-02: Boolean false
-03: JumpIfFalse(1)
-04: Jump(0)
-05: Load(Module, Class("System"))
-06: Constant(0: "ok")
-07: Call(Method, print(_))
-08: Pop
-09: EndModule
-10: Return
-11: End
+00 (ln 4): Boolean true
+01 (ln 4): JumpIfFalse(0)
+02 (ln 5): Boolean false
+03 (ln 5): JumpIfFalse(1)
+04 (ln 5): Jump(0)
+05 (ln 7): Load(Module, Class("System"))
+06 (ln 7): Constant(0: "ok")
+07 (ln 7): Call(Method, print(_))
+08 (ln 7): Pop
+09 (ln 7): EndModule
+10 (ln 7): Return
+11 (ln 7): End

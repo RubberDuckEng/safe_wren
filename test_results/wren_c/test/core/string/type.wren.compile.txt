@@ -1,31 +1,31 @@
 Constants:
 00: "s"
 Code:
-00: Load(Module, Class("System"))
-01: Constant(0: "s")
-02: Load(Module, Class("String"))
-03: Call(Method, is(_))
-04: Call(Method, print(_))
-05: Pop
-06: Load(Module, Class("System"))
-07: Constant(0: "s")
-08: Load(Module, Class("Object"))
-09: Call(Method, is(_))
-10: Call(Method, print(_))
-11: Pop
-12: Load(Module, Class("System"))
-13: Constant(0: "s")
-14: Load(Module, Class("Num"))
-15: Call(Method, is(_))
-16: Call(Method, print(_))
-17: Pop
-18: Load(Module, Class("System"))
-19: Constant(0: "s")
-20: Call(Getter, type)
-21: Load(Module, Class("String"))
-22: Call(Method, ==(_))
-23: Call(Method, print(_))
-24: Pop
-25: EndModule
-26: Return
-27: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Constant(0: "s")
+02 (ln 1): Load(Module, Class("String"))
+03 (ln 1): Call(Method, is(_))
+04 (ln 1): Call(Method, print(_))
+05 (ln 1): Pop
+06 (ln 2): Load(Module, Class("System"))
+07 (ln 2): Constant(0: "s")
+08 (ln 2): Load(Module, Class("Object"))
+09 (ln 2): Call(Method, is(_))
+10 (ln 2): Call(Method, print(_))
+11 (ln 2): Pop
+12 (ln 3): Load(Module, Class("System"))
+13 (ln 3): Constant(0: "s")
+14 (ln 3): Load(Module, Class("Num"))
+15 (ln 3): Call(Method, is(_))
+16 (ln 3): Call(Method, print(_))
+17 (ln 3): Pop
+18 (ln 4): Load(Module, Class("System"))
+19 (ln 4): Constant(0: "s")
+20 (ln 4): Call(Getter, type)
+21 (ln 4): Load(Module, Class("String"))
+22 (ln 4): Call(Method, ==(_))
+23 (ln 4): Call(Method, print(_))
+24 (ln 4): Pop
+25 (ln 5): EndModule
+26 (ln 5): Return
+27 (ln 5): End

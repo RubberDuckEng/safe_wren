@@ -1,41 +1,41 @@
 Constants:
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("List"))
-02: Call(Method, new())
-03: Load(Module, Class("List"))
-04: Call(Method, is(_))
-05: Call(Method, print(_))
-06: Pop
-07: Load(Module, Class("System"))
-08: Load(Module, Class("List"))
-09: Call(Method, new())
-10: Load(Module, Class("Sequence"))
-11: Call(Method, is(_))
-12: Call(Method, print(_))
-13: Pop
-14: Load(Module, Class("System"))
-15: Load(Module, Class("List"))
-16: Call(Method, new())
-17: Load(Module, Class("Object"))
-18: Call(Method, is(_))
-19: Call(Method, print(_))
-20: Pop
-21: Load(Module, Class("System"))
-22: Load(Module, Class("List"))
-23: Call(Method, new())
-24: Load(Module, Class("Bool"))
-25: Call(Method, is(_))
-26: Call(Method, print(_))
-27: Pop
-28: Load(Module, Class("System"))
-29: Load(Module, Class("List"))
-30: Call(Method, new())
-31: Call(Getter, type)
-32: Load(Module, Class("List"))
-33: Call(Method, ==(_))
-34: Call(Method, print(_))
-35: Pop
-36: EndModule
-37: Return
-38: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("List"))
+02 (ln 1): Call(Method, new())
+03 (ln 1): Load(Module, Class("List"))
+04 (ln 1): Call(Method, is(_))
+05 (ln 1): Call(Method, print(_))
+06 (ln 1): Pop
+07 (ln 2): Load(Module, Class("System"))
+08 (ln 2): Load(Module, Class("List"))
+09 (ln 2): Call(Method, new())
+10 (ln 2): Load(Module, Class("Sequence"))
+11 (ln 2): Call(Method, is(_))
+12 (ln 2): Call(Method, print(_))
+13 (ln 2): Pop
+14 (ln 3): Load(Module, Class("System"))
+15 (ln 3): Load(Module, Class("List"))
+16 (ln 3): Call(Method, new())
+17 (ln 3): Load(Module, Class("Object"))
+18 (ln 3): Call(Method, is(_))
+19 (ln 3): Call(Method, print(_))
+20 (ln 3): Pop
+21 (ln 4): Load(Module, Class("System"))
+22 (ln 4): Load(Module, Class("List"))
+23 (ln 4): Call(Method, new())
+24 (ln 4): Load(Module, Class("Bool"))
+25 (ln 4): Call(Method, is(_))
+26 (ln 4): Call(Method, print(_))
+27 (ln 4): Pop
+28 (ln 5): Load(Module, Class("System"))
+29 (ln 5): Load(Module, Class("List"))
+30 (ln 5): Call(Method, new())
+31 (ln 5): Call(Getter, type)
+32 (ln 5): Load(Module, Class("List"))
+33 (ln 5): Call(Method, ==(_))
+34 (ln 5): Call(Method, print(_))
+35 (ln 5): Pop
+36 (ln 6): EndModule
+37 (ln 6): Return
+38 (ln 6): End

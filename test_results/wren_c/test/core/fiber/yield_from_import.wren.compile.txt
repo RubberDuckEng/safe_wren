@@ -3,25 +3,25 @@ Constants:
 01: "main 1"
 02: "main 2"
 Code:
-00: Load(Module, Class("Fiber"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Call(Method, call())
-07: Pop
-08: Load(Module, Class("System"))
-09: Constant(1: "main 1")
-10: Call(Method, print(_))
-11: Pop
-12: Load(Module, Null)
-13: Call(Method, call())
-14: Pop
-15: Load(Module, Class("System"))
-16: Constant(2: "main 2")
-17: Call(Method, print(_))
-18: Pop
-19: EndModule
-20: Return
-21: End
+00 (ln 1): Load(Module, Class("Fiber"))
+01 (ln 7): Closure(0, [])
+02 (ln 7): Call(Method, new(_))
+03 (ln 7): Store(Module)
+04 (ln 7): Pop
+05 (ln 9): Load(Module, Null)
+06 (ln 9): Call(Method, call())
+07 (ln 9): Pop
+08 (ln 11): Load(Module, Class("System"))
+09 (ln 11): Constant(1: "main 1")
+10 (ln 11): Call(Method, print(_))
+11 (ln 11): Pop
+12 (ln 12): Load(Module, Null)
+13 (ln 12): Call(Method, call())
+14 (ln 12): Pop
+15 (ln 14): Load(Module, Class("System"))
+16 (ln 14): Constant(2: "main 2")
+17 (ln 14): Call(Method, print(_))
+18 (ln 14): Pop
+19 (ln 15): EndModule
+20 (ln 15): Return
+21 (ln 15): End

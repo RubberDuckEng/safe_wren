@@ -7,37 +7,37 @@ Constants:
 05: Fn()
 06: Fn(foo)
 Code:
-00: Constant(0: "A")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(instance, foo)
-08: Constant(2: "B")
-09: Load(Module, Null)
-10: Class(0 fields)
-11: Store(Module)
-12: Pop
-13: Constant(3: "C")
-14: Load(Module, Null)
-15: Class(0 fields)
-16: Store(Module)
-17: Pop
-18: Closure(4, [])
-19: Load(Module, Null)
-20: Method(instance, init new())
-21: Closure(5, [])
-22: Load(Module, Null)
-23: Method(static, new())
-24: Closure(6, [])
-25: Load(Module, Null)
-26: Method(instance, foo)
-27: Load(Module, Null)
-28: Call(Method, new())
-29: Call(Getter, foo)
-30: Pop
-31: EndModule
-32: Return
-33: End
+00 (ln 1): Constant(0: "A")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 4): Closure(1, [])
+06 (ln 4): Load(Module, Null)
+07 (ln 4): Method(instance, foo)
+08 (ln 7): Constant(2: "B")
+09 (ln 7): Load(Module, Null)
+10 (ln 7): Class(0 fields)
+11 (ln 7): Store(Module)
+12 (ln 7): Pop
+13 (ln 9): Constant(3: "C")
+14 (ln 9): Load(Module, Null)
+15 (ln 9): Class(0 fields)
+16 (ln 9): Store(Module)
+17 (ln 9): Pop
+18 (ln 10): Closure(4, [])
+19 (ln 10): Load(Module, Null)
+20 (ln 10): Method(instance, init new())
+21 (ln 10): Closure(5, [])
+22 (ln 10): Load(Module, Null)
+23 (ln 10): Method(static, new())
+24 (ln 15): Closure(6, [])
+25 (ln 15): Load(Module, Null)
+26 (ln 15): Method(instance, foo)
+27 (ln 18): Load(Module, Null)
+28 (ln 18): Call(Method, new())
+29 (ln 18): Call(Getter, foo)
+30 (ln 18): Pop
+31 (ln 21): EndModule
+32 (ln 21): Return
+33 (ln 21): End

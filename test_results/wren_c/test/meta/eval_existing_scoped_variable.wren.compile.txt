@@ -1,22 +1,22 @@
 Constants:
 00: "y = 2"
 Code:
-00: ImportModule("meta")
-01: Pop
-02: ImportVariable("Meta")
-03: Store(Module)
-04: Pop
-05: Null
-06: Store(Module)
-07: Pop
-08: Load(Module, Null)
-09: Constant(0: "y = 2")
-10: Call(Method, eval(_))
-11: Pop
-12: Load(Module, Class("System"))
-13: Load(Module, Null)
-14: Call(Method, print(_))
-15: Pop
-16: EndModule
-17: Return
-18: End
+00 (ln 1): ImportModule("meta")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Meta")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Null
+06 (ln 3): Store(Module)
+07 (ln 3): Pop
+08 (ln 5): Load(Module, Null)
+09 (ln 5): Constant(0: "y = 2")
+10 (ln 5): Call(Method, eval(_))
+11 (ln 5): Pop
+12 (ln 7): Load(Module, Class("System"))
+13 (ln 7): Load(Module, Null)
+14 (ln 7): Call(Method, print(_))
+15 (ln 7): Pop
+16 (ln 7): EndModule
+17 (ln 7): Return
+18 (ln 7): End

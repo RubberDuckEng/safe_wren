@@ -3,17 +3,17 @@ Constants:
 01: "one"
 02: "2"
 Code:
-00: Load(Module, Class("Map"))
-01: Call(Method, new())
-02: Constant(0: 1)
-03: Constant(1: "one")
-04: Call(Method, addCore_(_,_))
-05: Store(Module)
-06: Pop
-07: Load(Module, Null)
-08: Constant(2: "2")
-09: Call(Method, iteratorValue(_))
-10: Pop
-11: EndModule
-12: Return
-13: End
+00 (ln 1): Load(Module, Class("Map"))
+01 (ln 1): Call(Method, new())
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Constant(1: "one")
+04 (ln 1): Call(Method, addCore_(_,_))
+05 (ln 1): Store(Module)
+06 (ln 1): Pop
+07 (ln 2): Load(Module, Null)
+08 (ln 2): Constant(2: "2")
+09 (ln 2): Call(Method, iteratorValue(_))
+10 (ln 2): Pop
+11 (ln 3): EndModule
+12 (ln 3): Return
+13 (ln 3): End

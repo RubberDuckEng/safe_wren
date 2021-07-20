@@ -1,23 +1,23 @@
 Constants:
 00: "outer"
 Code:
-00: Constant(0: "outer")
-01: Store(Module)
-02: Pop
-03: Boolean true
-04: JumpIfFalse(8)
-05: ImportModule("./module")
-06: Pop
-07: ImportVariable("Module")
-08: Load(Module, Class("System"))
-09: Load(Local, 1)
-10: Call(Method, print(_))
-11: Pop
-12: Pop
-13: Load(Module, Class("System"))
-14: Load(Module, Null)
-15: Call(Method, print(_))
-16: Pop
-17: EndModule
-18: Return
-19: End
+00 (ln 1): Constant(0: "outer")
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 3): Boolean true
+04 (ln 3): JumpIfFalse(8)
+05 (ln 4): ImportModule("./module")
+06 (ln 4): Pop
+07 (ln 4): ImportVariable("Module")
+08 (ln 7): Load(Module, Class("System"))
+09 (ln 7): Load(Local, 1)
+10 (ln 7): Call(Method, print(_))
+11 (ln 7): Pop
+12 (ln 8): Pop
+13 (ln 10): Load(Module, Class("System"))
+14 (ln 10): Load(Module, Null)
+15 (ln 10): Call(Method, print(_))
+16 (ln 10): Pop
+17 (ln 11): EndModule
+18 (ln 11): Return
+19 (ln 11): End

@@ -1,11 +1,11 @@
 Constants:
 Code:
-00: Boolean true
-01: JumpIfFalse(2)
-02: Jump(1)
-03: Loop(4)
-04: Boolean false
-05: Pop
-06: EndModule
-07: Return
-08: End
+00 (ln 1): Boolean true
+01 (ln 1): JumpIfFalse(2)
+02 (ln 2): Jump(1)
+03 (ln 3): Loop(4)
+04 (ln 4): Boolean false
+05 (ln 4): Pop
+06 (ln 4): EndModule
+07 (ln 4): Return
+08 (ln 4): End

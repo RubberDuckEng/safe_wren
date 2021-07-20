@@ -1,17 +1,17 @@
 Constants:
 00: Fn(new(_) block argument)
 Code:
-00: Null
-01: Store(Module)
-02: Pop
-03: Load(Module, Class("Fiber"))
-04: Closure(0, [])
-05: Call(Method, new(_))
-06: Store(Module)
-07: Pop
-08: Load(Module, Null)
-09: Call(Method, call())
-10: Pop
-11: EndModule
-12: Return
-13: End
+00 (ln 1): Null
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 3): Load(Module, Class("Fiber"))
+04 (ln 5): Closure(0, [])
+05 (ln 5): Call(Method, new(_))
+06 (ln 5): Store(Module)
+07 (ln 5): Pop
+08 (ln 7): Load(Module, Null)
+09 (ln 7): Call(Method, call())
+10 (ln 7): Pop
+11 (ln 8): EndModule
+12 (ln 8): Return
+13 (ln 8): End

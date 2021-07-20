@@ -1,15 +1,15 @@
 Constants:
 00: 123
 Code:
-00: ImportModule("meta")
-01: Pop
-02: ImportVariable("Meta")
-03: Store(Module)
-04: Pop
-05: Load(Module, Null)
-06: Constant(0: 123)
-07: Call(Method, getModuleVariables(_))
-08: Pop
-09: EndModule
-10: Return
-11: End
+00 (ln 1): ImportModule("meta")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Meta")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Load(Module, Null)
+06 (ln 3): Constant(0: 123)
+07 (ln 3): Call(Method, getModuleVariables(_))
+08 (ln 3): Pop
+09 (ln 4): EndModule
+10 (ln 4): Return
+11 (ln 4): End

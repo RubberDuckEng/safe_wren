@@ -15,89 +15,89 @@ Constants:
 13: "prefix1.2"
 14: "1.2suffix"
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("Num"))
-02: Constant(0: "123")
-03: Call(Method, fromString(_))
-04: Constant(1: 123)
-05: Call(Method, ==(_))
-06: Call(Method, print(_))
-07: Pop
-08: Load(Module, Class("System"))
-09: Load(Module, Class("Num"))
-10: Constant(2: "-123")
-11: Call(Method, fromString(_))
-12: Constant(1: 123)
-13: Call(Method, -)
-14: Call(Method, ==(_))
-15: Call(Method, print(_))
-16: Pop
-17: Load(Module, Class("System"))
-18: Load(Module, Class("Num"))
-19: Constant(3: "-0")
-20: Call(Method, fromString(_))
-21: Constant(4: 0)
-22: Call(Method, -)
-23: Call(Method, ==(_))
-24: Call(Method, print(_))
-25: Pop
-26: Load(Module, Class("System"))
-27: Load(Module, Class("Num"))
-28: Constant(5: "12.34")
-29: Call(Method, fromString(_))
-30: Constant(6: 12.34)
-31: Call(Method, ==(_))
-32: Call(Method, print(_))
-33: Pop
-34: Load(Module, Class("System"))
-35: Load(Module, Class("Num"))
-36: Constant(7: "-0.0001")
-37: Call(Method, fromString(_))
-38: Constant(8: 0.0001)
-39: Call(Method, -)
-40: Call(Method, ==(_))
-41: Call(Method, print(_))
-42: Pop
-43: Load(Module, Class("System"))
-44: Load(Module, Class("Num"))
-45: Constant(9: " 12 ")
-46: Call(Method, fromString(_))
-47: Constant(10: 12)
-48: Call(Method, ==(_))
-49: Call(Method, print(_))
-50: Pop
-51: Load(Module, Class("System"))
-52: Load(Module, Class("Num"))
-53: Constant(11: "test1")
-54: Call(Method, fromString(_))
-55: Null
-56: Call(Method, ==(_))
-57: Call(Method, print(_))
-58: Pop
-59: Load(Module, Class("System"))
-60: Load(Module, Class("Num"))
-61: Constant(12: "")
-62: Call(Method, fromString(_))
-63: Null
-64: Call(Method, ==(_))
-65: Call(Method, print(_))
-66: Pop
-67: Load(Module, Class("System"))
-68: Load(Module, Class("Num"))
-69: Constant(13: "prefix1.2")
-70: Call(Method, fromString(_))
-71: Null
-72: Call(Method, ==(_))
-73: Call(Method, print(_))
-74: Pop
-75: Load(Module, Class("System"))
-76: Load(Module, Class("Num"))
-77: Constant(14: "1.2suffix")
-78: Call(Method, fromString(_))
-79: Null
-80: Call(Method, ==(_))
-81: Call(Method, print(_))
-82: Pop
-83: EndModule
-84: Return
-85: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("Num"))
+02 (ln 1): Constant(0: "123")
+03 (ln 1): Call(Method, fromString(_))
+04 (ln 1): Constant(1: 123)
+05 (ln 1): Call(Method, ==(_))
+06 (ln 1): Call(Method, print(_))
+07 (ln 1): Pop
+08 (ln 2): Load(Module, Class("System"))
+09 (ln 2): Load(Module, Class("Num"))
+10 (ln 2): Constant(2: "-123")
+11 (ln 2): Call(Method, fromString(_))
+12 (ln 2): Constant(1: 123)
+13 (ln 2): Call(Method, -)
+14 (ln 2): Call(Method, ==(_))
+15 (ln 2): Call(Method, print(_))
+16 (ln 2): Pop
+17 (ln 3): Load(Module, Class("System"))
+18 (ln 3): Load(Module, Class("Num"))
+19 (ln 3): Constant(3: "-0")
+20 (ln 3): Call(Method, fromString(_))
+21 (ln 3): Constant(4: 0)
+22 (ln 3): Call(Method, -)
+23 (ln 3): Call(Method, ==(_))
+24 (ln 3): Call(Method, print(_))
+25 (ln 3): Pop
+26 (ln 4): Load(Module, Class("System"))
+27 (ln 4): Load(Module, Class("Num"))
+28 (ln 4): Constant(5: "12.34")
+29 (ln 4): Call(Method, fromString(_))
+30 (ln 4): Constant(6: 12.34)
+31 (ln 4): Call(Method, ==(_))
+32 (ln 4): Call(Method, print(_))
+33 (ln 4): Pop
+34 (ln 5): Load(Module, Class("System"))
+35 (ln 5): Load(Module, Class("Num"))
+36 (ln 5): Constant(7: "-0.0001")
+37 (ln 5): Call(Method, fromString(_))
+38 (ln 5): Constant(8: 0.0001)
+39 (ln 5): Call(Method, -)
+40 (ln 5): Call(Method, ==(_))
+41 (ln 5): Call(Method, print(_))
+42 (ln 5): Pop
+43 (ln 6): Load(Module, Class("System"))
+44 (ln 6): Load(Module, Class("Num"))
+45 (ln 6): Constant(9: " 12 ")
+46 (ln 6): Call(Method, fromString(_))
+47 (ln 6): Constant(10: 12)
+48 (ln 6): Call(Method, ==(_))
+49 (ln 6): Call(Method, print(_))
+50 (ln 6): Pop
+51 (ln 9): Load(Module, Class("System"))
+52 (ln 9): Load(Module, Class("Num"))
+53 (ln 9): Constant(11: "test1")
+54 (ln 9): Call(Method, fromString(_))
+55 (ln 9): Null
+56 (ln 9): Call(Method, ==(_))
+57 (ln 9): Call(Method, print(_))
+58 (ln 9): Pop
+59 (ln 10): Load(Module, Class("System"))
+60 (ln 10): Load(Module, Class("Num"))
+61 (ln 10): Constant(12: "")
+62 (ln 10): Call(Method, fromString(_))
+63 (ln 10): Null
+64 (ln 10): Call(Method, ==(_))
+65 (ln 10): Call(Method, print(_))
+66 (ln 10): Pop
+67 (ln 11): Load(Module, Class("System"))
+68 (ln 11): Load(Module, Class("Num"))
+69 (ln 11): Constant(13: "prefix1.2")
+70 (ln 11): Call(Method, fromString(_))
+71 (ln 11): Null
+72 (ln 11): Call(Method, ==(_))
+73 (ln 11): Call(Method, print(_))
+74 (ln 11): Pop
+75 (ln 12): Load(Module, Class("System"))
+76 (ln 12): Load(Module, Class("Num"))
+77 (ln 12): Constant(14: "1.2suffix")
+78 (ln 12): Call(Method, fromString(_))
+79 (ln 12): Null
+80 (ln 12): Call(Method, ==(_))
+81 (ln 12): Call(Method, print(_))
+82 (ln 12): Pop
+83 (ln 15): EndModule
+84 (ln 15): Return
+85 (ln 15): End

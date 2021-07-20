@@ -1,13 +1,13 @@
 Constants:
 00: 1
 Code:
-00: Load(Module, Class("System"))
-01: Load(Module, Class("String"))
-02: Constant(0: 1)
-03: Call(Method, -)
-04: Call(Method, fromCodePoint(_))
-05: Call(Method, print(_))
-06: Pop
-07: EndModule
-08: Return
-09: End
+00 (ln 1): Load(Module, Class("System"))
+01 (ln 1): Load(Module, Class("String"))
+02 (ln 1): Constant(0: 1)
+03 (ln 1): Call(Method, -)
+04 (ln 1): Call(Method, fromCodePoint(_))
+05 (ln 1): Call(Method, print(_))
+06 (ln 1): Pop
+07 (ln 2): EndModule
+08 (ln 2): Return
+09 (ln 2): End

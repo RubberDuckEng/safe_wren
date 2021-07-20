@@ -6,63 +6,63 @@ Constants:
 04: Fn(new(_) block argument)
 05: "after"
 Code:
-00: Load(Module, Class("Fiber"))
-01: Closure(0, [])
-02: Call(Method, new(_))
-03: Store(Module)
-04: Pop
-05: Load(Module, Class("Fiber"))
-06: Closure(1, [])
-07: Call(Method, new(_))
-08: Store(Module)
-09: Pop
-10: Load(Module, Class("Fiber"))
-11: Closure(2, [])
-12: Call(Method, new(_))
-13: Store(Module)
-14: Pop
-15: Load(Module, Class("Fiber"))
-16: Closure(3, [])
-17: Call(Method, new(_))
-18: Store(Module)
-19: Pop
-20: Load(Module, Class("Fiber"))
-21: Closure(4, [])
-22: Call(Method, new(_))
-23: Store(Module)
-24: Pop
-25: Load(Module, Null)
-26: Call(Method, call())
-27: Pop
-28: Load(Module, Class("System"))
-29: Constant(5: "after")
-30: Call(Method, print(_))
-31: Pop
-32: Load(Module, Class("System"))
-33: Load(Module, Null)
-34: Call(Getter, error)
-35: Call(Method, print(_))
-36: Pop
-37: Load(Module, Class("System"))
-38: Load(Module, Null)
-39: Call(Getter, error)
-40: Call(Method, print(_))
-41: Pop
-42: Load(Module, Class("System"))
-43: Load(Module, Null)
-44: Call(Getter, error)
-45: Call(Method, print(_))
-46: Pop
-47: Load(Module, Class("System"))
-48: Load(Module, Null)
-49: Call(Getter, error)
-50: Call(Method, print(_))
-51: Pop
-52: Load(Module, Class("System"))
-53: Load(Module, Null)
-54: Call(Getter, error)
-55: Call(Method, print(_))
-56: Pop
-57: EndModule
-58: Return
-59: End
+00 (ln 4): Load(Module, Class("Fiber"))
+01 (ln 8): Closure(0, [])
+02 (ln 8): Call(Method, new(_))
+03 (ln 8): Store(Module)
+04 (ln 8): Pop
+05 (ln 10): Load(Module, Class("Fiber"))
+06 (ln 14): Closure(1, [])
+07 (ln 14): Call(Method, new(_))
+08 (ln 14): Store(Module)
+09 (ln 14): Pop
+10 (ln 16): Load(Module, Class("Fiber"))
+11 (ln 20): Closure(2, [])
+12 (ln 20): Call(Method, new(_))
+13 (ln 20): Store(Module)
+14 (ln 20): Pop
+15 (ln 22): Load(Module, Class("Fiber"))
+16 (ln 26): Closure(3, [])
+17 (ln 26): Call(Method, new(_))
+18 (ln 26): Store(Module)
+19 (ln 26): Pop
+20 (ln 28): Load(Module, Class("Fiber"))
+21 (ln 32): Closure(4, [])
+22 (ln 32): Call(Method, new(_))
+23 (ln 32): Store(Module)
+24 (ln 32): Pop
+25 (ln 34): Load(Module, Null)
+26 (ln 34): Call(Method, call())
+27 (ln 34): Pop
+28 (ln 42): Load(Module, Class("System"))
+29 (ln 42): Constant(5: "after")
+30 (ln 42): Call(Method, print(_))
+31 (ln 42): Pop
+32 (ln 45): Load(Module, Class("System"))
+33 (ln 45): Load(Module, Null)
+34 (ln 45): Call(Getter, error)
+35 (ln 45): Call(Method, print(_))
+36 (ln 45): Pop
+37 (ln 46): Load(Module, Class("System"))
+38 (ln 46): Load(Module, Null)
+39 (ln 46): Call(Getter, error)
+40 (ln 46): Call(Method, print(_))
+41 (ln 46): Pop
+42 (ln 47): Load(Module, Class("System"))
+43 (ln 47): Load(Module, Null)
+44 (ln 47): Call(Getter, error)
+45 (ln 47): Call(Method, print(_))
+46 (ln 47): Pop
+47 (ln 48): Load(Module, Class("System"))
+48 (ln 48): Load(Module, Null)
+49 (ln 48): Call(Getter, error)
+50 (ln 48): Call(Method, print(_))
+51 (ln 48): Pop
+52 (ln 49): Load(Module, Class("System"))
+53 (ln 49): Load(Module, Null)
+54 (ln 49): Call(Getter, error)
+55 (ln 49): Call(Method, print(_))
+56 (ln 49): Pop
+57 (ln 50): EndModule
+58 (ln 50): Return
+59 (ln 50): End

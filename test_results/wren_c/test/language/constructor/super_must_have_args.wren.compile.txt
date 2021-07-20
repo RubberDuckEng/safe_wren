@@ -4,22 +4,22 @@ Constants:
 02: Fn(init new())
 03: Fn()
 Code:
-00: Constant(0: "A")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Constant(1: "B")
-06: Load(Module, Null)
-07: Class(0 fields)
-08: Store(Module)
-09: Pop
-10: Closure(2, [])
-11: Load(Module, Null)
-12: Method(instance, init new())
-13: Closure(3, [])
-14: Load(Module, Null)
-15: Method(static, new())
-16: EndModule
-17: Return
-18: End
+00 (ln 1): Constant(0: "A")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Constant(1: "B")
+06 (ln 3): Load(Module, Null)
+07 (ln 3): Class(0 fields)
+08 (ln 3): Store(Module)
+09 (ln 3): Pop
+10 (ln 6): Closure(2, [])
+11 (ln 6): Load(Module, Null)
+12 (ln 6): Method(instance, init new())
+13 (ln 6): Closure(3, [])
+14 (ln 6): Load(Module, Null)
+15 (ln 6): Method(static, new())
+16 (ln 8): EndModule
+17 (ln 8): Return
+18 (ln 8): End

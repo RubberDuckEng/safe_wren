@@ -3,22 +3,22 @@ Constants:
 01: Fn(methodOnFoo)
 02: "Bar"
 Code:
-00: Constant(0: "Foo")
-01: Load(Module, Class("Object"))
-02: Class(0 fields)
-03: Store(Module)
-04: Pop
-05: Closure(1, [])
-06: Load(Module, Null)
-07: Method(static, methodOnFoo)
-08: Constant(2: "Bar")
-09: Load(Module, Null)
-10: Class(0 fields)
-11: Store(Module)
-12: Pop
-13: Load(Module, Null)
-14: Call(Getter, methodOnFoo)
-15: Pop
-16: EndModule
-17: Return
-18: End
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, Null)
+07 (ln 2): Method(static, methodOnFoo)
+08 (ln 5): Constant(2: "Bar")
+09 (ln 5): Load(Module, Null)
+10 (ln 5): Class(0 fields)
+11 (ln 5): Store(Module)
+12 (ln 5): Pop
+13 (ln 7): Load(Module, Null)
+14 (ln 7): Call(Getter, methodOnFoo)
+15 (ln 7): Pop
+16 (ln 8): EndModule
+17 (ln 8): Return
+18 (ln 8): End

@@ -31,12 +31,13 @@ with error text from any failed tests.  `test.py` will also update
 * String codepoint APIs (including String.iterate)
 * Map.iterate
 * foreign functions
+* wrong line numbers for foreign method runtime errors.
 * Give different types to Symbol, Constant, etc.
 * attributes
 * Limit tests
 * Scientific notation
 * super / superclass calls
-* static fields
+* static fields (emits to two compilers)
 * Raw strings
 * C API
 * Garbage Collection

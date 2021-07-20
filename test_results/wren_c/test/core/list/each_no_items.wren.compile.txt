@@ -2,18 +2,18 @@ Constants:
 00: 0
 01: Fn(each(_) block argument)
 Code:
-00: Constant(0: 0)
-01: Store(Module)
-02: Pop
-03: Load(Module, Class("List"))
-04: Call(Method, new())
-05: Closure(1, [])
-06: Call(Method, each(_))
-07: Pop
-08: Load(Module, Class("System"))
-09: Load(Module, Null)
-10: Call(Method, print(_))
-11: Pop
-12: EndModule
-13: Return
-14: End
+00 (ln 1): Constant(0: 0)
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 2): Load(Module, Class("List"))
+04 (ln 2): Call(Method, new())
+05 (ln 2): Closure(1, [])
+06 (ln 2): Call(Method, each(_))
+07 (ln 2): Pop
+08 (ln 3): Load(Module, Class("System"))
+09 (ln 3): Load(Module, Null)
+10 (ln 3): Call(Method, print(_))
+11 (ln 3): Pop
+12 (ln 4): EndModule
+13 (ln 4): Return
+14 (ln 4): End

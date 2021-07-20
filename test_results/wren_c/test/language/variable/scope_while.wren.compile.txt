@@ -4,26 +4,26 @@ Constants:
 02: 1
 03: "inner"
 Code:
-00: Constant(0: "outer")
-01: Store(Module)
-02: Pop
-03: Constant(1: 0)
-04: Store(Module)
-05: Pop
-06: Load(Module, Null)
-07: Constant(2: 1)
-08: Call(Method, +(_))
-09: Store(Module)
-10: Constant(2: 1)
-11: Call(Method, <=(_))
-12: JumpIfFalse(3)
-13: Constant(3: "inner")
-14: Pop
-15: Loop(10)
-16: Load(Module, Class("System"))
-17: Load(Module, Null)
-18: Call(Method, print(_))
-19: Pop
-20: EndModule
-21: Return
-22: End
+00 (ln 2): Constant(0: "outer")
+01 (ln 2): Store(Module)
+02 (ln 2): Pop
+03 (ln 3): Constant(1: 0)
+04 (ln 3): Store(Module)
+05 (ln 3): Pop
+06 (ln 4): Load(Module, Null)
+07 (ln 4): Constant(2: 1)
+08 (ln 4): Call(Method, +(_))
+09 (ln 4): Store(Module)
+10 (ln 4): Constant(2: 1)
+11 (ln 4): Call(Method, <=(_))
+12 (ln 4): JumpIfFalse(3)
+13 (ln 5): Constant(3: "inner")
+14 (ln 6): Pop
+15 (ln 6): Loop(10)
+16 (ln 7): Load(Module, Class("System"))
+17 (ln 7): Load(Module, Null)
+18 (ln 7): Call(Method, print(_))
+19 (ln 7): Pop
+20 (ln 8): EndModule
+21 (ln 8): Return
+22 (ln 8): End
