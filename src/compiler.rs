@@ -200,6 +200,9 @@ impl InputManager {
     pub fn from_string(source: String) -> InputManager {
         InputManager::from_bytes(source.as_bytes().to_vec())
     }
+    pub fn from_str(source: &str) -> InputManager {
+        InputManager::from_bytes(source.as_bytes().to_vec())
+    }
     pub fn from_bytes(source: Vec<u8>) -> InputManager {
         let start_offset = if source.starts_with(&[0xEF, 0xBB, 0xBF]) {
             3

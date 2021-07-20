@@ -1,21 +1,21 @@
 Unexpected output on stderr:
 String does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[#core line 314] in iterate(_)
+[#core line 312] in iterate(_)
 Unexpected output on stderr:
-[#core line 116] in toList
+[#core line 114] in toList
 Unexpected output on stderr:
-[#core line 253] in trim_(_,_,_)
+[#core line 251] in trim_(_,_,_)
 Unexpected output on stderr:
-[#core line 245] in trimStart()
+[#core line 243] in trimStart()
 Unexpected output on stderr:
 [wren_c/test/core/string/trim_start line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterate(_)'.
-[#core line 314] in iterate(_)
-[#core line 116] in toList
-[#core line 253] in trim_(_,_,_)
-[#core line 245] in trimStart()
+[#core line 312] in iterate(_)
+[#core line 114] in toList
+[#core line 251] in trim_(_,_,_)
+[#core line 243] in trimStart()
 [wren_c/test/core/string/trim_start line 1] in <script>
 
 Missing expected output "true" on line 1.

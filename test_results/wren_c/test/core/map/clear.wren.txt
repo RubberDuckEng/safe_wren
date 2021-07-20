@@ -1,21 +1,21 @@
 Unexpected output on stderr:
 Map does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[#core line 427] in iterate(_)
+[#core line 425] in iterate(_)
 Unexpected output on stderr:
-[#core line 394] in toString
+[#core line 392] in toString
 Unexpected output on stderr:
-[#core line 468] in writeObject_(_)
+[#core line 466] in writeObject_(_)
 Unexpected output on stderr:
-[#core line 448] in print(_)
+[#core line 446] in print(_)
 Unexpected output on stderr:
 [wren_c/test/core/map/clear line 3] in <script>
 Expected return code 0 and got 70. Stderr:
 Map does not implement 'iterate(_)'.
-[#core line 427] in iterate(_)
-[#core line 394] in toString
-[#core line 468] in writeObject_(_)
-[#core line 448] in print(_)
+[#core line 425] in iterate(_)
+[#core line 392] in toString
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
 [wren_c/test/core/map/clear line 3] in <script>
 
 Missing expected output "{}" on line 3.
