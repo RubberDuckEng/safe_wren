@@ -1,15 +1,12 @@
 Unexpected output on stderr:
-String does not implement 'iterate(_)'.
+String does not implement '[_]'.
 Unexpected output on stderr:
-[#core line 55] in isEmpty
-Unexpected output on stderr:
-[#core line 189] in split(_)
+[#core line 202] in split(_)
 Unexpected output on stderr:
 [./test/core/string/split line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'iterate(_)'.
-[#core line 55] in isEmpty
-[#core line 189] in split(_)
+String does not implement '[_]'.
+[#core line 202] in split(_)
 [./test/core/string/split line 1] in <script>
 
 Missing expected output "[so, ing]" on line 1.

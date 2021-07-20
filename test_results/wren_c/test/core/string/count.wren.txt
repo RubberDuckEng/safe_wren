@@ -1,15 +1,14 @@
 Unexpected output on stderr:
-String does not implement 'iterate(_)'.
+String does not implement 'iteratorValue(_)'.
 Unexpected output on stderr:
 [#core line 35] in count
 Unexpected output on stderr:
-[./test/core/string/count line 1] in <script>
+[./test/core/string/count line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'iterate(_)'.
+String does not implement 'iteratorValue(_)'.
 [#core line 35] in count
-[./test/core/string/count line 1] in <script>
+[./test/core/string/count line 2] in <script>
 
-Missing expected output "0" on line 1.
 Missing expected output "8" on line 2.
 Missing expected output "1" on line 5.
 Missing expected output "3" on line 6.

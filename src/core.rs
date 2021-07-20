@@ -646,6 +646,36 @@ fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+fn string_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let string = this_as_string(&args);
+
+    // If we're starting the iteration, return the first index.
+    if args[1].is_null() {
+        return Ok(if string.is_empty() {
+            Value::Boolean(false)
+        } else {
+            Value::Num(0.0)
+        });
+    }
+
+    let num = validate_int(&args[1], "Iterator")?;
+    if num < 0.0 {
+        return Ok(Value::Boolean(false));
+    }
+    let mut index = num as usize;
+
+    // Advance to the beginning of the next UTF-8 sequence.
+    loop {
+        index += 1;
+        if index >= string.len() {
+            return Ok(Value::Boolean(false));
+        }
+        if string.is_char_boundary(index) {
+            return Ok(Value::from_usize(index));
+        }
+    }
+}
+
 fn string_starts_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
@@ -1358,7 +1388,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.string, "endsWith(_)", string_ends_with);
     primitive!(vm, core.string, "indexOf(_)", string_index_of1);
     primitive!(vm, core.string, "indexOf(_,_)", string_index_of2);
-    // primitive!(vm, core.string, "iterate(_)", string_iterate);
+    primitive!(vm, core.string, "iterate(_)", string_iterate);
     // primitive!(vm, core.string, "iterateByte_(_)", string_iterate_byte);
     // primitive!(vm, core.string, "iteratorValue(_)", string_iterator_value);
     primitive!(vm, core.string, "startsWith(_)", string_starts_with);

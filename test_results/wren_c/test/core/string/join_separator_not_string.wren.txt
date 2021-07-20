@@ -1,2 +1,2 @@
 Expected runtime error "Right operand must be a string." and got:
-String does not implement 'iterate(_)'.
+String does not implement 'iteratorValue(_)'.
