@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-Could not find foreign method 'value=_' for class Handle in module 'wren_c/test/api/handle'.
+Could not find foreign method 'value=_' for class Handle in module './test/api/handle'.
 Unexpected output on stderr:
-[wren_c/test/api/handle line 2] in <script>
+[./test/api/handle line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Could not find foreign method 'value=_' for class Handle in module 'wren_c/test/api/handle'.
-[wren_c/test/api/handle line 2] in <script>
+Could not find foreign method 'value=_' for class Handle in module './test/api/handle'.
+[./test/api/handle line 2] in <script>
 
 Missing expected output "[list, of, strings]" on line 11.

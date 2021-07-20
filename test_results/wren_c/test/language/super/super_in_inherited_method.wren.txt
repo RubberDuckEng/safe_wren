@@ -1,12 +1,12 @@
 Unexpected output on stderr:
 B does not implement 'super'.
 Unexpected output on stderr:
-[wren_c/test/language/super/super_in_inherited_method line 2] in callSuperToString
+[./test/language/super/super_in_inherited_method line 2] in callSuperToString
 Unexpected output on stderr:
-[wren_c/test/language/super/super_in_inherited_method line 11] in <script>
+[./test/language/super/super_in_inherited_method line 11] in <script>
 Expected return code 0 and got 70. Stderr:
 B does not implement 'super'.
-[wren_c/test/language/super/super_in_inherited_method line 2] in callSuperToString
-[wren_c/test/language/super/super_in_inherited_method line 11] in <script>
+[./test/language/super/super_in_inherited_method line 2] in callSuperToString
+[./test/language/super/super_in_inherited_method line 11] in <script>
 
 Missing expected output "instance of B" on line 11.

@@ -1,13 +1,13 @@
 Unexpected output on stderr:
 Derived does not implement 'super'.
 Unexpected output on stderr:
-[wren_c/test/language/super/call_different_arity line 12] in foo(_)
+[./test/language/super/call_different_arity line 12] in foo(_)
 Unexpected output on stderr:
-[wren_c/test/language/super/call_different_arity line 18] in <script>
+[./test/language/super/call_different_arity line 18] in <script>
 Expected return code 0 and got 70. Stderr:
 Derived does not implement 'super'.
-[wren_c/test/language/super/call_different_arity line 12] in foo(_)
-[wren_c/test/language/super/call_different_arity line 18] in <script>
+[./test/language/super/call_different_arity line 12] in foo(_)
+[./test/language/super/call_different_arity line 18] in <script>
 
 Missing expected output "Base.foo" on line 20.
 Missing expected output "Base.foo(a)" on line 21.

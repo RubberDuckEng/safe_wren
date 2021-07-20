@@ -3,11 +3,11 @@ String does not implement 'iterateByte_(_)'.
 Unexpected output on stderr:
 [#core line 300] in iterate(_)
 Unexpected output on stderr:
-[wren_c/test/core/string_byte_sequence/iterate line 6] in <script>
+[./test/core/string_byte_sequence/iterate line 6] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement 'iterateByte_(_)'.
 [#core line 300] in iterate(_)
-[wren_c/test/core/string_byte_sequence/iterate line 6] in <script>
+[./test/core/string_byte_sequence/iterate line 6] in <script>
 
 Missing expected output "0" on line 6.
 Missing expected output "false" on line 7.

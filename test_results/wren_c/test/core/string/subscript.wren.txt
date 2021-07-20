@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 String does not implement '[_]'.
 Unexpected output on stderr:
-[wren_c/test/core/string/subscript line 2] in <script>
+[./test/core/string/subscript line 2] in <script>
 Expected return code 0 and got 70. Stderr:
 String does not implement '[_]'.
-[wren_c/test/core/string/subscript line 2] in <script>
+[./test/core/string/subscript line 2] in <script>
 
 Missing expected output "a" on line 2.
 Missing expected output "b" on line 3.

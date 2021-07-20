@@ -1,9 +1,9 @@
 Unexpected output on stderr:
 Could not load module 'meta'.
 Unexpected output on stderr:
-[wren_c/test/meta/eval_existing_scoped_variable line 1] in <script>
+[./test/meta/eval_existing_scoped_variable line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 Could not load module 'meta'.
-[wren_c/test/meta/eval_existing_scoped_variable line 1] in <script>
+[./test/meta/eval_existing_scoped_variable line 1] in <script>
 
 Missing expected output "2" on line 7.

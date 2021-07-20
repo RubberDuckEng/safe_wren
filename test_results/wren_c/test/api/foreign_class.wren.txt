@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Could not find foreign method 'finalized' for class ForeignClass in module 'wren_c/test/api/foreign_class'.
+Could not find foreign method 'finalized' for class ForeignClass in module './test/api/foreign_class'.
 Unexpected output on stderr:
-[wren_c/test/api/foreign_class line 2] in <script>
+[./test/api/foreign_class line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Could not find foreign method 'finalized' for class ForeignClass in module 'wren_c/test/api/foreign_class'.
-[wren_c/test/api/foreign_class line 2] in <script>
+Could not find foreign method 'finalized' for class ForeignClass in module './test/api/foreign_class'.
+[./test/api/foreign_class line 2] in <script>
 
 Missing expected output "0" on line 13.
 Missing expected output "3.1" on line 15.

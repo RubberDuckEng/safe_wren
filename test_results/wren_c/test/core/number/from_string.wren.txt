@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 Num metaclass does not implement 'fromString(_)'.
 Unexpected output on stderr:
-[wren_c/test/core/number/from_string line 1] in <script>
+[./test/core/number/from_string line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 Num metaclass does not implement 'fromString(_)'.
-[wren_c/test/core/number/from_string line 1] in <script>
+[./test/core/number/from_string line 1] in <script>
 
 Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.

@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/this/closure line 3] Error at 'toString': Could not resolve 'this'
+[./test/language/this/closure line 3] Error at 'toString': Could not resolve 'this'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/this/closure line 3] Error at 'toString': Could not resolve 'this'
+[./test/language/this/closure line 3] Error at 'toString': Could not resolve 'this'
 
 Missing expected output "Foo" on line 8.

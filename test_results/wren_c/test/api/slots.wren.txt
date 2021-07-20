@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Could not find foreign method 'noSet' for class Slots in module 'wren_c/test/api/slots'.
+Could not find foreign method 'noSet' for class Slots in module './test/api/slots'.
 Unexpected output on stderr:
-[wren_c/test/api/slots line 2] in <script>
+[./test/api/slots line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Could not find foreign method 'noSet' for class Slots in module 'wren_c/test/api/slots'.
-[wren_c/test/api/slots line 2] in <script>
+Could not find foreign method 'noSet' for class Slots in module './test/api/slots'.
+[./test/api/slots line 2] in <script>
 
 Missing expected output "true" on line 19.
 Missing expected output "true" on line 23.

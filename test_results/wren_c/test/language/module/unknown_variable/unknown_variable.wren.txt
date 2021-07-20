@@ -1,2 +1,0 @@
-Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got:
-Could not find a variable named 'DoesNotExist' in module 'wren_c/test/language/module/unknown_variable/module'.

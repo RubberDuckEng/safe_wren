@@ -56,17 +56,17 @@ occurances : error text
 2 : B does not implement 'super'.
 2 : C does not implement 'super'.
 2 : C does not implement 'super(_,_)'.
-2 : Could not find foreign method 'api()' for class CallCallsForeign in module 'wren_c/test/api/call_calls_foreign'.
-2 : Could not find foreign method 'beforeDefined()' for class GetVariable in module 'wren_c/test/api/get_variable'.
-2 : Could not find foreign method 'finalized' for class ForeignClass in module 'wren_c/test/api/foreign_class'.
-2 : Could not find foreign method 'newList()' for class Lists in module 'wren_c/test/api/lists'.
-2 : Could not find foreign method 'newMap()' for class Maps in module 'wren_c/test/api/maps'.
-2 : Could not find foreign method 'noResolver()' for class Resolution in module 'wren_c/test/api/resolution'.
-2 : Could not find foreign method 'noSet' for class Slots in module 'wren_c/test/api/slots'.
-2 : Could not find foreign method 'nullConfig()' for class VM in module 'wren_c/test/api/new_vm'.
-2 : Could not find foreign method 'runtimeError' for class Error in module 'wren_c/test/api/error'.
-2 : Could not find foreign method 'test' for class UserData in module 'wren_c/test/api/user_data'.
-2 : Could not find foreign method 'value=_' for class Handle in module 'wren_c/test/api/handle'.
+2 : Could not find foreign method 'api()' for class CallCallsForeign in module './test/api/call_calls_foreign'.
+2 : Could not find foreign method 'beforeDefined()' for class GetVariable in module './test/api/get_variable'.
+2 : Could not find foreign method 'finalized' for class ForeignClass in module './test/api/foreign_class'.
+2 : Could not find foreign method 'newList()' for class Lists in module './test/api/lists'.
+2 : Could not find foreign method 'newMap()' for class Maps in module './test/api/maps'.
+2 : Could not find foreign method 'noResolver()' for class Resolution in module './test/api/resolution'.
+2 : Could not find foreign method 'noSet' for class Slots in module './test/api/slots'.
+2 : Could not find foreign method 'nullConfig()' for class VM in module './test/api/new_vm'.
+2 : Could not find foreign method 'runtimeError' for class Error in module './test/api/error'.
+2 : Could not find foreign method 'test' for class UserData in module './test/api/user_data'.
+2 : Could not find foreign method 'value=_' for class Handle in module './test/api/handle'.
 2 : Error at '")     // expect: "': Expect ')' after arguments.
 2 : Error at '"A raw string"': Expect ')' after arguments.
 2 : Error at '#': Expect method definition.
@@ -86,23 +86,23 @@ occurances : error text
 2 : Expected runtime error "Range start out of bounds." and got:
 2 : Expected runtime error "Subscript out of bounds." and got:
 2 : Expected stack trace and got:
-2 : Failed to open file "wren_c/test/regression/442-000005.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000007.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000086.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000088.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000089.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000100.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000115.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000166.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000181.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000182.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000238.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000295.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000321.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000348.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000357.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000440.wren": stream did not contain valid UTF-8
-2 : Failed to open file "wren_c/test/regression/442-000665.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000005.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000007.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000086.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000088.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000089.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000100.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000115.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000166.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000181.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000182.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000238.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000295.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000321.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000348.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000357.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000440.wren": stream did not contain valid UTF-8
+2 : Failed to open file "test/regression/442-000665.wren": stream did not contain valid UTF-8
 2 : Foo metaclass does not implement 'super'.
 2 : Num does not implement 'iterate(_)'.
 2 : System metaclass does not implement 'gc()'.
@@ -119,10 +119,6 @@ occurances : error text
 2 : in trim()
 2 : in trimEnd()
 2 : in trimStart()
-1 : Could not compile module 'wren_c/test/language/module/compile_error/module'.
-1 : Could not find a variable named 'DoesNotExist' in module 'wren_c/test/language/module/unknown_variable/module'.
-1 : Could not find foreign method 'someUnknownMethod' for class Foo in module 'wren_c/test/language/foreign/unknown_method'.
-1 : Could not load module 'wren_c/test/language/module/does_not_exist'.
 1 : Error at 'root': Could not resolve 'this'
 1 : Expected output "-0.23456789012345" on line  and got "-0.23456789012345003".
 1 : Expected output "-0.3" on line  and got "-0.3000000000000007".
@@ -200,12 +196,8 @@ occurances : error text
 1 : Expected runtime error "Code point cannot be negative." and got:
 1 : Expected runtime error "Code point must be a number." and got:
 1 : Expected runtime error "Code point must be an integer." and got:
-1 : Expected runtime error "Could not compile module './test/language/module/compile_error/module'." and got:
 1 : Expected runtime error "Could not compile source code." and got:
 1 : Expected runtime error "Could not find a module named 'unknown'." and got:
-1 : Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got:
-1 : Expected runtime error "Could not find foreign method 'someUnknownMethod' for class Foo in module './test/language/foreign/unknown_method'." and got:
-1 : Expected runtime error "Could not load module './test/language/module/does_not_exist'." and got:
 1 : Expected runtime error "Delimiter must be a non-empty string." and got:
 1 : Expected runtime error "Foreign class 'Bar' may not inherit from a class with fields." and got none.
 1 : Expected runtime error "From must be a non-empty string." and got:

@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/super/super_in_closure_in_inherited_method line 3] Error at 'super': Could not resolve 'this'
+[./test/language/super/super_in_closure_in_inherited_method line 3] Error at 'super': Could not resolve 'this'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/super/super_in_closure_in_inherited_method line 3] Error at 'super': Could not resolve 'this'
+[./test/language/super/super_in_closure_in_inherited_method line 3] Error at 'super': Could not resolve 'this'
 
 Missing expected output "instance of B" on line 13.

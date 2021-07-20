@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 Could not load module 'meta'.
 Unexpected output on stderr:
-[wren_c/test/meta/get_module_variables line 1] in <script>
+[./test/meta/get_module_variables line 1] in <script>
 Expected return code 0 and got 70. Stderr:
 Could not load module 'meta'.
-[wren_c/test/meta/get_module_variables line 1] in <script>
+[./test/meta/get_module_variables line 1] in <script>
 
 Missing expected output "true" on line 6.
 Missing expected output "true" on line 7.

@@ -1,9 +1,9 @@
 Unexpected output on stderr:
 Without metaclass does not implement 'attributes'.
 Unexpected output on stderr:
-[wren_c/test/language/class/attributes/without line 4] in <script>
+[./test/language/class/attributes/without line 4] in <script>
 Expected return code 0 and got 70. Stderr:
 Without metaclass does not implement 'attributes'.
-[wren_c/test/language/class/attributes/without line 4] in <script>
+[./test/language/class/attributes/without line 4] in <script>
 
 Missing expected output "true" on line 4.

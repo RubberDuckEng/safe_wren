@@ -1,2 +1,0 @@
-Expected runtime error "Could not find foreign method 'someUnknownMethod' for class Foo in module './test/language/foreign/unknown_method'." and got:
-Could not find foreign method 'someUnknownMethod' for class Foo in module 'wren_c/test/language/foreign/unknown_method'.

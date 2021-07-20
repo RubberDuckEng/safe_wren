@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Could not find foreign method 'noResolver()' for class Resolution in module 'wren_c/test/api/resolution'.
+Could not find foreign method 'noResolver()' for class Resolution in module './test/api/resolution'.
 Unexpected output on stderr:
-[wren_c/test/api/resolution line 2] in <script>
+[./test/api/resolution line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Could not find foreign method 'noResolver()' for class Resolution in module 'wren_c/test/api/resolution'.
-[wren_c/test/api/resolution line 2] in <script>
+Could not find foreign method 'noResolver()' for class Resolution in module './test/api/resolution'.
+[./test/api/resolution line 2] in <script>
 
 Missing expected output "loading foo/bar" on line 12.
 Missing expected output "ok" on line 13.

@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from argparse import ArgumentParser
 from collections import defaultdict
-from os import listdir, makedirs, remove, environ
+from os import listdir, makedirs, remove, environ, getcwd
 from os.path import abspath, basename, dirname, isdir, isfile, join, realpath, relpath, splitext
 import re
 from subprocess import Popen, PIPE
@@ -178,7 +178,14 @@ class Test:
     def run(self, app, type):
         # Invoke wren and run the test.
         test_arg = self.path
-        proc = Popen([app, test_arg], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        # Hack to run wren_c tests from wren_c root and make output
+        # messages match expected.
+        cwd = getcwd()
+        if "wren_c" in test_arg:
+            cwd = WREN_DIR
+            test_arg = test_arg.replace("wren_c/", "")
+
+        proc = Popen([app, test_arg], stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=cwd)
 
         # If a test takes longer than five seconds, kill it.
         #

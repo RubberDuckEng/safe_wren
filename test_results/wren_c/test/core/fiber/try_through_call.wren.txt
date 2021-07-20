@@ -1,10 +1,10 @@
 Unexpected output on stderr:
 Abort!
 Unexpected output on stderr:
-[wren_c/test/core/fiber/try_through_call line 6] in new(_) block argument
+[./test/core/fiber/try_through_call line 6] in new(_) block argument
 Expected return code 0 and got 70. Stderr:
 Abort!
-[wren_c/test/core/fiber/try_through_call line 6] in new(_) block argument
+[./test/core/fiber/try_through_call line 6] in new(_) block argument
 
 Missing expected output "4 after" on line 40.
 Missing expected output "5 after" on line 41.

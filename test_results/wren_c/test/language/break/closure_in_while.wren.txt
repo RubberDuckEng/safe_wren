@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/break/closure_in_while line 4] Error at 'i': Variable is used but not defined.
+[./test/language/break/closure_in_while line 4] Error at 'i': Variable is used but not defined.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/break/closure_in_while line 4] Error at 'i': Variable is used but not defined.
+[./test/language/break/closure_in_while line 4] Error at 'i': Variable is used but not defined.
 
 Missing expected output "i" on line 9.

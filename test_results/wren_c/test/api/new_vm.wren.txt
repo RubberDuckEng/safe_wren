@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Could not find foreign method 'nullConfig()' for class VM in module 'wren_c/test/api/new_vm'.
+Could not find foreign method 'nullConfig()' for class VM in module './test/api/new_vm'.
 Unexpected output on stderr:
-[wren_c/test/api/new_vm line 2] in <script>
+[./test/api/new_vm line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Could not find foreign method 'nullConfig()' for class VM in module 'wren_c/test/api/new_vm'.
-[wren_c/test/api/new_vm line 2] in <script>
+Could not find foreign method 'nullConfig()' for class VM in module './test/api/new_vm'.
+[./test/api/new_vm line 2] in <script>
 
 Missing expected output "true" on line 7.
 Missing expected output "true" on line 8.

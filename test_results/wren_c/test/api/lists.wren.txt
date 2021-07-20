@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Could not find foreign method 'newList()' for class Lists in module 'wren_c/test/api/lists'.
+Could not find foreign method 'newList()' for class Lists in module './test/api/lists'.
 Unexpected output on stderr:
-[wren_c/test/api/lists line 2] in <script>
+[./test/api/lists line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Could not find foreign method 'newList()' for class Lists in module 'wren_c/test/api/lists'.
-[wren_c/test/api/lists line 2] in <script>
+Could not find foreign method 'newList()' for class Lists in module './test/api/lists'.
+[./test/api/lists line 2] in <script>
 
 Missing expected output "true" on line 9.
 Missing expected output "0" on line 10.

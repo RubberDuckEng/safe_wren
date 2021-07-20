@@ -56,12 +56,16 @@ fn run_file(path: &String) -> ! {
 
     // handle module setup.
     let mut vm = WrenVM::new(test_config());
-    let module_name = match path.strip_suffix(".wren") {
+    let mut module_name = match path.strip_suffix(".wren") {
         Some(stripped) => stripped,
         // FIXME: Not sure if other parts of the code assume paths end in wren?
         None => path,
-    };
-    let result = wren_interpret(&mut vm, module_name, source);
+    }
+    .to_string();
+    if !module_name.starts_with(".") {
+        module_name = format!("./{}", module_name);
+    }
+    let result = wren_interpret(&mut vm, &module_name, source);
     match result {
         WrenInterpretResult::CompileError => {
             exit(ExitCode::CompileError);

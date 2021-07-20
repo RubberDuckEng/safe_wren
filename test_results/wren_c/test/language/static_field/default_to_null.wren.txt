@@ -1,6 +1,6 @@
 Unexpected error:
-[wren_c/test/language/static_field/default_to_null line 2] Error at '__field': Expected expression.
+[./test/language/static_field/default_to_null line 2] Error at '__field': Expected expression.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/static_field/default_to_null line 2] Error at '__field': Expected expression.
+[./test/language/static_field/default_to_null line 2] Error at '__field': Expected expression.
 
 Missing expected output "null" on line 5.

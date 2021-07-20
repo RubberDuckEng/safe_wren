@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/class/attributes/groups line 3] Error at '#': Expected expression.
+[./test/language/class/attributes/groups line 3] Error at '#': Expected expression.
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/class/attributes/groups line 3] Error at '#': Expected expression.
+[./test/language/class/attributes/groups line 3] Error at '#': Expected expression.
 
 Missing expected output "1" on line 11.
 Missing expected output "1" on line 12.

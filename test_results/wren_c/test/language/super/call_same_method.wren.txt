@@ -1,12 +1,12 @@
 Unexpected output on stderr:
 Derived does not implement 'super'.
 Unexpected output on stderr:
-[wren_c/test/language/super/call_same_method line 12] in foo
+[./test/language/super/call_same_method line 12] in foo
 Unexpected output on stderr:
-[wren_c/test/language/super/call_same_method line 16] in <script>
+[./test/language/super/call_same_method line 16] in <script>
 Expected return code 0 and got 70. Stderr:
 Derived does not implement 'super'.
-[wren_c/test/language/super/call_same_method line 12] in foo
-[wren_c/test/language/super/call_same_method line 16] in <script>
+[./test/language/super/call_same_method line 12] in foo
+[./test/language/super/call_same_method line 16] in <script>
 
 Missing expected output "Base.foo" on line 18.

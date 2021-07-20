@@ -1,5 +1,5 @@
 Unexpected error:
-[wren_c/example/syntax line 19] Error at 'block': Could not resolve 'this'
+[./example/syntax line 19] Error at 'block': Could not resolve 'this'
 Expected return code 0 and got 65. Stderr:
-[wren_c/example/syntax line 19] Error at 'block': Could not resolve 'this'
+[./example/syntax line 19] Error at 'block': Could not resolve 'this'
 

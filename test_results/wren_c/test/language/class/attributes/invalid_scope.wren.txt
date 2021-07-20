@@ -1,3 +1,3 @@
 Unexpected error:
-[wren_c/test/language/class/attributes/invalid_scope line 3] Error at '#': Expected expression.
+[./test/language/class/attributes/invalid_scope line 3] Error at '#': Expected expression.
 Missing expected error on line 8.

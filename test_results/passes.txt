@@ -412,6 +412,7 @@ wren_c/test/language/for/syntax.wren
 wren_c/test/language/for/truth.wren
 wren_c/test/language/foreign/foreign_after_static.wren
 wren_c/test/language/foreign/foreign_method_with_body.wren
+wren_c/test/language/foreign/unknown_method.wren
 wren_c/test/language/function/empty_body.wren
 wren_c/test/language/function/newline_body.wren
 wren_c/test/language/function/newline_in_expression_block.wren
@@ -496,6 +497,7 @@ wren_c/test/language/method/subscript_too_many_arguments.wren
 wren_c/test/language/method/too_many_arguments.wren
 wren_c/test/language/method/too_many_parameters.wren
 wren_c/test/language/module/change_imported_value/change_imported_value.wren
+wren_c/test/language/module/compile_error/compile_error.wren
 wren_c/test/language/module/cyclic_import/cyclic_import.wren
 wren_c/test/language/module/implicitly_imports_core/implicitly_imports_core.wren
 wren_c/test/language/module/import_as/import_as.wren
@@ -515,6 +517,8 @@ wren_c/test/language/module/returns/return_value.wren
 wren_c/test/language/module/returns/return_value_from_import.wren
 wren_c/test/language/module/shared_import/shared_import.wren
 wren_c/test/language/module/simple_import/simple_import.wren
+wren_c/test/language/module/unknown_module.wren
+wren_c/test/language/module/unknown_variable/unknown_variable.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/nonlocal/assignment.wren
 wren_c/test/language/nonlocal/in_block_scope.wren

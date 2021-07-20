@@ -1,7 +1,7 @@
 Unexpected error:
-[wren_c/test/language/this/nested_class line 8] Error at 'this': Could not resolve 'this'
+[./test/language/this/nested_class line 8] Error at 'this': Could not resolve 'this'
 Expected return code 0 and got 65. Stderr:
-[wren_c/test/language/this/nested_class line 8] Error at 'this': Could not resolve 'this'
+[./test/language/this/nested_class line 8] Error at 'this': Could not resolve 'this'
 
 Missing expected output "Outer" on line 5.
 Missing expected output "Outer" on line 8.
