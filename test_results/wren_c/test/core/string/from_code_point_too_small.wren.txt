@@ -1,2 +1,0 @@
-Expected runtime error "Code point cannot be negative." and got:
-String metaclass does not implement 'fromCodePoint(_)'.

@@ -310,6 +310,11 @@ wren_c/test/core/string/from_byte_not_int.wren
 wren_c/test/core/string/from_byte_not_num.wren
 wren_c/test/core/string/from_byte_too_large.wren
 wren_c/test/core/string/from_byte_too_small.wren
+wren_c/test/core/string/from_code_point.wren
+wren_c/test/core/string/from_code_point_not_int.wren
+wren_c/test/core/string/from_code_point_not_num.wren
+wren_c/test/core/string/from_code_point_too_large.wren
+wren_c/test/core/string/from_code_point_too_small.wren
 wren_c/test/core/string/index_of_invalid_arg.wren
 wren_c/test/core/string/index_of_start_not_int.wren
 wren_c/test/core/string/index_of_start_not_num.wren

@@ -566,6 +566,21 @@ fn validate_string(arg: &Value, arg_name: &str) -> Result<String> {
         .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))
 }
 
+fn string_from_code_point(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let num = validate_int(&args[1], "Code point")?;
+    if num < 0.0 {
+        Err(VMError::from_str("Code point cannot be negative."))
+    } else if (num as u32) > 0x10ffff {
+        Err(VMError::from_str(
+            "Code point cannot be greater than 0x10ffff.",
+        ))
+    } else {
+        let c = char::from_u32(num as u32)
+            .ok_or_else(|| VMError::from_str("Code point must be valid unicode"))?;
+        Ok(Value::from_string(c.to_string()))
+    }
+}
+
 fn string_from_byte(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let num = validate_int(&args[1], "Byte")?;
     if num < 0.0 {
@@ -1474,7 +1489,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     //   PRIMITIVE(vm->numClass, "==(_)", num_eqeq);
     //   PRIMITIVE(vm->numClass, "!=(_)", num_bangeq);
 
-    // primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
+    primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
     primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);
     primitive!(vm, core.string, "+(_)", string_plus);
     primitive!(vm, core.string, "[_]", string_subscript);

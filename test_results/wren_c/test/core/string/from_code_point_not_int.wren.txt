@@ -1,2 +1,0 @@
-Expected runtime error "Code point must be an integer." and got:
-String metaclass does not implement 'fromCodePoint(_)'.
