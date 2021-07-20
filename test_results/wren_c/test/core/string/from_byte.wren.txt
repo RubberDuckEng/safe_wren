@@ -1,11 +1,9 @@
 Unexpected output on stderr:
-String metaclass does not implement 'fromByte(_)'.
+Byte must be valid utf8
 Unexpected output on stderr:
-[./test/core/string/from_byte line 1] in <script>
+[./test/core/string/from_byte line 3] in <script>
 Expected return code 0 and got 70. Stderr:
-String metaclass does not implement 'fromByte(_)'.
-[./test/core/string/from_byte line 1] in <script>
+Byte must be valid utf8
+[./test/core/string/from_byte line 3] in <script>
 
-Missing expected output "A" on line 1.
-Missing expected output "0" on line 2.
 Missing expected output "255" on line 3.

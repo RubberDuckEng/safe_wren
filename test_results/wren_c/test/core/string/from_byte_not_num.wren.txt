@@ -1,2 +1,0 @@
-Expected runtime error "Byte must be a number." and got:
-String metaclass does not implement 'fromByte(_)'.

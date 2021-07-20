@@ -306,6 +306,10 @@ wren_c/test/core/string/contains_argument_not_string.wren
 wren_c/test/core/string/ends_with.wren
 wren_c/test/core/string/ends_with_invalid_arg.wren
 wren_c/test/core/string/equality.wren
+wren_c/test/core/string/from_byte_not_int.wren
+wren_c/test/core/string/from_byte_not_num.wren
+wren_c/test/core/string/from_byte_too_large.wren
+wren_c/test/core/string/from_byte_too_small.wren
 wren_c/test/core/string/index_of_invalid_arg.wren
 wren_c/test/core/string/index_of_start_not_int.wren
 wren_c/test/core/string/index_of_start_not_num.wren

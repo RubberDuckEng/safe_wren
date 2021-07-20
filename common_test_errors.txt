@@ -19,7 +19,6 @@ occurances : error text
 6 : Error: Expect '(' after '%%'.
 6 : Error: Unterminated Scientific Notation
 6 : Got output "false" when none was expected.
-6 : String metaclass does not implement 'fromByte(_)'.
 6 : String metaclass does not implement 'fromCodePoint(_)'.
 6 : in foo
 6 : in new(_) block argument
@@ -41,6 +40,7 @@ occurances : error text
 3 : Expected output "1.5707963267949" on line  and got "1.5707963267948966".
 2 : Abort!
 2 : B does not implement 'super'.
+2 : Byte must be valid utf8
 2 : C does not implement 'super'.
 2 : C does not implement 'super(_,_)'.
 2 : Could not find foreign method 'api()' for class CallCallsForeign in module './test/api/call_calls_foreign'.
@@ -170,10 +170,6 @@ occurances : error text
 1 : Expected runtime error "Abort!" and got none.
 1 : Expected runtime error "Argument must be a string." and got:
 1 : Expected runtime error "Base does not implement 'doesNotExist(_)'." and got:
-1 : Expected runtime error "Byte cannot be greater than 0xff." and got:
-1 : Expected runtime error "Byte cannot be negative." and got:
-1 : Expected runtime error "Byte must be a number." and got:
-1 : Expected runtime error "Byte must be an integer." and got:
 1 : Expected runtime error "Cannot call root fiber." and got:
 1 : Expected runtime error "Class 'Bar' may not have more than 255 fields, including inherited ones." and got:
 1 : Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Fn'." and got:

@@ -566,6 +566,20 @@ fn validate_string(arg: &Value, arg_name: &str) -> Result<String> {
         .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))
 }
 
+fn string_from_byte(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let num = validate_int(&args[1], "Byte")?;
+    if num < 0.0 {
+        Err(VMError::from_str("Byte cannot be negative."))
+    } else if (num as u32) > 0xff {
+        Err(VMError::from_str("Byte cannot be greater than 0xff."))
+    } else {
+        let bytes = vec![num as u8];
+        let string =
+            String::from_utf8(bytes).map_err(|_| VMError::from_str("Byte must be valid utf8"))?;
+        Ok(Value::from_string(string))
+    }
+}
+
 fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let a = this_as_string(&args);
     let b = validate_string(&args[1], "Right operand")?;
@@ -1461,7 +1475,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     //   PRIMITIVE(vm->numClass, "!=(_)", num_bangeq);
 
     // primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
-    // primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);
+    primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);
     primitive!(vm, core.string, "+(_)", string_plus);
     primitive!(vm, core.string, "[_]", string_subscript);
     primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
