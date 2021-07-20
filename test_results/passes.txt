@@ -330,6 +330,9 @@ wren_c/test/core/string/trim_chars_not_string.wren
 wren_c/test/core/string/trim_end_chars_not_string.wren
 wren_c/test/core/string/trim_start_chars_not_string.wren
 wren_c/test/core/string/type.wren
+wren_c/test/core/string_byte_sequence/iterate.wren
+wren_c/test/core/string_byte_sequence/iterate_not_int.wren
+wren_c/test/core/string_byte_sequence/iterate_wrong_type.wren
 wren_c/test/core/string_byte_sequence/iterator_value.wren
 wren_c/test/core/string_byte_sequence/iterator_value_not_int.wren
 wren_c/test/core/string_byte_sequence/iterator_value_not_num.wren
