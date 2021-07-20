@@ -225,6 +225,7 @@ wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/divide_operand_not_num.wren
 wren_c/test/core/number/equality.wren
 wren_c/test/core/number/floor.wren
+wren_c/test/core/number/from_string_not_string.wren
 wren_c/test/core/number/greater_than_equal_operand_not_num.wren
 wren_c/test/core/number/greater_than_operand_not_num.wren
 wren_c/test/core/number/invalid_hex_literal.wren

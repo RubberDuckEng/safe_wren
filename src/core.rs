@@ -145,6 +145,23 @@ num_binary_op!(num_atan2, atan2, Num, "x value");
 num_binary_op!(num_pow, powf, Num, "Power value");
 num_unary_op!(num_unary_minus, neg, Num);
 
+fn num_from_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let string = validate_string(&args[1], "Argument")?;
+
+    // Corner case: Can't parse an empty string.
+    if string.is_empty() {
+        return Ok(Value::Null);
+    }
+    // Allow trailing whitespace?
+    //    if (errno == ERANGE) RETURN_ERROR("Number literal is too large.");
+
+    // FIXME: This accepts more than wren_c does (uses strtod).
+    match string.trim().parse::<f64>() {
+        Ok(num) => Ok(Value::Num(num)),
+        Err(e) => Ok(Value::Null),
+    }
+}
+
 fn num_fraction(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let a = validate_num(&args[0], "this")?;
     let fract = a.fract();
@@ -1429,7 +1446,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, core.null, "!", null_not);
     primitive!(vm, core.null, "toString", null_to_string);
 
-    // primitive_static!(vm, core.num, "fromString(_)", num_from_string);
+    primitive_static!(vm, core.num, "fromString(_)", num_from_string);
     primitive_static!(vm, core.num, "infinity", num_infinity);
     primitive_static!(vm, core.num, "nan", num_nan);
     primitive_static!(vm, core.num, "pi", num_pi);
