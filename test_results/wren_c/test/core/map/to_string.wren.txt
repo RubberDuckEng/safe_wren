@@ -1,18 +1,17 @@
 Unexpected output on stderr:
-Map does not implement 'iterate(_)'.
+Iterator out of bounds.
 Unexpected output on stderr:
-[#core line 425] in iterate(_)
+[#core line 426] in iteratorValue(_)
 Unexpected output on stderr:
 [#core line 392] in toString
 Unexpected output on stderr:
-[./test/core/map/to_string line 2] in <script>
+[./test/core/map/to_string line 5] in <script>
 Expected return code 0 and got 70. Stderr:
-Map does not implement 'iterate(_)'.
-[#core line 425] in iterate(_)
+Iterator out of bounds.
+[#core line 426] in iteratorValue(_)
 [#core line 392] in toString
-[./test/core/map/to_string line 2] in <script>
+[./test/core/map/to_string line 5] in <script>
 
-Missing expected output "{}" on line 2.
 Missing expected output "{1: 2}" on line 5.
 Missing expected output "{1: {2: {}}}" on line 8.
 Missing expected output "{1: Foo.toString}" on line 16.

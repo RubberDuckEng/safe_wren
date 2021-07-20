@@ -761,6 +761,48 @@ fn map_remove(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
+// FIXME: This is wrong.  This sits on top of rust's hashmap
+// and does not match wren_c's iterator behavior exactly.
+fn map_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let map = this_as_map(&args);
+    if map.borrow().data.is_empty() {
+        return Ok(Value::Boolean(false));
+    }
+
+    if !args[1].is_null() {
+        let value = validate_int(&args[1], "Iterator")?;
+        if value < 0.0 {
+            return Ok(Value::Boolean(false));
+        }
+
+        let index = value as usize;
+        if index >= map.borrow().data.len() {
+            return Ok(Value::Boolean(false));
+        }
+
+        // Advance the iterator.
+        Ok(Value::from_usize(index + 1))
+    } else {
+        Ok(Value::from_usize(0))
+    }
+}
+
+fn map_key_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let map_handle = this_as_map(&args);
+    let map = map_handle.borrow();
+    let index = validate_index(&args[1], map.data.len(), "Iterator")?;
+    let mut entries = map.data.iter();
+    Ok(entries.nth(index).unwrap().0.clone())
+}
+
+fn map_value_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+    let map_handle = this_as_map(&args);
+    let map = map_handle.borrow();
+    let index = validate_index(&args[1], map.data.len(), "Iterator")?;
+    let mut entries = map.data.iter();
+    Ok(entries.nth(index).unwrap().1.clone())
+}
+
 fn list_filled(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let size = validate_int(&args[1], "Size")?;
     if size < 0.0 {
@@ -1348,9 +1390,9 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
     primitive!(vm, map, "containsKey(_)", map_contains_key);
     primitive!(vm, map, "count", map_count);
     primitive!(vm, map, "remove(_)", map_remove);
-    // primitive!(vm, map, "iterate(_)", map_iterate);
-    // primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
-    // primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
+    primitive!(vm, map, "iterate(_)", map_iterate);
+    primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
+    primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
 
     primitive!(vm, core.range, "from", range_from);
     primitive!(vm, core.range, "to", range_to);

@@ -1,2 +1,0 @@
-Expected runtime error "Iterator must be a number." and got:
-Map does not implement 'iterate(_)'.

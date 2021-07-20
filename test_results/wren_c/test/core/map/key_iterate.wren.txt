@@ -1,32 +1,4 @@
-Unexpected output on stderr:
-Map does not implement 'iterate(_)'.
-Unexpected output on stderr:
-[#core line 425] in iterate(_)
-Unexpected output on stderr:
-[./test/core/map/key_iterate line 7] in <script>
-Expected return code 0 and got 70. Stderr:
-Map does not implement 'iterate(_)'.
-[#core line 425] in iterate(_)
-[./test/core/map/key_iterate line 7] in <script>
-
-Missing expected output "true" on line 7.
-Missing expected output "true" on line 8.
-Missing expected output "true" on line 10.
-Missing expected output "true" on line 11.
-Missing expected output "true" on line 12.
-Missing expected output "true" on line 13.
-Missing expected output "true" on line 14.
-Missing expected output "true" on line 15.
-Missing expected output "true" on line 16.
-Missing expected output "true" on line 17.
-Missing expected output "true" on line 28.
-Missing expected output "true" on line 29.
-Missing expected output "true" on line 31.
-Missing expected output "true" on line 32.
-Missing expected output "true" on line 34.
-Missing expected output "true" on line 35.
-Missing expected output "true" on line 37.
-Missing expected output "true" on line 38.
-Missing expected output "false" on line 41.
-Missing expected output "false" on line 42.
-Missing expected output "false" on line 45.
+Expected output "false" on line 41 and got "true".
+Expected output "false" on line 42 and got "true".
+Got output "false" when none was expected.
+Got output "false" when none was expected.
