@@ -337,7 +337,6 @@ pub enum LexError {
     FloatParsingError(std::num::ParseFloatError),
     UnterminatedString,
     UnterminatedBlockComment,
-    UnterminatedScientificNotation,
     Error(String),
 }
 
@@ -386,9 +385,6 @@ impl fmt::Display for LexError {
             LexError::FloatParsingError(e) => write!(f, "Float parsing {}", e),
             LexError::UnterminatedString => write!(f, "Unterminated String"),
             LexError::UnterminatedBlockComment => write!(f, "Unterminated Block Comment"),
-            LexError::UnterminatedScientificNotation => {
-                write!(f, "Unterminated Scientific Notation")
-            }
             LexError::UnexpectedChar(c) => write!(f, "Unexpected char '{}'", c),
             LexError::Error(s) => write!(f, "{}", s),
         }
@@ -404,7 +400,6 @@ impl error::Error for LexError {
             LexError::FloatParsingError(e) => Some(e),
             LexError::UnterminatedString => None,
             LexError::UnterminatedBlockComment => None,
-            LexError::UnterminatedScientificNotation => None,
             LexError::UnexpectedChar(_) => None,
             LexError::Error(_) => None,
         }
@@ -666,13 +661,13 @@ fn read_number(input: &mut InputManager) -> Result<f64, LexError> {
         input.skip_while(is_digit);
     }
     // See if the number is in scientific notation.
-    if input.peek_is(b'e') || input.peek_is(b'E') {
+    if match_char(input, b'e') || match_char(input, b'E') {
         // Allow a single positive/negative exponent symbol.
         if !match_char(input, b'+') {
             match_char(input, b'-');
         }
         if !input.peek_is_fn(is_digit) {
-            return Err(LexError::UnterminatedScientificNotation);
+            return Err(LexError::from_str("Unterminated scientific notation."));
         }
         input.skip_while(is_digit);
     }

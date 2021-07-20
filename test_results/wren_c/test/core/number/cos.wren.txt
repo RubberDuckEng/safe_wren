@@ -1,9 +1,0 @@
-Unexpected error:
-[./test/core/number/cos line 6] Error: Unterminated Scientific Notation
-Expected return code 0 and got 65. Stderr:
-[./test/core/number/cos line 6] Error: Unterminated Scientific Notation
-
-Missing expected output "1" on line 1.
-Missing expected output "-1" on line 2.
-Missing expected output "1" on line 3.
-Missing expected output "true" on line 6.

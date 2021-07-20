@@ -158,7 +158,7 @@ fn num_from_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     // FIXME: This accepts more than wren_c does (uses strtod).
     match string.trim().parse::<f64>() {
         Ok(num) => Ok(Value::Num(num)),
-        Err(e) => Ok(Value::Null),
+        Err(_) => Ok(Value::Null),
     }
 }
 

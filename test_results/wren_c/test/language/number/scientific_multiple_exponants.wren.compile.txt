@@ -1,1 +1,1 @@
-[wren_c/test/language/number/scientific_multiple_exponants line 1] Error: Unterminated Scientific Notation
+[wren_c/test/language/number/scientific_multiple_exponants line 1] Error at 'e4': Expect end of file.

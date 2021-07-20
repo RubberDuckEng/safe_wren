@@ -3,7 +3,7 @@ Most common errors seen in test_results/**:
 occurances : error text
 86 : in <script>
 31 : Could not load module 'random'.
-25 : Expected output "true" on line  and got "false".
+24 : Expected output "true" on line  and got "false".
 18 : Expected return code 65 and got 0. Stderr:
 17 : Expected return code 65 and got 66. Stderr:
 14 : Error at 'i': Variable is used but not defined.
@@ -17,7 +17,6 @@ occurances : error text
 7 : Expected output "false" on line  and got "true".
 6 : Error at 'local': Variable is used but not defined.
 6 : Error: Expect '(' after '%%'.
-6 : Error: Unterminated Scientific Notation
 6 : Got output "false" when none was expected.
 6 : in foo
 6 : in new(_) block argument

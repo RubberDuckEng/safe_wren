@@ -1,1 +1,1 @@
-[wren_c/test/language/number/scientific_floating_exponent line 1] Error: Unterminated Scientific Notation
+[wren_c/test/language/number/scientific_floating_exponent line 1] Error at '4': Expect method name after '.'.

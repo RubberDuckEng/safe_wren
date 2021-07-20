@@ -221,10 +221,12 @@ wren_c/test/core/number/clamp.wren
 wren_c/test/core/number/clamp_max_not_num.wren
 wren_c/test/core/number/clamp_min_not_num.wren
 wren_c/test/core/number/comparison.wren
+wren_c/test/core/number/cos.wren
 wren_c/test/core/number/decimal_point_at_eof.wren
 wren_c/test/core/number/divide_operand_not_num.wren
 wren_c/test/core/number/equality.wren
 wren_c/test/core/number/floor.wren
+wren_c/test/core/number/from_string.wren
 wren_c/test/core/number/from_string_not_string.wren
 wren_c/test/core/number/greater_than_equal_operand_not_num.wren
 wren_c/test/core/number/greater_than_operand_not_num.wren
@@ -250,6 +252,7 @@ wren_c/test/core/number/pow.wren
 wren_c/test/core/number/pow_power_not_num.wren
 wren_c/test/core/number/round.wren
 wren_c/test/core/number/sign.wren
+wren_c/test/core/number/sin.wren
 wren_c/test/core/number/to_string.wren
 wren_c/test/core/number/truncate.wren
 wren_c/test/core/number/type.wren
@@ -593,6 +596,7 @@ wren_c/test/language/number/hex_too_large.wren
 wren_c/test/language/number/literals.wren
 wren_c/test/language/number/scientific_float_missing_exponent.wren
 wren_c/test/language/number/scientific_floating_exponent.wren
+wren_c/test/language/number/scientific_literals.wren
 wren_c/test/language/number/scientific_missing_exponent.wren
 wren_c/test/language/number/scientific_missing_fractional_part.wren
 wren_c/test/language/number/scientific_multiple_exponants.wren
