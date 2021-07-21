@@ -26,6 +26,7 @@ with error text from any failed tests.  `test.py` will also update
 ## Ordered goals?
 * Time the tests / make faster
 * Upvalues
+* remove all uses of 'as' (use into() instead).
 * validateSuperclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
 * Map.iterate

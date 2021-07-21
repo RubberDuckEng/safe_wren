@@ -721,6 +721,47 @@ fn read_name(first_byte: u8, input: &mut InputManager) -> Result<String, LexErro
     Ok(name)
 }
 
+// Reads [digits] hex digits in a string literal and returns their number value.
+fn read_hex_escape(
+    input: &mut InputManager,
+    digits: usize,
+    description: &str,
+) -> Result<u8, LexError> {
+    let mut value = 0;
+    for _ in 0..digits {
+        match input.peek() {
+            Some(b'"') | None => {
+                return Err(LexError::Error(format!(
+                    "Incomplete {} escape sequence.",
+                    description
+                )));
+            }
+            Some(_) => {
+                let digit = read_hex_digit(input).ok_or_else(|| {
+                    LexError::Error(format!("Invalid {} escape sequence.", description))
+                })?;
+                value = (value * 16) | digit;
+            }
+        }
+    }
+    Ok(value)
+}
+
+// Reads a hex digit Unicode escape sequence in a string literal.
+fn read_unicode_escape(
+    input: &mut InputManager,
+    bytes: &mut Vec<u8>,
+    length: usize,
+) -> Result<(), LexError> {
+    let value = read_hex_escape(input, length, "Unicode")?;
+    let c = char::from_u32(value.into())
+        .ok_or_else(|| LexError::from_str("Invalid Unicode escape sequence."))?;
+    let mut new_bytes = [0u8; 4];
+    let string = c.encode_utf8(&mut new_bytes);
+    bytes.extend_from_slice(string.as_bytes());
+    Ok(())
+}
+
 fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
     let mut bytes = Vec::new();
     let mut is_interpolation = false;
@@ -757,7 +798,39 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
             )));
         }
 
-        bytes.push(next);
+        if next == b'\\' {
+            // FIXME: This should be part of the match instead.
+            // input next() should return Option.
+            if input.is_at_end() {
+                return Err(LexError::UnterminatedString);
+            }
+            match input.next() {
+                b'"' => bytes.push(b'"'),
+                b'\\' => bytes.push(b'\\'),
+                b'%' => bytes.push(b'%'),
+                b'0' => bytes.push(b'\0'),
+                b'a' => bytes.push(b'\x07'),
+                b'b' => bytes.push(b'\x08'),
+                b'e' => bytes.push(b'\x1b'),
+                b'f' => bytes.push(b'\x0c'),
+                b'n' => bytes.push(b'\n'),
+                b'r' => bytes.push(b'\r'),
+                b't' => bytes.push(b'\t'),
+                b'u' => read_unicode_escape(input, &mut bytes, 4)?,
+                b'U' => read_unicode_escape(input, &mut bytes, 8)?,
+                b'v' => bytes.push(b'\x0b'),
+                b'x' => bytes.push(read_hex_escape(input, 2, "byte")?),
+
+                b => {
+                    return Err(LexError::Error(format!(
+                        "Invalid escape character '{}'.",
+                        b
+                    )))
+                }
+            }
+        } else {
+            bytes.push(next);
+        }
     }
     let string = String::from_utf8(bytes)?;
 

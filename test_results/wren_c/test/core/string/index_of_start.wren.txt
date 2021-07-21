@@ -1,3 +1,2 @@
 Expected output "3" on line 31 and got "-1".
 Expected output "9" on line 32 and got "-1".
-Expected output "2" on line 37 and got "3".

@@ -1,12 +1,20 @@
-Expected output "A" on line 2 and got "\u0041".
-Expected output "~" on line 3 and got "\u007e".
-Expected output "¶" on line 6 and got "\u00b6".
-Expected output "Þ" on line 7 and got "\u00de".
-Expected output "ॐ" on line 10 and got "\u0950".
-Expected output "ஃ" on line 11 and got "\u0b83".
-Expected output "¶" on line 14 and got "\u00B6".
-Expected output "Þ" on line 15 and got "\u00DE".
-Expected output "true" on line 20 and got "false".
-Expected output "<🙊>" on line 22 and got "<\U0001F64A>".
-Expected output "<🚀>" on line 23 and got "<\U0001F680>".
-Expected output "<𐌘>" on line 24 and got "<\U00010318>".
+Unexpected output on stderr:
+thread 'main' panicked at 'attempt to multiply with overflow', src/compiler.rs:743:25
+Unexpected output on stderr:
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Expected return code 0 and got 101. Stderr:
+thread 'main' panicked at 'attempt to multiply with overflow', src/compiler.rs:743:25
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+Missing expected output "A" on line 2.
+Missing expected output "~" on line 3.
+Missing expected output "¶" on line 6.
+Missing expected output "Þ" on line 7.
+Missing expected output "ॐ" on line 10.
+Missing expected output "ஃ" on line 11.
+Missing expected output "¶" on line 14.
+Missing expected output "Þ" on line 15.
+Missing expected output "true" on line 20.
+Missing expected output "<🙊>" on line 22.
+Missing expected output "<🚀>" on line 23.
+Missing expected output "<𐌘>" on line 24.

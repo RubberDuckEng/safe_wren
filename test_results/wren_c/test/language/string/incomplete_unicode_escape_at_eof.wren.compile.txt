@@ -1,1 +1,1 @@
-[wren_c/test/language/string/incomplete_unicode_escape_at_eof line 0] Error: Unterminated String
+[wren_c/test/language/string/incomplete_unicode_escape_at_eof line 0] Error: Incomplete Unicode escape sequence.

@@ -1,3 +1,3 @@
+Unexpected error:
+[./test/language/string/invalid_unicode_escape line 0] Error: Invalid Unicode escape sequence.
 Missing expected error on line 2.
-Expected return code 65 and got 0. Stderr:
-

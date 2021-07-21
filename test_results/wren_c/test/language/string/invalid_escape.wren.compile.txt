@@ -1,8 +1,1 @@
-Constants:
-00: "not a \m real escape"
-Code:
-00 (ln 2): Constant(0: "not a \m real escape")
-01 (ln 2): Pop
-02 (ln 2): EndModule
-03 (ln 2): Return
-04 (ln 2): End
+[wren_c/test/language/string/invalid_escape line 0] Error: Invalid escape character '109'.

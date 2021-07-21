@@ -320,6 +320,7 @@ wren_c/test/core/string/from_code_point_not_int.wren
 wren_c/test/core/string/from_code_point_not_num.wren
 wren_c/test/core/string/from_code_point_too_large.wren
 wren_c/test/core/string/from_code_point_too_small.wren
+wren_c/test/core/string/index_of.wren
 wren_c/test/core/string/index_of_invalid_arg.wren
 wren_c/test/core/string/index_of_start_not_int.wren
 wren_c/test/core/string/index_of_start_not_num.wren
@@ -331,6 +332,7 @@ wren_c/test/core/string/iterator_value_iterator_not_int.wren
 wren_c/test/core/string/iterator_value_iterator_not_num.wren
 wren_c/test/core/string/iterator_value_iterator_too_large.wren
 wren_c/test/core/string/iterator_value_iterator_too_small.wren
+wren_c/test/core/string/join.wren
 wren_c/test/core/string/join_separator_not_string.wren
 wren_c/test/core/string/multiply.wren
 wren_c/test/core/string/multiply_negative.wren
@@ -358,8 +360,9 @@ wren_c/test/core/string/subscript_range_to_too_large.wren
 wren_c/test/core/string/subscript_range_to_too_small.wren
 wren_c/test/core/string/subscript_too_large.wren
 wren_c/test/core/string/subscript_too_small.wren
-wren_c/test/core/string/to_string.wren
+wren_c/test/core/string/trim.wren
 wren_c/test/core/string/trim_chars_not_string.wren
+wren_c/test/core/string/trim_end.wren
 wren_c/test/core/string/trim_end_chars_not_string.wren
 wren_c/test/core/string/trim_start.wren
 wren_c/test/core/string/trim_start_chars_not_string.wren
@@ -511,6 +514,7 @@ wren_c/test/language/inheritance/inherit_from_string.wren
 wren_c/test/language/inheritance/inherit_methods.wren
 wren_c/test/language/inheritance/is.wren
 wren_c/test/language/interpolation/empty.wren
+wren_c/test/language/interpolation/interpolation.wren
 wren_c/test/language/interpolation/runtime_error_in_expression.wren
 wren_c/test/language/interpolation/switch_fiber.wren
 wren_c/test/language/interpolation/unterminated.wren
@@ -553,8 +557,10 @@ wren_c/test/language/method/not_found.wren
 wren_c/test/language/method/not_found_eleven_arguments.wren
 wren_c/test/language/method/not_found_multiple_arguments.wren
 wren_c/test/language/method/not_found_one_argument.wren
+wren_c/test/language/method/operators.wren
 wren_c/test/language/method/static.wren
 wren_c/test/language/method/static_method_not_found.wren
+wren_c/test/language/method/static_operators.wren
 wren_c/test/language/method/subscript_operators.wren
 wren_c/test/language/method/subscript_setter_too_many_arguments.wren
 wren_c/test/language/method/subscript_too_many_arguments.wren
@@ -627,6 +633,7 @@ wren_c/test/language/shebang/shebang_at_eof.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
 wren_c/test/language/shebang/shebang_invalid.wren
 wren_c/test/language/static_field/outside_class.wren
+wren_c/test/language/string/escapes.wren
 wren_c/test/language/super/super_in_top_level_function.wren
 wren_c/test/language/this/this_at_top_level.wren
 wren_c/test/language/this/this_in_method.wren
@@ -664,6 +671,7 @@ wren_c/test/language/while/truth.wren
 wren_c/test/language/whitespace.wren
 wren_c/test/limit/interpolation_nesting.wren
 wren_c/test/limit/long_function.wren
+wren_c/test/limit/long_string.wren
 wren_c/test/limit/long_variable_name.wren
 wren_c/test/limit/many_constants.wren
 wren_c/test/limit/many_fields.wren

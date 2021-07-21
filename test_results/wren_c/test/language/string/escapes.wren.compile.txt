@@ -1,1 +1,27 @@
-[wren_c/test/language/string/escapes line 2] Error at '")     // expect: "': Expect ')' after arguments.
+Constants:
+00: """
+01: "\"
+02: "(
+)"
+03: "%"
+Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: """)
+02 (ln 2): Call(Method, print(_))
+03 (ln 2): Pop
+04 (ln 3): Load(Module, Class("System"))
+05 (ln 3): Constant(1: "\")
+06 (ln 3): Call(Method, print(_))
+07 (ln 3): Pop
+08 (ln 4): Load(Module, Class("System"))
+09 (ln 4): Constant(2: "(
+)")
+10 (ln 4): Call(Method, print(_))
+11 (ln 4): Pop
+12 (ln 6): Load(Module, Class("System"))
+13 (ln 6): Constant(3: "%")
+14 (ln 6): Call(Method, print(_))
+15 (ln 6): Pop
+16 (ln 9): EndModule
+17 (ln 9): Return
+18 (ln 9): End

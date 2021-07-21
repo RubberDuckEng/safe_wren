@@ -1,9 +1,14 @@
-Expected output "0" on line 3 and got "92".
-Expected output "18" on line 4 and got "120".
-Expected output "52" on line 5 and got "48".
-Expected output "86" on line 6 and got "48".
-Expected output "120" on line 7 and got "92".
-Expected output "171" on line 8 and got "120".
-Expected output "205" on line 9 and got "49".
-Expected output "255" on line 10 and got "50".
-Expected output "102" on line 12 and got "92".
+Unexpected error:
+[./test/language/string/byte_escapes line 1] Error: String decoding invalid utf-8 sequence of 1 bytes from index 5
+Expected return code 0 and got 65. Stderr:
+[./test/language/string/byte_escapes line 1] Error: String decoding invalid utf-8 sequence of 1 bytes from index 5
+
+Missing expected output "0" on line 3.
+Missing expected output "18" on line 4.
+Missing expected output "52" on line 5.
+Missing expected output "86" on line 6.
+Missing expected output "120" on line 7.
+Missing expected output "171" on line 8.
+Missing expected output "205" on line 9.
+Missing expected output "255" on line 10.
+Missing expected output "102" on line 12.

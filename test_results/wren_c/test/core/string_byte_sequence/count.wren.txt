@@ -1,2 +1,10 @@
-Expected output "3" on line 12 and got "6".
-Expected output "2" on line 15 and got "8".
+Unexpected error:
+[./test/core/string_byte_sequence/count line 15] Error: String decoding invalid utf-8 sequence of 1 bytes from index 0
+Expected return code 0 and got 65. Stderr:
+[./test/core/string_byte_sequence/count line 15] Error: String decoding invalid utf-8 sequence of 1 bytes from index 0
+
+Missing expected output "0" on line 2.
+Missing expected output "3" on line 3.
+Missing expected output "9" on line 9.
+Missing expected output "3" on line 12.
+Missing expected output "2" on line 15.

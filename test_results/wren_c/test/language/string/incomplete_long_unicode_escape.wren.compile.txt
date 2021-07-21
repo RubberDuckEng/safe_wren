@@ -1,8 +1,2 @@
-Constants:
-00: "\U01F603"
-Code:
-00 (ln 2): Constant(0: "\U01F603")
-01 (ln 2): Pop
-02 (ln 3): EndModule
-03 (ln 3): Return
-04 (ln 3): End
+thread 'main' panicked at 'attempt to multiply with overflow', src/compiler.rs:743:25
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

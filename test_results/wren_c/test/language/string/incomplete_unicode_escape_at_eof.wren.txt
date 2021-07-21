@@ -1,3 +1,3 @@
 Unexpected error:
-[./test/language/string/incomplete_unicode_escape_at_eof line 0] Error: Unterminated String
+[./test/language/string/incomplete_unicode_escape_at_eof line 0] Error: Incomplete Unicode escape sequence.
 Missing expected error on line 2.

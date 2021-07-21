@@ -1,9 +1,0 @@
-Unexpected error:
-[./test/language/interpolation/interpolation line 5] Error: Expect '(' after '%%'.
-Expected return code 0 and got 65. Stderr:
-[./test/language/interpolation/interpolation line 5] Error: Expect '(' after '%%'.
-
-Missing expected output "3" on line 2.
-Missing expected output "str3(7%11" on line 5.
-Missing expected output "[{inner}]" on line 8.
-Missing expected output "[template]" on line 15.

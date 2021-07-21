@@ -1,8 +1,1 @@
-Constants:
-00: "\U0060"
-Code:
-00 (ln 2): Constant(0: "\U0060")
-01 (ln 2): Pop
-02 (ln 3): EndModule
-03 (ln 3): Return
-04 (ln 3): End
+[wren_c/test/language/string/unicode_two_bytes_to_long_escape line 0] Error: Incomplete Unicode escape sequence.
