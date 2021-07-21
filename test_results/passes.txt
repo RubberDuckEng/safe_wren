@@ -308,6 +308,7 @@ wren_c/test/core/string/concatenation.wren
 wren_c/test/core/string/concatenation_wrong_arg_type.wren
 wren_c/test/core/string/contains.wren
 wren_c/test/core/string/contains_argument_not_string.wren
+wren_c/test/core/string/count.wren
 wren_c/test/core/string/ends_with.wren
 wren_c/test/core/string/ends_with_invalid_arg.wren
 wren_c/test/core/string/equality.wren
@@ -380,6 +381,7 @@ wren_c/test/core/string_byte_sequence/subscript_not_int.wren
 wren_c/test/core/string_byte_sequence/subscript_not_num.wren
 wren_c/test/core/string_byte_sequence/subscript_too_large.wren
 wren_c/test/core/string_byte_sequence/subscript_too_small.wren
+wren_c/test/core/string_code_point_sequence/count.wren
 wren_c/test/core/string_code_point_sequence/iterate_iterator_not_int.wren
 wren_c/test/core/string_code_point_sequence/iterate_iterator_not_num.wren
 wren_c/test/core/string_code_point_sequence/iterator_value_not_int.wren

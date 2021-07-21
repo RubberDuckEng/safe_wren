@@ -1,8 +1,3 @@
-Unexpected error:
-[./test/core/string_code_point_sequence/iterator_value_incomplete line 2] Error: String decoding invalid utf-8 sequence of 1 bytes from index 0
-Expected return code 0 and got 65. Stderr:
-[./test/core/string_code_point_sequence/iterator_value_incomplete line 2] Error: String decoding invalid utf-8 sequence of 1 bytes from index 0
-
-Missing expected output "-1" on line 2.
-Missing expected output "-1" on line 5.
-Missing expected output "-1" on line 8.
+Expected output "-1" on line 2 and got "192".
+Expected output "-1" on line 5 and got "224".
+Expected output "-1" on line 8 and got "224".

@@ -4,7 +4,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::error;
 use std::fmt;
-use std::ops::Range;
+use std::ops::{BitOr, Range};
 use std::rc::Rc;
 use std::str;
 
@@ -605,8 +605,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
 }
 
 fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
-    let name = str::from_utf8(&input.source[input.token_start_offset..input.offset])
-        .map_err(|e| LexError::SliceDecoderError(e))?;
+    let name = str::from_utf8(&input.source[input.token_start_offset..input.offset])?;
 
     let result = if is_hex {
         let without_prefix = name.trim_start_matches("0x");
@@ -717,16 +716,18 @@ fn read_name(first_byte: u8, input: &mut InputManager) -> Result<String, LexErro
         bytes.push(input.next());
     }
 
-    let name = String::from_utf8(bytes)?;
-    Ok(name)
+    Ok(String::from_utf8(bytes)?)
 }
 
-// Reads [digits] hex digits in a string literal and returns their number value.
-fn read_hex_escape(
+// Reads [digits] hex digits in a string literal and returns their
+// number value as a char.
+// FIXME: This should probably return an Option and the caller
+// can make the LexError in one place instead of 3.
+fn read_escape(
     input: &mut InputManager,
     digits: usize,
     description: &str,
-) -> Result<u8, LexError> {
+) -> Result<char, LexError> {
     let mut value = 0;
     for _ in 0..digits {
         match input.peek() {
@@ -740,29 +741,22 @@ fn read_hex_escape(
                 let digit = read_hex_digit(input).ok_or_else(|| {
                     LexError::Error(format!("Invalid {} escape sequence.", description))
                 })?;
-                value = (value * 16) | digit;
+                value = (value * 16).bitor(&digit.into());
             }
         }
     }
-    Ok(value)
-}
-
-// Reads a hex digit Unicode escape sequence in a string literal.
-fn read_unicode_escape(
-    input: &mut InputManager,
-    bytes: &mut Vec<u8>,
-    length: usize,
-) -> Result<(), LexError> {
-    let value = read_hex_escape(input, length, "Unicode")?;
-    let c = char::from_u32(value.into())
-        .ok_or_else(|| LexError::from_str("Invalid Unicode escape sequence."))?;
-    let mut new_bytes = [0u8; 4];
-    let string = c.encode_utf8(&mut new_bytes);
-    bytes.extend_from_slice(string.as_bytes());
-    Ok(())
+    Ok(char::from_u32(value.into())
+        .ok_or_else(|| LexError::Error(format!("Invalid {} escape sequence.", description)))?)
 }
 
 fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
+    // FIXME: Is there not a simpler way to do this?
+    fn push_char(bytes: &mut Vec<u8>, c: char) {
+        let mut new_bytes = [0u8; 4];
+        let string = c.encode_utf8(&mut new_bytes);
+        bytes.extend_from_slice(string.as_bytes());
+    }
+
     let mut bytes = Vec::new();
     let mut is_interpolation = false;
     loop {
@@ -816,10 +810,10 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
                 b'n' => bytes.push(b'\n'),
                 b'r' => bytes.push(b'\r'),
                 b't' => bytes.push(b'\t'),
-                b'u' => read_unicode_escape(input, &mut bytes, 4)?,
-                b'U' => read_unicode_escape(input, &mut bytes, 8)?,
+                b'u' => push_char(&mut bytes, read_escape(input, 4, "Unicode")?),
+                b'U' => push_char(&mut bytes, read_escape(input, 8, "Unicode")?),
                 b'v' => bytes.push(b'\x0b'),
-                b'x' => bytes.push(read_hex_escape(input, 2, "byte")?),
+                b'x' => push_char(&mut bytes, read_escape(input, 2, "byte")?),
 
                 b => {
                     return Err(LexError::Error(format!(

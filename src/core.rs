@@ -229,7 +229,7 @@ fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn wren_num_to_string(num: f64) -> String {
-    // Wren prints nan vs NaN and inifity vs inf.
+    // Wren prints nan vs NaN and infinity vs inf.
     if num.is_nan() {
         return "nan".into();
     }

@@ -1,2 +1,1 @@
-thread 'main' panicked at 'attempt to multiply with overflow', src/compiler.rs:743:25
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[wren_c/test/language/string/incomplete_long_unicode_escape line 0] Error: Incomplete Unicode escape sequence.

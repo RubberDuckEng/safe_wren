@@ -1,9 +1,3 @@
-Unexpected output on stderr:
-thread 'main' panicked at 'attempt to multiply with overflow', src/compiler.rs:743:25
-Unexpected output on stderr:
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Unexpected error:
+[./test/language/string/incomplete_long_unicode_escape line 0] Error: Incomplete Unicode escape sequence.
 Missing expected error on line 2.
-Expected return code 65 and got 101. Stderr:
-thread 'main' panicked at 'attempt to multiply with overflow', src/compiler.rs:743:25
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-

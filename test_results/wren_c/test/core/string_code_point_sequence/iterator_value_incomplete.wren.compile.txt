@@ -1,1 +1,30 @@
-[wren_c/test/core/string_code_point_sequence/iterator_value_incomplete line 2] Error: String decoding invalid utf-8 sequence of 1 bytes from index 0
+Constants:
+00: "À"
+01: 0
+02: "à"
+03: "à®"
+Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "À")
+02 (ln 2): Call(Getter, codePoints)
+03 (ln 2): Constant(1: 0)
+04 (ln 2): Call(Method, iteratorValue(_))
+05 (ln 2): Call(Method, print(_))
+06 (ln 2): Pop
+07 (ln 5): Load(Module, Class("System"))
+08 (ln 5): Constant(2: "à")
+09 (ln 5): Call(Getter, codePoints)
+10 (ln 5): Constant(1: 0)
+11 (ln 5): Call(Method, iteratorValue(_))
+12 (ln 5): Call(Method, print(_))
+13 (ln 5): Pop
+14 (ln 8): Load(Module, Class("System"))
+15 (ln 8): Constant(3: "à®")
+16 (ln 8): Call(Getter, codePoints)
+17 (ln 8): Constant(1: 0)
+18 (ln 8): Call(Method, iteratorValue(_))
+19 (ln 8): Call(Method, print(_))
+20 (ln 8): Pop
+21 (ln 9): EndModule
+22 (ln 9): Return
+23 (ln 9): End

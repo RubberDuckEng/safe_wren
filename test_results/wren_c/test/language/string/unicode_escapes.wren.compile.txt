@@ -1,2 +1,72 @@
-thread 'main' panicked at 'attempt to multiply with overflow', src/compiler.rs:743:25
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Constants:
+00: "A"
+01: "~"
+02: "¶"
+03: "Þ"
+04: "ॐ"
+05: "ஃ"
+06: "😃"
+07: "ð"
+08: "<🙊>"
+09: "<🚀>"
+10: "<𐌘>"
+Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "A")
+02 (ln 2): Call(Method, print(_))
+03 (ln 2): Pop
+04 (ln 3): Load(Module, Class("System"))
+05 (ln 3): Constant(1: "~")
+06 (ln 3): Call(Method, print(_))
+07 (ln 3): Pop
+08 (ln 6): Load(Module, Class("System"))
+09 (ln 6): Constant(2: "¶")
+10 (ln 6): Call(Method, print(_))
+11 (ln 6): Pop
+12 (ln 7): Load(Module, Class("System"))
+13 (ln 7): Constant(3: "Þ")
+14 (ln 7): Call(Method, print(_))
+15 (ln 7): Pop
+16 (ln 10): Load(Module, Class("System"))
+17 (ln 10): Constant(4: "ॐ")
+18 (ln 10): Call(Method, print(_))
+19 (ln 10): Pop
+20 (ln 11): Load(Module, Class("System"))
+21 (ln 11): Constant(5: "ஃ")
+22 (ln 11): Call(Method, print(_))
+23 (ln 11): Pop
+24 (ln 14): Load(Module, Class("System"))
+25 (ln 14): Constant(2: "¶")
+26 (ln 14): Call(Method, print(_))
+27 (ln 14): Pop
+28 (ln 15): Load(Module, Class("System"))
+29 (ln 15): Constant(3: "Þ")
+30 (ln 15): Call(Method, print(_))
+31 (ln 15): Pop
+32 (ln 18): Constant(6: "😃")
+33 (ln 18): Store(Module)
+34 (ln 18): Pop
+35 (ln 19): Constant(7: "ð")
+36 (ln 19): Store(Module)
+37 (ln 19): Pop
+38 (ln 20): Load(Module, Class("System"))
+39 (ln 20): Load(Module, Null)
+40 (ln 20): Load(Module, Null)
+41 (ln 20): Call(Method, ==(_))
+42 (ln 20): Call(Method, print(_))
+43 (ln 20): Pop
+44 (ln 22): Load(Module, Class("System"))
+45 (ln 22): Constant(8: "<🙊>")
+46 (ln 22): Call(Method, print(_))
+47 (ln 22): Pop
+48 (ln 23): Load(Module, Class("System"))
+49 (ln 23): Constant(9: "<🚀>")
+50 (ln 23): Call(Method, print(_))
+51 (ln 23): Pop
+52 (ln 24): Load(Module, Class("System"))
+53 (ln 24): Constant(10: "<𐌘>")
+54 (ln 24): Call(Method, print(_))
+55 (ln 24): Pop
+56 (ln 25): EndModule
+57 (ln 25): Return
+58 (ln 25): End
