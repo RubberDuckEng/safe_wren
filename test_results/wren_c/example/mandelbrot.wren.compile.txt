@@ -36,7 +36,7 @@ Code:
 20 (ln 6): Load(Local, 2)
 21 (ln 6): Call(Method, iterate(_))
 22 (ln 6): Store(Local, 2)
-23 (ln 6): JumpIfFalse(121)
+23 (ln 6): JumpIfFalse(125)
 24 (ln 6): Load(Local, 1)
 25 (ln 6): Load(Local, 2)
 26 (ln 6): Call(Method, iteratorValue(_))
@@ -57,7 +57,7 @@ Code:
 41 (ln 8): Load(Local, 6)
 42 (ln 8): Call(Method, iterate(_))
 43 (ln 8): Store(Local, 6)
-44 (ln 8): JumpIfFalse(92)
+44 (ln 8): JumpIfFalse(96)
 45 (ln 8): Load(Local, 5)
 46 (ln 8): Load(Local, 6)
 47 (ln 8): Call(Method, iteratorValue(_))
@@ -81,7 +81,7 @@ Code:
 65 (ln 13): Load(Local, 13)
 66 (ln 13): Call(Method, iterate(_))
 67 (ln 13): Store(Local, 13)
-68 (ln 13): JumpIfFalse(56)
+68 (ln 13): JumpIfFalse(60)
 69 (ln 13): Load(Local, 12)
 70 (ln 13): Load(Local, 13)
 71 (ln 13): Call(Method, iteratorValue(_))
@@ -123,7 +123,7 @@ Code:
 107 (ln 26): Load(Local, 17)
 108 (ln 26): Constant(10: 4)
 109 (ln 26): Call(Method, >(_))
-110 (ln 26): JumpIfFalse(9)
+110 (ln 26): JumpIfFalse(13)
 111 (ln 27): Constant(11: " .:;+=xX$&")
 112 (ln 27): Load(Local, 14)
 113 (ln 27): Constant(12: 8)
@@ -132,34 +132,38 @@ Code:
 116 (ln 27): Call(Subscript, [_])
 117 (ln 27): Store(Local, 9)
 118 (ln 27): Pop
-119 (ln 28): Jump(5)
-120 (ln 30): Pop
-121 (ln 30): Pop
-122 (ln 30): Pop
-123 (ln 30): Pop
-124 (ln 30): Loop(61)
+119 (ln 28): Pop
+120 (ln 28): Pop
+121 (ln 28): Pop
+122 (ln 28): Pop
+123 (ln 28): Jump(5)
+124 (ln 30): Pop
 125 (ln 30): Pop
 126 (ln 30): Pop
-127 (ln 32): Load(Module, Class("System"))
-128 (ln 32): Load(Local, 9)
-129 (ln 32): Call(Method, write(_))
-130 (ln 32): Pop
-131 (ln 33): Pop
-132 (ln 33): Pop
-133 (ln 33): Pop
-134 (ln 33): Pop
+127 (ln 30): Pop
+128 (ln 30): Loop(65)
+129 (ln 30): Pop
+130 (ln 30): Pop
+131 (ln 32): Load(Module, Class("System"))
+132 (ln 32): Load(Local, 9)
+133 (ln 32): Call(Method, write(_))
+134 (ln 32): Pop
 135 (ln 33): Pop
-136 (ln 33): Loop(97)
+136 (ln 33): Pop
 137 (ln 33): Pop
 138 (ln 33): Pop
-139 (ln 35): Load(Module, Class("System"))
-140 (ln 35): Call(Method, print())
-141 (ln 35): Pop
-142 (ln 36): Pop
-143 (ln 36): Pop
-144 (ln 36): Loop(126)
-145 (ln 36): Pop
+139 (ln 33): Pop
+140 (ln 33): Loop(101)
+141 (ln 33): Pop
+142 (ln 33): Pop
+143 (ln 35): Load(Module, Class("System"))
+144 (ln 35): Call(Method, print())
+145 (ln 35): Pop
 146 (ln 36): Pop
-147 (ln 37): EndModule
-148 (ln 37): Return
-149 (ln 37): End
+147 (ln 36): Pop
+148 (ln 36): Loop(130)
+149 (ln 36): Pop
+150 (ln 36): Pop
+151 (ln 37): EndModule
+152 (ln 37): Return
+153 (ln 37): End

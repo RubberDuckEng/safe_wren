@@ -24,7 +24,6 @@ with error text from any failed tests.  `test.py` will also update
 `test_results/passes.txt` with the list of passing tests.
 
 ## Ordered goals?
-* Investigate break/nested_for_loop.wren, it may indicate a discard_locals problem.
 * Time the tests / make faster
 * Upvalues
 * validateSuperclass could now use ClassSource to validate internal, etc.

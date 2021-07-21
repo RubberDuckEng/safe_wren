@@ -139,7 +139,7 @@ impl core::fmt::Debug for Value {
             Value::Map(m) => write!(f, "Map(len: {})", m.borrow().data.len()),
             Value::Fiber(_) => write!(f, "Fiber()"),
             Value::Fn(c) => write!(f, "Fn({})", c.borrow().debug.name),
-            Value::Closure(c) => write!(f, "Closure({})", c.borrow().fn_obj.borrow().debug.name),
+            Value::Closure(c) => write!(f, "{}", c.borrow().fn_obj.borrow().debug.name),
             Value::Instance(o) => write!(
                 f,
                 "Instance({})",
@@ -1723,15 +1723,16 @@ impl CallFrame {
     fn dump_stack(&self, active_module: &str, frame_depth: usize) {
         // Print the stack left (top) to right (bottom)
         let mut as_string = Vec::new();
-        for value in &self.stack {
-            as_string.push(format!("{:?}", value));
+        for (index, value) in self.stack.iter().enumerate().rev() {
+            let debug = format!("{:?}", value);
+            as_string.push(format!("{}: {:10}", index, debug));
         }
         as_string.reverse();
         println!(
-            "{}  Stack({}): [{}]",
+            "{:10}  Stack({:2}): {}",
             active_module,
             frame_depth,
-            as_string.join(", ")
+            as_string.join(" ")
         );
     }
 }

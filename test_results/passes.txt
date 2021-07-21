@@ -23,6 +23,7 @@ test/num/sign_edge.wren
 wren_c/example/hello.wren
 wren_c/example/import_module/cthulu.wren
 wren_c/example/import_module/lovecraft.wren
+wren_c/example/mandelbrot.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/no_constructor.wren
 wren_c/test/core/bool/not.wren
@@ -409,6 +410,7 @@ wren_c/test/language/break/in_for_loop.wren
 wren_c/test/language/break/in_function_in_loop.wren
 wren_c/test/language/break/in_method_in_loop.wren
 wren_c/test/language/break/in_while_loop.wren
+wren_c/test/language/break/nested_for_loop.wren
 wren_c/test/language/break/nested_while_loop.wren
 wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/chained_newline.wren
@@ -445,9 +447,12 @@ wren_c/test/language/constructor/no_default.wren
 wren_c/test/language/constructor/no_parameter_list.wren
 wren_c/test/language/constructor/not_inherited.wren
 wren_c/test/language/constructor/return_without_value.wren
+wren_c/test/language/continue/exit_local_scopes.wren
+wren_c/test/language/continue/in_for_loop.wren
 wren_c/test/language/continue/in_function_in_loop.wren
 wren_c/test/language/continue/in_method_in_loop.wren
 wren_c/test/language/continue/in_while_loop.wren
+wren_c/test/language/continue/nested_for_loop.wren
 wren_c/test/language/continue/nested_while_loop.wren
 wren_c/test/language/continue/outside_loop.wren
 wren_c/test/language/empty_block.wren

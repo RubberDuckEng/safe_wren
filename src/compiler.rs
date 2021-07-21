@@ -893,6 +893,15 @@ enum ScopeDepth {
     Local(usize),
 }
 
+impl ScopeDepth {
+    fn one_deeper(&self) -> ScopeDepth {
+        match self {
+            ScopeDepth::Local(depth) => ScopeDepth::Local(depth + 1),
+            ScopeDepth::Module => ScopeDepth::Local(0),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub(crate) struct Upvalue {
     // True if this upvalue is capturing a local variable from the enclosing
@@ -1126,14 +1135,12 @@ fn emit_loop(ctx: &mut ParseContext, offsets: &LoopOffsets) {
 }
 
 fn push_scope(ctx: &mut ParseContext) {
-    ctx.compiler_mut().scope_depth = match ctx.compiler().scope_depth {
-        ScopeDepth::Module => ScopeDepth::Local(0),
-        ScopeDepth::Local(i) => ScopeDepth::Local(i + 1),
-    }
+    ctx.compiler_mut().scope_depth = ctx.compiler().scope_depth.one_deeper()
 }
 fn pop_scope(ctx: &mut ParseContext) {
-    // let popped =
-    discard_locals(ctx, ctx.compiler().scope_depth);
+    let popped = emit_pops_for_locals(ctx, ctx.compiler().scope_depth);
+    let locals_len = ctx.compiler().locals.len();
+    ctx.compiler_mut().locals.truncate(locals_len - popped);
     // self.num_slots -= popped;
 
     ctx.compiler_mut().scope_depth = match ctx.compiler_mut().scope_depth {
@@ -2155,14 +2162,14 @@ struct LoopOffsets {
     body: usize,
     // Depth of the scope(s) that need to be exited if a break is hit inside the
     // loop.
-    //    scope_depth: usize,
+    scope_depth: ScopeDepth,
 }
 
 impl Compiler {
     fn start_loop(&mut self) -> u8 {
         self.loops.push(LoopOffsets {
             start: self.code.len(), // Unclear why wren_c has code - 1 here?
-            //scope_depth: self.scope_depth,
+            scope_depth: self.scope_depth,
             body: 0,
             exit_jump: 0,
         });
@@ -2463,39 +2470,44 @@ impl<'a, 'b> Drop for ScopePusher<'a, 'b> {
     }
 }
 
-// Generates code to discard local variables at [depth] or greater. Does *not*
+// Generates code to pop local variables at [depth] or greater. Does *not*
 // actually undeclare variables or pop any scopes, though. This is called
 // directly when compiling "break" statements to ditch the local variables
 // before jumping out of the loop even though they are still in scope *past*
 // the break instruction.
 //
-// Returns the number of local variables that were eliminated.
-// FIXME: Is discard_locals needed with each CallFrame having a separate stack?
-fn discard_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usize {
+// Returns the number of local variables for which pops were issued.
+// wren_c names this "discardLocals"
+fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usize {
     let target_depth = match scope_depth {
         ScopeDepth::Module => panic!("Can't discard locals at module level."),
         ScopeDepth::Local(i) => i,
     };
 
-    let starting_locals_len = ctx.compiler().locals.len();
-
-    fn emit_pops(ctx: &mut ParseContext, target_depth: usize) {
-        while let Some(local) = ctx.compiler().locals.last() {
-            let local_depth = match local.depth {
-                ScopeDepth::Module => return, // Stop at the magical "this" (see hack note above in Compiler constructor).
-                ScopeDepth::Local(i) => i,
-            };
-            if local_depth < target_depth {
-                break;
+    // Note this *does not change* Compiler.locals, only issues pops.
+    // Locals remain in compiler until pop_scope().
+    fn emit_pops(ctx: &mut ParseContext, target_depth: usize) -> usize {
+        let mut pops_emitted = 0;
+        for index in (0..ctx.compiler().locals.len()).rev() {
+            // Scope the borrow of ctx for local.
+            {
+                let local = &ctx.compiler().locals[index];
+                let local_depth = match local.depth {
+                    ScopeDepth::Module => return pops_emitted, // Stop at the magical "this" (see hack note above in Compiler constructor).
+                    ScopeDepth::Local(i) => i,
+                };
+                if local_depth < target_depth {
+                    break;
+                }
             }
             // FIXME: Handle upvalues.
             emit(ctx, Ops::Pop);
-            ctx.compiler_mut().locals.pop();
+            pops_emitted += 1;
         }
+        pops_emitted
     }
 
-    emit_pops(ctx, target_depth);
-    return starting_locals_len - ctx.compiler().locals.len();
+    emit_pops(ctx, target_depth)
 }
 
 // Attempts to look up the name in the local variables of [compiler]. If found,
@@ -2514,18 +2526,16 @@ fn discard_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usize {
 // Break, continue, if, for, while, blocks, etc.
 // Unlike expression, does not leave something on the stack.
 fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
-    // TODO: Many more statements to implement!
-
     if match_current(ctx, Token::Break)? {
-        // let offsets =
-        ctx.compiler()
+        let offsets = *ctx
+            .compiler()
             .loops
             .last()
             .ok_or_else(|| ctx.error_str("Cannot use 'break' outside of a loop."))?;
 
         // Since we will be jumping out of the scope, make sure any locals in it
         // are discarded first.
-        // discard_locals(compiler, offsets.scope_depth + 1);
+        emit_pops_for_locals(ctx, offsets.scope_depth.one_deeper());
 
         // Emit a placeholder instruction for the jump to the end of the body.
         // We'll fix these up with real Jumps at the end of compiling this loop.
@@ -2539,7 +2549,7 @@ fn statement(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
         // Since we will be jumping out of the scope, make sure any locals in it
         // are discarded first.
-        // discard_locals(compiler, offsets.scope_depth + 1);
+        emit_pops_for_locals(ctx, offsets.scope_depth.one_deeper());
 
         emit_loop(ctx, &offsets);
     } else if match_current(ctx, Token::For)? {

@@ -14,7 +14,7 @@ Code:
 05 (ln 1): Load(Local, 2)
 06 (ln 1): Call(Method, iterate(_))
 07 (ln 1): Store(Local, 2)
-08 (ln 1): JumpIfFalse(55)
+08 (ln 1): JumpIfFalse(57)
 09 (ln 1): Load(Local, 1)
 10 (ln 1): Load(Local, 2)
 11 (ln 1): Call(Method, iteratorValue(_))
@@ -33,45 +33,47 @@ Code:
 24 (ln 3): Load(Local, 3)
 25 (ln 3): Constant(4: 1)
 26 (ln 3): Call(Method, ==(_))
-27 (ln 3): JumpIfFalse(1)
-28 (ln 3): Loop(25)
-29 (ln 5): Constant(0: 0)
-30 (ln 5): Constant(1: 2)
-31 (ln 5): Call(Method, ..(_))
-32 (ln 5): Null
-33 (ln 5): Load(Local, 4)
-34 (ln 5): Load(Local, 5)
-35 (ln 5): Call(Method, iterate(_))
-36 (ln 5): Store(Local, 5)
-37 (ln 5): JumpIfFalse(22)
-38 (ln 5): Load(Local, 4)
-39 (ln 5): Load(Local, 5)
-40 (ln 5): Call(Method, iteratorValue(_))
-41 (ln 6): Load(Local, 6)
-42 (ln 6): Constant(4: 1)
-43 (ln 6): Call(Method, ==(_))
-44 (ln 6): JumpIfFalse(1)
-45 (ln 6): Loop(13)
-46 (ln 7): Load(Module, Class("System"))
-47 (ln 7): Load(Module, Class("List"))
-48 (ln 7): Call(Method, new())
-49 (ln 7): Constant(5: "inner ")
-50 (ln 7): Call(Method, addCore_(_))
-51 (ln 7): Load(Local, 6)
+27 (ln 3): JumpIfFalse(2)
+28 (ln 3): Pop
+29 (ln 3): Loop(26)
+30 (ln 5): Constant(0: 0)
+31 (ln 5): Constant(1: 2)
+32 (ln 5): Call(Method, ..(_))
+33 (ln 5): Null
+34 (ln 5): Load(Local, 4)
+35 (ln 5): Load(Local, 5)
+36 (ln 5): Call(Method, iterate(_))
+37 (ln 5): Store(Local, 5)
+38 (ln 5): JumpIfFalse(23)
+39 (ln 5): Load(Local, 4)
+40 (ln 5): Load(Local, 5)
+41 (ln 5): Call(Method, iteratorValue(_))
+42 (ln 6): Load(Local, 6)
+43 (ln 6): Constant(4: 1)
+44 (ln 6): Call(Method, ==(_))
+45 (ln 6): JumpIfFalse(2)
+46 (ln 6): Pop
+47 (ln 6): Loop(14)
+48 (ln 7): Load(Module, Class("System"))
+49 (ln 7): Load(Module, Class("List"))
+50 (ln 7): Call(Method, new())
+51 (ln 7): Constant(5: "inner ")
 52 (ln 7): Call(Method, addCore_(_))
-53 (ln 7): Constant(3: "")
+53 (ln 7): Load(Local, 6)
 54 (ln 7): Call(Method, addCore_(_))
-55 (ln 7): Call(Method, join())
-56 (ln 7): Call(Method, print(_))
-57 (ln 7): Pop
-58 (ln 8): Pop
-59 (ln 8): Loop(27)
+55 (ln 7): Constant(3: "")
+56 (ln 7): Call(Method, addCore_(_))
+57 (ln 7): Call(Method, join())
+58 (ln 7): Call(Method, print(_))
+59 (ln 7): Pop
 60 (ln 8): Pop
-61 (ln 8): Pop
-62 (ln 9): Pop
-63 (ln 9): Loop(60)
+61 (ln 8): Loop(28)
+62 (ln 8): Pop
+63 (ln 8): Pop
 64 (ln 9): Pop
-65 (ln 9): Pop
-66 (ln 17): EndModule
-67 (ln 17): Return
-68 (ln 17): End
+65 (ln 9): Loop(62)
+66 (ln 9): Pop
+67 (ln 9): Pop
+68 (ln 17): EndModule
+69 (ln 17): Return
+70 (ln 17): End

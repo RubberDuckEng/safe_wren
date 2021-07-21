@@ -1,5 +1,0 @@
-Expected output "inner 2" on line 13 and got "outer 0".
-Expected output "outer 1" on line 14 and got "inner 0..2".
-Expected output "outer 2" on line 15 and got "outer 0".
-Missing expected output "inner 0" on line 16.
-Missing expected output "inner 2" on line 17.
