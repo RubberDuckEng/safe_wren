@@ -30,6 +30,7 @@ wren_c/test/meta/eval_not_string.wren
 wren_c/test/meta/get_module_variables_not_string.wren
 wren_c/test/meta/eval_compile_error.wren
 
+# Easy fix, see FIXME in 'fn method()'
 # wren_c/test/language/constructor/cannot_be_static.wren
 
 # wren_c continues after most failures during compiling

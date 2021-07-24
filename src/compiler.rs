@@ -3214,6 +3214,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
         scope.ctx.compiler_mut().is_initializer = signature.call_type == SignatureType::Initializer;
 
         if is_static && signature.call_type == SignatureType::Initializer {
+            // FIXME: This should return Err.  Waiting to see if Clippy catches it.
             scope.ctx.error_str("A constructor cannot be static.");
         }
 
