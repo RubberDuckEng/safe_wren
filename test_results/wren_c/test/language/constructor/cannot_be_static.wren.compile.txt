@@ -1,1 +1,1 @@
-[wren_c/test/language/constructor/cannot_be_static line 3] Error at 'static': Expect constructor name after 'construct'.
+[wren_c/test/language/constructor/cannot_be_static line 2] Error at ')': A constructor cannot be static.

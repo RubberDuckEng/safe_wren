@@ -215,8 +215,6 @@ pub(crate) struct Module {
     variable_names: Vec<String>,
 }
 
-// FIXME: Will turn on in a separate change.
-#[allow(dead_code)]
 pub(crate) enum ModuleLimitError {
     TooManyVariables,
 }

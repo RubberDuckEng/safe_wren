@@ -30,9 +30,6 @@ wren_c/test/meta/eval_not_string.wren
 wren_c/test/meta/get_module_variables_not_string.wren
 wren_c/test/meta/eval_compile_error.wren
 
-# Easy fix, see FIXME in 'fn method()'
-# wren_c/test/language/constructor/cannot_be_static.wren
-
 # wren_c continues after most failures during compiling
 # hence for wren_rust we get wrong line numbers sometimes.
 # wren_c/test/language/string/incomplete_unicode_escape_at_eof.wren
@@ -55,7 +52,7 @@ wren_c/test/language/class/newline_after_static.wren
 wren_c/test/limit/variable_name_too_long.wren
 wren_c/test/regression/428.wren
 wren_c/test/regression/494.wren
-
+wren_c/test/language/constructor/cannot_be_static.wren
 
 # byte escapes get expanded through char
 # Fails because 171 expands to 194, 171 for rust:
