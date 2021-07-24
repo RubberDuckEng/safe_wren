@@ -1215,8 +1215,8 @@ fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = this_as_list(&args);
     let index = validate_index(&args[1], list.borrow().elements.len(), "Index")?;
-    list.borrow_mut().elements.remove(index);
-    Ok(Value::List(list))
+    let value = list.borrow_mut().elements.remove(index);
+    Ok(value)
 }
 
 fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
