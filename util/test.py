@@ -28,6 +28,7 @@ WREN_TEST = join(WREN_RUST_DIR, 'target', 'debug', 'wren_test' + args.suffix)
 WREN_DEBUG = join(WREN_RUST_DIR, 'target', 'debug', 'wren_debug' + args.suffix)
 
 RESULTS_DIR = join(WREN_RUST_DIR, 'test_results')
+EXPECTATIONS_PATH = join(RESULTS_DIR, "test_expectations.txt")
 
 WREN_TEST_WITH_EXT = WREN_TEST
 if platform.system() == "Windows":
@@ -63,6 +64,22 @@ def supports_colored_text():
             environ.get('TERM_PROGRAM') == 'vscode')
 
 
+def load_test_expectations():
+    skips = []
+    try:
+        with open(EXPECTATIONS_PATH, 'r', encoding="utf-8") as file:
+            for line in file:
+                parts = line.split("#")
+                test_name = parts[0].strip()
+                if test_name:
+                    skips.append(test_name)
+        return skips
+    except:
+        e = sys.exc_info()[0]
+        print(f"Failed open {EXPECTATIONS_PATH}: {e}")
+        return skips
+
+
 SUPPORTS_COLORED_TEXT = supports_colored_text()
 
 passed = 0
@@ -71,6 +88,7 @@ num_skipped = 0
 skipped = defaultdict(int)
 expectations = 0
 passes = []
+expected_skips = load_test_expectations()
 
 
 class Test:
@@ -148,6 +166,11 @@ class Test:
                     skipped[match.group(1)] += 1
                     return False
 
+                if self.path in expected_skips:
+                    num_skipped += 1
+                    skipped[self.path] += 1
+                    return False
+
                 # Not a test file at all, so ignore it.
                 match = NONTEST_PATTERN.search(line)
                 if match:
@@ -185,7 +208,8 @@ class Test:
             cwd = WREN_DIR
             test_arg = test_arg.replace("wren_c/", "")
 
-        proc = Popen([app, test_arg], stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=cwd)
+        proc = Popen([app, test_arg], stdin=PIPE,
+                     stdout=PIPE, stderr=PIPE, cwd=cwd)
 
         # If a test takes longer than five seconds, kill it.
         #
@@ -481,8 +505,12 @@ if failed == 0:
 else:
     print(green(passed) + ' tests passed. ' + red(failed) + ' tests failed.')
 
-for key in sorted(skipped.keys()):
-    print('Skipped ' + yellow(skipped[key]) + ' tests: ' + key)
+skipped_count = len(skipped)
+if skipped_count:
+    print(f'Skipped {yellow(skipped_count)} tests.')
+
+# for key in sorted(skipped.keys()):
+#     print('Skipped ' + yellow(skipped[key]) + ' tests: ' + key)
 
 output_path = join(RESULTS_DIR, "passes.txt")
 pass_file = open(output_path, mode="w")
