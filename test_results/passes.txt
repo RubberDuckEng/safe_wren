@@ -21,6 +21,9 @@ test/fiber/suspend.wren
 test/fuzz/grammar_nesting.wren
 test/list/equality.wren
 test/map/equality.wren
+test/map/iterate.wren
+test/map/key_iterate.wren
+test/map/value_iterate.wren
 test/num/shift_overflow.wren
 test/num/sign_edge.wren
 wren_c/example/hello.wren
@@ -207,6 +210,7 @@ wren_c/test/core/map/reuse_tombstone.wren
 wren_c/test/core/map/subscript_empty_map.wren
 wren_c/test/core/map/subscript_key_not_value.wren
 wren_c/test/core/map/subscript_setter_key_not_value.wren
+wren_c/test/core/map/to_string.wren
 wren_c/test/core/map/type.wren
 wren_c/test/core/map/value_iterate_iterator_not_int.wren
 wren_c/test/core/map/value_iterate_iterator_not_num.wren

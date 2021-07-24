@@ -1,4 +1,21 @@
-Expected output "false" on line 41 and got "true".
-Expected output "false" on line 42 and got "true".
-Got output "false" when none was expected.
-Got output "false" when none was expected.
+Unexpected output on stderr:
+Bool does not implement '>(_)'.
+Unexpected output on stderr:
+[./test/core/map/value_iterate line 17] in <script>
+Expected return code 0 and got 70. Stderr:
+Bool does not implement '>(_)'.
+[./test/core/map/value_iterate line 17] in <script>
+
+Expected output "true" on line 16 and got "false".
+Missing expected output "true" on line 17.
+Missing expected output "true" on line 28.
+Missing expected output "true" on line 29.
+Missing expected output "true" on line 31.
+Missing expected output "true" on line 32.
+Missing expected output "true" on line 34.
+Missing expected output "true" on line 35.
+Missing expected output "true" on line 37.
+Missing expected output "true" on line 38.
+Missing expected output "false" on line 41.
+Missing expected output "false" on line 42.
+Missing expected output "false" on line 45.

@@ -940,13 +940,13 @@ fn map_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
             return Ok(Value::Boolean(false));
         }
 
-        let index = value as usize;
-        if index >= map.borrow().data.len() {
-            return Ok(Value::Boolean(false));
-        }
-
         // Advance the iterator.
-        Ok(Value::from_usize(index + 1))
+        let index = value as usize + 1;
+        if index < map.borrow().data.len() {
+            Ok(Value::from_usize(index))
+        } else {
+            Ok(Value::Boolean(false))
+        }
     } else {
         Ok(Value::from_usize(0))
     }
