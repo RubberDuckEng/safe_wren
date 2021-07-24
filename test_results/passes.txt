@@ -425,6 +425,7 @@ wren_c/test/language/break/nested_while_loop.wren
 wren_c/test/language/break/outside_loop.wren
 wren_c/test/language/chained_newline.wren
 wren_c/test/language/class/attributes/invalid_toplevel.wren
+wren_c/test/language/class/foreign_class_inherit_fields.wren
 wren_c/test/language/class/lowercase_name_inside_body.wren
 wren_c/test/language/class/missing_class_after_foreign.wren
 wren_c/test/language/class/name_inside_body.wren
@@ -696,6 +697,7 @@ wren_c/test/limit/many_globals.wren
 wren_c/test/limit/reuse_constants.wren
 wren_c/test/limit/too_many_constants.wren
 wren_c/test/limit/too_many_function_parameters.wren
+wren_c/test/limit/too_many_inherited_fields.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren
 wren_c/test/regression/429.wren
 wren_c/test/regression/561.wren

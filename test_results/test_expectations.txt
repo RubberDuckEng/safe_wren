@@ -48,15 +48,17 @@ wren_c/test/meta/eval_compile_error.wren
 # wren_c/test/language/string/invalid_escape.wren
 # wren_c/test/language/string/invalid_unicode_escape.wren
 
+# We stop at first error, WONTFIX?
+wren_c/test/language/method/empty_subscript_call.wren
+wren_c/test/language/nonlocal/undefined.wren
+wren_c/test/language/class/field_in_foreign_class.wren
+wren_c/test/language/class/newline_after_static.wren
 
 # byte escapes get expanded through char
 # Fails because 171 expands to 194, 171 for rust:
 # https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d79f8bdf98be962582f31ea4a62fb658
 # wren_c/test/language/string/byte_escapes.wren
 # wren_c/test/language/string/unicode_escapes.wren
-
-
-# wren_c/test/language/nonlocal/undefined.wren
 
 # Missing error.
 # wren_c/test/language/number/literal_too_large.wren
@@ -77,20 +79,14 @@ wren_c/test/language/super/no_superclass_method.wren
 # Missing duplicate method check:
 wren_c/test/language/method/duplicate_methods.wren
 
-# wren_c/test/language/variable/use_this_as_var.wren
-# wren_c/test/language/inheritance/inherit_from_closure.wren
+# Field inheritance
 # wren_c/test/language/inheritance/inherit_fields.wren
-# wren_c/test/language/inheritance/inherited_fields_in_closure.wren
-
-# We stop at first error, WONTFIX?
-wren_c/test/language/method/empty_subscript_call.wren
-
 
 # Block comments
 wren_c/test/language/comments/unterminated_block.wren
 wren_c/test/language/comments/unterminated_nested_block.wren
 
-
+# Missing System.gc()
 # wren_c/test/language/deeply_nested_gc.wren
 
 # class attributes
@@ -104,12 +100,9 @@ wren_c/test/language/class/attributes/literals.wren
 wren_c/test/language/class/attributes/invalid_expression.wren
 wren_c/test/language/class/attributes/methods.wren
 
-# wren_c/test/language/class/field_in_foreign_class.wren
-# wren_c/test/language/class/newline_after_static.wren
-# wren_c/test/language/class/foreign_class_inherit_fields.wren
-
-
-# closures
+# closures / upvalues
+wren_c/test/language/inheritance/inherit_from_closure.wren
+wren_c/test/language/inheritance/inherited_fields_in_closure.wren
 wren_c/test/language/this/nested_closure.wren
 wren_c/test/language/this/closure.wren
 wren_c/test/language/this/nested_class.wren
@@ -177,7 +170,6 @@ wren_c/test/regression/442-000086.wren
 wren_c/test/regression/442-000295.wren
 
 
-# wren_c/test/limit/too_many_inherited_fields.wren
 # wren_c/test/limit/jump_too_far.wren
 # wren_c/test/limit/loop_too_far.wren
 # wren_c/test/limit/too_many_fields.wren

@@ -28,7 +28,7 @@ pub(crate) const MAX_PARAMETERS: usize = 16;
 // a single byte for the number of fields. Note that it's 255 and not 256
 // because creating a class takes the *number* of fields, not the *highest
 // field index*.
-// const MAX_FIELDS: usize = 255;
+const MAX_FIELDS: usize = 255;
 
 // Internal VM Error, wrapped in RuntimeError for API.
 #[derive(Debug)]
@@ -770,7 +770,11 @@ pub(crate) fn wren_new_class(
     wren_new_class_with_class_class(superclass, source, name, &vm.class_class.as_ref().unwrap())
 }
 
-fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<ObjClass>> {
+fn validate_superclass(
+    name: &str,
+    superclass_value: Value,
+    source: &ClassSource,
+) -> Result<Handle<ObjClass>> {
     // Make sure the superclass is a class.
     let superclass = superclass_value.try_into_class().ok_or_else(|| {
         VMError::from_string(format!(
@@ -782,6 +786,7 @@ fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<Obj
     // In wren_c, this is required since wren_c does blind-casts
     // of "this" in primitives.  wren_rust also does unwrap() and would
     // (safely) panic if "this" were a ObjInstance subclass.
+    // FIXME: Merge with match below by checking ClassSource::Internal?
     match &superclass.borrow().name[..] {
         "Class" | "Fiber" | "Fn" | "List" | "Map" | "Range" | "String" | "Bool" | "Null"
         | "Num" => {
@@ -793,27 +798,32 @@ fn validate_superclass(name: &str, superclass_value: Value) -> Result<Handle<Obj
         }
         _ => {}
     }
-
-    //   if (superclass->numFields == -1)
-    //   {
-    //     return wrenStringFormat(vm,
-    //         "Class '@' cannot inherit from foreign class '@'.",
-    //         name, OBJ_VAL(superclass->name));
-    //   }
-
-    //   if (numFields == -1 && superclass->numFields > 0)
-    //   {
-    //     return wrenStringFormat(vm,
-    //         "Foreign class '@' may not inherit from a class with fields.",
-    //         name);
-    //   }
-
-    //   if (superclass->numFields + numFields > MAX_FIELDS)
-    //   {
-    //     return wrenStringFormat(vm,
-    //         "Class '@' may not have more than 255 fields, including inherited "
-    //         "ones.", name);
-    //   }
+    match (source, &superclass.borrow().source) {
+        (_, ClassSource::Foreign) => {
+            return Err(VMError::from_string(format!(
+                "Class '{}' cannot inherit from foreign class '{}'.",
+                name,
+                superclass.borrow().name
+            )));
+        }
+        (ClassSource::Foreign, ClassSource::Source(num_fields)) => {
+            if *num_fields > 0 {
+                return Err(VMError::from_string(format!(
+                    "Foreign class '{}' may not inherit from a class with fields.",
+                    name,
+                )));
+            }
+        }
+        (ClassSource::Source(fields), ClassSource::Source(super_fields)) => {
+            if *fields + *super_fields > MAX_FIELDS {
+                return Err(VMError::from_string(format!(
+                    "Class '{}' may not have more than 255 fields, including inherited ones.",
+                    name
+                )));
+            }
+        }
+        _ => {}
+    }
 
     Ok(superclass)
 }
@@ -855,7 +865,7 @@ fn create_class(
     let name = name_value
         .try_into_string()
         .ok_or_else(|| VMError::from_str("Class name not string."))?;
-    let superclass = validate_superclass(&name, superclass_value)?;
+    let superclass = validate_superclass(&name, superclass_value, &source)?;
 
     let class = wren_new_class(vm, &superclass, source.clone(), name)?;
     match source {
