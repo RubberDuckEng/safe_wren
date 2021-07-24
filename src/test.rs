@@ -4,7 +4,7 @@
 // wren_debug.rs and wren_test.rs.
 
 use std::fs;
-use std::path::{Component, Path, PathBuf};
+use std::path::{Component, Path};
 
 use crate::wren::*;
 
@@ -41,10 +41,10 @@ fn write_string(_vm: &WrenVM, string: &str) {
 }
 
 fn is_relative_import(module: &str) -> bool {
-    module.starts_with(".")
+    module.starts_with('.')
 }
 
-fn normalize_path(path: &PathBuf) -> String {
+fn normalize_path(path: &Path) -> String {
     path.components()
         .map(|component| match component {
             Component::Prefix(s) => s.as_os_str().to_str().unwrap(),
@@ -81,12 +81,9 @@ fn resolve_module(_vm: &WrenVM, importer: &str, module: &str) -> String {
 fn read_module(_vm: &WrenVM, name: &str) -> Option<WrenLoadModuleResult> {
     // Hack for now.
     let path = format!("{}.wren", name);
-    match fs::read_to_string(&path) {
-        Ok(source) => return Some(WrenLoadModuleResult { source: source }),
-        // Err(e) => {
-        //     println!("{} : {}", path, e);
-        // }
-        _ => {}
+    if let Ok(source) = fs::read_to_string(&path) {
+        Some(WrenLoadModuleResult { source })
+    } else {
+        None
     }
-    None
 }

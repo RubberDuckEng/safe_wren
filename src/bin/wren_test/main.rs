@@ -43,7 +43,7 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
-fn run_file(path: &String) -> ! {
+fn run_file(path: &str) -> ! {
     let source = fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
         // FIXME: wren_c appears to read the file as bytes and

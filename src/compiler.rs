@@ -213,7 +213,7 @@ impl InputManager {
         };
 
         InputManager {
-            source: source,
+            source,
             offset: start_offset,
             line_number: 1,
             token_start_offset: start_offset,
@@ -286,7 +286,7 @@ impl InputManager {
             self.line_number += 1;
         }
         self.offset += 1;
-        return val;
+        val
     }
 
     fn skip_while(&mut self, precicate: fn(u8) -> bool) {
@@ -307,7 +307,7 @@ impl InputManager {
         };
         ParseToken {
             line: line_number,
-            token: token,
+            token,
             bytes_range: self.token_start_offset..self.offset,
         }
     }
@@ -340,7 +340,7 @@ impl InputManager {
         // This is the final ")", so the interpolation expression has ended.
         // This ")" now begins the next section of the template string.
         self.parens.pop();
-        return true;
+        true
     }
 }
 
@@ -476,9 +476,10 @@ fn skip_block_comment(input: &mut InputManager) -> Result<(), LexError> {
 
 fn is_whitespace(maybe_b: Option<u8>) -> bool {
     if let Some(b) = maybe_b {
-        return b == b' ' || b == b'\t' || b == b'\r';
+        b == b' ' || b == b'\t' || b == b'\r'
+    } else {
+        false
     }
-    return false;
 }
 
 fn two_char_token(
@@ -626,7 +627,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             }
         }
     }
-    return Ok(input.make_token(Token::EndOfFile));
+    Ok(input.make_token(Token::EndOfFile))
 }
 
 fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
@@ -634,11 +635,9 @@ fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
 
     let result = if is_hex {
         let without_prefix = name.trim_start_matches("0x");
-        u32::from_str_radix(without_prefix, 16).map_err(|e| LexError::IntegerParsingError(e))?
-            as f64
+        u32::from_str_radix(without_prefix, 16)?.into()
     } else {
-        name.parse::<f64>()
-            .map_err(|e| LexError::FloatParsingError(e))?
+        name.parse::<f64>()?
     };
     Ok(result)
 }
@@ -665,7 +664,7 @@ fn read_hex_number(input: &mut InputManager) -> Result<f64, LexError> {
     input.next();
 
     // Iterate over all the valid hexadecimal digits found.
-    while let Some(_) = read_hex_digit(input) {}
+    while read_hex_digit(input).is_some() {}
 
     make_number(input, true)
 }
@@ -738,8 +737,7 @@ fn is_digit(c: Option<u8>) -> bool {
 
 fn read_name(first_byte: u8, input: &mut InputManager) -> Result<String, LexError> {
     // This should be a string?
-    let mut bytes = Vec::new();
-    bytes.push(first_byte);
+    let mut bytes = vec![first_byte];
     while is_name(input.peek()) || is_digit(input.peek()) {
         bytes.push(input.next());
     }
@@ -773,8 +771,8 @@ fn read_escape(
             }
         }
     }
-    Ok(char::from_u32(value)
-        .ok_or_else(|| LexError::Error(format!("Invalid {} escape sequence.", description)))?)
+    char::from_u32(value)
+        .ok_or_else(|| LexError::Error(format!("Invalid {} escape sequence.", description)))
 }
 
 fn read_raw_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
@@ -793,13 +791,9 @@ fn read_raw_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
         // FIXME: We probably don't need to check all 3 every time?
         let c = input
             .next_checked()
-            .ok_or_else(|| LexError::UnterminatedRawString)?;
-        let c1 = input
-            .peek()
-            .ok_or_else(|| LexError::UnterminatedRawString)?;
-        let c2 = input
-            .peek_next()
-            .ok_or_else(|| LexError::UnterminatedRawString)?;
+            .ok_or(LexError::UnterminatedRawString)?;
+        let c1 = input.peek().ok_or(LexError::UnterminatedRawString)?;
+        let c2 = input.peek_next().ok_or(LexError::UnterminatedRawString)?;
 
         if c == b'\r' {
             continue;
@@ -1144,7 +1138,7 @@ impl ClassInfo {
             fields: SymbolTable::default(),
             // methods: Vec::new(),
             // static_methods: Vec::new(),
-            is_foreign_class: is_foreign_class,
+            is_foreign_class,
             in_static_method: false,
         }
     }
@@ -1260,7 +1254,7 @@ impl Compiler {
             loops: Vec::new(),
             // num_slots: 0,
             enclosing_class: None,
-            parent: parent,
+            parent,
             upvalues: Vec::new(),
             is_initializer: false, // Should this be tracked here?
             fn_debug: FnDebug::default(),
@@ -1366,7 +1360,7 @@ impl fmt::Debug for Compiler {
 // wren_c calls this addConstant
 fn ensure_constant(ctx: &mut ParseContext, constant: Value) -> Result<usize, WrenError> {
     if let Some(index) = ctx.compiler().constants.lookup(&constant) {
-        return Ok(*index);
+        Ok(*index)
     } else if ctx.compiler().constants.len() < MAX_CONSTANTS {
         Ok(ctx.compiler_mut().constants.add(constant))
     } else {
@@ -1414,7 +1408,7 @@ impl<'a> ParseContext<'a> {
         WrenError {
             line: self.parser.previous.line,
             module: self.module_name(),
-            error: error,
+            error,
         }
     }
 
@@ -1473,7 +1467,7 @@ impl<'a> ParseContext<'a> {
             }
             maybe_compiler = &compiler.parent;
         }
-        return false;
+        false
     }
 
     fn call_with_enclosing_class<T, F>(&mut self, f: F) -> Result<T, WrenError>
@@ -1627,8 +1621,8 @@ impl Signature {
     fn from_bare_name(call_type: SignatureType, bare_name: &str, arity: u8) -> Signature {
         Signature {
             bare_name: bare_name.into(),
-            call_type: call_type,
-            arity: arity,
+            call_type,
+            arity,
         }
     }
 }
@@ -1699,7 +1693,7 @@ fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
     let signature = Signature {
         call_type: SignatureType::Method,
         bare_name: full_name.into(), // FIXME: Wrong.
-        arity: arity,
+        arity,
     };
     emit(ctx, Ops::Call(signature, symbol));
 }
@@ -1939,7 +1933,7 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
         // Maybe Compiler::root that doesn't take a parent?
         ctx._compiler = Some(Box::new(Compiler::block(current)));
         PushCompiler {
-            ctx: ctx,
+            ctx,
             did_pop: false,
         }
     }
@@ -1953,7 +1947,7 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
         let compiler = Compiler::block(current);
         ctx._compiler = Some(Box::new(compiler));
         PushCompiler {
-            ctx: ctx,
+            ctx,
             did_pop: false,
         }
     }
@@ -1967,13 +1961,13 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
         let compiler = Compiler::method(current);
         ctx._compiler = Some(Box::new(compiler));
         PushCompiler {
-            ctx: ctx,
+            ctx,
             did_pop: false,
         }
     }
 
     fn pop(&mut self) -> Box<Compiler> {
-        assert_eq!(self.did_pop, false);
+        assert!(!self.did_pop);
         let mut compiler = self.ctx._compiler.take().unwrap();
         self.ctx._compiler = compiler.parent.take();
         self.did_pop = true;
@@ -2280,7 +2274,7 @@ fn resolve_non_module(ctx: &ParseContext, name: &str) -> Option<Variable> {
 // wren_c just checks if the first byte is lowercase.
 // this exists to be shared with vm.rs.
 pub(crate) fn wren_is_local_name(name: &str) -> bool {
-    matches!(name.bytes().nth(0).unwrap(), b'a'..=b'z')
+    matches!(name.as_bytes().get(0).unwrap(), b'a'..=b'z')
 }
 
 // Loads the receiver of the currently enclosing method. Correctly handles
@@ -2288,7 +2282,7 @@ pub(crate) fn wren_is_local_name(name: &str) -> bool {
 fn load_this(ctx: &mut ParseContext) -> Result<(), WrenError> {
     let var = resolve_non_module(ctx, "this");
     match var {
-        None => Err(ctx.error_str("Could not resolve 'this'"))?,
+        None => Err(ctx.error_str("Could not resolve 'this'")),
         Some(var) => {
             emit(ctx, Ops::Load(var));
             Ok(())
@@ -2633,7 +2627,7 @@ fn finish_block(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     }
 
     consume_expecting(ctx, Token::RightCurlyBrace, "Expect '}' at end of block.")?;
-    return Ok(false);
+    Ok(false)
 }
 
 struct ScopePusher<'a, 'b> {
@@ -2647,7 +2641,7 @@ impl<'a, 'b> ScopePusher<'a, 'b> {
         push_scope(ctx);
         ctx.compiler_mut().enclosing_class = Some(RefCell::new(class_info));
         ScopePusher {
-            ctx: ctx,
+            ctx,
             did_pop: false,
             did_set_class: true,
         }
@@ -2656,14 +2650,14 @@ impl<'a, 'b> ScopePusher<'a, 'b> {
     fn push_block(ctx: &'a mut ParseContext<'b>) -> ScopePusher<'a, 'b> {
         push_scope(ctx);
         ScopePusher {
-            ctx: ctx,
+            ctx,
             did_pop: false,
             did_set_class: false,
         }
     }
 
     fn pop(&mut self) {
-        assert_eq!(self.did_pop, false);
+        assert!(!self.did_pop);
         if self.did_set_class {
             self.ctx.compiler_mut().enclosing_class = None;
         }
@@ -2880,7 +2874,7 @@ fn declare_method(ctx: &mut ParseContext, signature: &Signature) -> Result<usize
 // and the name is unique.
 fn add_local(ctx: &mut ParseContext, name: String) -> u16 {
     let local = Local {
-        name: name,
+        name,
         depth: ScopeDepth::Local(ctx.compiler().nested_local_scope_count()),
     };
     ctx.compiler_mut().locals.push(local);
@@ -3051,7 +3045,6 @@ fn define_variable(ctx: &mut ParseContext, symbol: u16) {
         ScopeDepth::Local(_) => {
             // Store the variable. If it's a local, the result of the initializer is
             // in the correct slot on the stack already so we're done.
-            return;
         }
         ScopeDepth::Module => {
             // It's a module-level variable, so store the value in the module slot and
@@ -3198,7 +3191,8 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
     let maybe_signature_fn = ctx.parser.current.token.grammar_rule().signature;
     consume(ctx)?;
 
-    let signature_fn = maybe_signature_fn.ok_or(ctx.error_str("Expect method definition."))?;
+    let signature_fn =
+        maybe_signature_fn.ok_or_else(|| ctx.error_str("Expect method definition."))?;
 
     // Build the method signature.
     let mut signature = signature_from_token(ctx, SignatureType::Getter)?;
@@ -3443,7 +3437,7 @@ impl GrammarRule {
         GrammarRule {
             prefix: None,
             infix: Some(infix_op),
-            precedence: precedence,
+            precedence,
             signature: Some(infix_signature),
         }
     }
@@ -3460,7 +3454,7 @@ impl GrammarRule {
         GrammarRule {
             prefix: None,
             infix: Some(infix_parselet),
-            precedence: precedence,
+            precedence,
             signature: None,
         }
     }
@@ -3638,16 +3632,17 @@ fn peek_expecting(ctx: &ParseContext, expected: Token) -> bool {
 fn match_current(ctx: &mut ParseContext, token: Token) -> Result<bool, WrenError> {
     if ctx.parser.current.token == token {
         consume(ctx)?;
-        return Ok(true);
+        Ok(true)
+    } else {
+        Ok(false)
     }
-    Ok(false)
 }
 
 fn match_current_interpolation(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     match ctx.parser.current.token {
         Token::Interpolation(_) => {
             consume(ctx)?;
-            return Ok(true);
+            Ok(true)
         }
         _ => Ok(false),
     }
@@ -3697,7 +3692,7 @@ struct NestingScope<'a, 'b> {
 impl<'a, 'b> NestingScope<'a, 'b> {
     fn push(ctx: &'a mut ParseContext<'b>) -> NestingScope<'a, 'b> {
         ctx.nesting += 1;
-        NestingScope { ctx: ctx }
+        NestingScope { ctx }
     }
 }
 
@@ -3774,8 +3769,8 @@ pub(crate) fn wren_compile_source(
     compile_in_module(vm, module_name, input)
 }
 
-pub(crate) fn wren_compile<'a>(
-    vm: &'a mut WrenVM,
+pub(crate) fn wren_compile(
+    vm: &mut WrenVM,
     input: InputManager,
     module: Handle<Module>,
 ) -> Result<Handle<ObjClosure>, WrenError> {
@@ -3784,14 +3779,14 @@ pub(crate) fn wren_compile<'a>(
     // Init the parser & compiler
     let mut parse_context = ParseContext {
         parser: Parser {
-            input: input,
+            input,
             previous: ParseToken::before_file(),
             current: ParseToken::before_file(),
             next: ParseToken::before_file(),
         },
         _compiler: None,
-        module: module,
-        vm: vm,
+        module,
+        vm,
         nesting: 0,
     };
 

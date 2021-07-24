@@ -188,7 +188,7 @@ pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInte
                     &e.error.to_string(),
                 );
             }
-            return WrenInterpretResult::CompileError;
+            WrenInterpretResult::CompileError
         }
         Ok(closure) => {
             // wren_c does the fiber creation here instead.
@@ -215,11 +215,9 @@ pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInte
                             );
                         }
                     }
-                    return WrenInterpretResult::RuntimeError;
+                    WrenInterpretResult::RuntimeError
                 }
-                Ok(_) => {
-                    return WrenInterpretResult::Success;
-                }
+                Ok(_) => WrenInterpretResult::Success,
             }
         }
     }

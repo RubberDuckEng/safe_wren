@@ -77,7 +77,7 @@ impl Hash for Value {
     // See hashObject in wren_c wren_value.c
     fn hash<H: Hasher>(&self, state: &mut H) {
         fn hash_f64<H: Hasher>(num: f64, state: &mut H) {
-            let bits: u64 = unsafe { std::mem::transmute(num) };
+            let bits: u64 = num.to_bits();
             bits.hash(state);
         }
         match self {
@@ -108,27 +108,27 @@ impl PartialEq for Value {
         // wren_c does memcmp here (e.g. wrenValuesEqual)
         // However the code below seems to pass all the tests.
         match (self, rhs) {
-            (Value::Null, Value::Null) => return true,
-            (Value::Num(a), Value::Num(b)) => return a == b,
-            (Value::Boolean(a), Value::Boolean(b)) => return a == b,
+            (Value::Null, Value::Null) => true,
+            (Value::Num(a), Value::Num(b)) => a == b,
+            (Value::Boolean(a), Value::Boolean(b)) => a == b,
             (Value::Range(a_range), Value::Range(b_range)) => {
                 let a = a_range.borrow();
                 let b = b_range.borrow();
-                return a.from == b.from && a.to == b.to && a.is_inclusive == b.is_inclusive;
+                a.from == b.from && a.to == b.to && a.is_inclusive == b.is_inclusive
             }
-            (Value::String(a_string), Value::String(b_string)) => return a_string.eq(&b_string),
-            (Value::Class(a), Value::Class(b)) => return a.as_ptr() == b.as_ptr(),
-            (Value::Instance(a), Value::Instance(b)) => return a.as_ptr() == b.as_ptr(),
-            (Value::Fn(a), Value::Fn(b)) => return a.as_ptr() == b.as_ptr(),
-            (Value::List(a), Value::List(b)) => return a.as_ptr() == b.as_ptr(),
-            (Value::Map(a), Value::Map(b)) => return a.as_ptr() == b.as_ptr(),
-            (Value::Closure(a), Value::Closure(b)) => return a.as_ptr() == b.as_ptr(),
-            (Value::Fiber(a), Value::Fiber(b)) => return a.as_ptr() == b.as_ptr(),
+            (Value::String(a_string), Value::String(b_string)) => a_string.eq(&b_string),
+            (Value::Class(a), Value::Class(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Instance(a), Value::Instance(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Fn(a), Value::Fn(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::List(a), Value::List(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Map(a), Value::Map(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Closure(a), Value::Closure(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Fiber(a), Value::Fiber(b)) => a.as_ptr() == b.as_ptr(),
             // FIXME: This catch-all is kinda dangerous as it prevents
             // warnings when we add new types to Value.
             // Some way to only catch-all for (T, S) where T != S
             // would be more future-proof.
-            _ => return false,
+            _ => false,
         }
     }
 }
@@ -182,10 +182,7 @@ impl Value {
     // Different from "is truthy" used by "as_bool" in wren_c
     // Unclear if this is only ever called on a known-bool?
     pub(crate) fn equals_true(&self) -> bool {
-        match self {
-            Value::Boolean(b) => *b == true,
-            _ => false,
-        }
+        matches!(self, Value::Boolean(true))
     }
 
     // In Wren false and null are false, everything else is true.
@@ -202,16 +199,10 @@ impl Value {
     }
 
     pub(crate) fn is_null(&self) -> bool {
-        match self {
-            Value::Null => true,
-            _ => false,
-        }
+        matches!(self, Value::Null)
     }
     pub(crate) fn is_num(&self) -> bool {
-        match self {
-            Value::Num(_) => true,
-            _ => false,
-        }
+        matches!(self, Value::Num(_))
     }
 }
 
@@ -281,20 +272,17 @@ impl Module {
     }
 
     pub(crate) fn variable_by_name(&self, name: &str) -> Option<Value> {
-        if let Some(index) = self.lookup_symbol(name) {
-            Some(self.variables[index as usize].clone())
-        } else {
-            None
-        }
+        self.lookup_symbol(name)
+            .map(|index| self.variables[index as usize].clone())
     }
 
     pub(crate) fn expect_class(&self, name: &str) -> Handle<ObjClass> {
         let symbol = self
             .lookup_symbol(name)
-            .expect(&format!("failed to load {}", name));
+            .unwrap_or_else(|| panic!("failed to load {}", name));
         self.variables[symbol as usize]
             .try_into_class()
-            .expect(&format!("failed to load {}", name))
+            .unwrap_or_else(|| panic!("failed to load {}", name))
     }
 }
 
@@ -321,8 +309,8 @@ impl RuntimeError {
         let maybe_msg = value.try_into_string();
         RuntimeError {
             // [error object] matches wren_c wrenDebugPrintStackTrace
-            msg: maybe_msg.unwrap_or("[error object]".to_string()),
-            stack_trace: stack_trace,
+            msg: maybe_msg.unwrap_or_else(|| "[error object]".to_string()),
+            stack_trace,
         }
     }
 }
@@ -465,17 +453,11 @@ impl ObjFiber {
     // }
 
     pub fn is_root(&self) -> bool {
-        match self.run_source {
-            FiberRunSource::Root => true,
-            _ => false,
-        }
+        matches!(self.run_source, FiberRunSource::Root)
     }
 
     pub fn is_try(&self) -> bool {
-        match self.run_source {
-            FiberRunSource::Try => true,
-            _ => false,
-        }
+        matches!(self.run_source, FiberRunSource::Try)
     }
 
     fn return_from_fiber_take_caller(&mut self) -> Option<Handle<ObjFiber>> {
@@ -520,7 +502,7 @@ impl ObjFiber {
             class_obj: vm.fiber_class.as_ref().unwrap().clone(),
             error: Value::Null,
             caller: None,
-            run_source: run_source,
+            run_source,
             completed_normally_cache: false,
             call_stack: RefCell::new(vec![CallFrame::new_root(closure)]),
         }
@@ -659,7 +641,7 @@ impl Drop for WrenVM {
         // functions keep references to modules.
         clear_maybe_module(self.core_module.take());
         clear_maybe_module(self.last_imported_module.take());
-        for (_, module) in &self.modules {
+        for module in self.modules.values() {
             module.borrow_mut().clear();
         }
 
@@ -713,9 +695,9 @@ pub(crate) fn wren_new_range(
 ) -> Handle<ObjRange> {
     new_handle(ObjRange {
         class_obj: vm.core.as_ref().unwrap().range.clone(),
-        from: from,
-        to: to,
-        is_inclusive: is_inclusive,
+        from,
+        to,
+        is_inclusive,
     })
 }
 pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<ObjClass>) {
@@ -733,11 +715,11 @@ pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<
 fn wren_new_single_class(source: ClassSource, name: String) -> Handle<ObjClass> {
     // the wren_c version does a lot more?  Unclear if this should.
     new_handle(ObjClass {
-        name: name,
+        name,
         methods: Vec::new(),
         class: None,
         superclass: None,
-        source: source,
+        source,
     })
 }
 
@@ -877,9 +859,8 @@ fn create_class(
     let superclass = validate_superclass(&name, superclass_value, &source)?;
 
     let class = wren_new_class(vm, &superclass, source.clone(), name)?;
-    match source {
-        ClassSource::Foreign => bind_foreign_class(vm, &mut class.borrow_mut(), module),
-        _ => (),
+    if let ClassSource::Foreign = source {
+        bind_foreign_class(vm, &mut class.borrow_mut(), module)
     }
     // After bind_foreign_class to avoid a clone, should not make a differnce.
     frame.push(Value::Class(class));
@@ -1070,9 +1051,8 @@ fn import_module(
     let name = resolve_module(vm, importer_name, unresolved_name);
 
     // If the module is already loaded, we don't need to do anything.
-    match vm.modules.get(&name) {
-        Some(m) => return Ok(ImportResult::Existing(m.clone())),
-        None => {}
+    if let Some(m) = vm.modules.get(&name) {
+        return Ok(ImportResult::Existing(m.clone()));
     }
 
     // If we ever have other builtins, this doesn't need to be an error.
@@ -1116,7 +1096,7 @@ impl WrenVM {
             modules: HashMap::new(),
             start_time: std::time::Instant::now(),
             last_imported_module: None,
-            config: config,
+            config,
             foreign_args: None,
         };
 
@@ -1147,9 +1127,8 @@ impl WrenVM {
     }
 
     pub(crate) fn lookup_or_register_empty_module(&mut self, name: &str) -> Handle<Module> {
-        match self.modules.get(name) {
-            Some(m) => return m.clone(),
-            None => {}
+        if let Some(m) = self.modules.get(name) {
+            return m.clone();
         }
         let module = self.new_module_with_name(name);
         self.register_module(module.clone());
@@ -1223,7 +1202,7 @@ impl WrenVM {
             let fn_obj = closure.fn_obj.borrow();
             let module = fn_obj.module.borrow().name.clone();
             FrameInfo {
-                module: module,
+                module,
                 // In an executing frame, the pc points to the *next*
                 // instruction to execute, the error is from the
                 // previous instruction.
@@ -1252,8 +1231,7 @@ impl WrenVM {
         foreign(self);
         // Take the value w/o copy
         let args = self.foreign_args.take();
-        let value = args.unwrap().into_iter().nth(0).unwrap();
-        value
+        args.unwrap().into_iter().next().unwrap()
     }
 
     fn cascade_error(&mut self, error: Value) -> Result<(), RuntimeError> {
@@ -1444,7 +1422,6 @@ impl WrenVM {
         let closure_rc = frame.closure.clone();
         let closure = closure_rc.borrow();
         let fn_obj = closure.fn_obj.borrow();
-        frame.pc;
         let dump_instructions = self.should_dump_instructions(&fn_obj.debug);
         loop {
             let op = &fn_obj.code[frame.pc];
@@ -1719,7 +1696,7 @@ fn check_arity(value: &Value, num_args: usize) -> Result<Handle<ObjClosure>> {
 
     // num_args includes implicit this, not counted in arity.
     let arity = closure.borrow().fn_obj.borrow().arity as usize;
-    if num_args >= arity + 1 {
+    if num_args > arity {
         Ok(closure)
     } else {
         Err(VMError::from_str("Function expects more arguments."))
@@ -1963,7 +1940,7 @@ impl ObjClosure {
         // FIXME: Is this really supposed to also be class = fn?
         ObjClosure {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
-            fn_obj: fn_obj,
+            fn_obj,
         }
     }
 }
@@ -1997,9 +1974,9 @@ impl ObjFn {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
             constants: compiler.constants.list,
             code: compiler.code,
-            arity: arity,
+            arity,
             debug: compiler.fn_debug,
-            module: module,
+            module,
         }
     }
 }
@@ -2024,7 +2001,7 @@ impl ObjInstance {
         let fields = vec![Value::Null; num_fields];
         ObjInstance {
             class_obj: class,
-            fields: fields,
+            fields,
         }
     }
 }
@@ -2158,10 +2135,7 @@ impl ObjClass {
     }
 
     fn is_foreign(&self) -> bool {
-        match self.source {
-            ClassSource::Foreign => true,
-            _ => false,
-        }
+        matches!(self.source, ClassSource::Foreign)
     }
 }
 

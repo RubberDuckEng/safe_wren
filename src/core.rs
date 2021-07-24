@@ -12,25 +12,25 @@ type Handle<T> = std::rc::Rc<std::cell::RefCell<T>>;
 // These are our safer (and error-message sharing) alternatives.
 // FIXME: Rust would expect "unwrap" in these names.
 // e.g. unwrap_this_as_range
-fn this_as_range(args: &Vec<Value>) -> Handle<ObjRange> {
+fn this_as_range(args: &[Value]) -> Handle<ObjRange> {
     args[0].try_into_range().unwrap()
 }
-fn this_as_string(args: &Vec<Value>) -> String {
+fn this_as_string(args: &[Value]) -> String {
     args[0].try_into_string().unwrap()
 }
-fn this_as_closure(args: &Vec<Value>) -> Handle<ObjClosure> {
+fn this_as_closure(args: &[Value]) -> Handle<ObjClosure> {
     args[0].try_into_closure().unwrap()
 }
-fn this_as_map(args: &Vec<Value>) -> Handle<ObjMap> {
+fn this_as_map(args: &[Value]) -> Handle<ObjMap> {
     args[0].try_into_map().unwrap()
 }
-fn this_as_list(args: &Vec<Value>) -> Handle<ObjList> {
+fn this_as_list(args: &[Value]) -> Handle<ObjList> {
     args[0].try_into_list().unwrap()
 }
-fn this_as_class(args: &Vec<Value>) -> Handle<ObjClass> {
+fn this_as_class(args: &[Value]) -> Handle<ObjClass> {
     args[0].try_into_class().unwrap()
 }
-fn this_as_fiber(args: &Vec<Value>) -> Handle<ObjFiber> {
+fn this_as_fiber(args: &[Value]) -> Handle<ObjFiber> {
     args[0].try_into_fiber().unwrap()
 }
 
@@ -109,8 +109,8 @@ macro_rules! num_unary_op {
 
 num_constant!(num_infinity, f64::INFINITY);
 num_constant!(num_nan, f64::NAN);
-num_constant!(num_pi, 3.14159265358979323846264338327950288);
-num_constant!(num_tau, 6.28318530717958647692528676655900577);
+num_constant!(num_pi, std::f64::consts::PI);
+num_constant!(num_tau, std::f64::consts::TAU);
 num_constant!(num_largest, f64::MAX);
 num_constant!(num_smallest, f64::MIN);
 num_constant!(num_max_safe_integer, 9007199254740991.0);
@@ -255,7 +255,7 @@ fn wren_num_to_string(num: f64) -> String {
 
     // Hacks to get us closer:
     let log_x = num.abs().log10();
-    if (log_x >= -4.0 && log_x <= 14.0) || num == 0.0 {
+    if (-4.0..=14.0).contains(&log_x) || num == 0.0 {
         format!("{}", num)
     } else {
         let sci = format!("{:e}", num);
@@ -629,7 +629,7 @@ fn string_subscript(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
     match &args[1] {
         Value::Num(_) => {
-            let index = validate_index(&args[1], string.len(), "Subscript".into())?;
+            let index = validate_index(&args[1], string.len(), "Subscript")?;
             Ok(wren_string_code_point_at(string, index))
         }
         Value::Range(r) => {
@@ -677,7 +677,7 @@ fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
         return Ok(Value::Num(-1.0));
     }
     // FIXME: Might be a nicer way to do this in rust?
-    let c = this.split_at(index).1.chars().nth(0).unwrap();
+    let c = this.split_at(index).1.chars().next().unwrap();
     Ok(Value::from_usize(c as usize))
 }
 
@@ -779,11 +779,11 @@ fn string_iterate_byte(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
     // Advance to the next byte.
     let index = num as usize + 1;
-    return Ok(if index >= string.len() {
+    Ok(if index >= string.len() {
         Value::Boolean(false)
     } else {
         Value::from_usize(index)
-    });
+    })
 }
 
 // Is this API?
@@ -808,7 +808,7 @@ fn string_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let string = this_as_string(&args);
     let index = validate_index(&args[1], string.len(), "Iterator")?;
 
-    return Ok(wren_string_code_point_at(string, index));
+    Ok(wren_string_code_point_at(string, index))
 }
 
 fn string_starts_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
@@ -863,15 +863,15 @@ fn map_subscript_setter(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn wren_map_is_valid_key(arg: &Value) -> bool {
-    match arg {
-        Value::Boolean(_) => true,
-        Value::Class(_) => true,
-        Value::Null => true,
-        Value::Num(_) => true,
-        Value::Range(_) => true,
-        Value::String(_) => true,
-        _ => false,
-    }
+    matches!(
+        arg,
+        Value::Boolean(_)
+            | Value::Class(_)
+            | Value::Null
+            | Value::Num(_)
+            | Value::Range(_)
+            | Value::String(_)
+    )
 }
 
 fn validate_key(_vm: &WrenVM, arg: &Value) -> Result<bool> {
@@ -1015,7 +1015,7 @@ fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
     let mut value = validate_int_value(range.to as f64, "Range end")?;
     // Negative indices count from the end.
     if value < 0.0 {
-        value = len_f + value;
+        value += len_f;
     }
 
     // Convert the exclusive range to an inclusive one.
@@ -1056,7 +1056,7 @@ fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
     match &args[1] {
         Value::Num(_) => {
-            let index = validate_index(&args[1], list.borrow().elements.len(), "Subscript".into())?;
+            let index = validate_index(&args[1], list.borrow().elements.len(), "Subscript")?;
             Ok(list.borrow().elements[index].clone())
         }
         Value::Range(r) => {
@@ -1178,7 +1178,7 @@ fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
         return Ok(Value::Boolean(false));
     }
     // Otherwise, move to the next index.
-    return Ok(Value::Num(index + 1.0));
+    Ok(Value::Num(index + 1.0))
 }
 
 fn validate_index(value: &Value, count: usize, arg_name: &str) -> Result<usize> {
@@ -1194,7 +1194,7 @@ fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<
 
     // Negative indices count from the end.
     if value < 0.0 {
-        value = count as f64 + value;
+        value += count as f64;
     }
     // Check bounds.
     if value >= 0.0 && value < count as f64 {
@@ -1436,7 +1436,7 @@ pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
 
     for arity in 0..=crate::vm::MAX_PARAMETERS {
         let name = if arity == 0 {
-            format!("call()")
+            "call()".to_string()
         } else {
             // arity=1 -> "call(_)", arity=2 -> "call(_,_)", etc.
             format!("call({}{})", "_,".repeat(arity - 1), "_")

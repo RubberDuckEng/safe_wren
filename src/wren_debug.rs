@@ -31,7 +31,7 @@ struct CompileInput {
     module_name: String,
 }
 
-fn input_from_source_or_path(source_or_path: &String) -> CompileInput {
+fn input_from_source_or_path(source_or_path: &str) -> CompileInput {
     if source_or_path.ends_with(".wren") {
         let source = fs::read_to_string(source_or_path).unwrap_or_else(|_| {
             eprintln!("Could not find file \"{}\".", source_or_path);
@@ -43,13 +43,13 @@ fn input_from_source_or_path(source_or_path: &String) -> CompileInput {
         }
     } else {
         CompileInput {
-            input: InputManager::from_string(source_or_path.clone()),
+            input: InputManager::from_string(source_or_path.to_string()),
             module_name: "<inline>".into(),
         }
     }
 }
 
-pub fn print_tokens(source_or_path: &String) {
+pub fn print_tokens(source_or_path: &str) {
     let mut input = input_from_source_or_path(source_or_path);
     let result = lex(&mut input.input);
 
@@ -64,7 +64,7 @@ pub fn print_tokens(source_or_path: &String) {
     }
 }
 
-pub fn print_bytecode(source_or_path: &String) {
+pub fn print_bytecode(source_or_path: &str) {
     let mut vm = WrenVM::new(test_config());
     let input = input_from_source_or_path(source_or_path);
     let result = compile_in_module(&mut vm, &input.module_name, input.input);
@@ -74,7 +74,7 @@ pub fn print_bytecode(source_or_path: &String) {
     }
 }
 
-pub fn interpret_and_print_vm(source_or_path: &String) {
+pub fn interpret_and_print_vm(source_or_path: &str) {
     let mut vm = WrenVM::new(test_config());
     vm.config.debug_level = Some(DebugLevel::NonCore);
     let input = input_from_source_or_path(source_or_path);
