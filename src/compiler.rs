@@ -11,7 +11,7 @@ use std::str;
 
 use crate::vm::{
     new_handle, wren_define_variable, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn,
-    SymbolTable, Value, WrenVM,
+    SymbolTable, Value, WrenVM, MAX_FIELDS,
 };
 
 // Maximum times grammar is allowed to recurse through parse_precedence
@@ -2177,7 +2177,9 @@ fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     };
 
     let symbol = ctx.call_with_enclosing_class(field_lookup)?;
-    // FIXME: Handle field limits.
+    if symbol >= MAX_FIELDS {
+        return Err(ctx.error_string(format!("A class can only have {} fields.", MAX_FIELDS)));
+    }
 
     // If there's an "=" after a field name, it's an assignment.
     let is_assignment = can_assign && match_current(ctx, Token::Equals)?;

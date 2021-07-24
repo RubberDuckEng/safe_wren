@@ -28,7 +28,7 @@ pub(crate) const MAX_PARAMETERS: usize = 16;
 // a single byte for the number of fields. Note that it's 255 and not 256
 // because creating a class takes the *number* of fields, not the *highest
 // field index*.
-const MAX_FIELDS: usize = 255;
+pub(crate) const MAX_FIELDS: usize = 255;
 
 // Internal VM Error, wrapped in RuntimeError for API.
 #[derive(Debug)]

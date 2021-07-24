@@ -701,6 +701,7 @@ wren_c/test/limit/many_fields.wren
 wren_c/test/limit/many_globals.wren
 wren_c/test/limit/reuse_constants.wren
 wren_c/test/limit/too_many_constants.wren
+wren_c/test/limit/too_many_fields.wren
 wren_c/test/limit/too_many_function_parameters.wren
 wren_c/test/limit/too_many_inherited_fields.wren
 wren_c/test/limit/too_much_interpolation_nesting.wren

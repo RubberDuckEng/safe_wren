@@ -31,8 +31,6 @@ wren_c/test/meta/get_module_variables_not_string.wren
 wren_c/test/meta/eval_compile_error.wren
 
 # wren_c/test/language/constructor/cannot_be_static.wren
-# wren_c/test/language/constructor/superclass.wren
-# wren_c/test/language/constructor/super_must_have_args.wren
 
 # wren_c continues after most failures during compiling
 # hence for wren_rust we get wrong line numbers sometimes.
@@ -53,6 +51,10 @@ wren_c/test/language/method/empty_subscript_call.wren
 wren_c/test/language/nonlocal/undefined.wren
 wren_c/test/language/class/field_in_foreign_class.wren
 wren_c/test/language/class/newline_after_static.wren
+wren_c/test/limit/variable_name_too_long.wren
+wren_c/test/regression/428.wren
+wren_c/test/regression/494.wren
+
 
 # byte escapes get expanded through char
 # Fails because 171 expands to 194, 171 for rust:
@@ -75,6 +77,9 @@ wren_c/test/language/super/indirectly_inherited.wren
 wren_c/test/language/super/call_same_method.wren
 wren_c/test/language/super/super_in_inherited_method.wren
 wren_c/test/language/super/no_superclass_method.wren
+wren_c/test/limit/many_inherited_fields.wren
+wren_c/test/language/constructor/superclass.wren
+wren_c/test/language/constructor/super_must_have_args.wren
 
 # Missing duplicate method check:
 wren_c/test/language/method/duplicate_methods.wren
@@ -143,11 +148,6 @@ wren_c/test/language/static_field/use_before_set.wren
 wren_c/test/language/static_field/nested_class.wren
 
 
-# Wrong line number?
-# wren_c/test/regression/428.wren
-# wren_c/test/regression/494.wren
-
-
 # wren_rust only allows valid unicode and thus gives the wrong
 # exit code (NO_INPUT) and even if that was fixed would give the
 # wrong line number for the parse error (we never try to parse them)
@@ -170,11 +170,11 @@ wren_c/test/regression/442-000086.wren
 wren_c/test/regression/442-000295.wren
 
 
-# wren_c/test/limit/jump_too_far.wren
-# wren_c/test/limit/loop_too_far.wren
-# wren_c/test/limit/too_many_fields.wren
-# wren_c/test/limit/many_inherited_fields.wren
-# wren_c/test/limit/variable_name_too_long.wren
+# WONTFIX? wren_rust doesn't currently enforce MAX_JUMP, but even
+# if we did, our opcode stream is different from wren_c's
+# so these limit tests wouldn't work.
+wren_c/test/limit/jump_too_far.wren
+wren_c/test/limit/loop_too_far.wren
 
 # wren_c/test/core/string/iterator_value.wren
 # wren_c/test/core/string/subscript_range.wren
