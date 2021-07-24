@@ -4,7 +4,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::error;
 use std::fmt;
-use std::ops::{BitOr, Range};
+use std::ops::Range;
 use std::rc::Rc;
 use std::str;
 
@@ -264,6 +264,21 @@ impl InputManager {
         }
     }
 
+    fn next_checked(&mut self) -> Option<u8> {
+        if self.offset < self.source.len() {
+            let val = self.source[self.offset];
+            if val == b'\n' {
+                self.line_number += 1;
+            }
+            self.offset += 1;
+            Some(val)
+        } else {
+            None
+        }
+    }
+
+    // FIXME: Move to next_checked instead, or at least
+    // rename this to next_unchecked.
     fn next(&mut self) -> u8 {
         let val = self.source[self.offset];
         if val == b'\n' {
@@ -338,6 +353,7 @@ pub enum LexError {
     FloatParsingError(std::num::ParseFloatError),
     UnterminatedString,
     UnterminatedBlockComment,
+    UnterminatedRawString,
     Error(String),
 }
 
@@ -384,8 +400,9 @@ impl fmt::Display for LexError {
             LexError::StringDecoderError(e) => write!(f, "String decoding {}", e),
             LexError::IntegerParsingError(e) => write!(f, "Integer parsing {}", e),
             LexError::FloatParsingError(e) => write!(f, "Float parsing {}", e),
-            LexError::UnterminatedString => write!(f, "Unterminated String"),
-            LexError::UnterminatedBlockComment => write!(f, "Unterminated Block Comment"),
+            LexError::UnterminatedString => write!(f, "Unterminated string."),
+            LexError::UnterminatedRawString => write!(f, "Unterminated raw string."),
+            LexError::UnterminatedBlockComment => write!(f, "Unterminated block comment."),
             LexError::UnexpectedChar(c) => write!(f, "Unexpected char '{}'", c),
             LexError::Error(s) => write!(f, "{}", s),
         }
@@ -400,6 +417,7 @@ impl error::Error for LexError {
             LexError::IntegerParsingError(e) => Some(e),
             LexError::FloatParsingError(e) => Some(e),
             LexError::UnterminatedString => None,
+            LexError::UnterminatedRawString => None,
             LexError::UnterminatedBlockComment => None,
             LexError::UnexpectedChar(_) => None,
             LexError::Error(_) => None,
@@ -580,7 +598,12 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                     Token::Equals,
                 ))
             }
-            b'"' => return read_string(input),
+            b'"' => {
+                if input.peek_is(b'"') && input.peek_next_is(b'"') {
+                    return read_raw_string(input);
+                }
+                return read_string(input);
+            }
             // Note this does not have _ like "is_name" does.
             b'a'..=b'z' | b'A'..=b'Z' => {
                 let name = read_name(c, input)?;
@@ -622,6 +645,8 @@ fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
 // Reads the next character, which should be a hex digit (0-9, a-f, or A-F) and
 // returns its numeric value. If the character isn't a hex digit, returns -1.
 fn read_hex_digit(input: &mut InputManager) -> Option<u8> {
+    // FIXME: Can't this just be input.next() and all the other
+    // input.next() become "b"?
     match input.peek() {
         Some(b) => match b {
             b'0'..=b'9' => Some(input.next() - b'0'),
@@ -743,12 +768,98 @@ fn read_escape(
                 let digit = read_hex_digit(input).ok_or_else(|| {
                     LexError::Error(format!("Invalid {} escape sequence.", description))
                 })?;
-                value = (value * 16).bitor(&digit.into());
+                value = value * 16 + &digit.into();
             }
         }
     }
-    Ok(char::from_u32(value.into())
+    Ok(char::from_u32(value)
         .ok_or_else(|| LexError::Error(format!("Invalid {} escape sequence.", description)))?)
+}
+
+fn read_raw_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
+    //consume the second and third "
+    input.next();
+    input.next();
+
+    let mut string = String::new();
+
+    let mut skip_start = Some(0);
+    let mut first_newline = None;
+    let mut skip_end = None;
+    let mut last_newline = None;
+
+    loop {
+        // FIXME: We probably don't need to check all 3 every time?
+        let c = input
+            .next_checked()
+            .ok_or_else(|| LexError::UnterminatedRawString)?;
+        let c1 = input
+            .peek()
+            .ok_or_else(|| LexError::UnterminatedRawString)?;
+        let c2 = input
+            .peek_next()
+            .ok_or_else(|| LexError::UnterminatedRawString)?;
+
+        if c == b'\r' {
+            continue;
+        }
+
+        let c_is_newline = c == b'\n';
+        if c_is_newline {
+            last_newline = Some(string.len());
+            skip_end = last_newline;
+            if first_newline.is_none() {
+                first_newline = Some(string.len());
+            }
+        }
+
+        // We found the end of the raw string.
+        if c == b'"' && c1 == b'"' && c2 == b'"' {
+            break;
+        }
+
+        let c_is_whitespace = c == b' ' || c == b'\t';
+        if !c_is_newline && !c_is_whitespace {
+            skip_end = None;
+        }
+
+        // If we haven't seen a newline or other character yet,
+        // and still seeing whitespace, count the characters
+        // as skippable till we know otherwise
+        let skippable = skip_start.is_some() && c_is_whitespace && first_newline.is_none();
+        if skippable {
+            skip_start = Some(string.len() + 1);
+        }
+
+        // We've counted leading whitespace till we hit something else,
+        // but it's not a newline, so we reset skipStart since we need these characters
+        if first_newline.is_none() && !c_is_whitespace && !c_is_newline {
+            skip_start = None;
+        }
+
+        string.push(char::from_u32(c.into()).unwrap());
+    }
+
+    //consume the second and third "
+    input.next();
+    input.next();
+
+    let mut offset = 0;
+    let mut count = string.len();
+
+    if first_newline.is_some() && skip_start == first_newline {
+        offset = first_newline.unwrap() + 1;
+    }
+    if last_newline.is_some() && skip_end == last_newline {
+        count = last_newline.unwrap();
+    }
+    if offset > count {
+        count = 0;
+    } else {
+        count -= offset;
+    }
+
+    Ok(input.make_token(Token::String(string[offset..offset + count].into())))
 }
 
 fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {

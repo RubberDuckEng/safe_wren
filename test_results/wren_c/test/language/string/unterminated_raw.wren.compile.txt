@@ -1,1 +1,1 @@
-[wren_c/test/language/string/unterminated_raw line 1] Error: Unterminated String
+[wren_c/test/language/string/unterminated_raw line 0] Error: Unterminated raw string.

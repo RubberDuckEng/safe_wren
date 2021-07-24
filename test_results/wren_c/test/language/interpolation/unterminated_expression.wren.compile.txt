@@ -1,1 +1,1 @@
-[wren_c/test/language/interpolation/unterminated_expression line 2] Error: Unterminated String
+[wren_c/test/language/interpolation/unterminated_expression line 2] Error: Unterminated string.

@@ -1,3 +1,3 @@
 Unexpected error:
-[./test/language/string/unterminated line 0] Error: Unterminated String
+[./test/language/string/unterminated line 0] Error: Unterminated string.
 Missing expected error on line 2.

@@ -641,6 +641,7 @@ wren_c/test/language/shebang/shebang_at_other_line.wren
 wren_c/test/language/shebang/shebang_invalid.wren
 wren_c/test/language/static_field/outside_class.wren
 wren_c/test/language/string/escapes.wren
+wren_c/test/language/string/literals.wren
 wren_c/test/language/super/super_in_top_level_function.wren
 wren_c/test/language/this/this_at_top_level.wren
 wren_c/test/language/this/this_in_method.wren

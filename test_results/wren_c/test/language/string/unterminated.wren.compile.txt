@@ -1,1 +1,1 @@
-[wren_c/test/language/string/unterminated line 0] Error: Unterminated String
+[wren_c/test/language/string/unterminated line 0] Error: Unterminated string.

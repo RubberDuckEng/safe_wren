@@ -1,3 +1,3 @@
 Unexpected error:
-[./test/language/string/unterminated_raw line 1] Error: Unterminated String
+[./test/language/string/unterminated_raw line 0] Error: Unterminated raw string.
 Missing expected error on line 2.
