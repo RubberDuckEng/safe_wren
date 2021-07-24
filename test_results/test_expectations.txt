@@ -32,17 +32,17 @@ wren_c/test/meta/eval_compile_error.wren
 
 # wren_c continues after most failures during compiling
 # hence for wren_rust we get wrong line numbers sometimes.
-# wren_c/test/language/string/incomplete_unicode_escape_at_eof.wren
-# wren_c/test/language/string/incomplete_long_unicode_escape.wren
-# wren_c/test/language/string/incomplete_unicode_escape.wren
-# wren_c/test/language/string/incomplete_byte_escape.wren
-# wren_c/test/language/string/invalid_byte_escape.wren
-# wren_c/test/language/string/incomplete_byte_escape_at_eof.wren
-# wren_c/test/language/string/unicode_two_bytes_to_long_escape.wren
-# wren_c/test/language/string/unterminated_raw.wren
-# wren_c/test/language/string/unterminated.wren
-# wren_c/test/language/string/invalid_escape.wren
-# wren_c/test/language/string/invalid_unicode_escape.wren
+wren_c/test/language/string/incomplete_unicode_escape_at_eof.wren
+wren_c/test/language/string/incomplete_long_unicode_escape.wren
+wren_c/test/language/string/incomplete_unicode_escape.wren
+wren_c/test/language/string/incomplete_byte_escape.wren
+wren_c/test/language/string/invalid_byte_escape.wren
+wren_c/test/language/string/incomplete_byte_escape_at_eof.wren
+wren_c/test/language/string/unicode_two_bytes_to_long_escape.wren
+wren_c/test/language/string/unterminated_raw.wren
+wren_c/test/language/string/unterminated.wren
+wren_c/test/language/string/invalid_escape.wren
+wren_c/test/language/string/invalid_unicode_escape.wren
 
 # We stop at first error, WONTFIX?
 wren_c/test/language/method/empty_subscript_call.wren
@@ -57,11 +57,14 @@ wren_c/test/language/constructor/cannot_be_static.wren
 # byte escapes get expanded through char
 # Fails because 171 expands to 194, 171 for rust:
 # https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d79f8bdf98be962582f31ea4a62fb658
-# wren_c/test/language/string/byte_escapes.wren
-# wren_c/test/language/string/unicode_escapes.wren
+wren_c/test/language/string/byte_escapes.wren
+wren_c/test/language/string/unicode_escapes.wren
 
 # Missing error.
 # wren_c/test/language/number/literal_too_large.wren
+
+# Missing limit
+# wren_c/test/core/number/from_string_too_large.wren
 
 # super
 wren_c/test/language/super/super_in_closure_in_inherited_method.wren
@@ -83,14 +86,14 @@ wren_c/test/language/constructor/super_must_have_args.wren
 wren_c/test/language/method/duplicate_methods.wren
 
 # Field inheritance
-# wren_c/test/language/inheritance/inherit_fields.wren
+wren_c/test/language/inheritance/inherit_fields.wren
 
 # Block comments
 wren_c/test/language/comments/unterminated_block.wren
 wren_c/test/language/comments/unterminated_nested_block.wren
 
 # Missing System.gc()
-# wren_c/test/language/deeply_nested_gc.wren
+wren_c/test/language/deeply_nested_gc.wren
 
 # class attributes
 wren_c/test/language/class/attributes/duplicate_keys.wren
@@ -133,10 +136,6 @@ wren_c/test/language/break/closure_in_for.wren
 wren_c/test/language/break/closure_in_while.wren
 wren_c/test/language/fiber/closure.wren
 
-
-# wren_c/test/language/many_reallocations.wren
-# wren_c/test/language/shebang/shebang.wren
-
 # static fields
 wren_c/test/language/static_field/default_to_null.wren
 wren_c/test/language/static_field/multiple.wren
@@ -144,7 +143,6 @@ wren_c/test/language/static_field/in_instance_method.wren
 wren_c/test/language/static_field/closure.wren
 wren_c/test/language/static_field/use_before_set.wren
 wren_c/test/language/static_field/nested_class.wren
-
 
 # wren_rust only allows valid unicode and thus gives the wrong
 # exit code (NO_INPUT) and even if that was fixed would give the
@@ -174,13 +172,6 @@ wren_c/test/regression/442-000295.wren
 wren_c/test/limit/jump_too_far.wren
 wren_c/test/limit/loop_too_far.wren
 
-# wren_c/test/core/string/iterator_value.wren
-# wren_c/test/core/string/subscript_range.wren
-# wren_c/test/core/string/index_of_start.wren
-
-# test/bringup/call_method_before_defined.wren
-# wren_c/example/syntax.wren
-
 # Missing C API to include these.
 wren_c/test/api/call_calls_foreign.wren
 wren_c/test/api/call_wren_call_root.wren
@@ -197,17 +188,6 @@ wren_c/test/api/reset_stack_after_foreign_construct.wren
 wren_c/test/api/resolution.wren
 wren_c/test/api/slots.wren
 wren_c/test/api/user_data.wren
-
-# wren_c/test/core/map/iterate.wren
-# wren_c/test/core/map/key_iterate.wren
-# wren_c/test/core/map/to_string.wren
-# wren_c/test/core/map/value_iterate.wren
-
-# Missing limit
-# wren_c/test/core/number/from_string_too_large.wren
-
-# Wrong number?
-# wren_c/test/core/number/smallest.wren
 
 
 # Num.toString doesn't print correct # of digits or round.
@@ -227,6 +207,27 @@ wren_c/test/core/number/minSafeInteger.wren
 wren_c/test/core/number/minus.wren
 wren_c/test/core/number/sqrt.wren
 wren_c/test/core/number/tan.wren
+
+# Times out
+# wren_c/test/language/many_reallocations.wren
+
+# Wrong number?
+# wren_c/test/core/number/smallest.wren
+
+
+## UNTRIAGED BELOW
+
+# wren_c/test/core/string/iterator_value.wren
+# wren_c/test/core/string/subscript_range.wren
+# wren_c/test/core/string/index_of_start.wren
+
+# test/bringup/call_method_before_defined.wren
+# wren_c/example/syntax.wren
+
+# wren_c/test/core/map/iterate.wren
+# wren_c/test/core/map/key_iterate.wren
+# wren_c/test/core/map/to_string.wren
+# wren_c/test/core/map/value_iterate.wren
 
 # wren_c/test/core/string_byte_sequence/count.wren
 # wren_c/test/core/string_code_point_sequence/iterate.wren

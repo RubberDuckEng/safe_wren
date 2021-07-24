@@ -587,7 +587,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
                 // Ignore shebang on the first line.
                 if input.line_number == 1 && input.peek_is(b'!') && input.peek_next_is(b'/') {
                     skip_line_comment(input);
-                    break;
+                    continue;
                 }
                 // Otherwise we treat it as a token
                 return Ok(input.make_token(Token::Hash));
@@ -627,6 +627,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             }
         }
     }
+    assert!(input.is_at_end(), "Broke out of next_token loop early?",);
     Ok(input.make_token(Token::EndOfFile))
 }
 

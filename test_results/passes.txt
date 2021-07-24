@@ -643,6 +643,7 @@ wren_c/test/language/setter/prefix_operator.wren
 wren_c/test/language/setter/result.wren
 wren_c/test/language/setter/same_name_as_method.wren
 wren_c/test/language/setter/static.wren
+wren_c/test/language/shebang/shebang.wren
 wren_c/test/language/shebang/shebang_at_eof.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
 wren_c/test/language/shebang/shebang_invalid.wren
