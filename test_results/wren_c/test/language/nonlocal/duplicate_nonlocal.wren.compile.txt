@@ -1,15 +1,1 @@
-Constants:
-00: "Foo"
-01: Fn(bar)
-Code:
-00 (ln 1): Constant(0: "Foo")
-01 (ln 1): Load(Module, Class("Object"))
-02 (ln 1): Class(0 fields)
-03 (ln 1): Store(Module)
-04 (ln 1): Pop
-05 (ln 5): Closure(1, [])
-06 (ln 5): Load(Module, Null)
-07 (ln 5): Method(instance, bar)
-08 (ln 7): EndModule
-09 (ln 7): Return
-10 (ln 7): End
+[wren_c/test/language/nonlocal/duplicate_nonlocal line 4] Error at '"other"': Variable is already declared in this scope.

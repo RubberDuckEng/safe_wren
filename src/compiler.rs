@@ -1,6 +1,7 @@
 // analog to wren_compiler.c from wren_c.
 
 use std::cell::RefCell;
+use std::cmp::{Ord, Ordering};
 use std::collections::HashMap;
 use std::error;
 use std::fmt;
@@ -1067,10 +1068,27 @@ struct Local {
     depth: ScopeDepth,
 }
 
-#[derive(Copy, Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, PartialEq, Debug, Eq)]
 enum ScopeDepth {
     Module,
     Local(usize),
+}
+
+impl Ord for ScopeDepth {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        match (self, other) {
+            (ScopeDepth::Module, ScopeDepth::Module) => Ordering::Equal,
+            (ScopeDepth::Module, ScopeDepth::Local(_)) => Ordering::Less,
+            (ScopeDepth::Local(_), ScopeDepth::Module) => Ordering::Greater,
+            (ScopeDepth::Local(this), ScopeDepth::Local(that)) => this.cmp(that),
+        }
+    }
+}
+
+impl PartialOrd for ScopeDepth {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 impl ScopeDepth {
@@ -2897,7 +2915,18 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
         return Ok(symbol);
     }
 
-    // TODO: Check to see if another local with the same name exists
+    // See if there is already a variable with this name declared in the current
+    // scope. (Outer scopes are OK: those get shadowed.)
+    for local in ctx.compiler().locals.iter().rev() {
+        // Once we escape this scope and hit an outer one, we can stop.
+        if local.depth < ctx.compiler().scope_depth {
+            break;
+        }
+        if local.name.eq(&name) {
+            // Wren still returns, even after emitting the error!
+            return Err(ctx.error_str("Variable is already declared in this scope."));
+        }
+    }
 
     if ctx.compiler().locals.len() >= MAX_LOCALS {
         return Err(ctx.error_string(format!(

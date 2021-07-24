@@ -598,6 +598,7 @@ wren_c/test/language/module/unknown_module.wren
 wren_c/test/language/module/unknown_variable/unknown_variable.wren
 wren_c/test/language/no_trailing_newline.wren
 wren_c/test/language/nonlocal/assignment.wren
+wren_c/test/language/nonlocal/duplicate_nonlocal.wren
 wren_c/test/language/nonlocal/in_block_scope.wren
 wren_c/test/language/nonlocal/localname_forward_declare.wren
 wren_c/test/language/nonlocal/mutual_recursion.wren
@@ -648,8 +649,12 @@ wren_c/test/language/this/this_in_method.wren
 wren_c/test/language/this/this_in_static_method.wren
 wren_c/test/language/this/this_in_top_level_function.wren
 wren_c/test/language/unexpected_character.wren
+wren_c/test/language/variable/duplicate_local.wren
+wren_c/test/language/variable/duplicate_parameter.wren
 wren_c/test/language/variable/global_in_initializer.wren
 wren_c/test/language/variable/global_without_initializer.wren
+wren_c/test/language/variable/local_collide_with_function_parameter.wren
+wren_c/test/language/variable/local_collide_with_method_parameter.wren
 wren_c/test/language/variable/local_in_initializer.wren
 wren_c/test/language/variable/local_in_middle_of_block.wren
 wren_c/test/language/variable/local_in_nested_block.wren

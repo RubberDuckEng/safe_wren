@@ -57,7 +57,6 @@ wren_c/test/meta/eval_compile_error.wren
 
 
 # wren_c/test/language/nonlocal/undefined.wren
-# wren_c/test/language/nonlocal/duplicate_nonlocal.wren
 
 # Missing error.
 # wren_c/test/language/number/literal_too_large.wren
@@ -78,14 +77,10 @@ wren_c/test/language/super/no_superclass_method.wren
 # Missing duplicate method check:
 wren_c/test/language/method/duplicate_methods.wren
 
-# wren_c/test/language/variable/duplicate_parameter.wren
 # wren_c/test/language/variable/shadow_local.wren
-# wren_c/test/language/variable/duplicate_local.wren
 # wren_c/test/language/variable/shadow_and_local.wren
 # wren_c/test/language/variable/use_this_as_var.wren
 # wren_c/test/language/variable/shadow_in_initializer.wren
-# wren_c/test/language/variable/local_collide_with_function_parameter.wren
-# wren_c/test/language/variable/local_collide_with_method_parameter.wren
 # wren_c/test/language/inheritance/inherit_from_closure.wren
 # wren_c/test/language/inheritance/inherit_fields.wren
 # wren_c/test/language/inheritance/inherited_fields_in_closure.wren
