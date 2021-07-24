@@ -1,2 +1,0 @@
-Expected output "true" on line 15 and got "false".
-Expected output "false" on line 16 and got "true".

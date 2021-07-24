@@ -15,9 +15,12 @@ test/bringup/range.wren
 test/bringup/scopes.wren
 test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
+test/fiber/equality.wren
 test/fiber/return_as_yield.wren
 test/fiber/suspend.wren
 test/fuzz/grammar_nesting.wren
+test/list/equality.wren
+test/map/equality.wren
 test/num/shift_overflow.wren
 test/num/sign_edge.wren
 wren_c/example/hello.wren
@@ -102,6 +105,7 @@ wren_c/test/core/function/arity.wren
 wren_c/test/core/function/call_extra_arguments.wren
 wren_c/test/core/function/call_missing_arguments.wren
 wren_c/test/core/function/call_runtime_error.wren
+wren_c/test/core/function/equality.wren
 wren_c/test/core/function/new_wrong_arg_type.wren
 wren_c/test/core/function/to_string.wren
 wren_c/test/core/function/type.wren

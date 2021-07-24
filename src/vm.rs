@@ -119,6 +119,15 @@ impl PartialEq for Value {
             (Value::String(a_string), Value::String(b_string)) => return a_string.eq(&b_string),
             (Value::Class(a), Value::Class(b)) => return a.as_ptr() == b.as_ptr(),
             (Value::Instance(a), Value::Instance(b)) => return a.as_ptr() == b.as_ptr(),
+            (Value::Fn(a), Value::Fn(b)) => return a.as_ptr() == b.as_ptr(),
+            (Value::List(a), Value::List(b)) => return a.as_ptr() == b.as_ptr(),
+            (Value::Map(a), Value::Map(b)) => return a.as_ptr() == b.as_ptr(),
+            (Value::Closure(a), Value::Closure(b)) => return a.as_ptr() == b.as_ptr(),
+            (Value::Fiber(a), Value::Fiber(b)) => return a.as_ptr() == b.as_ptr(),
+            // FIXME: This catch-all is kinda dangerous as it prevents
+            // warnings when we add new types to Value.
+            // Some way to only catch-all for (T, S) where T != S
+            // would be more future-proof.
             _ => return false,
         }
     }
