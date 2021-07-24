@@ -48,10 +48,10 @@ impl VMError {
         VMError::Error(msg)
     }
 
-    fn into_try_return_value(self) -> Value {
+    fn as_try_return_value(&self) -> Value {
         match self {
-            VMError::Error(string) => Value::from_string(string),
-            VMError::FiberAbort(value) => value,
+            VMError::Error(string) => Value::from_str(string),
+            VMError::FiberAbort(value) => value.clone(),
         }
     }
 }
@@ -1294,30 +1294,38 @@ impl WrenVM {
                     }
                 },
                 Err(error) => {
-                    // Set Fiber.error on the current fiber.  We can't do this
-                    // deeper in the stack because we can't borrow_mut there.
-                    match &error {
-                        VMError::FiberAbort(value) => fiber.borrow_mut().error = value.clone(),
-                        _ => {}
-                    }
-                    // If we are a tried fiber and we have a caller
-                    let caller = match &self.fiber {
-                        Some(fiber) if fiber.borrow().is_try() => {
-                            fiber.borrow_mut().return_from_fiber_take_caller()
-                        }
-                        _ => None,
-                    };
-                    // transfer the string to the caller.
-                    self.fiber = caller;
-                    match &self.fiber {
-                        Some(fiber) => fiber
-                            .borrow_mut()
-                            .push_fiber_return(error.into_try_return_value()),
-                        None => {
-                            return Err(RuntimeError::from_vm_error(
-                                error,
-                                self.stack_trace(&fiber.borrow()),
-                            ))
+                    loop {
+                        let callee = self.fiber.clone().unwrap();
+                        // Set Fiber.error on the current fiber. Can't do this
+                        // deeper in the stack because can't borrow_mut there.
+                        callee.borrow_mut().error = error.as_try_return_value();
+                        // If we have a caller, it's now the new fiber.
+                        let caller = match &self.fiber {
+                            Some(fiber) => fiber.borrow_mut().return_from_fiber_take_caller(),
+                            _ => None,
+                        };
+                        self.fiber = caller;
+
+                        match &self.fiber {
+                            // If the previously called fiber was a try, return
+                            // control and the error value.
+                            Some(fiber) => {
+                                if callee.borrow().is_try() {
+                                    fiber
+                                        .borrow_mut()
+                                        .push_fiber_return(error.as_try_return_value());
+                                    break;
+                                }
+                                // If this wasn't a try, continue walking up
+                                // the fiber stack.
+                            }
+                            // If we've reached the root fiber, return.
+                            None => {
+                                return Err(RuntimeError::from_vm_error(
+                                    error,
+                                    self.stack_trace(&fiber.borrow()),
+                                ))
+                            }
                         }
                     }
                 }

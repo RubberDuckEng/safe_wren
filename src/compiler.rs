@@ -728,7 +728,7 @@ fn read_escape(
     digits: usize,
     description: &str,
 ) -> Result<char, LexError> {
-    let mut value = 0;
+    let mut value = 0u32;
     for _ in 0..digits {
         match input.peek() {
             Some(b'"') | None => {

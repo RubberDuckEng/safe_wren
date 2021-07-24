@@ -55,7 +55,9 @@ wren_c/test/core/fiber/call_with_value_error.wren
 wren_c/test/core/fiber/call_with_value_indirect_reenter.wren
 wren_c/test/core/fiber/call_with_value_to_parameter.wren
 wren_c/test/core/fiber/call_with_value_transferred.wren
+wren_c/test/core/fiber/error.wren
 wren_c/test/core/fiber/is_done.wren
+wren_c/test/core/fiber/is_done_after_error.wren
 wren_c/test/core/fiber/new_wrong_arg_type.wren
 wren_c/test/core/fiber/new_wrong_arity.wren
 wren_c/test/core/fiber/resume_caller.wren
@@ -80,6 +82,7 @@ wren_c/test/core/fiber/try_direct_reenter.wren
 wren_c/test/core/fiber/try_done.wren
 wren_c/test/core/fiber/try_error.wren
 wren_c/test/core/fiber/try_indirect_reenter.wren
+wren_c/test/core/fiber/try_through_call.wren
 wren_c/test/core/fiber/try_value.wren
 wren_c/test/core/fiber/try_value_yield.wren
 wren_c/test/core/fiber/try_without_error.wren
