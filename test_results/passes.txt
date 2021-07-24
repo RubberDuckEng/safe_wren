@@ -63,6 +63,8 @@ wren_c/test/core/fiber/new_wrong_arity.wren
 wren_c/test/core/fiber/resume_caller.wren
 wren_c/test/core/fiber/transfer.wren
 wren_c/test/core/fiber/transfer_direct_reenter.wren
+wren_c/test/core/fiber/transfer_error.wren
+wren_c/test/core/fiber/transfer_error_not_string.wren
 wren_c/test/core/fiber/transfer_indirect_reenter.wren
 wren_c/test/core/fiber/transfer_return_call_value.wren
 wren_c/test/core/fiber/transfer_return_transfer_value.wren

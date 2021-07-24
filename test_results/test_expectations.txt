@@ -205,12 +205,6 @@ wren_c/test/api/resolution.wren
 wren_c/test/api/slots.wren
 wren_c/test/api/user_data.wren
 
-# wren_c/test/core/fiber/error.wren
-# wren_c/test/core/fiber/is_done_after_error.wren
-# wren_c/test/core/fiber/transfer_error_not_string.wren
-# wren_c/test/core/fiber/transfer_error.wren
-# wren_c/test/core/fiber/try_through_call.wren
-
 # wren_c/test/core/function/equality.wren
 # wren_c/test/core/list/remove_at.wren
 # wren_c/test/core/map/iterate.wren

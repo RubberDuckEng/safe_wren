@@ -308,17 +308,11 @@ pub struct RuntimeError {
 }
 
 impl RuntimeError {
-    fn from_vm_error(vm_error: VMError, stack_trace: StackTrace) -> RuntimeError {
-        let msg = match vm_error {
-            VMError::Error(msg) => msg,
-            VMError::FiberAbort(value) => {
-                let maybe_msg = value.try_into_string();
-                // [error object] matches wren_c wrenDebugPrintStackTrace
-                maybe_msg.unwrap_or("[error object]".to_string())
-            }
-        };
+    fn from_error_value(value: Value, stack_trace: StackTrace) -> RuntimeError {
+        let maybe_msg = value.try_into_string();
         RuntimeError {
-            msg: msg,
+            // [error object] matches wren_c wrenDebugPrintStackTrace
+            msg: maybe_msg.unwrap_or("[error object]".to_string()),
             stack_trace: stack_trace,
         }
     }
@@ -481,13 +475,9 @@ impl ObjFiber {
         caller
     }
 
-    fn push_fiber_argument(&mut self, arg: Value) {
-        // A bit hacky way to pass the arg.
-        self.call_stack.borrow_mut()[0].push(arg);
-    }
-
-    fn push_fiber_return(&mut self, arg: Value) {
-        // Push the return value from a yeild or transfer
+    fn push_value_to_top_of_stack(&mut self, arg: Value) {
+        // Push the argument to the fiber call, try or transfer
+        // or the return value from a yield or transfer
         // onto the top-most frame of the callstack.
         self.call_stack.borrow_mut().last_mut().unwrap().push(arg);
     }
@@ -1247,6 +1237,43 @@ impl WrenVM {
         value
     }
 
+    fn cascade_error(&mut self, error: Value) -> Result<(), RuntimeError> {
+        let stack_trace_fiber = self.fiber.clone().unwrap();
+        loop {
+            let callee = self.fiber.clone().unwrap();
+            // Set Fiber.error on the current fiber. Can't do this
+            // deeper in the stack because can't borrow_mut there.
+            callee.borrow_mut().error = error.clone();
+            // If we have a caller, it's now the new fiber.
+            let caller = match &self.fiber {
+                Some(fiber) => fiber.borrow_mut().return_from_fiber_take_caller(),
+                _ => None,
+            };
+            self.fiber = caller;
+
+            match &self.fiber {
+                // If the previously called fiber was a try, return
+                // control and the error value.
+                Some(fiber) => {
+                    if callee.borrow().is_try() {
+                        fiber.borrow_mut().push_value_to_top_of_stack(error);
+                        break;
+                    }
+                    // If this wasn't a try, continue walking up
+                    // the fiber stack.
+                }
+                // If we've reached the root fiber, return.
+                None => {
+                    return Err(RuntimeError::from_error_value(
+                        error,
+                        self.stack_trace(&stack_trace_fiber.borrow()),
+                    ))
+                }
+            }
+        }
+        Ok(())
+    }
+
     pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
         self.fiber = Some(new_handle(ObjFiber::new(
             self,
@@ -1257,77 +1284,46 @@ impl WrenVM {
             let fiber = self.fiber.clone().unwrap();
             let result = self.run_in_fiber(&fiber.borrow());
             match result {
-                Ok(action) => match action {
-                    FiberAction::Call(fiber, arg) => {
-                        fiber.borrow_mut().caller = self.fiber.take();
-                        fiber.borrow_mut().push_fiber_argument(arg);
-                        self.fiber = Some(fiber.clone());
+                Ok(FiberAction::Call(fiber, arg)) => {
+                    fiber.borrow_mut().caller = self.fiber.take();
+                    fiber.borrow_mut().push_value_to_top_of_stack(arg);
+                    self.fiber = Some(fiber.clone());
+                }
+                Ok(FiberAction::Try(fiber, arg)) => {
+                    fiber.borrow_mut().caller = self.fiber.take();
+                    fiber.borrow_mut().push_value_to_top_of_stack(arg);
+                    fiber.borrow_mut().run_source = FiberRunSource::Try;
+                    self.fiber = Some(fiber.clone());
+                }
+                Ok(FiberAction::Suspend) => {
+                    self.fiber = None;
+                    // FIXME: This return value is wrong.
+                    // The api should not return a value for Fiber.suspend.
+                    return Ok(Value::Null);
+                }
+                Ok(FiberAction::Return(value)) => {
+                    let caller = if let Some(fiber) = &self.fiber {
+                        fiber.borrow_mut().return_from_fiber_take_caller()
+                    } else {
+                        // This should never be reached?
+                        None
+                    };
+                    self.fiber = caller;
+                    match &self.fiber {
+                        Some(fiber) => fiber.borrow_mut().push_value_to_top_of_stack(value),
+                        None => return Ok(value),
                     }
-                    FiberAction::Try(fiber, arg) => {
-                        fiber.borrow_mut().caller = self.fiber.take();
-                        fiber.borrow_mut().push_fiber_argument(arg);
-                        fiber.borrow_mut().run_source = FiberRunSource::Try;
-                        self.fiber = Some(fiber.clone());
-                    }
-                    FiberAction::Transfer(fiber, arg) => {
-                        fiber.borrow_mut().push_fiber_argument(arg);
-                        self.fiber = Some(fiber.clone());
-                    }
-                    FiberAction::Suspend => {
-                        self.fiber = None;
-                        // FIXME: This return value is wrong.
-                        // The api should not return a value for Fiber.suspend.
-                        return Ok(Value::Null);
-                    }
-                    FiberAction::Return(value) => {
-                        let caller = if let Some(fiber) = &self.fiber {
-                            fiber.borrow_mut().return_from_fiber_take_caller()
-                        } else {
-                            // This should never be reached?
-                            None
-                        };
-                        self.fiber = caller;
-                        match &self.fiber {
-                            Some(fiber) => fiber.borrow_mut().push_fiber_return(value),
-                            None => return Ok(value),
-                        }
-                    }
-                },
+                }
+                Ok(FiberAction::Transfer(fiber, arg)) => {
+                    fiber.borrow_mut().push_value_to_top_of_stack(arg);
+                    self.fiber = Some(fiber.clone());
+                }
+                Ok(FiberAction::TransferError(fiber, error)) => {
+                    self.fiber = Some(fiber);
+                    self.cascade_error(error)?;
+                }
                 Err(error) => {
-                    loop {
-                        let callee = self.fiber.clone().unwrap();
-                        // Set Fiber.error on the current fiber. Can't do this
-                        // deeper in the stack because can't borrow_mut there.
-                        callee.borrow_mut().error = error.as_try_return_value();
-                        // If we have a caller, it's now the new fiber.
-                        let caller = match &self.fiber {
-                            Some(fiber) => fiber.borrow_mut().return_from_fiber_take_caller(),
-                            _ => None,
-                        };
-                        self.fiber = caller;
-
-                        match &self.fiber {
-                            // If the previously called fiber was a try, return
-                            // control and the error value.
-                            Some(fiber) => {
-                                if callee.borrow().is_try() {
-                                    fiber
-                                        .borrow_mut()
-                                        .push_fiber_return(error.as_try_return_value());
-                                    break;
-                                }
-                                // If this wasn't a try, continue walking up
-                                // the fiber stack.
-                            }
-                            // If we've reached the root fiber, return.
-                            None => {
-                                return Err(RuntimeError::from_vm_error(
-                                    error,
-                                    self.stack_trace(&fiber.borrow()),
-                                ))
-                            }
-                        }
-                    }
+                    self.cascade_error(error.as_try_return_value())?;
                 }
             }
         }
@@ -2042,6 +2038,7 @@ impl Obj for ObjRange {
 pub(crate) enum FiberAction {
     Call(Handle<ObjFiber>, Value),
     Transfer(Handle<ObjFiber>, Value),
+    TransferError(Handle<ObjFiber>, Value),
     // AFAICT, Return and Yield are the same.
     Return(Value),
     Try(Handle<ObjFiber>, Value),
