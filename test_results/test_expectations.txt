@@ -77,10 +77,7 @@ wren_c/test/language/super/no_superclass_method.wren
 # Missing duplicate method check:
 wren_c/test/language/method/duplicate_methods.wren
 
-# wren_c/test/language/variable/shadow_local.wren
-# wren_c/test/language/variable/shadow_and_local.wren
 # wren_c/test/language/variable/use_this_as_var.wren
-# wren_c/test/language/variable/shadow_in_initializer.wren
 # wren_c/test/language/inheritance/inherit_from_closure.wren
 # wren_c/test/language/inheritance/inherit_fields.wren
 # wren_c/test/language/inheritance/inherited_fields_in_closure.wren

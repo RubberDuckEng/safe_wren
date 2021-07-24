@@ -7,7 +7,7 @@ Code:
 02 (ln 4): Constant(1: " inner")
 03 (ln 4): Call(Method, +(_))
 04 (ln 5): Load(Module, Class("System"))
-05 (ln 5): Load(Local, 1)
+05 (ln 5): Load(Local, 2)
 06 (ln 5): Call(Method, print(_))
 07 (ln 5): Pop
 08 (ln 6): Pop

@@ -5,7 +5,7 @@ Code:
 00 (ln 2): Constant(0: "local")
 01 (ln 4): Constant(1: "shadow")
 02 (ln 5): Load(Module, Class("System"))
-03 (ln 5): Load(Local, 1)
+03 (ln 5): Load(Local, 2)
 04 (ln 5): Call(Method, print(_))
 05 (ln 5): Pop
 06 (ln 6): Pop

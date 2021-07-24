@@ -2264,7 +2264,8 @@ fn find_upvalue(_ctx: &ParseContext, _name: &str) -> Option<u16> {
 }
 
 fn resolve_non_module(ctx: &ParseContext, name: &str) -> Option<Variable> {
-    if let Some(index) = ctx.compiler().locals.iter().position(|l| l.name.eq(name)) {
+    // rposition to allow vars in deeper scopes to shadow shallower scopes.
+    if let Some(index) = ctx.compiler().locals.iter().rposition(|l| l.name.eq(name)) {
         return Some(Variable::local(index as u16));
     }
     if let Some(index) = find_upvalue(ctx, name) {
