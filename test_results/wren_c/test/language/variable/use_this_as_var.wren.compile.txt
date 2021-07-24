@@ -1,9 +1,1 @@
-Constants:
-00: "value"
-Code:
-00 (ln 1): Constant(0: "value")
-01 (ln 1): Store(Module)
-02 (ln 1): Pop
-03 (ln 2): EndModule
-04 (ln 2): Return
-05 (ln 2): End
+[wren_c/test/language/variable/use_this_as_var line 1] Error at 'this': Expect variable name.

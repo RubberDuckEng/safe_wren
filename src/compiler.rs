@@ -108,6 +108,7 @@ pub enum Token {
     Break,
     Continue,
     Return,
+    This,
     Foreign,
     Static,
     Import,
@@ -696,6 +697,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "static" => Some(Token::Static),
         "import" => Some(Token::Import),
         "as" => Some(Token::As),
+        "this" => Some(Token::This),
         _ => None,
     }
 }
@@ -1925,7 +1927,7 @@ fn call(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
-fn or_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
+fn or(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
 
     // Skip the right argument if the left is true.
@@ -1935,7 +1937,7 @@ fn or_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
-fn and_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
+fn and(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
 
     // Skip the right argument if the left is true.
@@ -1943,6 +1945,16 @@ fn and_(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     parse_precendence(ctx, Precedence::LogicalAnd)?;
     ctx.compiler_mut().patch_jump(jump);
     Ok(())
+}
+
+fn this(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
+    if !ctx.inside_class_definition() {
+        // wren_c uses a more direct error call which skips the
+        // label telling us that the error occured at "this".
+        Err(ctx.error_str("Cannot use 'this' outside of a method."))
+    } else {
+        load_this(ctx)
+    }
 }
 
 // Subscript or "array indexing" operator like `foo[bar]`.
@@ -3362,9 +3374,9 @@ impl Token {
             Token::Is => GrammarRule::infix_operator(Precedence::Is),
             Token::Caret => GrammarRule::infix_operator(Precedence::BitwiseXor),
             Token::Pipe => GrammarRule::infix_operator(Precedence::BitwiseOr),
-            Token::PipePipe => GrammarRule::infix(Precedence::LogicalOr, or_),
+            Token::PipePipe => GrammarRule::infix(Precedence::LogicalOr, or),
             Token::Amp => GrammarRule::infix_operator(Precedence::BitwiseAnd),
-            Token::AmpAmp => GrammarRule::infix(Precedence::LogicalOr, and_),
+            Token::AmpAmp => GrammarRule::infix(Precedence::LogicalOr, and),
             Token::For => GrammarRule::unused(),
             Token::In => GrammarRule::unused(),
             Token::If => GrammarRule::unused(),
@@ -3379,6 +3391,7 @@ impl Token {
             Token::Static => GrammarRule::unused(),
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
+            Token::This => GrammarRule::prefix(this),
             Token::Return => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
             Token::Continue => GrammarRule::unused(),

@@ -1,1 +1,1 @@
-[wren_c/test/language/this/this_at_top_level line 1] Error at 'this': Variable is used but not defined.
+[wren_c/test/language/this/this_at_top_level line 1] Error at 'this': Cannot use 'this' outside of a method.
