@@ -1,1 +1,0 @@
-Expected output "foo" on line 9 and got "null".

@@ -1,4 +1,5 @@
 test/bringup/add.wren
+test/bringup/call_method_before_defined.wren
 test/bringup/class.wren
 test/bringup/do_nothing_while.wren
 test/bringup/for.wren
