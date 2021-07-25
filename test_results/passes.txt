@@ -31,6 +31,7 @@ wren_c/example/hello.wren
 wren_c/example/import_module/cthulu.wren
 wren_c/example/import_module/lovecraft.wren
 wren_c/example/mandelbrot.wren
+wren_c/test/api/error.wren
 wren_c/test/core/bool/equality.wren
 wren_c/test/core/bool/no_constructor.wren
 wren_c/test/core/bool/not.wren

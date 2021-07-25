@@ -10,7 +10,7 @@ use std::{str, usize};
 
 use crate::compiler::{compile_in_module, wren_is_local_name, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-use crate::wren::{DebugLevel, WrenConfiguration, WrenForeignMethodFn};
+use crate::wren::{DebugLevel, Slot, WrenConfiguration, WrenForeignMethodFn};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -523,6 +523,38 @@ impl core::fmt::Debug for ObjFiber {
     }
 }
 
+struct Api {
+    stack: Vec<Value>,
+    error: Value,
+}
+
+impl Api {
+    fn new(slots: usize) -> Api {
+        Api {
+            stack: vec![Value::Null; slots],
+            error: Value::Null,
+        }
+    }
+
+    fn with_stack(stack: Vec<Value>) -> Api {
+        Api {
+            stack,
+            error: Value::Null,
+        }
+    }
+
+    fn ensure(&mut self, slots: usize) {
+        if slots >= self.stack.len() {
+            self.stack.resize(slots + 1, Value::Null);
+        }
+    }
+
+    fn into_return_value(self) -> Value {
+        // Take without copy.
+        self.stack.into_iter().next().unwrap()
+    }
+}
+
 pub struct WrenVM {
     // Current executing Fiber (should eventually be a list?)
     pub(crate) fiber: Option<Handle<ObjFiber>>,
@@ -546,7 +578,30 @@ pub struct WrenVM {
 
     // Args for the foreign function being called.
     // wren_c calls this apiStack
-    foreign_args: Option<Vec<Value>>,
+    api: Option<Api>,
+}
+
+impl WrenVM {
+    pub fn ensure_slots(&mut self, slots: usize) {
+        match &mut self.api {
+            None => self.api = Some(Api::new(slots)),
+            Some(api) => api.ensure(slots),
+        }
+    }
+
+    pub fn set_slot_string(&mut self, slot: Slot, string: &str) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::from_str(string);
+        }
+    }
+
+    pub fn abort_fiber(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.error = api.stack[slot].clone();
+        }
+    }
 }
 
 pub trait Clear {
@@ -1095,7 +1150,7 @@ impl WrenVM {
             start_time: std::time::Instant::now(),
             last_imported_module: None,
             config,
-            foreign_args: None,
+            api: None,
         };
 
         // FIXME: This shouldn't be needed anymore.  We no longer
@@ -1220,16 +1275,16 @@ impl WrenVM {
         }
     }
 
-    fn call_foreign(&mut self, foreign: &WrenForeignMethodFn, args: Vec<Value>) -> Value {
-        assert!(
-            self.foreign_args.is_none(),
-            "Cannot already be in foreign call."
-        );
-        self.foreign_args = Some(args);
+    fn call_foreign(&mut self, foreign: &WrenForeignMethodFn, args: Vec<Value>) -> Result<Value> {
+        assert!(self.api.is_none(), "Cannot already be in foreign call.");
+        self.api = Some(Api::with_stack(args));
         foreign(self);
-        // Take the value w/o copy
-        let args = self.foreign_args.take();
-        args.unwrap().into_iter().next().unwrap()
+        let api = self.api.take().unwrap();
+        if api.error.is_null() {
+            Ok(api.into_return_value())
+        } else {
+            Err(VMError::FiberAbort(api.error))
+        }
     }
 
     fn cascade_error(&mut self, error: Value) -> Result<(), RuntimeError> {
@@ -1405,7 +1460,7 @@ impl WrenVM {
         match method {
             Method::ForeignFunction(foreign) => {
                 let args = vec![Value::Class(class_handle.clone())];
-                Ok(self.call_foreign(foreign, args))
+                self.call_foreign(foreign, args)
             }
             _ => Err(VMError::from_str("Allocator should be foreign.")),
         }
@@ -1494,7 +1549,7 @@ impl WrenVM {
                             }));
                         }
                         Method::ForeignFunction(foreign) => {
-                            self.call_foreign(foreign, args);
+                            self.call_foreign(foreign, args)?;
                         }
                         Method::Block(closure) => {
                             // Pushes a new stack frame.

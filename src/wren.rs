@@ -6,7 +6,7 @@ pub static WREN_VERSION_STRING: &str = "wren_rust-0.1";
 
 // A function callable from Wren code, but implemented in another language.
 // FIXME: How does this report errors?
-pub type WrenForeignMethodFn = fn(vm: &WrenVM);
+pub type WrenForeignMethodFn = fn(vm: &mut WrenVM);
 
 // Gives the host a chance to canonicalize the imported module name,
 // potentially taking into account the (previously resolved) name of the module
@@ -222,3 +222,5 @@ pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInte
         }
     }
 }
+
+pub type Slot = usize;

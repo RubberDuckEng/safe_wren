@@ -34,11 +34,9 @@ with error text from any failed tests.  `test.py` will also update
 * wrong line numbers for foreign method runtime errors.
 * Give different types to Symbol, Constant, etc.
 * attributes
-* Limit tests
 * Scientific notation
 * super / superclass calls
 * static fields (emits to two compilers)
-* Raw strings
 * C API
 * Garbage Collection
 * Sort methods to match wren_c order?

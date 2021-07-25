@@ -9,6 +9,10 @@ use std::fs;
 
 extern crate wren_rust;
 
+mod api_tests;
+mod error;
+
+use api_tests::api_test_bind_foreign_method_fn;
 use wren_rust::test::test_config;
 use wren_rust::wren::*;
 
@@ -43,7 +47,7 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
-fn run_file(path: &str) -> ! {
+fn run_file(vm: &mut WrenVM, path: &str) -> ! {
     let source = fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
         // FIXME: wren_c appears to read the file as bytes and
@@ -55,7 +59,6 @@ fn run_file(path: &str) -> ! {
     });
 
     // handle module setup.
-    let mut vm = WrenVM::new(test_config());
     let mut module_name = match path.strip_suffix(".wren") {
         Some(stripped) => stripped,
         // FIXME: Not sure if other parts of the code assume paths end in wren?
@@ -65,7 +68,7 @@ fn run_file(path: &str) -> ! {
     if !module_name.starts_with(".") {
         module_name = format!("./{}", module_name);
     }
-    let result = wren_interpret(&mut vm, &module_name, source);
+    let result = wren_interpret(vm, &module_name, source);
     match result {
         WrenInterpretResult::CompileError => {
             exit(ExitCode::CompileError);
@@ -79,9 +82,21 @@ fn run_file(path: &str) -> ! {
     }
 }
 
+fn is_api_test_path(test_path: &str) -> bool {
+    test_path.contains("test/api") || test_path.contains("test/benchmark")
+}
+
 fn main() {
     let args: Vec<_> = env::args().collect();
     handle_usage(&args);
+    let test_path = &args[1];
+    let api_test = is_api_test_path(test_path);
+    let mut config = test_config();
+    if api_test {
+        config.bind_foreign_method_fn = Some(api_test_bind_foreign_method_fn);
+    }
+    let mut vm = WrenVM::new(config);
+
     // handle API tests.
-    run_file(&args[1]);
+    run_file(&mut vm, test_path);
 }
