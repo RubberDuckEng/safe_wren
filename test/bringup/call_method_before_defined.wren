@@ -1,8 +1,6 @@
 class Foo {
     construct new() {}
-    bar {
-        foo()
-    }
+    bar { foo() }
     foo() { "foo" }
 }
 var foo = Foo.new()

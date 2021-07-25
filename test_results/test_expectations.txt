@@ -215,20 +215,19 @@ wren_c/test/core/number/tan.wren
 # wren_c/test/core/number/smallest.wren
 
 
+# Invalid: makes false assumptions about iterate behavior.
+# Replaced by copies in test/map
+wren_c/test/core/map/iterate.wren
+wren_c/test/core/map/key_iterate.wren
+wren_c/test/core/map/value_iterate.wren
+
 ## UNTRIAGED BELOW
 
 # wren_c/test/core/string/iterator_value.wren
 # wren_c/test/core/string/subscript_range.wren
 # wren_c/test/core/string/index_of_start.wren
 
-# test/bringup/call_method_before_defined.wren
 # wren_c/example/syntax.wren
-
-# Invalid: makes false assumptions about iterate behavior.
-# Replaced by copies in test/map
-wren_c/test/core/map/iterate.wren
-wren_c/test/core/map/key_iterate.wren
-wren_c/test/core/map/value_iterate.wren
 
 # wren_c/test/core/string_byte_sequence/count.wren
 # wren_c/test/core/string_code_point_sequence/iterate.wren
