@@ -1,5 +1,5 @@
 Unexpected output on stderr:
-Bar does not implement 'super()'.
+Foo does not implement 'new()'.
 Unexpected output on stderr:
 [./test/limit/many_inherited_fields line 141] in init new()
 Unexpected output on stderr:
@@ -7,7 +7,7 @@ Unexpected output on stderr:
 Unexpected output on stderr:
 [./test/limit/many_inherited_fields line 277] in <script>
 Expected return code 0 and got 70. Stderr:
-Bar does not implement 'super()'.
+Foo does not implement 'new()'.
 [./test/limit/many_inherited_fields line 141] in init new()
 [./test/limit/many_inherited_fields line 269] in 
 [./test/limit/many_inherited_fields line 277] in <script>

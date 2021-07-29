@@ -110,6 +110,7 @@ pub enum Token {
     Continue,
     Return,
     This,
+    Super,
     Foreign,
     Static,
     Import,
@@ -724,6 +725,7 @@ fn keyword_token(name: &str) -> Option<Token> {
         "import" => Some(Token::Import),
         "as" => Some(Token::As),
         "this" => Some(Token::This),
+        "super" => Some(Token::Super),
         _ => None,
     }
 }
@@ -1020,6 +1022,7 @@ pub(crate) enum Ops {
     Boolean(bool), // Unclear if needed, could be constant?
     Null,          // Unclear if needed, could be constant?
     Call(Signature, usize),
+    CallSuper(Signature, usize, usize),
     LoadField(usize),
     StoreField(usize),
     Load(Variable),
@@ -1129,7 +1132,7 @@ struct ClassInfo {
     // // True if the current method being compiled is static.
     in_static_method: bool,
     // The signature of the method being compiled.
-    //   Signature* signature;
+    signature: Option<Signature>,
 }
 
 impl ClassInfo {
@@ -1141,6 +1144,7 @@ impl ClassInfo {
             // static_methods: Vec::new(),
             is_foreign_class,
             in_static_method: false,
+            signature: None,
         }
     }
 }
@@ -1471,6 +1475,17 @@ impl<'a> ParseContext<'a> {
         false
     }
 
+    fn enclosing_method_signature(&self) -> Option<Signature> {
+        let mut maybe_compiler = &self._compiler;
+        while let Some(compiler) = maybe_compiler {
+            if let Some(class_info) = &compiler.enclosing_class {
+                return class_info.borrow().signature.clone();
+            }
+            maybe_compiler = &compiler.parent;
+        }
+        None
+    }
+
     fn call_with_enclosing_class<T, F>(&mut self, f: F) -> Result<T, WrenError>
     where
         F: Fn(&ParseContext, &Option<RefCell<ClassInfo>>) -> Result<T, WrenError>,
@@ -1579,7 +1594,7 @@ fn conditional(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenErro
     Ok(())
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub(crate) enum SignatureType {
     Getter,
     Method,
@@ -1589,7 +1604,7 @@ pub(crate) enum SignatureType {
     Initializer,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub(crate) struct Signature {
     pub(crate) bare_name: String,
     // Not sure either of these are needed once the full name is compiled
@@ -1639,7 +1654,7 @@ fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
     // This could use signature_from_token, but since this is only called
     // for tokens with known name lengths wren_c skips it.
     let signature = Signature::from_bare_name(SignatureType::Method, &name, 1);
-    call_signature(ctx, signature);
+    call_signature(ctx, signature, CallType::Instance);
     Ok(())
 }
 
@@ -1681,11 +1696,31 @@ fn mixed_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<
     Ok(())
 }
 
+enum CallType {
+    Instance,
+    Super,
+}
+
 // Compiles a method call with [signature] using [instruction].
-fn call_signature(ctx: &mut ParseContext, signature: Signature) {
+fn call_signature(ctx: &mut ParseContext, signature: Signature, call_type: CallType) {
     let symbol = signature_symbol(ctx, &signature);
-    emit(ctx, Ops::Call(signature, symbol));
-    // FIXME: Handle superclass calls.
+    match call_type {
+        CallType::Instance => {
+            emit(ctx, Ops::Call(signature, symbol));
+        }
+        CallType::Super => {
+            // Super calls need to be statically bound to the class's
+            // superclass. This ensures we call the right method even
+            // when a method containing a super call is inherited by
+            // another subclass.
+            //
+            // We bind it at class definition time by storing a reference to the
+            // superclass, initially Null. When the method is bound, we'll look
+            // up the superclass then and store it in this slot.
+            let super_const = ctx.compiler_mut().constants.add(Value::Null);
+            emit(ctx, Ops::CallSuper(signature, symbol, super_const));
+        }
+    }
 }
 
 // Compiles a method call with [numArgs] for a method with [name] with [length].
@@ -1987,7 +2022,11 @@ impl<'a, 'b> Drop for PushCompiler<'a, 'b> {
 
 // // Compiles an (optional) argument list for a method call with [methodSignature]
 // // and then calls it.
-fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenError> {
+fn method_call(
+    ctx: &mut ParseContext,
+    signature: Signature,
+    call_type: CallType,
+) -> Result<(), WrenError> {
     let mut called = Signature {
         bare_name: signature.bare_name,
         call_type: SignatureType::Getter,
@@ -2039,7 +2078,7 @@ fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenE
     //     called.call_type = SignatureType::Initializer;
     // }
 
-    call_signature(ctx, called);
+    call_signature(ctx, called, call_type);
 
     Ok(())
 }
@@ -2047,7 +2086,7 @@ fn method_call(ctx: &mut ParseContext, signature: Signature) -> Result<(), WrenE
 fn call(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     ignore_newlines(ctx)?;
     consume_expecting_name(ctx, "Expect method name after '.'.")?;
-    named_call(ctx, can_assign)?;
+    named_call(ctx, can_assign, CallType::Instance)?;
     Ok(())
 }
 
@@ -2068,6 +2107,35 @@ fn and(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     let jump = emit(ctx, Ops::AndPlaceholder);
     parse_precendence(ctx, Precedence::LogicalAnd)?;
     ctx.compiler_mut().patch_jump(jump);
+    Ok(())
+}
+
+fn super_(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
+    if !ctx.inside_class_definition() {
+        // wren_c uses a more direct error call which skips the
+        // label telling us that the error occured at "this".
+        return Err(ctx.error_str("Cannot use 'super' outside of a method."));
+    }
+
+    load_this(ctx)?;
+
+    // wren_c TODO: Super operator calls.
+    // wren_c TODO: There's no syntax for invoking a superclass constructor with a
+    // different name from the enclosing one. Figure that out.
+
+    // See if it's a named super call, or an unnamed one.
+    if match_current(ctx, Token::Dot)? {
+        // Compile the superclass call.
+        consume_expecting_name(ctx, "Expect method name after 'super.'.")?;
+        named_call(ctx, can_assign, CallType::Super)?;
+    } else {
+        // No explicit name, so use the name of the enclosing method. Make sure we
+        // check that enclosingClass isn't NULL first. We've already reported the
+        // error, but we don't want to crash here.
+        // FIXME: Is unwrap always safe?
+        let signature = ctx.enclosing_method_signature();
+        method_call(ctx, signature.unwrap(), CallType::Super)?;
+    }
     Ok(())
 }
 
@@ -2103,7 +2171,7 @@ fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> 
     }
     // Name is always empty for Subscripts, I think?
     let signature = Signature::from_bare_name(call_type, "", arity);
-    call_signature(ctx, signature);
+    call_signature(ctx, signature, CallType::Instance);
     Ok(())
 }
 
@@ -2293,7 +2361,11 @@ fn load_this(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 // Compiles a call whose name is the previously consumed token. This includes
 // getters, method calls with arguments, and setter calls.
-fn named_call(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
+fn named_call(
+    ctx: &mut ParseContext,
+    can_assign: bool,
+    call_type: CallType,
+) -> Result<(), WrenError> {
     // Get the token for the method name.
     let mut signature = signature_from_token(ctx, SignatureType::Getter)?;
 
@@ -2306,9 +2378,9 @@ fn named_call(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError>
 
         // Compile the assigned value.
         expression(ctx)?;
-        call_signature(ctx, signature);
+        call_signature(ctx, signature, call_type);
     } else {
-        method_call(ctx, signature)?;
+        method_call(ctx, signature, call_type)?;
         allow_line_before_dot(ctx)?;
     }
     Ok(())
@@ -2328,7 +2400,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     // on this.
     if wren_is_local_name(&name) && ctx.inside_class_definition() {
         load_this(ctx)?;
-        return named_call(ctx, can_assign);
+        return named_call(ctx, can_assign, CallType::Instance);
     }
 
     // Otherwise if in module scope handle module case:
@@ -2857,8 +2929,9 @@ fn define_method(
     // defining a method.
     emit(ctx, Ops::Load(class_variable));
 
-    // Define the method.
+    // Bind the method onto the class.
     emit(ctx, Ops::Method(is_static, method_symbol));
+    // FIXME: Handle static methods!
 }
 
 // Declares a method in the enclosing class with [signature].
@@ -3197,7 +3270,6 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
 
     // Build the method signature.
     let mut signature = signature_from_token(ctx, SignatureType::Getter)?;
-    //   compiler->enclosingClass->signature = &signature;
 
     let method_symbol;
     {
@@ -3205,6 +3277,11 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
 
         // Compile the method signature.
         signature_fn(scope.ctx, &mut signature)?;
+
+        scope.ctx.call_with_enclosing_class(|_ctx, maybe_class| {
+            maybe_class.as_ref().unwrap().borrow_mut().signature = Some(signature.clone());
+            Ok(())
+        })?;
 
         scope.ctx.compiler_mut().is_initializer = signature.call_type == SignatureType::Initializer;
 
@@ -3276,7 +3353,6 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
 
     // Make a string constant for the name.
     emit_constant(ctx, class_name)?;
-    // FIXME: Handle superclasses, TOKEN_IS
 
     // Load the superclass (if there is one).
     if match_current(ctx, Token::Is)? {
@@ -3530,6 +3606,7 @@ impl Token {
             Token::Class => GrammarRule::unused(),
             Token::While => GrammarRule::unused(),
             Token::This => GrammarRule::prefix(this),
+            Token::Super => GrammarRule::prefix(super_),
             Token::Return => GrammarRule::unused(),
             Token::Break => GrammarRule::unused(),
             Token::Continue => GrammarRule::unused(),

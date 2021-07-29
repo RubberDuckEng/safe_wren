@@ -656,6 +656,13 @@ wren_c/test/language/shebang/shebang_invalid.wren
 wren_c/test/language/static_field/outside_class.wren
 wren_c/test/language/string/escapes.wren
 wren_c/test/language/string/literals.wren
+wren_c/test/language/super/call_different_arity.wren
+wren_c/test/language/super/call_other_method.wren
+wren_c/test/language/super/call_same_method.wren
+wren_c/test/language/super/implicit_name.wren
+wren_c/test/language/super/indirectly_inherited.wren
+wren_c/test/language/super/no_superclass_method.wren
+wren_c/test/language/super/super_in_inherited_method.wren
 wren_c/test/language/super/super_in_top_level_function.wren
 wren_c/test/language/this/this_at_top_level.wren
 wren_c/test/language/this/this_in_method.wren

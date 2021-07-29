@@ -8,7 +8,9 @@ use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::{str, usize};
 
-use crate::compiler::{compile_in_module, wren_is_local_name, FnDebug, InputManager, Ops, Scope};
+use crate::compiler::{
+    compile_in_module, wren_is_local_name, FnDebug, InputManager, Ops, Scope, Signature,
+};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 use crate::wren::{DebugLevel, Slot, WrenConfiguration, WrenForeignMethodFn};
 
@@ -1032,6 +1034,23 @@ fn find_foreign_method(
     None
 }
 
+fn bind_method_code(class: &ObjClass, fn_obj: &mut ObjFn) {
+    for op in &fn_obj.code {
+        match op {
+            // FIXME: Will do load/stores in the actual lookups
+            // since the instance knows how many fields its superclass had, no?
+            Ops::CallSuper(_, _, super_constant) => {
+                fn_obj.constants[*super_constant] =
+                    Value::Class(class.superclass.as_ref().unwrap().clone())
+            }
+            _ => {}
+        }
+    }
+    // Load and store fields  / this
+    // Super calls
+    // FIXME: nested closures
+}
+
 // Defines [methodValue] as a method on [classObj].
 //
 // Handles both foreign methods where [methodValue] is a string containing the
@@ -1061,7 +1080,11 @@ fn bind_method(
                     })?;
             Method::ForeignFunction(foreign_fn)
         }
-        Value::Closure(closure) => Method::Block(closure),
+        Value::Closure(closure) => {
+            // Patch up the bytecode now that we know the superclass.
+            bind_method_code(&class, &mut closure.borrow().fn_obj.borrow_mut());
+            Method::Block(closure)
+        }
         // Is this a compiler error?  Should this panic?
         _ => {
             return Err(VMError::from_str(
@@ -1069,10 +1092,6 @@ fn bind_method(
             ))
         }
     };
-
-    // FIXME: Need to patch the closure code!
-    // Patch up the bytecode now that we know the superclass.
-    // wrenBindMethodCode(classObj, method.as.closure->fn);
 
     if is_static {
         class.class_obj().borrow_mut().set_method(symbol, method);
@@ -1466,6 +1485,80 @@ impl WrenVM {
         }
     }
 
+    fn call_method(
+        &mut self,
+        frame: &mut CallFrame,
+        symbol: usize,
+        class_obj: &ObjClass,
+        args: Vec<Value>,
+    ) -> Result<Option<FunctionNext>, VMError> {
+        // Get the Method record for this class for this symbol.
+        // This could return None instead of MethodNone?
+        let method = class_obj
+            .methods
+            .get(symbol)
+            .ok_or_else(|| self.method_not_found(&class_obj, symbol))?;
+
+        // Even if we got a Method doesn't mean *this* class
+        // implements it.
+        match method {
+            Method::ValuePrimitive(f) => {
+                let result = f(self, args)?;
+                frame.push(result);
+                Ok(None)
+            }
+            Method::FiberActionPrimitive(f) => {
+                let action = f(self, args)?;
+                Ok(Some(FunctionNext::FiberAction(action)))
+            }
+            Method::FunctionCall => {
+                // Pushes a new stack frame.
+                // wren_rust (currently) keeps a separate stack
+                // per CallFrame, so underflows are caught on a
+                // per-function call basis.
+                Ok(Some(FunctionNext::Call(CallFrame {
+                    pc: 0,
+                    closure: check_arity(&args[0], args.len())?,
+                    stack: args,
+                })))
+            }
+            Method::ForeignFunction(foreign) => {
+                self.call_foreign(foreign, args)?;
+                Ok(None)
+            }
+            Method::Block(closure) => {
+                // Pushes a new stack frame.
+                // wren_rust (currently) keeps a separate stack
+                // per CallFrame, so underflows are caught on a
+                // per-function call basis.
+                // println!("About to call:");
+                // debug_bytecode(self, &closure.borrow(), module);
+                Ok(Some(FunctionNext::Call(CallFrame {
+                    pc: 0,
+                    closure: closure.clone(),
+                    stack: args,
+                })))
+            }
+            // FIXME: This should use Option<Method> instead.
+            Method::None => {
+                // This is the case where the methods vector was
+                // large enough to have the symbol (because the
+                // class supports a larger symbol), but this symbol
+                // is Method::None (not implemented).
+                Err(self.method_not_found(&class_obj, symbol))
+            }
+        }
+    }
+
+    fn args_for_call(&self, frame: &mut CallFrame, signature: &Signature) -> Vec<Value> {
+        // Implicit arg for this.
+        let num_args = signature.arity as usize + 1;
+        let this_offset = frame.stack.len() - num_args;
+        // Unlike wren_c, we remove the args from the stack
+        // and pass them to the function.
+        frame.stack.split_off(this_offset)
+    }
+
     fn run_frame_in_fiber(
         &mut self,
         frame: &mut CallFrame,
@@ -1509,69 +1602,26 @@ impl WrenVM {
                 Ops::Null => {
                     frame.push(Value::Null);
                 }
+                Ops::CallSuper(signature, symbol, constant) => {
+                    let value = fn_obj.constants[*constant].clone();
+                    // Compiler error if this is not a class.
+                    let superclass = value.try_into_class().unwrap();
+                    let args = self.args_for_call(frame, signature);
+                    let maybe_action =
+                        self.call_method(frame, *symbol, &superclass.borrow(), args)?;
+                    match maybe_action {
+                        Some(action) => return Ok(action),
+                        None => {}
+                    }
+                }
                 Ops::Call(signature, symbol) => {
-                    // Implicit arg for this.
-                    let num_args = signature.arity as usize + 1;
-                    let this_offset = frame.stack.len() - num_args;
-                    // Unlike wren_c, we remove the args from the stack
-                    // and pass them to the function.
-                    let args = frame.stack.split_off(this_offset);
-
+                    let args = self.args_for_call(frame, signature);
                     let this_class = self.class_for_value(&args[0]);
                     let class_obj = this_class.borrow();
-                    // Get the Method record for this class for this symbol.
-                    // This could return None instead of MethodNone?
-                    let method = class_obj
-                        .methods
-                        .get(*symbol)
-                        .ok_or_else(|| self.method_not_found(&class_obj, *symbol))?;
-
-                    // Even if we got a Method doesn't mean *this* class
-                    // implements it.
-                    match method {
-                        Method::ValuePrimitive(f) => {
-                            let result = f(self, args)?;
-                            frame.push(result);
-                        }
-                        Method::FiberActionPrimitive(f) => {
-                            let action = f(self, args)?;
-                            return Ok(FunctionNext::FiberAction(action));
-                        }
-                        Method::FunctionCall => {
-                            // Pushes a new stack frame.
-                            // wren_rust (currently) keeps a separate stack
-                            // per CallFrame, so underflows are caught on a
-                            // per-function call basis.
-                            return Ok(FunctionNext::Call(CallFrame {
-                                pc: 0,
-                                closure: check_arity(&args[0], num_args)?,
-                                stack: args,
-                            }));
-                        }
-                        Method::ForeignFunction(foreign) => {
-                            self.call_foreign(foreign, args)?;
-                        }
-                        Method::Block(closure) => {
-                            // Pushes a new stack frame.
-                            // wren_rust (currently) keeps a separate stack
-                            // per CallFrame, so underflows are caught on a
-                            // per-function call basis.
-                            // println!("About to call:");
-                            // debug_bytecode(self, &closure.borrow(), module);
-                            return Ok(FunctionNext::Call(CallFrame {
-                                pc: 0,
-                                closure: closure.clone(),
-                                stack: args,
-                            }));
-                        }
-                        // FIXME: This should use Option<Method> instead.
-                        Method::None => {
-                            // This is the case where the methods vector was
-                            // large enough to have the symbol (because the
-                            // class supports a larger symbol), but this symbol
-                            // is Method::None (not implemented).
-                            return Err(self.method_not_found(&class_obj, *symbol));
-                        }
+                    let maybe_action = self.call_method(frame, *symbol, &class_obj, args)?;
+                    match maybe_action {
+                        Some(action) => return Ok(action),
+                        None => {}
                     }
                 }
                 Ops::Construct => {
@@ -1849,6 +1899,14 @@ fn op_debug_string(
         Ops::Constant(i) => format!("Constant({}: {:?})", i, fn_obj.constants[*i]),
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
+        Ops::CallSuper(sig, symbol, _super_constant) => {
+            format!(
+                "CallSuper({:?}, {}{})",
+                sig.call_type,
+                unstable_num_arrow(*symbol),
+                methods.name_for_symbol(*symbol)
+            )
+        }
         Ops::Call(sig, symbol) => {
             format!(
                 "Call({:?}, {}{})",

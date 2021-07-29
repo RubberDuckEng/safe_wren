@@ -1,2 +1,0 @@
-Expected runtime error "Base does not implement 'doesNotExist(_)'." and got:
-Derived does not implement 'super'.

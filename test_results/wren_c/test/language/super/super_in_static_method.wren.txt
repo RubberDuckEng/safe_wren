@@ -1,11 +1,11 @@
 Unexpected output on stderr:
-Foo metaclass does not implement 'super'.
+Object does not implement 'name'.
 Unexpected output on stderr:
 [./test/language/super/super_in_static_method line 4] in name
 Unexpected output on stderr:
 [./test/language/super/super_in_static_method line 8] in <script>
 Expected return code 0 and got 70. Stderr:
-Foo metaclass does not implement 'super'.
+Object does not implement 'name'.
 [./test/language/super/super_in_static_method line 4] in name
 [./test/language/super/super_in_static_method line 8] in <script>
 

@@ -1,5 +1,5 @@
 Unexpected output on stderr:
-C does not implement 'super(_,_)'.
+B does not implement 'new(_,_)'.
 Unexpected output on stderr:
 [./test/language/constructor/superclass line 22] in init new()
 Unexpected output on stderr:
@@ -7,7 +7,7 @@ Unexpected output on stderr:
 Unexpected output on stderr:
 [./test/language/constructor/superclass line 30] in <script>
 Expected return code 0 and got 70. Stderr:
-C does not implement 'super(_,_)'.
+B does not implement 'new(_,_)'.
 [./test/language/constructor/superclass line 22] in init new()
 [./test/language/constructor/superclass line 25] in 
 [./test/language/constructor/superclass line 30] in <script>
