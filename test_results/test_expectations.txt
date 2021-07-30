@@ -204,15 +204,12 @@ wren_c/test/core/number/log2.wren
 wren_c/test/core/number/maxSafeInteger.wren
 wren_c/test/core/number/minSafeInteger.wren
 wren_c/test/core/number/minus.wren
+wren_c/test/core/number/smallest.wren
 wren_c/test/core/number/sqrt.wren
 wren_c/test/core/number/tan.wren
 
 # Times out
 # wren_c/test/language/many_reallocations.wren
-
-# Wrong number?
-# wren_c/test/core/number/smallest.wren
-
 
 # Invalid: makes false assumptions about iterate behavior.
 # Replaced by copies in test/map

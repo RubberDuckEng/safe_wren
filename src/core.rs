@@ -112,7 +112,7 @@ num_constant!(num_nan, f64::NAN);
 num_constant!(num_pi, std::f64::consts::PI);
 num_constant!(num_tau, std::f64::consts::TAU);
 num_constant!(num_largest, f64::MAX);
-num_constant!(num_smallest, f64::MIN); // FIXME: Should be MIN_POSITIVE?
+num_constant!(num_smallest, f64::MIN_POSITIVE);
 num_constant!(num_max_safe_integer, 9007199254740991.0);
 num_constant!(num_min_safe_integer, -9007199254740991.0);
 
