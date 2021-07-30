@@ -2070,13 +2070,14 @@ fn method_call(
         end_compiler(scope.ctx, compiler, fn_signature.arity, name)?;
     }
 
-    // Handle SIG_INITIALIZER?
-    // if signature.call_type == SignatureType::Initializer {
-    //     if called.call_type != SignatureType::Method {
-    //         return Err(ctx.grammar_error("A superclass constructor must have an argument list."));
-    //     }
-    //     called.call_type = SignatureType::Initializer;
-    // }
+    if signature.call_type == SignatureType::Initializer {
+        if called.call_type != SignatureType::Method {
+            return Err(ctx.error_str("A superclass constructor must have an argument list."));
+        }
+        called.call_type = SignatureType::Initializer;
+    }
+    // FIXME: Are other signature -> called mappings needed?
+    // super does not currently work in subscripts, should it?
 
     call_signature(ctx, called, call_type);
 

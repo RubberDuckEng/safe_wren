@@ -1,5 +1,7 @@
 Unexpected output on stderr:
-Foo does not implement 'new()'.
+Out of bounds field.
+Unexpected output on stderr:
+[./test/limit/many_inherited_fields line 130] in init new()
 Unexpected output on stderr:
 [./test/limit/many_inherited_fields line 141] in init new()
 Unexpected output on stderr:
@@ -7,7 +9,8 @@ Unexpected output on stderr:
 Unexpected output on stderr:
 [./test/limit/many_inherited_fields line 277] in <script>
 Expected return code 0 and got 70. Stderr:
-Foo does not implement 'new()'.
+Out of bounds field.
+[./test/limit/many_inherited_fields line 130] in init new()
 [./test/limit/many_inherited_fields line 141] in init new()
 [./test/limit/many_inherited_fields line 269] in 
 [./test/limit/many_inherited_fields line 277] in <script>

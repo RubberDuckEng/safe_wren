@@ -53,6 +53,8 @@ wren_c/test/limit/variable_name_too_long.wren
 wren_c/test/regression/428.wren
 wren_c/test/regression/494.wren
 wren_c/test/language/constructor/cannot_be_static.wren
+wren_c/test/language/super/super_at_top_level.wren
+
 
 # byte escapes \x get expanded through char
 # Fails because 171 expands to 194, 171 for rust:
@@ -73,19 +75,12 @@ wren_c/test/core/string_byte_sequence/count.wren
 
 # super
 # wren_c/test/language/super/super_in_closure_in_inherited_method.wren
-# wren_c/test/language/super/super_at_top_level.wren
-# wren_c/test/language/super/super_in_static_method.wren
-# wren_c/test/language/super/implicit_name.wren
-# wren_c/test/language/super/call_other_method.wren
 # wren_c/test/language/super/closure.wren
-# wren_c/test/language/super/call_different_arity.wren
-# wren_c/test/language/super/indirectly_inherited.wren
-# wren_c/test/language/super/call_same_method.wren
-# wren_c/test/language/super/super_in_inherited_method.wren
-# wren_c/test/language/super/no_superclass_method.wren
+# wren_c/test/language/super/super_in_static_method.wren
+
+# Not yet supporting inherited fields.
 # wren_c/test/limit/many_inherited_fields.wren
 # wren_c/test/language/constructor/superclass.wren
-# wren_c/test/language/constructor/super_must_have_args.wren
 
 # Missing duplicate method check:
 wren_c/test/language/method/duplicate_methods.wren
