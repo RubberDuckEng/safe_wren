@@ -18,6 +18,7 @@ test/bringup/simple_while.wren
 test/bringup/trailing_newlines.wren
 test/fiber/equality.wren
 test/fiber/return_as_yield.wren
+test/fiber/return_from_transfer_error.wren
 test/fiber/suspend.wren
 test/fuzz/grammar_nesting.wren
 test/list/equality.wren

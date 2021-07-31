@@ -17,5 +17,5 @@ System.print(B.error) // expect: error!
 System.print(A.error) // expect: null
 System.print(A.isDone) // expect: false
 A.call("foo")
-// expect: "foo"
+// expect: foo
 System.print(A.isDone) // expect: true

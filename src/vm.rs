@@ -448,9 +448,10 @@ pub struct ObjFiber {
 }
 
 impl ObjFiber {
-    // pub fn just_started(&self) -> bool {
-    //     self.call_stack.len() == 1 && self.call_stack[0].pc == 0
-    // }
+    pub fn just_started(&self) -> bool {
+        let frames = self.call_stack.borrow();
+        frames.len() == 1 && frames[0].pc == 0
+    }
 
     pub fn is_root(&self) -> bool {
         matches!(self.run_source, FiberRunSource::Root)
@@ -466,7 +467,28 @@ impl ObjFiber {
         caller
     }
 
-    fn push_value_to_top_of_stack(&mut self, arg: Value) {
+    fn push_call_arg_or_return_value(&mut self, arg: Value) {
+        if self.just_started() {
+            // The fiber is being started for the first time. If its
+            // function takes a parameter, bind an argument to it.
+            if self.call_stack.borrow()[0]
+                .closure
+                .borrow()
+                .fn_obj
+                .borrow()
+                .arity
+                == 1
+            {
+                self.call_stack.borrow_mut()[0].push(arg);
+            }
+        } else {
+            // The fiber is being resumed, make yield(), transfer()
+            // or transferError() return the result.
+            self.call_stack.borrow_mut().last_mut().unwrap().push(arg);
+        }
+    }
+
+    fn push_return_value(&mut self, arg: Value) {
         // Push the argument to the fiber call, try or transfer
         // or the return value from a yield or transfer
         // onto the top-most frame of the callstack.
@@ -1345,7 +1367,7 @@ impl WrenVM {
                 // control and the error value.
                 Some(fiber) => {
                     if callee.borrow().is_try() {
-                        fiber.borrow_mut().push_value_to_top_of_stack(error);
+                        fiber.borrow_mut().push_return_value(error);
                         break;
                     }
                     // If this wasn't a try, continue walking up
@@ -1375,16 +1397,12 @@ impl WrenVM {
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
                     fiber.borrow_mut().caller = self.fiber.take();
-                    // FIXME: This only seems to work the first time entering
-                    // the Fiber.  If we enter a second time this isn't correct?
-                    fiber.borrow_mut().push_value_to_top_of_stack(arg);
+                    fiber.borrow_mut().push_call_arg_or_return_value(arg);
                     self.fiber = Some(fiber.clone());
                 }
                 Ok(FiberAction::Try(fiber, arg)) => {
                     fiber.borrow_mut().caller = self.fiber.take();
-                    // FIXME: This only seems to work the first time entering
-                    // the Fiber.  If we enter a second time this isn't correct?
-                    fiber.borrow_mut().push_value_to_top_of_stack(arg);
+                    fiber.borrow_mut().push_call_arg_or_return_value(arg);
                     fiber.borrow_mut().run_source = FiberRunSource::Try;
                     self.fiber = Some(fiber.clone());
                 }
@@ -1403,12 +1421,12 @@ impl WrenVM {
                     };
                     self.fiber = caller;
                     match &self.fiber {
-                        Some(fiber) => fiber.borrow_mut().push_value_to_top_of_stack(value),
+                        Some(fiber) => fiber.borrow_mut().push_return_value(value),
                         None => return Ok(value),
                     }
                 }
                 Ok(FiberAction::Transfer(fiber, arg)) => {
-                    fiber.borrow_mut().push_value_to_top_of_stack(arg);
+                    fiber.borrow_mut().push_call_arg_or_return_value(arg);
                     self.fiber = Some(fiber.clone());
                 }
                 Ok(FiberAction::TransferError(fiber, error)) => {
