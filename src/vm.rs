@@ -1424,9 +1424,10 @@ impl WrenVM {
 
     fn run_in_fiber(&mut self, fiber: &ObjFiber) -> Result<FiberAction, VMError> {
         loop {
-            // FIXME: I suspect we no longer need to pop the active frame since
-            // the call_stack is held in a RefCell and can be passed with
-            // separate mutability from ObjFiber?
+            // We pull the frame off of the call_stack so that in Debug mode
+            // run_frame_in_fiber is still able to borrow the call_stack to
+            // walk it for the active frame and frame_count.  We could pass that
+            // debug info a different way I guess?
             let mut frame = fiber.call_stack.borrow_mut().pop().unwrap();
             // This is all to avoid run_fiber needing to call itself
             // recursively, or the run_fiber main loop needing to pull
@@ -1444,7 +1445,7 @@ impl WrenVM {
                     if fiber.call_stack.borrow().is_empty() {
                         return Ok(FiberAction::Return(value));
                     } else {
-                        // Take the return value and push it onto the calling stack.
+                        // Push the return value onto the calling stack.
                         fiber
                             .call_stack
                             .borrow_mut()
@@ -1454,7 +1455,8 @@ impl WrenVM {
                     }
                 }
                 Ok(FunctionNext::FiberAction(action)) => {
-                    fiber.call_stack.borrow_mut().push(frame); // FIXME?
+                    // call_stack does not contain "frame", restore it.
+                    fiber.call_stack.borrow_mut().push(frame);
                     return Ok(action);
                 }
                 Err(vm_error) => {
