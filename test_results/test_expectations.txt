@@ -200,8 +200,10 @@ wren_c/test/core/number/smallest.wren
 wren_c/test/core/number/sqrt.wren
 wren_c/test/core/number/tan.wren
 
-# Times out
-# wren_c/test/language/many_reallocations.wren
+# Times out on linux, stack-overflow on windows
+# Will require fancier tear-down behavior to avoid
+# long Drop recursion chains.
+wren_c/test/language/many_reallocations.wren
 
 # Invalid: makes false assumptions about iterate behavior.
 # Replaced by copies in test/map
