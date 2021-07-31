@@ -1,2 +1,0 @@
-Expected output "foo 1" on line 34 and got "bar 1".
-Expected output "foo 2" on line 35 and got "bar 2".

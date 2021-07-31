@@ -65,7 +65,13 @@ wren_c/test/language/string/unicode_escapes.wren
 # it will probably fail even after fixing \x
 wren_c/test/core/string_byte_sequence/count.wren
 
-
+# This also depending on invalid utf8 behavior and \x
+wren_c/test/core/string/iterate.wren
+wren_c/test/core/string_code_point_sequence/subscript.wren
+wren_c/test/core/string_code_point_sequence/iterate.wren
+wren_c/test/core/string_code_point_sequence/iterator_value.wren
+wren_c/test/core/string_code_point_sequence/iterator_value_incomplete.wren
+wren_c/test/core/string_code_point_sequence/subscript_incomplete.wren
 
 # Missing error.
 # wren_c/test/language/number/literal_too_large.wren
@@ -73,18 +79,11 @@ wren_c/test/core/string_byte_sequence/count.wren
 # Missing limit
 # wren_c/test/core/number/from_string_too_large.wren
 
-# super
-# wren_c/test/language/super/super_in_closure_in_inherited_method.wren
-# wren_c/test/language/super/closure.wren
-
 # I'm not entirely sure how/why this works in wren_c
-# wren_c/test/language/super/super_in_static_method.wren
+wren_c/test/language/super/super_in_static_method.wren
 
 # Missing duplicate method check:
 wren_c/test/language/method/duplicate_methods.wren
-
-# Field inheritance
-wren_c/test/language/inheritance/inherit_fields.wren
 
 # Block comments
 wren_c/test/language/comments/unterminated_block.wren
@@ -133,14 +132,18 @@ wren_c/test/language/closure/unused_later_closure.wren
 wren_c/test/language/break/closure_in_for.wren
 wren_c/test/language/break/closure_in_while.wren
 wren_c/test/language/fiber/closure.wren
+wren_c/test/language/super/super_in_closure_in_inherited_method.wren
+wren_c/test/language/super/closure.wren
 
 # static fields
+# Requires being able to parse to two compilers at the same time.
 wren_c/test/language/static_field/default_to_null.wren
 wren_c/test/language/static_field/multiple.wren
 wren_c/test/language/static_field/in_instance_method.wren
 wren_c/test/language/static_field/closure.wren
 wren_c/test/language/static_field/use_before_set.wren
 wren_c/test/language/static_field/nested_class.wren
+wren_c/example/syntax.wren
 
 # wren_rust only allows valid unicode and thus gives the wrong
 # exit code (NO_INPUT) and even if that was fixed would give the
@@ -215,21 +218,19 @@ wren_c/test/core/map/iterate.wren
 wren_c/test/core/map/key_iterate.wren
 wren_c/test/core/map/value_iterate.wren
 
-## UNTRIAGED BELOW
-
-# wren_c/test/core/string/iterator_value.wren
+# This might just be a utf8 encoding difference, unclear?
 # wren_c/test/core/string/subscript_range.wren
 # wren_c/test/core/string/index_of_start.wren
 
-# wren_c/example/syntax.wren
+# 255 is not a valid utf8 byte.
+wren_c/test/core/string/from_byte.wren
 
-# wren_c/test/core/string_code_point_sequence/iterate.wren
-# wren_c/test/core/string_code_point_sequence/iterator_value_incomplete.wren
-# wren_c/test/core/string_code_point_sequence/iterator_value.wren
-# wren_c/test/core/string_code_point_sequence/subscript_incomplete.wren
-# wren_c/test/core/string_code_point_sequence/subscript.wren
-# wren_c/test/core/string/from_byte.wren
-# wren_c/test/core/string/iterate.wren
-# wren_c/test/core/string/split.wren
-# wren_c/test/core/string/subscript.wren
-# wren_c/test/core/string/to_string.wren
+# wren_c expects subscripts in the middle of utf8 codepoints
+# to just return the byte as an (invalid) string.  We don't.
+wren_c/test/core/string/subscript.wren
+wren_c/test/core/string/iterator_value.wren
+
+# wren_c truncates strings when printing at first \0.
+wren_c/test/core/string/to_string.wren
+
+

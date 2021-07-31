@@ -624,6 +624,22 @@ fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_string(a + &b))
 }
 
+fn adjust_range_to_char_boundaries(
+    string: &str,
+    range: std::ops::RangeInclusive<usize>,
+) -> std::ops::Range<usize> {
+    let mut before = *range.start();
+    let mut after = range.end() + 1;
+    while before <= after && !string.is_char_boundary(before) {
+        before += 1;
+    }
+    while after >= before && !string.is_char_boundary(after) {
+        after -= 1;
+    }
+    // Intentionally converting to exclusive to avoid -1
+    before..after
+}
+
 fn string_subscript(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let string = this_as_string(&args);
 
@@ -637,17 +653,8 @@ fn string_subscript(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
             if range.range.is_empty() {
                 return Ok(Value::from_str(""));
             }
-            // This is not part of wren_c, but prevents rust from panicking.
-            // wren_c strings are byte arrays, rust strings must always be
-            // valid utf8, and it makes no sense to index within codepoints.
-            if !string.is_char_boundary(*range.range.start())
-                || !string.is_char_boundary(*range.range.end())
-            {
-                return Err(VMError::from_str(
-                    "Range must start and end on character boundaries.",
-                ));
-            }
-            let slice = &string[range.range];
+            let safe_range = adjust_range_to_char_boundaries(&string, range.range);
+            let slice = &string[safe_range];
             // This doesn't match the wren_c backwards range behavaior.
             if range.reverse {
                 Ok(Value::from_string(slice.chars().rev().collect()))
