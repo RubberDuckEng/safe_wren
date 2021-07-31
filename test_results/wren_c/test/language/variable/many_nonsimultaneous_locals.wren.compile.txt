@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: "value a"
 01: "value b"
-Code:
+<script> Code:
 00 (ln 7): Constant(0: "value a")
 01 (ln 8): Load(Local, 1)
 02 (ln 9): Load(Local, 2)

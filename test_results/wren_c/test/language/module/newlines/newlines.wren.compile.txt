@@ -1,5 +1,4 @@
-Constants:
-Code:
+<script> Code:
 00 (ln 4): ImportModule("./module")
 01 (ln 4): Pop
 02 (ln 6): ImportModule("./module")

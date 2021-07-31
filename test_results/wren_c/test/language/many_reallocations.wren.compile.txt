@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 1
 01: 1000
 02: 1337
@@ -6,7 +6,7 @@ Constants:
 04: "b"
 05: Fn(all(_) block argument)
 06: "done"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("List"))
 01 (ln 1): Call(Method, new())
 02 (ln 1): Store(Module)
@@ -98,3 +98,11 @@ Code:
 88 (ln 17): EndModule
 89 (ln 17): Return
 90 (ln 17): End
+all(_) block argument Constants:
+00: 1337
+all(_) block argument Code:
+00 (ln 15): Load(Local, 1)
+01 (ln 15): Constant(0: 1337)
+02 (ln 15): Call(Method, ==(_))
+03 (ln 15): Return
+04 (ln 15): End

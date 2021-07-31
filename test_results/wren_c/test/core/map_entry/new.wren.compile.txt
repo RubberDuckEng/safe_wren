@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: "key"
 01: "value"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("MapEntry"))
 01 (ln 1): Constant(0: "key")
 02 (ln 1): Constant(1: "value")

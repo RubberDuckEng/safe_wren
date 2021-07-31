@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
 01: Fn(new(_) block argument)
 02: Fn(new(_) block argument)
@@ -12,7 +12,7 @@ Constants:
 10: Fn(new(_) block argument)
 11: Fn(new(_) block argument)
 12: Fn(new(_) block argument)
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Load(Module, Class("Fiber"))
 02 (ln 2): Closure(0, [])
@@ -101,3 +101,69 @@ Code:
 85 (ln 17): EndModule
 86 (ln 17): Return
 87 (ln 17): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 2): Constant(0: 123)
+01 (ln 2): Return
+02 (ln 2): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 2): Constant(0: 123)
+01 (ln 2): Return
+02 (ln 2): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 3): Constant(0: 123)
+01 (ln 3): Return
+02 (ln 3): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 3): Constant(0: 123)
+01 (ln 3): Return
+02 (ln 3): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 6): Constant(0: 123)
+01 (ln 6): Return
+02 (ln 6): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 7): Constant(0: 123)
+01 (ln 7): Return
+02 (ln 7): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 8): Constant(0: 123)
+01 (ln 8): Return
+02 (ln 8): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 9): Constant(0: 123)
+01 (ln 9): Return
+02 (ln 9): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 10): Constant(0: 123)
+01 (ln 10): Return
+02 (ln 10): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 11): Constant(0: 123)
+01 (ln 11): Return
+02 (ln 11): End
+new(_) block argument Constants:
+00: 123
+new(_) block argument Code:
+00 (ln 14): Constant(0: 123)
+01 (ln 14): Return
+02 (ln 14): End

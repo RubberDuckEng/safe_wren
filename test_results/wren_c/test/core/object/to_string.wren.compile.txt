@@ -1,9 +1,9 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: "instance of Foo"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -26,3 +26,12 @@ Code:
 19 (ln 5): EndModule
 20 (ln 5): Return
 21 (ln 5): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new())
+02 (ln 2): Return
+03 (ln 2): End

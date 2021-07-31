@@ -1906,6 +1906,7 @@ fn end_compiler(
     let line = ctx.parser.previous.line;
     compiler.emit_op_for_line(Ops::End, line);
 
+    // FIXME: Should this include the name of the directly enclosing class?
     compiler.fn_debug.name = name;
     compiler.fn_debug.from_core_module = ctx.in_core_module();
 

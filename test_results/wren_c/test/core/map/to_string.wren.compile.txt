@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "1"
 01: "2"
 02: 1
@@ -17,7 +17,7 @@ Constants:
 15: "{3: 4, 5: 6, 1: 2}"
 16: "{5: 6, 1: 2, 3: 4}"
 17: "{5: 6, 3: 4, 1: 2}"
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Load(Module, Class("Map"))
 02 (ln 2): Call(Method, new())
@@ -112,3 +112,18 @@ Code:
 91 (ln 29): EndModule
 92 (ln 29): Return
 93 (ln 29): End
+init new() Code:
+00 (ln 12): Load(Local, 0)
+01 (ln 12): Return
+02 (ln 12): End
+ Code:
+00 (ln 12): Construct
+01 (ln 12): Call(Method, init new())
+02 (ln 12): Return
+03 (ln 12): End
+toString Constants:
+00: "Foo.toString"
+toString Code:
+00 (ln 13): Constant(0: "Foo.toString")
+01 (ln 13): Return
+02 (ln 13): End

@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: "abracadabra"
 01: 123
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "abracadabra")
 01 (ln 1): Constant(1: 123)
 02 (ln 1): Call(Method, trim(_))

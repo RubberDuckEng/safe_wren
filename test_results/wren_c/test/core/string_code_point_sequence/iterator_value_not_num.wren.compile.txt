@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: "string"
 01: "not num"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "string")
 02 (ln 1): Call(Getter, codePoints)

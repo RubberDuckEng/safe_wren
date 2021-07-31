@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 4
 01: 1
 02: 3
@@ -10,7 +10,7 @@ Constants:
 08: 5
 09: Fn(sort(_) block argument)
 10: Fn(sort(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Load(Module, Class("List"))
 02 (ln 1): Call(Method, new())
@@ -77,3 +77,15 @@ Code:
 63 (ln 9): EndModule
 64 (ln 9): Return
 65 (ln 9): End
+sort(_) block argument Code:
+00 (ln 4): Load(Local, 1)
+01 (ln 4): Load(Local, 2)
+02 (ln 4): Call(Method, <(_))
+03 (ln 4): Return
+04 (ln 4): End
+sort(_) block argument Code:
+00 (ln 6): Load(Local, 1)
+01 (ln 6): Load(Local, 2)
+02 (ln 6): Call(Method, >(_))
+03 (ln 6): Return
+04 (ln 6): End

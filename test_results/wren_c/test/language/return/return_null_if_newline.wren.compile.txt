@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fn"))
 01 (ln 4): Closure(0, [])
 02 (ln 4): Call(Method, new(_))
@@ -14,3 +14,15 @@ Code:
 10 (ln 7): EndModule
 11 (ln 7): Return
 12 (ln 7): End
+new(_) block argument Constants:
+00: "bad"
+new(_) block argument Code:
+00 (ln 2): Null
+01 (ln 2): Return
+02 (ln 3): Load(Module, Class("System"))
+03 (ln 3): Constant(0: "bad")
+04 (ln 3): Call(Method, print(_))
+05 (ln 3): Pop
+06 (ln 4): Null
+07 (ln 4): Return
+08 (ln 4): End

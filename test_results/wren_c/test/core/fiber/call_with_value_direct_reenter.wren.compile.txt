@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
 01: 1
-Code:
+<script> Code:
 00 (ln 1): Null
 01 (ln 1): Store(Module)
 02 (ln 1): Pop
@@ -17,3 +17,13 @@ Code:
 12 (ln 8): EndModule
 13 (ln 8): Return
 14 (ln 8): End
+new(_) block argument Constants:
+00: 2
+new(_) block argument Code:
+00 (ln 4): Load(Module, Null)
+01 (ln 4): Constant(0: 2)
+02 (ln 4): Call(Method, call(_))
+03 (ln 4): Pop
+04 (ln 5): Null
+05 (ln 5): Return
+06 (ln 5): End

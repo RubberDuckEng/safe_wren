@@ -1,5 +1,4 @@
-Constants:
-Code:
+<script> Code:
 00 (ln 2): EndModule
 01 (ln 2): Return
 02 (ln 2): End

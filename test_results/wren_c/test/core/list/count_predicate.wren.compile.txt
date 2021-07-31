@@ -1,11 +1,11 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: 3
 03: Fn(count(_) block argument)
 04: Fn(count(_) block argument)
 05: Fn(count(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("List"))
 01 (ln 1): Call(Method, new())
 02 (ln 1): Constant(0: 1)
@@ -38,3 +38,23 @@ Code:
 29 (ln 7): EndModule
 30 (ln 7): Return
 31 (ln 7): End
+count(_) block argument Constants:
+00: 3
+count(_) block argument Code:
+00 (ln 3): Load(Local, 1)
+01 (ln 3): Constant(0: 3)
+02 (ln 3): Call(Method, >(_))
+03 (ln 3): Return
+04 (ln 3): End
+count(_) block argument Constants:
+00: 1
+count(_) block argument Code:
+00 (ln 4): Load(Local, 1)
+01 (ln 4): Constant(0: 1)
+02 (ln 4): Call(Method, >(_))
+03 (ln 4): Return
+04 (ln 4): End
+count(_) block argument Code:
+00 (ln 6): Boolean true
+01 (ln 6): Return
+02 (ln 6): End

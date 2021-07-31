@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
 01: "main 1"
 02: "main 2"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 7): Closure(0, [])
 02 (ln 7): Call(Method, new(_))
@@ -25,3 +25,20 @@ Code:
 19 (ln 15): EndModule
 20 (ln 15): Return
 21 (ln 15): End
+new(_) block argument Constants:
+00: "fiber 1"
+01: "fiber 2"
+new(_) block argument Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "fiber 1")
+02 (ln 2): Call(Method, print(_))
+03 (ln 2): Pop
+04 (ln 4): ImportModule("./yield_from_import_module")
+05 (ln 4): Pop
+06 (ln 6): Load(Module, Class("System"))
+07 (ln 6): Constant(1: "fiber 2")
+08 (ln 6): Call(Method, print(_))
+09 (ln 6): Pop
+10 (ln 7): Null
+11 (ln 7): Return
+12 (ln 7): End

@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(init new())
 02: Fn()
@@ -7,7 +7,7 @@ Constants:
 05: Fn(bar(_))
 06: Fn(bar(_))
 07: "arg"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -58,3 +58,54 @@ Code:
 47 (ln 14): EndModule
 48 (ln 14): Return
 49 (ln 14): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new())
+02 (ln 2): Return
+03 (ln 2): End
+bar Constants:
+00: "on instance"
+bar Code:
+00 (ln 3): Constant(0: "on instance")
+01 (ln 3): Return
+02 (ln 3): End
+bar Constants:
+00: "on metaclass"
+bar Code:
+00 (ln 4): Constant(0: "on metaclass")
+01 (ln 4): Return
+02 (ln 4): End
+bar(_) Constants:
+00: "on instance "
+01: ""
+bar(_) Code:
+00 (ln 6): Load(Module, Class("List"))
+01 (ln 6): Call(Method, new())
+02 (ln 6): Constant(0: "on instance ")
+03 (ln 6): Call(Method, addCore_(_))
+04 (ln 6): Load(Local, 1)
+05 (ln 6): Call(Method, addCore_(_))
+06 (ln 6): Constant(1: "")
+07 (ln 6): Call(Method, addCore_(_))
+08 (ln 6): Call(Method, join())
+09 (ln 6): Return
+10 (ln 6): End
+bar(_) Constants:
+00: "on metaclass "
+01: ""
+bar(_) Code:
+00 (ln 7): Load(Module, Class("List"))
+01 (ln 7): Call(Method, new())
+02 (ln 7): Constant(0: "on metaclass ")
+03 (ln 7): Call(Method, addCore_(_))
+04 (ln 7): Load(Local, 1)
+05 (ln 7): Call(Method, addCore_(_))
+06 (ln 7): Constant(1: "")
+07 (ln 7): Call(Method, addCore_(_))
+08 (ln 7): Call(Method, join())
+09 (ln 7): Return
+10 (ln 7): End

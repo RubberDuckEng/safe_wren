@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: "before"
 01: "after"
 02: "Foo"
 03: Fn(method)
 04: Fn(new(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "before")
 01 (ln 1): Store(Module)
 02 (ln 1): Pop
@@ -46,3 +46,21 @@ Code:
 38 (ln 19): EndModule
 39 (ln 19): Return
 40 (ln 19): End
+method Constants:
+00: "method"
+method Code:
+00 (ln 8): Constant(0: "method")
+01 (ln 8): Store(Module)
+02 (ln 8): Pop
+03 (ln 9): Null
+04 (ln 9): Return
+05 (ln 9): End
+new(_) block argument Constants:
+00: "fn"
+new(_) block argument Code:
+00 (ln 16): Constant(0: "fn")
+01 (ln 16): Store(Module)
+02 (ln 16): Pop
+03 (ln 17): Null
+04 (ln 17): Return
+05 (ln 17): End

@@ -1,5 +1,4 @@
-Constants:
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Null"))
 01 (ln 1): Call(Method, new())
 02 (ln 1): Pop

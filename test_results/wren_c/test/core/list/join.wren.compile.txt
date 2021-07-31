@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: ","
 01: ""
 02: 1
@@ -12,7 +12,7 @@ Constants:
 10: Fn()
 11: Fn(toString)
 12: ", "
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Load(Module, Class("List"))
 02 (ln 2): Call(Method, new())
@@ -114,3 +114,18 @@ Code:
 98 (ln 25): EndModule
 99 (ln 25): Return
 100 (ln 25): End
+init new() Code:
+00 (ln 18): Load(Local, 0)
+01 (ln 18): Return
+02 (ln 18): End
+ Code:
+00 (ln 18): Construct
+01 (ln 18): Call(Method, init new())
+02 (ln 18): Return
+03 (ln 18): End
+toString Constants:
+00: "Foo.toString"
+toString Code:
+00 (ln 19): Constant(0: "Foo.toString")
+01 (ln 19): Return
+02 (ln 19): End

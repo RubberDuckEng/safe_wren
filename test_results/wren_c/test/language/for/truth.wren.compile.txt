@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Iter"
 01: Fn(init new(_))
 02: Fn()
@@ -9,7 +9,7 @@ Constants:
 07: 0
 08: ""
 09: "string"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Iter")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(1 fields)
@@ -140,3 +140,27 @@ Code:
 127 (ln 33): EndModule
 128 (ln 33): Return
 129 (ln 33): End
+init new(_) Code:
+00 (ln 2): Load(Local, 1)
+01 (ln 2): Load(Local, 0)
+02 (ln 2): StoreField(0)
+03 (ln 2): Pop
+04 (ln 2): Load(Local, 0)
+05 (ln 2): Return
+06 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new(_))
+02 (ln 2): Return
+03 (ln 2): End
+iterate(_) Code:
+00 (ln 3): Load(Local, 0)
+01 (ln 3): LoadField(0)
+02 (ln 3): Return
+03 (ln 3): End
+iteratorValue(_) Constants:
+00: "value"
+iteratorValue(_) Code:
+00 (ln 4): Constant(0: "value")
+01 (ln 4): Return
+02 (ln 4): End

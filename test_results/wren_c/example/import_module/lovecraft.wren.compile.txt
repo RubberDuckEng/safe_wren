@@ -1,9 +1,9 @@
-Constants:
+<script> Constants:
 00: "Lovecraft"
 01: Fn(init new())
 02: Fn()
 03: Fn(say())
-Code:
+<script> Code:
 00 (ln 1): ImportModule("./cthulu")
 01 (ln 1): Pop
 02 (ln 1): ImportVariable("Cthulu")
@@ -32,3 +32,18 @@ Code:
 25 (ln 9): EndModule
 26 (ln 9): Return
 27 (ln 9): End
+init new() Code:
+00 (ln 4): Load(Local, 0)
+01 (ln 4): Return
+02 (ln 4): End
+ Code:
+00 (ln 4): Construct
+01 (ln 4): Call(Method, init new())
+02 (ln 4): Return
+03 (ln 4): End
+say() Code:
+00 (ln 5): Load(Module, Null)
+01 (ln 5): Call(Method, new())
+02 (ln 5): Call(Getter, message)
+03 (ln 5): Return
+04 (ln 5): End

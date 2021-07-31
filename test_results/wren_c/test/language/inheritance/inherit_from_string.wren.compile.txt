@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "Subclass"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Subclass")
 01 (ln 1): Load(Module, Class("String"))
 02 (ln 1): Class(0 fields)

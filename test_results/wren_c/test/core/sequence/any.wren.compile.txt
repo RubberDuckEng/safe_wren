@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: 3
@@ -7,7 +7,7 @@ Constants:
 05: Fn(any(_) block argument)
 06: Fn(any(_) block argument)
 07: Fn(any(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("List"))
 01 (ln 1): Call(Method, new())
 02 (ln 1): Constant(0: 1)
@@ -52,3 +52,39 @@ Code:
 41 (ln 11): EndModule
 42 (ln 11): Return
 43 (ln 11): End
+any(_) block argument Constants:
+00: 3
+any(_) block argument Code:
+00 (ln 2): Load(Local, 1)
+01 (ln 2): Constant(0: 3)
+02 (ln 2): Call(Method, >(_))
+03 (ln 2): Return
+04 (ln 2): End
+any(_) block argument Constants:
+00: 1
+any(_) block argument Code:
+00 (ln 3): Load(Local, 1)
+01 (ln 3): Constant(0: 1)
+02 (ln 3): Call(Method, >(_))
+03 (ln 3): Return
+04 (ln 3): End
+any(_) block argument Code:
+00 (ln 4): Boolean true
+01 (ln 4): Return
+02 (ln 4): End
+any(_) block argument Code:
+00 (ln 7): Load(Local, 1)
+01 (ln 7): Return
+02 (ln 7): End
+any(_) block argument Constants:
+00: 2
+any(_) block argument Code:
+00 (ln 10): Load(Local, 1)
+01 (ln 10): Constant(0: 2)
+02 (ln 10): Call(Method, <(_))
+03 (ln 10): JumpIfFalse(2)
+04 (ln 10): Null
+05 (ln 10): Jump(1)
+06 (ln 10): Boolean false
+07 (ln 10): Return
+08 (ln 10): End

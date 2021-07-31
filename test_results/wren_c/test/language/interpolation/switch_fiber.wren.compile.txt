@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
 01: "outer "
 02: " string"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 4): Closure(0, [])
 02 (ln 4): Call(Method, new(_))
@@ -24,3 +24,18 @@ Code:
 18 (ln 9): EndModule
 19 (ln 9): Return
 20 (ln 9): End
+new(_) block argument Constants:
+00: "in fiber"
+01: "result"
+new(_) block argument Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "in fiber")
+02 (ln 2): Call(Method, print(_))
+03 (ln 2): Pop
+04 (ln 3): Load(Module, Class("Fiber"))
+05 (ln 3): Constant(1: "result")
+06 (ln 3): Call(Method, yield(_))
+07 (ln 3): Pop
+08 (ln 4): Null
+09 (ln 4): Return
+10 (ln 4): End

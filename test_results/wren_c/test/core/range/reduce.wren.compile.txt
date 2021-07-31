@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: 1
 01: 10
 02: Fn(reduce(_) block argument)
 03: 100
 04: Fn(reduce(_,_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Constant(1: 10)
 02 (ln 1): Call(Method, ..(_))
@@ -26,3 +26,19 @@ Code:
 18 (ln 5): EndModule
 19 (ln 5): Return
 20 (ln 5): End
+reduce(_) block argument Code:
+00 (ln 3): Load(Local, 1)
+01 (ln 3): Load(Local, 2)
+02 (ln 3): Call(Method, +(_))
+03 (ln 3): Return
+04 (ln 3): End
+reduce(_,_) block argument Code:
+00 (ln 4): Load(Local, 1)
+01 (ln 4): Load(Local, 2)
+02 (ln 4): Call(Method, <(_))
+03 (ln 4): JumpIfFalse(2)
+04 (ln 4): Load(Local, 1)
+05 (ln 4): Jump(1)
+06 (ln 4): Load(Local, 2)
+07 (ln 4): Return
+08 (ln 4): End

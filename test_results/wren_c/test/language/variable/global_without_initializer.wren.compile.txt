@@ -1,5 +1,4 @@
-Constants:
-Code:
+<script> Code:
 00 (ln 1): Null
 01 (ln 1): Store(Module)
 02 (ln 1): Pop

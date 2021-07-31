@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: 0
 01: 100
 02: 10
-Code:
+<script> Code:
 00 (ln 3): Load(Module, Class("Map"))
 01 (ln 3): Call(Method, new())
 02 (ln 3): Store(Module)

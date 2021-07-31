@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Aeneus corydoras"
 01: "African glass catfish"
 02: "African lungfish"
@@ -252,7 +252,7 @@ Constants:
 250: 150
 251: 249
 252: 1
-Code:
+<script> Code:
 00 (ln 4): Load(Module, Class("List"))
 01 (ln 4): Call(Method, new())
 02 (ln 5): Constant(0: "Aeneus corydoras")

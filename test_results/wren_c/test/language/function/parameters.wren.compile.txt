@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
 01: Fn(new(_) block argument)
 02: 1
@@ -32,7 +32,7 @@ Constants:
 30: 15
 31: Fn(new(_) block argument)
 32: 16
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fn"))
 01 (ln 1): Closure(0, [])
 02 (ln 1): Call(Method, new(_))
@@ -342,3 +342,313 @@ Code:
 306 (ln 51): EndModule
 307 (ln 51): Return
 308 (ln 51): End
+new(_) block argument Constants:
+00: 0
+new(_) block argument Code:
+00 (ln 1): Constant(0: 0)
+01 (ln 1): Return
+02 (ln 1): End
+new(_) block argument Code:
+00 (ln 4): Load(Local, 1)
+01 (ln 4): Return
+02 (ln 4): End
+new(_) block argument Code:
+00 (ln 7): Load(Local, 1)
+01 (ln 7): Load(Local, 2)
+02 (ln 7): Call(Method, +(_))
+03 (ln 7): Return
+04 (ln 7): End
+new(_) block argument Code:
+00 (ln 10): Load(Local, 1)
+01 (ln 10): Load(Local, 2)
+02 (ln 10): Call(Method, +(_))
+03 (ln 10): Load(Local, 3)
+04 (ln 10): Call(Method, +(_))
+05 (ln 10): Return
+06 (ln 10): End
+new(_) block argument Code:
+00 (ln 13): Load(Local, 1)
+01 (ln 13): Load(Local, 2)
+02 (ln 13): Call(Method, +(_))
+03 (ln 13): Load(Local, 3)
+04 (ln 13): Call(Method, +(_))
+05 (ln 13): Load(Local, 4)
+06 (ln 13): Call(Method, +(_))
+07 (ln 13): Return
+08 (ln 13): End
+new(_) block argument Code:
+00 (ln 16): Load(Local, 1)
+01 (ln 16): Load(Local, 2)
+02 (ln 16): Call(Method, +(_))
+03 (ln 16): Load(Local, 3)
+04 (ln 16): Call(Method, +(_))
+05 (ln 16): Load(Local, 4)
+06 (ln 16): Call(Method, +(_))
+07 (ln 16): Load(Local, 5)
+08 (ln 16): Call(Method, +(_))
+09 (ln 16): Return
+10 (ln 16): End
+new(_) block argument Code:
+00 (ln 19): Load(Local, 1)
+01 (ln 19): Load(Local, 2)
+02 (ln 19): Call(Method, +(_))
+03 (ln 19): Load(Local, 3)
+04 (ln 19): Call(Method, +(_))
+05 (ln 19): Load(Local, 4)
+06 (ln 19): Call(Method, +(_))
+07 (ln 19): Load(Local, 5)
+08 (ln 19): Call(Method, +(_))
+09 (ln 19): Load(Local, 6)
+10 (ln 19): Call(Method, +(_))
+11 (ln 19): Return
+12 (ln 19): End
+new(_) block argument Code:
+00 (ln 22): Load(Local, 1)
+01 (ln 22): Load(Local, 2)
+02 (ln 22): Call(Method, +(_))
+03 (ln 22): Load(Local, 3)
+04 (ln 22): Call(Method, +(_))
+05 (ln 22): Load(Local, 4)
+06 (ln 22): Call(Method, +(_))
+07 (ln 22): Load(Local, 5)
+08 (ln 22): Call(Method, +(_))
+09 (ln 22): Load(Local, 6)
+10 (ln 22): Call(Method, +(_))
+11 (ln 22): Load(Local, 7)
+12 (ln 22): Call(Method, +(_))
+13 (ln 22): Return
+14 (ln 22): End
+new(_) block argument Code:
+00 (ln 25): Load(Local, 1)
+01 (ln 25): Load(Local, 2)
+02 (ln 25): Call(Method, +(_))
+03 (ln 25): Load(Local, 3)
+04 (ln 25): Call(Method, +(_))
+05 (ln 25): Load(Local, 4)
+06 (ln 25): Call(Method, +(_))
+07 (ln 25): Load(Local, 5)
+08 (ln 25): Call(Method, +(_))
+09 (ln 25): Load(Local, 6)
+10 (ln 25): Call(Method, +(_))
+11 (ln 25): Load(Local, 7)
+12 (ln 25): Call(Method, +(_))
+13 (ln 25): Load(Local, 8)
+14 (ln 25): Call(Method, +(_))
+15 (ln 25): Return
+16 (ln 25): End
+new(_) block argument Code:
+00 (ln 28): Load(Local, 1)
+01 (ln 28): Load(Local, 2)
+02 (ln 28): Call(Method, +(_))
+03 (ln 28): Load(Local, 3)
+04 (ln 28): Call(Method, +(_))
+05 (ln 28): Load(Local, 4)
+06 (ln 28): Call(Method, +(_))
+07 (ln 28): Load(Local, 5)
+08 (ln 28): Call(Method, +(_))
+09 (ln 28): Load(Local, 6)
+10 (ln 28): Call(Method, +(_))
+11 (ln 28): Load(Local, 7)
+12 (ln 28): Call(Method, +(_))
+13 (ln 28): Load(Local, 8)
+14 (ln 28): Call(Method, +(_))
+15 (ln 28): Load(Local, 9)
+16 (ln 28): Call(Method, +(_))
+17 (ln 28): Return
+18 (ln 28): End
+new(_) block argument Code:
+00 (ln 31): Load(Local, 1)
+01 (ln 31): Load(Local, 2)
+02 (ln 31): Call(Method, +(_))
+03 (ln 31): Load(Local, 3)
+04 (ln 31): Call(Method, +(_))
+05 (ln 31): Load(Local, 4)
+06 (ln 31): Call(Method, +(_))
+07 (ln 31): Load(Local, 5)
+08 (ln 31): Call(Method, +(_))
+09 (ln 31): Load(Local, 6)
+10 (ln 31): Call(Method, +(_))
+11 (ln 31): Load(Local, 7)
+12 (ln 31): Call(Method, +(_))
+13 (ln 31): Load(Local, 8)
+14 (ln 31): Call(Method, +(_))
+15 (ln 31): Load(Local, 9)
+16 (ln 31): Call(Method, +(_))
+17 (ln 31): Load(Local, 10)
+18 (ln 31): Call(Method, +(_))
+19 (ln 31): Return
+20 (ln 31): End
+new(_) block argument Code:
+00 (ln 34): Load(Local, 1)
+01 (ln 34): Load(Local, 2)
+02 (ln 34): Call(Method, +(_))
+03 (ln 34): Load(Local, 3)
+04 (ln 34): Call(Method, +(_))
+05 (ln 34): Load(Local, 4)
+06 (ln 34): Call(Method, +(_))
+07 (ln 34): Load(Local, 5)
+08 (ln 34): Call(Method, +(_))
+09 (ln 34): Load(Local, 6)
+10 (ln 34): Call(Method, +(_))
+11 (ln 34): Load(Local, 7)
+12 (ln 34): Call(Method, +(_))
+13 (ln 34): Load(Local, 8)
+14 (ln 34): Call(Method, +(_))
+15 (ln 34): Load(Local, 9)
+16 (ln 34): Call(Method, +(_))
+17 (ln 34): Load(Local, 10)
+18 (ln 34): Call(Method, +(_))
+19 (ln 34): Load(Local, 11)
+20 (ln 34): Call(Method, +(_))
+21 (ln 34): Return
+22 (ln 34): End
+new(_) block argument Code:
+00 (ln 37): Load(Local, 1)
+01 (ln 37): Load(Local, 2)
+02 (ln 37): Call(Method, +(_))
+03 (ln 37): Load(Local, 3)
+04 (ln 37): Call(Method, +(_))
+05 (ln 37): Load(Local, 4)
+06 (ln 37): Call(Method, +(_))
+07 (ln 37): Load(Local, 5)
+08 (ln 37): Call(Method, +(_))
+09 (ln 37): Load(Local, 6)
+10 (ln 37): Call(Method, +(_))
+11 (ln 37): Load(Local, 7)
+12 (ln 37): Call(Method, +(_))
+13 (ln 37): Load(Local, 8)
+14 (ln 37): Call(Method, +(_))
+15 (ln 37): Load(Local, 9)
+16 (ln 37): Call(Method, +(_))
+17 (ln 37): Load(Local, 10)
+18 (ln 37): Call(Method, +(_))
+19 (ln 37): Load(Local, 11)
+20 (ln 37): Call(Method, +(_))
+21 (ln 37): Load(Local, 12)
+22 (ln 37): Call(Method, +(_))
+23 (ln 37): Return
+24 (ln 37): End
+new(_) block argument Code:
+00 (ln 40): Load(Local, 1)
+01 (ln 40): Load(Local, 2)
+02 (ln 40): Call(Method, +(_))
+03 (ln 40): Load(Local, 3)
+04 (ln 40): Call(Method, +(_))
+05 (ln 40): Load(Local, 4)
+06 (ln 40): Call(Method, +(_))
+07 (ln 40): Load(Local, 5)
+08 (ln 40): Call(Method, +(_))
+09 (ln 40): Load(Local, 6)
+10 (ln 40): Call(Method, +(_))
+11 (ln 40): Load(Local, 7)
+12 (ln 40): Call(Method, +(_))
+13 (ln 40): Load(Local, 8)
+14 (ln 40): Call(Method, +(_))
+15 (ln 40): Load(Local, 9)
+16 (ln 40): Call(Method, +(_))
+17 (ln 40): Load(Local, 10)
+18 (ln 40): Call(Method, +(_))
+19 (ln 40): Load(Local, 11)
+20 (ln 40): Call(Method, +(_))
+21 (ln 40): Load(Local, 12)
+22 (ln 40): Call(Method, +(_))
+23 (ln 40): Load(Local, 13)
+24 (ln 40): Call(Method, +(_))
+25 (ln 40): Return
+26 (ln 40): End
+new(_) block argument Code:
+00 (ln 43): Load(Local, 1)
+01 (ln 43): Load(Local, 2)
+02 (ln 43): Call(Method, +(_))
+03 (ln 43): Load(Local, 3)
+04 (ln 43): Call(Method, +(_))
+05 (ln 43): Load(Local, 4)
+06 (ln 43): Call(Method, +(_))
+07 (ln 43): Load(Local, 5)
+08 (ln 43): Call(Method, +(_))
+09 (ln 43): Load(Local, 6)
+10 (ln 43): Call(Method, +(_))
+11 (ln 43): Load(Local, 7)
+12 (ln 43): Call(Method, +(_))
+13 (ln 43): Load(Local, 8)
+14 (ln 43): Call(Method, +(_))
+15 (ln 43): Load(Local, 9)
+16 (ln 43): Call(Method, +(_))
+17 (ln 43): Load(Local, 10)
+18 (ln 43): Call(Method, +(_))
+19 (ln 43): Load(Local, 11)
+20 (ln 43): Call(Method, +(_))
+21 (ln 43): Load(Local, 12)
+22 (ln 43): Call(Method, +(_))
+23 (ln 43): Load(Local, 13)
+24 (ln 43): Call(Method, +(_))
+25 (ln 43): Load(Local, 14)
+26 (ln 43): Call(Method, +(_))
+27 (ln 43): Return
+28 (ln 43): End
+new(_) block argument Code:
+00 (ln 46): Load(Local, 1)
+01 (ln 46): Load(Local, 2)
+02 (ln 46): Call(Method, +(_))
+03 (ln 46): Load(Local, 3)
+04 (ln 46): Call(Method, +(_))
+05 (ln 46): Load(Local, 4)
+06 (ln 46): Call(Method, +(_))
+07 (ln 46): Load(Local, 5)
+08 (ln 46): Call(Method, +(_))
+09 (ln 46): Load(Local, 6)
+10 (ln 46): Call(Method, +(_))
+11 (ln 46): Load(Local, 7)
+12 (ln 46): Call(Method, +(_))
+13 (ln 46): Load(Local, 8)
+14 (ln 46): Call(Method, +(_))
+15 (ln 46): Load(Local, 9)
+16 (ln 46): Call(Method, +(_))
+17 (ln 46): Load(Local, 10)
+18 (ln 46): Call(Method, +(_))
+19 (ln 46): Load(Local, 11)
+20 (ln 46): Call(Method, +(_))
+21 (ln 46): Load(Local, 12)
+22 (ln 46): Call(Method, +(_))
+23 (ln 46): Load(Local, 13)
+24 (ln 46): Call(Method, +(_))
+25 (ln 46): Load(Local, 14)
+26 (ln 46): Call(Method, +(_))
+27 (ln 46): Load(Local, 15)
+28 (ln 46): Call(Method, +(_))
+29 (ln 46): Return
+30 (ln 46): End
+new(_) block argument Code:
+00 (ln 49): Load(Local, 1)
+01 (ln 49): Load(Local, 2)
+02 (ln 49): Call(Method, +(_))
+03 (ln 49): Load(Local, 3)
+04 (ln 49): Call(Method, +(_))
+05 (ln 49): Load(Local, 4)
+06 (ln 49): Call(Method, +(_))
+07 (ln 49): Load(Local, 5)
+08 (ln 49): Call(Method, +(_))
+09 (ln 49): Load(Local, 6)
+10 (ln 49): Call(Method, +(_))
+11 (ln 49): Load(Local, 7)
+12 (ln 49): Call(Method, +(_))
+13 (ln 49): Load(Local, 8)
+14 (ln 49): Call(Method, +(_))
+15 (ln 49): Load(Local, 9)
+16 (ln 49): Call(Method, +(_))
+17 (ln 49): Load(Local, 10)
+18 (ln 49): Call(Method, +(_))
+19 (ln 49): Load(Local, 11)
+20 (ln 49): Call(Method, +(_))
+21 (ln 49): Load(Local, 12)
+22 (ln 49): Call(Method, +(_))
+23 (ln 49): Load(Local, 13)
+24 (ln 49): Call(Method, +(_))
+25 (ln 49): Load(Local, 14)
+26 (ln 49): Call(Method, +(_))
+27 (ln 49): Load(Local, 15)
+28 (ln 49): Call(Method, +(_))
+29 (ln 49): Load(Local, 16)
+30 (ln 49): Call(Method, +(_))
+31 (ln 49): Return
+32 (ln 49): End

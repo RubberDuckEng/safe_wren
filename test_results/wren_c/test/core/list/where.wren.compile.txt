@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: 3
 03: Fn(where(_) block argument)
 04: Fn(where(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("List"))
 01 (ln 1): Call(Method, new())
 02 (ln 1): Constant(0: 1)
@@ -38,3 +38,19 @@ Code:
 30 (ln 7): EndModule
 31 (ln 7): Return
 32 (ln 7): End
+where(_) block argument Constants:
+00: 1
+where(_) block argument Code:
+00 (ln 2): Load(Local, 1)
+01 (ln 2): Constant(0: 1)
+02 (ln 2): Call(Method, >(_))
+03 (ln 2): Return
+04 (ln 2): End
+where(_) block argument Constants:
+00: 10
+where(_) block argument Code:
+00 (ln 5): Load(Local, 1)
+01 (ln 5): Constant(0: 10)
+02 (ln 5): Call(Method, >(_))
+03 (ln 5): Return
+04 (ln 5): End

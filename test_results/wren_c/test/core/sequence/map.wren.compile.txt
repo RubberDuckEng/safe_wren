@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "FibIterator"
 01: Fn(init new())
 02: Fn()
@@ -10,7 +10,7 @@ Constants:
 08: Fn(iterate(_))
 09: Fn(iteratorValue(_))
 10: Fn(map(_) block argument)
-Code:
+<script> Code:
 00 (ln 2): Constant(0: "FibIterator")
 01 (ln 2): Load(Module, Class("Object"))
 02 (ln 2): Class(2 fields)
@@ -122,3 +122,82 @@ Code:
 108 (ln 49): EndModule
 109 (ln 49): Return
 110 (ln 49): End
+init new() Constants:
+00: 0
+01: 1
+init new() Code:
+00 (ln 4): Constant(0: 0)
+01 (ln 4): Load(Local, 0)
+02 (ln 4): StoreField(0)
+03 (ln 4): Pop
+04 (ln 5): Constant(1: 1)
+05 (ln 5): Load(Local, 0)
+06 (ln 5): StoreField(1)
+07 (ln 5): Pop
+08 (ln 6): Load(Local, 0)
+09 (ln 6): Return
+10 (ln 6): End
+ Code:
+00 (ln 6): Construct
+01 (ln 6): Call(Method, init new())
+02 (ln 6): Return
+03 (ln 6): End
+iterate Code:
+00 (ln 9): Load(Local, 0)
+01 (ln 9): LoadField(0)
+02 (ln 9): Load(Local, 0)
+03 (ln 9): LoadField(1)
+04 (ln 9): Call(Method, +(_))
+05 (ln 10): Load(Local, 0)
+06 (ln 10): LoadField(1)
+07 (ln 10): Load(Local, 0)
+08 (ln 10): StoreField(0)
+09 (ln 10): Pop
+10 (ln 11): Load(Local, 1)
+11 (ln 11): Load(Local, 0)
+12 (ln 11): StoreField(1)
+13 (ln 11): Pop
+14 (ln 12): Null
+15 (ln 12): Return
+16 (ln 12): End
+value Code:
+00 (ln 14): Load(Local, 0)
+01 (ln 14): LoadField(0)
+02 (ln 14): Return
+03 (ln 14): End
+init new() Code:
+00 (ln 18): Load(Local, 0)
+01 (ln 18): Return
+02 (ln 18): End
+ Code:
+00 (ln 18): Construct
+01 (ln 18): Call(Method, init new())
+02 (ln 18): Return
+03 (ln 18): End
+iterate(_) Code:
+00 (ln 21): Load(Local, 1)
+01 (ln 21): Null
+02 (ln 21): Call(Method, ==(_))
+03 (ln 21): JumpIfFalse(3)
+04 (ln 21): Load(Module, Null)
+05 (ln 21): Call(Method, new())
+06 (ln 21): Return
+07 (ln 22): Load(Local, 1)
+08 (ln 22): Call(Getter, iterate)
+09 (ln 22): Pop
+10 (ln 23): Load(Local, 1)
+11 (ln 23): Return
+12 (ln 24): Null
+13 (ln 24): Return
+14 (ln 24): End
+iteratorValue(_) Code:
+00 (ln 26): Load(Local, 1)
+01 (ln 26): Call(Getter, value)
+02 (ln 26): Return
+03 (ln 26): End
+map(_) block argument Code:
+00 (ln 29): Load(Local, 1)
+01 (ln 29): Load(Local, 1)
+02 (ln 29): Call(Method, *(_))
+03 (ln 29): Return
+04 (ln 29): End

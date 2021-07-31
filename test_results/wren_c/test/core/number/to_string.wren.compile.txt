@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 123
 01: "123"
 02: "-123"
@@ -8,7 +8,7 @@ Constants:
 06: "12.34"
 07: 0.0001
 08: "-0.0001"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 123)
 02 (ln 1): Call(Getter, toString)

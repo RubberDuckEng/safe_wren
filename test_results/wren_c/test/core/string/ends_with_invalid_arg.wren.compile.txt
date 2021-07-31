@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "abcd"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "abcd")
 02 (ln 1): Null

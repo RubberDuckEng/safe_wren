@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "søméஃthîng"
-Code:
+<script> Code:
 00 (ln 4): Constant(0: "søméஃthîng")
 01 (ln 4): Store(Module)
 02 (ln 4): Pop

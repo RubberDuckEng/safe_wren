@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: 1
 01: 3
 02: ", "
-Code:
+<script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Constant(1: 3)
 02 (ln 1): Call(Method, ..(_))

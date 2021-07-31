@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(init new(_))
 02: Fn()
@@ -8,7 +8,7 @@ Constants:
 06: "b"
 07: "c"
 08: "d"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(1 fields)
@@ -67,3 +67,31 @@ Code:
 55 (ln 19): EndModule
 56 (ln 19): Return
 57 (ln 19): End
+init new(_) Code:
+00 (ln 2): Load(Local, 1)
+01 (ln 2): Load(Local, 0)
+02 (ln 2): StoreField(0)
+03 (ln 2): Pop
+04 (ln 2): Load(Local, 0)
+05 (ln 2): Return
+06 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new(_))
+02 (ln 2): Return
+03 (ln 2): End
+toString Code:
+00 (ln 3): Load(Local, 0)
+01 (ln 3): LoadField(0)
+02 (ln 3): Return
+03 (ln 3): End
+bar=_ Code:
+00 (ln 5): Load(Local, 1)
+01 (ln 5): Load(Local, 0)
+02 (ln 5): StoreField(0)
+03 (ln 5): Pop
+04 (ln 6): Load(Local, 1)
+05 (ln 6): Return
+06 (ln 7): Null
+07 (ln 7): Return
+08 (ln 7): End

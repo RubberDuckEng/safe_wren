@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: "outer"
 01: "inner"
-Code:
+<script> Code:
 00 (ln 2): Constant(0: "outer")
 01 (ln 4): Load(Module, Class("System"))
 02 (ln 4): Load(Local, 1)

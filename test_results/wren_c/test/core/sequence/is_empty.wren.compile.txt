@@ -1,11 +1,11 @@
-Constants:
+<script> Constants:
 00: 1
 01: "InfiniteSequence"
 02: Fn(init new())
 03: Fn()
 04: Fn(iterate(_))
 05: Fn(iteratorValue(_))
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Load(Module, Class("List"))
 02 (ln 1): Call(Method, new())
@@ -46,3 +46,20 @@ Code:
 37 (ln 12): EndModule
 38 (ln 12): Return
 39 (ln 12): End
+init new() Code:
+00 (ln 5): Load(Local, 0)
+01 (ln 5): Return
+02 (ln 5): End
+ Code:
+00 (ln 5): Construct
+01 (ln 5): Call(Method, init new())
+02 (ln 5): Return
+03 (ln 5): End
+iterate(_) Code:
+00 (ln 6): Boolean true
+01 (ln 6): Return
+02 (ln 6): End
+iteratorValue(_) Code:
+00 (ln 7): Load(Local, 1)
+01 (ln 7): Return
+02 (ln 7): End

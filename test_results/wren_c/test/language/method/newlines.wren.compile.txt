@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(init new())
 02: Fn()
@@ -6,7 +6,7 @@ Constants:
 04: Fn([_,_])
 05: "a"
 06: "b"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -45,3 +45,52 @@ Code:
 35 (ln 22): EndModule
 36 (ln 22): Return
 37 (ln 22): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new())
+02 (ln 2): Return
+03 (ln 2): End
+method(_,_) Constants:
+00: "method "
+01: " "
+02: ""
+method(_,_) Code:
+00 (ln 3): Load(Module, Class("List"))
+01 (ln 3): Call(Method, new())
+02 (ln 3): Constant(0: "method ")
+03 (ln 3): Call(Method, addCore_(_))
+04 (ln 3): Load(Local, 1)
+05 (ln 3): Call(Method, addCore_(_))
+06 (ln 3): Constant(1: " ")
+07 (ln 3): Call(Method, addCore_(_))
+08 (ln 3): Load(Local, 2)
+09 (ln 3): Call(Method, addCore_(_))
+10 (ln 3): Constant(2: "")
+11 (ln 3): Call(Method, addCore_(_))
+12 (ln 3): Call(Method, join())
+13 (ln 3): Return
+14 (ln 3): End
+[_,_] Constants:
+00: "subscript "
+01: " "
+02: ""
+[_,_] Code:
+00 (ln 4): Load(Module, Class("List"))
+01 (ln 4): Call(Method, new())
+02 (ln 4): Constant(0: "subscript ")
+03 (ln 4): Call(Method, addCore_(_))
+04 (ln 4): Load(Local, 1)
+05 (ln 4): Call(Method, addCore_(_))
+06 (ln 4): Constant(1: " ")
+07 (ln 4): Call(Method, addCore_(_))
+08 (ln 4): Load(Local, 2)
+09 (ln 4): Call(Method, addCore_(_))
+10 (ln 4): Constant(2: "")
+11 (ln 4): Call(Method, addCore_(_))
+12 (ln 4): Call(Method, join())
+13 (ln 4): Return
+14 (ln 4): End

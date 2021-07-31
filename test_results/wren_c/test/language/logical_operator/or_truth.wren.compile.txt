@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "ok"
 01: 0
 02: "s"
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Boolean false
 02 (ln 2): Or(1)

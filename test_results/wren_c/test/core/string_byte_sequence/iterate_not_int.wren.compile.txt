@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: "str"
 01: 12.34
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "str")
 01 (ln 1): Call(Getter, bytes)
 02 (ln 1): Constant(1: 12.34)

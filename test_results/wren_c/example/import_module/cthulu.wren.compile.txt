@@ -1,9 +1,9 @@
-Constants:
+<script> Constants:
 00: "Cthulu"
 01: Fn(init new())
 02: Fn()
 03: Fn(message)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Cthulu")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -21,3 +21,18 @@ Code:
 14 (ln 5): EndModule
 15 (ln 5): Return
 16 (ln 5): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new())
+02 (ln 2): Return
+03 (ln 2): End
+message Constants:
+00: "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn"
+message Code:
+00 (ln 3): Constant(0: "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn")
+01 (ln 3): Return
+02 (ln 3): End

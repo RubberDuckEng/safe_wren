@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: 0
 01: 2
 02: 0.000000000000001
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 0)
 02 (ln 1): Call(Getter, sin)

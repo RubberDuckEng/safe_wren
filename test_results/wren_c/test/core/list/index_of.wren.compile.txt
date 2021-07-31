@@ -1,11 +1,11 @@
-Constants:
+<script> Constants:
 00: 0
 01: 1
 02: 2
 03: 3
 04: 4
 05: 100
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("List"))
 01 (ln 2): Call(Method, new())
 02 (ln 2): Constant(0: 0)

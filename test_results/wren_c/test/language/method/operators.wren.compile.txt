@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(init new())
 02: Fn()
@@ -20,7 +20,7 @@ Constants:
 18: Fn(~)
 19: Fn(-)
 20: "a"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -189,3 +189,240 @@ Code:
 165 (ln 42): EndModule
 166 (ln 42): Return
 167 (ln 42): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new())
+02 (ln 2): Return
+03 (ln 2): End
++(_) Constants:
+00: "infix + "
+01: ""
++(_) Code:
+00 (ln 4): Load(Module, Class("List"))
+01 (ln 4): Call(Method, new())
+02 (ln 4): Constant(0: "infix + ")
+03 (ln 4): Call(Method, addCore_(_))
+04 (ln 4): Load(Local, 1)
+05 (ln 4): Call(Method, addCore_(_))
+06 (ln 4): Constant(1: "")
+07 (ln 4): Call(Method, addCore_(_))
+08 (ln 4): Call(Method, join())
+09 (ln 4): Return
+10 (ln 4): End
+-(_) Constants:
+00: "infix - "
+01: ""
+-(_) Code:
+00 (ln 5): Load(Module, Class("List"))
+01 (ln 5): Call(Method, new())
+02 (ln 5): Constant(0: "infix - ")
+03 (ln 5): Call(Method, addCore_(_))
+04 (ln 5): Load(Local, 1)
+05 (ln 5): Call(Method, addCore_(_))
+06 (ln 5): Constant(1: "")
+07 (ln 5): Call(Method, addCore_(_))
+08 (ln 5): Call(Method, join())
+09 (ln 5): Return
+10 (ln 5): End
+*(_) Constants:
+00: "infix * "
+01: ""
+*(_) Code:
+00 (ln 6): Load(Module, Class("List"))
+01 (ln 6): Call(Method, new())
+02 (ln 6): Constant(0: "infix * ")
+03 (ln 6): Call(Method, addCore_(_))
+04 (ln 6): Load(Local, 1)
+05 (ln 6): Call(Method, addCore_(_))
+06 (ln 6): Constant(1: "")
+07 (ln 6): Call(Method, addCore_(_))
+08 (ln 6): Call(Method, join())
+09 (ln 6): Return
+10 (ln 6): End
+/(_) Constants:
+00: "infix / "
+01: ""
+/(_) Code:
+00 (ln 7): Load(Module, Class("List"))
+01 (ln 7): Call(Method, new())
+02 (ln 7): Constant(0: "infix / ")
+03 (ln 7): Call(Method, addCore_(_))
+04 (ln 7): Load(Local, 1)
+05 (ln 7): Call(Method, addCore_(_))
+06 (ln 7): Constant(1: "")
+07 (ln 7): Call(Method, addCore_(_))
+08 (ln 7): Call(Method, join())
+09 (ln 7): Return
+10 (ln 7): End
+%(_) Constants:
+00: "infix % "
+01: ""
+%(_) Code:
+00 (ln 8): Load(Module, Class("List"))
+01 (ln 8): Call(Method, new())
+02 (ln 8): Constant(0: "infix % ")
+03 (ln 8): Call(Method, addCore_(_))
+04 (ln 8): Load(Local, 1)
+05 (ln 8): Call(Method, addCore_(_))
+06 (ln 8): Constant(1: "")
+07 (ln 8): Call(Method, addCore_(_))
+08 (ln 8): Call(Method, join())
+09 (ln 8): Return
+10 (ln 8): End
+<(_) Constants:
+00: "infix < "
+01: ""
+<(_) Code:
+00 (ln 9): Load(Module, Class("List"))
+01 (ln 9): Call(Method, new())
+02 (ln 9): Constant(0: "infix < ")
+03 (ln 9): Call(Method, addCore_(_))
+04 (ln 9): Load(Local, 1)
+05 (ln 9): Call(Method, addCore_(_))
+06 (ln 9): Constant(1: "")
+07 (ln 9): Call(Method, addCore_(_))
+08 (ln 9): Call(Method, join())
+09 (ln 9): Return
+10 (ln 9): End
+>(_) Constants:
+00: "infix > "
+01: ""
+>(_) Code:
+00 (ln 10): Load(Module, Class("List"))
+01 (ln 10): Call(Method, new())
+02 (ln 10): Constant(0: "infix > ")
+03 (ln 10): Call(Method, addCore_(_))
+04 (ln 10): Load(Local, 1)
+05 (ln 10): Call(Method, addCore_(_))
+06 (ln 10): Constant(1: "")
+07 (ln 10): Call(Method, addCore_(_))
+08 (ln 10): Call(Method, join())
+09 (ln 10): Return
+10 (ln 10): End
+<=(_) Constants:
+00: "infix <= "
+01: ""
+<=(_) Code:
+00 (ln 11): Load(Module, Class("List"))
+01 (ln 11): Call(Method, new())
+02 (ln 11): Constant(0: "infix <= ")
+03 (ln 11): Call(Method, addCore_(_))
+04 (ln 11): Load(Local, 1)
+05 (ln 11): Call(Method, addCore_(_))
+06 (ln 11): Constant(1: "")
+07 (ln 11): Call(Method, addCore_(_))
+08 (ln 11): Call(Method, join())
+09 (ln 11): Return
+10 (ln 11): End
+>=(_) Constants:
+00: "infix >= "
+01: ""
+>=(_) Code:
+00 (ln 12): Load(Module, Class("List"))
+01 (ln 12): Call(Method, new())
+02 (ln 12): Constant(0: "infix >= ")
+03 (ln 12): Call(Method, addCore_(_))
+04 (ln 12): Load(Local, 1)
+05 (ln 12): Call(Method, addCore_(_))
+06 (ln 12): Constant(1: "")
+07 (ln 12): Call(Method, addCore_(_))
+08 (ln 12): Call(Method, join())
+09 (ln 12): Return
+10 (ln 12): End
+==(_) Constants:
+00: "infix == "
+01: ""
+==(_) Code:
+00 (ln 13): Load(Module, Class("List"))
+01 (ln 13): Call(Method, new())
+02 (ln 13): Constant(0: "infix == ")
+03 (ln 13): Call(Method, addCore_(_))
+04 (ln 13): Load(Local, 1)
+05 (ln 13): Call(Method, addCore_(_))
+06 (ln 13): Constant(1: "")
+07 (ln 13): Call(Method, addCore_(_))
+08 (ln 13): Call(Method, join())
+09 (ln 13): Return
+10 (ln 13): End
+!=(_) Constants:
+00: "infix != "
+01: ""
+!=(_) Code:
+00 (ln 14): Load(Module, Class("List"))
+01 (ln 14): Call(Method, new())
+02 (ln 14): Constant(0: "infix != ")
+03 (ln 14): Call(Method, addCore_(_))
+04 (ln 14): Load(Local, 1)
+05 (ln 14): Call(Method, addCore_(_))
+06 (ln 14): Constant(1: "")
+07 (ln 14): Call(Method, addCore_(_))
+08 (ln 14): Call(Method, join())
+09 (ln 14): Return
+10 (ln 14): End
+&(_) Constants:
+00: "infix & "
+01: ""
+&(_) Code:
+00 (ln 15): Load(Module, Class("List"))
+01 (ln 15): Call(Method, new())
+02 (ln 15): Constant(0: "infix & ")
+03 (ln 15): Call(Method, addCore_(_))
+04 (ln 15): Load(Local, 1)
+05 (ln 15): Call(Method, addCore_(_))
+06 (ln 15): Constant(1: "")
+07 (ln 15): Call(Method, addCore_(_))
+08 (ln 15): Call(Method, join())
+09 (ln 15): Return
+10 (ln 15): End
+|(_) Constants:
+00: "infix | "
+01: ""
+|(_) Code:
+00 (ln 16): Load(Module, Class("List"))
+01 (ln 16): Call(Method, new())
+02 (ln 16): Constant(0: "infix | ")
+03 (ln 16): Call(Method, addCore_(_))
+04 (ln 16): Load(Local, 1)
+05 (ln 16): Call(Method, addCore_(_))
+06 (ln 16): Constant(1: "")
+07 (ln 16): Call(Method, addCore_(_))
+08 (ln 16): Call(Method, join())
+09 (ln 16): Return
+10 (ln 16): End
+is(_) Constants:
+00: "infix is "
+01: ""
+is(_) Code:
+00 (ln 17): Load(Module, Class("List"))
+01 (ln 17): Call(Method, new())
+02 (ln 17): Constant(0: "infix is ")
+03 (ln 17): Call(Method, addCore_(_))
+04 (ln 17): Load(Local, 1)
+05 (ln 17): Call(Method, addCore_(_))
+06 (ln 17): Constant(1: "")
+07 (ln 17): Call(Method, addCore_(_))
+08 (ln 17): Call(Method, join())
+09 (ln 17): Return
+10 (ln 17): End
+! Constants:
+00: "prefix !"
+! Code:
+00 (ln 19): Constant(0: "prefix !")
+01 (ln 19): Return
+02 (ln 19): End
+~ Constants:
+00: "prefix ~"
+~ Code:
+00 (ln 20): Constant(0: "prefix ~")
+01 (ln 20): Return
+02 (ln 20): End
+- Constants:
+00: "prefix -"
+- Code:
+00 (ln 21): Constant(0: "prefix -")
+01 (ln 21): Return
+02 (ln 21): End

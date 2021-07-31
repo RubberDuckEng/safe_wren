@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(methodOnFoo)
 02: Fn(method(_))
@@ -15,7 +15,7 @@ Constants:
 13: 2
 14: 3
 15: 4
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -94,3 +94,76 @@ Code:
 75 (ln 26): EndModule
 76 (ln 26): Return
 77 (ln 26): End
+methodOnFoo Constants:
+00: "foo"
+methodOnFoo Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "foo")
+02 (ln 2): Call(Method, print(_))
+03 (ln 2): Return
+04 (ln 2): End
+method(_) Constants:
+00: "foo"
+method(_) Code:
+00 (ln 3): Load(Module, Class("System"))
+01 (ln 3): Constant(0: "foo")
+02 (ln 3): Call(Method, print(_))
+03 (ln 3): Return
+04 (ln 3): End
+method(_,_,_) Constants:
+00: "foo"
+method(_,_,_) Code:
+00 (ln 4): Load(Module, Class("System"))
+01 (ln 4): Constant(0: "foo")
+02 (ln 4): Call(Method, print(_))
+03 (ln 4): Return
+04 (ln 4): End
+override Constants:
+00: "foo"
+override Code:
+00 (ln 5): Load(Module, Class("System"))
+01 (ln 5): Constant(0: "foo")
+02 (ln 5): Call(Method, print(_))
+03 (ln 5): Return
+04 (ln 5): End
+init new() Code:
+00 (ln 9): Load(Local, 0)
+01 (ln 9): Return
+02 (ln 9): End
+ Code:
+00 (ln 9): Construct
+01 (ln 9): Call(Method, init new())
+02 (ln 9): Return
+03 (ln 9): End
+methodOnBar Constants:
+00: "bar"
+methodOnBar Code:
+00 (ln 10): Load(Module, Class("System"))
+01 (ln 10): Constant(0: "bar")
+02 (ln 10): Call(Method, print(_))
+03 (ln 10): Return
+04 (ln 10): End
+method(_,_) Constants:
+00: "bar"
+method(_,_) Code:
+00 (ln 11): Load(Module, Class("System"))
+01 (ln 11): Constant(0: "bar")
+02 (ln 11): Call(Method, print(_))
+03 (ln 11): Return
+04 (ln 11): End
+method(_,_,_,_) Constants:
+00: "bar"
+method(_,_,_,_) Code:
+00 (ln 12): Load(Module, Class("System"))
+01 (ln 12): Constant(0: "bar")
+02 (ln 12): Call(Method, print(_))
+03 (ln 12): Return
+04 (ln 12): End
+override Constants:
+00: "bar"
+override Code:
+00 (ln 13): Load(Module, Class("System"))
+01 (ln 13): Constant(0: "bar")
+02 (ln 13): Call(Method, print(_))
+03 (ln 13): Return
+04 (ln 13): End

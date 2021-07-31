@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 0.2
 01: 0.1
 02: 1.5
@@ -12,7 +12,7 @@ Constants:
 10: 4
 11: " .:;+=xX$&"
 12: 8
-Code:
+<script> Code:
 00 (ln 1): Constant(0: 0.2)
 01 (ln 1): Call(Method, -)
 02 (ln 1): Store(Module)

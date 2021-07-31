@@ -1,5 +1,4 @@
-Constants:
-Code:
+<script> Code:
 00 (ln 3): ImportModule("./module")
 01 (ln 3): Pop
 02 (ln 3): ImportVariable("DoesNotExist")

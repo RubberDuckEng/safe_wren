@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "ok"
-Code:
+<script> Code:
 00 (ln 4): Boolean true
 01 (ln 4): JumpIfFalse(0)
 02 (ln 5): Boolean false

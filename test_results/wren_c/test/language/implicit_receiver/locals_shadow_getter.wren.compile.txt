@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(init new())
 02: Fn()
 03: Fn(bar)
 04: Fn(test)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -29,3 +29,45 @@ Code:
 21 (ln 20): EndModule
 22 (ln 20): Return
 23 (ln 20): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(Method, init new())
+02 (ln 2): Return
+03 (ln 2): End
+bar Constants:
+00: "getter"
+bar Code:
+00 (ln 4): Constant(0: "getter")
+01 (ln 4): Return
+02 (ln 4): End
+test Constants:
+00: "local"
+test Code:
+00 (ln 7): Load(Module, Class("System"))
+01 (ln 7): Load(Local, 0)
+02 (ln 7): Call(Getter, bar)
+03 (ln 7): Call(Method, print(_))
+04 (ln 7): Pop
+05 (ln 10): Load(Module, Class("System"))
+06 (ln 10): Load(Local, 0)
+07 (ln 10): Call(Getter, bar)
+08 (ln 10): Call(Method, print(_))
+09 (ln 10): Pop
+10 (ln 11): Constant(0: "local")
+11 (ln 12): Load(Module, Class("System"))
+12 (ln 12): Load(Local, 1)
+13 (ln 12): Call(Method, print(_))
+14 (ln 12): Pop
+15 (ln 13): Pop
+16 (ln 15): Load(Module, Class("System"))
+17 (ln 15): Load(Local, 0)
+18 (ln 15): Call(Getter, bar)
+19 (ln 15): Call(Method, print(_))
+20 (ln 15): Pop
+21 (ln 16): Null
+22 (ln 16): Return
+23 (ln 16): End

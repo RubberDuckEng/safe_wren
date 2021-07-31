@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: "fn 123"
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Load(Module, Class("List"))
 02 (ln 2): Call(Method, new())

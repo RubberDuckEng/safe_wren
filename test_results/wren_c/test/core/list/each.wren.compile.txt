@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: ""
 01: "One"
 02: "Two"
 03: "Three"
 04: Fn(each(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "")
 01 (ln 1): Store(Module)
 02 (ln 1): Pop
@@ -26,3 +26,10 @@ Code:
 18 (ln 4): EndModule
 19 (ln 4): Return
 20 (ln 4): End
+each(_) block argument Code:
+00 (ln 2): Load(Module, Null)
+01 (ln 2): Load(Local, 1)
+02 (ln 2): Call(Method, +(_))
+03 (ln 2): Store(Module)
+04 (ln 2): Return
+05 (ln 2): End

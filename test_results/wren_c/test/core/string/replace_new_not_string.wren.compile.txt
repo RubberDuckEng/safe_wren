@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "foo"
 01: "o"
 02: 1
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "foo")
 01 (ln 1): Constant(1: "o")
 02 (ln 1): Constant(2: 1)

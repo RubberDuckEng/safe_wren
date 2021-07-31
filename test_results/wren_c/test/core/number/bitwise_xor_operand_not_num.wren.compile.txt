@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: 1
-Code:
+<script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Boolean false
 02 (ln 1): Call(Method, ^(_))

@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "Error"
 01: "runtimeError"
 02: Fn(new(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Error")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -37,3 +37,10 @@ Code:
 31 (ln 13): EndModule
 32 (ln 13): Return
 33 (ln 13): End
+new(_) block argument Code:
+00 (ln 6): Load(Module, Null)
+01 (ln 6): Call(Getter, runtimeError)
+02 (ln 6): Pop
+03 (ln 7): Null
+04 (ln 7): Return
+05 (ln 7): End

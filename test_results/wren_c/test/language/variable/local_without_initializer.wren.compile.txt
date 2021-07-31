@@ -1,5 +1,4 @@
-Constants:
-Code:
+<script> Code:
 00 (ln 2): Null
 01 (ln 3): Load(Module, Class("System"))
 02 (ln 3): Load(Local, 1)

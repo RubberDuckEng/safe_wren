@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: 3
@@ -4095,7 +4095,7 @@ Constants:
 4093: 4094
 4094: 4095
 4095: 4096
-Code:
+<script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Store(Module)
 02 (ln 1): Pop

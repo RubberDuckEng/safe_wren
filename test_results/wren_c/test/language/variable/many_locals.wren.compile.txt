@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "value"
-Code:
+<script> Code:
 00 (ln 3): Constant(0: "value")
 01 (ln 4): Load(Local, 1)
 02 (ln 5): Load(Local, 2)

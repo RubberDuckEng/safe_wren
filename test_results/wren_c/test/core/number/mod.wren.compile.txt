@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 5
 01: 3
 02: 10
@@ -8,7 +8,7 @@ Constants:
 06: 13
 07: 7
 08: 1
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 5)
 02 (ln 1): Constant(1: 3)

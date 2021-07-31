@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fn"))
 01 (ln 5): Closure(0, [])
 02 (ln 5): Call(Method, new(_))
@@ -14,3 +14,34 @@ Code:
 10 (ln 9): EndModule
 11 (ln 9): Return
 12 (ln 9): End
+new(_) block argument Constants:
+00: 1
+01: 2
+02: 3
+new(_) block argument Code:
+00 (ln 2): Load(Module, Class("List"))
+01 (ln 2): Call(Method, new())
+02 (ln 2): Constant(0: 1)
+03 (ln 2): Call(Method, addCore_(_))
+04 (ln 2): Constant(1: 2)
+05 (ln 2): Call(Method, addCore_(_))
+06 (ln 2): Constant(2: 3)
+07 (ln 2): Call(Method, addCore_(_))
+08 (ln 2): Null
+09 (ln 2): Load(Local, 1)
+10 (ln 2): Load(Local, 2)
+11 (ln 2): Call(Method, iterate(_))
+12 (ln 2): Store(Local, 2)
+13 (ln 2): JumpIfFalse(7)
+14 (ln 2): Load(Local, 1)
+15 (ln 2): Load(Local, 2)
+16 (ln 2): Call(Method, iteratorValue(_))
+17 (ln 3): Load(Local, 3)
+18 (ln 3): Return
+19 (ln 4): Pop
+20 (ln 4): Loop(12)
+21 (ln 4): Pop
+22 (ln 4): Pop
+23 (ln 5): Null
+24 (ln 5): Return
+25 (ln 5): End

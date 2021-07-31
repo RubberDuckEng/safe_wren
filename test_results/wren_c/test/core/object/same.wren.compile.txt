@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: 3
@@ -14,7 +14,7 @@ Constants:
 12: Fn(init new())
 13: Fn()
 14: Fn(==(_))
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Load(Module, Class("Object"))
 02 (ln 2): Boolean true
@@ -208,3 +208,25 @@ Code:
 190 (ln 44): EndModule
 191 (ln 44): Return
 192 (ln 44): End
+init new() Code:
+00 (ln 28): Load(Local, 0)
+01 (ln 28): Return
+02 (ln 28): End
+ Code:
+00 (ln 28): Construct
+01 (ln 28): Call(Method, init new())
+02 (ln 28): Return
+03 (ln 28): End
+init new() Code:
+00 (ln 37): Load(Local, 0)
+01 (ln 37): Return
+02 (ln 37): End
+ Code:
+00 (ln 37): Construct
+01 (ln 37): Call(Method, init new())
+02 (ln 37): Return
+03 (ln 37): End
+==(_) Code:
+00 (ln 38): Boolean true
+01 (ln 38): Return
+02 (ln 38): End

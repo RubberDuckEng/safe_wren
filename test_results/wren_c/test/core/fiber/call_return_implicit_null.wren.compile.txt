@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 3): Closure(0, [])
 02 (ln 3): Call(Method, new(_))
@@ -14,3 +14,13 @@ Code:
 10 (ln 6): EndModule
 11 (ln 6): Return
 12 (ln 6): End
+new(_) block argument Constants:
+00: "fiber"
+new(_) block argument Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Constant(0: "fiber")
+02 (ln 2): Call(Method, print(_))
+03 (ln 2): Pop
+04 (ln 3): Null
+05 (ln 3): Return
+06 (ln 3): End

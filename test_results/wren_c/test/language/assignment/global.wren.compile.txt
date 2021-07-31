@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "before"
 01: "after"
 02: "arg"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "before")
 01 (ln 1): Store(Module)
 02 (ln 1): Pop

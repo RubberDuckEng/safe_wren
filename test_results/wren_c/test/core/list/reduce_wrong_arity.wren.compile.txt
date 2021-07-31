@@ -1,9 +1,9 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: 3
 03: Fn(reduce(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("List"))
 01 (ln 1): Call(Method, new())
 02 (ln 1): Constant(0: 1)
@@ -18,3 +18,7 @@ Code:
 11 (ln 2): EndModule
 12 (ln 2): Return
 13 (ln 2): End
+reduce(_) block argument Code:
+00 (ln 1): Load(Local, 1)
+01 (ln 1): Return
+02 (ln 1): End

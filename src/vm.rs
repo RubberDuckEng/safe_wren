@@ -1377,11 +1377,15 @@ impl WrenVM {
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
                     fiber.borrow_mut().caller = self.fiber.take();
+                    // FIXME: This only seems to work the first time entering
+                    // the Fiber.  If we enter a second time this isn't correct?
                     fiber.borrow_mut().push_value_to_top_of_stack(arg);
                     self.fiber = Some(fiber.clone());
                 }
                 Ok(FiberAction::Try(fiber, arg)) => {
                     fiber.borrow_mut().caller = self.fiber.take();
+                    // FIXME: This only seems to work the first time entering
+                    // the Fiber.  If we enter a second time this isn't correct?
                     fiber.borrow_mut().push_value_to_top_of_stack(arg);
                     fiber.borrow_mut().run_source = FiberRunSource::Try;
                     self.fiber = Some(fiber.clone());
@@ -1893,14 +1897,14 @@ fn dump_instruction(
         module_name_and_line(fn_obj, pc),
         fn_obj.debug.name,
         pc,
-        op_debug_string(op, methods, closure, frame, mode)
+        op_debug_string(op, methods, fn_obj, frame, mode)
     );
 }
 
 fn op_debug_string(
     op: &Ops,
     methods: &SymbolTable,
-    closure: &ObjClosure,
+    fn_obj: &ObjFn,
     frame: Option<&CallFrame>,
     mode: DumpMode,
 ) -> String {
@@ -1914,8 +1918,6 @@ fn op_debug_string(
         DumpMode::HideSymbols => format!(""),
         DumpMode::ShowSymbols => format!(" {}", symbol),
     };
-
-    let fn_obj = closure.fn_obj.borrow();
 
     match op {
         Ops::Constant(i) => format!("Constant({}: {:?})", i, fn_obj.constants[*i]),
@@ -1996,24 +1998,42 @@ pub(crate) fn wren_debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
     debug_bytecode(vm, closure);
 }
 
-fn debug_bytecode(vm: &WrenVM, closure: &ObjClosure) {
-    let func = &closure.fn_obj.borrow();
-    println!("Constants:");
-    for (id, value) in func.constants.iter().enumerate() {
-        println!("{:02}: {:?}", id, value);
+fn debug_bytecode(vm: &WrenVM, top_closure: &ObjClosure) {
+    let mut fn_objs = vec![top_closure.fn_obj.clone()];
+
+    loop {
+        let fn_obj = fn_objs.remove(0);
+        let func = &fn_obj.borrow();
+        let fn_name = &func.debug.name;
+        if !func.constants.is_empty() {
+            println!("{} Constants:", fn_name);
+            for (id, value) in func.constants.iter().enumerate() {
+                println!("{:02}: {:?}", id, value);
+            }
+        }
+        println!("{} Code:", fn_name);
+        for (pc, op) in func.code.iter().enumerate() {
+            // Don't share with dump_instruction for now.
+            println!(
+                "{:02} (ln {}): {}",
+                pc,
+                func.debug.line_for_pc(pc),
+                op_debug_string(op, &vm.methods, func, None, DumpMode::HideSymbols)
+            );
+        }
+        // Walk module-level constants looking for code?
+        for const_value in &func.constants {
+            match const_value {
+                Value::Fn(fn_obj) => fn_objs.push(fn_obj.clone()),
+                _ => {}
+            }
+        }
+        // Walk functions/closures looking for code?
+
+        if fn_objs.is_empty() {
+            break;
+        }
     }
-    println!("Code:");
-    for (pc, op) in func.code.iter().enumerate() {
-        // Don't share with dump_instruction for now.
-        println!(
-            "{:02} (ln {}): {}",
-            pc,
-            func.debug.line_for_pc(pc),
-            op_debug_string(op, &vm.methods, closure, None, DumpMode::HideSymbols)
-        );
-    }
-    // Walk module-level constants looking for code?
-    // Walk functions/closures looking for code?
 }
 
 pub trait Obj: Clear {

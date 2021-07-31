@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "A"
 01: Fn(init new(_))
 02: Fn()
@@ -11,7 +11,7 @@ Constants:
 09: Fn(init new())
 10: Fn()
 11: Fn(cField)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "A")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(1 fields)
@@ -94,3 +94,107 @@ Code:
 79 (ln 41): EndModule
 80 (ln 41): Return
 81 (ln 41): End
+init new(_) Constants:
+00: "new A "
+01: ""
+init new(_) Code:
+00 (ln 3): Load(Module, Class("System"))
+01 (ln 3): Load(Module, Class("List"))
+02 (ln 3): Call(Method, new())
+03 (ln 3): Constant(0: "new A ")
+04 (ln 3): Call(Method, addCore_(_))
+05 (ln 3): Load(Local, 1)
+06 (ln 3): Call(Method, addCore_(_))
+07 (ln 3): Constant(1: "")
+08 (ln 3): Call(Method, addCore_(_))
+09 (ln 3): Call(Method, join())
+10 (ln 3): Call(Method, print(_))
+11 (ln 3): Pop
+12 (ln 4): Load(Local, 1)
+13 (ln 4): Load(Local, 0)
+14 (ln 4): StoreField(0)
+15 (ln 4): Pop
+16 (ln 5): Load(Local, 0)
+17 (ln 5): Return
+18 (ln 5): End
+ Code:
+00 (ln 5): Construct
+01 (ln 5): Call(Method, init new(_))
+02 (ln 5): Return
+03 (ln 5): End
+aField Code:
+00 (ln 7): Load(Local, 0)
+01 (ln 7): LoadField(0)
+02 (ln 7): Return
+03 (ln 7): End
+init new(_,_) Constants:
+00: Null
+01: "new B "
+02: ""
+init new(_,_) Code:
+00 (ln 12): Load(Local, 0)
+01 (ln 12): Load(Local, 2)
+02 (ln 12): CallSuper(Initializer, init new(_))
+03 (ln 12): Pop
+04 (ln 13): Load(Module, Class("System"))
+05 (ln 13): Load(Module, Class("List"))
+06 (ln 13): Call(Method, new())
+07 (ln 13): Constant(1: "new B ")
+08 (ln 13): Call(Method, addCore_(_))
+09 (ln 13): Load(Local, 1)
+10 (ln 13): Call(Method, addCore_(_))
+11 (ln 13): Constant(2: "")
+12 (ln 13): Call(Method, addCore_(_))
+13 (ln 13): Call(Method, join())
+14 (ln 13): Call(Method, print(_))
+15 (ln 13): Pop
+16 (ln 14): Load(Local, 1)
+17 (ln 14): Load(Local, 0)
+18 (ln 14): StoreField(0)
+19 (ln 14): Pop
+20 (ln 15): Load(Local, 0)
+21 (ln 15): Return
+22 (ln 15): End
+ Code:
+00 (ln 15): Construct
+01 (ln 15): Call(Method, init new(_,_))
+02 (ln 15): Return
+03 (ln 15): End
+bField Code:
+00 (ln 17): Load(Local, 0)
+01 (ln 17): LoadField(0)
+02 (ln 17): Return
+03 (ln 17): End
+init new() Constants:
+00: "one"
+01: "two"
+02: Null
+03: "new C"
+04: "c"
+init new() Code:
+00 (ln 22): Load(Local, 0)
+01 (ln 22): Constant(0: "one")
+02 (ln 22): Constant(1: "two")
+03 (ln 22): CallSuper(Initializer, init new(_,_))
+04 (ln 22): Pop
+05 (ln 23): Load(Module, Class("System"))
+06 (ln 23): Constant(3: "new C")
+07 (ln 23): Call(Method, print(_))
+08 (ln 23): Pop
+09 (ln 24): Constant(4: "c")
+10 (ln 24): Load(Local, 0)
+11 (ln 24): StoreField(0)
+12 (ln 24): Pop
+13 (ln 25): Load(Local, 0)
+14 (ln 25): Return
+15 (ln 25): End
+ Code:
+00 (ln 25): Construct
+01 (ln 25): Call(Method, init new())
+02 (ln 25): Return
+03 (ln 25): End
+cField Code:
+00 (ln 27): Load(Local, 0)
+01 (ln 27): LoadField(0)
+02 (ln 27): Return
+03 (ln 27): End

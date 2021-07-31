@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "søméஃ"
 01: ""
 02: 0
@@ -11,7 +11,7 @@ Constants:
 09: 7
 10: 8
 11: 123
-Code:
+<script> Code:
 00 (ln 4): Constant(0: "søméஃ")
 01 (ln 4): Call(Getter, bytes)
 02 (ln 4): Store(Module)

@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "Foo"
 01: Fn(method())
 02: "Bar"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Foo")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(1 fields)
@@ -19,3 +19,13 @@ Code:
 13 (ln 8): EndModule
 14 (ln 8): Return
 15 (ln 8): End
+method() Constants:
+00: "value"
+method() Code:
+00 (ln 3): Constant(0: "value")
+01 (ln 3): Load(Local, 0)
+02 (ln 3): StoreField(0)
+03 (ln 3): Pop
+04 (ln 4): Null
+05 (ln 4): Return
+06 (ln 4): End

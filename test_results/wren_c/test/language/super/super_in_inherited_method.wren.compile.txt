@@ -1,11 +1,11 @@
-Constants:
+<script> Constants:
 00: "A"
 01: Fn(callSuperToString)
 02: Fn(toString)
 03: "B"
 04: Fn(init new())
 05: Fn()
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "A")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -37,3 +37,25 @@ Code:
 28 (ln 12): EndModule
 29 (ln 12): Return
 30 (ln 12): End
+callSuperToString Constants:
+00: Null
+callSuperToString Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): CallSuper(Getter, toString)
+02 (ln 2): Return
+03 (ln 2): End
+toString Constants:
+00: "A.toString"
+toString Code:
+00 (ln 4): Constant(0: "A.toString")
+01 (ln 4): Return
+02 (ln 4): End
+init new() Code:
+00 (ln 8): Load(Local, 0)
+01 (ln 8): Return
+02 (ln 8): End
+ Code:
+00 (ln 8): Construct
+01 (ln 8): Call(Method, init new())
+02 (ln 8): Return
+03 (ln 8): End

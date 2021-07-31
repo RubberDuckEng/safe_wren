@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: "bad"
 01: "true"
 02: 0
 03: ""
 04: "string"
-Code:
+<script> Code:
 00 (ln 2): Boolean false
 01 (ln 2): JumpIfFalse(6)
 02 (ln 3): Load(Module, Class("System"))

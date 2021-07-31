@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: ""
 01: "a string"
 02: "A~¶Þॐஃ"
@@ -19,7 +19,7 @@ Constants:
 10: "no trailing spaces"
 11: "newline before"
 12: "newline after"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "")
 02 (ln 1): Call(Getter, count)

@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: """
 01: "\"
 02: "(
 )"
 03: "%"
-Code:
+<script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: """)
 02 (ln 2): Call(Method, print(_))

@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: Fn(new(_) block argument)
 01: "null value"
 02: "true value"
@@ -24,7 +24,7 @@ Constants:
 22: "ll"
 23: "new string value"
 24: "new 1 to 3"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 1): Closure(0, [])
 02 (ln 1): Call(Method, new(_))
@@ -227,3 +227,7 @@ Code:
 199 (ln 46): EndModule
 200 (ln 46): Return
 201 (ln 46): End
+new(_) block argument Code:
+00 (ln 1): Null
+01 (ln 1): Return
+02 (ln 1): End

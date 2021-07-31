@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "before"
 01: 1
 02: "not reached"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "before")
 02 (ln 1): Call(Method, print(_))

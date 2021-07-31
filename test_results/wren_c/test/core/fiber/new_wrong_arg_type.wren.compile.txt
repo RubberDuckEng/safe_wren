@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "not fn"
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 1): Constant(0: "not fn")
 02 (ln 1): Call(Method, new(_))
