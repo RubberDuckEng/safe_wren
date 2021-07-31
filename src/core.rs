@@ -222,10 +222,16 @@ num_unary_op!(num_exp, exp, Num);
 num_binary_op!(num_mod, rem, Num, "Right operand");
 num_bitwise_unary_op!(num_bitwise_not, not);
 
+// I don't know of a better way to check this.
+#[allow(clippy::float_cmp)]
+fn f64_is_integer(x: f64) -> bool {
+    x.trunc() == x
+}
+
 fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let x = validate_num(&args[0], "this")?;
     Ok(Value::Boolean(
-        !x.is_nan() && !x.is_infinite() && (x.trunc() == x),
+        !x.is_nan() && !x.is_infinite() && f64_is_integer(x),
     ))
 }
 
@@ -1155,7 +1161,7 @@ fn list_swap(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 }
 
 fn validate_int_value(value: f64, arg_name: &str) -> Result<f64> {
-    if value.trunc() != value {
+    if !f64_is_integer(value) {
         Err(VMError::from_string(format!(
             "{} must be an integer.",
             arg_name

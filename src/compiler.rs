@@ -774,7 +774,7 @@ fn read_escape(
                 let digit = read_hex_digit(input).ok_or_else(|| {
                     LexError::Error(format!("Invalid {} escape sequence.", description))
                 })?;
-                value = value * 16 + &digit.into();
+                value = value * 16 + u32::from(digit);
             }
         }
     }

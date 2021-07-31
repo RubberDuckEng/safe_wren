@@ -1506,17 +1506,16 @@ impl WrenVM {
         &mut self,
         frame: &mut CallFrame,
         symbol: usize,
-        class_obj: &ObjClass,
+        class: &ObjClass,
         args: Vec<Value>,
     ) -> Result<Option<FunctionNext>, VMError> {
         // Get the Method record for this class for this symbol.
         // This could return None instead of MethodNone?
-        let method = class_obj
+        let method = class
             .lookup_method(symbol)
-            .ok_or_else(|| self.method_not_found(&class_obj, symbol))?;
+            .ok_or_else(|| self.method_not_found(&class, symbol))?;
 
-        // Even if we got a Method doesn't mean *this* class
-        // implements it.
+        // Even if we got a Method doesn't mean *this* class implements it.
         match method {
             Method::ValuePrimitive(f) => {
                 let result = f(self, args)?;
@@ -1547,8 +1546,6 @@ impl WrenVM {
                 // wren_rust (currently) keeps a separate stack
                 // per CallFrame, so underflows are caught on a
                 // per-function call basis.
-                // println!("About to call:");
-                // debug_bytecode(self, &closure.borrow(), module);
                 Ok(Some(FunctionNext::Call(CallFrame {
                     pc: 0,
                     closure: closure.clone(),
@@ -1611,26 +1608,25 @@ impl WrenVM {
                     frame.push(Value::Null);
                 }
                 Ops::CallSuper(signature, symbol, constant) => {
-                    let value = fn_obj.constants[*constant].clone();
-                    // Compiler error if this is not a class.
-                    let superclass = value.try_into_class().unwrap();
                     let args = self.args_for_call(frame, signature);
-                    let maybe_action =
-                        self.call_method(frame, *symbol, &superclass.borrow(), args)?;
-                    match maybe_action {
-                        Some(action) => return Ok(action),
-                        None => {}
-                    }
+                    // Compiler error if this is not a class.
+                    let superclass = fn_obj.constants[*constant].try_into_class().unwrap();
+                    if let Some(action) =
+                        self.call_method(frame, *symbol, &superclass.borrow(), args)?
+                    {
+                        return Ok(action);
+                    };
+                    // None means continue normal execution, no action needed.
                 }
                 Ops::Call(signature, symbol) => {
                     let args = self.args_for_call(frame, signature);
                     let this_class = self.class_for_value(&args[0]);
-                    let class_obj = this_class.borrow();
-                    let maybe_action = self.call_method(frame, *symbol, &class_obj, args)?;
-                    match maybe_action {
-                        Some(action) => return Ok(action),
-                        None => {}
-                    }
+                    if let Some(action) =
+                        self.call_method(frame, *symbol, &this_class.borrow(), args)?
+                    {
+                        return Ok(action);
+                    };
+                    // None means continue normal execution, no action needed.
                 }
                 Ops::Construct => {
                     let this = frame.stack[0].clone();
@@ -2005,9 +2001,8 @@ fn debug_bytecode(vm: &WrenVM, top_closure: &ObjClosure) {
         }
         // Walk module-level constants looking for code?
         for const_value in &func.constants {
-            match const_value {
-                Value::Fn(fn_obj) => fn_objs.push(fn_obj.clone()),
-                _ => {}
+            if let Value::Fn(fn_obj) = const_value {
+                fn_objs.push(fn_obj.clone());
             }
         }
         // Walk functions/closures looking for code?
