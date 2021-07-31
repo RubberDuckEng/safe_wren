@@ -1426,27 +1426,25 @@ impl WrenVM {
 
     fn run_in_fiber(&mut self, fiber: &ObjFiber) -> Result<FiberAction, VMError> {
         loop {
-            // FIXME: I suspect we no longer need to pop the active frame since
-            // the call_stack is held in a RefCell and can be passed with
-            // separate mutability from ObjFiber?
-            let mut frame = fiber.call_stack.borrow_mut().pop().unwrap();
             // This is all to avoid run_fiber needing to call itself
             // recursively, or the run_fiber main loop needing to pull
             // the frame on every instruction.  Maybe not worth it?
-            let result = self.run_frame_in_fiber(&mut frame, fiber);
+            let result = self.run_frame_in_fiber(
+                &mut fiber.call_stack.borrow_mut().last_mut().unwrap(),
+                fiber,
+            )?;
             match result {
-                Ok(FunctionNext::Call(new_frame)) => {
+                FunctionNext::Call(new_frame) => {
                     let mut call_stack = fiber.call_stack.borrow_mut();
-                    // call_stack does not contain "frame", restore it.
-                    call_stack.push(frame);
                     // Now push our new frame!
                     call_stack.push(new_frame);
                 }
-                Ok(FunctionNext::Return(value)) => {
+                FunctionNext::Return(value) => {
+                    fiber.call_stack.borrow_mut().pop(); // Frame we're leaving
                     if fiber.call_stack.borrow().is_empty() {
                         return Ok(FiberAction::Return(value));
                     } else {
-                        // Take the return value and push it onto the calling stack.
+                        // Push return value onto the calling stack.
                         fiber
                             .call_stack
                             .borrow_mut()
@@ -1455,15 +1453,8 @@ impl WrenVM {
                             .push(value);
                     }
                 }
-                Ok(FunctionNext::FiberAction(action)) => {
-                    fiber.call_stack.borrow_mut().push(frame); // FIXME?
+                FunctionNext::FiberAction(action) => {
                     return Ok(action);
-                }
-                Err(vm_error) => {
-                    // Push the current frame back onto the fiber so we can
-                    // see it in error reporting.
-                    fiber.call_stack.borrow_mut().push(frame);
-                    return Err(vm_error);
                 }
             }
         }
@@ -2291,13 +2282,6 @@ impl ObjClass {
         matches!(self.source, ClassSource::Foreign)
     }
 }
-
-// FIXME: This is a hack?  for object_is
-// impl PartialEq for ObjClass {
-//     fn eq(&self, other: &ObjClass) -> bool {
-//         self.name.eq(&other.name)
-//     }
-// }
 
 impl core::fmt::Debug for ObjClass {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
