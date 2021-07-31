@@ -630,11 +630,12 @@ fn adjust_range_to_char_boundaries(
 ) -> std::ops::Range<usize> {
     let mut before = *range.start();
     let mut after = range.end() + 1;
+    // wren_c only includes sequences whose first byte is in the range.
     while before <= after && !string.is_char_boundary(before) {
         before += 1;
     }
-    while after >= before && !string.is_char_boundary(after) {
-        after -= 1;
+    while after < string.len() && !string.is_char_boundary(after) {
+        after += 1;
     }
     // Intentionally converting to exclusive to avoid -1
     before..after
@@ -722,12 +723,12 @@ fn string_index_of1(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let this = this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
-    let start = validate_index(&args[2], this.len(), "Start")?;
-    // Rust will panic if you try to slice in the middle of a code point
-    // since it's not possible to successfully "find" a partial code point, this
-    // should be correct (and prevent the panic).
-    if !this.is_char_boundary(start) {
-        return Ok(Value::Num(-1.0));
+    let mut start = validate_index(&args[2], this.len(), "Start")?;
+    // Rust will panic if you try to slice in the middle of a code point.
+    // Since it's not possible to "find" a partial codepoint we just
+    // adjust start to the next valid char_boundary and search there.
+    while start < this.len() && !this.is_char_boundary(start) {
+        start += 1;
     }
     let maybe_index = this[start..].find(&search);
     // This cannot use index_or_neg_one, due to adding start.

@@ -1,2 +1,0 @@
-Expected output "méஃ" on line 49 and got "mé".
-Expected output "méஃ" on line 51 and got "mé".

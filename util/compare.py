@@ -28,8 +28,8 @@ def run(runner, test_path):
                  stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
     out, err = proc.communicate(None)
-    out = out.decode("utf-8").replace('\r\n', '\n')
-    err = err.decode("utf-8").replace('\r\n', '\n')
+    out = out.decode("utf-8", "replace").replace('\r\n', '\n')
+    err = err.decode("utf-8", "replace").replace('\r\n', '\n')
     return out + err
 
 

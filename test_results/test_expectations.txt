@@ -218,10 +218,6 @@ wren_c/test/core/map/iterate.wren
 wren_c/test/core/map/key_iterate.wren
 wren_c/test/core/map/value_iterate.wren
 
-# This might just be a utf8 encoding difference, unclear?
-# wren_c/test/core/string/subscript_range.wren
-# wren_c/test/core/string/index_of_start.wren
-
 # 255 is not a valid utf8 byte.
 wren_c/test/core/string/from_byte.wren
 
