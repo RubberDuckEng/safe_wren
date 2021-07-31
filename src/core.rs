@@ -152,12 +152,15 @@ fn num_from_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     if string.is_empty() {
         return Ok(Value::Null);
     }
-    // Allow trailing whitespace?
-    //    if (errno == ERANGE) RETURN_ERROR("Number literal is too large.");
-
     // FIXME: This accepts more than wren_c does (uses strtod).
     match string.trim().parse::<f64>() {
-        Ok(num) => Ok(Value::Num(num)),
+        Ok(num) => {
+            if num.is_finite() {
+                Ok(Value::Num(num))
+            } else {
+                Err(VMError::from_str("Number literal is too large."))
+            }
+        }
         Err(_) => Ok(Value::Null),
     }
 }

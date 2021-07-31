@@ -1,9 +1,1 @@
-Constants:
-00: inf
-Code:
-00 (ln 1): Constant(0: inf)
-01 (ln 1): Store(Module)
-02 (ln 1): Pop
-03 (ln 2): EndModule
-04 (ln 2): Return
-05 (ln 2): End
+[wren_c/test/language/number/literal_too_large line 1] Error: Number literal was too large.

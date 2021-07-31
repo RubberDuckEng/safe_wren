@@ -246,6 +246,7 @@ wren_c/test/core/number/equality.wren
 wren_c/test/core/number/floor.wren
 wren_c/test/core/number/from_string.wren
 wren_c/test/core/number/from_string_not_string.wren
+wren_c/test/core/number/from_string_too_large.wren
 wren_c/test/core/number/greater_than_equal_operand_not_num.wren
 wren_c/test/core/number/greater_than_operand_not_num.wren
 wren_c/test/core/number/invalid_hex_literal.wren
@@ -631,6 +632,7 @@ wren_c/test/language/nonlocal/use_in_method_before_definition.wren
 wren_c/test/language/null/literal.wren
 wren_c/test/language/number/hex_literals.wren
 wren_c/test/language/number/hex_too_large.wren
+wren_c/test/language/number/literal_too_large.wren
 wren_c/test/language/number/literals.wren
 wren_c/test/language/number/scientific_float_missing_exponent.wren
 wren_c/test/language/number/scientific_floating_exponent.wren

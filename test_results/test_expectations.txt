@@ -73,12 +73,6 @@ wren_c/test/core/string_code_point_sequence/iterator_value.wren
 wren_c/test/core/string_code_point_sequence/iterator_value_incomplete.wren
 wren_c/test/core/string_code_point_sequence/subscript_incomplete.wren
 
-# Missing error.
-# wren_c/test/language/number/literal_too_large.wren
-
-# Missing limit
-# wren_c/test/core/number/from_string_too_large.wren
-
 # I'm not entirely sure how/why this works in wren_c
 wren_c/test/language/super/super_in_static_method.wren
 
@@ -228,5 +222,3 @@ wren_c/test/core/string/iterator_value.wren
 
 # wren_c truncates strings when printing at first \0.
 wren_c/test/core/string/to_string.wren
-
-

@@ -1,3 +1,0 @@
-Expected runtime error "Number literal is too large." and got none.
-Expected return code 70 and got 0. Stderr:
-

@@ -641,7 +641,11 @@ fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
     } else {
         name.parse::<f64>()?
     };
-    Ok(result)
+    if result.is_finite() {
+        Ok(result)
+    } else {
+        Err(LexError::from_str("Number literal was too large."))
+    }
 }
 
 // Reads the next character, which should be a hex digit (0-9, a-f, or A-F) and
