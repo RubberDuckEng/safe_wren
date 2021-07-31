@@ -773,9 +773,7 @@ pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<
 
     // Inherit methods from its superclass.
     // FIXME: Should this be in reverse order (to minimize # of resizes?)
-    for (symbol, method) in superclass.borrow().methods.iter().enumerate() {
-        subclass.set_method(symbol, method.clone());
-    }
+    subclass.inherit_methods_from(&superclass.borrow());
 }
 
 fn wren_new_single_class(source: ClassSource, name: String) -> Handle<ObjClass> {
@@ -1269,8 +1267,8 @@ impl WrenVM {
         println!("{:?} has:", class);
         for (symbol, method) in class.methods.iter().enumerate() {
             match method {
-                Method::None => (),
-                _ => {
+                None => (),
+                Some(_) => {
                     println!(
                         "{} ({}) => {:?}",
                         self.methods.name_for_symbol(symbol),
@@ -1490,7 +1488,9 @@ impl WrenVM {
             .ok_or_else(|| VMError::from_str("Should have defined <allocate> symbol."))?;
 
         vm_assert(class.methods.len() > symbol, "Class should have allocator.")?;
-        let method = &class.methods[symbol];
+        let method = class
+            .lookup_method(symbol)
+            .ok_or_else(|| VMError::from_str("Class should have allocator."))?;
 
         // Pass the constructor arguments to the allocator as well.
         match method {
@@ -1512,8 +1512,7 @@ impl WrenVM {
         // Get the Method record for this class for this symbol.
         // This could return None instead of MethodNone?
         let method = class_obj
-            .methods
-            .get(symbol)
+            .lookup_method(symbol)
             .ok_or_else(|| self.method_not_found(&class_obj, symbol))?;
 
         // Even if we got a Method doesn't mean *this* class
@@ -1555,14 +1554,6 @@ impl WrenVM {
                     closure: closure.clone(),
                     stack: args,
                 })))
-            }
-            // FIXME: This should use Option<Method> instead.
-            Method::None => {
-                // This is the case where the methods vector was
-                // large enough to have the symbol (because the
-                // class supports a larger symbol), but this symbol
-                // is Method::None (not implemented).
-                Err(self.method_not_found(&class_obj, symbol))
             }
         }
     }
@@ -2204,9 +2195,6 @@ pub(crate) enum Method {
 
     // A normal user-defined method.
     Block(Handle<ObjClosure>),
-
-    // No method for the given symbol.
-    None,
 }
 
 impl core::fmt::Debug for Method {
@@ -2219,7 +2207,6 @@ impl core::fmt::Debug for Method {
                 write!(f, "Block {}", closure.borrow().fn_obj.borrow().debug.name)
             }
             Method::ForeignFunction(_) => write!(f, "ForeignFunction"),
-            Method::None => write!(f, "None"),
         }
     }
 }
@@ -2261,7 +2248,7 @@ pub struct ObjClass {
     // You can think of it as a hash table that never has collisions but has a
     // really low load factor. Since methods are pretty small (just a type and a
     // pointer), this should be a worthwhile trade-off.
-    methods: Vec<Method>,
+    methods: Vec<Option<Method>>,
 
     // The name of the class.
     pub(crate) name: String, // Should be Rc<ObjString>?
@@ -2305,14 +2292,26 @@ impl ObjClass {
     // wren_c calls this wrenBindMethod
     pub(crate) fn set_method(&mut self, symbol: usize, method: Method) {
         if symbol >= self.methods.len() {
-            self.methods.resize(symbol + 1, Method::None);
+            self.methods.resize(symbol + 1, None);
         }
-        self.methods[symbol] = method;
+        self.methods[symbol] = Some(method);
     }
 
-    // pub(crate) fn lookup_method(&self, symbol: usize) -> Option<&Method> {
-    //     self.methods.get(symbol)
-    // }
+    fn inherit_methods_from(&mut self, superclass: &ObjClass) {
+        // Should this assert that we're not overriding any methods?
+        self.methods
+            .resize(self.methods.len() + superclass.methods.len(), None);
+        for (symbol, method) in superclass.methods.iter().enumerate() {
+            self.methods[symbol] = method.clone();
+        }
+    }
+
+    pub(crate) fn lookup_method(&self, symbol: usize) -> Option<&Method> {
+        match self.methods.get(symbol) {
+            Some(maybe_method) => maybe_method.as_ref(),
+            None => None,
+        }
+    }
 }
 
 impl Obj for ObjClass {
