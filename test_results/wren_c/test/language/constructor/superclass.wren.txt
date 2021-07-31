@@ -1,2 +1,0 @@
-Expected output "two" on line 38 and got "c".
-Expected output "one" on line 39 and got "c".

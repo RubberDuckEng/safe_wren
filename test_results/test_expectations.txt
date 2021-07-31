@@ -76,11 +76,9 @@ wren_c/test/core/string_byte_sequence/count.wren
 # super
 # wren_c/test/language/super/super_in_closure_in_inherited_method.wren
 # wren_c/test/language/super/closure.wren
-# wren_c/test/language/super/super_in_static_method.wren
 
-# Not yet supporting inherited fields.
-# wren_c/test/limit/many_inherited_fields.wren
-# wren_c/test/language/constructor/superclass.wren
+# I'm not entirely sure how/why this works in wren_c
+# wren_c/test/language/super/super_in_static_method.wren
 
 # Missing duplicate method check:
 wren_c/test/language/method/duplicate_methods.wren

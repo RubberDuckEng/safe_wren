@@ -2932,7 +2932,8 @@ fn define_method(
 
     // Bind the method onto the class.
     emit(ctx, Ops::Method(is_static, method_symbol));
-    // FIXME: Handle static methods!
+    // wren_c emits different opcodes for static vs instance methods
+    // however in wren_vm.c it handles them identically?
 }
 
 // Declares a method in the enclosing class with [signature].

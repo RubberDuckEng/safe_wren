@@ -471,6 +471,7 @@ wren_c/test/language/constructor/no_parameter_list.wren
 wren_c/test/language/constructor/not_inherited.wren
 wren_c/test/language/constructor/return_without_value.wren
 wren_c/test/language/constructor/super_must_have_args.wren
+wren_c/test/language/constructor/superclass.wren
 wren_c/test/language/continue/exit_local_scopes.wren
 wren_c/test/language/continue/in_for_loop.wren
 wren_c/test/language/continue/in_function_in_loop.wren
@@ -715,6 +716,7 @@ wren_c/test/limit/long_variable_name.wren
 wren_c/test/limit/many_constants.wren
 wren_c/test/limit/many_fields.wren
 wren_c/test/limit/many_globals.wren
+wren_c/test/limit/many_inherited_fields.wren
 wren_c/test/limit/reuse_constants.wren
 wren_c/test/limit/too_many_constants.wren
 wren_c/test/limit/too_many_fields.wren

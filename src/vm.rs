@@ -757,8 +757,19 @@ pub(crate) fn wren_new_range(
 }
 pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<ObjClass>) {
     subclass.superclass = Some(superclass.clone());
-    // Setup fields
-    // Inherit methods
+
+    // Include the superclass in the total number of fields.
+    match &mut subclass.source {
+        ClassSource::Source(num_fields) => {
+            *num_fields += superclass.borrow().num_fields().unwrap_or(0);
+        }
+        _ => match superclass.borrow().num_fields() {
+            Some(num_fields) if num_fields > 0 => {
+                panic!("A foreign class cannot inherit from a class with fields.");
+            }
+            _ => {}
+        },
+    }
 
     // Inherit methods from its superclass.
     // FIXME: Should this be in reverse order (to minimize # of resizes?)
@@ -1035,20 +1046,31 @@ fn find_foreign_method(
 }
 
 fn bind_method_code(class: &ObjClass, fn_obj: &mut ObjFn) {
-    for op in &fn_obj.code {
+    // Shift this class's fields down past the inherited ones. We don't
+    // check for overflow here because we'll see if the number of fields
+    // overflows when the subclass is created.
+    fn field_adjustment(class: &ObjClass) -> usize {
+        class
+            .superclass
+            .as_ref()
+            .unwrap()
+            .borrow()
+            .num_fields()
+            .unwrap_or(0)
+    }
+
+    for op in &mut fn_obj.code {
         match op {
-            // FIXME: Will do load/stores in the actual lookups
-            // since the instance knows how many fields its superclass had, no?
             Ops::CallSuper(_, _, super_constant) => {
                 fn_obj.constants[*super_constant] =
                     Value::Class(class.superclass.as_ref().unwrap().clone())
             }
+            Ops::LoadField(field) => *field += field_adjustment(class),
+            Ops::StoreField(field) => *field += field_adjustment(class),
+            // FIXME: recurse into nested closures
             _ => {}
-        }
+        };
     }
-    // Load and store fields  / this
-    // Super calls
-    // FIXME: nested closures
 }
 
 // Defines [methodValue] as a method on [classObj].
