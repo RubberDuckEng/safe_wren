@@ -467,18 +467,24 @@ impl ObjFiber {
         caller
     }
 
+    // Can only be 0 or 1, enforced by Fiber.new.
+    // Only valid to call when not running.
+    fn arity(&self) -> u8 {
+        self.call_stack.borrow()[0]
+            .closure
+            .borrow()
+            .fn_obj
+            .borrow()
+            .arity
+    }
+
     fn push_call_arg_or_return_value(&mut self, arg: Value) {
         if self.just_started() {
             // The fiber is being started for the first time. If its
             // function takes a parameter, bind an argument to it.
-            if self.call_stack.borrow()[0]
-                .closure
-                .borrow()
-                .fn_obj
-                .borrow()
-                .arity
-                == 1
-            {
+            // This exact check of arity == 1 is OK, because
+            // Fiber.new also checks arity is either 0 or 1.
+            if self.arity() == 1 {
                 self.call_stack.borrow_mut()[0].push(arg);
             }
         } else {
