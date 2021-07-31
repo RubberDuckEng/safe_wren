@@ -54,7 +54,7 @@ wren_c/test/regression/428.wren
 wren_c/test/regression/494.wren
 wren_c/test/language/constructor/cannot_be_static.wren
 wren_c/test/language/super/super_at_top_level.wren
-
+wren_c/test/language/method/duplicate_methods.wren
 
 # byte escapes \x get expanded through char
 # Fails because 171 expands to 194, 171 for rust:
@@ -75,9 +75,6 @@ wren_c/test/core/string_code_point_sequence/subscript_incomplete.wren
 
 # I'm not entirely sure how/why this works in wren_c
 wren_c/test/language/super/super_in_static_method.wren
-
-# Missing duplicate method check:
-wren_c/test/language/method/duplicate_methods.wren
 
 # Block comments
 wren_c/test/language/comments/unterminated_block.wren

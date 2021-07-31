@@ -1116,7 +1116,7 @@ pub(crate) struct Upvalue {
 #[derive(Default)]
 struct ClassInfo {
     // The name of the class.
-    // name: String,
+    name: String,
     //   // Attributes for the class itself
     //   ObjMap* classAttributes;
     //   // Attributes for methods in this class
@@ -1125,10 +1125,10 @@ struct ClassInfo {
     // // Symbol table for the fields of the class.
     fields: SymbolTable,
 
-    // // Symbols for the methods defined by the class. Used to detect duplicate
-    // // method definitions.
-    // methods: Vec<usize>,
-    // static_methods: Vec<usize>,
+    // Symbols for the methods defined by the class. Used to detect duplicate
+    // method definitions.
+    methods: Vec<usize>,
+    static_methods: Vec<usize>,
 
     // True if the class being compiled is a foreign class.
     is_foreign_class: bool,
@@ -1140,12 +1140,12 @@ struct ClassInfo {
 }
 
 impl ClassInfo {
-    fn new(_name: &str, is_foreign_class: bool) -> ClassInfo {
+    fn new(name: &str, is_foreign_class: bool) -> ClassInfo {
         ClassInfo {
-            // name: name.into(),
+            name: name.into(),
             fields: SymbolTable::default(),
-            // methods: Vec::new(),
-            // static_methods: Vec::new(),
+            methods: Vec::new(),
+            static_methods: Vec::new(),
             is_foreign_class,
             in_static_method: false,
             signature: None,
@@ -2947,7 +2947,35 @@ fn define_method(
 // Returns the symbol for the method.
 fn declare_method(ctx: &mut ParseContext, signature: &Signature) -> Result<usize, WrenError> {
     let symbol = signature_symbol(ctx, signature);
-    // FIXME: Ensure this method isn't a duplicate.
+
+    // See if the class has already declared method with this signature.
+    // FIXME: Why can wren_c just grab directly at compiler.enclosing_class?
+    // Are we failing to set it correctly?  Do we have too many compilers?
+    ctx.call_with_enclosing_class(|ctx, maybe_class| {
+        let mut class_info = maybe_class.as_ref().unwrap().borrow_mut();
+        let methods = if class_info.in_static_method {
+            &mut class_info.static_methods
+        } else {
+            &mut class_info.methods
+        };
+        for existing_symbol in methods.iter() {
+            if *existing_symbol == symbol {
+                let static_prefix = if class_info.in_static_method {
+                    "static "
+                } else {
+                    ""
+                };
+                return Err(ctx.error_string(format!(
+                    "Class {} already defines a {}method '{}'.",
+                    class_info.name,
+                    static_prefix,
+                    signature.full_name()
+                )));
+            }
+        }
+        methods.push(symbol);
+        Ok(())
+    })?;
     Ok(symbol)
 }
 
