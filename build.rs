@@ -29,6 +29,20 @@ fn generate_wren_core_source_rs() {
     println!("cargo:rerun-if-changed=build.rs");
 }
 
+fn compile_opt_random() {
+    // FIXME: The analyzer seems even slower now.
+    // Is this rebuilding too often?
+    let opt_random_path = "wren_c/src/optional/wren_opt_random.c";
+    cc::Build::new()
+        .file(opt_random_path)
+        .include("wren_c/src/include") // For wren.h
+        .include("wren_c/src/vm") // For wren_common.h
+        .warnings(false) // Big hammer to disable unused-parameter warnings. :/
+        .compile("wren_opt_random");
+    println!("cargo:rerun-if-changed={}", opt_random_path);
+}
+
 fn main() {
     generate_wren_core_source_rs();
+    compile_opt_random();
 }

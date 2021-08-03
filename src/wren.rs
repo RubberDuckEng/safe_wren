@@ -1,42 +1,49 @@
 // analog to wren.h from wren_c.
 
-pub use crate::vm::WrenVM;
+pub use crate::vm::{UserData, WrenVM};
 
 pub static WREN_VERSION_STRING: &str = "wren_rust-0.1";
 
 // A function callable from Wren code, but implemented in another language.
 // FIXME: How does this report errors?
-pub type WrenForeignMethodFn = fn(vm: &mut WrenVM);
+pub type ForeignMethodFn = fn(vm: &mut WrenVM);
+
+// A finalizer function for freeing resources owned by an instance of a foreign
+// class. Unlike most foreign methods, finalizers do not have access to the VM
+// and should not interact with it since it's in the middle of a garbage
+// collection.
+// FIXME: a rusty data should be Box<dyn Trait> maybe?
+pub type FinalizerFn = fn(data: *mut std::ffi::c_void);
 
 // Gives the host a chance to canonicalize the imported module name,
 // potentially taking into account the (previously resolved) name of the module
 // that contains the import. Typically, this is used to implement relative
 // imports.
-type WrenResolveModuleFn = fn(vm: &WrenVM, importer: &str, name: &str) -> String;
+pub type ResolveModuleFn = fn(vm: &WrenVM, importer: &str, name: &str) -> String;
 
 // The result of a loadModuleFn call.
 // [source] is the source code for the module.
-pub struct WrenLoadModuleResult {
+pub struct LoadModuleResult {
     pub source: String,
 }
 
 // Loads and returns the source code for the module [name] if found.
-type WrenLoadModuleFn = fn(vm: &WrenVM, name: &str) -> Option<WrenLoadModuleResult>;
+type LoadModuleFn = fn(vm: &WrenVM, name: &str) -> Option<LoadModuleResult>;
 
 // Returns a pointer to a foreign method on [className] in [module] with
 // [signature].
-type WrenBindForeignMethodFn = fn(
+type BindForeignMethodFn = fn(
     vm: &WrenVM,
     module: &str,
     class_name: &str,
     is_static: bool,
     signature: &str,
-) -> Option<WrenForeignMethodFn>;
+) -> Option<ForeignMethodFn>;
 
 // Displays a string of text to the user.
-type WrenWriteFn = fn(vm: &WrenVM, text: &str);
+type WriteFn = fn(vm: &WrenVM, text: &str);
 
-pub enum WrenErrorType {
+pub enum ErrorType {
     // A syntax or resolution error detected at compile time.
     Compile,
 
@@ -59,30 +66,29 @@ pub enum WrenErrorType {
 // made for each line in the stack trace. Each of those has the resolved
 // [module] and [line] where the method or function is defined and [message] is
 // the name of the method or function.
-type WrenErrorFn =
-    fn(vm: &WrenVM, error_type: WrenErrorType, module: &str, line: usize, message: &str);
+type ErrorFn = fn(vm: &WrenVM, error_type: ErrorType, module: &str, line: usize, message: &str);
 
-pub struct WrenForeignClassMethods {
+pub struct ForeignClassMethods {
     // The callback invoked when the foreign object is created.
     //
     // This must be provided. Inside the body of this, it must call
     // [wrenSetSlotNewForeign()] exactly once.
-    pub allocate: WrenForeignMethodFn,
+    pub allocate: ForeignMethodFn,
     // The callback invoked when the garbage collector is about to collect a
     // foreign object's memory.
     //
     // This may be `None` if the foreign class does not need to finalize.
-    // pub finalize: Option<WrenFinalizerFn>,
+    pub finalize: Option<FinalizerFn>,
 }
 
 // Returns a pair of pointers to the foreign methods used to allocate and
 // finalize the data for instances of [className] in resolved [module].
-pub type WrenBindForeignClassFn =
-    fn(vm: &WrenVM, module_name: &str, class_name: &str) -> WrenForeignClassMethods;
+pub type BindForeignClassFn =
+    fn(vm: &WrenVM, module_name: &str, class_name: &str) -> ForeignClassMethods;
 
 // FIXME: derive Default is a hack for now.
 #[derive(Default)]
-pub struct WrenConfiguration {
+pub struct Configuration {
     // The callback Wren uses to resolve a module name.
     //
     // Some host applications may wish to support "relative" imports, where the
@@ -107,7 +113,7 @@ pub struct WrenConfiguration {
     // Wren will take ownership of the string you return and free it for you, so
     // it should be allocated using the same allocation function you provide
     // above.
-    pub resolve_module_fn: Option<WrenResolveModuleFn>,
+    pub resolve_module_fn: Option<ResolveModuleFn>,
 
     // The callback Wren uses to load a module.
     //
@@ -124,7 +130,7 @@ pub struct WrenConfiguration {
     //
     // If a module with the given name could not be found by the embedder, it
     // should return NULL and Wren will report that as a runtime error.
-    pub load_module_fn: Option<WrenLoadModuleFn>,
+    pub load_module_fn: Option<LoadModuleFn>,
 
     // The callback Wren uses to find a foreign method and bind it to a class.
     //
@@ -135,7 +141,7 @@ pub struct WrenConfiguration {
     //
     // If the foreign function could not be found, this should return NULL and
     // Wren will report it as runtime error.
-    pub bind_foreign_method_fn: Option<WrenBindForeignMethodFn>,
+    pub bind_foreign_method_fn: Option<BindForeignMethodFn>,
 
     // The callback Wren uses to find a foreign class and get its foreign methods.
     //
@@ -143,20 +149,20 @@ pub struct WrenConfiguration {
     // module and name when the class body is executed. It should return the
     // foreign functions uses to allocate and (optionally) finalize the bytes
     // stored in the foreign object when an instance is created.
-    pub bind_foreign_class_fn: Option<WrenBindForeignClassFn>,
+    pub bind_foreign_class_fn: Option<BindForeignClassFn>,
 
     // The callback Wren uses to display text when `System.print()` or the other
     // related functions are called.
     //
     // If this is `NULL`, Wren discards any printed text.
-    pub wren_write_fn: Option<WrenWriteFn>,
+    pub wren_write_fn: Option<WriteFn>,
 
     // The callback Wren uses to report errors.
     //
     // When an error occurs, this will be called with the module name, line
     // number, and an error message. If this is None, Wren doesn't report any
     // errors.
-    pub error_fn: Option<WrenErrorFn>,
+    pub error_fn: Option<ErrorFn>,
 
     // FIXME: Hack during development, shouldn't be API.
     pub debug_level: Option<DebugLevel>,
@@ -180,13 +186,7 @@ pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInte
     match crate::compiler::wren_compile_source(vm, module, source) {
         Err(e) => {
             if let Some(error_fn) = vm.config.error_fn {
-                error_fn(
-                    vm,
-                    WrenErrorType::Compile,
-                    module,
-                    e.line,
-                    &e.error.to_string(),
-                );
+                error_fn(vm, ErrorType::Compile, module, e.line, &e.error.to_string());
             }
             WrenInterpretResult::CompileError
         }
@@ -200,7 +200,7 @@ pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInte
                         // top frame instead.
                         error_fn(
                             vm,
-                            WrenErrorType::Runtime,
+                            ErrorType::Runtime,
                             module,
                             e.stack_trace.frames[0].line,
                             &e.msg,
@@ -208,7 +208,7 @@ pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInte
                         for frame in &e.stack_trace.frames {
                             error_fn(
                                 vm,
-                                WrenErrorType::StackTrace,
+                                ErrorType::StackTrace,
                                 &frame.module,
                                 frame.line,
                                 &frame.fn_name,

@@ -1,4 +1,4 @@
-use wren_rust::wren::{WrenForeignMethodFn, WrenVM};
+use wren_rust::wren::{ForeignMethodFn, WrenVM};
 
 fn runtime_error(vm: &mut WrenVM) {
     vm.ensure_slots(1);
@@ -6,7 +6,7 @@ fn runtime_error(vm: &mut WrenVM) {
     vm.abort_fiber(0);
 }
 
-pub fn error_bind_method(signature: &str) -> Option<WrenForeignMethodFn> {
+pub fn error_bind_method(signature: &str) -> Option<ForeignMethodFn> {
     if signature == "static Error.runtimeError" {
         Some(runtime_error)
     } else {

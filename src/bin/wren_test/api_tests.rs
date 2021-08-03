@@ -1,5 +1,5 @@
 use super::error::error_bind_method;
-use wren_rust::wren::{WrenForeignMethodFn, WrenVM};
+use wren_rust::wren::{ForeignMethodFn, WrenVM};
 
 pub fn api_test_bind_foreign_method_fn(
     _vm: &WrenVM,
@@ -7,7 +7,7 @@ pub fn api_test_bind_foreign_method_fn(
     class_name: &str,
     is_static: bool,
     method_name: &str,
-) -> Option<WrenForeignMethodFn> {
+) -> Option<ForeignMethodFn> {
     // For convenience, concatenate all of the method qualifiers into a single
     // signature string.
     let full_signature = if is_static {

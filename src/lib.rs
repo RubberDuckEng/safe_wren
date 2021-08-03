@@ -2,8 +2,16 @@
 
 mod compiler;
 mod core;
+mod opt {
+    pub mod random_bindings;
+}
 mod vm;
 pub mod wren;
+mod ffi {
+    pub mod c_api;
+}
+
+extern crate libc;
 
 // FIXME: These should not be public.
 pub mod test;

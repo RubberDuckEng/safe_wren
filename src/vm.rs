@@ -12,7 +12,11 @@ use crate::compiler::{
     compile_in_module, wren_is_local_name, FnDebug, InputManager, Ops, Scope, Signature,
 };
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-use crate::wren::{DebugLevel, Slot, WrenConfiguration, WrenForeignMethodFn};
+use crate::wren::{Configuration, DebugLevel, ForeignMethodFn, LoadModuleResult, Slot};
+
+use crate::opt::random_bindings::{
+    random_bind_foreign_class, random_bind_foreign_method, random_source,
+};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -73,6 +77,7 @@ pub(crate) enum Value {
     Map(Handle<ObjMap>),
     Fiber(Handle<ObjFiber>),
     Instance(Handle<ObjInstance>),
+    Foreign(Handle<ObjForeign>),
 }
 
 impl Hash for Value {
@@ -101,6 +106,7 @@ impl Hash for Value {
             Value::Map(v) => v.as_ptr().hash(state),
             Value::Fiber(v) => v.as_ptr().hash(state),
             Value::Instance(v) => v.as_ptr().hash(state),
+            Value::Foreign(v) => v.as_ptr().hash(state),
         }
     }
 }
@@ -157,6 +163,7 @@ impl core::fmt::Debug for Value {
                 // FIXME: Probably needs a helper on ObjInstance?
                 o.borrow().class_obj().borrow().name
             ),
+            Value::Foreign(o) => write!(f, "Foreign({})", o.borrow().class_obj().borrow().name),
         }
     }
 }
@@ -349,6 +356,7 @@ impl Value {
     try_into!(try_into_closure, Closure, ObjClosure);
     try_into!(try_into_instance, Instance, ObjInstance);
     try_into!(try_into_fiber, Fiber, ObjFiber);
+    try_into!(try_into_foreign, Foreign, ObjForeign);
 }
 
 #[derive(Debug, Default)]
@@ -585,6 +593,8 @@ impl Api {
     }
 }
 
+// FIXME: WrenVM Should wrap VM, only WrenVM needs to be C-safe.
+#[repr(C)]
 pub struct WrenVM {
     // Current executing Fiber (should eventually be a list?)
     pub(crate) fiber: Option<Handle<ObjFiber>>,
@@ -604,11 +614,17 @@ pub struct WrenVM {
     pub(crate) core: Option<CoreClasses>,
     pub(crate) start_time: std::time::Instant,
     pub(crate) last_imported_module: Option<Handle<Module>>,
-    pub(crate) config: WrenConfiguration,
+    pub(crate) config: Configuration,
 
     // Args for the foreign function being called.
     // wren_c calls this apiStack
     api: Option<Api>,
+}
+
+pub trait UserData {
+    // Hack to allow downcasting?
+    // https://stackoverflow.com/questions/33687447/how-to-get-a-reference-to-a-concrete-type-from-a-trait-object
+    fn as_mut_any(&mut self) -> &mut dyn std::any::Any;
 }
 
 impl WrenVM {
@@ -630,6 +646,42 @@ impl WrenVM {
         assert!(self.api.is_some());
         if let Some(api) = &mut self.api {
             api.error = api.stack[slot].clone();
+        }
+    }
+
+    pub fn set_slot_new_foreign(
+        &mut self,
+        slot: Slot,
+        class_slot: Slot,
+        user_data: Box<dyn UserData>,
+    ) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            let class = api.stack[class_slot]
+                .try_into_class()
+                .expect("Slot must hold a class.");
+            assert!(matches!(class.borrow().source, ClassSource::Foreign));
+            api.stack[slot] = Value::Foreign(new_handle(ObjForeign::new(class, user_data)))
+        }
+    }
+
+    pub fn get_slot_double(&mut self, slot: Slot) -> f64 {
+        assert!(self.api.is_some());
+        self.api.as_ref().unwrap().stack[slot]
+            .try_into_num()
+            .expect("slot is not a num")
+    }
+
+    // Allows c_api to write addition APIs which the rust public API
+    // may not also share.
+    pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
+        &self.api.as_ref().unwrap().stack[slot]
+    }
+
+    pub fn set_slot_double(&mut self, slot: Slot, num: f64) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::Num(num)
         }
     }
 }
@@ -669,6 +721,12 @@ impl Clear for ObjInstance {
     fn clear(&mut self) {
         self.class_obj.borrow_mut().clear();
         self.fields.clear();
+    }
+}
+
+impl Clear for ObjForeign {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
     }
 }
 
@@ -923,13 +981,21 @@ fn bind_foreign_class(vm: &mut WrenVM, class: &mut ObjClass, module: &Module) {
     if let Some(bind_class) = vm.config.bind_foreign_class_fn {
         let methods = bind_class(vm, &module.name, &class.name);
         class.set_method(allocate_symbol, Method::ForeignFunction(methods.allocate));
-        // if Some(finalize) = methods.finalize {
+        // if let Some(finalize) = methods.finalize {
         //     class.set_method(finalize_symbol, Method::ForeignFunction(finalize));
         // }
     } else {
         // wren_c does not, but we could error here, since we know we have
         // no <allocate> for the class.
         // assert!("Allocator required for foreign classes");
+    }
+
+    if module.name.eq("random") {
+        let methods = random_bind_foreign_class(vm, &module.name, &class.name);
+        class.set_method(allocate_symbol, Method::ForeignFunction(methods.allocate));
+        // if let Some(finalize) = methods.finalize {
+        //     class.set_method(finalize_symbol, Method::ForeignFunction(finalize));
+        // }
     }
 
     // FIXME: Support opt_random.
@@ -1054,12 +1120,12 @@ enum FunctionNext {
 // This will try the host's foreign method binder first. If that fails, it
 // falls back to handling the built-in modules.
 fn find_foreign_method(
-    vm: &WrenVM,
+    vm: &mut WrenVM, // Only mut because random_bind_foreign_method expects mut.
     module_name: &str,
     class_name: &str,
     is_static: bool,
     signature: &str,
-) -> Option<WrenForeignMethodFn> {
+) -> Option<ForeignMethodFn> {
     if let Some(bind_foreign_method) = vm.config.bind_foreign_method_fn {
         if let Some(method_fn) =
             bind_foreign_method(vm, module_name, class_name, is_static, signature)
@@ -1067,7 +1133,13 @@ fn find_foreign_method(
             return Some(method_fn);
         }
     }
-    // FIXME: support opt_meta and opt_random modules.
+
+    if module_name.eq("random") {
+        return Some(random_bind_foreign_method(
+            vm, class_name, is_static, signature,
+        ));
+    }
+    // FIXME: support opt_meta
     None
 }
 
@@ -1163,6 +1235,20 @@ enum ImportResult {
     New(Handle<ObjClosure>),
 }
 
+fn try_load_module(vm: &mut WrenVM, name: &str) -> Option<LoadModuleResult> {
+    if let Some(load_module) = vm.config.load_module_fn {
+        if let Some(result) = load_module(vm, name) {
+            return Some(result);
+        }
+    }
+    if name.eq("random") {
+        return Some(LoadModuleResult {
+            source: random_source(),
+        });
+    }
+    None
+}
+
 fn import_module(
     vm: &mut WrenVM,
     importer_name: &str,
@@ -1175,14 +1261,7 @@ fn import_module(
         return Ok(ImportResult::Existing(m.clone()));
     }
 
-    // If we ever have other builtins, this doesn't need to be an error.
-    let load_module = vm
-        .config
-        .load_module_fn
-        .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
-
-    // Isn't there a rusty way to chain this with the above?
-    let result = load_module(vm, &name)
+    let result = try_load_module(vm, &name)
         .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
 
     let input = InputManager::from_string(result.source);
@@ -1203,7 +1282,7 @@ fn get_module_variable(_vm: &WrenVM, module: &Module, variable_name: &str) -> Re
 }
 
 impl WrenVM {
-    pub fn new(config: WrenConfiguration) -> Self {
+    pub fn new(config: Configuration) -> Self {
         let mut vm = Self {
             // Invalid import name, intentionally.
             methods: SymbolTable::default(),
@@ -1287,6 +1366,7 @@ impl WrenVM {
             Value::Fn(o) => o.borrow().class_obj(),
             Value::Closure(o) => o.borrow().class_obj(),
             Value::Instance(o) => o.borrow().class_obj(),
+            Value::Foreign(o) => o.borrow().class_obj(),
         }
     }
 
@@ -1342,7 +1422,7 @@ impl WrenVM {
         }
     }
 
-    fn call_foreign(&mut self, foreign: &WrenForeignMethodFn, args: Vec<Value>) -> Result<Value> {
+    fn call_foreign(&mut self, foreign: &ForeignMethodFn, args: Vec<Value>) -> Result<Value> {
         assert!(self.api.is_none(), "Cannot already be in foreign call.");
         self.api = Some(Api::with_stack(args));
         foreign(self);
@@ -1507,9 +1587,9 @@ impl WrenVM {
         // wren_c makes these all asserts, but I'm not sure why?
         fn vm_assert(condition: bool, msg: &str) -> Result<()> {
             if condition {
-                Err(VMError::from_str(msg))
-            } else {
                 Ok(())
+            } else {
+                Err(VMError::from_str(msg))
             }
         }
 
@@ -1573,7 +1653,8 @@ impl WrenVM {
                 })))
             }
             Method::ForeignFunction(foreign) => {
-                self.call_foreign(foreign, args)?;
+                let value = self.call_foreign(foreign, args)?;
+                frame.push(value);
                 Ok(None)
             }
             Method::Block(closure) => {
@@ -2177,6 +2258,26 @@ impl Obj for ObjInstance {
     }
 }
 
+pub(crate) struct ObjForeign {
+    class_obj: Handle<ObjClass>,
+    pub user_data: Box<dyn UserData>,
+}
+
+impl ObjForeign {
+    pub(crate) fn new(class: Handle<ObjClass>, user_data: Box<dyn UserData>) -> ObjForeign {
+        ObjForeign {
+            class_obj: class,
+            user_data,
+        }
+    }
+}
+
+impl Obj for ObjForeign {
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
+    }
+}
+
 impl core::fmt::Debug for ObjRange {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let op_string = if self.is_inclusive { ".." } else { "..." };
@@ -2221,7 +2322,7 @@ pub(crate) enum Method {
     FunctionCall,
 
     // A externally-defined method.
-    ForeignFunction(WrenForeignMethodFn),
+    ForeignFunction(ForeignMethodFn),
 
     // A normal user-defined method.
     Block(Handle<ObjClosure>),
@@ -2240,7 +2341,7 @@ impl core::fmt::Debug for Method {
         }
     }
 }
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(crate) enum ClassSource {
     Internal,      // vm defined, no fields.
     Source(usize), // source defined, fields allowed
@@ -2299,13 +2400,6 @@ impl ObjClass {
         matches!(self.source, ClassSource::Foreign)
     }
 }
-
-// FIXME: This is a hack?  for object_is
-// impl PartialEq for ObjClass {
-//     fn eq(&self, other: &ObjClass) -> bool {
-//         self.name.eq(&other.name)
-//     }
-// }
 
 impl core::fmt::Debug for ObjClass {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {

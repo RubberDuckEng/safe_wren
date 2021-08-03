@@ -1,10 +1,10 @@
-Constants:
+<script> Constants:
 00: 1
 01: 2
 02: 3
 03: 0
 04: 100
-Code:
+<script> Code:
 00 (ln 1): ImportModule("random")
 01 (ln 1): Pop
 02 (ln 1): ImportVariable("Random")

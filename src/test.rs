@@ -8,8 +8,8 @@ use std::path::{Component, Path};
 
 use crate::wren::*;
 
-pub fn test_config() -> WrenConfiguration {
-    WrenConfiguration {
+pub fn test_config() -> Configuration {
+    Configuration {
         load_module_fn: Some(read_module),
         wren_write_fn: Some(write_string),
         resolve_module_fn: Some(resolve_module),
@@ -18,19 +18,19 @@ pub fn test_config() -> WrenConfiguration {
     }
 }
 
-fn error_fn(_vm: &WrenVM, error_type: WrenErrorType, module: &str, line: usize, message: &str) {
+fn error_fn(_vm: &WrenVM, error_type: ErrorType, module: &str, line: usize, message: &str) {
     match error_type {
-        WrenErrorType::Compile => {
+        ErrorType::Compile => {
             // Matching test.c output:
             eprintln!("[{} line {}] {}", module, line, message);
         }
         // For runtime errors, wren_test expects:
         // Index must be a number.
         // [.test/core/string.../iterator_value_not_num line 1] in (script)
-        WrenErrorType::Runtime => {
+        ErrorType::Runtime => {
             eprintln!("{}", message);
         }
-        WrenErrorType::StackTrace => {
+        ErrorType::StackTrace => {
             eprintln!("[{} line {}] in {}", module, line, message);
         }
     }
@@ -78,11 +78,11 @@ fn resolve_module(_vm: &WrenVM, importer: &str, module: &str) -> String {
     normalize_path(&resolved)
 }
 
-fn read_module(_vm: &WrenVM, name: &str) -> Option<WrenLoadModuleResult> {
+fn read_module(_vm: &WrenVM, name: &str) -> Option<LoadModuleResult> {
     // Hack for now.
     let path = format!("{}.wren", name);
     if let Ok(source) = fs::read_to_string(&path) {
-        Some(WrenLoadModuleResult { source })
+        Some(LoadModuleResult { source })
     } else {
         None
     }

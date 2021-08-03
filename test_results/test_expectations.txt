@@ -1,27 +1,6 @@
 # Just a skip-list for now.  But presumably will add
 # expectations later.
 
-# import 'random', C API
-wren_c/test/random/float_max.wren
-wren_c/test/random/int_max.wren
-wren_c/test/random/int_min_max.wren
-wren_c/test/random/sample_count_multiple.wren
-wren_c/test/random/new_empty_sequence.wren
-wren_c/test/random/new.wren
-wren_c/test/random/sample_one_empty.wren
-wren_c/test/random/sample_one.wren
-wren_c/test/random/new_wrong_arg_type.wren
-wren_c/test/random/int.wren
-wren_c/test/random/shuffle.wren
-wren_c/test/random/float.wren
-wren_c/test/random/sample_count_one.wren
-wren_c/test/random/new_sequence.wren
-wren_c/test/random/sample_count_too_many.wren
-wren_c/test/random/sample_count_zero.wren
-wren_c/test/random/float_min_max.wren
-wren_c/test/random/new_number.wren
-wren_c/test/random/new_wrong_element_type.wren
-
 # import 'meta', C API
 wren_c/test/meta/get_module_variables.wren
 wren_c/test/meta/get_module_variables_unknown_module.wren
@@ -125,6 +104,7 @@ wren_c/test/language/break/closure_in_while.wren
 wren_c/test/language/fiber/closure.wren
 wren_c/test/language/super/super_in_closure_in_inherited_method.wren
 wren_c/test/language/super/closure.wren
+wren_c/test/random/sample_count_multiple.wren
 
 # static fields
 # Requires being able to parse to two compilers at the same time.

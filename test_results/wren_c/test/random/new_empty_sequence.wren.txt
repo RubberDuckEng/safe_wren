@@ -1,3 +1,0 @@
-Expected runtime error "Sequence cannot be empty." and got:
-Could not load module 'random'.
-Expected runtime error on line 3 but was on line 1.
