@@ -682,6 +682,21 @@ impl VM {
         }
     }
 
+    pub fn get_variable(&mut self, module_name: &str, variable_name: &str, slot: Slot) {
+        let value = if let Some(module) = self.modules.get(module_name) {
+            // What if the module is mut_borrowed for execution?
+            module
+                .borrow()
+                .variable_by_name(variable_name)
+                .unwrap()
+                .clone()
+        } else {
+            // wren_c asserts in the case of the module not being defined.
+            unreachable!("Module not defined.");
+        };
+        self.set_value_for_slot(slot, value);
+    }
+
     pub fn set_slot_new_foreign(
         &mut self,
         slot: Slot,

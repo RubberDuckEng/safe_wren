@@ -339,14 +339,19 @@ pub extern "C" fn wrenRemoveMapValue(
     vm.remove_map_value(map_slot, key_slot, removed_value_slot)
 }
 
-// #[no_mangle]
-// pub extern "C" fn wrenGetVariable(
-//     c_vm: *mut WrenVM,
-//     c_module: *const c_char,
-//     c_name: *const c_char,
-//     c_slot: c_int,
-// ) {
-// }
+#[no_mangle]
+pub extern "C" fn wrenGetVariable(
+    c_vm: *mut WrenVM,
+    c_module: *const c_char,
+    c_name: *const c_char,
+    c_slot: c_int,
+) {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let module_name = unsafe { CStr::from_ptr(c_module) }.to_str().unwrap();
+    let variable_name = unsafe { CStr::from_ptr(c_name) }.to_str().unwrap();
+    let slot = usize::try_from(c_slot).unwrap();
+    vm.get_variable(module_name, variable_name, slot)
+}
 
 #[no_mangle]
 pub extern "C" fn wrenHasVariable(

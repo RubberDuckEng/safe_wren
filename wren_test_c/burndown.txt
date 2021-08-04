@@ -1,5 +1,5 @@
    Compiling wren_rust v0.1.0 (/Users/eseidel/Documents/GitHub/wren_rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 5.25s
+    Finished dev [unoptimized + debuginfo] target(s) in 4.60s
 Undefined symbols for architecture x86_64:
   "_wrenCall", referenced from:
       _call in benchmark.o
@@ -39,15 +39,6 @@ Undefined symbols for architecture x86_64:
       _setSlots in slots.o
   "_wrenGetUserData", referenced from:
       _test in user_data.o
-  "_wrenGetVariable", referenced from:
-      _call in benchmark.o
-      _callRunTests in call.o
-      _callCallsForeignRunTests in call_calls_foreign.o
-      _callWrenCallRootRunTests in call_wren_call_root.o
-      _beforeDefined in get_variable.o
-      _afterDefined in get_variable.o
-      _afterAssigned in get_variable.o
-      ...
   "_wrenInitConfiguration", referenced from:
       _call in benchmark.o
       _main in main.o
