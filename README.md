@@ -1,5 +1,11 @@
 # wren_rust
- Playing around with writing a wren compiler in rust.
+An (incomplete) implementation of Wren (wren.io) in Rust
+
+## Differences from wren_c
+* reference-counted, no garbage collected.
+* expects utf8 input
+* Strings are always utf8 (do not allow invalid utf8 bytes)
+* does not allow overriding allocator (yet?)
 
 ## Usage
 
@@ -23,22 +29,21 @@ wren_debug sub-commands:
 with error text from any failed tests.  `test.py` will also update
 `test_results/passes.txt` with the list of passing tests.
 
+`test_results/test_expectations.txt` lists all currently skipped tests and why.
+
 ## Ordered goals?
 * Time the tests / make faster
 * Upvalues
 * remove all uses of 'as' (use into() instead).
 * validateSuperclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
-* Map.iterate
-* foreign functions
 * wrong line numbers for foreign method runtime errors.
 * Give different types to Symbol, Constant, etc.
 * attributes
 * Scientific notation
-* super / superclass calls
 * static fields (emits to two compilers)
 * C API
-* Garbage Collection
+* Garbage Collection?
 * Sort methods to match wren_c order?
 
 ## Future bugs
@@ -50,8 +55,12 @@ with error text from any failed tests.  `test.py` will also update
 * https://docs.rs/anyhow/1.0.41/anyhow/
 * Try optimizing for size: https://github.com/johnthagen/min-sized-rust
 * To try for really-small size, no-std + https://doc.rust-lang.org/alloc/
+* Box has the same layout as a C pointer, possibly simplifying our FFI?
+https://stackoverflow.com/questions/62338832/how-to-hold-rust-objects-in-rust-code-created-through-c
+https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to imply so?
 
 ### wren_c bugs
 * closures/functions defined in wren_core.wren end up with a null class pointer?
 * If you yield from the root, it gets set to state=OTHER, presumably later you
 might be able to call things on it?
+* WrenConfiguration likely leaked for each WrenVM constructed/destructed?
