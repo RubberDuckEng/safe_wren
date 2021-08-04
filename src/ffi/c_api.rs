@@ -1,5 +1,4 @@
-use crate::wren::WrenVM as RustWrenVM;
-use crate::wren::{FinalizerFn, ForeignClassMethods, ForeignMethodFn, SlotType, UserData};
+use crate::wren::{FinalizerFn, ForeignClassMethods, ForeignMethodFn, SlotType, UserData, VM};
 use libc::{c_char, c_int, size_t};
 use std::convert::TryFrom;
 use std::ffi::{c_void, CStr};
@@ -53,8 +52,8 @@ impl ForeignClassMethods {
     }
 }
 
-pub fn to_c_vm(vm: &mut RustWrenVM) -> *mut WrenVM {
-    unsafe { std::mem::transmute::<&mut RustWrenVM, *mut WrenVM>(vm) }
+pub fn to_c_vm(vm: &mut VM) -> *mut WrenVM {
+    unsafe { std::mem::transmute::<&mut VM, *mut WrenVM>(vm) }
 }
 
 struct UserDataWrapper {
@@ -78,7 +77,7 @@ pub extern "C" fn wrenSetSlotNewForeign(
     };
     let c_ptr = user_data.buffer.as_mut_ptr();
 
-    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }.set_slot_new_foreign(
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }.set_slot_new_foreign(
         usize::try_from(slot).unwrap(),
         usize::try_from(class_slot).unwrap(),
         Box::new(user_data),
@@ -88,13 +87,13 @@ pub extern "C" fn wrenSetSlotNewForeign(
 
 #[no_mangle]
 pub extern "C" fn wrenGetSlotCount(vm: *mut WrenVM) -> c_int {
-    let count = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }.slot_count();
+    let count = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }.slot_count();
     c_int::try_from(count).unwrap()
 }
 
 #[no_mangle]
 pub extern "C" fn wrenEnsureSlots(vm: *mut WrenVM, num_slots: c_int) {
-    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }
         .ensure_slots(usize::try_from(num_slots).unwrap())
 }
 
@@ -113,7 +112,7 @@ pub enum WrenType {
 
 #[no_mangle]
 pub extern "C" fn wrenGetSlotType(c_vm: *mut WrenVM, c_slot: c_int) -> WrenType {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     match vm.type_for_slot(slot) {
         SlotType::Bool => WrenType::WREN_TYPE_BOOL,
@@ -129,7 +128,7 @@ pub extern "C" fn wrenGetSlotType(c_vm: *mut WrenVM, c_slot: c_int) -> WrenType 
 
 #[no_mangle]
 pub extern "C" fn wrenGetSlotBool(vm: *mut WrenVM, slot: c_int) -> bool {
-    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }
         .get_slot_bool(usize::try_from(slot).unwrap())
 }
 
@@ -140,12 +139,12 @@ pub extern "C" fn wrenGetSlotBool(vm: *mut WrenVM, slot: c_int) -> bool {
 
 #[no_mangle]
 pub extern "C" fn wrenGetSlotDouble(vm: *mut WrenVM, slot: c_int) -> f64 {
-    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }
         .get_slot_double(usize::try_from(slot).unwrap())
 }
 #[no_mangle]
 pub extern "C" fn wrenGetSlotForeign(c_vm: *mut WrenVM, c_slot: c_int) -> *mut c_void {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     let foreign = vm.value_for_slot(slot).try_into_foreign().unwrap();
     let user_data = &mut foreign.borrow_mut().user_data;
@@ -169,7 +168,7 @@ pub extern "C" fn wrenGetSlotForeign(c_vm: *mut WrenVM, c_slot: c_int) -> *mut c
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotBool(vm: *mut WrenVM, slot: c_int, value: bool) {
-    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }
         .set_slot_bool(usize::try_from(slot).unwrap(), value)
 }
 
@@ -184,35 +183,35 @@ pub extern "C" fn wrenSetSlotBool(vm: *mut WrenVM, slot: c_int, value: bool) {
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotDouble(c_vm: *mut WrenVM, c_slot: c_int, value: f64) {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     vm.set_slot_double(usize::try_from(slot).unwrap(), value);
 }
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotNewList(c_vm: *mut WrenVM, c_slot: c_int) {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     vm.set_slot_new_list(slot);
 }
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotNewMap(c_vm: *mut WrenVM, c_slot: c_int) {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     vm.set_slot_new_map(slot);
 }
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotNull(c_vm: *mut WrenVM, c_slot: c_int) {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     vm.set_slot_null(slot);
 }
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotString(c_vm: *mut WrenVM, c_slot: c_int, c_text: *const c_char) {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     let string = unsafe { CStr::from_ptr(c_text) }.to_str().unwrap().into();
     vm.set_slot_string(slot, string);
@@ -223,7 +222,7 @@ pub extern "C" fn wrenSetSlotString(c_vm: *mut WrenVM, c_slot: c_int, c_text: *c
 
 #[no_mangle]
 extern "C" fn wrenGetListCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     let value = vm.value_for_slot(slot);
     let list = value.try_into_list().unwrap();
@@ -260,7 +259,7 @@ extern "C" fn wrenGetListCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
 
 #[no_mangle]
 pub extern "C" fn wrenGetMapCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
-    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
     let value = vm.value_for_slot(slot);
     let map = value.try_into_map().unwrap();
@@ -329,7 +328,7 @@ pub extern "C" fn wrenGetMapCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
 
 #[no_mangle]
 pub extern "C" fn wrenAbortFiber(vm: *mut WrenVM, slot: c_int) {
-    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }
         .abort_fiber(usize::try_from(slot).unwrap())
 }
 

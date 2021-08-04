@@ -1,8 +1,8 @@
 use super::error::error_bind_method;
-use wren_rust::wren::{ForeignMethodFn, WrenVM};
+use wren_rust::wren::{ForeignMethodFn, VM};
 
 pub fn api_test_bind_foreign_method_fn(
-    _vm: &WrenVM,
+    _vm: &VM,
     _module: &str,
     class_name: &str,
     is_static: bool,

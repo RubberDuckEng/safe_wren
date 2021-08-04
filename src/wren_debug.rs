@@ -5,7 +5,7 @@ use std::fs;
 
 use crate::compiler::{compile_in_module, lex, InputManager, WrenError};
 use crate::test::test_config;
-use crate::vm::{wren_debug_bytecode, RuntimeError, WrenVM};
+use crate::vm::{wren_debug_bytecode, RuntimeError, VM};
 use crate::wren::DebugLevel;
 
 fn print_compile_error(e: WrenError) {
@@ -65,7 +65,7 @@ pub fn print_tokens(source_or_path: &str) {
 }
 
 pub fn print_bytecode(source_or_path: &str) {
-    let mut vm = WrenVM::new(test_config());
+    let mut vm = VM::new(test_config());
     let input = input_from_source_or_path(source_or_path);
     let result = compile_in_module(&mut vm, &input.module_name, input.input);
     match result {
@@ -75,7 +75,7 @@ pub fn print_bytecode(source_or_path: &str) {
 }
 
 pub fn interpret_and_print_vm(source_or_path: &str) {
-    let mut vm = WrenVM::new(test_config());
+    let mut vm = VM::new(test_config());
     vm.config.debug_level = Some(DebugLevel::NonCore);
     let input = input_from_source_or_path(source_or_path);
     let result = compile_in_module(&mut vm, &input.module_name, input.input);

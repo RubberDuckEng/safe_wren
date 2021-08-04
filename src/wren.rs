@@ -1,12 +1,12 @@
 // analog to wren.h from wren_c.
 
-pub use crate::vm::{SlotType, UserData, WrenVM};
+pub use crate::vm::{SlotType, UserData, VM};
 
 pub static WREN_VERSION_STRING: &str = "wren_rust-0.1";
 
 // A function callable from Wren code, but implemented in another language.
 // FIXME: How does this report errors?
-pub type ForeignMethodFn = fn(vm: &mut WrenVM);
+pub type ForeignMethodFn = fn(vm: &mut VM);
 
 // A finalizer function for freeing resources owned by an instance of a foreign
 // class. Unlike most foreign methods, finalizers do not have access to the VM
@@ -19,7 +19,7 @@ pub type FinalizerFn = fn(data: *mut std::ffi::c_void);
 // potentially taking into account the (previously resolved) name of the module
 // that contains the import. Typically, this is used to implement relative
 // imports.
-pub type ResolveModuleFn = fn(vm: &WrenVM, importer: &str, name: &str) -> String;
+pub type ResolveModuleFn = fn(vm: &VM, importer: &str, name: &str) -> String;
 
 // The result of a loadModuleFn call.
 // [source] is the source code for the module.
@@ -28,12 +28,12 @@ pub struct LoadModuleResult {
 }
 
 // Loads and returns the source code for the module [name] if found.
-type LoadModuleFn = fn(vm: &WrenVM, name: &str) -> Option<LoadModuleResult>;
+type LoadModuleFn = fn(vm: &VM, name: &str) -> Option<LoadModuleResult>;
 
 // Returns a pointer to a foreign method on [className] in [module] with
 // [signature].
 type BindForeignMethodFn = fn(
-    vm: &WrenVM,
+    vm: &VM,
     module: &str,
     class_name: &str,
     is_static: bool,
@@ -41,7 +41,7 @@ type BindForeignMethodFn = fn(
 ) -> Option<ForeignMethodFn>;
 
 // Displays a string of text to the user.
-type WriteFn = fn(vm: &WrenVM, text: &str);
+type WriteFn = fn(vm: &VM, text: &str);
 
 pub enum ErrorType {
     // A syntax or resolution error detected at compile time.
@@ -66,7 +66,7 @@ pub enum ErrorType {
 // made for each line in the stack trace. Each of those has the resolved
 // [module] and [line] where the method or function is defined and [message] is
 // the name of the method or function.
-type ErrorFn = fn(vm: &WrenVM, error_type: ErrorType, module: &str, line: usize, message: &str);
+type ErrorFn = fn(vm: &VM, error_type: ErrorType, module: &str, line: usize, message: &str);
 
 pub struct ForeignClassMethods {
     // The callback invoked when the foreign object is created.
@@ -84,7 +84,7 @@ pub struct ForeignClassMethods {
 // Returns a pair of pointers to the foreign methods used to allocate and
 // finalize the data for instances of [className] in resolved [module].
 pub type BindForeignClassFn =
-    fn(vm: &WrenVM, module_name: &str, class_name: &str) -> ForeignClassMethods;
+    fn(vm: &VM, module_name: &str, class_name: &str) -> ForeignClassMethods;
 
 // FIXME: derive Default is a hack for now.
 #[derive(Default)]
@@ -182,7 +182,7 @@ pub enum WrenInterpretResult {
 
 // Runs [source], a string of Wren source code in a new fiber in [vm] in the
 // context of resolved [module].
-pub fn wren_interpret(vm: &mut WrenVM, module: &str, source: String) -> WrenInterpretResult {
+pub fn wren_interpret(vm: &mut VM, module: &str, source: String) -> WrenInterpretResult {
     match crate::compiler::wren_compile_source(vm, module, source) {
         Err(e) => {
             if let Some(error_fn) = vm.config.error_fn {

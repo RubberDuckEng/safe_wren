@@ -34,7 +34,7 @@ fn unwrap_this_as_fiber(args: &[Value]) -> Handle<ObjFiber> {
 
 macro_rules! num_constant {
     ($func:ident, $value:expr) => {
-        fn $func(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, _args: Vec<Value>) -> Result<Value> {
             Ok(Value::Num($value))
         }
     };
@@ -48,7 +48,7 @@ fn validate_num(value: &Value, arg_name: &str) -> Result<f64> {
 
 macro_rules! infix_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")?;
             let b = validate_num(&args[1], "Right operand")?;
             Ok(Value::$return_type(a.$method(&b)))
@@ -59,7 +59,7 @@ macro_rules! infix_num_op {
 // This is identical to infix_num_op except the borrow for b. :/
 macro_rules! num_binary_op {
     ($func:ident, $method:ident, $return_type:ident, $msg:expr) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")?;
             let b = validate_num(&args[1], $msg)?;
             Ok(Value::$return_type(a.$method(b)))
@@ -69,7 +69,7 @@ macro_rules! num_binary_op {
 
 macro_rules! bitwise_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")? as u32;
             let b = validate_num(&args[1], "Right operand")? as u32;
             Ok(Value::from_u32(a.$method(&b)))
@@ -79,7 +79,7 @@ macro_rules! bitwise_num_op {
 
 macro_rules! overflowing_bitwise_num_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")? as u32;
             let b = validate_num(&args[1], "Right operand")? as u32;
             Ok(Value::from_u32(a.$method(b).0))
@@ -89,7 +89,7 @@ macro_rules! overflowing_bitwise_num_op {
 
 macro_rules! num_bitwise_unary_op {
     ($func:ident, $method:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")? as u32;
             Ok(Value::from_u32(a.$method()))
         }
@@ -98,7 +98,7 @@ macro_rules! num_bitwise_unary_op {
 
 macro_rules! num_unary_op {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let a = validate_num(&args[0], "this")?;
             Ok(Value::$return_type(a.$method()))
         }
@@ -129,12 +129,12 @@ bitwise_num_op!(num_bitwise_xor, bitxor, Num);
 overflowing_bitwise_num_op!(num_bitwise_shl, overflowing_shl, Num);
 overflowing_bitwise_num_op!(num_bitwise_shr, overflowing_shr, Num);
 
-fn num_range_inclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_range_inclusive(vm: &VM, args: Vec<Value>) -> Result<Value> {
     let start = validate_num(&args[0], "Left hand side of range")?;
     let end = validate_num(&args[1], "Right hand side of range")?;
     Ok(Value::Range(wren_new_range(vm, start, end, true)))
 }
-fn num_range_exclusive(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_range_exclusive(vm: &VM, args: Vec<Value>) -> Result<Value> {
     let start = validate_num(&args[0], "Left hand side of range")?;
     let end = validate_num(&args[1], "Right hand side of range")?;
     Ok(Value::Range(wren_new_range(vm, start, end, false)))
@@ -143,7 +143,7 @@ num_binary_op!(num_atan2, atan2, Num, "x value");
 num_binary_op!(num_pow, powf, Num, "Power value");
 num_unary_op!(num_unary_minus, neg, Num);
 
-fn num_from_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_from_string(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let string = validate_string(&args[1], "Argument")?;
 
     // Corner case: Can't parse an empty string.
@@ -163,7 +163,7 @@ fn num_from_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn num_fraction(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_fraction(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let a = validate_num(&args[0], "this")?;
     let fract = a.fract();
     // wren_c uses modf which seems to be negative if original is?
@@ -178,7 +178,7 @@ fn num_fraction(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 num_unary_op!(num_is_infinity, is_infinite, Boolean);
 num_unary_op!(num_is_nan, is_nan, Boolean);
 
-fn num_sign(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_sign(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     // wren_c Num.sign behavior differs from f64.signum at 0 and nan
     let a = validate_num(&args[0], "this")?;
     let sign = if a == 0.0 || a.is_nan() {
@@ -206,7 +206,7 @@ num_unary_op!(num_round, round, Num);
 num_binary_op!(num_min, min, Num, "Other value");
 num_binary_op!(num_max, max, Num, "Other value");
 
-fn num_clamp(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_clamp(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let value = validate_num(&args[0], "this")?;
     let min = validate_num(&args[1], "Min value")?;
     let max = validate_num(&args[2], "Max value")?;
@@ -228,7 +228,7 @@ fn f64_is_integer(x: f64) -> bool {
     x.trunc() == x
 }
 
-fn num_is_integer(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_is_integer(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let x = validate_num(&args[0], "this")?;
     Ok(Value::Boolean(
         !x.is_nan() && !x.is_infinite() && f64_is_integer(x),
@@ -275,19 +275,19 @@ fn wren_num_to_string(num: f64) -> String {
     }
 }
 
-fn num_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn num_to_string(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let value = validate_num(&args[0], "this")?;
     let string = wren_num_to_string(value);
     Ok(Value::from_string(string))
 }
 
-fn class_name(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn class_name(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_class(&args);
     let string = this.borrow().name.clone();
     Ok(Value::from_string(string))
 }
 
-fn class_supertype(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn class_supertype(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_class(&args);
     let maybe_superclass = &this.borrow().superclass;
     match maybe_superclass {
@@ -296,26 +296,26 @@ fn class_supertype(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn class_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn class_to_string(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_class(&args);
     let string = this.borrow().name.clone();
     Ok(Value::from_string(string))
 }
 
-fn object_eqeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn object_eqeq(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(args[0].eq(&args[1])))
 }
 
 // Note this is a static method, comparing two passed args.
-fn object_same(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn object_same(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(args[1].eq(&args[2])))
 }
 
-fn object_bangeq(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn object_bangeq(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(args[0].ne(&args[1])))
 }
 
-fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn object_is(vm: &VM, args: Vec<Value>) -> Result<Value> {
     let expected_baseclass = args[1]
         .try_into_class()
         .ok_or_else(|| VMError::from_str("Right operand must be a class."))?;
@@ -338,7 +338,7 @@ fn object_is(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn object_to_string(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn object_to_string(vm: &VM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_string(format!(
         "instance of {}",
         vm.class_for_value(&args[0]).borrow().name
@@ -347,7 +347,7 @@ fn object_to_string(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 macro_rules! range_getter {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let range_cell = unwrap_this_as_range(&args);
             let range = range_cell.borrow();
             Ok(Value::$return_type(range.$method))
@@ -358,7 +358,7 @@ macro_rules! range_getter {
 // FIXME: Should be possible to share with range_getter?
 macro_rules! range_getter_fn {
     ($func:ident, $method:ident, $return_type:ident) => {
-        fn $func(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+        fn $func(_vm: &VM, args: Vec<Value>) -> Result<Value> {
             let range_cell = unwrap_this_as_range(&args);
             let range = range_cell.borrow();
             Ok(Value::$return_type(range.$method()))
@@ -372,7 +372,7 @@ range_getter!(range_is_inclusive, is_inclusive, Boolean);
 range_getter_fn!(range_min, min, Num);
 range_getter_fn!(range_max, max, Num);
 
-fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn range_iterate(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let range_cell = unwrap_this_as_range(&args);
     let range = range_cell.borrow();
 
@@ -407,12 +407,12 @@ fn range_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Num(iterator))
 }
 
-fn range_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn range_iterator_value(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     // Assuming args[1] is a number.
     Ok(args[1].clone())
 }
 
-fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn range_to_string(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let range_ref = args[0]
         .try_into_range()
         .ok_or_else(|| VMError::from_str("this must be range"))?;
@@ -424,19 +424,19 @@ fn range_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_string(format!("{}{}{}", from, op, to)))
 }
 
-fn object_type(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn object_type(vm: &VM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Class(vm.class_for_value(&args[0])))
 }
 
-fn object_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn object_not(_vm: &VM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(false))
 }
 
-fn bool_not(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn bool_not(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(!args[0].equals_true()))
 }
 
-fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn bool_to_string(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     if args[0].equals_true() {
         Ok(Value::from_str("true"))
     } else {
@@ -444,7 +444,7 @@ fn bool_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn fiber_new(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn fiber_new(vm: &VM, args: Vec<Value>) -> Result<Value> {
     let closure = validate_fn(&args[1], "Argument")?;
     if closure.borrow().fn_obj.borrow().arity > 1 {
         Err(VMError::from_str(
@@ -458,7 +458,7 @@ fn fiber_new(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 // This method sometimes causes a FiberAction (abort) and sometimes
 // returns a value.  So for now it has to be a ValuePrimitive
 // and use the Err result to cause the abort
-fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn fiber_abort(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let is_abort = !args[1].is_null();
     // wren_c just records the error string and continues?
     // vm->fiber->error = args[1];
@@ -471,71 +471,71 @@ fn fiber_abort(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn fiber_current(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn fiber_current(vm: &VM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Fiber(vm.fiber.as_ref().unwrap().clone()))
 }
 
-fn fiber_suspend(_vm: &WrenVM, _args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_suspend(_vm: &VM, _args: Vec<Value>) -> Result<FiberAction> {
     Ok(FiberAction::Suspend)
 }
 
-fn fiber_yield(_vm: &WrenVM, _args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_yield(_vm: &VM, _args: Vec<Value>) -> Result<FiberAction> {
     Ok(FiberAction::Return(Value::Null))
 }
 
-fn fiber_yield1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_yield1(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     Ok(FiberAction::Return(args[1].clone()))
 }
 
-fn fiber_call(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_call(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     let this = unwrap_this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), true, "call")?;
     Ok(FiberAction::Call(this, Value::Null))
 }
 
-fn fiber_call1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_call1(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     let this = unwrap_this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), true, "call")?;
     Ok(FiberAction::Call(this, args[1].clone()))
 }
 
-fn fiber_transfer(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_transfer(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     let this = unwrap_this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), false, "transfer to")?;
     Ok(FiberAction::Transfer(this, Value::Null))
 }
 
-fn fiber_transfer1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_transfer1(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     let this = unwrap_this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), false, "transfer to")?;
     Ok(FiberAction::Transfer(this, args[1].clone()))
 }
 
-fn fiber_transfer_error(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_transfer_error(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     let this = unwrap_this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), false, "transfer to")?;
     Ok(FiberAction::TransferError(this, args[1].clone()))
 }
 
-fn fiber_try(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_try(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     let this = unwrap_this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), true, "try")?;
     Ok(FiberAction::Try(this, Value::Null))
 }
 
-fn fiber_try1(_vm: &WrenVM, args: Vec<Value>) -> Result<FiberAction> {
+fn fiber_try1(_vm: &VM, args: Vec<Value>) -> Result<FiberAction> {
     let this = unwrap_this_as_fiber(&args);
     validate_fiber_action(&this.borrow(), true, "try")?;
     Ok(FiberAction::Try(this, args[1].clone()))
 }
 
-fn fiber_error(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn fiber_error(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_fiber(&args);
     let error = this.borrow().error();
     Ok(error)
 }
 
-fn fiber_is_done(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn fiber_is_done(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this_handle = unwrap_this_as_fiber(&args);
     let this = this_handle.borrow();
     // We can't get a refernce to the (possibly currently running) stack
@@ -583,11 +583,11 @@ fn validate_fiber_action(fiber: &ObjFiber, is_call: bool, verb: &str) -> Result<
     Ok(())
 }
 
-fn null_not(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn null_not(_vm: &VM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(true))
 }
 
-fn null_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn null_to_string(_vm: &VM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_str("null"))
 }
 
@@ -596,7 +596,7 @@ fn validate_string(arg: &Value, arg_name: &str) -> Result<String> {
         .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))
 }
 
-fn string_from_code_point(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_from_code_point(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let num = validate_int(&args[1], "Code point")?;
     if num < 0.0 {
         Err(VMError::from_str("Code point cannot be negative."))
@@ -611,7 +611,7 @@ fn string_from_code_point(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn string_from_byte(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_from_byte(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let num = validate_int(&args[1], "Byte")?;
     if num < 0.0 {
         Err(VMError::from_str("Byte cannot be negative."))
@@ -625,7 +625,7 @@ fn string_from_byte(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn string_plus(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_plus(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let a = unwrap_this_as_string(&args);
     let b = validate_string(&args[1], "Right operand")?;
     Ok(Value::from_string(a + &b))
@@ -648,7 +648,7 @@ fn adjust_range_to_char_boundaries(
     before..after
 }
 
-fn string_subscript(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_subscript(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let string = unwrap_this_as_string(&args);
 
     match &args[1] {
@@ -674,16 +674,16 @@ fn string_subscript(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn string_to_string(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_to_string(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     // Do we need to confirm args[0] is a string?  wren_c does not.
     Ok(args[0].clone())
 }
 
-fn string_byte_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_byte_count(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_usize(unwrap_this_as_string(&args).len()))
 }
 
-fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_code_point_at(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_string(&args);
     let index = validate_index(&args[1], this.len(), "Index")?;
 
@@ -696,18 +696,18 @@ fn string_code_point_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_usize(c as usize))
 }
 
-fn string_byte_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_byte_at(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let string = unwrap_this_as_string(&args);
     let index = validate_index(&args[1], string.len(), "Index")?;
     Ok(Value::from_u8(string.as_bytes()[index]))
 }
 
-fn string_contains(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_contains(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     Ok(Value::Boolean(this.contains(&search)))
 }
-fn string_ends_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_ends_with(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     Ok(Value::Boolean(this.ends_with(&search)))
@@ -720,14 +720,14 @@ fn index_or_neg_one(maybe_index: Option<usize>) -> Value {
     }
 }
 
-fn string_index_of1(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_index_of1(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     let maybe_index = this.find(&search);
     Ok(index_or_neg_one(maybe_index))
 }
 
-fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_index_of2(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     let mut start = validate_index(&args[2], this.len(), "Start")?;
@@ -745,7 +745,7 @@ fn string_index_of2(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn string_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_iterate(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let string = unwrap_this_as_string(&args);
 
     // If we're starting the iteration, return the first index.
@@ -775,7 +775,7 @@ fn string_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn string_iterate_byte(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_iterate_byte(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let string = unwrap_this_as_string(&args);
 
     // If we're starting the iteration, return the first index.
@@ -819,14 +819,14 @@ fn wren_string_code_point_at(string: String, index: usize) -> Value {
     }
 }
 
-fn string_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_iterator_value(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let string = unwrap_this_as_string(&args);
     let index = validate_index(&args[1], string.len(), "Iterator")?;
 
     Ok(wren_string_code_point_at(string, index))
 }
 
-fn string_starts_with(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn string_starts_with(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let this = unwrap_this_as_string(&args);
     let search = validate_string(&args[1], "Argument")?;
     Ok(Value::Boolean(this.starts_with(&search)))
@@ -837,27 +837,27 @@ fn validate_fn(arg: &Value, arg_name: &str) -> Result<Handle<ObjClosure>> {
         .ok_or_else(|| VMError::from_string(format!("{} must be a function.", arg_name)))
 }
 
-fn fn_new(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn fn_new(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     // Odd that this never checks arg[0].
     // The block argument is already a function, so just return it.
     Ok(Value::Closure(validate_fn(&args[1], "Argument")?))
 }
 
-fn fn_arity(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn fn_arity(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let closure = unwrap_this_as_closure(&args);
     let arity = closure.borrow().fn_obj.borrow().arity;
     Ok(Value::from_u8(arity))
 }
 
-fn fn_to_string(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn fn_to_string(_vm: &VM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::from_str("<fn>"))
 }
 
-fn map_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn map_new(vm: &VM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::Map(wren_new_map(vm)))
 }
 
-fn map_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_subscript(vm: &VM, args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
     let map_cell = unwrap_this_as_map(&args);
     let map = map_cell.borrow();
@@ -868,7 +868,7 @@ fn map_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn map_subscript_setter(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_subscript_setter(vm: &VM, args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
     let map = unwrap_this_as_map(&args);
     map.borrow_mut()
@@ -889,7 +889,7 @@ fn wren_map_is_valid_key(arg: &Value) -> bool {
     )
 }
 
-fn validate_key(_vm: &WrenVM, arg: &Value) -> Result<bool> {
+fn validate_key(_vm: &VM, arg: &Value) -> Result<bool> {
     if wren_map_is_valid_key(arg) {
         Ok(true)
     } else {
@@ -900,7 +900,7 @@ fn validate_key(_vm: &WrenVM, arg: &Value) -> Result<bool> {
 // Adds an entry to the map and then returns the map itself. This is called by
 // the compiler when compiling map literals instead of using [_]=(_) to
 // minimize stack churn.
-fn map_add_core(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
+fn map_add_core(vm: &VM, mut args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
 
     let value = args.pop().unwrap();
@@ -911,13 +911,13 @@ fn map_add_core(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     Ok(Value::Map(map))
 }
 
-fn map_clear(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_clear(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let map = unwrap_this_as_map(&args);
     map.borrow_mut().data.clear();
     Ok(Value::Null)
 }
 
-fn map_contains_key(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
+fn map_contains_key(vm: &VM, mut args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
     let map = unwrap_this_as_map(&args);
     let key = args.pop().unwrap();
@@ -925,13 +925,13 @@ fn map_contains_key(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
     Ok(Value::Boolean(result))
 }
 
-fn map_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_count(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let map = unwrap_this_as_map(&args);
     let count = map.borrow().len();
     Ok(Value::from_usize(count))
 }
 
-fn map_remove(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_remove(vm: &VM, args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
     let map = unwrap_this_as_map(&args);
     let maybe_value = map.borrow_mut().data.remove(&args[1]);
@@ -943,7 +943,7 @@ fn map_remove(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 // FIXME: This is wrong.  This sits on top of rust's hashmap
 // and does not match wren_c's iterator behavior exactly.
-fn map_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_iterate(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let map = unwrap_this_as_map(&args);
     if map.borrow().data.is_empty() {
         return Ok(Value::Boolean(false));
@@ -967,7 +967,7 @@ fn map_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn map_key_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_key_iterator_value(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let map_handle = unwrap_this_as_map(&args);
     let map = map_handle.borrow();
     let index = validate_index(&args[1], map.len(), "Iterator")?;
@@ -975,7 +975,7 @@ fn map_key_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(entries.nth(index).unwrap().0.clone())
 }
 
-fn map_value_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn map_value_iterator_value(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let map_handle = unwrap_this_as_map(&args);
     let map = map_handle.borrow();
     let index = validate_index(&args[1], map.len(), "Iterator")?;
@@ -983,7 +983,7 @@ fn map_value_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(entries.nth(index).unwrap().1.clone())
 }
 
-fn list_filled(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_filled(vm: &VM, args: Vec<Value>) -> Result<Value> {
     let size = validate_int(&args[1], "Size")?;
     if size < 0.0 {
         return Err(VMError::from_str("Size cannot be negative."));
@@ -992,7 +992,7 @@ fn list_filled(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(Value::List(wren_new_list(vm, contents)))
 }
 
-fn list_new(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn list_new(vm: &VM, _args: Vec<Value>) -> Result<Value> {
     Ok(Value::List(wren_new_list(vm, Vec::new())))
 }
 
@@ -1066,7 +1066,7 @@ fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
     }
 }
 
-fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_subscript(vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
 
     match &args[1] {
@@ -1090,14 +1090,14 @@ fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn list_subscript_setter(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_subscript_setter(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
     list.borrow_mut().elements[index] = args[2].clone();
     Ok(args[2].clone())
 }
 
-fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
+fn list_add(_vm: &VM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
     let list = unwrap_this_as_list(&args);
     list.borrow_mut().elements.push(value.clone());
@@ -1107,19 +1107,19 @@ fn list_add(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
 // Adds an element to the list and then returns the list itself. This is called
 // by the compiler when compiling list literals instead of using add() to
 // minimize stack churn.
-fn list_add_core(_vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
+fn list_add_core(_vm: &VM, mut args: Vec<Value>) -> Result<Value> {
     let value = args.pop().unwrap();
     let list = unwrap_this_as_list(&args);
     list.borrow_mut().elements.push(value);
     Ok(args[0].clone())
 }
 
-fn list_clear(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_clear(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     list.borrow_mut().elements.clear();
     Ok(Value::Null)
 }
-fn list_insert(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_insert(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let elements = &mut list.borrow_mut().elements;
     let count = elements.len();
@@ -1133,7 +1133,7 @@ fn list_insert(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(args[2].clone())
 }
 
-fn list_remove_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_remove_value(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
     match maybe_index {
@@ -1145,13 +1145,13 @@ fn list_remove_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     }
 }
 
-fn list_index_of(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_index_of(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
     Ok(index_or_neg_one(maybe_index))
 }
 
-fn list_swap(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_swap(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let index_a = validate_index(&args[1], list.borrow().len(), "Index 0")?;
     let index_b = validate_index(&args[2], list.borrow().len(), "Index 1")?;
@@ -1176,7 +1176,7 @@ fn validate_int(value: &Value, arg_name: &str) -> Result<f64> {
     validate_int_value(num, arg_name)
 }
 
-fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_iterate(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let elements_len = list.borrow().len() as f64;
 
@@ -1219,7 +1219,7 @@ fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<
     }
 }
 
-fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_iterator_value(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
 
     let index = validate_index(&args[1], list.borrow().len(), "Iterator")?;
@@ -1227,14 +1227,14 @@ fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     Ok(value)
 }
 
-fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_remove_at(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let index = validate_index(&args[1], list.borrow().len(), "Index")?;
     let value = list.borrow_mut().elements.remove(index);
     Ok(value)
 }
 
-fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn list_count(_vm: &VM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
     let count = list.borrow().len();
     Ok(Value::from_usize(count))
@@ -1269,16 +1269,16 @@ fn unescape(s: &str) -> String {
     s
 }
 
-fn system_clock(vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+fn system_clock(vm: &VM, _args: Vec<Value>) -> Result<Value> {
     let now = std::time::Instant::now();
     Ok(Value::Num(now.duration_since(vm.start_time).as_secs_f64()))
 }
 
-// fn system_gc(_vm: &WrenVM, _args: Vec<Value>) -> Result<Value> {
+// fn system_gc(_vm: &VM, _args: Vec<Value>) -> Result<Value> {
 //     Ok(Value::Null)
 // }
 
-fn system_write_string(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
+fn system_write_string(vm: &VM, args: Vec<Value>) -> Result<Value> {
     let string = args[1]
         .try_into_string()
         .ok_or_else(|| VMError::from_str("expected String"))?;
@@ -1329,7 +1329,7 @@ macro_rules! primitive_static {
     };
 }
 
-pub(crate) fn init_base_classes(vm: &mut WrenVM, core_module: &mut Module) {
+pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
     // wren_c makes a core module, which it then imports
     // into every module when running.  For now we're just
     // "importing" core directly into the one module we ever have.
@@ -1388,7 +1388,7 @@ pub(crate) fn init_base_classes(vm: &mut WrenVM, core_module: &mut Module) {
 
 // Only used by init_fn_and_fiber
 fn create_and_define_class(
-    vm: &mut WrenVM,
+    vm: &mut VM,
     module: &mut Module,
     name: &str,
     superclass: &Handle<ObjClass>,
@@ -1399,7 +1399,7 @@ fn create_and_define_class(
 }
 
 // Only used for initing before loading wren_core.wren.
-pub(crate) fn init_fn_and_fiber(vm: &mut WrenVM, module: &mut Module) {
+pub(crate) fn init_fn_and_fiber(vm: &mut VM, module: &mut Module) {
     // wren_c compiles wren_core.wren with functions/closures with a
     // null class. Manually initialize classes before compiling wren_core.wren.
     let superclass = module.expect_class("Object");
@@ -1408,7 +1408,7 @@ pub(crate) fn init_fn_and_fiber(vm: &mut WrenVM, module: &mut Module) {
     vm.fiber_class = Some(create_and_define_class(vm, module, "Fiber", &superclass));
 }
 
-pub(crate) fn register_core_primitives(vm: &mut WrenVM) {
+pub(crate) fn register_core_primitives(vm: &mut VM) {
     // Note: All of these methods are bound *after* setup from
     // superclass, so any classes added to a superclass
     // WOULD NOT end up inherited into wren_core.wren subclasses.

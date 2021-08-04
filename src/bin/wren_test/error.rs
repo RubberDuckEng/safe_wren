@@ -1,6 +1,6 @@
-use wren_rust::wren::{ForeignMethodFn, WrenVM};
+use wren_rust::wren::{ForeignMethodFn, VM};
 
-fn runtime_error(vm: &mut WrenVM) {
+fn runtime_error(vm: &mut VM) {
     vm.ensure_slots(1);
     vm.set_slot_string(0, "Error!");
     vm.abort_fiber(0);

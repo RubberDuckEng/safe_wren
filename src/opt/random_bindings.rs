@@ -1,6 +1,5 @@
 use crate::ffi::c_api::*;
-use crate::wren::WrenVM as RustWrenVM;
-use crate::wren::{ForeignClassMethods, ForeignMethodFn};
+use crate::wren::{ForeignClassMethods, ForeignMethodFn, VM};
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 
@@ -27,7 +26,7 @@ pub fn random_source() -> String {
 }
 
 pub fn random_bind_foreign_class(
-    vm: &mut RustWrenVM,
+    vm: &mut VM,
     module_name: &str,
     class_name: &str,
 ) -> ForeignClassMethods {
@@ -39,7 +38,7 @@ pub fn random_bind_foreign_class(
 }
 
 pub fn random_bind_foreign_method(
-    vm: &mut RustWrenVM,
+    vm: &mut VM,
     class_name: &str,
     is_static: bool,
     signature: &str,

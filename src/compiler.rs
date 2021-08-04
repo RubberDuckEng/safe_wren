@@ -11,7 +11,7 @@ use std::str;
 
 use crate::vm::{
     new_handle, wren_define_variable, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn,
-    SymbolTable, Value, WrenVM, MAX_FIELDS,
+    SymbolTable, Value, MAX_FIELDS, VM,
 };
 
 // Maximum times grammar is allowed to recurse through parse_precedence
@@ -1394,7 +1394,7 @@ struct Parser {
 struct ParseContext<'a> {
     parser: Parser,
     _compiler: Option<Box<Compiler>>,
-    vm: &'a mut WrenVM,
+    vm: &'a mut VM,
     // We have the module during parse-time in order to be able to
     // make ObjFn objects (which hold a pointer to the module) as
     // well as be able to look-up and define variables on the module.
@@ -3704,10 +3704,6 @@ impl From<LexError> for ParserError {
     }
 }
 
-// typedef void (*WrenErrorFn)(
-//     WrenVM* vm, WrenErrorType type, const char* module, int line,
-//     const char* message);
-
 #[derive(Debug)]
 pub struct WrenError {
     pub module: String,
@@ -3863,7 +3859,7 @@ fn ignore_newlines(ctx: &mut ParseContext) -> Result<(), WrenError> {
 }
 
 pub(crate) fn compile_in_module(
-    vm: &mut WrenVM,
+    vm: &mut VM,
     module_name: &str,
     input: InputManager,
 ) -> Result<Handle<ObjClosure>, WrenError> {
@@ -3873,7 +3869,7 @@ pub(crate) fn compile_in_module(
 }
 
 pub(crate) fn wren_compile_source(
-    vm: &mut WrenVM,
+    vm: &mut VM,
     module_name: &str,
     source: String,
 ) -> Result<Handle<ObjClosure>, WrenError> {
@@ -3882,7 +3878,7 @@ pub(crate) fn wren_compile_source(
 }
 
 pub(crate) fn wren_compile(
-    vm: &mut WrenVM,
+    vm: &mut VM,
     input: InputManager,
     module: Handle<Module>,
 ) -> Result<Handle<ObjClosure>, WrenError> {

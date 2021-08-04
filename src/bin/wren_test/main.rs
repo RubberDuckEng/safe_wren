@@ -47,7 +47,7 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
-fn run_file(vm: &mut WrenVM, path: &str) -> ! {
+fn run_file(vm: &mut VM, path: &str) -> ! {
     let source = fs::read_to_string(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
         // FIXME: wren_c appears to read the file as bytes and
@@ -95,7 +95,7 @@ fn main() {
     if api_test {
         config.bind_foreign_method_fn = Some(api_test_bind_foreign_method_fn);
     }
-    let mut vm = WrenVM::new(config);
+    let mut vm = VM::new(config);
 
     // handle API tests.
     run_file(&mut vm, test_path);
