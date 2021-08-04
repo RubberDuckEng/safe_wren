@@ -720,6 +720,34 @@ impl VM {
         }
     }
 
+    pub fn get_list_count(&mut self, slot: Slot) -> usize {
+        assert!(self.api.is_some());
+        let list = self.value_for_slot(slot).try_into_list().unwrap();
+        let count = list.borrow().len();
+        count
+    }
+
+    pub fn get_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
+        assert!(self.api.is_some());
+        let list_ref = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let list = list_ref.borrow();
+        self.set_value_for_slot(element_slot, list.elements[index].clone())
+    }
+
+    pub fn set_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
+        assert!(self.api.is_some());
+        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let element = self.value_for_slot(element_slot);
+        list.borrow_mut().elements[index] = element.clone();
+    }
+
+    pub fn insert_in_list(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
+        assert!(self.api.is_some());
+        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let element = self.value_for_slot(element_slot);
+        list.borrow_mut().elements.insert(index, element.clone());
+    }
+
     pub fn set_slot_new_map(&mut self, slot: Slot) {
         assert!(self.api.is_some());
         let value = Value::Map(wren_new_map(self));

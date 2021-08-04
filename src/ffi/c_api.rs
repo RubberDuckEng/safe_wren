@@ -229,38 +229,51 @@ pub extern "C" fn wrenSetSlotString(c_vm: *mut WrenVM, c_slot: c_int, c_text: *c
 extern "C" fn wrenGetListCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
     let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let slot = usize::try_from(c_slot).unwrap();
-    let value = vm.value_for_slot(slot);
-    let list = value.try_into_list().unwrap();
-    let count = list.borrow().len();
+    let count = vm.get_list_count(slot);
     c_int::try_from(count).unwrap()
 }
 
-// #[no_mangle]
-// pub extern "C" fn wrenGetListElement(
-//     c_vm: *mut WrenVM,
-//     c_list_slot: c_int,
-//     c_index: c_int,
-//     c_element_slot: c_int,
-// ) {
-// }
+#[no_mangle]
+pub extern "C" fn wrenGetListElement(
+    c_vm: *mut WrenVM,
+    c_list_slot: c_int,
+    c_index: c_int,
+    c_element_slot: c_int,
+) {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let list_slot = usize::try_from(c_list_slot).unwrap();
+    let index = usize::try_from(c_index).unwrap();
+    let element_slot = usize::try_from(c_element_slot).unwrap();
+    vm.get_list_element(list_slot, index, element_slot)
+}
 
-// #[no_mangle]
-// pub extern "C" fn wrenSetListElement(
-//     c_vm: *mut WrenVM,
-//     c_list_slot: c_int,
-//     c_index: c_int,
-//     c_element_slot: c_int,
-// ) {
-// }
+#[no_mangle]
+pub extern "C" fn wrenSetListElement(
+    c_vm: *mut WrenVM,
+    c_list_slot: c_int,
+    c_index: c_int,
+    c_element_slot: c_int,
+) {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let list_slot = usize::try_from(c_list_slot).unwrap();
+    let index = usize::try_from(c_index).unwrap();
+    let element_slot = usize::try_from(c_element_slot).unwrap();
+    vm.set_list_element(list_slot, index, element_slot)
+}
 
-// #[no_mangle]
-// pub extern "C" fn wrenInsertInList(
-//     c_vm: *mut WrenVM,
-//     c_list_slot: c_int,
-//     c_index: c_int,
-//     c_element_slot: c_int,
-// ) {
-// }
+#[no_mangle]
+pub extern "C" fn wrenInsertInList(
+    c_vm: *mut WrenVM,
+    c_list_slot: c_int,
+    c_index: c_int,
+    c_element_slot: c_int,
+) {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let list_slot = usize::try_from(c_list_slot).unwrap();
+    let index = usize::try_from(c_index).unwrap();
+    let element_slot = usize::try_from(c_element_slot).unwrap();
+    vm.insert_in_list(list_slot, index, element_slot)
+}
 
 #[no_mangle]
 pub extern "C" fn wrenGetMapCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {

@@ -1,5 +1,5 @@
    Compiling wren_rust v0.1.0 (/Users/eseidel/Documents/GitHub/wren_rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 8.53s
+    Finished dev [unoptimized + debuginfo] target(s) in 3.97s
 Undefined symbols for architecture x86_64:
   "_wrenCall", referenced from:
       _call in benchmark.o
@@ -19,9 +19,6 @@ Undefined symbols for architecture x86_64:
       _returnsNull in resolution.o
       _changesString in resolution.o
       ...
-  "_wrenGetListElement", referenced from:
-      _get in lists.o
-      _getListElement in slots.o
   "_wrenGetSlotBytes", referenced from:
       _getSlots in slots.o
       _setSlots in slots.o
@@ -64,10 +61,6 @@ Undefined symbols for architecture x86_64:
       _shared in resolution.o
       _importer in resolution.o
       ...
-  "_wrenInsertInList", referenced from:
-      _api in call_calls_foreign.o
-      _insert in lists.o
-      _set in lists.o
   "_wrenInterpret", referenced from:
       _call in benchmark.o
       _nullConfig in new_vm.o
@@ -104,8 +97,6 @@ Undefined symbols for architecture x86_64:
       _multipleInterpretCalls in new_vm.o
       _resetStackAfterCallAbortRunTests in reset_stack_after_call_abort.o
       ...
-  "_wrenSetListElement", referenced from:
-      _set in lists.o
   "_wrenSetSlotBytes", referenced from:
       _callRunTests in call.o
       _setSlots in slots.o
