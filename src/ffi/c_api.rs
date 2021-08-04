@@ -1,5 +1,7 @@
-use crate::wren::{FinalizerFn, ForeignClassMethods, ForeignMethodFn, SlotType, UserData, VM};
-use libc::{c_char, c_int, size_t};
+use crate::wren::{
+    FinalizerFn, ForeignClassMethods, ForeignMethodFn, InterpretResult, SlotType, UserData, VM,
+};
+use libc::{c_char, c_int, c_uint, size_t};
 use std::convert::TryFrom;
 use std::ffi::{c_void, CStr};
 
@@ -13,40 +15,146 @@ pub struct WrenVM {
 //     _unused: usize,
 // }
 
+pub type WrenReallocateFn = Option<
+    unsafe extern "C" fn(
+        memory: *mut c_void,
+        newSize: size_t,
+        userData: *mut c_void,
+    ) -> *mut c_void,
+>;
+
+pub type WrenForeignMethodFn = Option<unsafe extern "C" fn(vm: *mut WrenVM)>;
+pub type WrenFinalizerFn = Option<unsafe extern "C" fn(data: *mut c_void)>;
+pub type WrenResolveModuleFn = Option<
+    unsafe extern "C" fn(
+        vm: *mut WrenVM,
+        importer: *const c_char,
+        name: *const c_char,
+    ) -> *const c_char,
+>;
+pub type WrenLoadModuleCompleteFn = Option<
+    unsafe extern "C" fn(vm: *mut WrenVM, name: *const c_char, result: WrenLoadModuleResult),
+>;
+
+pub type WrenLoadModuleFn =
+    Option<unsafe extern "C" fn(vm: *mut WrenVM, name: *const c_char) -> WrenLoadModuleResult>;
+pub type WrenBindForeignMethodFn = Option<
+    unsafe extern "C" fn(
+        vm: *mut WrenVM,
+        module: *const c_char,
+        className: *const c_char,
+        isStatic: bool,
+        signature: *const c_char,
+    ) -> WrenForeignMethodFn,
+>;
+pub type WrenWriteFn = Option<unsafe extern "C" fn(vm: *mut WrenVM, text: *const c_char)>;
+
+pub type WrenBindForeignClassFn = Option<
+    unsafe extern "C" fn(
+        vm: *mut WrenVM,
+        module: *const c_char,
+        className: *const c_char,
+    ) -> WrenForeignClassMethods,
+>;
+
+// #[allow(non_upper_case_globals)]
+// pub const WrenErrorType_WREN_ERROR_COMPILE: WrenErrorType = 0;
+// #[allow(non_upper_case_globals)]
+// pub const WrenErrorType_WREN_ERROR_RUNTIME: WrenErrorType = 1;
+// #[allow(non_upper_case_globals)]
+// pub const WrenErrorType_WREN_ERROR_STACK_TRACE: WrenErrorType = 2;
+pub type WrenErrorType = c_uint;
+
+pub type WrenErrorFn = Option<
+    unsafe extern "C" fn(
+        vm: *mut WrenVM,
+        type_: WrenErrorType,
+        module: *const c_char,
+        line: c_int,
+        message: *const c_char,
+    ),
+>;
+
+#[repr(C)]
+pub struct WrenConfiguration {
+    pub reallocate_fn: WrenReallocateFn, // ignored
+    pub resolve_module_fn: WrenResolveModuleFn,
+    pub load_module_fn: WrenLoadModuleFn,
+    pub bind_foreign_method_fn: WrenBindForeignMethodFn,
+    pub bind_foreign_class_fn: WrenBindForeignClassFn,
+    pub write_fn: WrenWriteFn,
+    pub error_fn: WrenErrorFn,
+    pub initial_heap_size: size_t,  // ignored
+    pub min_heap_size: size_t,      // ignored
+    pub heap_growth_percent: c_int, // ignored
+    pub user_data: *mut c_void,
+}
+
+#[repr(C)]
+pub struct WrenLoadModuleResult {
+    pub source: *const c_char,
+    pub on_complete: WrenLoadModuleCompleteFn,
+    pub user_data: *mut c_void,
+}
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct WrenForeignClassMethods {
-    pub allocate: Option<WrenForeignMethodFn>,
-    pub finalize: Option<WrenFinalizerFn>,
+    pub allocate: WrenForeignMethodFn,
+    pub finalize: WrenFinalizerFn,
 }
 
-// Called after loadModuleFn is called for module [name]. The original returned result
-// is handed back to you in this callback, so that you can free memory if appropriate.
-// pub type WrenLoadModuleCompleteFn =
-//     unsafe extern "C" fn(_vm: *mut WrenVM, name: *const c_char, result: WrenLoadModuleResult);
+#[no_mangle]
+pub extern "C" fn wrenInitConfiguration(configuration: *mut WrenConfiguration) {
+    let config = unsafe { &mut *configuration };
+    config.reallocate_fn = None; // ignored
+    config.resolve_module_fn = None;
+    config.load_module_fn = None;
+    config.bind_foreign_method_fn = None;
+    config.bind_foreign_class_fn = None;
+    config.write_fn = None;
+    config.error_fn = None;
+    config.initial_heap_size = 0; // ignored
+    config.min_heap_size = 0; // ignored
+    config.heap_growth_percent = 0; // ignored
+    config.user_data = std::ptr::null_mut();
+}
 
-// #[repr(C)]
-// pub struct WrenLoadModuleResult {
-//     pub source: *const c_char,
-//     pub on_complete: WrenLoadModuleCompleteFn,
-//     pub user_data: *mut c_void,
-// }
+#[allow(non_upper_case_globals)]
+pub const WrenInterpretResult_WREN_RESULT_SUCCESS: WrenInterpretResult = 0;
+#[allow(non_upper_case_globals)]
+pub const WrenInterpretResult_WREN_RESULT_COMPILE_ERROR: WrenInterpretResult = 1;
+#[allow(non_upper_case_globals)]
+pub const WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR: WrenInterpretResult = 2;
+pub type WrenInterpretResult = c_uint;
 
-pub type WrenForeignMethodFn = unsafe extern "C" fn(_vm: *mut WrenVM);
-pub type WrenFinalizerFn = unsafe extern "C" fn(data: *mut c_void);
+#[no_mangle]
+pub extern "C" fn wrenInterpret(
+    c_vm: *mut WrenVM,
+    c_module: *const c_char,
+    c_source: *const c_char,
+) -> WrenInterpretResult {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let module = unsafe { CStr::from_ptr(c_module) }.to_str().unwrap();
+    let source = unsafe { CStr::from_ptr(c_source) }.to_str().unwrap().into();
+    match vm.interpret(module, source) {
+        InterpretResult::Success => WrenInterpretResult_WREN_RESULT_SUCCESS,
+        InterpretResult::CompileError => WrenInterpretResult_WREN_RESULT_COMPILE_ERROR,
+        InterpretResult::RuntimeError => WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR,
+    }
+}
 
 impl ForeignClassMethods {
     pub fn from_c(methods: WrenForeignClassMethods) -> ForeignClassMethods {
-        let c_allocate = methods.allocate.unwrap();
-        let allocate =
-            unsafe { std::mem::transmute::<WrenForeignMethodFn, ForeignMethodFn>(c_allocate) };
-        let maybe_finalize = if let Some(c_finalize) = methods.finalize {
-            Some(unsafe { std::mem::transmute::<WrenFinalizerFn, FinalizerFn>(c_finalize) })
-        } else {
-            None
+        let maybe_allocate = unsafe {
+            std::mem::transmute::<WrenForeignMethodFn, Option<ForeignMethodFn>>(methods.allocate)
+        };
+        let maybe_finalize = unsafe {
+            std::mem::transmute::<WrenFinalizerFn, Option<FinalizerFn>>(methods.finalize)
         };
         ForeignClassMethods {
-            allocate: allocate,
+            // allocate is required, even if the types don't say so.
+            allocate: maybe_allocate.unwrap(),
             finalize: maybe_finalize,
         }
     }
@@ -67,21 +175,20 @@ impl UserData for UserDataWrapper {
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotNewForeign(
-    vm: *mut WrenVM,
-    slot: c_int,
-    class_slot: c_int,
+    c_vm: *mut WrenVM,
+    c_slot: c_int,
+    c_class_slot: c_int,
     size: size_t,
 ) -> *mut c_void {
     let mut user_data = UserDataWrapper {
         buffer: vec![0; size].into_boxed_slice(),
     };
     let c_ptr = user_data.buffer.as_mut_ptr();
+    let slot = usize::try_from(c_slot).unwrap();
+    let class_slot = usize::try_from(c_class_slot).unwrap();
 
-    unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(vm) }.set_slot_new_foreign(
-        usize::try_from(slot).unwrap(),
-        usize::try_from(class_slot).unwrap(),
-        Box::new(user_data),
-    );
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    vm.set_slot_new_foreign(slot, class_slot, Box::new(user_data));
     unsafe { std::mem::transmute::<*mut u8, *mut c_void>(c_ptr) }
 }
 
