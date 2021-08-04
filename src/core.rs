@@ -1283,7 +1283,7 @@ fn system_write_string(vm: &VM, args: Vec<Value>) -> Result<Value> {
         .try_into_string()
         .ok_or_else(|| VMError::from_str("expected String"))?;
     let result = unescape(&string);
-    if let Some(write_fn) = vm.config.wren_write_fn {
+    if let Some(write_fn) = vm.config.write_fn {
         write_fn(vm, &result);
     }
     Ok(args[1].clone())

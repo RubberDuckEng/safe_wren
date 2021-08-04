@@ -34,10 +34,7 @@ fn handle_usage(args: &Vec<String>) {
     }
 
     if args.len() == 2 && args[1] == "--version" {
-        println!(
-            "wren_test is running on Wren version {}\n",
-            WREN_VERSION_STRING
-        );
+        println!("wren_test is running on Wren version {}\n", VERSION_STRING);
         exit(ExitCode::GenericError);
     }
 }
@@ -68,15 +65,15 @@ fn run_file(vm: &mut VM, path: &str) -> ! {
     if !module_name.starts_with(".") {
         module_name = format!("./{}", module_name);
     }
-    let result = wren_interpret(vm, &module_name, source);
+    let result = vm.interpret(&module_name, source);
     match result {
-        WrenInterpretResult::CompileError => {
+        InterpretResult::CompileError => {
             exit(ExitCode::CompileError);
         }
-        WrenInterpretResult::RuntimeError => {
+        InterpretResult::RuntimeError => {
             exit(ExitCode::RuntimeError);
         }
-        WrenInterpretResult::Success => {
+        InterpretResult::Success => {
             exit(ExitCode::Success);
         }
     }

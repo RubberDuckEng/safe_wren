@@ -11,7 +11,7 @@ use crate::wren::*;
 pub fn test_config() -> Configuration {
     Configuration {
         load_module_fn: Some(read_module),
-        wren_write_fn: Some(write_string),
+        write_fn: Some(write_string),
         resolve_module_fn: Some(resolve_module),
         error_fn: Some(error_fn),
         ..Default::default()

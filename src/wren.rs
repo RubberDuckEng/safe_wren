@@ -1,8 +1,11 @@
-// analog to wren.h from wren_c.
+// An attempt at defining a "rusty" API for Wren.  Definitely still needs work.
+// This was originally used as both the C API and the Rust API, but should
+// move away from any ties to needing to by c-like now that we have c_api.rs
+// to implement the C-API on top of whatever rust API this exposes.
 
 pub use crate::vm::{SlotType, UserData, VM};
 
-pub static WREN_VERSION_STRING: &str = "wren_rust-0.1";
+pub static VERSION_STRING: &str = "wren_rust-0.1";
 
 // A function callable from Wren code, but implemented in another language.
 // FIXME: How does this report errors?
@@ -155,7 +158,7 @@ pub struct Configuration {
     // related functions are called.
     //
     // If this is `NULL`, Wren discards any printed text.
-    pub wren_write_fn: Option<WriteFn>,
+    pub write_fn: Option<WriteFn>,
 
     // The callback Wren uses to report errors.
     //
@@ -174,7 +177,7 @@ pub enum DebugLevel {
     All,
 }
 
-pub enum WrenInterpretResult {
+pub enum InterpretResult {
     Success,
     CompileError,
     RuntimeError,
@@ -182,42 +185,50 @@ pub enum WrenInterpretResult {
 
 // Runs [source], a string of Wren source code in a new fiber in [vm] in the
 // context of resolved [module].
-pub fn wren_interpret(vm: &mut VM, module: &str, source: String) -> WrenInterpretResult {
-    match crate::compiler::wren_compile_source(vm, module, source) {
-        Err(e) => {
-            if let Some(error_fn) = vm.config.error_fn {
-                error_fn(vm, ErrorType::Compile, module, e.line, &e.error.to_string());
-            }
-            WrenInterpretResult::CompileError
-        }
-        Ok(closure) => {
-            // wren_c does the fiber creation here instead.
-            match vm.run(closure) {
-                Err(e) => {
-                    if let Some(error_fn) = vm.config.error_fn {
-                        // wren_c sends module = null, line = -1 in the
-                        // first message we're sending the info for the
-                        // top frame instead.
-                        error_fn(
-                            vm,
-                            ErrorType::Runtime,
-                            module,
-                            e.stack_trace.frames[0].line,
-                            &e.msg,
-                        );
-                        for frame in &e.stack_trace.frames {
-                            error_fn(
-                                vm,
-                                ErrorType::StackTrace,
-                                &frame.module,
-                                frame.line,
-                                &frame.fn_name,
-                            );
-                        }
-                    }
-                    WrenInterpretResult::RuntimeError
+impl VM {
+    pub fn interpret(&mut self, module: &str, source: String) -> InterpretResult {
+        match crate::compiler::wren_compile_source(self, module, source) {
+            Err(e) => {
+                if let Some(error_fn) = self.config.error_fn {
+                    error_fn(
+                        self,
+                        ErrorType::Compile,
+                        module,
+                        e.line,
+                        &e.error.to_string(),
+                    );
                 }
-                Ok(_) => WrenInterpretResult::Success,
+                InterpretResult::CompileError
+            }
+            Ok(closure) => {
+                // wren_c does the fiber creation here instead.
+                match self.run(closure) {
+                    Err(e) => {
+                        if let Some(error_fn) = self.config.error_fn {
+                            // wren_c sends module = null, line = -1 in the
+                            // first message we're sending the info for the
+                            // top frame instead.
+                            error_fn(
+                                self,
+                                ErrorType::Runtime,
+                                module,
+                                e.stack_trace.frames[0].line,
+                                &e.msg,
+                            );
+                            for frame in &e.stack_trace.frames {
+                                error_fn(
+                                    self,
+                                    ErrorType::StackTrace,
+                                    &frame.module,
+                                    frame.line,
+                                    &frame.fn_name,
+                                );
+                            }
+                        }
+                        InterpretResult::RuntimeError
+                    }
+                    Ok(_) => InterpretResult::Success,
+                }
             }
         }
     }
