@@ -1,7 +1,7 @@
 # Just a skip-list for now.  But presumably will add
 # expectations later.
 
-# import 'meta', C API
+# import 'meta', needs a rust implentation since it grabs at VM internals.
 wren_c/test/meta/get_module_variables.wren
 wren_c/test/meta/get_module_variables_unknown_module.wren
 wren_c/test/meta/eval_existing_scoped_variable.wren
