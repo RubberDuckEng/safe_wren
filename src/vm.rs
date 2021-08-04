@@ -668,6 +668,20 @@ impl VM {
         }
     }
 
+    pub fn has_module(&self, module_name: &str) -> bool {
+        self.modules.contains_key(module_name)
+    }
+
+    pub fn has_variable(&self, module_name: &str, variable_name: &str) -> bool {
+        if let Some(module) = self.modules.get(module_name) {
+            // What if the module is mut_borrowed for execution?
+            module.borrow().lookup_symbol(variable_name).is_some()
+        } else {
+            // wren_c asserts in the case of the module not being defined.
+            false
+        }
+    }
+
     pub fn set_slot_new_foreign(
         &mut self,
         slot: Slot,

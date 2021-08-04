@@ -348,19 +348,24 @@ pub extern "C" fn wrenRemoveMapValue(
 // ) {
 // }
 
-// #[no_mangle]
-// pub extern "C" fn wrenHasVariable(
-//     c_vm: *mut WrenVM,
-//     c_module: *const c_char,
-//     c_name: *const c_char,
-// ) -> bool {
-//     false
-// }
+#[no_mangle]
+pub extern "C" fn wrenHasVariable(
+    c_vm: *mut WrenVM,
+    c_module: *const c_char,
+    c_name: *const c_char,
+) -> bool {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let module_name = unsafe { CStr::from_ptr(c_module) }.to_str().unwrap();
+    let variable_name = unsafe { CStr::from_ptr(c_name) }.to_str().unwrap();
+    vm.has_variable(module_name, variable_name)
+}
 
-// #[no_mangle]
-// pub extern "C" fn wrenHasModule(c_vm: *mut WrenVM, c_module: *const c_char) -> bool {
-//     false
-// }
+#[no_mangle]
+pub extern "C" fn wrenHasModule(c_vm: *mut WrenVM, c_module: *const c_char) -> bool {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let module = unsafe { CStr::from_ptr(c_module) }.to_str().unwrap();
+    vm.has_module(module)
+}
 
 #[no_mangle]
 pub extern "C" fn wrenAbortFiber(c_vm: *mut WrenVM, c_slot: c_int) {

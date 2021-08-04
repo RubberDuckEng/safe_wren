@@ -1,5 +1,5 @@
    Compiling wren_rust v0.1.0 (/Users/eseidel/Documents/GitHub/wren_rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 3.97s
+    Finished dev [unoptimized + debuginfo] target(s) in 5.25s
 Undefined symbols for architecture x86_64:
   "_wrenCall", referenced from:
       _call in benchmark.o
@@ -48,10 +48,6 @@ Undefined symbols for architecture x86_64:
       _afterDefined in get_variable.o
       _afterAssigned in get_variable.o
       ...
-  "_wrenHasModule", referenced from:
-      _hasModule in get_variable.o
-  "_wrenHasVariable", referenced from:
-      _hasVariable in get_variable.o
   "_wrenInitConfiguration", referenced from:
       _call in benchmark.o
       _main in main.o
