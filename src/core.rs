@@ -921,7 +921,7 @@ fn map_contains_key(vm: &VM, mut args: Vec<Value>) -> Result<Value> {
     validate_key(vm, &args[1])?;
     let map = unwrap_this_as_map(&args);
     let key = args.pop().unwrap();
-    let result = map.borrow().data.contains_key(&key);
+    let result = map.borrow().contains_key(&key);
     Ok(Value::Boolean(result))
 }
 

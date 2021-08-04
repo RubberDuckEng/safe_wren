@@ -728,6 +728,50 @@ impl VM {
         }
     }
 
+    pub fn map_contains_key(&self, map_slot: Slot, key_slot: Slot) -> bool {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let contains = map.borrow().contains_key(key);
+        contains
+    }
+
+    pub fn get_map_value(&mut self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let value = map.borrow().data[key].clone();
+        self.set_value_for_slot(value_slot, value)
+    }
+
+    pub fn set_map_value(&self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot).clone();
+        let value = self.value_for_slot(value_slot).clone();
+        map.borrow_mut().data.insert(key, value);
+    }
+
+    pub fn remove_map_value(&mut self, map_slot: Slot, key_slot: Slot, removed_value_slot: Slot) {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let value = map.borrow_mut().data.remove(key).unwrap_or(Value::Null);
+        self.set_value_for_slot(removed_value_slot, value);
+    }
+
     pub fn get_slot_bool(&mut self, slot: Slot) -> bool {
         assert!(self.api.is_some());
         self.api.as_ref().unwrap().stack[slot]
@@ -746,6 +790,13 @@ impl VM {
     // may not also share.
     pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
         &self.api.as_ref().unwrap().stack[slot]
+    }
+
+    pub(crate) fn set_value_for_slot(&mut self, slot: Slot, value: Value) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = value;
+        }
     }
 
     // Maybe return Option<SlotType> and None on failure instead of panick?
@@ -2230,6 +2281,10 @@ pub(crate) struct ObjMap {
 impl ObjMap {
     pub fn len(&self) -> usize {
         self.data.len()
+    }
+
+    pub fn contains_key(&self, key: &Value) -> bool {
+        self.data.contains_key(key)
     }
 }
 
