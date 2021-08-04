@@ -10,15 +10,6 @@ Undefined symbols for architecture x86_64:
       _resetStackAfterCallAbortRunTests in reset_stack_after_call_abort.o
       _resetStackAfterForeignConstructRunTests in reset_stack_after_foreign_construct.o
       ...
-  "_wrenFreeVM", referenced from:
-      _call in benchmark.o
-      _main in main.o
-      _nullConfig in new_vm.o
-      _multipleInterpretCalls in new_vm.o
-      _noResolver in resolution.o
-      _returnsNull in resolution.o
-      _changesString in resolution.o
-      ...
   "_wrenGetSlotBytes", referenced from:
       _getSlots in slots.o
       _setSlots in slots.o
@@ -47,15 +38,6 @@ Undefined symbols for architecture x86_64:
       _multipleInterpretCalls in new_vm.o
       _resetStackAfterCallAbortRunTests in reset_stack_after_call_abort.o
       _resetStackAfterForeignConstructRunTests in reset_stack_after_foreign_construct.o
-      ...
-  "_wrenNewVM", referenced from:
-      _call in benchmark.o
-      _main in main.o
-      _nullConfig in new_vm.o
-      _multipleInterpretCalls in new_vm.o
-      _noResolver in resolution.o
-      _returnsNull in resolution.o
-      _changesString in resolution.o
       ...
   "_wrenReleaseHandle", referenced from:
       _call in benchmark.o

@@ -1,7 +1,9 @@
 use crate::wren::{
-    FinalizerFn, ForeignClassMethods, ForeignMethodFn, InterpretResult, SlotType, UserData, VM,
+    Configuration, FinalizerFn, ForeignClassMethods, ForeignMethodFn, InterpretResult, SlotType,
+    UserData, VM,
 };
 use libc::{c_char, c_int, c_uint, size_t};
+use std::boxed::Box;
 use std::convert::TryFrom;
 use std::ffi::{c_void, CStr};
 
@@ -127,6 +129,40 @@ pub const WrenInterpretResult_WREN_RESULT_COMPILE_ERROR: WrenInterpretResult = 1
 #[allow(non_upper_case_globals)]
 pub const WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR: WrenInterpretResult = 2;
 pub type WrenInterpretResult = c_uint;
+
+impl Configuration {
+    pub fn from_c(c_config_ptr: *mut WrenConfiguration) -> Configuration {
+        // c_config.resolve_module_fn: WrenResolveModuleFn,
+        // c_config.load_module_fn: WrenLoadModuleFn,
+        // c_config.bind_foreign_method_fn: WrenBindForeignMethodFn,
+        // c_config.bind_foreign_class_fn: WrenBindForeignClassFn,
+        // c_config.write_fn: WrenWriteFn,
+        // c_config.error_fn: WrenErrorFn,
+        // c_config.initial_heap_size: size_t,  // ignored
+        // c_config.min_heap_size: size_t,      // ignored
+        // c_config.heap_growth_percent: c_int, // ignored
+        // c_config.user_data: *mut c_void,
+        let c_config = unsafe { &*c_config_ptr };
+        assert_eq!(c_config.reallocate_fn, None); // Ignored
+        Configuration {
+            ..Default::default()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn wrenNewVM(c_config: *mut WrenConfiguration) -> *mut WrenVM {
+    let config = Configuration::from_c(c_config);
+    let vm = VM::new(config);
+    let vm_ptr = Box::into_raw(Box::new(vm));
+    unsafe { std::mem::transmute::<*mut VM, *mut WrenVM>(vm_ptr) }
+}
+
+#[no_mangle]
+pub extern "C" fn wrenFreeVM(c_vm: *mut WrenVM) {
+    let vm_ptr = unsafe { std::mem::transmute::<*mut WrenVM, *mut VM>(c_vm) };
+    unsafe { Box::from_raw(vm_ptr) };
+}
 
 #[no_mangle]
 pub extern "C" fn wrenInterpret(
