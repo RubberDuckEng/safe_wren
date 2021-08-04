@@ -258,10 +258,15 @@ extern "C" fn wrenGetListCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
 // ) {
 // }
 
-// #[no_mangle]
-// pub extern "C" fn wrenGetMapCount(_vm: *mut WrenVM, _slot: c_int) -> c_int {
-//     0
-// }
+#[no_mangle]
+pub extern "C" fn wrenGetMapCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let slot = usize::try_from(c_slot).unwrap();
+    let value = vm.value_for_slot(slot);
+    let map = value.try_into_map().unwrap();
+    let count = map.borrow().len();
+    c_int::try_from(count).unwrap()
+}
 
 // #[no_mangle]
 // pub extern "C" fn wrenGetMapContainsKey(
