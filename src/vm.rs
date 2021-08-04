@@ -634,6 +634,20 @@ pub trait UserData {
     fn as_mut_any(&mut self) -> &mut dyn std::any::Any;
 }
 
+pub enum SlotType {
+    Bool,
+    Num,
+    Foreign,
+    List,
+    Map,
+    Null,
+    String,
+    Unknown,
+}
+
+// Rust implementations backing the wren_c API.  Eventually these should
+// shift to be the *rust* API and follow *rust* patterns.  All the C-isms
+// should move into c_api.rs.
 impl WrenVM {
     pub fn ensure_slots(&mut self, slots: usize) {
         match &mut self.api {
@@ -679,6 +693,13 @@ impl WrenVM {
         }
     }
 
+    pub fn set_slot_null(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::Null;
+        }
+    }
+
     pub fn get_slot_double(&mut self, slot: Slot) -> f64 {
         assert!(self.api.is_some());
         self.api.as_ref().unwrap().stack[slot]
@@ -690,6 +711,22 @@ impl WrenVM {
         assert!(self.api.is_some());
         if let Some(api) = &mut self.api {
             api.stack[slot] = Value::Num(num)
+        }
+    }
+
+    pub fn set_slot_new_list(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        let value = Value::List(wren_new_list(self, vec![]));
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = value;
+        }
+    }
+
+    pub fn set_slot_new_map(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        let value = Value::Map(wren_new_map(self));
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = value;
         }
     }
 
@@ -711,6 +748,20 @@ impl WrenVM {
     // may not also share.
     pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
         &self.api.as_ref().unwrap().stack[slot]
+    }
+
+    // Maybe return Option<SlotType> and None on failure instead of panick?
+    pub fn type_for_slot(&self, slot: Slot) -> SlotType {
+        match self.value_for_slot(slot) {
+            Value::Boolean(_) => SlotType::Bool,
+            Value::Num(_) => SlotType::Num,
+            Value::Foreign(_) => SlotType::Foreign,
+            Value::List(_) => SlotType::List,
+            Value::Map(_) => SlotType::Map,
+            Value::Null => SlotType::Null,
+            Value::String(_) => SlotType::String,
+            _ => SlotType::Unknown,
+        }
     }
 }
 

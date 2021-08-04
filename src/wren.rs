@@ -1,6 +1,6 @@
 // analog to wren.h from wren_c.
 
-pub use crate::vm::{UserData, WrenVM};
+pub use crate::vm::{SlotType, UserData, WrenVM};
 
 pub static WREN_VERSION_STRING: &str = "wren_rust-0.1";
 

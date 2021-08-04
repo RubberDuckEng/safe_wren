@@ -1,5 +1,5 @@
    Compiling wren_rust v0.1.0 (/Users/eseidel/Documents/GitHub/wren_rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 5.88s
+    Finished dev [unoptimized + debuginfo] target(s) in 7.52s
 Undefined symbols for architecture x86_64:
   "_wrenCall", referenced from:
       _call in benchmark.o
@@ -51,9 +51,6 @@ Undefined symbols for architecture x86_64:
       _hasModule in get_variable.o
       _getSlots in slots.o
       _setSlots in slots.o
-  "_wrenGetSlotType", referenced from:
-      _setSlots in slots.o
-      _slotTypes in slots.o
   "_wrenGetUserData", referenced from:
       _test in user_data.o
   "_wrenGetVariable", referenced from:
@@ -136,29 +133,6 @@ Undefined symbols for architecture x86_64:
       _getValue in handle.o
       _resetStackAfterCallAbortRunTests in reset_stack_after_call_abort.o
       _resetStackAfterForeignConstructRunTests in reset_stack_after_foreign_construct.o
-      ...
-  "_wrenSetSlotNewList", referenced from:
-      _api in call_calls_foreign.o
-      _newList in lists.o
-      _insert in lists.o
-      _set in lists.o
-      _insert in maps.o
-  "_wrenSetSlotNewMap", referenced from:
-      _newMap in maps.o
-      _insert in maps.o
-      _invalidInsert in maps.o
-  "_wrenSetSlotNull", referenced from:
-      _callRunTests in call.o
-      _insert in maps.o
-      _setSlots in slots.o
-  "_wrenSetSlotString", referenced from:
-      _callRunTests in call.o
-      _callCallsForeignRunTests in call_calls_foreign.o
-      _runtimeError in error.o
-      _pointToString in foreign_class.o
-      _badClassAllocate in foreign_class.o
-      _otherSlot in get_variable.o
-      _insert in maps.o
       ...
   "_wrenSetUserData", referenced from:
       _test in user_data.o
