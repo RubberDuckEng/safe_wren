@@ -36,6 +36,8 @@ LDDEPS +=
 ALL_LDFLAGS += $(LDFLAGS) -L../target/debug
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
+	@echo Running prebuild commands
+	cargo build
 endef
 define PRELINKCMDS
 endef

@@ -86,13 +86,17 @@ pub extern "C" fn wrenSetSlotNewForeign(
     unsafe { std::mem::transmute::<*mut u8, *mut c_void>(c_ptr) }
 }
 
-// #[no_mangle]
-// pub extern "C" fn wrenGetSlotCount(_vm: *mut WrenVM) -> c_int {
-//     0
-// }
+#[no_mangle]
+pub extern "C" fn wrenGetSlotCount(vm: *mut WrenVM) -> c_int {
+    let count = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }.slot_count();
+    c_int::try_from(count).unwrap()
+}
 
-// #[no_mangle]
-// pub extern "C" fn wrenEnsureSlots(_vm: *mut WrenVM, _num_slots: c_int) {}
+#[no_mangle]
+pub extern "C" fn wrenEnsureSlots(vm: *mut WrenVM, num_slots: c_int) {
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+        .ensure_slots(usize::try_from(num_slots).unwrap())
+}
 
 // #[repr(C)]
 // #[allow(non_camel_case_types, dead_code)]
@@ -112,10 +116,11 @@ pub extern "C" fn wrenSetSlotNewForeign(
 //     WrenType::WREN_TYPE_UNKNOWN
 // }
 
-// #[no_mangle]
-// pub extern "C" fn wrenGetSlotBool(_vm: *mut WrenVM, _slot: c_int) -> bool {
-//     false
-// }
+#[no_mangle]
+pub extern "C" fn wrenGetSlotBool(vm: *mut WrenVM, slot: c_int) -> bool {
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+        .get_slot_bool(usize::try_from(slot).unwrap())
+}
 
 // // #[no_mangle]
 // // pub extern "C" fn  wrenGetSlotBytes(_vm: *mut WrenVM, _slot: c_int, length: *mut c_int) -> *c_char {
@@ -151,8 +156,11 @@ pub extern "C" fn wrenGetSlotForeign(c_vm: *mut WrenVM, c_slot: c_int) -> *mut c
 //     std::ptr::null_mut()
 // }
 
-// #[no_mangle]
-// pub extern "C" fn wrenSetSlotBool(_vm: *mut WrenVM, _slot: c_int, _value: bool) {}
+#[no_mangle]
+pub extern "C" fn wrenSetSlotBool(vm: *mut WrenVM, slot: c_int, value: bool) {
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+        .set_slot_bool(usize::try_from(slot).unwrap(), value)
+}
 
 // #[no_mangle]
 // pub extern "C" fn wrenSetSlotBytes(
@@ -280,8 +288,11 @@ pub extern "C" fn wrenSetSlotDouble(vm: *mut WrenVM, slot: c_int, value: f64) {
 //     false
 // }
 
-// #[no_mangle]
-// pub extern "C" fn wrenAbortFiber(_vm: *mut WrenVM, _slot: c_int) {}
+#[no_mangle]
+pub extern "C" fn wrenAbortFiber(vm: *mut WrenVM, slot: c_int) {
+    unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(vm) }
+        .abort_fiber(usize::try_from(slot).unwrap())
+}
 
 // #[no_mangle]
 // pub extern "C" fn wrenGetUserData(_vm: *mut WrenVM) -> *mut c_void {

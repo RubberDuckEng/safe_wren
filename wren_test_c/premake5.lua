@@ -21,6 +21,8 @@ project "wren_test"
   links { "wren_rust" }
   libdirs { "../target/debug" }
 
+  prebuildcommands { "cargo build" }
+
   files {
     "main.c",
     "test.c",

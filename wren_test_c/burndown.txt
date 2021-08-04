@@ -1,7 +1,6 @@
+   Compiling wren_rust v0.1.0 (/Users/eseidel/Documents/GitHub/wren_rust)
+    Finished dev [unoptimized + debuginfo] target(s) in 5.88s
 Undefined symbols for architecture x86_64:
-  "_wrenAbortFiber", referenced from:
-      _runtimeError in error.o
-      _badClassAllocate in foreign_class.o
   "_wrenCall", referenced from:
       _call in benchmark.o
       _callRunTests in call.o
@@ -10,15 +9,6 @@ Undefined symbols for architecture x86_64:
       _multipleInterpretCalls in new_vm.o
       _resetStackAfterCallAbortRunTests in reset_stack_after_call_abort.o
       _resetStackAfterForeignConstructRunTests in reset_stack_after_foreign_construct.o
-      ...
-  "_wrenEnsureSlots", referenced from:
-      _call in benchmark.o
-      _callRunTests in call.o
-      _api in call_calls_foreign.o
-      _callCallsForeignRunTests in call_calls_foreign.o
-      _callWrenCallRootRunTests in call_wren_call_root.o
-      _runtimeError in error.o
-      _badClassAllocate in foreign_class.o
       ...
   "_wrenFreeVM", referenced from:
       _call in benchmark.o
@@ -43,18 +33,9 @@ Undefined symbols for architecture x86_64:
       _countAPI in maps.o
   "_wrenGetMapValue", referenced from:
       _getMapValue in slots.o
-  "_wrenGetSlotBool", referenced from:
-      _getSlots in slots.o
-      _setSlots in slots.o
   "_wrenGetSlotBytes", referenced from:
       _getSlots in slots.o
       _setSlots in slots.o
-  "_wrenGetSlotCount", referenced from:
-      _callRunTests in call.o
-      _callCallsForeignRunTests in call_calls_foreign.o
-      _pointAllocate in foreign_class.o
-      _ensure in slots.o
-      _ensureOutsideForeign in slots.o
   "_wrenGetSlotHandle", referenced from:
       _call in benchmark.o
       _callRunTests in call.o
@@ -144,15 +125,6 @@ Undefined symbols for architecture x86_64:
   "_wrenSetMapValue", referenced from:
       _insert in maps.o
       _invalidInsert in maps.o
-  "_wrenSetSlotBool", referenced from:
-      _call in benchmark.o
-      _callRunTests in call.o
-      _hasVariable in get_variable.o
-      _hasModule in get_variable.o
-      _insert in maps.o
-      _containsAPI in maps.o
-      _containsAPIFalse in maps.o
-      ...
   "_wrenSetSlotBytes", referenced from:
       _callRunTests in call.o
       _setSlots in slots.o

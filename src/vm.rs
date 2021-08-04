@@ -341,6 +341,13 @@ impl Value {
         }
     }
 
+    pub fn try_into_bool(&self) -> Option<bool> {
+        match self {
+            Value::Boolean(value) => Some(*value),
+            _ => None,
+        }
+    }
+
     pub fn try_into_string(&self) -> Option<String> {
         match self {
             Value::String(string) => Some(string.as_ref().clone()),
@@ -665,6 +672,13 @@ impl WrenVM {
         }
     }
 
+    pub fn slot_count(&self) -> usize {
+        match &self.api {
+            None => 0,
+            Some(api) => api.stack.len(),
+        }
+    }
+
     pub fn get_slot_double(&mut self, slot: Slot) -> f64 {
         assert!(self.api.is_some());
         self.api.as_ref().unwrap().stack[slot]
@@ -672,17 +686,31 @@ impl WrenVM {
             .expect("slot is not a num")
     }
 
-    // Allows c_api to write addition APIs which the rust public API
-    // may not also share.
-    pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
-        &self.api.as_ref().unwrap().stack[slot]
-    }
-
     pub fn set_slot_double(&mut self, slot: Slot, num: f64) {
         assert!(self.api.is_some());
         if let Some(api) = &mut self.api {
             api.stack[slot] = Value::Num(num)
         }
+    }
+
+    pub fn get_slot_bool(&mut self, slot: Slot) -> bool {
+        assert!(self.api.is_some());
+        self.api.as_ref().unwrap().stack[slot]
+            .try_into_bool()
+            .expect("slot is not a bool")
+    }
+
+    pub fn set_slot_bool(&mut self, slot: Slot, value: bool) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::Boolean(value)
+        }
+    }
+
+    // Allows c_api to write addition APIs which the rust public API
+    // may not also share.
+    pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
+        &self.api.as_ref().unwrap().stack[slot]
     }
 }
 
