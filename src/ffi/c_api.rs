@@ -221,10 +221,15 @@ pub extern "C" fn wrenSetSlotString(c_vm: *mut WrenVM, c_slot: c_int, c_text: *c
 // #[no_mangle]
 // pub extern "C" fn wrenSetSlotHandle(_vm: *mut WrenVM, _slot: c_int, _handle: *mut WrenHandle) {}
 
-// #[no_mangle]
-// extern "C" fn wrenGetListCount(_vm: *mut WrenVM, _slot: c_int) -> c_int {
-//     0
-// }
+#[no_mangle]
+extern "C" fn wrenGetListCount(c_vm: *mut WrenVM, c_slot: c_int) -> c_int {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut RustWrenVM>(c_vm) };
+    let slot = usize::try_from(c_slot).unwrap();
+    let value = vm.value_for_slot(slot);
+    let list = value.try_into_list().unwrap();
+    let count = list.borrow().len();
+    c_int::try_from(count).unwrap()
+}
 
 // #[no_mangle]
 // pub extern "C" fn wrenGetListElement(

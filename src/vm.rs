@@ -152,8 +152,8 @@ impl core::fmt::Debug for Value {
             Value::String(s) => write!(f, "\"{}\"", s),
             Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
             Value::Range(r) => write!(f, "{:?}", r.borrow()),
-            Value::List(l) => write!(f, "List(len: {})", l.borrow().elements.len()),
-            Value::Map(m) => write!(f, "Map(len: {})", m.borrow().data.len()),
+            Value::List(l) => write!(f, "List(len: {})", l.borrow().len()),
+            Value::Map(m) => write!(f, "Map(len: {})", m.borrow().len()),
             Value::Fiber(_) => write!(f, "Fiber()"),
             Value::Fn(c) => write!(f, "Fn({})", c.borrow().debug.name),
             Value::Closure(c) => write!(f, "{}", c.borrow().fn_obj.borrow().debug.name),
@@ -2238,6 +2238,12 @@ pub(crate) struct ObjMap {
     pub(crate) data: HashMap<Value, Value>,
 }
 
+impl ObjMap {
+    pub fn len(&self) -> usize {
+        self.data.len()
+    }
+}
+
 impl Obj for ObjMap {
     fn class_obj(&self) -> Handle<ObjClass> {
         self.class_obj.clone()
@@ -2247,6 +2253,12 @@ impl Obj for ObjMap {
 pub(crate) struct ObjList {
     class_obj: Handle<ObjClass>,
     pub(crate) elements: Vec<Value>,
+}
+
+impl ObjList {
+    pub fn len(&self) -> usize {
+        self.elements.len()
+    }
 }
 
 impl Obj for ObjList {

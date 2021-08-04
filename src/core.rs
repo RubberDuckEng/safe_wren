@@ -927,7 +927,7 @@ fn map_contains_key(vm: &WrenVM, mut args: Vec<Value>) -> Result<Value> {
 
 fn map_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let map = unwrap_this_as_map(&args);
-    let count = map.borrow().data.len();
+    let count = map.borrow().len();
     Ok(Value::from_usize(count))
 }
 
@@ -957,7 +957,7 @@ fn map_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
         // Advance the iterator.
         let index = value as usize + 1;
-        if index < map.borrow().data.len() {
+        if index < map.borrow().len() {
             Ok(Value::from_usize(index))
         } else {
             Ok(Value::Boolean(false))
@@ -970,7 +970,7 @@ fn map_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 fn map_key_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let map_handle = unwrap_this_as_map(&args);
     let map = map_handle.borrow();
-    let index = validate_index(&args[1], map.data.len(), "Iterator")?;
+    let index = validate_index(&args[1], map.len(), "Iterator")?;
     let mut entries = map.data.iter();
     Ok(entries.nth(index).unwrap().0.clone())
 }
@@ -978,7 +978,7 @@ fn map_key_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 fn map_value_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let map_handle = unwrap_this_as_map(&args);
     let map = map_handle.borrow();
-    let index = validate_index(&args[1], map.data.len(), "Iterator")?;
+    let index = validate_index(&args[1], map.len(), "Iterator")?;
     let mut entries = map.data.iter();
     Ok(entries.nth(index).unwrap().1.clone())
 }
@@ -1071,11 +1071,11 @@ fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
     match &args[1] {
         Value::Num(_) => {
-            let index = validate_index(&args[1], list.borrow().elements.len(), "Subscript")?;
+            let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
             Ok(list.borrow().elements[index].clone())
         }
         Value::Range(r) => {
-            let range = calculate_range(&r.borrow(), list.borrow().elements.len())?;
+            let range = calculate_range(&r.borrow(), list.borrow().len())?;
             if range.range.is_empty() {
                 return Ok(Value::List(wren_new_list(vm, Vec::new())));
             }
@@ -1092,7 +1092,7 @@ fn list_subscript(vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn list_subscript_setter(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
-    let index = validate_index(&args[1], list.borrow().elements.len(), "Subscript")?;
+    let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
     list.borrow_mut().elements[index] = args[2].clone();
     Ok(args[2].clone())
 }
@@ -1153,8 +1153,8 @@ fn list_index_of(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
 
 fn list_swap(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
-    let index_a = validate_index(&args[1], list.borrow().elements.len(), "Index 0")?;
-    let index_b = validate_index(&args[2], list.borrow().elements.len(), "Index 1")?;
+    let index_a = validate_index(&args[1], list.borrow().len(), "Index 0")?;
+    let index_b = validate_index(&args[2], list.borrow().len(), "Index 1")?;
 
     list.borrow_mut().elements.swap(index_a, index_b);
     Ok(Value::Null)
@@ -1178,7 +1178,7 @@ fn validate_int(value: &Value, arg_name: &str) -> Result<f64> {
 
 fn list_iterate(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
-    let elements_len = list.borrow().elements.len() as f64;
+    let elements_len = list.borrow().len() as f64;
 
     if args[1].is_null() {
         if elements_len == 0.0 {
@@ -1222,21 +1222,21 @@ fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<
 fn list_iterator_value(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
 
-    let index = validate_index(&args[1], list.borrow().elements.len(), "Iterator")?;
+    let index = validate_index(&args[1], list.borrow().len(), "Iterator")?;
     let value = list.borrow().elements[index].clone();
     Ok(value)
 }
 
 fn list_remove_at(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
-    let index = validate_index(&args[1], list.borrow().elements.len(), "Index")?;
+    let index = validate_index(&args[1], list.borrow().len(), "Index")?;
     let value = list.borrow_mut().elements.remove(index);
     Ok(value)
 }
 
 fn list_count(_vm: &WrenVM, args: Vec<Value>) -> Result<Value> {
     let list = unwrap_this_as_list(&args);
-    let count = list.borrow().elements.len();
+    let count = list.borrow().len();
     Ok(Value::from_usize(count))
 }
 
