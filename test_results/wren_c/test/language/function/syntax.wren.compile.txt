@@ -6,23 +6,23 @@
 <script> Code:
 00 (ln 2): Load(Module, Class("Fn"))
 01 (ln 2): Closure(0, [])
-02 (ln 2): Call(Method, new(_))
-03 (ln 2): Call(Method, call())
+02 (ln 2): Call(new(_))
+03 (ln 2): Call(call())
 04 (ln 2): Pop
 05 (ln 5): Load(Module, Class("Fn"))
 06 (ln 7): Closure(1, [])
-07 (ln 7): Call(Method, new(_))
-08 (ln 7): Call(Method, call())
+07 (ln 7): Call(new(_))
+08 (ln 7): Call(call())
 09 (ln 7): Pop
 10 (ln 10): Load(Module, Class("Fn"))
 11 (ln 13): Closure(2, [])
-12 (ln 13): Call(Method, new(_))
-13 (ln 13): Call(Method, call())
+12 (ln 13): Call(new(_))
+13 (ln 13): Call(call())
 14 (ln 13): Pop
 15 (ln 16): Load(Module, Class("Fn"))
 16 (ln 25): Closure(3, [])
-17 (ln 25): Call(Method, new(_))
-18 (ln 25): Call(Method, call())
+17 (ln 25): Call(new(_))
+18 (ln 25): Call(call())
 19 (ln 25): Pop
 20 (ln 26): EndModule
 21 (ln 26): Return
@@ -32,7 +32,7 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "ok")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Return
 04 (ln 2): End
 new(_) block argument Constants:
@@ -40,7 +40,7 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 6): Load(Module, Class("System"))
 01 (ln 6): Constant(0: "ok")
-02 (ln 6): Call(Method, print(_))
+02 (ln 6): Call(print(_))
 03 (ln 6): Pop
 04 (ln 7): Null
 05 (ln 7): Return
@@ -51,11 +51,11 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 11): Load(Module, Class("System"))
 01 (ln 11): Constant(0: "1")
-02 (ln 11): Call(Method, print(_))
+02 (ln 11): Call(print(_))
 03 (ln 11): Pop
 04 (ln 12): Load(Module, Class("System"))
 05 (ln 12): Constant(1: "2")
-06 (ln 12): Call(Method, print(_))
+06 (ln 12): Call(print(_))
 07 (ln 12): Pop
 08 (ln 13): Null
 09 (ln 13): Return
@@ -66,11 +66,11 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 19): Load(Module, Class("System"))
 01 (ln 19): Constant(0: "1")
-02 (ln 19): Call(Method, print(_))
+02 (ln 19): Call(print(_))
 03 (ln 19): Pop
 04 (ln 22): Load(Module, Class("System"))
 05 (ln 22): Constant(1: "2")
-06 (ln 22): Call(Method, print(_))
+06 (ln 22): Call(print(_))
 07 (ln 22): Pop
 08 (ln 25): Null
 09 (ln 25): Return

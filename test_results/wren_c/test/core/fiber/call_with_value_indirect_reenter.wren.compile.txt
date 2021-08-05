@@ -5,17 +5,17 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 3): Closure(0, [])
-02 (ln 3): Call(Method, new(_))
+02 (ln 3): Call(new(_))
 03 (ln 3): Store(Module)
 04 (ln 3): Pop
 05 (ln 5): Load(Module, Class("Fiber"))
 06 (ln 7): Closure(1, [])
-07 (ln 7): Call(Method, new(_))
+07 (ln 7): Call(new(_))
 08 (ln 7): Store(Module)
 09 (ln 7): Pop
 10 (ln 9): Load(Module, Null)
 11 (ln 9): Constant(2: 1)
-12 (ln 9): Call(Method, call(_))
+12 (ln 9): Call(call(_))
 13 (ln 9): Pop
 14 (ln 10): EndModule
 15 (ln 10): Return
@@ -25,7 +25,7 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 2): Load(Module, Null)
 01 (ln 2): Constant(0: 3)
-02 (ln 2): Call(Method, call(_))
+02 (ln 2): Call(call(_))
 03 (ln 2): Pop
 04 (ln 3): Null
 05 (ln 3): Return
@@ -35,7 +35,7 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 6): Load(Module, Null)
 01 (ln 6): Constant(0: 2)
-02 (ln 6): Call(Method, call(_))
+02 (ln 6): Call(call(_))
 03 (ln 6): Pop
 04 (ln 7): Null
 05 (ln 7): Return

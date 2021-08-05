@@ -15,7 +15,7 @@
 09 (ln 259): Load(Module, Null)
 10 (ln 259): Method(static, new())
 11 (ln 262): Load(Module, Null)
-12 (ln 262): Call(Method, new())
+12 (ln 262): Call(new())
 13 (ln 262): Store(Module)
 14 (ln 262): Pop
 15 (ln 263): EndModule
@@ -1301,13 +1301,13 @@ init new() Code:
 1020 (ln 258): Load(Module, Class("System"))
 1021 (ln 258): Load(Local, 0)
 1022 (ln 258): LoadField(254)
-1023 (ln 258): Call(Method, print(_))
+1023 (ln 258): Call(print(_))
 1024 (ln 258): Pop
 1025 (ln 259): Load(Local, 0)
 1026 (ln 259): Return
 1027 (ln 259): End
  Code:
 00 (ln 259): Construct
-01 (ln 259): Call(Method, init new())
+01 (ln 259): Call(init new())
 02 (ln 259): Return
 03 (ln 259): End

@@ -8,20 +8,20 @@
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 2)
 02 (ln 1): Constant(1: 4)
-03 (ln 1): Call(Method, pow(_))
-04 (ln 1): Call(Method, print(_))
+03 (ln 1): Call(pow(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Constant(0: 2)
 08 (ln 2): Constant(2: 10)
-09 (ln 2): Call(Method, pow(_))
-10 (ln 2): Call(Method, print(_))
+09 (ln 2): Call(pow(_))
+10 (ln 2): Call(print(_))
 11 (ln 2): Pop
 12 (ln 4): Load(Module, Class("System"))
 13 (ln 4): Constant(3: 1)
 14 (ln 4): Constant(4: 0)
-15 (ln 4): Call(Method, pow(_))
-16 (ln 4): Call(Method, print(_))
+15 (ln 4): Call(pow(_))
+16 (ln 4): Call(print(_))
 17 (ln 4): Pop
 18 (ln 5): EndModule
 19 (ln 5): Return

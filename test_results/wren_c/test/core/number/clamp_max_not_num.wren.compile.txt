@@ -5,7 +5,7 @@
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Constant(1: 0)
 02 (ln 1): Boolean false
-03 (ln 1): Call(Method, clamp(_,_))
+03 (ln 1): Call(clamp(_,_))
 04 (ln 1): Pop
 05 (ln 2): EndModule
 06 (ln 2): Return

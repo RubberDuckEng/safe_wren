@@ -22,28 +22,28 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "")
-02 (ln 1): Call(Getter, count)
-03 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(count)
+03 (ln 1): Call(print(_))
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Class("System"))
 06 (ln 2): Constant(1: "a string")
-07 (ln 2): Call(Method, print(_))
+07 (ln 2): Call(print(_))
 08 (ln 2): Pop
 09 (ln 5): Load(Module, Class("System"))
 10 (ln 5): Constant(2: "A~¶Þॐஃ")
-11 (ln 5): Call(Method, print(_))
+11 (ln 5): Call(print(_))
 12 (ln 5): Pop
 13 (ln 8): Load(Module, Class("System"))
 14 (ln 8): Constant(3: "A raw string")
-15 (ln 8): Call(Method, print(_))
+15 (ln 8): Call(print(_))
 16 (ln 8): Pop
 17 (ln 9): Load(Module, Class("System"))
 18 (ln 9): Constant(4: "   A raw string")
-19 (ln 9): Call(Method, print(_))
+19 (ln 9): Call(print(_))
 20 (ln 9): Pop
 21 (ln 10): Load(Module, Class("System"))
 22 (ln 10): Constant(5: "A raw string   ")
-23 (ln 10): Call(Method, print(_))
+23 (ln 10): Call(print(_))
 24 (ln 10): Pop
 25 (ln 16): Constant(6: "
   A
@@ -54,7 +54,7 @@
 27 (ln 16): Pop
 28 (ln 17): Load(Module, Class("System"))
 29 (ln 17): Load(Module, Null)
-30 (ln 17): Call(Method, print(_))
+30 (ln 17): Call(print(_))
 31 (ln 17): Pop
 32 (ln 28): Constant(7: "  A if*(<invalid>)*
   multi line /{}()
@@ -64,42 +64,42 @@
 34 (ln 28): Pop
 35 (ln 29): Load(Module, Class("System"))
 36 (ln 29): Load(Module, Null)
-37 (ln 29): Call(Method, print(_))
+37 (ln 29): Call(print(_))
 38 (ln 29): Pop
 39 (ln 38): Constant(8: "no newlines")
 40 (ln 38): Store(Module)
 41 (ln 38): Pop
 42 (ln 39): Load(Module, Class("System"))
 43 (ln 39): Load(Module, Null)
-44 (ln 39): Call(Method, print(_))
+44 (ln 39): Call(print(_))
 45 (ln 39): Pop
 46 (ln 44): Constant(9: "no leading spaces")
 47 (ln 44): Store(Module)
 48 (ln 44): Pop
 49 (ln 45): Load(Module, Class("System"))
 50 (ln 45): Load(Module, Null)
-51 (ln 45): Call(Method, print(_))
+51 (ln 45): Call(print(_))
 52 (ln 45): Pop
 53 (ln 50): Constant(10: "no trailing spaces")
 54 (ln 50): Store(Module)
 55 (ln 50): Pop
 56 (ln 51): Load(Module, Class("System"))
 57 (ln 51): Load(Module, Null)
-58 (ln 51): Call(Method, print(_))
+58 (ln 51): Call(print(_))
 59 (ln 51): Pop
 60 (ln 54): Constant(11: "newline before")
 61 (ln 54): Store(Module)
 62 (ln 54): Pop
 63 (ln 55): Load(Module, Class("System"))
 64 (ln 55): Load(Module, Null)
-65 (ln 55): Call(Method, print(_))
+65 (ln 55): Call(print(_))
 66 (ln 55): Pop
 67 (ln 58): Constant(12: "newline after")
 68 (ln 58): Store(Module)
 69 (ln 58): Pop
 70 (ln 59): Load(Module, Class("System"))
 71 (ln 59): Load(Module, Null)
-72 (ln 59): Call(Method, print(_))
+72 (ln 59): Call(print(_))
 73 (ln 59): Pop
 74 (ln 60): EndModule
 75 (ln 60): Return

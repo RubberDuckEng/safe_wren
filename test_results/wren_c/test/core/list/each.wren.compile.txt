@@ -9,19 +9,19 @@
 01 (ln 1): Store(Module)
 02 (ln 1): Pop
 03 (ln 2): Load(Module, Class("List"))
-04 (ln 2): Call(Method, new())
+04 (ln 2): Call(new())
 05 (ln 2): Constant(1: "One")
-06 (ln 2): Call(Method, addCore_(_))
+06 (ln 2): Call(addCore_(_))
 07 (ln 2): Constant(2: "Two")
-08 (ln 2): Call(Method, addCore_(_))
+08 (ln 2): Call(addCore_(_))
 09 (ln 2): Constant(3: "Three")
-10 (ln 2): Call(Method, addCore_(_))
+10 (ln 2): Call(addCore_(_))
 11 (ln 2): Closure(4, [])
-12 (ln 2): Call(Method, each(_))
+12 (ln 2): Call(each(_))
 13 (ln 2): Pop
 14 (ln 3): Load(Module, Class("System"))
 15 (ln 3): Load(Module, Null)
-16 (ln 3): Call(Method, print(_))
+16 (ln 3): Call(print(_))
 17 (ln 3): Pop
 18 (ln 4): EndModule
 19 (ln 4): Return
@@ -29,7 +29,7 @@
 each(_) block argument Code:
 00 (ln 2): Load(Module, Null)
 01 (ln 2): Load(Local, 1)
-02 (ln 2): Call(Method, +(_))
+02 (ln 2): Call(+(_))
 03 (ln 2): Store(Module)
 04 (ln 2): Return
 05 (ln 2): End

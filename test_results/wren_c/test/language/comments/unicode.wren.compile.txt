@@ -3,7 +3,7 @@
 <script> Code:
 00 (ln 11): Load(Module, Class("System"))
 01 (ln 11): Constant(0: "ok")
-02 (ln 11): Call(Method, print(_))
+02 (ln 11): Call(print(_))
 03 (ln 11): Pop
 04 (ln 12): EndModule
 05 (ln 12): Return

@@ -5,32 +5,32 @@
 03: 4
 <script> Code:
 00 (ln 1): Load(Module, Class("List"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Constant(0: 1)
-03 (ln 1): Call(Method, addCore_(_))
+03 (ln 1): Call(addCore_(_))
 04 (ln 1): Store(Module)
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Null)
 07 (ln 2): Constant(1: 2)
-08 (ln 2): Call(Method, add(_))
+08 (ln 2): Call(add(_))
 09 (ln 2): Pop
 10 (ln 3): Load(Module, Class("System"))
 11 (ln 3): Load(Module, Null)
-12 (ln 3): Call(Method, print(_))
+12 (ln 3): Call(print(_))
 13 (ln 3): Pop
 14 (ln 4): Load(Module, Null)
 15 (ln 4): Constant(2: 3)
-16 (ln 4): Call(Method, add(_))
+16 (ln 4): Call(add(_))
 17 (ln 4): Pop
 18 (ln 5): Load(Module, Class("System"))
 19 (ln 5): Load(Module, Null)
-20 (ln 5): Call(Method, print(_))
+20 (ln 5): Call(print(_))
 21 (ln 5): Pop
 22 (ln 8): Load(Module, Class("System"))
 23 (ln 8): Load(Module, Null)
 24 (ln 8): Constant(3: 4)
-25 (ln 8): Call(Method, add(_))
-26 (ln 8): Call(Method, print(_))
+25 (ln 8): Call(add(_))
+26 (ln 8): Call(print(_))
 27 (ln 8): Pop
 28 (ln 9): EndModule
 29 (ln 9): Return

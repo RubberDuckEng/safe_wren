@@ -4,15 +4,15 @@
 02: 1.5
 <script> Code:
 00 (ln 1): Load(Module, Class("Map"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Constant(0: 1)
 03 (ln 1): Constant(1: "one")
-04 (ln 1): Call(Method, addCore_(_,_))
+04 (ln 1): Call(addCore_(_,_))
 05 (ln 1): Store(Module)
 06 (ln 1): Pop
 07 (ln 2): Load(Module, Null)
 08 (ln 2): Constant(2: 1.5)
-09 (ln 2): Call(Method, iteratorValue(_))
+09 (ln 2): Call(iteratorValue(_))
 10 (ln 2): Pop
 11 (ln 3): EndModule
 12 (ln 3): Return

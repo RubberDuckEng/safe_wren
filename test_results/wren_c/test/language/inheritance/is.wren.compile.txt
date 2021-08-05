@@ -43,70 +43,70 @@
 31 (ln 8): Load(Module, Null)
 32 (ln 8): Method(static, new())
 33 (ln 10): Load(Module, Null)
-34 (ln 10): Call(Method, new())
+34 (ln 10): Call(new())
 35 (ln 10): Store(Module)
 36 (ln 10): Pop
 37 (ln 11): Load(Module, Null)
-38 (ln 11): Call(Method, new())
+38 (ln 11): Call(new())
 39 (ln 11): Store(Module)
 40 (ln 11): Pop
 41 (ln 12): Load(Module, Null)
-42 (ln 12): Call(Method, new())
+42 (ln 12): Call(new())
 43 (ln 12): Store(Module)
 44 (ln 12): Pop
 45 (ln 14): Load(Module, Class("System"))
 46 (ln 14): Load(Module, Null)
 47 (ln 14): Load(Module, Null)
-48 (ln 14): Call(Method, is(_))
-49 (ln 14): Call(Method, print(_))
+48 (ln 14): Call(is(_))
+49 (ln 14): Call(print(_))
 50 (ln 14): Pop
 51 (ln 15): Load(Module, Class("System"))
 52 (ln 15): Load(Module, Null)
 53 (ln 15): Load(Module, Null)
-54 (ln 15): Call(Method, is(_))
-55 (ln 15): Call(Method, print(_))
+54 (ln 15): Call(is(_))
+55 (ln 15): Call(print(_))
 56 (ln 15): Pop
 57 (ln 16): Load(Module, Class("System"))
 58 (ln 16): Load(Module, Null)
 59 (ln 16): Load(Module, Null)
-60 (ln 16): Call(Method, is(_))
-61 (ln 16): Call(Method, print(_))
+60 (ln 16): Call(is(_))
+61 (ln 16): Call(print(_))
 62 (ln 16): Pop
 63 (ln 17): Load(Module, Class("System"))
 64 (ln 17): Load(Module, Null)
 65 (ln 17): Load(Module, Null)
-66 (ln 17): Call(Method, is(_))
-67 (ln 17): Call(Method, print(_))
+66 (ln 17): Call(is(_))
+67 (ln 17): Call(print(_))
 68 (ln 17): Pop
 69 (ln 18): Load(Module, Class("System"))
 70 (ln 18): Load(Module, Null)
 71 (ln 18): Load(Module, Null)
-72 (ln 18): Call(Method, is(_))
-73 (ln 18): Call(Method, print(_))
+72 (ln 18): Call(is(_))
+73 (ln 18): Call(print(_))
 74 (ln 18): Pop
 75 (ln 19): Load(Module, Class("System"))
 76 (ln 19): Load(Module, Null)
 77 (ln 19): Load(Module, Null)
-78 (ln 19): Call(Method, is(_))
-79 (ln 19): Call(Method, print(_))
+78 (ln 19): Call(is(_))
+79 (ln 19): Call(print(_))
 80 (ln 19): Pop
 81 (ln 20): Load(Module, Class("System"))
 82 (ln 20): Load(Module, Null)
 83 (ln 20): Load(Module, Null)
-84 (ln 20): Call(Method, is(_))
-85 (ln 20): Call(Method, print(_))
+84 (ln 20): Call(is(_))
+85 (ln 20): Call(print(_))
 86 (ln 20): Pop
 87 (ln 21): Load(Module, Class("System"))
 88 (ln 21): Load(Module, Null)
 89 (ln 21): Load(Module, Null)
-90 (ln 21): Call(Method, is(_))
-91 (ln 21): Call(Method, print(_))
+90 (ln 21): Call(is(_))
+91 (ln 21): Call(print(_))
 92 (ln 21): Pop
 93 (ln 22): Load(Module, Class("System"))
 94 (ln 22): Load(Module, Null)
 95 (ln 22): Load(Module, Null)
-96 (ln 22): Call(Method, is(_))
-97 (ln 22): Call(Method, print(_))
+96 (ln 22): Call(is(_))
+97 (ln 22): Call(print(_))
 98 (ln 22): Pop
 99 (ln 23): EndModule
 100 (ln 23): Return
@@ -117,7 +117,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 init new() Code:
@@ -126,7 +126,7 @@ init new() Code:
 02 (ln 5): End
  Code:
 00 (ln 5): Construct
-01 (ln 5): Call(Method, init new())
+01 (ln 5): Call(init new())
 02 (ln 5): Return
 03 (ln 5): End
 init new() Code:
@@ -135,6 +135,6 @@ init new() Code:
 02 (ln 8): End
  Code:
 00 (ln 8): Construct
-01 (ln 8): Call(Method, init new())
+01 (ln 8): Call(init new())
 02 (ln 8): Return
 03 (ln 8): End

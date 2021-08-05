@@ -5,24 +5,24 @@
 03: Fn(map(_) block argument)
 <script> Code:
 00 (ln 1): Load(Module, Class("List"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Constant(0: 1)
-03 (ln 1): Call(Method, addCore_(_))
+03 (ln 1): Call(addCore_(_))
 04 (ln 1): Constant(1: 2)
-05 (ln 1): Call(Method, addCore_(_))
+05 (ln 1): Call(addCore_(_))
 06 (ln 1): Constant(2: 3)
-07 (ln 1): Call(Method, addCore_(_))
+07 (ln 1): Call(addCore_(_))
 08 (ln 1): Store(Module)
 09 (ln 1): Pop
 10 (ln 2): Load(Module, Null)
 11 (ln 2): Closure(3, [])
-12 (ln 2): Call(Method, map(_))
-13 (ln 2): Call(Getter, toList)
+12 (ln 2): Call(map(_))
+13 (ln 2): Call(toList)
 14 (ln 2): Store(Module)
 15 (ln 2): Pop
 16 (ln 3): Load(Module, Class("System"))
 17 (ln 3): Load(Module, Null)
-18 (ln 3): Call(Method, print(_))
+18 (ln 3): Call(print(_))
 19 (ln 3): Pop
 20 (ln 4): EndModule
 21 (ln 4): Return
@@ -32,6 +32,6 @@ map(_) block argument Constants:
 map(_) block argument Code:
 00 (ln 2): Load(Local, 1)
 01 (ln 2): Constant(0: 1)
-02 (ln 2): Call(Method, +(_))
+02 (ln 2): Call(+(_))
 03 (ln 2): Return
 04 (ln 2): End

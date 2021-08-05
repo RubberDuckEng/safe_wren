@@ -7,8 +7,8 @@
 02 (ln 1): Pop
 03 (ln 2): Load(Module, Null)
 04 (ln 2): Constant(1: 5)
-05 (ln 2): Call(Method, -)
-06 (ln 2): Call(Subscript, [_])
+05 (ln 2): Call(-)
+06 (ln 2): Call([_])
 07 (ln 2): Pop
 08 (ln 3): EndModule
 09 (ln 3): Return

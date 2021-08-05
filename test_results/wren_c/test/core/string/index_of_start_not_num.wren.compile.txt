@@ -7,11 +7,11 @@
 00 (ln 1): Constant(0: "abcd")
 01 (ln 1): Constant(1: "bc")
 02 (ln 1): Constant(2: "not num")
-03 (ln 1): Call(Method, indexOf(_,_))
+03 (ln 1): Call(indexOf(_,_))
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Class("System"))
 06 (ln 2): Constant(3: "after")
-07 (ln 2): Call(Method, print(_))
+07 (ln 2): Call(print(_))
 08 (ln 2): Pop
 09 (ln 2): EndModule
 10 (ln 2): Return

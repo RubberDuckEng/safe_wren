@@ -16386,7 +16386,7 @@
 12287 (ln 4096): Pop
 12288 (ln 4098): Load(Module, Class("System"))
 12289 (ln 4098): Load(Module, Null)
-12290 (ln 4098): Call(Method, print(_))
+12290 (ln 4098): Call(print(_))
 12291 (ln 4098): Pop
 12292 (ln 65489): EndModule
 12293 (ln 65489): Return

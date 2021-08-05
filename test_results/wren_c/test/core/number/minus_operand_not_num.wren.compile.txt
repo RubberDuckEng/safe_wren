@@ -3,7 +3,7 @@
 <script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Boolean false
-02 (ln 1): Call(Method, -(_))
+02 (ln 1): Call(-(_))
 03 (ln 1): Pop
 04 (ln 2): EndModule
 05 (ln 2): Return

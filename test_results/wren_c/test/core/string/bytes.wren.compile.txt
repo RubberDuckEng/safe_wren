@@ -6,10 +6,10 @@
 02 (ln 4): Pop
 03 (ln 6): Load(Module, Class("System"))
 04 (ln 6): Load(Module, Null)
-05 (ln 6): Call(Getter, bytes)
+05 (ln 6): Call(bytes)
 06 (ln 6): Load(Module, Class("StringByteSequence"))
-07 (ln 6): Call(Method, is(_))
-08 (ln 6): Call(Method, print(_))
+07 (ln 6): Call(is(_))
+08 (ln 6): Call(print(_))
 09 (ln 6): Pop
 10 (ln 7): EndModule
 11 (ln 7): Return

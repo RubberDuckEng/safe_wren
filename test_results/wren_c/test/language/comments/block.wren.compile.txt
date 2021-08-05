@@ -3,11 +3,11 @@
 <script> Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "ok")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Pop
 04 (ln 5): Load(Module, Class("System"))
 05 (ln 5): Constant(0: "ok")
-06 (ln 5): Call(Method, print(_))
+06 (ln 5): Call(print(_))
 07 (ln 5): Pop
 08 (ln 6): EndModule
 09 (ln 6): Return

@@ -2,63 +2,63 @@
 00: 1
 <script> Code:
 00 (ln 2): Load(Module, Class("List"))
-01 (ln 2): Call(Method, new())
+01 (ln 2): Call(new())
 02 (ln 2): Constant(0: 1)
-03 (ln 2): Call(Method, addCore_(_))
+03 (ln 2): Call(addCore_(_))
 04 (ln 2): Null
 05 (ln 2): Load(Local, 1)
 06 (ln 2): Load(Local, 2)
-07 (ln 2): Call(Method, iterate(_))
+07 (ln 2): Call(iterate(_))
 08 (ln 2): Store(Local, 2)
 09 (ln 2): JumpIfFalse(9)
 10 (ln 2): Load(Local, 1)
 11 (ln 2): Load(Local, 2)
-12 (ln 2): Call(Method, iteratorValue(_))
+12 (ln 2): Call(iteratorValue(_))
 13 (ln 2): Load(Module, Class("System"))
 14 (ln 2): Load(Local, 3)
-15 (ln 2): Call(Method, print(_))
+15 (ln 2): Call(print(_))
 16 (ln 2): Pop
 17 (ln 2): Pop
 18 (ln 2): Loop(14)
 19 (ln 2): Pop
 20 (ln 2): Pop
 21 (ln 6): Load(Module, Class("List"))
-22 (ln 6): Call(Method, new())
+22 (ln 6): Call(new())
 23 (ln 6): Constant(0: 1)
-24 (ln 6): Call(Method, addCore_(_))
+24 (ln 6): Call(addCore_(_))
 25 (ln 6): Null
 26 (ln 6): Load(Local, 1)
 27 (ln 6): Load(Local, 2)
-28 (ln 6): Call(Method, iterate(_))
+28 (ln 6): Call(iterate(_))
 29 (ln 6): Store(Local, 2)
 30 (ln 6): JumpIfFalse(9)
 31 (ln 6): Load(Local, 1)
 32 (ln 6): Load(Local, 2)
-33 (ln 6): Call(Method, iteratorValue(_))
+33 (ln 6): Call(iteratorValue(_))
 34 (ln 7): Load(Module, Class("System"))
 35 (ln 7): Load(Local, 3)
-36 (ln 7): Call(Method, print(_))
+36 (ln 7): Call(print(_))
 37 (ln 7): Pop
 38 (ln 8): Pop
 39 (ln 8): Loop(14)
 40 (ln 8): Pop
 41 (ln 8): Pop
 42 (ln 13): Load(Module, Class("List"))
-43 (ln 13): Call(Method, new())
+43 (ln 13): Call(new())
 44 (ln 13): Constant(0: 1)
-45 (ln 13): Call(Method, addCore_(_))
+45 (ln 13): Call(addCore_(_))
 46 (ln 13): Null
 47 (ln 13): Load(Local, 1)
 48 (ln 13): Load(Local, 2)
-49 (ln 13): Call(Method, iterate(_))
+49 (ln 13): Call(iterate(_))
 50 (ln 13): Store(Local, 2)
 51 (ln 13): JumpIfFalse(9)
 52 (ln 13): Load(Local, 1)
 53 (ln 13): Load(Local, 2)
-54 (ln 13): Call(Method, iteratorValue(_))
+54 (ln 13): Call(iteratorValue(_))
 55 (ln 13): Load(Module, Class("System"))
 56 (ln 13): Load(Local, 3)
-57 (ln 13): Call(Method, print(_))
+57 (ln 13): Call(print(_))
 58 (ln 13): Pop
 59 (ln 13): Pop
 60 (ln 13): Loop(14)

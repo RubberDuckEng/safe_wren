@@ -17,7 +17,7 @@
 11 (ln 5): Store(Module)
 12 (ln 5): Pop
 13 (ln 7): Load(Module, Null)
-14 (ln 7): Call(Getter, methodOnFoo)
+14 (ln 7): Call(methodOnFoo)
 15 (ln 7): Pop
 16 (ln 8): EndModule
 17 (ln 8): Return
@@ -27,6 +27,6 @@ methodOnFoo Constants:
 methodOnFoo Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "foo")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Return
 04 (ln 2): End

@@ -25,9 +25,9 @@
 18 (ln 5): Method(instance, say())
 19 (ln 8): Load(Module, Class("System"))
 20 (ln 8): Load(Module, Null)
-21 (ln 8): Call(Method, new())
-22 (ln 8): Call(Method, say())
-23 (ln 8): Call(Method, print(_))
+21 (ln 8): Call(new())
+22 (ln 8): Call(say())
+23 (ln 8): Call(print(_))
 24 (ln 8): Pop
 25 (ln 9): EndModule
 26 (ln 9): Return
@@ -38,12 +38,12 @@ init new() Code:
 02 (ln 4): End
  Code:
 00 (ln 4): Construct
-01 (ln 4): Call(Method, init new())
+01 (ln 4): Call(init new())
 02 (ln 4): Return
 03 (ln 4): End
 say() Code:
 00 (ln 5): Load(Module, Null)
-01 (ln 5): Call(Method, new())
-02 (ln 5): Call(Getter, message)
+01 (ln 5): Call(new())
+02 (ln 5): Call(message)
 03 (ln 5): Return
 04 (ln 5): End

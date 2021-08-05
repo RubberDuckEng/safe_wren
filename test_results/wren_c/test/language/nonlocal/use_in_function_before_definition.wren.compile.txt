@@ -4,14 +4,14 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fn"))
 01 (ln 3): Closure(0, [])
-02 (ln 3): Call(Method, new(_))
+02 (ln 3): Call(new(_))
 03 (ln 3): Store(Module)
 04 (ln 3): Pop
 05 (ln 5): Constant(1: "global")
 06 (ln 5): Store(Module)
 07 (ln 5): Pop
 08 (ln 7): Load(Module, Null)
-09 (ln 7): Call(Method, call())
+09 (ln 7): Call(call())
 10 (ln 7): Pop
 11 (ln 7): EndModule
 12 (ln 7): Return
@@ -19,7 +19,7 @@
 new(_) block argument Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Load(Module, Null)
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Pop
 04 (ln 3): Null
 05 (ln 3): Return

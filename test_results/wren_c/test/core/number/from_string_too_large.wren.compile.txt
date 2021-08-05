@@ -6,7 +6,7 @@
 02 (ln 1): Pop
 03 (ln 2): Load(Module, Class("Num"))
 04 (ln 2): Load(Module, Null)
-05 (ln 2): Call(Method, fromString(_))
+05 (ln 2): Call(fromString(_))
 06 (ln 2): Store(Module)
 07 (ln 2): Pop
 08 (ln 3): EndModule

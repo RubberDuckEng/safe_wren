@@ -20,9 +20,9 @@
 13 (ln 5): Method(instance, thisHasAMethodNameThatIsExactly64CharactersLongWhichIsTheMaximum)
 14 (ln 8): Load(Module, Class("System"))
 15 (ln 8): Load(Module, Null)
-16 (ln 8): Call(Method, new())
-17 (ln 8): Call(Getter, thisHasAMethodNameThatIsExactly64CharactersLongWhichIsTheMaximum)
-18 (ln 8): Call(Method, print(_))
+16 (ln 8): Call(new())
+17 (ln 8): Call(thisHasAMethodNameThatIsExactly64CharactersLongWhichIsTheMaximum)
+18 (ln 8): Call(print(_))
 19 (ln 8): Pop
 20 (ln 9): EndModule
 21 (ln 9): Return
@@ -33,7 +33,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 thisHasAMethodNameThatIsExactly64CharactersLongWhichIsTheMaximum Constants:

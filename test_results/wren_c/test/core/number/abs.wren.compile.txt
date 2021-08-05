@@ -6,36 +6,36 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 123)
-02 (ln 1): Call(Getter, abs)
-03 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(abs)
+03 (ln 1): Call(print(_))
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Class("System"))
 06 (ln 2): Constant(0: 123)
-07 (ln 2): Call(Method, -)
-08 (ln 2): Call(Getter, abs)
-09 (ln 2): Call(Method, print(_))
+07 (ln 2): Call(-)
+08 (ln 2): Call(abs)
+09 (ln 2): Call(print(_))
 10 (ln 2): Pop
 11 (ln 3): Load(Module, Class("System"))
 12 (ln 3): Constant(1: 0)
-13 (ln 3): Call(Getter, abs)
-14 (ln 3): Call(Method, print(_))
+13 (ln 3): Call(abs)
+14 (ln 3): Call(print(_))
 15 (ln 3): Pop
 16 (ln 4): Load(Module, Class("System"))
 17 (ln 4): Constant(1: 0)
-18 (ln 4): Call(Method, -)
-19 (ln 4): Call(Getter, abs)
-20 (ln 4): Call(Method, print(_))
+18 (ln 4): Call(-)
+19 (ln 4): Call(abs)
+20 (ln 4): Call(print(_))
 21 (ln 4): Pop
 22 (ln 5): Load(Module, Class("System"))
 23 (ln 5): Constant(2: 0.12)
-24 (ln 5): Call(Method, -)
-25 (ln 5): Call(Getter, abs)
-26 (ln 5): Call(Method, print(_))
+24 (ln 5): Call(-)
+25 (ln 5): Call(abs)
+26 (ln 5): Call(print(_))
 27 (ln 5): Pop
 28 (ln 6): Load(Module, Class("System"))
 29 (ln 6): Constant(3: 12.34)
-30 (ln 6): Call(Getter, abs)
-31 (ln 6): Call(Method, print(_))
+30 (ln 6): Call(abs)
+31 (ln 6): Call(print(_))
 32 (ln 6): Pop
 33 (ln 7): EndModule
 34 (ln 7): Return

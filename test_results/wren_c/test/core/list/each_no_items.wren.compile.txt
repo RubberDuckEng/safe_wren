@@ -6,13 +6,13 @@
 01 (ln 1): Store(Module)
 02 (ln 1): Pop
 03 (ln 2): Load(Module, Class("List"))
-04 (ln 2): Call(Method, new())
+04 (ln 2): Call(new())
 05 (ln 2): Closure(1, [])
-06 (ln 2): Call(Method, each(_))
+06 (ln 2): Call(each(_))
 07 (ln 2): Pop
 08 (ln 3): Load(Module, Class("System"))
 09 (ln 3): Load(Module, Null)
-10 (ln 3): Call(Method, print(_))
+10 (ln 3): Call(print(_))
 11 (ln 3): Pop
 12 (ln 4): EndModule
 13 (ln 4): Return
@@ -22,7 +22,7 @@ each(_) block argument Constants:
 each(_) block argument Code:
 00 (ln 2): Load(Module, Null)
 01 (ln 2): Constant(0: 1)
-02 (ln 2): Call(Method, +(_))
+02 (ln 2): Call(+(_))
 03 (ln 2): Store(Module)
 04 (ln 2): Return
 05 (ln 2): End

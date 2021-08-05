@@ -38,9 +38,9 @@
 26 (ln 15): Load(Module, Null)
 27 (ln 15): Method(instance, foo(_))
 28 (ln 18): Load(Module, Null)
-29 (ln 18): Call(Method, new())
+29 (ln 18): Call(new())
 30 (ln 18): Constant(8: 1)
-31 (ln 18): Call(Method, foo(_))
+31 (ln 18): Call(foo(_))
 32 (ln 18): Pop
 33 (ln 23): EndModule
 34 (ln 23): Return
@@ -50,7 +50,7 @@ foo Constants:
 foo Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "Base.foo")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Return
 04 (ln 2): End
 foo(_) Constants:
@@ -58,7 +58,7 @@ foo(_) Constants:
 foo(_) Code:
 00 (ln 3): Load(Module, Class("System"))
 01 (ln 3): Constant(0: "Base.foo(a)")
-02 (ln 3): Call(Method, print(_))
+02 (ln 3): Call(print(_))
 03 (ln 3): Return
 04 (ln 3): End
 foo(_,_) Constants:
@@ -66,7 +66,7 @@ foo(_,_) Constants:
 foo(_,_) Code:
 00 (ln 4): Load(Module, Class("System"))
 01 (ln 4): Constant(0: "Base.foo(a, b)")
-02 (ln 4): Call(Method, print(_))
+02 (ln 4): Call(print(_))
 03 (ln 4): Return
 04 (ln 4): End
 init new() Code:
@@ -75,7 +75,7 @@ init new() Code:
 02 (ln 8): End
  Code:
 00 (ln 8): Construct
-01 (ln 8): Call(Method, init new())
+01 (ln 8): Call(init new())
 02 (ln 8): Return
 03 (ln 8): End
 foo(_) Constants:
@@ -88,19 +88,19 @@ foo(_) Constants:
 foo(_) Code:
 00 (ln 11): Load(Module, Class("System"))
 01 (ln 11): Constant(0: "Derived.bar(a)")
-02 (ln 11): Call(Method, print(_))
+02 (ln 11): Call(print(_))
 03 (ln 11): Pop
 04 (ln 12): Load(Local, 0)
-05 (ln 12): CallSuper(Getter, foo)
+05 (ln 12): CallSuper(foo)
 06 (ln 12): Pop
 07 (ln 13): Load(Local, 0)
 08 (ln 13): Constant(2: 1)
-09 (ln 13): CallSuper(Method, foo(_))
+09 (ln 13): CallSuper(foo(_))
 10 (ln 13): Pop
 11 (ln 14): Load(Local, 0)
 12 (ln 14): Constant(2: 1)
 13 (ln 14): Constant(4: 2)
-14 (ln 14): CallSuper(Method, foo(_,_))
+14 (ln 14): CallSuper(foo(_,_))
 15 (ln 14): Pop
 16 (ln 15): Null
 17 (ln 15): Return

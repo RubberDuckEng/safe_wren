@@ -5,12 +5,12 @@
 00 (ln 2): Constant(0: "outer")
 01 (ln 4): Load(Module, Class("System"))
 02 (ln 4): Load(Local, 1)
-03 (ln 4): Call(Method, print(_))
+03 (ln 4): Call(print(_))
 04 (ln 4): Pop
 05 (ln 5): Constant(1: "inner")
 06 (ln 6): Load(Module, Class("System"))
 07 (ln 6): Load(Local, 2)
-08 (ln 6): Call(Method, print(_))
+08 (ln 6): Call(print(_))
 09 (ln 6): Pop
 10 (ln 7): Pop
 11 (ln 8): Pop

@@ -5,24 +5,24 @@
 03: 1
 <script> Code:
 00 (ln 2): Load(Module, Class("List"))
-01 (ln 2): Call(Method, new())
+01 (ln 2): Call(new())
 02 (ln 2): Store(Module)
 03 (ln 2): Pop
 04 (ln 3): Constant(0: 0)
 05 (ln 3): Constant(1: 200)
-06 (ln 3): Call(Method, ..(_))
+06 (ln 3): Call(..(_))
 07 (ln 3): Null
 08 (ln 3): Load(Local, 1)
 09 (ln 3): Load(Local, 2)
-10 (ln 3): Call(Method, iterate(_))
+10 (ln 3): Call(iterate(_))
 11 (ln 3): Store(Local, 2)
 12 (ln 3): JumpIfFalse(9)
 13 (ln 3): Load(Local, 1)
 14 (ln 3): Load(Local, 2)
-15 (ln 3): Call(Method, iteratorValue(_))
+15 (ln 3): Call(iteratorValue(_))
 16 (ln 4): Load(Module, Null)
 17 (ln 4): Load(Local, 3)
-18 (ln 4): Call(Method, add(_))
+18 (ln 4): Call(add(_))
 19 (ln 4): Pop
 20 (ln 5): Pop
 21 (ln 5): Loop(14)
@@ -30,20 +30,20 @@
 23 (ln 5): Pop
 24 (ln 7): Constant(0: 0)
 25 (ln 7): Constant(2: 195)
-26 (ln 7): Call(Method, ..(_))
+26 (ln 7): Call(..(_))
 27 (ln 7): Null
 28 (ln 7): Load(Local, 1)
 29 (ln 7): Load(Local, 2)
-30 (ln 7): Call(Method, iterate(_))
+30 (ln 7): Call(iterate(_))
 31 (ln 7): Store(Local, 2)
 32 (ln 7): JumpIfFalse(10)
 33 (ln 7): Load(Local, 1)
 34 (ln 7): Load(Local, 2)
-35 (ln 7): Call(Method, iteratorValue(_))
+35 (ln 7): Call(iteratorValue(_))
 36 (ln 8): Load(Module, Null)
 37 (ln 8): Constant(3: 1)
-38 (ln 8): Call(Method, -)
-39 (ln 8): Call(Method, removeAt(_))
+38 (ln 8): Call(-)
+39 (ln 8): Call(removeAt(_))
 40 (ln 8): Pop
 41 (ln 9): Pop
 42 (ln 9): Loop(15)
@@ -51,7 +51,7 @@
 44 (ln 9): Pop
 45 (ln 11): Load(Module, Class("System"))
 46 (ln 11): Load(Module, Null)
-47 (ln 11): Call(Method, print(_))
+47 (ln 11): Call(print(_))
 48 (ln 11): Pop
 49 (ln 12): EndModule
 50 (ln 12): Return

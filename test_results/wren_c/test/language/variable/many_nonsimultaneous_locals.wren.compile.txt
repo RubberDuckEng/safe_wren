@@ -259,7 +259,7 @@
 254 (ln 261): Load(Local, 254)
 255 (ln 262): Load(Module, Class("System"))
 256 (ln 262): Load(Local, 255)
-257 (ln 262): Call(Method, print(_))
+257 (ln 262): Call(print(_))
 258 (ln 262): Pop
 259 (ln 263): Pop
 260 (ln 263): Pop
@@ -773,7 +773,7 @@
 768 (ln 521): Load(Local, 254)
 769 (ln 522): Load(Module, Class("System"))
 770 (ln 522): Load(Local, 255)
-771 (ln 522): Call(Method, print(_))
+771 (ln 522): Call(print(_))
 772 (ln 522): Pop
 773 (ln 523): Pop
 774 (ln 523): Pop

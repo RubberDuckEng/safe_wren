@@ -7,26 +7,26 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 3): Closure(0, [])
-02 (ln 3): Call(Method, new(_))
+02 (ln 3): Call(new(_))
 03 (ln 3): Store(Module)
 04 (ln 3): Pop
 05 (ln 5): Load(Module, Class("Fiber"))
 06 (ln 9): Closure(1, [])
-07 (ln 9): Call(Method, new(_))
+07 (ln 9): Call(new(_))
 08 (ln 9): Store(Module)
 09 (ln 9): Pop
 10 (ln 11): Load(Module, Class("Fiber"))
 11 (ln 15): Closure(2, [])
-12 (ln 15): Call(Method, new(_))
+12 (ln 15): Call(new(_))
 13 (ln 15): Store(Module)
 14 (ln 15): Pop
 15 (ln 17): Load(Module, Class("System"))
 16 (ln 17): Constant(3: "start")
-17 (ln 17): Call(Method, print(_))
+17 (ln 17): Call(print(_))
 18 (ln 17): Pop
 19 (ln 19): Load(Module, Null)
 20 (ln 19): Constant(4: "ignored")
-21 (ln 19): Call(Method, transfer(_))
+21 (ln 19): Call(transfer(_))
 22 (ln 19): Pop
 23 (ln 25): EndModule
 24 (ln 25): Return
@@ -36,7 +36,7 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "a")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Pop
 04 (ln 3): Null
 05 (ln 3): Return
@@ -48,15 +48,15 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 6): Load(Module, Class("System"))
 01 (ln 6): Constant(0: "b before")
-02 (ln 6): Call(Method, print(_))
+02 (ln 6): Call(print(_))
 03 (ln 6): Pop
 04 (ln 7): Load(Module, Null)
 05 (ln 7): Constant(1: "ignored")
-06 (ln 7): Call(Method, transfer(_))
+06 (ln 7): Call(transfer(_))
 07 (ln 7): Pop
 08 (ln 8): Load(Module, Class("System"))
 09 (ln 8): Constant(2: "b after")
-10 (ln 8): Call(Method, print(_))
+10 (ln 8): Call(print(_))
 11 (ln 8): Pop
 12 (ln 9): Null
 13 (ln 9): Return
@@ -68,15 +68,15 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 12): Load(Module, Class("System"))
 01 (ln 12): Constant(0: "c before")
-02 (ln 12): Call(Method, print(_))
+02 (ln 12): Call(print(_))
 03 (ln 12): Pop
 04 (ln 13): Load(Module, Null)
 05 (ln 13): Constant(1: "ignored")
-06 (ln 13): Call(Method, transfer(_))
+06 (ln 13): Call(transfer(_))
 07 (ln 13): Pop
 08 (ln 14): Load(Module, Class("System"))
 09 (ln 14): Constant(2: "c after")
-10 (ln 14): Call(Method, print(_))
+10 (ln 14): Call(print(_))
 11 (ln 14): Pop
 12 (ln 15): Null
 13 (ln 15): Return

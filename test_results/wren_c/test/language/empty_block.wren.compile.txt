@@ -8,7 +8,7 @@
 04 (ln 5): Jump(0)
 05 (ln 7): Load(Module, Class("System"))
 06 (ln 7): Constant(0: "ok")
-07 (ln 7): Call(Method, print(_))
+07 (ln 7): Call(print(_))
 08 (ln 7): Pop
 09 (ln 7): EndModule
 10 (ln 7): Return

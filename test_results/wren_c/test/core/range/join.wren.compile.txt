@@ -5,19 +5,19 @@
 <script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Constant(1: 3)
-02 (ln 1): Call(Method, ..(_))
+02 (ln 1): Call(..(_))
 03 (ln 1): Store(Module)
 04 (ln 1): Pop
 05 (ln 3): Load(Module, Class("System"))
 06 (ln 3): Load(Module, Null)
-07 (ln 3): Call(Method, join())
-08 (ln 3): Call(Method, print(_))
+07 (ln 3): Call(join())
+08 (ln 3): Call(print(_))
 09 (ln 3): Pop
 10 (ln 4): Load(Module, Class("System"))
 11 (ln 4): Load(Module, Null)
 12 (ln 4): Constant(2: ", ")
-13 (ln 4): Call(Method, join(_))
-14 (ln 4): Call(Method, print(_))
+13 (ln 4): Call(join(_))
+14 (ln 4): Call(print(_))
 15 (ln 4): Pop
 16 (ln 5): EndModule
 17 (ln 5): Return

@@ -7,13 +7,13 @@
 01 (ln 5): Boolean false
 02 (ln 5): And(1)
 03 (ln 5): Constant(0: 1)
-04 (ln 5): Call(Method, print(_))
+04 (ln 5): Call(print(_))
 05 (ln 5): Pop
 06 (ln 6): Load(Module, Class("System"))
 07 (ln 6): Boolean true
 08 (ln 6): And(1)
 09 (ln 6): Constant(0: 1)
-10 (ln 6): Call(Method, print(_))
+10 (ln 6): Call(print(_))
 11 (ln 6): Pop
 12 (ln 7): Load(Module, Class("System"))
 13 (ln 7): Constant(0: 1)
@@ -21,13 +21,13 @@
 15 (ln 7): Constant(1: 2)
 16 (ln 7): And(1)
 17 (ln 7): Boolean false
-18 (ln 7): Call(Method, print(_))
+18 (ln 7): Call(print(_))
 19 (ln 7): Pop
 20 (ln 10): Load(Module, Class("System"))
 21 (ln 10): Constant(0: 1)
 22 (ln 10): And(1)
 23 (ln 10): Boolean true
-24 (ln 10): Call(Method, print(_))
+24 (ln 10): Call(print(_))
 25 (ln 10): Pop
 26 (ln 11): Load(Module, Class("System"))
 27 (ln 11): Constant(0: 1)
@@ -35,25 +35,25 @@
 29 (ln 11): Constant(1: 2)
 30 (ln 11): And(1)
 31 (ln 11): Constant(2: 3)
-32 (ln 11): Call(Method, print(_))
+32 (ln 11): Call(print(_))
 33 (ln 11): Pop
 34 (ln 14): Load(Module, Class("System"))
 35 (ln 14): Boolean true
-36 (ln 14): Call(Method, print(_))
+36 (ln 14): Call(print(_))
 37 (ln 14): And(3)
 38 (ln 15): Load(Module, Class("System"))
 39 (ln 15): Boolean false
-40 (ln 15): Call(Method, print(_))
+40 (ln 15): Call(print(_))
 41 (ln 15): And(3)
 42 (ln 16): Load(Module, Class("System"))
 43 (ln 16): Boolean false
-44 (ln 16): Call(Method, print(_))
+44 (ln 16): Call(print(_))
 45 (ln 16): Pop
 46 (ln 19): Load(Module, Class("System"))
 47 (ln 19): Boolean true
 48 (ln 19): And(1)
 49 (ln 20): Boolean true
-50 (ln 20): Call(Method, print(_))
+50 (ln 20): Call(print(_))
 51 (ln 20): Pop
 52 (ln 21): EndModule
 53 (ln 21): Return

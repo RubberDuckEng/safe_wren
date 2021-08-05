@@ -8,32 +8,32 @@
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Load(Module, Class("String"))
 02 (ln 1): Constant(0: 65)
-03 (ln 1): Call(Method, fromCodePoint(_))
-04 (ln 1): Call(Method, print(_))
+03 (ln 1): Call(fromCodePoint(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Load(Module, Class("String"))
 08 (ln 2): Constant(1: 164)
-09 (ln 2): Call(Method, fromCodePoint(_))
-10 (ln 2): Call(Method, print(_))
+09 (ln 2): Call(fromCodePoint(_))
+10 (ln 2): Call(print(_))
 11 (ln 2): Pop
 12 (ln 3): Load(Module, Class("System"))
 13 (ln 3): Load(Module, Class("String"))
 14 (ln 3): Constant(2: 398)
-15 (ln 3): Call(Method, fromCodePoint(_))
-16 (ln 3): Call(Method, print(_))
+15 (ln 3): Call(fromCodePoint(_))
+16 (ln 3): Call(print(_))
 17 (ln 3): Pop
 18 (ln 4): Load(Module, Class("System"))
 19 (ln 4): Load(Module, Class("String"))
 20 (ln 4): Constant(3: 8225)
-21 (ln 4): Call(Method, fromCodePoint(_))
-22 (ln 4): Call(Method, print(_))
+21 (ln 4): Call(fromCodePoint(_))
+22 (ln 4): Call(print(_))
 23 (ln 4): Pop
 24 (ln 5): Load(Module, Class("System"))
 25 (ln 5): Load(Module, Class("String"))
 26 (ln 5): Constant(4: 9547)
-27 (ln 5): Call(Method, fromCodePoint(_))
-28 (ln 5): Call(Method, print(_))
+27 (ln 5): Call(fromCodePoint(_))
+28 (ln 5): Call(print(_))
 29 (ln 5): Pop
 30 (ln 6): EndModule
 31 (ln 6): Return

@@ -21,7 +21,7 @@
 14 (ln 5): Store(Module)
 15 (ln 5): Pop
 16 (ln 7): Load(Module, Null)
-17 (ln 7): Call(Method, base())
+17 (ln 7): Call(base())
 18 (ln 7): Pop
 19 (ln 8): EndModule
 20 (ln 8): Return
@@ -32,6 +32,6 @@ init base() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init base())
+01 (ln 2): Call(init base())
 02 (ln 2): Return
 03 (ln 2): End

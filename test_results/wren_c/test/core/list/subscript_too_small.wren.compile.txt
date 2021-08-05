@@ -5,19 +5,19 @@
 03: 5
 <script> Code:
 00 (ln 1): Load(Module, Class("List"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Constant(0: 1)
-03 (ln 1): Call(Method, addCore_(_))
+03 (ln 1): Call(addCore_(_))
 04 (ln 1): Constant(1: 2)
-05 (ln 1): Call(Method, addCore_(_))
+05 (ln 1): Call(addCore_(_))
 06 (ln 1): Constant(2: 3)
-07 (ln 1): Call(Method, addCore_(_))
+07 (ln 1): Call(addCore_(_))
 08 (ln 1): Store(Module)
 09 (ln 1): Pop
 10 (ln 2): Load(Module, Null)
 11 (ln 2): Constant(3: 5)
-12 (ln 2): Call(Method, -)
-13 (ln 2): Call(Subscript, [_])
+12 (ln 2): Call(-)
+13 (ln 2): Call([_])
 14 (ln 2): Pop
 15 (ln 3): EndModule
 16 (ln 3): Return

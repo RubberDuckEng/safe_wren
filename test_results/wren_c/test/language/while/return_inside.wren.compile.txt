@@ -3,13 +3,13 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fn"))
 01 (ln 6): Closure(0, [])
-02 (ln 6): Call(Method, new(_))
+02 (ln 6): Call(new(_))
 03 (ln 6): Store(Module)
 04 (ln 6): Pop
 05 (ln 8): Load(Module, Class("System"))
 06 (ln 8): Load(Module, Null)
-07 (ln 8): Call(Method, call())
-08 (ln 8): Call(Method, print(_))
+07 (ln 8): Call(call())
+08 (ln 8): Call(print(_))
 09 (ln 8): Pop
 10 (ln 10): EndModule
 11 (ln 10): Return

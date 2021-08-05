@@ -11,12 +11,12 @@
 07 (ln 4): ImportVariable("Module")
 08 (ln 7): Load(Module, Class("System"))
 09 (ln 7): Load(Local, 1)
-10 (ln 7): Call(Method, print(_))
+10 (ln 7): Call(print(_))
 11 (ln 7): Pop
 12 (ln 8): Pop
 13 (ln 10): Load(Module, Class("System"))
 14 (ln 10): Load(Module, Null)
-15 (ln 10): Call(Method, print(_))
+15 (ln 10): Call(print(_))
 16 (ln 10): Pop
 17 (ln 11): EndModule
 18 (ln 11): Return

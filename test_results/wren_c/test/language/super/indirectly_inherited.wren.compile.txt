@@ -35,8 +35,8 @@
 25 (ln 15): Load(Module, Null)
 26 (ln 15): Method(instance, foo)
 27 (ln 18): Load(Module, Null)
-28 (ln 18): Call(Method, new())
-29 (ln 18): Call(Getter, foo)
+28 (ln 18): Call(new())
+29 (ln 18): Call(foo)
 30 (ln 18): Pop
 31 (ln 21): EndModule
 32 (ln 21): Return
@@ -46,7 +46,7 @@ foo Constants:
 foo Code:
 00 (ln 3): Load(Module, Class("System"))
 01 (ln 3): Constant(0: "A.foo")
-02 (ln 3): Call(Method, print(_))
+02 (ln 3): Call(print(_))
 03 (ln 3): Pop
 04 (ln 4): Null
 05 (ln 4): Return
@@ -57,7 +57,7 @@ init new() Code:
 02 (ln 10): End
  Code:
 00 (ln 10): Construct
-01 (ln 10): Call(Method, init new())
+01 (ln 10): Call(init new())
 02 (ln 10): Return
 03 (ln 10): End
 foo Constants:
@@ -66,10 +66,10 @@ foo Constants:
 foo Code:
 00 (ln 13): Load(Module, Class("System"))
 01 (ln 13): Constant(0: "C.foo")
-02 (ln 13): Call(Method, print(_))
+02 (ln 13): Call(print(_))
 03 (ln 13): Pop
 04 (ln 14): Load(Local, 0)
-05 (ln 14): CallSuper(Getter, foo)
+05 (ln 14): CallSuper(foo)
 06 (ln 14): Pop
 07 (ln 15): Null
 08 (ln 15): Return

@@ -30,9 +30,9 @@
 21 (ln 8): Method(static, new())
 22 (ln 11): Load(Module, Class("System"))
 23 (ln 11): Load(Module, Null)
-24 (ln 11): Call(Method, new())
-25 (ln 11): Call(Getter, callSuperToString)
-26 (ln 11): Call(Method, print(_))
+24 (ln 11): Call(new())
+25 (ln 11): Call(callSuperToString)
+26 (ln 11): Call(print(_))
 27 (ln 11): Pop
 28 (ln 12): EndModule
 29 (ln 12): Return
@@ -41,7 +41,7 @@ callSuperToString Constants:
 00: Null
 callSuperToString Code:
 00 (ln 2): Load(Local, 0)
-01 (ln 2): CallSuper(Getter, toString)
+01 (ln 2): CallSuper(toString)
 02 (ln 2): Return
 03 (ln 2): End
 toString Constants:
@@ -56,6 +56,6 @@ init new() Code:
 02 (ln 8): End
  Code:
 00 (ln 8): Construct
-01 (ln 8): Call(Method, init new())
+01 (ln 8): Call(init new())
 02 (ln 8): Return
 03 (ln 8): End

@@ -57,39 +57,39 @@
 38 (ln 13): Load(Module, Null)
 39 (ln 13): Method(instance, override)
 40 (ln 16): Load(Module, Null)
-41 (ln 16): Call(Method, new())
+41 (ln 16): Call(new())
 42 (ln 16): Store(Module)
 43 (ln 16): Pop
 44 (ln 17): Load(Module, Null)
-45 (ln 17): Call(Getter, methodOnFoo)
+45 (ln 17): Call(methodOnFoo)
 46 (ln 17): Pop
 47 (ln 18): Load(Module, Null)
-48 (ln 18): Call(Getter, methodOnBar)
+48 (ln 18): Call(methodOnBar)
 49 (ln 18): Pop
 50 (ln 21): Load(Module, Null)
 51 (ln 21): Constant(12: 1)
-52 (ln 21): Call(Method, method(_))
+52 (ln 21): Call(method(_))
 53 (ln 21): Pop
 54 (ln 22): Load(Module, Null)
 55 (ln 22): Constant(12: 1)
 56 (ln 22): Constant(13: 2)
-57 (ln 22): Call(Method, method(_,_))
+57 (ln 22): Call(method(_,_))
 58 (ln 22): Pop
 59 (ln 23): Load(Module, Null)
 60 (ln 23): Constant(12: 1)
 61 (ln 23): Constant(13: 2)
 62 (ln 23): Constant(14: 3)
-63 (ln 23): Call(Method, method(_,_,_))
+63 (ln 23): Call(method(_,_,_))
 64 (ln 23): Pop
 65 (ln 24): Load(Module, Null)
 66 (ln 24): Constant(12: 1)
 67 (ln 24): Constant(13: 2)
 68 (ln 24): Constant(14: 3)
 69 (ln 24): Constant(15: 4)
-70 (ln 24): Call(Method, method(_,_,_,_))
+70 (ln 24): Call(method(_,_,_,_))
 71 (ln 24): Pop
 72 (ln 25): Load(Module, Null)
-73 (ln 25): Call(Getter, override)
+73 (ln 25): Call(override)
 74 (ln 25): Pop
 75 (ln 26): EndModule
 76 (ln 26): Return
@@ -99,7 +99,7 @@ methodOnFoo Constants:
 methodOnFoo Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "foo")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Return
 04 (ln 2): End
 method(_) Constants:
@@ -107,7 +107,7 @@ method(_) Constants:
 method(_) Code:
 00 (ln 3): Load(Module, Class("System"))
 01 (ln 3): Constant(0: "foo")
-02 (ln 3): Call(Method, print(_))
+02 (ln 3): Call(print(_))
 03 (ln 3): Return
 04 (ln 3): End
 method(_,_,_) Constants:
@@ -115,7 +115,7 @@ method(_,_,_) Constants:
 method(_,_,_) Code:
 00 (ln 4): Load(Module, Class("System"))
 01 (ln 4): Constant(0: "foo")
-02 (ln 4): Call(Method, print(_))
+02 (ln 4): Call(print(_))
 03 (ln 4): Return
 04 (ln 4): End
 override Constants:
@@ -123,7 +123,7 @@ override Constants:
 override Code:
 00 (ln 5): Load(Module, Class("System"))
 01 (ln 5): Constant(0: "foo")
-02 (ln 5): Call(Method, print(_))
+02 (ln 5): Call(print(_))
 03 (ln 5): Return
 04 (ln 5): End
 init new() Code:
@@ -132,7 +132,7 @@ init new() Code:
 02 (ln 9): End
  Code:
 00 (ln 9): Construct
-01 (ln 9): Call(Method, init new())
+01 (ln 9): Call(init new())
 02 (ln 9): Return
 03 (ln 9): End
 methodOnBar Constants:
@@ -140,7 +140,7 @@ methodOnBar Constants:
 methodOnBar Code:
 00 (ln 10): Load(Module, Class("System"))
 01 (ln 10): Constant(0: "bar")
-02 (ln 10): Call(Method, print(_))
+02 (ln 10): Call(print(_))
 03 (ln 10): Return
 04 (ln 10): End
 method(_,_) Constants:
@@ -148,7 +148,7 @@ method(_,_) Constants:
 method(_,_) Code:
 00 (ln 11): Load(Module, Class("System"))
 01 (ln 11): Constant(0: "bar")
-02 (ln 11): Call(Method, print(_))
+02 (ln 11): Call(print(_))
 03 (ln 11): Return
 04 (ln 11): End
 method(_,_,_,_) Constants:
@@ -156,7 +156,7 @@ method(_,_,_,_) Constants:
 method(_,_,_,_) Code:
 00 (ln 12): Load(Module, Class("System"))
 01 (ln 12): Constant(0: "bar")
-02 (ln 12): Call(Method, print(_))
+02 (ln 12): Call(print(_))
 03 (ln 12): Return
 04 (ln 12): End
 override Constants:
@@ -164,6 +164,6 @@ override Constants:
 override Code:
 00 (ln 13): Load(Module, Class("System"))
 01 (ln 13): Constant(0: "bar")
-02 (ln 13): Call(Method, print(_))
+02 (ln 13): Call(print(_))
 03 (ln 13): Return
 04 (ln 13): End

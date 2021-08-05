@@ -8,12 +8,12 @@
 03 (ln 4): Constant(1: "inner")
 04 (ln 5): Load(Module, Class("System"))
 05 (ln 5): Load(Local, 1)
-06 (ln 5): Call(Method, print(_))
+06 (ln 5): Call(print(_))
 07 (ln 5): Pop
 08 (ln 6): Pop
 09 (ln 8): Load(Module, Class("System"))
 10 (ln 8): Load(Module, Null)
-11 (ln 8): Call(Method, print(_))
+11 (ln 8): Call(print(_))
 12 (ln 8): Pop
 13 (ln 9): EndModule
 14 (ln 9): Return

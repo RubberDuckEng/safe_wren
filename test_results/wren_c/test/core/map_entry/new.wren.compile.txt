@@ -5,18 +5,18 @@
 00 (ln 1): Load(Module, Class("MapEntry"))
 01 (ln 1): Constant(0: "key")
 02 (ln 1): Constant(1: "value")
-03 (ln 1): Call(Method, new(_,_))
+03 (ln 1): Call(new(_,_))
 04 (ln 1): Store(Module)
 05 (ln 1): Pop
 06 (ln 3): Load(Module, Class("System"))
 07 (ln 3): Load(Module, Null)
-08 (ln 3): Call(Getter, key)
-09 (ln 3): Call(Method, print(_))
+08 (ln 3): Call(key)
+09 (ln 3): Call(print(_))
 10 (ln 3): Pop
 11 (ln 4): Load(Module, Class("System"))
 12 (ln 4): Load(Module, Null)
-13 (ln 4): Call(Getter, value)
-14 (ln 4): Call(Method, print(_))
+13 (ln 4): Call(value)
+14 (ln 4): Call(print(_))
 15 (ln 4): Pop
 16 (ln 5): EndModule
 17 (ln 5): Return

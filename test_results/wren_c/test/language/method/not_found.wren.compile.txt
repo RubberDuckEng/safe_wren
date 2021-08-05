@@ -15,8 +15,8 @@
 09 (ln 2): Load(Module, Null)
 10 (ln 2): Method(static, new())
 11 (ln 5): Load(Module, Null)
-12 (ln 5): Call(Method, new())
-13 (ln 5): Call(Getter, someUnknownMethod)
+12 (ln 5): Call(new())
+13 (ln 5): Call(someUnknownMethod)
 14 (ln 5): Pop
 15 (ln 6): EndModule
 16 (ln 6): Return
@@ -27,6 +27,6 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End

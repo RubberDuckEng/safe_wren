@@ -4,15 +4,15 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 5): Closure(0, [])
-02 (ln 5): Call(Method, new(_))
+02 (ln 5): Call(new(_))
 03 (ln 5): Store(Module)
 04 (ln 5): Pop
 05 (ln 7): Load(Module, Null)
-06 (ln 7): Call(Method, call())
+06 (ln 7): Call(call())
 07 (ln 7): Pop
 08 (ln 8): Load(Module, Null)
 09 (ln 8): Constant(1: "value")
-10 (ln 8): Call(Method, transfer(_))
+10 (ln 8): Call(transfer(_))
 11 (ln 8): Pop
 12 (ln 10): EndModule
 13 (ln 10): Return
@@ -23,16 +23,16 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "called")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Pop
 04 (ln 3): Load(Module, Class("System"))
 05 (ln 3): Load(Module, Class("Fiber"))
-06 (ln 3): Call(Method, yield())
-07 (ln 3): Call(Method, print(_))
+06 (ln 3): Call(yield())
+07 (ln 3): Call(print(_))
 08 (ln 3): Pop
 09 (ln 4): Load(Module, Class("System"))
 10 (ln 4): Constant(1: "transferred")
-11 (ln 4): Call(Method, print(_))
+11 (ln 4): Call(print(_))
 12 (ln 4): Pop
 13 (ln 5): Null
 14 (ln 5): Return

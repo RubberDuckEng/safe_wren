@@ -37,14 +37,14 @@
 26 (ln 275): Load(Module, Null)
 27 (ln 275): Method(instance, bar)
 28 (ln 278): Load(Module, Null)
-29 (ln 278): Call(Method, new())
+29 (ln 278): Call(new())
 30 (ln 278): Store(Module)
 31 (ln 278): Pop
 32 (ln 279): Load(Module, Null)
-33 (ln 279): Call(Getter, foo)
+33 (ln 279): Call(foo)
 34 (ln 279): Pop
 35 (ln 280): Load(Module, Null)
-36 (ln 280): Call(Getter, bar)
+36 (ln 280): Call(bar)
 37 (ln 280): Pop
 38 (ln 281): EndModule
 39 (ln 281): Return
@@ -696,19 +696,19 @@ init new() Code:
 514 (ln 131): End
  Code:
 00 (ln 131): Construct
-01 (ln 131): Call(Method, init new())
+01 (ln 131): Call(init new())
 02 (ln 131): Return
 03 (ln 131): End
 foo Code:
 00 (ln 134): Load(Module, Class("System"))
 01 (ln 134): Load(Local, 0)
 02 (ln 134): LoadField(0)
-03 (ln 134): Call(Method, print(_))
+03 (ln 134): Call(print(_))
 04 (ln 134): Pop
 05 (ln 135): Load(Module, Class("System"))
 06 (ln 135): Load(Local, 0)
 07 (ln 135): LoadField(127)
-08 (ln 135): Call(Method, print(_))
+08 (ln 135): Call(print(_))
 09 (ln 135): Pop
 10 (ln 136): Null
 11 (ln 136): Return
@@ -845,7 +845,7 @@ init new() Constants:
 128: 256
 init new() Code:
 00 (ln 141): Load(Local, 0)
-01 (ln 141): CallSuper(Initializer, init new())
+01 (ln 141): CallSuper(init new())
 02 (ln 141): Pop
 03 (ln 142): Constant(1: 129)
 04 (ln 142): Load(Local, 0)
@@ -1364,19 +1364,19 @@ init new() Code:
 517 (ln 270): End
  Code:
 00 (ln 270): Construct
-01 (ln 270): Call(Method, init new())
+01 (ln 270): Call(init new())
 02 (ln 270): Return
 03 (ln 270): End
 bar Code:
 00 (ln 273): Load(Module, Class("System"))
 01 (ln 273): Load(Local, 0)
 02 (ln 273): LoadField(0)
-03 (ln 273): Call(Method, print(_))
+03 (ln 273): Call(print(_))
 04 (ln 273): Pop
 05 (ln 274): Load(Module, Class("System"))
 06 (ln 274): Load(Local, 0)
 07 (ln 274): LoadField(127)
-08 (ln 274): Call(Method, print(_))
+08 (ln 274): Call(print(_))
 09 (ln 274): Pop
 10 (ln 275): Null
 11 (ln 275): Return

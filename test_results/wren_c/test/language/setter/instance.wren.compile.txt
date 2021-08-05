@@ -20,12 +20,12 @@
 12 (ln 6): Load(Module, Null)
 13 (ln 6): Method(instance, bar=_)
 14 (ln 9): Load(Module, Null)
-15 (ln 9): Call(Method, new())
+15 (ln 9): Call(new())
 16 (ln 9): Store(Module)
 17 (ln 9): Pop
 18 (ln 10): Load(Module, Null)
 19 (ln 10): Constant(4: "value")
-20 (ln 10): Call(Setter, bar=_)
+20 (ln 10): Call(bar=_)
 21 (ln 10): Pop
 22 (ln 11): EndModule
 23 (ln 11): Return
@@ -36,13 +36,13 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 bar=_ Code:
 00 (ln 5): Load(Module, Class("System"))
 01 (ln 5): Load(Local, 1)
-02 (ln 5): Call(Method, print(_))
+02 (ln 5): Call(print(_))
 03 (ln 5): Pop
 04 (ln 6): Null
 05 (ln 6): Return

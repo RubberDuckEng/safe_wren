@@ -10,21 +10,21 @@
 04 (ln 2): JumpIfFalse(19)
 05 (ln 3): Load(Module, Null)
 06 (ln 3): Constant(1: 1)
-07 (ln 3): Call(Method, +(_))
+07 (ln 3): Call(+(_))
 08 (ln 3): Store(Module)
 09 (ln 3): Pop
 10 (ln 4): Load(Module, Class("System"))
 11 (ln 4): Load(Module, Null)
-12 (ln 4): Call(Method, print(_))
+12 (ln 4): Call(print(_))
 13 (ln 4): Pop
 14 (ln 5): Load(Module, Null)
 15 (ln 5): Constant(2: 2)
-16 (ln 5): Call(Method, >(_))
+16 (ln 5): Call(>(_))
 17 (ln 5): JumpIfFalse(1)
 18 (ln 5): Jump(5)
 19 (ln 6): Load(Module, Class("System"))
 20 (ln 6): Load(Module, Null)
-21 (ln 6): Call(Method, print(_))
+21 (ln 6): Call(print(_))
 22 (ln 6): Pop
 23 (ln 7): Loop(21)
 24 (ln 13): EndModule

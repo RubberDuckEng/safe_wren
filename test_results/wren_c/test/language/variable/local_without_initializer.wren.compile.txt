@@ -2,7 +2,7 @@
 00 (ln 2): Null
 01 (ln 3): Load(Module, Class("System"))
 02 (ln 3): Load(Local, 1)
-03 (ln 3): Call(Method, print(_))
+03 (ln 3): Call(print(_))
 04 (ln 3): Pop
 05 (ln 4): Pop
 06 (ln 5): EndModule

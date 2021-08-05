@@ -3,23 +3,23 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 7): Closure(0, [])
-02 (ln 7): Call(Method, new(_))
+02 (ln 7): Call(new(_))
 03 (ln 7): Store(Module)
 04 (ln 7): Pop
 05 (ln 9): Load(Module, Class("System"))
 06 (ln 9): Load(Module, Null)
-07 (ln 9): Call(Method, call())
-08 (ln 9): Call(Method, print(_))
+07 (ln 9): Call(call())
+08 (ln 9): Call(print(_))
 09 (ln 9): Pop
 10 (ln 11): Load(Module, Class("System"))
 11 (ln 11): Load(Module, Null)
-12 (ln 11): Call(Method, call())
-13 (ln 11): Call(Method, print(_))
+12 (ln 11): Call(call())
+13 (ln 11): Call(print(_))
 14 (ln 11): Pop
 15 (ln 13): Load(Module, Class("System"))
 16 (ln 13): Load(Module, Null)
-17 (ln 13): Call(Method, call())
-18 (ln 13): Call(Method, print(_))
+17 (ln 13): Call(call())
+18 (ln 13): Call(print(_))
 19 (ln 13): Pop
 20 (ln 15): EndModule
 21 (ln 15): Return
@@ -33,23 +33,23 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: "fiber 1")
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Pop
 04 (ln 3): Load(Module, Class("Fiber"))
 05 (ln 3): Constant(1: "yield 1")
-06 (ln 3): Call(Method, yield(_))
+06 (ln 3): Call(yield(_))
 07 (ln 3): Pop
 08 (ln 4): Load(Module, Class("System"))
 09 (ln 4): Constant(2: "fiber 2")
-10 (ln 4): Call(Method, print(_))
+10 (ln 4): Call(print(_))
 11 (ln 4): Pop
 12 (ln 5): Load(Module, Class("Fiber"))
 13 (ln 5): Constant(3: "yield 2")
-14 (ln 5): Call(Method, yield(_))
+14 (ln 5): Call(yield(_))
 15 (ln 5): Pop
 16 (ln 6): Load(Module, Class("System"))
 17 (ln 6): Constant(4: "fiber 3")
-18 (ln 6): Call(Method, print(_))
+18 (ln 6): Call(print(_))
 19 (ln 6): Pop
 20 (ln 7): Null
 21 (ln 7): Return

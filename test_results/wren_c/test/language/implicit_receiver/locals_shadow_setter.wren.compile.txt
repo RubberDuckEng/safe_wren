@@ -23,8 +23,8 @@
 15 (ln 19): Load(Module, Null)
 16 (ln 19): Method(instance, test)
 17 (ln 22): Load(Module, Null)
-18 (ln 22): Call(Method, new())
-19 (ln 22): Call(Getter, test)
+18 (ln 22): Call(new())
+19 (ln 22): Call(test)
 20 (ln 22): Pop
 21 (ln 23): EndModule
 22 (ln 23): Return
@@ -35,7 +35,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 bar=_ Constants:
@@ -43,7 +43,7 @@ bar=_ Constants:
 bar=_ Code:
 00 (ln 5): Load(Module, Class("System"))
 01 (ln 5): Constant(0: "setter")
-02 (ln 5): Call(Method, print(_))
+02 (ln 5): Call(print(_))
 03 (ln 5): Pop
 04 (ln 6): Load(Local, 1)
 05 (ln 6): Return
@@ -56,11 +56,11 @@ test Constants:
 test Code:
 00 (ln 10): Load(Local, 0)
 01 (ln 10): Constant(0: "value")
-02 (ln 10): Call(Setter, bar=_)
+02 (ln 10): Call(bar=_)
 03 (ln 10): Pop
 04 (ln 13): Load(Local, 0)
 05 (ln 13): Constant(0: "value")
-06 (ln 13): Call(Setter, bar=_)
+06 (ln 13): Call(bar=_)
 07 (ln 13): Pop
 08 (ln 14): Constant(1: "local")
 09 (ln 15): Constant(0: "value")
@@ -69,7 +69,7 @@ test Code:
 12 (ln 16): Pop
 13 (ln 18): Load(Local, 0)
 14 (ln 18): Constant(0: "value")
-15 (ln 18): Call(Setter, bar=_)
+15 (ln 18): Call(bar=_)
 16 (ln 18): Pop
 17 (ln 19): Null
 18 (ln 19): Return

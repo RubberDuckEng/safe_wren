@@ -4,7 +4,7 @@
 <script> Code:
 00 (ln 1): Constant(0: "s")
 01 (ln 1): Constant(1: "2")
-02 (ln 1): Call(Method, iterate(_))
+02 (ln 1): Call(iterate(_))
 03 (ln 1): Pop
 04 (ln 2): EndModule
 05 (ln 2): Return

@@ -1,22 +1,22 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Load(Module, Class("Num"))
-02 (ln 1): Call(Getter, nan)
-03 (ln 1): Call(Getter, sign)
-04 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(nan)
+03 (ln 1): Call(sign)
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Load(Module, Class("Num"))
-08 (ln 2): Call(Getter, infinity)
-09 (ln 2): Call(Method, -)
-10 (ln 2): Call(Getter, sign)
-11 (ln 2): Call(Method, print(_))
+08 (ln 2): Call(infinity)
+09 (ln 2): Call(-)
+10 (ln 2): Call(sign)
+11 (ln 2): Call(print(_))
 12 (ln 2): Pop
 13 (ln 3): Load(Module, Class("System"))
 14 (ln 3): Load(Module, Class("Num"))
-15 (ln 3): Call(Getter, infinity)
-16 (ln 3): Call(Getter, sign)
-17 (ln 3): Call(Method, print(_))
+15 (ln 3): Call(infinity)
+16 (ln 3): Call(sign)
+17 (ln 3): Call(print(_))
 18 (ln 3): Pop
 19 (ln 4): EndModule
 20 (ln 4): Return

@@ -8,13 +8,13 @@
 04 (ln 1): Pop
 05 (ln 3): Load(Module, Null)
 06 (ln 3): Constant(0: 12345)
-07 (ln 3): Call(Method, new(_))
+07 (ln 3): Call(new(_))
 08 (ln 3): Store(Module)
 09 (ln 3): Pop
 10 (ln 5): Load(Module, Null)
 11 (ln 5): Load(Module, Class("List"))
-12 (ln 5): Call(Method, new())
-13 (ln 5): Call(Method, sample(_))
+12 (ln 5): Call(new())
+13 (ln 5): Call(sample(_))
 14 (ln 5): Pop
 15 (ln 6): EndModule
 16 (ln 6): Return

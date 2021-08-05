@@ -7,7 +7,7 @@
 03 (ln 1): Store(Module)
 04 (ln 1): Pop
 05 (ln 4): Load(Module, Null)
-06 (ln 4): Call(Method, new())
+06 (ln 4): Call(new())
 07 (ln 4): Store(Module)
 08 (ln 4): Pop
 09 (ln 5): EndModule

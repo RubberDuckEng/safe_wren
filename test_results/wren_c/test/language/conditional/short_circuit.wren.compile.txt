@@ -6,21 +6,21 @@
 01 (ln 1): JumpIfFalse(4)
 02 (ln 1): Load(Module, Class("System"))
 03 (ln 1): Constant(0: "ok")
-04 (ln 1): Call(Method, print(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Jump(3)
 06 (ln 1): Load(Module, Class("System"))
 07 (ln 1): Constant(1: "no")
-08 (ln 1): Call(Method, print(_))
+08 (ln 1): Call(print(_))
 09 (ln 1): Pop
 10 (ln 2): Boolean false
 11 (ln 2): JumpIfFalse(4)
 12 (ln 2): Load(Module, Class("System"))
 13 (ln 2): Constant(1: "no")
-14 (ln 2): Call(Method, print(_))
+14 (ln 2): Call(print(_))
 15 (ln 2): Jump(3)
 16 (ln 2): Load(Module, Class("System"))
 17 (ln 2): Constant(0: "ok")
-18 (ln 2): Call(Method, print(_))
+18 (ln 2): Call(print(_))
 19 (ln 2): Pop
 20 (ln 3): EndModule
 21 (ln 3): Return

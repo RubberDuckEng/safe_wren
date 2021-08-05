@@ -3,13 +3,13 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fn"))
 01 (ln 1): Closure(0, [])
-02 (ln 1): Call(Method, new(_))
+02 (ln 1): Call(new(_))
 03 (ln 1): Store(Module)
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Null)
 06 (ln 2): Boolean true
 07 (ln 2): Boolean false
-08 (ln 2): Call(Method, call(_,_))
+08 (ln 2): Call(call(_,_))
 09 (ln 2): Pop
 10 (ln 4): EndModule
 11 (ln 4): Return
@@ -17,6 +17,6 @@
 new(_) block argument Code:
 00 (ln 1): Load(Local, 1)
 01 (ln 1): Load(Local, 2)
-02 (ln 1): Call(Method, +(_))
+02 (ln 1): Call(+(_))
 03 (ln 1): Return
 04 (ln 1): End

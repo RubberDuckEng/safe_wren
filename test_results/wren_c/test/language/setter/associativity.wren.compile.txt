@@ -28,41 +28,41 @@
 16 (ln 7): Method(instance, bar=_)
 17 (ln 10): Load(Module, Null)
 18 (ln 10): Constant(5: "a")
-19 (ln 10): Call(Method, new(_))
+19 (ln 10): Call(new(_))
 20 (ln 10): Store(Module)
 21 (ln 10): Pop
 22 (ln 11): Load(Module, Null)
 23 (ln 11): Constant(6: "b")
-24 (ln 11): Call(Method, new(_))
+24 (ln 11): Call(new(_))
 25 (ln 11): Store(Module)
 26 (ln 11): Pop
 27 (ln 12): Load(Module, Null)
 28 (ln 12): Constant(7: "c")
-29 (ln 12): Call(Method, new(_))
+29 (ln 12): Call(new(_))
 30 (ln 12): Store(Module)
 31 (ln 12): Pop
 32 (ln 15): Load(Module, Null)
 33 (ln 15): Load(Module, Null)
 34 (ln 15): Load(Module, Null)
 35 (ln 15): Constant(8: "d")
-36 (ln 15): Call(Setter, bar=_)
-37 (ln 15): Call(Setter, bar=_)
-38 (ln 15): Call(Setter, bar=_)
+36 (ln 15): Call(bar=_)
+37 (ln 15): Call(bar=_)
+38 (ln 15): Call(bar=_)
 39 (ln 15): Pop
 40 (ln 16): Load(Module, Class("System"))
 41 (ln 16): Load(Module, Null)
-42 (ln 16): Call(Getter, toString)
-43 (ln 16): Call(Method, print(_))
+42 (ln 16): Call(toString)
+43 (ln 16): Call(print(_))
 44 (ln 16): Pop
 45 (ln 17): Load(Module, Class("System"))
 46 (ln 17): Load(Module, Null)
-47 (ln 17): Call(Getter, toString)
-48 (ln 17): Call(Method, print(_))
+47 (ln 17): Call(toString)
+48 (ln 17): Call(print(_))
 49 (ln 17): Pop
 50 (ln 18): Load(Module, Class("System"))
 51 (ln 18): Load(Module, Null)
-52 (ln 18): Call(Getter, toString)
-53 (ln 18): Call(Method, print(_))
+52 (ln 18): Call(toString)
+53 (ln 18): Call(print(_))
 54 (ln 18): Pop
 55 (ln 19): EndModule
 56 (ln 19): Return
@@ -77,7 +77,7 @@ init new(_) Code:
 06 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new(_))
+01 (ln 2): Call(init new(_))
 02 (ln 2): Return
 03 (ln 2): End
 toString Code:

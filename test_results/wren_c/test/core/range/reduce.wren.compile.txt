@@ -7,21 +7,21 @@
 <script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Constant(1: 10)
-02 (ln 1): Call(Method, ..(_))
+02 (ln 1): Call(..(_))
 03 (ln 1): Store(Module)
 04 (ln 1): Pop
 05 (ln 3): Load(Module, Class("System"))
 06 (ln 3): Load(Module, Null)
 07 (ln 3): Closure(2, [])
-08 (ln 3): Call(Method, reduce(_))
-09 (ln 3): Call(Method, print(_))
+08 (ln 3): Call(reduce(_))
+09 (ln 3): Call(print(_))
 10 (ln 3): Pop
 11 (ln 4): Load(Module, Class("System"))
 12 (ln 4): Load(Module, Null)
 13 (ln 4): Constant(3: 100)
 14 (ln 4): Closure(4, [])
-15 (ln 4): Call(Method, reduce(_,_))
-16 (ln 4): Call(Method, print(_))
+15 (ln 4): Call(reduce(_,_))
+16 (ln 4): Call(print(_))
 17 (ln 4): Pop
 18 (ln 5): EndModule
 19 (ln 5): Return
@@ -29,13 +29,13 @@
 reduce(_) block argument Code:
 00 (ln 3): Load(Local, 1)
 01 (ln 3): Load(Local, 2)
-02 (ln 3): Call(Method, +(_))
+02 (ln 3): Call(+(_))
 03 (ln 3): Return
 04 (ln 3): End
 reduce(_,_) block argument Code:
 00 (ln 4): Load(Local, 1)
 01 (ln 4): Load(Local, 2)
-02 (ln 4): Call(Method, <(_))
+02 (ln 4): Call(<(_))
 03 (ln 4): JumpIfFalse(2)
 04 (ln 4): Load(Local, 1)
 05 (ln 4): Jump(1)

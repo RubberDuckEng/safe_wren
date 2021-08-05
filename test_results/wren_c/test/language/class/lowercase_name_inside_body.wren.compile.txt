@@ -31,11 +31,11 @@
 21 (ln 13): Load(Module, Null)
 22 (ln 13): Method(static, foo)
 23 (ln 16): Load(Module, Null)
-24 (ln 16): Call(Getter, callFoo)
+24 (ln 16): Call(callFoo)
 25 (ln 16): Pop
 26 (ln 17): Load(Module, Null)
-27 (ln 17): Call(Method, new())
-28 (ln 17): Call(Getter, callFoo)
+27 (ln 17): Call(new())
+28 (ln 17): Call(callFoo)
 29 (ln 17): Pop
 30 (ln 18): EndModule
 31 (ln 18): Return
@@ -46,14 +46,14 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 callFoo Code:
 00 (ln 5): Load(Module, Class("System"))
 01 (ln 5): Load(Local, 0)
-02 (ln 5): Call(Getter, foo)
-03 (ln 5): Call(Method, print(_))
+02 (ln 5): Call(foo)
+03 (ln 5): Call(print(_))
 04 (ln 5): Pop
 05 (ln 6): Null
 06 (ln 6): Return
@@ -61,8 +61,8 @@ callFoo Code:
 callFoo Code:
 00 (ln 9): Load(Module, Class("System"))
 01 (ln 9): Load(Local, 0)
-02 (ln 9): Call(Getter, foo)
-03 (ln 9): Call(Method, print(_))
+02 (ln 9): Call(foo)
+03 (ln 9): Call(print(_))
 04 (ln 9): Pop
 05 (ln 10): Null
 06 (ln 10): Return

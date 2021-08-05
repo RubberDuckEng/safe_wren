@@ -11,14 +11,14 @@
 06 (ln 4): Load(Module, Class("System"))
 07 (ln 4): Load(Module, Null)
 08 (ln 4): Load(Module, Null)
-09 (ln 4): Call(Method, max(_))
-10 (ln 4): Call(Method, print(_))
+09 (ln 4): Call(max(_))
+10 (ln 4): Call(print(_))
 11 (ln 4): Pop
 12 (ln 5): Load(Module, Class("System"))
 13 (ln 5): Load(Module, Null)
 14 (ln 5): Load(Module, Null)
-15 (ln 5): Call(Method, min(_))
-16 (ln 5): Call(Method, print(_))
+15 (ln 5): Call(min(_))
+16 (ln 5): Call(print(_))
 17 (ln 5): Pop
 18 (ln 5): EndModule
 19 (ln 5): Return

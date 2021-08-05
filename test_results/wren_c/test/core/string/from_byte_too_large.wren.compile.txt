@@ -6,9 +6,9 @@
 01 (ln 1): Load(Module, Class("String"))
 02 (ln 1): Constant(0: 255)
 03 (ln 1): Constant(1: 1)
-04 (ln 1): Call(Method, +(_))
-05 (ln 1): Call(Method, fromByte(_))
-06 (ln 1): Call(Method, print(_))
+04 (ln 1): Call(+(_))
+05 (ln 1): Call(fromByte(_))
+06 (ln 1): Call(print(_))
 07 (ln 1): Pop
 08 (ln 2): EndModule
 09 (ln 2): Return

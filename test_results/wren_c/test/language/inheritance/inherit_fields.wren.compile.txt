@@ -49,24 +49,24 @@
 32 (ln 26): Load(Module, Null)
 33 (ln 26): Method(instance, barPrint)
 34 (ln 29): Load(Module, Null)
-35 (ln 29): Call(Method, new())
+35 (ln 29): Call(new())
 36 (ln 29): Store(Module)
 37 (ln 29): Pop
 38 (ln 30): Load(Module, Null)
 39 (ln 30): Constant(10: "foo 1")
 40 (ln 30): Constant(11: "foo 2")
-41 (ln 30): Call(Method, foo(_,_))
+41 (ln 30): Call(foo(_,_))
 42 (ln 30): Pop
 43 (ln 31): Load(Module, Null)
 44 (ln 31): Constant(12: "bar 1")
 45 (ln 31): Constant(13: "bar 2")
-46 (ln 31): Call(Method, bar(_,_))
+46 (ln 31): Call(bar(_,_))
 47 (ln 31): Pop
 48 (ln 33): Load(Module, Null)
-49 (ln 33): Call(Getter, fooPrint)
+49 (ln 33): Call(fooPrint)
 50 (ln 33): Pop
 51 (ln 37): Load(Module, Null)
-52 (ln 37): Call(Getter, barPrint)
+52 (ln 37): Call(barPrint)
 53 (ln 37): Pop
 54 (ln 40): EndModule
 55 (ln 40): Return
@@ -77,7 +77,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 foo(_,_) Code:
@@ -96,12 +96,12 @@ fooPrint Code:
 00 (ln 10): Load(Module, Class("System"))
 01 (ln 10): Load(Local, 0)
 02 (ln 10): LoadField(0)
-03 (ln 10): Call(Method, print(_))
+03 (ln 10): Call(print(_))
 04 (ln 10): Pop
 05 (ln 11): Load(Module, Class("System"))
 06 (ln 11): Load(Local, 0)
 07 (ln 11): LoadField(1)
-08 (ln 11): Call(Method, print(_))
+08 (ln 11): Call(print(_))
 09 (ln 11): Pop
 10 (ln 12): Null
 11 (ln 12): Return
@@ -112,7 +112,7 @@ init new() Code:
 02 (ln 16): End
  Code:
 00 (ln 16): Construct
-01 (ln 16): Call(Method, init new())
+01 (ln 16): Call(init new())
 02 (ln 16): Return
 03 (ln 16): End
 bar(_,_) Code:
@@ -131,12 +131,12 @@ barPrint Code:
 00 (ln 24): Load(Module, Class("System"))
 01 (ln 24): Load(Local, 0)
 02 (ln 24): LoadField(0)
-03 (ln 24): Call(Method, print(_))
+03 (ln 24): Call(print(_))
 04 (ln 24): Pop
 05 (ln 25): Load(Module, Class("System"))
 06 (ln 25): Load(Local, 0)
 07 (ln 25): LoadField(1)
-08 (ln 25): Call(Method, print(_))
+08 (ln 25): Call(print(_))
 09 (ln 25): Pop
 10 (ln 26): Null
 11 (ln 26): Return

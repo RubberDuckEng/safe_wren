@@ -12,17 +12,17 @@
 05 (ln 3): Pop
 06 (ln 4): Load(Module, Null)
 07 (ln 4): Constant(2: 1)
-08 (ln 4): Call(Method, +(_))
+08 (ln 4): Call(+(_))
 09 (ln 4): Store(Module)
 10 (ln 4): Constant(2: 1)
-11 (ln 4): Call(Method, <=(_))
+11 (ln 4): Call(<=(_))
 12 (ln 4): JumpIfFalse(3)
 13 (ln 5): Constant(3: "inner")
 14 (ln 6): Pop
 15 (ln 6): Loop(10)
 16 (ln 7): Load(Module, Class("System"))
 17 (ln 7): Load(Module, Null)
-18 (ln 7): Call(Method, print(_))
+18 (ln 7): Call(print(_))
 19 (ln 7): Pop
 20 (ln 8): EndModule
 21 (ln 8): Return

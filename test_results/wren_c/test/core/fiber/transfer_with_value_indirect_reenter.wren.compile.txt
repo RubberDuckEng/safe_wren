@@ -5,20 +5,20 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 5): Closure(0, [])
-02 (ln 5): Call(Method, new(_))
+02 (ln 5): Call(new(_))
 03 (ln 5): Store(Module)
 04 (ln 5): Pop
 05 (ln 7): Load(Module, Class("Fiber"))
 06 (ln 11): Closure(1, [])
-07 (ln 11): Call(Method, new(_))
+07 (ln 11): Call(new(_))
 08 (ln 11): Store(Module)
 09 (ln 11): Pop
 10 (ln 13): Load(Module, Null)
-11 (ln 13): Call(Method, call())
+11 (ln 13): Call(call())
 12 (ln 13): Pop
 13 (ln 17): Load(Module, Class("System"))
 14 (ln 17): Constant(2: 4)
-15 (ln 17): Call(Method, print(_))
+15 (ln 17): Call(print(_))
 16 (ln 17): Pop
 17 (ln 18): EndModule
 18 (ln 18): Return
@@ -30,15 +30,15 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Constant(0: 2)
-02 (ln 2): Call(Method, print(_))
+02 (ln 2): Call(print(_))
 03 (ln 2): Pop
 04 (ln 3): Load(Module, Null)
 05 (ln 3): Constant(1: "ignored")
-06 (ln 3): Call(Method, transfer(_))
+06 (ln 3): Call(transfer(_))
 07 (ln 3): Pop
 08 (ln 4): Load(Module, Class("System"))
 09 (ln 4): Constant(2: "nope")
-10 (ln 4): Call(Method, print(_))
+10 (ln 4): Call(print(_))
 11 (ln 4): Pop
 12 (ln 5): Null
 13 (ln 5): Return
@@ -50,15 +50,15 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 8): Load(Module, Class("System"))
 01 (ln 8): Constant(0: 1)
-02 (ln 8): Call(Method, print(_))
+02 (ln 8): Call(print(_))
 03 (ln 8): Pop
 04 (ln 9): Load(Module, Null)
 05 (ln 9): Constant(1: "ignored")
-06 (ln 9): Call(Method, transfer(_))
+06 (ln 9): Call(transfer(_))
 07 (ln 9): Pop
 08 (ln 10): Load(Module, Class("System"))
 09 (ln 10): Constant(2: 3)
-10 (ln 10): Call(Method, print(_))
+10 (ln 10): Call(print(_))
 11 (ln 10): Pop
 12 (ln 11): Null
 13 (ln 11): Return

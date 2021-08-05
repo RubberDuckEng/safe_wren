@@ -5,20 +5,20 @@
 03: Fn(count(_) block argument)
 <script> Code:
 00 (ln 1): Load(Module, Class("List"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Constant(0: 1)
-03 (ln 1): Call(Method, addCore_(_))
+03 (ln 1): Call(addCore_(_))
 04 (ln 1): Constant(1: 2)
-05 (ln 1): Call(Method, addCore_(_))
+05 (ln 1): Call(addCore_(_))
 06 (ln 1): Constant(2: 3)
-07 (ln 1): Call(Method, addCore_(_))
+07 (ln 1): Call(addCore_(_))
 08 (ln 1): Store(Module)
 09 (ln 1): Pop
 10 (ln 3): Load(Module, Class("System"))
 11 (ln 3): Load(Module, Null)
 12 (ln 3): Closure(3, [])
-13 (ln 3): Call(Method, count(_))
-14 (ln 3): Call(Method, print(_))
+13 (ln 3): Call(count(_))
+14 (ln 3): Call(print(_))
 15 (ln 3): Pop
 16 (ln 4): EndModule
 17 (ln 4): Return

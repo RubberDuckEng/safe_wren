@@ -9,9 +9,13 @@ use std::ops::Range;
 use std::rc::Rc;
 use std::str;
 
+pub(crate) type Constant = usize;
+pub(crate) type Arity = u8;
+pub(crate) type JumpOffset = u16;
+
 use crate::vm::{
     new_handle, wren_define_variable, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn,
-    SymbolTable, Value, MAX_FIELDS, VM,
+    Symbol, SymbolTable, Value, MAX_FIELDS, VM,
 };
 
 // Maximum times grammar is allowed to recurse through parse_precedence
@@ -1025,14 +1029,14 @@ pub(crate) enum Ops {
     Constant(usize),
     Boolean(bool), // Unclear if needed, could be constant?
     Null,          // Unclear if needed, could be constant?
-    Call(Signature, usize),
-    CallSuper(Signature, usize, usize),
+    Call(Arity, Symbol),
+    CallSuper(Arity, Symbol, Constant),
     LoadField(usize),
     StoreField(usize),
     Load(Variable),
     Store(Variable),
     ClassPlaceholder,
-    Class(usize),
+    Class(usize), // num_fields
     ForeignClass,
     Closure(usize, Vec<Upvalue>),
     Construct,
@@ -1044,20 +1048,20 @@ pub(crate) enum Ops {
 
     // If the top of the stack is false, jump [arg] forward. Otherwise, pop and
     // continue.
-    And(u16),
+    And(JumpOffset),
     AndPlaceholder,
 
     // If the top of the stack is non-false, jump [arg] forward. Otherwise, pop
     // and continue.
-    Or(u16),
+    Or(JumpOffset),
     OrPlaceholder,
 
-    JumpIfFalse(u16), // Pop stack, if truthy, Jump forward relative offset.
+    JumpIfFalse(JumpOffset), // Pop stack, if truthy, Jump forward relative offset.
     JumpIfFalsePlaceholder,
-    Jump(u16), // Jump forward relative offset.
+    Jump(JumpOffset), // Jump forward relative offset.
     JumpPlaceholder,
 
-    Loop(u16), // Jump backwards relative offset.
+    Loop(JumpOffset), // Jump backwards relative offset.
     Pop,
     Return,
     EndModule,
@@ -1127,8 +1131,8 @@ struct ClassInfo {
 
     // Symbols for the methods defined by the class. Used to detect duplicate
     // method definitions.
-    methods: Vec<usize>,
-    static_methods: Vec<usize>,
+    methods: Vec<Symbol>,
+    static_methods: Vec<Symbol>,
 
     // True if the class being compiled is a foreign class.
     is_foreign_class: bool,
@@ -1167,6 +1171,14 @@ pub(crate) struct FnDebug {
 impl FnDebug {
     pub(crate) fn line_for_pc(&self, pc: usize) -> usize {
         self.source_lines[pc]
+    }
+
+    pub(crate) fn generated(name: &str, line_count: usize) -> FnDebug {
+        FnDebug {
+            name: name.into(),
+            source_lines: vec![line_count; 0],
+            from_core_module: false,
+        }
     }
 }
 
@@ -1710,7 +1722,7 @@ fn call_signature(ctx: &mut ParseContext, signature: Signature, call_type: CallT
     let symbol = signature_symbol(ctx, &signature);
     match call_type {
         CallType::Instance => {
-            emit(ctx, Ops::Call(signature, symbol));
+            emit(ctx, Ops::Call(signature.arity, symbol));
         }
         CallType::Super => {
             // Super calls need to be statically bound to the class's
@@ -1722,7 +1734,7 @@ fn call_signature(ctx: &mut ParseContext, signature: Signature, call_type: CallT
             // superclass, initially Null. When the method is bound, we'll look
             // up the superclass then and store it in this slot.
             let super_const = ctx.compiler_mut().constants.add(Value::Null);
-            emit(ctx, Ops::CallSuper(signature, symbol, super_const));
+            emit(ctx, Ops::CallSuper(signature.arity, symbol, super_const));
         }
     }
 }
@@ -1735,7 +1747,7 @@ fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
         bare_name: full_name.into(), // FIXME: Wrong.
         arity,
     };
-    emit(ctx, Ops::Call(signature, symbol));
+    emit(ctx, Ops::Call(signature.arity, symbol));
 }
 
 // A list literal.
@@ -1912,7 +1924,12 @@ fn end_compiler(
 
     // We're done with the compiler, create an ObjFn from it.
     let upvalues = std::mem::take(&mut compiler.upvalues);
-    let fn_obj = new_handle(ObjFn::new(ctx.vm, ctx.module.clone(), compiler, arity));
+    let fn_obj = new_handle(ObjFn::from_compiler(
+        ctx.vm,
+        ctx.module.clone(),
+        compiler,
+        arity,
+    ));
 
     // If this was not the top-compiler, load the compile function into
     // the parent code.
@@ -2909,7 +2926,7 @@ fn create_constructor(
     }
 
     // Run its initializer.
-    emit(scope.ctx, Ops::Call(signature, initializer_symbol));
+    emit(scope.ctx, Ops::Call(signature.arity, initializer_symbol));
 
     // Return the instance.
     emit(scope.ctx, Ops::Return);

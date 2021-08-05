@@ -2,27 +2,27 @@
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Boolean true
 02 (ln 1): Load(Module, Class("Bool"))
-03 (ln 1): Call(Method, is(_))
-04 (ln 1): Call(Method, print(_))
+03 (ln 1): Call(is(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Boolean true
 08 (ln 2): Load(Module, Class("Object"))
-09 (ln 2): Call(Method, is(_))
-10 (ln 2): Call(Method, print(_))
+09 (ln 2): Call(is(_))
+10 (ln 2): Call(print(_))
 11 (ln 2): Pop
 12 (ln 3): Load(Module, Class("System"))
 13 (ln 3): Boolean true
 14 (ln 3): Load(Module, Class("Num"))
-15 (ln 3): Call(Method, is(_))
-16 (ln 3): Call(Method, print(_))
+15 (ln 3): Call(is(_))
+16 (ln 3): Call(print(_))
 17 (ln 3): Pop
 18 (ln 4): Load(Module, Class("System"))
 19 (ln 4): Boolean true
-20 (ln 4): Call(Getter, type)
+20 (ln 4): Call(type)
 21 (ln 4): Load(Module, Class("Bool"))
-22 (ln 4): Call(Method, ==(_))
-23 (ln 4): Call(Method, print(_))
+22 (ln 4): Call(==(_))
+23 (ln 4): Call(print(_))
 24 (ln 4): Pop
 25 (ln 5): EndModule
 26 (ln 5): Return

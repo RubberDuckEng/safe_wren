@@ -22,22 +22,22 @@
 13 (ln 4): Method(instance, toString)
 14 (ln 7): Load(Module, Class("System"))
 15 (ln 7): Load(Module, Class("List"))
-16 (ln 7): Call(Method, new())
-17 (ln 7): Call(Method, printAll(_))
+16 (ln 7): Call(new())
+17 (ln 7): Call(printAll(_))
 18 (ln 7): Pop
 19 (ln 8): Load(Module, Class("System"))
 20 (ln 8): Load(Module, Class("List"))
-21 (ln 8): Call(Method, new())
+21 (ln 8): Call(new())
 22 (ln 8): Constant(4: 1)
-23 (ln 8): Call(Method, addCore_(_))
+23 (ln 8): Call(addCore_(_))
 24 (ln 8): Boolean true
-25 (ln 8): Call(Method, addCore_(_))
+25 (ln 8): Call(addCore_(_))
 26 (ln 8): Load(Module, Null)
-27 (ln 8): Call(Method, new())
-28 (ln 8): Call(Method, addCore_(_))
+27 (ln 8): Call(new())
+28 (ln 8): Call(addCore_(_))
 29 (ln 8): Constant(5: "s")
-30 (ln 8): Call(Method, addCore_(_))
-31 (ln 8): Call(Method, printAll(_))
+30 (ln 8): Call(addCore_(_))
+31 (ln 8): Call(printAll(_))
 32 (ln 8): Pop
 33 (ln 9): EndModule
 34 (ln 9): Return
@@ -48,7 +48,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 toString Constants:

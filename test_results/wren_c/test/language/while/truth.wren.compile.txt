@@ -9,7 +9,7 @@
 01 (ln 2): JumpIfFalse(6)
 02 (ln 3): Load(Module, Class("System"))
 03 (ln 3): Constant(0: "bad")
-04 (ln 3): Call(Method, print(_))
+04 (ln 3): Call(print(_))
 05 (ln 3): Pop
 06 (ln 4): Jump(1)
 07 (ln 5): Loop(8)
@@ -17,7 +17,7 @@
 09 (ln 7): JumpIfFalse(6)
 10 (ln 8): Load(Module, Class("System"))
 11 (ln 8): Constant(0: "bad")
-12 (ln 8): Call(Method, print(_))
+12 (ln 8): Call(print(_))
 13 (ln 8): Pop
 14 (ln 9): Jump(1)
 15 (ln 10): Loop(8)
@@ -25,7 +25,7 @@
 17 (ln 13): JumpIfFalse(6)
 18 (ln 14): Load(Module, Class("System"))
 19 (ln 14): Constant(1: "true")
-20 (ln 14): Call(Method, print(_))
+20 (ln 14): Call(print(_))
 21 (ln 14): Pop
 22 (ln 15): Jump(1)
 23 (ln 16): Loop(8)
@@ -33,7 +33,7 @@
 25 (ln 18): JumpIfFalse(6)
 26 (ln 19): Load(Module, Class("System"))
 27 (ln 19): Constant(2: 0)
-28 (ln 19): Call(Method, print(_))
+28 (ln 19): Call(print(_))
 29 (ln 19): Pop
 30 (ln 20): Jump(1)
 31 (ln 21): Loop(8)
@@ -41,7 +41,7 @@
 33 (ln 23): JumpIfFalse(6)
 34 (ln 24): Load(Module, Class("System"))
 35 (ln 24): Constant(4: "string")
-36 (ln 24): Call(Method, print(_))
+36 (ln 24): Call(print(_))
 37 (ln 24): Pop
 38 (ln 25): Jump(1)
 39 (ln 26): Loop(8)

@@ -16,11 +16,11 @@
 09 (ln 4): Pop
 10 (ln 5): Load(Module, Class("System"))
 11 (ln 5): Load(Module, Null)
-12 (ln 5): Call(Method, print(_))
+12 (ln 5): Call(print(_))
 13 (ln 5): Pop
 14 (ln 6): Load(Module, Class("System"))
 15 (ln 6): Load(Module, Null)
-16 (ln 6): Call(Method, print(_))
+16 (ln 6): Call(print(_))
 17 (ln 6): Pop
 18 (ln 9): Constant(3: "var")
 19 (ln 9): Store(Module)
@@ -28,11 +28,11 @@
 21 (ln 9): Pop
 22 (ln 10): Load(Module, Class("System"))
 23 (ln 10): Load(Module, Null)
-24 (ln 10): Call(Method, print(_))
+24 (ln 10): Call(print(_))
 25 (ln 10): Pop
 26 (ln 11): Load(Module, Class("System"))
 27 (ln 11): Load(Module, Null)
-28 (ln 11): Call(Method, print(_))
+28 (ln 11): Call(print(_))
 29 (ln 11): Pop
 30 (ln 12): EndModule
 31 (ln 12): Return

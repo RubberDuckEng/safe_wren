@@ -7,7 +7,7 @@
 03 (ln 1): Store(Module)
 04 (ln 1): Pop
 05 (ln 3): Load(Module, Null)
-06 (ln 3): Call(Getter, bar)
+06 (ln 3): Call(bar)
 07 (ln 3): Pop
 08 (ln 3): EndModule
 09 (ln 3): Return

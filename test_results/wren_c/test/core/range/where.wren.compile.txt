@@ -6,28 +6,28 @@
 <script> Code:
 00 (ln 1): Constant(0: 1)
 01 (ln 1): Constant(1: 3)
-02 (ln 1): Call(Method, ..(_))
+02 (ln 1): Call(..(_))
 03 (ln 1): Store(Module)
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Null)
 06 (ln 2): Closure(2, [])
-07 (ln 2): Call(Method, where(_))
-08 (ln 2): Call(Getter, toList)
+07 (ln 2): Call(where(_))
+08 (ln 2): Call(toList)
 09 (ln 2): Store(Module)
 10 (ln 2): Pop
 11 (ln 3): Load(Module, Class("System"))
 12 (ln 3): Load(Module, Null)
-13 (ln 3): Call(Method, print(_))
+13 (ln 3): Call(print(_))
 14 (ln 3): Pop
 15 (ln 5): Load(Module, Null)
 16 (ln 5): Closure(3, [])
-17 (ln 5): Call(Method, where(_))
-18 (ln 5): Call(Getter, toList)
+17 (ln 5): Call(where(_))
+18 (ln 5): Call(toList)
 19 (ln 5): Store(Module)
 20 (ln 5): Pop
 21 (ln 6): Load(Module, Class("System"))
 22 (ln 6): Load(Module, Null)
-23 (ln 6): Call(Method, print(_))
+23 (ln 6): Call(print(_))
 24 (ln 6): Pop
 25 (ln 7): EndModule
 26 (ln 7): Return
@@ -37,7 +37,7 @@ where(_) block argument Constants:
 where(_) block argument Code:
 00 (ln 2): Load(Local, 1)
 01 (ln 2): Constant(0: 1)
-02 (ln 2): Call(Method, >(_))
+02 (ln 2): Call(>(_))
 03 (ln 2): Return
 04 (ln 2): End
 where(_) block argument Constants:
@@ -45,6 +45,6 @@ where(_) block argument Constants:
 where(_) block argument Code:
 00 (ln 5): Load(Local, 1)
 01 (ln 5): Constant(0: 10)
-02 (ln 5): Call(Method, >(_))
+02 (ln 5): Call(>(_))
 03 (ln 5): Return
 04 (ln 5): End

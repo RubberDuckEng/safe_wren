@@ -229,8 +229,13 @@ pub extern "C" fn wrenSetSlotNewForeign(
     unsafe { std::mem::transmute::<*mut u8, *mut c_void>(c_ptr) }
 }
 
-// #[no_mangle]
-// extern "C" fn wrenMakeCallHandle(c_vm: *mut WrenVM, c_signature: *const c_char) -> *mut WrenHandle {}
+#[no_mangle]
+extern "C" fn wrenMakeCallHandle(c_vm: *mut WrenVM, c_signature: *const c_char) -> *mut WrenHandle {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let signature = unsafe { CStr::from_ptr(c_signature) }.to_str().unwrap();
+    let value = vm.call_handle_for_signature(signature);
+    value.into_handle()
+}
 
 // #[no_mangle]
 // extern "C" fn wrenCall(c_vm: *mut WrenVM, c_method: *mut WrenHandle) -> WrenInterpretResult {}

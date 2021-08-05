@@ -4,10 +4,10 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "string")
-02 (ln 1): Call(Getter, codePoints)
+02 (ln 1): Call(codePoints)
 03 (ln 1): Constant(1: 6)
-04 (ln 1): Call(Method, iteratorValue(_))
-05 (ln 1): Call(Method, print(_))
+04 (ln 1): Call(iteratorValue(_))
+05 (ln 1): Call(print(_))
 06 (ln 1): Pop
 07 (ln 2): EndModule
 08 (ln 2): Return

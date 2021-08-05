@@ -33,27 +33,27 @@
 22 (ln 7): Method(static, bar(_))
 23 (ln 10): Load(Module, Class("System"))
 24 (ln 10): Load(Module, Null)
-25 (ln 10): Call(Method, new())
-26 (ln 10): Call(Getter, bar)
-27 (ln 10): Call(Method, print(_))
+25 (ln 10): Call(new())
+26 (ln 10): Call(bar)
+27 (ln 10): Call(print(_))
 28 (ln 10): Pop
 29 (ln 11): Load(Module, Class("System"))
 30 (ln 11): Load(Module, Null)
-31 (ln 11): Call(Getter, bar)
-32 (ln 11): Call(Method, print(_))
+31 (ln 11): Call(bar)
+32 (ln 11): Call(print(_))
 33 (ln 11): Pop
 34 (ln 12): Load(Module, Class("System"))
 35 (ln 12): Load(Module, Null)
-36 (ln 12): Call(Method, new())
+36 (ln 12): Call(new())
 37 (ln 12): Constant(7: "arg")
-38 (ln 12): Call(Method, bar(_))
-39 (ln 12): Call(Method, print(_))
+38 (ln 12): Call(bar(_))
+39 (ln 12): Call(print(_))
 40 (ln 12): Pop
 41 (ln 13): Load(Module, Class("System"))
 42 (ln 13): Load(Module, Null)
 43 (ln 13): Constant(7: "arg")
-44 (ln 13): Call(Method, bar(_))
-45 (ln 13): Call(Method, print(_))
+44 (ln 13): Call(bar(_))
+45 (ln 13): Call(print(_))
 46 (ln 13): Pop
 47 (ln 14): EndModule
 48 (ln 14): Return
@@ -64,7 +64,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 bar Constants:
@@ -84,14 +84,14 @@ bar(_) Constants:
 01: ""
 bar(_) Code:
 00 (ln 6): Load(Module, Class("List"))
-01 (ln 6): Call(Method, new())
+01 (ln 6): Call(new())
 02 (ln 6): Constant(0: "on instance ")
-03 (ln 6): Call(Method, addCore_(_))
+03 (ln 6): Call(addCore_(_))
 04 (ln 6): Load(Local, 1)
-05 (ln 6): Call(Method, addCore_(_))
+05 (ln 6): Call(addCore_(_))
 06 (ln 6): Constant(1: "")
-07 (ln 6): Call(Method, addCore_(_))
-08 (ln 6): Call(Method, join())
+07 (ln 6): Call(addCore_(_))
+08 (ln 6): Call(join())
 09 (ln 6): Return
 10 (ln 6): End
 bar(_) Constants:
@@ -99,13 +99,13 @@ bar(_) Constants:
 01: ""
 bar(_) Code:
 00 (ln 7): Load(Module, Class("List"))
-01 (ln 7): Call(Method, new())
+01 (ln 7): Call(new())
 02 (ln 7): Constant(0: "on metaclass ")
-03 (ln 7): Call(Method, addCore_(_))
+03 (ln 7): Call(addCore_(_))
 04 (ln 7): Load(Local, 1)
-05 (ln 7): Call(Method, addCore_(_))
+05 (ln 7): Call(addCore_(_))
 06 (ln 7): Constant(1: "")
-07 (ln 7): Call(Method, addCore_(_))
-08 (ln 7): Call(Method, join())
+07 (ln 7): Call(addCore_(_))
+08 (ln 7): Call(join())
 09 (ln 7): Return
 10 (ln 7): End

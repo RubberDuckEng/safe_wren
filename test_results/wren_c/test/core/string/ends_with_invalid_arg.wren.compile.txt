@@ -4,8 +4,8 @@
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "abcd")
 02 (ln 1): Null
-03 (ln 1): Call(Method, endsWith(_))
-04 (ln 1): Call(Method, print(_))
+03 (ln 1): Call(endsWith(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 1): EndModule
 07 (ln 1): Return

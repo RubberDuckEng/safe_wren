@@ -2,8 +2,8 @@
 00 (ln 2): Load(Module, Class("System"))
 01 (ln 2): Boolean false
 02 (ln 2): Load(Module, Class("Bool"))
-03 (ln 2): Call(Method, is(_))
-04 (ln 2): Call(Method, print(_))
+03 (ln 2): Call(is(_))
+04 (ln 2): Call(print(_))
 05 (ln 2): Pop
 06 (ln 2): EndModule
 07 (ln 2): Return

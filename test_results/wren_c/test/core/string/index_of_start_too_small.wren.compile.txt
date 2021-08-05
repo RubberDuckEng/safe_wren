@@ -6,8 +6,8 @@
 00 (ln 1): Constant(0: "abcd")
 01 (ln 1): Constant(1: "bc")
 02 (ln 1): Constant(2: 5)
-03 (ln 1): Call(Method, -)
-04 (ln 1): Call(Method, indexOf(_,_))
+03 (ln 1): Call(-)
+04 (ln 1): Call(indexOf(_,_))
 05 (ln 1): Pop
 06 (ln 2): EndModule
 07 (ln 2): Return

@@ -25,8 +25,8 @@
 17 (ln 5): Load(Module, Null)
 18 (ln 5): Method(instance, foo)
 19 (ln 8): Load(Module, Null)
-20 (ln 8): Call(Method, new())
-21 (ln 8): Call(Getter, foo)
+20 (ln 8): Call(new())
+21 (ln 8): Call(foo)
 22 (ln 8): Pop
 23 (ln 9): EndModule
 24 (ln 9): Return
@@ -37,7 +37,7 @@ init new() Code:
 02 (ln 4): End
  Code:
 00 (ln 4): Construct
-01 (ln 4): Call(Method, init new())
+01 (ln 4): Call(init new())
 02 (ln 4): Return
 03 (ln 4): End
 foo Constants:
@@ -46,6 +46,6 @@ foo Constants:
 foo Code:
 00 (ln 5): Load(Local, 0)
 01 (ln 5): Constant(0: 1)
-02 (ln 5): CallSuper(Method, doesNotExist(_))
+02 (ln 5): CallSuper(doesNotExist(_))
 03 (ln 5): Return
 04 (ln 5): End

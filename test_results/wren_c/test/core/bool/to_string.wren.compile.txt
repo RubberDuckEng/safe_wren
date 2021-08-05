@@ -1,13 +1,13 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Boolean true
-02 (ln 1): Call(Getter, toString)
-03 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(toString)
+03 (ln 1): Call(print(_))
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Class("System"))
 06 (ln 2): Boolean false
-07 (ln 2): Call(Getter, toString)
-08 (ln 2): Call(Method, print(_))
+07 (ln 2): Call(toString)
+08 (ln 2): Call(print(_))
 09 (ln 2): Pop
 10 (ln 3): EndModule
 11 (ln 3): Return

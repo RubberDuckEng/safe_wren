@@ -258,7 +258,7 @@
 254 (ln 257): Load(Local, 254)
 255 (ln 258): Load(Module, Class("System"))
 256 (ln 258): Load(Local, 255)
-257 (ln 258): Call(Method, print(_))
+257 (ln 258): Call(print(_))
 258 (ln 258): Pop
 259 (ln 259): Pop
 260 (ln 259): Pop

@@ -9,7 +9,7 @@ use std::rc::Rc;
 use std::{str, usize};
 
 use crate::compiler::{
-    compile_in_module, wren_is_local_name, FnDebug, InputManager, Ops, Scope, Signature,
+    compile_in_module, wren_is_local_name, Arity, FnDebug, InputManager, Ops, Scope,
 };
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 use crate::wren::{Configuration, DebugLevel, ForeignMethodFn, LoadModuleResult, Slot};
@@ -19,6 +19,8 @@ use crate::opt::random_bindings::{
 };
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
+
+pub(crate) type Symbol = usize;
 
 pub(crate) const CORE_MODULE_NAME: &str = "#core";
 
@@ -373,7 +375,7 @@ pub struct SymbolTable {
 
 impl SymbolTable {
     // This is called methodSymbol or wrenSymbolTableEnsure in wren_c
-    pub fn ensure_symbol(&mut self, name: &str) -> usize {
+    pub fn ensure_symbol(&mut self, name: &str) -> Symbol {
         if let Some(index) = self.symbol_for_name(name) {
             return index;
         }
@@ -383,11 +385,11 @@ impl SymbolTable {
         self.names.len() - 1
     }
 
-    fn symbol_for_name(&self, name: &str) -> Option<usize> {
+    fn symbol_for_name(&self, name: &str) -> Option<Symbol> {
         self.names.iter().position(|n| n.eq(name))
     }
 
-    pub fn name_for_symbol(&self, symbol: usize) -> String {
+    pub fn name_for_symbol(&self, symbol: Symbol) -> String {
         match self.names.get(symbol) {
             None => "<not found>".into(),
             Some(name) => name.clone(),
@@ -841,6 +843,16 @@ impl VM {
         if let Some(api) = &mut self.api {
             api.stack[slot] = Value::Boolean(value)
         }
+    }
+
+    // This isn't quite right for the rust API, but is used by the C API.
+    pub(crate) fn call_handle_for_signature(&mut self, signature: &str) -> Value {
+        let symbol = self.methods.ensure_symbol(signature);
+        // Create a little stub function that assumes the arguments are on the stack
+        // and calls the method.
+        let fn_obj = ObjFn::stub_call(self, signature, symbol);
+        let closure = ObjClosure::new(self, new_handle(fn_obj));
+        Value::Closure(new_handle(closure))
     }
 
     // Allows c_api to write addition APIs which the rust public API
@@ -1847,9 +1859,9 @@ impl VM {
         }
     }
 
-    fn args_for_call(&self, frame: &mut CallFrame, signature: &Signature) -> Vec<Value> {
+    fn args_for_call(&self, frame: &mut CallFrame, arity: Arity) -> Vec<Value> {
         // Implicit arg for this.
-        let num_args = signature.arity as usize + 1;
+        let num_args = arity as usize + 1;
         let this_offset = frame.stack.len() - num_args;
         // Unlike wren_c, we remove the args from the stack
         // and pass them to the function.
@@ -1899,8 +1911,8 @@ impl VM {
                 Ops::Null => {
                     frame.push(Value::Null);
                 }
-                Ops::CallSuper(signature, symbol, constant) => {
-                    let args = self.args_for_call(frame, signature);
+                Ops::CallSuper(arity, symbol, constant) => {
+                    let args = self.args_for_call(frame, *arity);
                     // Compiler error if this is not a class.
                     let superclass = fn_obj.constants[*constant].try_into_class().unwrap();
                     if let Some(action) =
@@ -1910,8 +1922,8 @@ impl VM {
                     };
                     // None means continue normal execution, no action needed.
                 }
-                Ops::Call(signature, symbol) => {
-                    let args = self.args_for_call(frame, signature);
+                Ops::Call(arity, symbol) => {
+                    let args = self.args_for_call(frame, *arity);
                     let this_class = self.class_for_value(&args[0]);
                     if let Some(action) =
                         self.call_method(frame, *symbol, &this_class.borrow(), args)?
@@ -2193,18 +2205,16 @@ fn op_debug_string(
         Ops::Constant(i) => format!("Constant({}: {:?})", i, fn_obj.constants[*i]),
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
-        Ops::CallSuper(sig, symbol, _super_constant) => {
+        Ops::CallSuper(_arity, symbol, _super_constant) => {
             format!(
-                "CallSuper({:?}, {}{})",
-                sig.call_type,
+                "CallSuper({}{})",
                 unstable_num_arrow(*symbol),
                 methods.name_for_symbol(*symbol)
             )
         }
-        Ops::Call(sig, symbol) => {
+        Ops::Call(_arity, symbol) => {
             format!(
-                "Call({:?}, {}{})",
-                sig.call_type,
+                "Call({}{})",
                 unstable_num_arrow(*symbol),
                 methods.name_for_symbol(*symbol)
             )
@@ -2402,7 +2412,7 @@ pub(crate) struct ObjFn {
 }
 
 impl ObjFn {
-    pub(crate) fn new(
+    pub(crate) fn from_compiler(
         vm: &VM,
         module: Handle<Module>,
         compiler: Box<crate::compiler::Compiler>,
@@ -2415,6 +2425,39 @@ impl ObjFn {
             arity,
             debug: compiler.fn_debug,
             module,
+        }
+    }
+
+    pub(crate) fn stub_call(vm: &VM, signature: &str, symbol: Symbol) -> ObjFn {
+        let mut num_params = 0;
+        let signature_length = signature.len();
+        // Count normal arguments
+        if signature.ends_with(')') {
+            let left_paren_index = signature.rfind('(').unwrap();
+            let params = &signature[(left_paren_index + 1)..signature_length];
+            num_params += params.matches('_').count();
+        }
+        // Count subscript arguments.
+        if signature.starts_with('[') {
+            let right_brace_index = signature.find(']').unwrap();
+            let params = &signature[1..right_brace_index];
+            num_params += params.matches('_').count();
+        }
+
+        let code = vec![
+            Ops::Call(num_params as Arity, symbol),
+            Ops::Return,
+            Ops::End,
+        ];
+        let code_len = code.len();
+
+        ObjFn {
+            class_obj: vm.fn_class.as_ref().unwrap().clone(),
+            arity: num_params as Arity + 1,
+            code: code,
+            constants: vec![],
+            module: vm.last_imported_module.as_ref().unwrap().clone(), // Wrong?
+            debug: FnDebug::generated(signature, code_len),
         }
     }
 }

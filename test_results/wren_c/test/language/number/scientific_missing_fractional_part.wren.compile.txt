@@ -2,7 +2,7 @@
 00: 1
 <script> Code:
 00 (ln 1): Constant(0: 1)
-01 (ln 1): Call(Getter, e)
+01 (ln 1): Call(e)
 02 (ln 1): Store(Module)
 03 (ln 1): Pop
 04 (ln 1): EndModule

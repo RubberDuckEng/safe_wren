@@ -54,97 +54,97 @@
 38 (ln 76): Load(Module, Null)
 39 (ln 76): Method(instance, method())
 40 (ln 82): Load(Module, Null)
-41 (ln 82): Call(Method, new())
+41 (ln 82): Call(new())
 42 (ln 82): Store(Module)
 43 (ln 82): Pop
 44 (ln 84): Load(Module, Null)
-45 (ln 84): Call(Getter, getter)
-46 (ln 85): Call(Method, test0())
-47 (ln 86): Call(Method, test1())
-48 (ln 87): Call(Method, test2())
+45 (ln 84): Call(getter)
+46 (ln 85): Call(test0())
+47 (ln 86): Call(test1())
+48 (ln 87): Call(test2())
 49 (ln 87): Pop
 50 (ln 89): Load(Module, Null)
-51 (ln 89): Call(Getter, getter)
-52 (ln 90): Call(Method, test0())
-53 (ln 91): Call(Method, test1())
-54 (ln 92): Call(Method, test2())
+51 (ln 89): Call(getter)
+52 (ln 90): Call(test0())
+53 (ln 91): Call(test1())
+54 (ln 92): Call(test2())
 55 (ln 92): Pop
 56 (ln 94): Load(Module, Null)
-57 (ln 94): Call(Getter, getter)
-58 (ln 95): Call(Method, test0())
-59 (ln 96): Call(Method, test1())
-60 (ln 97): Call(Method, test2())
+57 (ln 94): Call(getter)
+58 (ln 95): Call(test0())
+59 (ln 96): Call(test1())
+60 (ln 97): Call(test2())
 61 (ln 97): Pop
 62 (ln 99): Load(Module, Null)
-63 (ln 99): Call(Getter, getter)
+63 (ln 99): Call(getter)
 64 (ln 99): Constant(12: 0)
-65 (ln 99): Call(Subscript, [_])
-66 (ln 100): Call(Method, test0())
+65 (ln 99): Call([_])
+66 (ln 100): Call(test0())
 67 (ln 100): Pop
 68 (ln 102): Load(Module, Null)
-69 (ln 102): Call(Getter, getter)
+69 (ln 102): Call(getter)
 70 (ln 102): Constant(12: 0)
-71 (ln 102): Call(Subscript, [_])
-72 (ln 103): Call(Method, test0())
+71 (ln 102): Call([_])
+72 (ln 103): Call(test0())
 73 (ln 103): Pop
 74 (ln 105): Load(Module, Null)
-75 (ln 105): Call(Method, method())
-76 (ln 106): Call(Method, test0())
-77 (ln 107): Call(Method, test1())
-78 (ln 108): Call(Method, test2())
+75 (ln 105): Call(method())
+76 (ln 106): Call(test0())
+77 (ln 107): Call(test1())
+78 (ln 108): Call(test2())
 79 (ln 108): Pop
 80 (ln 110): Load(Module, Null)
-81 (ln 110): Call(Method, method())
-82 (ln 111): Call(Method, test0())
-83 (ln 112): Call(Method, test1())
-84 (ln 113): Call(Method, test2())
+81 (ln 110): Call(method())
+82 (ln 111): Call(test0())
+83 (ln 112): Call(test1())
+84 (ln 113): Call(test2())
 85 (ln 113): Pop
 86 (ln 115): Load(Module, Null)
-87 (ln 115): Call(Method, method())
-88 (ln 116): Call(Method, test0())
-89 (ln 117): Call(Method, test1())
-90 (ln 118): Call(Method, test2())
+87 (ln 115): Call(method())
+88 (ln 116): Call(test0())
+89 (ln 117): Call(test1())
+90 (ln 118): Call(test2())
 91 (ln 118): Pop
 92 (ln 120): Load(Module, Null)
-93 (ln 120): Call(Method, method())
+93 (ln 120): Call(method())
 94 (ln 120): Constant(12: 0)
-95 (ln 120): Call(Subscript, [_])
-96 (ln 121): Call(Method, test0())
+95 (ln 120): Call([_])
+96 (ln 121): Call(test0())
 97 (ln 121): Pop
 98 (ln 123): Load(Module, Null)
-99 (ln 123): Call(Method, method())
+99 (ln 123): Call(method())
 100 (ln 123): Constant(12: 0)
-101 (ln 123): Call(Subscript, [_])
-102 (ln 124): Call(Method, test0())
+101 (ln 123): Call([_])
+102 (ln 124): Call(test0())
 103 (ln 124): Pop
 104 (ln 129): Load(Module, Null)
-105 (ln 129): Call(Method, new())
+105 (ln 129): Call(new())
 106 (ln 129): Store(Module)
 107 (ln 129): Pop
 108 (ln 131): Load(Module, Null)
-109 (ln 132): Call(Method, test0())
-110 (ln 133): Call(Method, test1())
-111 (ln 134): Call(Method, test2())
+109 (ln 132): Call(test0())
+110 (ln 133): Call(test1())
+111 (ln 134): Call(test2())
 112 (ln 134): Pop
 113 (ln 136): Load(Module, Null)
-114 (ln 137): Call(Method, test0())
-115 (ln 138): Call(Method, test1())
-116 (ln 139): Call(Method, test2())
+114 (ln 137): Call(test0())
+115 (ln 138): Call(test1())
+116 (ln 139): Call(test2())
 117 (ln 139): Pop
 118 (ln 141): Load(Module, Null)
-119 (ln 142): Call(Method, test0())
-120 (ln 143): Call(Method, test1())
-121 (ln 144): Call(Method, test2())
+119 (ln 142): Call(test0())
+120 (ln 143): Call(test1())
+121 (ln 144): Call(test2())
 122 (ln 144): Pop
 123 (ln 147): Load(Module, Null)
 124 (ln 147): Constant(12: 0)
-125 (ln 147): Call(Subscript, [_])
-126 (ln 148): Call(Method, test0())
+125 (ln 147): Call([_])
+126 (ln 148): Call(test0())
 127 (ln 148): Pop
 128 (ln 150): Load(Module, Null)
 129 (ln 150): Constant(12: 0)
-130 (ln 150): Call(Subscript, [_])
-131 (ln 151): Call(Method, test0())
+130 (ln 150): Call([_])
+131 (ln 151): Call(test0())
 132 (ln 151): Pop
 133 (ln 152): EndModule
 134 (ln 152): Return
@@ -155,7 +155,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 test0() Constants:
@@ -163,7 +163,7 @@ test0() Constants:
 test0() Code:
 00 (ln 4): Load(Module, Class("System"))
 01 (ln 4): Constant(0: "test0")
-02 (ln 4): Call(Method, print(_))
+02 (ln 4): Call(print(_))
 03 (ln 4): Pop
 04 (ln 5): Load(Local, 0)
 05 (ln 5): Return
@@ -175,7 +175,7 @@ test1() Constants:
 test1() Code:
 00 (ln 8): Load(Module, Class("System"))
 01 (ln 8): Constant(0: "test1")
-02 (ln 8): Call(Method, print(_))
+02 (ln 8): Call(print(_))
 03 (ln 8): Pop
 04 (ln 9): Load(Local, 0)
 05 (ln 9): Return
@@ -187,7 +187,7 @@ test2() Constants:
 test2() Code:
 00 (ln 12): Load(Module, Class("System"))
 01 (ln 12): Constant(0: "test2")
-02 (ln 12): Call(Method, print(_))
+02 (ln 12): Call(print(_))
 03 (ln 12): Pop
 04 (ln 13): Load(Local, 0)
 05 (ln 13): Return
@@ -199,7 +199,7 @@ test2() Code:
 [_] Code:
 00 (ln 17): Load(Module, Class("System"))
 01 (ln 17): Constant(0: "testSubscript")
-02 (ln 17): Call(Method, print(_))
+02 (ln 17): Call(print(_))
 03 (ln 17): Pop
 04 (ln 18): Load(Local, 0)
 05 (ln 18): Return
@@ -210,70 +210,70 @@ init new() Constants:
 00: 0
 init new() Code:
 00 (ln 25): Load(Module, Null)
-01 (ln 25): Call(Method, new())
+01 (ln 25): Call(new())
 02 (ln 25): Load(Local, 0)
 03 (ln 25): StoreField(0)
 04 (ln 29): Load(Local, 1)
-05 (ln 30): Call(Method, test0())
-06 (ln 31): Call(Method, test1())
-07 (ln 32): Call(Method, test2())
+05 (ln 30): Call(test0())
+06 (ln 31): Call(test1())
+07 (ln 32): Call(test2())
 08 (ln 32): Pop
 09 (ln 34): Load(Local, 1)
-10 (ln 35): Call(Method, test0())
-11 (ln 36): Call(Method, test1())
-12 (ln 37): Call(Method, test2())
+10 (ln 35): Call(test0())
+11 (ln 36): Call(test1())
+12 (ln 37): Call(test2())
 13 (ln 37): Pop
 14 (ln 39): Load(Local, 1)
-15 (ln 40): Call(Method, test0())
-16 (ln 41): Call(Method, test1())
-17 (ln 42): Call(Method, test2())
+15 (ln 40): Call(test0())
+16 (ln 41): Call(test1())
+17 (ln 42): Call(test2())
 18 (ln 42): Pop
 19 (ln 44): Load(Local, 1)
 20 (ln 44): Constant(0: 0)
-21 (ln 44): Call(Subscript, [_])
-22 (ln 45): Call(Method, test0())
+21 (ln 44): Call([_])
+22 (ln 45): Call(test0())
 23 (ln 45): Pop
 24 (ln 47): Load(Local, 1)
 25 (ln 47): Constant(0: 0)
-26 (ln 47): Call(Subscript, [_])
-27 (ln 48): Call(Method, test0())
+26 (ln 47): Call([_])
+27 (ln 48): Call(test0())
 28 (ln 48): Pop
 29 (ln 52): Load(Local, 0)
 30 (ln 52): LoadField(0)
-31 (ln 53): Call(Method, test0())
-32 (ln 54): Call(Method, test1())
-33 (ln 55): Call(Method, test2())
+31 (ln 53): Call(test0())
+32 (ln 54): Call(test1())
+33 (ln 55): Call(test2())
 34 (ln 55): Pop
 35 (ln 57): Load(Local, 0)
 36 (ln 57): LoadField(0)
-37 (ln 58): Call(Method, test0())
-38 (ln 59): Call(Method, test1())
-39 (ln 60): Call(Method, test2())
+37 (ln 58): Call(test0())
+38 (ln 59): Call(test1())
+39 (ln 60): Call(test2())
 40 (ln 60): Pop
 41 (ln 62): Load(Local, 0)
 42 (ln 62): LoadField(0)
-43 (ln 63): Call(Method, test0())
-44 (ln 64): Call(Method, test1())
-45 (ln 65): Call(Method, test2())
+43 (ln 63): Call(test0())
+44 (ln 64): Call(test1())
+45 (ln 65): Call(test2())
 46 (ln 65): Pop
 47 (ln 67): Load(Local, 0)
 48 (ln 67): LoadField(0)
 49 (ln 67): Constant(0: 0)
-50 (ln 67): Call(Subscript, [_])
-51 (ln 68): Call(Method, test0())
+50 (ln 67): Call([_])
+51 (ln 68): Call(test0())
 52 (ln 68): Pop
 53 (ln 70): Load(Local, 0)
 54 (ln 70): LoadField(0)
 55 (ln 70): Constant(0: 0)
-56 (ln 70): Call(Subscript, [_])
-57 (ln 71): Call(Method, test0())
+56 (ln 70): Call([_])
+57 (ln 71): Call(test0())
 58 (ln 71): Pop
 59 (ln 73): Load(Local, 0)
 60 (ln 73): Return
 61 (ln 73): End
  Code:
 00 (ln 73): Construct
-01 (ln 73): Call(Method, init new())
+01 (ln 73): Call(init new())
 02 (ln 73): Return
 03 (ln 73): End
 getter Code:

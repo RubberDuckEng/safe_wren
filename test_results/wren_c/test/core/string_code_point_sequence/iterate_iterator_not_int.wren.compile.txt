@@ -3,9 +3,9 @@
 01: 1.5
 <script> Code:
 00 (ln 1): Constant(0: "s")
-01 (ln 1): Call(Getter, codePoints)
+01 (ln 1): Call(codePoints)
 02 (ln 1): Constant(1: 1.5)
-03 (ln 1): Call(Method, iterate(_))
+03 (ln 1): Call(iterate(_))
 04 (ln 1): Pop
 05 (ln 2): EndModule
 06 (ln 2): Return

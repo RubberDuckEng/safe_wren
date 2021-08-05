@@ -4,13 +4,13 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "s")
-02 (ln 1): Call(Method, !)
-03 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(!)
+03 (ln 1): Call(print(_))
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Class("System"))
 06 (ln 2): Constant(1: "")
-07 (ln 2): Call(Method, !)
-08 (ln 2): Call(Method, print(_))
+07 (ln 2): Call(!)
+08 (ln 2): Call(print(_))
 09 (ln 2): Pop
 10 (ln 3): EndModule
 11 (ln 3): Return

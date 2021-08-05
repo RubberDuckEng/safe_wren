@@ -6,8 +6,8 @@
 04 (ln 1): Pop
 05 (ln 3): Load(Module, Null)
 06 (ln 3): Load(Module, Class("List"))
-07 (ln 3): Call(Method, new())
-08 (ln 3): Call(Method, new(_))
+07 (ln 3): Call(new())
+08 (ln 3): Call(new(_))
 09 (ln 3): Pop
 10 (ln 4): EndModule
 11 (ln 4): Return

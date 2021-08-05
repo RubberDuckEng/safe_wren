@@ -4,8 +4,8 @@
 <script> Code:
 00 (ln 1): Constant(0: "abc")
 01 (ln 1): Constant(1: 3)
-02 (ln 1): Call(Method, -)
-03 (ln 1): Call(Method, *(_))
+02 (ln 1): Call(-)
+03 (ln 1): Call(*(_))
 04 (ln 1): Pop
 05 (ln 2): EndModule
 06 (ln 2): Return

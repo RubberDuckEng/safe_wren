@@ -8,12 +8,12 @@
 03 (ln 3): Constant(1: "shadow")
 04 (ln 4): Load(Module, Class("System"))
 05 (ln 4): Load(Local, 1)
-06 (ln 4): Call(Method, print(_))
+06 (ln 4): Call(print(_))
 07 (ln 4): Pop
 08 (ln 5): Pop
 09 (ln 6): Load(Module, Class("System"))
 10 (ln 6): Load(Module, Null)
-11 (ln 6): Call(Method, print(_))
+11 (ln 6): Call(print(_))
 12 (ln 6): Pop
 13 (ln 6): EndModule
 14 (ln 6): Return

@@ -4,36 +4,36 @@
 02: 3
 <script> Code:
 00 (ln 1): Load(Module, Class("List"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Constant(0: 1)
-03 (ln 1): Call(Method, addCore_(_))
+03 (ln 1): Call(addCore_(_))
 04 (ln 1): Constant(1: 2)
-05 (ln 1): Call(Method, addCore_(_))
+05 (ln 1): Call(addCore_(_))
 06 (ln 1): Constant(2: 3)
-07 (ln 1): Call(Method, addCore_(_))
+07 (ln 1): Call(addCore_(_))
 08 (ln 1): Store(Module)
 09 (ln 1): Pop
 10 (ln 2): Load(Module, Null)
-11 (ln 2): Call(Method, clear())
+11 (ln 2): Call(clear())
 12 (ln 2): Pop
 13 (ln 3): Load(Module, Class("System"))
 14 (ln 3): Load(Module, Null)
-15 (ln 3): Call(Method, print(_))
+15 (ln 3): Call(print(_))
 16 (ln 3): Pop
 17 (ln 4): Load(Module, Class("System"))
 18 (ln 4): Load(Module, Null)
-19 (ln 4): Call(Getter, count)
-20 (ln 4): Call(Method, print(_))
+19 (ln 4): Call(count)
+20 (ln 4): Call(print(_))
 21 (ln 4): Pop
 22 (ln 7): Load(Module, Class("System"))
 23 (ln 7): Load(Module, Class("List"))
-24 (ln 7): Call(Method, new())
+24 (ln 7): Call(new())
 25 (ln 7): Constant(0: 1)
-26 (ln 7): Call(Method, addCore_(_))
+26 (ln 7): Call(addCore_(_))
 27 (ln 7): Constant(1: 2)
-28 (ln 7): Call(Method, addCore_(_))
-29 (ln 7): Call(Method, clear())
-30 (ln 7): Call(Method, print(_))
+28 (ln 7): Call(addCore_(_))
+29 (ln 7): Call(clear())
+30 (ln 7): Call(print(_))
 31 (ln 7): Pop
 32 (ln 8): EndModule
 33 (ln 8): Return

@@ -6,7 +6,7 @@
 00 (ln 1): Constant(0: "foo")
 01 (ln 1): Constant(1: "")
 02 (ln 1): Constant(2: "f")
-03 (ln 1): Call(Method, replace(_,_))
+03 (ln 1): Call(replace(_,_))
 04 (ln 1): Pop
 05 (ln 2): EndModule
 06 (ln 2): Return

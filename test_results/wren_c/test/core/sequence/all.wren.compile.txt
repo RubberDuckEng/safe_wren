@@ -9,45 +9,45 @@
 07: Fn(all(_) block argument)
 <script> Code:
 00 (ln 1): Load(Module, Class("List"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Constant(0: 1)
-03 (ln 1): Call(Method, addCore_(_))
+03 (ln 1): Call(addCore_(_))
 04 (ln 1): Constant(1: 2)
-05 (ln 1): Call(Method, addCore_(_))
+05 (ln 1): Call(addCore_(_))
 06 (ln 1): Constant(2: 3)
-07 (ln 1): Call(Method, addCore_(_))
+07 (ln 1): Call(addCore_(_))
 08 (ln 1): Store(Module)
 09 (ln 1): Pop
 10 (ln 2): Load(Module, Class("System"))
 11 (ln 2): Load(Module, Null)
 12 (ln 2): Closure(3, [])
-13 (ln 2): Call(Method, all(_))
-14 (ln 2): Call(Method, print(_))
+13 (ln 2): Call(all(_))
+14 (ln 2): Call(print(_))
 15 (ln 2): Pop
 16 (ln 3): Load(Module, Class("System"))
 17 (ln 3): Load(Module, Null)
 18 (ln 3): Closure(4, [])
-19 (ln 3): Call(Method, all(_))
-20 (ln 3): Call(Method, print(_))
+19 (ln 3): Call(all(_))
+20 (ln 3): Call(print(_))
 21 (ln 3): Pop
 22 (ln 4): Load(Module, Class("System"))
 23 (ln 4): Load(Module, Class("List"))
-24 (ln 4): Call(Method, new())
+24 (ln 4): Call(new())
 25 (ln 4): Closure(5, [])
-26 (ln 4): Call(Method, all(_))
-27 (ln 4): Call(Method, print(_))
+26 (ln 4): Call(all(_))
+27 (ln 4): Call(print(_))
 28 (ln 4): Pop
 29 (ln 7): Load(Module, Class("System"))
 30 (ln 7): Load(Module, Null)
 31 (ln 7): Closure(6, [])
-32 (ln 7): Call(Method, all(_))
-33 (ln 7): Call(Method, print(_))
+32 (ln 7): Call(all(_))
+33 (ln 7): Call(print(_))
 34 (ln 7): Pop
 35 (ln 10): Load(Module, Class("System"))
 36 (ln 10): Load(Module, Null)
 37 (ln 10): Closure(7, [])
-38 (ln 10): Call(Method, all(_))
-39 (ln 10): Call(Method, print(_))
+38 (ln 10): Call(all(_))
+39 (ln 10): Call(print(_))
 40 (ln 10): Pop
 41 (ln 10): EndModule
 42 (ln 10): Return
@@ -57,7 +57,7 @@ all(_) block argument Constants:
 all(_) block argument Code:
 00 (ln 2): Load(Local, 1)
 01 (ln 2): Constant(0: 1)
-02 (ln 2): Call(Method, >(_))
+02 (ln 2): Call(>(_))
 03 (ln 2): Return
 04 (ln 2): End
 all(_) block argument Constants:
@@ -65,7 +65,7 @@ all(_) block argument Constants:
 all(_) block argument Code:
 00 (ln 3): Load(Local, 1)
 01 (ln 3): Constant(0: 0)
-02 (ln 3): Call(Method, >(_))
+02 (ln 3): Call(>(_))
 03 (ln 3): Return
 04 (ln 3): End
 all(_) block argument Code:
@@ -77,7 +77,7 @@ all(_) block argument Constants:
 all(_) block argument Code:
 00 (ln 7): Load(Local, 1)
 01 (ln 7): Constant(0: 2)
-02 (ln 7): Call(Method, <(_))
+02 (ln 7): Call(<(_))
 03 (ln 7): JumpIfFalse(2)
 04 (ln 7): Null
 05 (ln 7): Jump(1)

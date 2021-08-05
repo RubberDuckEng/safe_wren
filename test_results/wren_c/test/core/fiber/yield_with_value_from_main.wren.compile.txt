@@ -5,15 +5,15 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: "before")
-02 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(print(_))
 03 (ln 1): Pop
 04 (ln 2): Load(Module, Class("Fiber"))
 05 (ln 2): Constant(1: 1)
-06 (ln 2): Call(Method, yield(_))
+06 (ln 2): Call(yield(_))
 07 (ln 2): Pop
 08 (ln 3): Load(Module, Class("System"))
 09 (ln 3): Constant(2: "not reached")
-10 (ln 3): Call(Method, print(_))
+10 (ln 3): Call(print(_))
 11 (ln 3): Pop
 12 (ln 3): EndModule
 13 (ln 3): Return

@@ -9,7 +9,7 @@
 04 (ln 4): Pop
 05 (ln 5): Load(Module, Class("System"))
 06 (ln 5): Load(Module, Null)
-07 (ln 5): Call(Method, print(_))
+07 (ln 5): Call(print(_))
 08 (ln 5): Pop
 09 (ln 5): EndModule
 10 (ln 5): Return

@@ -7,14 +7,14 @@
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 6)
 02 (ln 1): Constant(1: 101)
-03 (ln 1): Call(Method, >>(_))
-04 (ln 1): Call(Method, print(_))
+03 (ln 1): Call(>>(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Constant(2: 0)
 08 (ln 2): Constant(3: 33)
-09 (ln 2): Call(Method, <<(_))
-10 (ln 2): Call(Method, print(_))
+09 (ln 2): Call(<<(_))
+10 (ln 2): Call(print(_))
 11 (ln 2): Pop
 12 (ln 3): EndModule
 13 (ln 3): Return

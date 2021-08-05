@@ -29,19 +29,19 @@
 16 (ln 4): Method(instance, iteratorValue(_))
 17 (ln 8): Load(Module, Null)
 18 (ln 8): Boolean false
-19 (ln 8): Call(Method, new(_))
+19 (ln 8): Call(new(_))
 20 (ln 8): Null
 21 (ln 8): Load(Local, 1)
 22 (ln 8): Load(Local, 2)
-23 (ln 8): Call(Method, iterate(_))
+23 (ln 8): Call(iterate(_))
 24 (ln 8): Store(Local, 2)
 25 (ln 8): JumpIfFalse(11)
 26 (ln 8): Load(Local, 1)
 27 (ln 8): Load(Local, 2)
-28 (ln 8): Call(Method, iteratorValue(_))
+28 (ln 8): Call(iteratorValue(_))
 29 (ln 9): Load(Module, Class("System"))
 30 (ln 9): Constant(5: "bad")
-31 (ln 9): Call(Method, print(_))
+31 (ln 9): Call(print(_))
 32 (ln 9): Pop
 33 (ln 10): Pop
 34 (ln 10): Jump(2)
@@ -51,19 +51,19 @@
 38 (ln 11): Pop
 39 (ln 13): Load(Module, Null)
 40 (ln 13): Null
-41 (ln 13): Call(Method, new(_))
+41 (ln 13): Call(new(_))
 42 (ln 13): Null
 43 (ln 13): Load(Local, 1)
 44 (ln 13): Load(Local, 2)
-45 (ln 13): Call(Method, iterate(_))
+45 (ln 13): Call(iterate(_))
 46 (ln 13): Store(Local, 2)
 47 (ln 13): JumpIfFalse(11)
 48 (ln 13): Load(Local, 1)
 49 (ln 13): Load(Local, 2)
-50 (ln 13): Call(Method, iteratorValue(_))
+50 (ln 13): Call(iteratorValue(_))
 51 (ln 14): Load(Module, Class("System"))
 52 (ln 14): Constant(5: "bad")
-53 (ln 14): Call(Method, print(_))
+53 (ln 14): Call(print(_))
 54 (ln 14): Pop
 55 (ln 15): Pop
 56 (ln 15): Jump(2)
@@ -73,19 +73,19 @@
 60 (ln 16): Pop
 61 (ln 19): Load(Module, Null)
 62 (ln 19): Boolean true
-63 (ln 19): Call(Method, new(_))
+63 (ln 19): Call(new(_))
 64 (ln 19): Null
 65 (ln 19): Load(Local, 1)
 66 (ln 19): Load(Local, 2)
-67 (ln 19): Call(Method, iterate(_))
+67 (ln 19): Call(iterate(_))
 68 (ln 19): Store(Local, 2)
 69 (ln 19): JumpIfFalse(11)
 70 (ln 19): Load(Local, 1)
 71 (ln 19): Load(Local, 2)
-72 (ln 19): Call(Method, iteratorValue(_))
+72 (ln 19): Call(iteratorValue(_))
 73 (ln 20): Load(Module, Class("System"))
 74 (ln 20): Constant(6: "true")
-75 (ln 20): Call(Method, print(_))
+75 (ln 20): Call(print(_))
 76 (ln 20): Pop
 77 (ln 21): Pop
 78 (ln 21): Jump(2)
@@ -95,19 +95,19 @@
 82 (ln 22): Pop
 83 (ln 24): Load(Module, Null)
 84 (ln 24): Constant(7: 0)
-85 (ln 24): Call(Method, new(_))
+85 (ln 24): Call(new(_))
 86 (ln 24): Null
 87 (ln 24): Load(Local, 1)
 88 (ln 24): Load(Local, 2)
-89 (ln 24): Call(Method, iterate(_))
+89 (ln 24): Call(iterate(_))
 90 (ln 24): Store(Local, 2)
 91 (ln 24): JumpIfFalse(11)
 92 (ln 24): Load(Local, 1)
 93 (ln 24): Load(Local, 2)
-94 (ln 24): Call(Method, iteratorValue(_))
+94 (ln 24): Call(iteratorValue(_))
 95 (ln 25): Load(Module, Class("System"))
 96 (ln 25): Constant(7: 0)
-97 (ln 25): Call(Method, print(_))
+97 (ln 25): Call(print(_))
 98 (ln 25): Pop
 99 (ln 26): Pop
 100 (ln 26): Jump(2)
@@ -117,19 +117,19 @@
 104 (ln 27): Pop
 105 (ln 29): Load(Module, Null)
 106 (ln 29): Constant(8: "")
-107 (ln 29): Call(Method, new(_))
+107 (ln 29): Call(new(_))
 108 (ln 29): Null
 109 (ln 29): Load(Local, 1)
 110 (ln 29): Load(Local, 2)
-111 (ln 29): Call(Method, iterate(_))
+111 (ln 29): Call(iterate(_))
 112 (ln 29): Store(Local, 2)
 113 (ln 29): JumpIfFalse(11)
 114 (ln 29): Load(Local, 1)
 115 (ln 29): Load(Local, 2)
-116 (ln 29): Call(Method, iteratorValue(_))
+116 (ln 29): Call(iteratorValue(_))
 117 (ln 30): Load(Module, Class("System"))
 118 (ln 30): Constant(9: "string")
-119 (ln 30): Call(Method, print(_))
+119 (ln 30): Call(print(_))
 120 (ln 30): Pop
 121 (ln 31): Pop
 122 (ln 31): Jump(2)
@@ -150,7 +150,7 @@ init new(_) Code:
 06 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new(_))
+01 (ln 2): Call(init new(_))
 02 (ln 2): Return
 03 (ln 2): End
 iterate(_) Code:

@@ -4,15 +4,15 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Fiber"))
 01 (ln 4): Closure(0, [])
-02 (ln 4): Call(Method, new(_))
+02 (ln 4): Call(new(_))
 03 (ln 4): Store(Module)
 04 (ln 4): Pop
 05 (ln 6): Load(Module, Null)
-06 (ln 6): Call(Method, try())
+06 (ln 6): Call(try())
 07 (ln 6): Pop
 08 (ln 7): Load(Module, Null)
 09 (ln 7): Constant(1: "blah")
-10 (ln 7): Call(Method, transfer(_))
+10 (ln 7): Call(transfer(_))
 11 (ln 7): Pop
 12 (ln 8): EndModule
 13 (ln 8): Return
@@ -23,11 +23,11 @@ new(_) block argument Constants:
 new(_) block argument Code:
 00 (ln 2): Load(Module, Class("Fiber"))
 01 (ln 2): Constant(0: "Error!")
-02 (ln 2): Call(Method, abort(_))
+02 (ln 2): Call(abort(_))
 03 (ln 2): Pop
 04 (ln 3): Load(Module, Class("System"))
 05 (ln 3): Constant(1: "should not get here")
-06 (ln 3): Call(Method, print(_))
+06 (ln 3): Call(print(_))
 07 (ln 3): Pop
 08 (ln 4): Null
 09 (ln 4): Return

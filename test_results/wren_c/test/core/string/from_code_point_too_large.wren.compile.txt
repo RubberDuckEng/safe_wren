@@ -6,9 +6,9 @@
 01 (ln 3): Load(Module, Class("String"))
 02 (ln 3): Constant(0: 1114111)
 03 (ln 3): Constant(1: 1)
-04 (ln 3): Call(Method, +(_))
-05 (ln 3): Call(Method, fromCodePoint(_))
-06 (ln 3): Call(Method, print(_))
+04 (ln 3): Call(+(_))
+05 (ln 3): Call(fromCodePoint(_))
+06 (ln 3): Call(print(_))
 07 (ln 3): Pop
 08 (ln 4): EndModule
 09 (ln 4): Return

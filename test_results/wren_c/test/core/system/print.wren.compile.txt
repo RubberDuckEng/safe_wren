@@ -21,16 +21,16 @@
 13 (ln 4): Method(instance, toString)
 14 (ln 8): Load(Module, Class("System"))
 15 (ln 8): Load(Module, Null)
-16 (ln 8): Call(Method, new())
-17 (ln 8): Call(Method, print(_))
+16 (ln 8): Call(new())
+17 (ln 8): Call(print(_))
 18 (ln 8): Pop
 19 (ln 11): Load(Module, Class("System"))
 20 (ln 11): Load(Module, Class("System"))
 21 (ln 11): Constant(4: 1)
-22 (ln 11): Call(Method, print(_))
+22 (ln 11): Call(print(_))
 23 (ln 11): Constant(4: 1)
-24 (ln 11): Call(Method, ==(_))
-25 (ln 11): Call(Method, print(_))
+24 (ln 11): Call(==(_))
+25 (ln 11): Call(print(_))
 26 (ln 11): Pop
 27 (ln 13): EndModule
 28 (ln 13): Return
@@ -41,7 +41,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 toString Constants:

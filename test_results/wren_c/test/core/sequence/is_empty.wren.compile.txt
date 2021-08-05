@@ -8,17 +8,17 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Load(Module, Class("List"))
-02 (ln 1): Call(Method, new())
-03 (ln 1): Call(Getter, isEmpty)
-04 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(new())
+03 (ln 1): Call(isEmpty)
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Load(Module, Class("List"))
-08 (ln 2): Call(Method, new())
+08 (ln 2): Call(new())
 09 (ln 2): Constant(0: 1)
-10 (ln 2): Call(Method, addCore_(_))
-11 (ln 2): Call(Getter, isEmpty)
-12 (ln 2): Call(Method, print(_))
+10 (ln 2): Call(addCore_(_))
+11 (ln 2): Call(isEmpty)
+12 (ln 2): Call(print(_))
 13 (ln 2): Pop
 14 (ln 4): Constant(1: "InfiniteSequence")
 15 (ln 4): Load(Module, Class("Sequence"))
@@ -39,9 +39,9 @@
 30 (ln 7): Method(instance, iteratorValue(_))
 31 (ln 11): Load(Module, Class("System"))
 32 (ln 11): Load(Module, Null)
-33 (ln 11): Call(Method, new())
-34 (ln 11): Call(Getter, isEmpty)
-35 (ln 11): Call(Method, print(_))
+33 (ln 11): Call(new())
+34 (ln 11): Call(isEmpty)
+35 (ln 11): Call(print(_))
 36 (ln 11): Pop
 37 (ln 12): EndModule
 38 (ln 12): Return
@@ -52,7 +52,7 @@ init new() Code:
 02 (ln 5): End
  Code:
 00 (ln 5): Construct
-01 (ln 5): Call(Method, init new())
+01 (ln 5): Call(init new())
 02 (ln 5): Return
 03 (ln 5): End
 iterate(_) Code:

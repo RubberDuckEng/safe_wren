@@ -24,9 +24,9 @@
 16 (ln 10): Method(instance, iteratorValue(_))
 17 (ln 13): Load(Module, Class("System"))
 18 (ln 13): Load(Module, Null)
-19 (ln 13): Call(Method, new())
-20 (ln 13): Call(Getter, count)
-21 (ln 13): Call(Method, print(_))
+19 (ln 13): Call(new())
+20 (ln 13): Call(count)
+21 (ln 13): Call(print(_))
 22 (ln 13): Pop
 23 (ln 14): EndModule
 24 (ln 14): Return
@@ -37,7 +37,7 @@ init new() Code:
 02 (ln 2): End
  Code:
 00 (ln 2): Construct
-01 (ln 2): Call(Method, init new())
+01 (ln 2): Call(init new())
 02 (ln 2): Return
 03 (ln 2): End
 iterate(_) Constants:
@@ -46,19 +46,19 @@ iterate(_) Constants:
 iterate(_) Code:
 00 (ln 5): Load(Local, 1)
 01 (ln 5): Null
-02 (ln 5): Call(Method, ==(_))
+02 (ln 5): Call(==(_))
 03 (ln 5): JumpIfFalse(2)
 04 (ln 5): Constant(0: 1)
 05 (ln 5): Return
 06 (ln 6): Load(Local, 1)
 07 (ln 6): Constant(1: 10)
-08 (ln 6): Call(Method, ==(_))
+08 (ln 6): Call(==(_))
 09 (ln 6): JumpIfFalse(2)
 10 (ln 6): Boolean false
 11 (ln 6): Return
 12 (ln 7): Load(Local, 1)
 13 (ln 7): Constant(0: 1)
-14 (ln 7): Call(Method, +(_))
+14 (ln 7): Call(+(_))
 15 (ln 7): Return
 16 (ln 8): Null
 17 (ln 8): Return

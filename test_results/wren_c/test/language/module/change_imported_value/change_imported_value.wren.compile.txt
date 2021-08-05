@@ -9,17 +9,17 @@
 07 (ln 1): Pop
 08 (ln 3): Load(Module, Class("System"))
 09 (ln 3): Load(Module, Null)
-10 (ln 3): Call(Method, print(_))
+10 (ln 3): Call(print(_))
 11 (ln 3): Pop
 12 (ln 7): Load(Module, Null)
-13 (ln 7): Call(Getter, change)
+13 (ln 7): Call(change)
 14 (ln 7): Pop
 15 (ln 8): Load(Module, Class("System"))
 16 (ln 8): Load(Module, Null)
-17 (ln 8): Call(Method, print(_))
+17 (ln 8): Call(print(_))
 18 (ln 8): Pop
 19 (ln 11): Load(Module, Null)
-20 (ln 11): Call(Getter, show)
+20 (ln 11): Call(show)
 21 (ln 11): Pop
 22 (ln 12): EndModule
 23 (ln 12): Return

@@ -13,7 +13,7 @@
 07 (ln 4): Method(static, bar=_)
 08 (ln 7): Load(Module, Null)
 09 (ln 7): Constant(2: "value")
-10 (ln 7): Call(Setter, bar=_)
+10 (ln 7): Call(bar=_)
 11 (ln 7): Pop
 12 (ln 8): EndModule
 13 (ln 8): Return
@@ -21,7 +21,7 @@
 bar=_ Code:
 00 (ln 3): Load(Module, Class("System"))
 01 (ln 3): Load(Local, 1)
-02 (ln 3): Call(Method, print(_))
+02 (ln 3): Call(print(_))
 03 (ln 3): Pop
 04 (ln 4): Null
 05 (ln 4): Return

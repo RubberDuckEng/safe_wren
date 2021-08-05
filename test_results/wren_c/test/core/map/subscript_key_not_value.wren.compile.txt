@@ -1,9 +1,9 @@
 <script> Code:
 00 (ln 1): Load(Module, Class("Map"))
-01 (ln 1): Call(Method, new())
+01 (ln 1): Call(new())
 02 (ln 1): Load(Module, Class("List"))
-03 (ln 1): Call(Method, new())
-04 (ln 1): Call(Subscript, [_])
+03 (ln 1): Call(new())
+04 (ln 1): Call([_])
 05 (ln 1): Store(Module)
 06 (ln 1): Pop
 07 (ln 2): EndModule
