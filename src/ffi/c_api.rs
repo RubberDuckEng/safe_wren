@@ -132,7 +132,7 @@ pub const WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR: WrenInterpretResult = 2
 pub type WrenInterpretResult = c_uint;
 
 impl Configuration {
-    pub fn from_c(c_config_ptr: *mut WrenConfiguration) -> Configuration {
+    pub fn from_c(c_config: &WrenConfiguration) -> Configuration {
         // c_config.resolve_module_fn: WrenResolveModuleFn,
         // c_config.load_module_fn: WrenLoadModuleFn,
         // c_config.bind_foreign_method_fn: WrenBindForeignMethodFn,
@@ -143,7 +143,6 @@ impl Configuration {
         // c_config.min_heap_size: size_t,      // ignored
         // c_config.heap_growth_percent: c_int, // ignored
         // c_config.user_data: *mut c_void,
-        let c_config = unsafe { &*c_config_ptr };
         assert_eq!(c_config.reallocate_fn, None); // Ignored
         Configuration {
             ..Default::default()
@@ -152,9 +151,11 @@ impl Configuration {
 }
 
 #[no_mangle]
-pub extern "C" fn wrenNewVM(c_config: *mut WrenConfiguration) -> *mut WrenVM {
+pub extern "C" fn wrenNewVM(c_config_ptr: *mut WrenConfiguration) -> *mut WrenVM {
+    let c_config = unsafe { &*c_config_ptr };
     let config = Configuration::from_c(c_config);
-    let vm = VM::new(config);
+    let mut vm = VM::new(config);
+    vm.user_data = c_config.user_data;
     let vm_ptr = Box::into_raw(Box::new(vm));
     unsafe { std::mem::transmute::<*mut VM, *mut WrenVM>(vm_ptr) }
 }
@@ -571,10 +572,14 @@ pub extern "C" fn wrenAbortFiber(c_vm: *mut WrenVM, c_slot: c_int) {
     vm.abort_fiber(slot)
 }
 
-// #[no_mangle]
-// pub extern "C" fn wrenGetUserData(c_vm: *mut WrenVM) -> *mut c_void {
-//     std::ptr::null_mut()
-// }
+#[no_mangle]
+pub extern "C" fn wrenGetUserData(c_vm: *mut WrenVM) -> *mut c_void {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    vm.user_data
+}
 
-// #[no_mangle]
-// pub extern "C" fn wrenSetUserData(c_vm: *mut WrenVM, c_user_data: *mut c_void) {}
+#[no_mangle]
+pub extern "C" fn wrenSetUserData(c_vm: *mut WrenVM, c_user_data: *mut c_void) {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    vm.user_data = c_user_data;
+}

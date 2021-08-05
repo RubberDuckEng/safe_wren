@@ -4,6 +4,7 @@ include!(concat!(env!("OUT_DIR"), "/wren_core_source.rs"));
 
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::ffi::c_void;
 use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::{str, usize};
@@ -628,6 +629,8 @@ pub struct VM {
     // Args for the foreign function being called.
     // wren_c calls this apiStack
     api: Option<Api>,
+    // For the C API.
+    pub(crate) user_data: *mut c_void,
 }
 
 pub trait UserData {
@@ -1493,6 +1496,7 @@ impl VM {
             last_imported_module: None,
             config,
             api: None,
+            user_data: std::ptr::null_mut(),
         };
 
         // FIXME: This shouldn't be needed anymore.  We no longer

@@ -1,5 +1,5 @@
    Compiling wren_rust v0.1.0 (/Users/eseidel/Documents/GitHub/wren_rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 4.44s
+    Finished dev [unoptimized + debuginfo] target(s) in 4.99s
 Undefined symbols for architecture x86_64:
   "_wrenGetSlotBytes", referenced from:
       _getSlots in slots.o
@@ -10,13 +10,9 @@ Undefined symbols for architecture x86_64:
       _hasModule in get_variable.o
       _getSlots in slots.o
       _setSlots in slots.o
-  "_wrenGetUserData", referenced from:
-      _test in user_data.o
   "_wrenSetSlotBytes", referenced from:
       _callRunTests in call.o
       _setSlots in slots.o
-  "_wrenSetUserData", referenced from:
-      _test in user_data.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 make[1]: *** [bin/wren_test] Error 1
