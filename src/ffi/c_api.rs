@@ -308,10 +308,15 @@ pub extern "C" fn wrenGetSlotBool(c_vm: *mut WrenVM, c_slot: c_int) -> bool {
     vm.get_slot_bool(slot)
 }
 
-// // #[no_mangle]
-// // pub extern "C" fn  wrenGetSlotBytes(c_vm: *mut WrenVM, c_slot: c_int, length: *mut c_int) -> *c_char {
-
-// // }
+#[no_mangle]
+pub extern "C" fn wrenGetSlotBytes(
+    _vm: *mut WrenVM,
+    _slot: c_int,
+    _length: *mut c_int,
+) -> *const c_char {
+    // Is expected to live a long as the value its drawn from.
+    std::ptr::null()
+}
 
 #[no_mangle]
 pub extern "C" fn wrenGetSlotDouble(c_vm: *mut WrenVM, c_slot: c_int) -> f64 {
@@ -333,10 +338,11 @@ pub extern "C" fn wrenGetSlotForeign(c_vm: *mut WrenVM, c_slot: c_int) -> *mut c
     unsafe { std::mem::transmute::<*mut u8, *mut c_void>(c_ptr) }
 }
 
-// #[no_mangle]
-// pub extern "C" fn wrenGetSlotString(c_vm: *mut WrenVM, c_slot: c_int) -> *const c_char {
-//     std::ptr::null()
-// }
+#[no_mangle]
+pub extern "C" fn wrenGetSlotString(_vm: *mut WrenVM, _slot: c_int) -> *const c_char {
+    // FIXME: unimplemented.
+    std::ptr::null()
+}
 
 impl Value {
     fn into_handle(&self) -> *mut WrenHandle {
@@ -365,14 +371,15 @@ pub extern "C" fn wrenSetSlotBool(c_vm: *mut WrenVM, c_slot: c_int, value: bool)
     vm.set_slot_bool(slot, value)
 }
 
-// #[no_mangle]
-// pub extern "C" fn wrenSetSlotBytes(
-//     c_vm: *mut WrenVM,
-//     c_slot: c_int,
-//     c_bytes: *const c_char,
-//     c_length: size_t,
-// ) {
-// }
+#[no_mangle]
+pub extern "C" fn wrenSetSlotBytes(
+    _vm: *mut WrenVM,
+    _slot: c_int,
+    _bytes: *const c_char,
+    _length: size_t,
+) {
+    // FIXME: rust strings don't take arbitrary byte arrays.
+}
 
 #[no_mangle]
 pub extern "C" fn wrenSetSlotDouble(c_vm: *mut WrenVM, c_slot: c_int, value: f64) {
