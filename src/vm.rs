@@ -12,7 +12,9 @@ use crate::compiler::{
     compile_in_module, wren_is_local_name, Arity, FnDebug, InputManager, Ops, Scope,
 };
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-use crate::wren::{Configuration, DebugLevel, ForeignMethodFn, LoadModuleResult, Slot};
+use crate::wren::{
+    Configuration, DebugLevel, ForeignMethodFn, InterpretResult, LoadModuleResult, Slot,
+};
 
 use crate::opt::random_bindings::{
     random_bind_foreign_class, random_bind_foreign_method, random_source,
@@ -848,11 +850,17 @@ impl VM {
     // This isn't quite right for the rust API, but is used by the C API.
     pub(crate) fn call_handle_for_signature(&mut self, signature: &str) -> Value {
         let symbol = self.methods.ensure_symbol(signature);
-        // Create a little stub function that assumes the arguments are on the stack
-        // and calls the method.
+        // Create a little stub function that assumes the arguments are on the
+        // stack and calls the method.
         let fn_obj = ObjFn::stub_call(self, signature, symbol);
         let closure = ObjClosure::new(self, new_handle(fn_obj));
         Value::Closure(new_handle(closure))
+    }
+
+    // This is just a (non-functional) stub for the C API as well.
+    pub(crate) fn call(&mut self, _method: &Value) -> InterpretResult {
+        self.set_value_for_slot(0, Value::Null);
+        InterpretResult::Success
     }
 
     // Allows c_api to write addition APIs which the rust public API

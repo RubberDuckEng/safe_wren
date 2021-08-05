@@ -165,6 +165,16 @@ pub extern "C" fn wrenFreeVM(c_vm: *mut WrenVM) {
     unsafe { Box::from_raw(vm_ptr) };
 }
 
+impl InterpretResult {
+    fn to_c(self) -> WrenInterpretResult {
+        match self {
+            InterpretResult::Success => WrenInterpretResult_WREN_RESULT_SUCCESS,
+            InterpretResult::CompileError => WrenInterpretResult_WREN_RESULT_COMPILE_ERROR,
+            InterpretResult::RuntimeError => WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR,
+        }
+    }
+}
+
 #[no_mangle]
 pub extern "C" fn wrenInterpret(
     c_vm: *mut WrenVM,
@@ -174,11 +184,7 @@ pub extern "C" fn wrenInterpret(
     let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let module = unsafe { CStr::from_ptr(c_module) }.to_str().unwrap();
     let source = unsafe { CStr::from_ptr(c_source) }.to_str().unwrap().into();
-    match vm.interpret(module, source) {
-        InterpretResult::Success => WrenInterpretResult_WREN_RESULT_SUCCESS,
-        InterpretResult::CompileError => WrenInterpretResult_WREN_RESULT_COMPILE_ERROR,
-        InterpretResult::RuntimeError => WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR,
-    }
+    vm.interpret(module, source).to_c()
 }
 
 impl ForeignClassMethods {
@@ -237,8 +243,14 @@ extern "C" fn wrenMakeCallHandle(c_vm: *mut WrenVM, c_signature: *const c_char) 
     value.into_handle()
 }
 
-// #[no_mangle]
-// extern "C" fn wrenCall(c_vm: *mut WrenVM, c_method: *mut WrenHandle) -> WrenInterpretResult {}
+#[no_mangle]
+extern "C" fn wrenCall(c_vm: *mut WrenVM, c_method: *mut WrenHandle) -> WrenInterpretResult {
+    let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
+    let value = unsafe { std::mem::transmute::<*mut WrenHandle, &mut Value>(c_method) };
+    // Copy api stack onto the (new?) real stack and then call the function?
+    // What does it have access to?
+    vm.call(value).to_c()
+}
 
 #[no_mangle]
 extern "C" fn wrenReleaseHandle(_vm: *mut WrenVM, c_handle: *mut WrenHandle) {
