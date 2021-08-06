@@ -1,12 +1,12 @@
 use crate::vm::Value;
 use crate::wren::{
-    Configuration, FinalizerFn, ForeignClassMethods, ForeignMethodFn, InterpretResult, SlotType,
-    UserData, VM,
+    Configuration, ErrorFn, ErrorType, FinalizerFn, ForeignClassMethods, ForeignMethodFn,
+    InterpretResult, ResolveModuleFn, SlotType, UserData, WriteFn, VM,
 };
 use libc::{c_char, c_int, c_uint, size_t};
 use std::boxed::Box;
 use std::convert::TryFrom;
-use std::ffi::{c_void, CStr};
+use std::ffi::{c_void, CStr, CString};
 
 #[repr(C)]
 pub struct WrenVM {
@@ -60,12 +60,12 @@ pub type WrenBindForeignClassFn = Option<
     ) -> WrenForeignClassMethods,
 >;
 
-// #[allow(non_upper_case_globals)]
-// pub const WrenErrorType_WREN_ERROR_COMPILE: WrenErrorType = 0;
-// #[allow(non_upper_case_globals)]
-// pub const WrenErrorType_WREN_ERROR_RUNTIME: WrenErrorType = 1;
-// #[allow(non_upper_case_globals)]
-// pub const WrenErrorType_WREN_ERROR_STACK_TRACE: WrenErrorType = 2;
+#[allow(non_upper_case_globals)]
+pub const WrenErrorType_WREN_ERROR_COMPILE: WrenErrorType = 0;
+#[allow(non_upper_case_globals)]
+pub const WrenErrorType_WREN_ERROR_RUNTIME: WrenErrorType = 1;
+#[allow(non_upper_case_globals)]
+pub const WrenErrorType_WREN_ERROR_STACK_TRACE: WrenErrorType = 2;
 pub type WrenErrorType = c_uint;
 
 pub type WrenErrorFn = Option<
@@ -79,6 +79,7 @@ pub type WrenErrorFn = Option<
 >;
 
 #[repr(C)]
+#[derive(Clone)]
 pub struct WrenConfiguration {
     pub reallocate_fn: WrenReallocateFn, // ignored
     pub resolve_module_fn: WrenResolveModuleFn,
@@ -91,6 +92,24 @@ pub struct WrenConfiguration {
     pub min_heap_size: size_t,      // ignored
     pub heap_growth_percent: c_int, // ignored
     pub user_data: *mut c_void,
+}
+
+impl Default for WrenConfiguration {
+    fn default() -> WrenConfiguration {
+        WrenConfiguration {
+            reallocate_fn: None,
+            resolve_module_fn: None,
+            load_module_fn: None,
+            bind_foreign_method_fn: None,
+            bind_foreign_class_fn: None,
+            write_fn: None,
+            error_fn: None,
+            initial_heap_size: 0,
+            min_heap_size: 0,
+            heap_growth_percent: 0,
+            user_data: std::ptr::null_mut(),
+        }
+    }
 }
 
 #[repr(C)]
@@ -131,20 +150,81 @@ pub const WrenInterpretResult_WREN_RESULT_COMPILE_ERROR: WrenInterpretResult = 1
 pub const WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR: WrenInterpretResult = 2;
 pub type WrenInterpretResult = c_uint;
 
+impl ErrorType {
+    fn to_c(self) -> WrenErrorType {
+        match self {
+            ErrorType::Compile => WrenErrorType_WREN_ERROR_COMPILE,
+            ErrorType::Runtime => WrenErrorType_WREN_ERROR_RUNTIME,
+            ErrorType::StackTrace => WrenErrorType_WREN_ERROR_STACK_TRACE,
+        }
+    }
+}
+
 impl Configuration {
     pub fn from_c(c_config: &WrenConfiguration) -> Configuration {
-        // c_config.resolve_module_fn: WrenResolveModuleFn,
+        // We have to hold onto the function pointer from C somehow.
+        // We could use closures and capture the fn pointer.  But for now we're
+        // just saving the whole c_config struct and grabbing the function
+        // pointers off of that when dispatching to these static rust functions.
+        // If we ever change Configuration (rust) to take Closures, we could
+        // switch to using Closures instead.
+        fn write_fn(vm: &VM, text: &str) {
+            let c_fn = vm.c_config.write_fn.unwrap();
+            // Eeek!  mapping to mut! This is probably terrible.
+            let c_vm = unsafe { std::mem::transmute::<&VM, *mut WrenVM>(vm) };
+            let c_text = CString::new(text).unwrap();
+            unsafe { c_fn(c_vm, c_text.as_ptr()) };
+        }
+        fn resolve_module_fn(vm: &VM, importer: &str, name: &str) -> String {
+            let c_fn = vm.c_config.resolve_module_fn.unwrap();
+            // Eeek!  mapping to mut! This is probably terrible.
+            let c_vm = unsafe { std::mem::transmute::<&VM, *mut WrenVM>(vm) };
+            let c_importer = CString::new(importer).unwrap();
+            let c_name = CString::new(name).unwrap();
+            let c_resolved = unsafe { c_fn(c_vm, c_importer.as_ptr(), c_name.as_ptr()) };
+            let resolved = unsafe { CStr::from_ptr(c_resolved) }
+                .to_str()
+                .unwrap()
+                .into();
+            // FIXME: LEAK.  This should config.realloc to free.
+            // crate::libc::free(c_resolved); // Wrong mutability.
+            resolved
+        }
+        fn error_fn(vm: &VM, error_type: ErrorType, module: &str, line: usize, message: &str) {
+            let c_fn = vm.c_config.error_fn.unwrap();
+            // Eeek!  mapping to mut! This is probably terrible.
+            let c_vm = unsafe { std::mem::transmute::<&VM, *mut WrenVM>(vm) };
+            let c_error_type = error_type.to_c();
+            let c_module = CString::new(module).unwrap();
+            let c_line = c_int::try_from(line).unwrap();
+            let c_message = CString::new(message).unwrap();
+            unsafe {
+                c_fn(
+                    c_vm,
+                    c_error_type,
+                    c_module.as_ptr(),
+                    c_line,
+                    c_message.as_ptr(),
+                )
+            };
+        }
+
         // c_config.load_module_fn: WrenLoadModuleFn,
         // c_config.bind_foreign_method_fn: WrenBindForeignMethodFn,
         // c_config.bind_foreign_class_fn: WrenBindForeignClassFn,
-        // c_config.write_fn: WrenWriteFn,
-        // c_config.error_fn: WrenErrorFn,
         // c_config.initial_heap_size: size_t,  // ignored
         // c_config.min_heap_size: size_t,      // ignored
         // c_config.heap_growth_percent: c_int, // ignored
-        // c_config.user_data: *mut c_void,
-        assert_eq!(c_config.reallocate_fn, None); // Ignored
+        // c_config.user_data: *mut c_void, // handled outside.
+        // c_config.reallocate_fn // ignored.
         Configuration {
+            // FIXME: is "as WriteFn" really needed?
+            // https://users.rust-lang.org/t/puzzling-expected-fn-pointer-found-fn-item/46423/4
+            write_fn: c_config.write_fn.map(|_| write_fn as WriteFn),
+            resolve_module_fn: c_config
+                .resolve_module_fn
+                .map(|_| resolve_module_fn as ResolveModuleFn),
+            error_fn: c_config.error_fn.map(|_| error_fn as ErrorFn),
             ..Default::default()
         }
     }
@@ -155,7 +235,8 @@ pub extern "C" fn wrenNewVM(c_config_ptr: *mut WrenConfiguration) -> *mut WrenVM
     let c_config = unsafe { &*c_config_ptr };
     let config = Configuration::from_c(c_config);
     let mut vm = VM::new(config);
-    vm.user_data = c_config.user_data;
+    // Also hold onto the config for the function pointers.
+    vm.c_config = c_config.clone();
     let vm_ptr = Box::into_raw(Box::new(vm));
     unsafe { std::mem::transmute::<*mut VM, *mut WrenVM>(vm_ptr) }
 }
@@ -582,11 +663,11 @@ pub extern "C" fn wrenAbortFiber(c_vm: *mut WrenVM, c_slot: c_int) {
 #[no_mangle]
 pub extern "C" fn wrenGetUserData(c_vm: *mut WrenVM) -> *mut c_void {
     let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
-    vm.user_data
+    vm.c_config.user_data
 }
 
 #[no_mangle]
 pub extern "C" fn wrenSetUserData(c_vm: *mut WrenVM, c_user_data: *mut c_void) {
     let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
-    vm.user_data = c_user_data;
+    vm.c_config.user_data = c_user_data;
 }

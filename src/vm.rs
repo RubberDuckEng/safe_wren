@@ -4,7 +4,6 @@ include!(concat!(env!("OUT_DIR"), "/wren_core_source.rs"));
 
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::ffi::c_void;
 use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::{str, usize};
@@ -13,12 +12,12 @@ use crate::compiler::{
     compile_in_module, wren_is_local_name, Arity, FnDebug, InputManager, Ops, Scope,
 };
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-use crate::wren::{
-    Configuration, DebugLevel, ForeignMethodFn, InterpretResult, LoadModuleResult, Slot,
-};
-
+use crate::ffi::c_api::WrenConfiguration;
 use crate::opt::random_bindings::{
     random_bind_foreign_class, random_bind_foreign_method, random_source,
+};
+use crate::wren::{
+    Configuration, DebugLevel, ForeignMethodFn, InterpretResult, LoadModuleResult, Slot,
 };
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
@@ -629,8 +628,10 @@ pub struct VM {
     // Args for the foreign function being called.
     // wren_c calls this apiStack
     api: Option<Api>,
-    // For the C API.
-    pub(crate) user_data: *mut c_void,
+    // Hold onto the function pointers for the C API so we can
+    // use rust function pointers in the normal config and just
+    // look up the c ones here through the VM pointer.
+    pub(crate) c_config: WrenConfiguration,
 }
 
 pub trait UserData {
@@ -1496,7 +1497,7 @@ impl VM {
             last_imported_module: None,
             config,
             api: None,
-            user_data: std::ptr::null_mut(),
+            c_config: WrenConfiguration::default(),
         };
 
         // FIXME: This shouldn't be needed anymore.  We no longer

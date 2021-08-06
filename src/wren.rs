@@ -44,7 +44,7 @@ type BindForeignMethodFn = fn(
 ) -> Option<ForeignMethodFn>;
 
 // Displays a string of text to the user.
-type WriteFn = fn(vm: &VM, text: &str);
+pub type WriteFn = fn(vm: &VM, text: &str);
 
 pub enum ErrorType {
     // A syntax or resolution error detected at compile time.
@@ -69,7 +69,7 @@ pub enum ErrorType {
 // made for each line in the stack trace. Each of those has the resolved
 // [module] and [line] where the method or function is defined and [message] is
 // the name of the method or function.
-type ErrorFn = fn(vm: &VM, error_type: ErrorType, module: &str, line: usize, message: &str);
+pub type ErrorFn = fn(vm: &VM, error_type: ErrorType, module: &str, line: usize, message: &str);
 
 pub struct ForeignClassMethods {
     // The callback invoked when the foreign object is created.
