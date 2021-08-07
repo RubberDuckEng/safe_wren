@@ -1,8 +1,5 @@
 use crate::vm::Value;
-use crate::wren::{
-    Configuration, ErrorFn, ErrorType, FinalizerFn, ForeignClassMethods, ForeignMethodFn,
-    InterpretResult, ResolveModuleFn, SlotType, UserData, WriteFn, VM,
-};
+use crate::wren::*;
 use libc::{c_char, c_int, c_uint, size_t};
 use std::boxed::Box;
 use std::convert::TryFrom;
@@ -209,14 +206,71 @@ impl Configuration {
             };
         }
 
-        // c_config.load_module_fn: WrenLoadModuleFn,
-        // c_config.bind_foreign_method_fn: WrenBindForeignMethodFn,
-        // c_config.bind_foreign_class_fn: WrenBindForeignClassFn,
-        // c_config.initial_heap_size: size_t,  // ignored
-        // c_config.min_heap_size: size_t,      // ignored
-        // c_config.heap_growth_percent: c_int, // ignored
+        fn load_module_fn(vm: &VM, name: &str) -> Option<LoadModuleResult> {
+            let c_fn = vm.c_config.load_module_fn.unwrap();
+            // Eeek!  mapping to mut! This is probably terrible.
+            let c_vm = unsafe { std::mem::transmute::<&VM, *mut WrenVM>(vm) };
+            let c_name = CString::new(name).unwrap();
+            let c_result = unsafe { c_fn(c_vm, c_name.as_ptr()) };
+            if c_result.source.is_null() {
+                // FIXME: call the completion function?
+                return None;
+            }
+            let source = unsafe { CStr::from_ptr(c_result.source) }
+                .to_str()
+                .unwrap()
+                .into();
+            Some(LoadModuleResult { source })
+        }
+
+        fn bind_foreign_method_fn(
+            vm: &VM,
+            module: &str,
+            class_name: &str,
+            is_static: bool,
+            signature: &str,
+        ) -> Option<ForeignMethodFn> {
+            let c_fn = vm.c_config.bind_foreign_method_fn.unwrap();
+            // Eeek!  mapping to mut! This is probably terrible.
+            let c_vm = unsafe { std::mem::transmute::<&VM, *mut WrenVM>(vm) };
+            let c_module = CString::new(module).unwrap();
+            let c_class_name = CString::new(class_name).unwrap();
+            let c_signature = CString::new(signature).unwrap();
+            let c_foreign_method_fn = unsafe {
+                c_fn(
+                    c_vm,
+                    c_module.as_ptr(),
+                    c_class_name.as_ptr(),
+                    is_static,
+                    c_signature.as_ptr(),
+                )
+            };
+            type InnerFn = unsafe extern "C" fn(vm: *mut WrenVM);
+            // Same signature, so direct transmute is possible.
+            c_foreign_method_fn
+                .map(|func| unsafe { std::mem::transmute::<InnerFn, ForeignMethodFn>(func) })
+        }
+
+        fn bind_foreign_class_fn(
+            vm: &VM,
+            module_name: &str,
+            class_name: &str,
+        ) -> ForeignClassMethods {
+            let c_fn = vm.c_config.bind_foreign_class_fn.unwrap();
+            // Eeek!  mapping to mut! This is probably terrible.
+            let c_vm = unsafe { std::mem::transmute::<&VM, *mut WrenVM>(vm) };
+            let c_module = CString::new(module_name).unwrap();
+            let c_class_name = CString::new(class_name).unwrap();
+            let c_foreign_class_methods =
+                unsafe { c_fn(c_vm, c_module.as_ptr(), c_class_name.as_ptr()) };
+            ForeignClassMethods::from_c(c_foreign_class_methods)
+        }
+
+        // c_config.initial_heap_size: size_t,  // ignored, no GC
+        // c_config.min_heap_size: size_t,      // ignored, no GC
+        // c_config.heap_growth_percent: c_int, // ignored, no GC
         // c_config.user_data: *mut c_void, // handled outside.
-        // c_config.reallocate_fn // ignored.
+        // c_config.reallocate_fn // FIXME: Need to add support.
         Configuration {
             // FIXME: is "as WriteFn" really needed?
             // https://users.rust-lang.org/t/puzzling-expected-fn-pointer-found-fn-item/46423/4
@@ -225,6 +279,15 @@ impl Configuration {
                 .resolve_module_fn
                 .map(|_| resolve_module_fn as ResolveModuleFn),
             error_fn: c_config.error_fn.map(|_| error_fn as ErrorFn),
+            load_module_fn: c_config
+                .load_module_fn
+                .map(|_| load_module_fn as LoadModuleFn),
+            bind_foreign_method_fn: c_config
+                .bind_foreign_method_fn
+                .map(|_| bind_foreign_method_fn as BindForeignMethodFn),
+            bind_foreign_class_fn: c_config
+                .bind_foreign_class_fn
+                .map(|_| bind_foreign_class_fn as BindForeignClassFn),
             ..Default::default()
         }
     }

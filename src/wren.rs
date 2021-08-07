@@ -31,11 +31,11 @@ pub struct LoadModuleResult {
 }
 
 // Loads and returns the source code for the module [name] if found.
-type LoadModuleFn = fn(vm: &VM, name: &str) -> Option<LoadModuleResult>;
+pub type LoadModuleFn = fn(vm: &VM, name: &str) -> Option<LoadModuleResult>;
 
 // Returns a pointer to a foreign method on [className] in [module] with
 // [signature].
-type BindForeignMethodFn = fn(
+pub type BindForeignMethodFn = fn(
     vm: &VM,
     module: &str,
     class_name: &str,
