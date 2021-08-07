@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Call"
 01: Fn(noParams)
 02: Fn(zero())
@@ -9,7 +9,7 @@ Constants:
 07: Fn(-(_))
 08: Fn([_,_])
 09: Fn([_,_]=(_))
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Call")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -45,3 +45,174 @@ Code:
 32 (ln 58): EndModule
 33 (ln 58): Return
 34 (ln 58): End
+noParams Constants:
+00: "noParams"
+noParams Code:
+00 (ln 3): Load(Module, Class("System"))
+01 (ln 3): Constant(0: "noParams")
+02 (ln 3): Call(print(_))
+03 (ln 3): Pop
+04 (ln 4): Null
+05 (ln 4): Return
+06 (ln 4): End
+zero() Constants:
+00: "zero"
+zero() Code:
+00 (ln 7): Load(Module, Class("System"))
+01 (ln 7): Constant(0: "zero")
+02 (ln 7): Call(print(_))
+03 (ln 7): Pop
+04 (ln 8): Null
+05 (ln 8): Return
+06 (ln 8): End
+one(_) Constants:
+00: "one "
+01: ""
+one(_) Code:
+00 (ln 11): Load(Module, Class("System"))
+01 (ln 11): Load(Module, Class("List"))
+02 (ln 11): Call(new())
+03 (ln 11): Constant(0: "one ")
+04 (ln 11): Call(addCore_(_))
+05 (ln 11): Load(Local, 1)
+06 (ln 11): Call(addCore_(_))
+07 (ln 11): Constant(1: "")
+08 (ln 11): Call(addCore_(_))
+09 (ln 11): Call(join())
+10 (ln 11): Call(print(_))
+11 (ln 11): Pop
+12 (ln 12): Null
+13 (ln 12): Return
+14 (ln 12): End
+two(_,_) Constants:
+00: 0
+01: "two "
+02: " "
+03: ""
+two(_,_) Code:
+00 (ln 16): Load(Local, 2)
+01 (ln 16): Load(Module, Class("String"))
+02 (ln 16): Call(is(_))
+03 (ln 16): And(4)
+04 (ln 16): Load(Local, 2)
+05 (ln 16): Call(bytes)
+06 (ln 16): Constant(0: 0)
+07 (ln 16): Call(contains(_))
+08 (ln 16): JumpIfFalse(5)
+09 (ln 17): Load(Local, 2)
+10 (ln 17): Call(bytes)
+11 (ln 17): Call(toList)
+12 (ln 17): Store(Local, 2)
+13 (ln 17): Pop
+14 (ln 20): Load(Module, Class("System"))
+15 (ln 20): Load(Module, Class("List"))
+16 (ln 20): Call(new())
+17 (ln 20): Constant(1: "two ")
+18 (ln 20): Call(addCore_(_))
+19 (ln 20): Load(Local, 1)
+20 (ln 20): Call(addCore_(_))
+21 (ln 20): Constant(2: " ")
+22 (ln 20): Call(addCore_(_))
+23 (ln 20): Load(Local, 2)
+24 (ln 20): Call(addCore_(_))
+25 (ln 20): Constant(3: "")
+26 (ln 20): Call(addCore_(_))
+27 (ln 20): Call(join())
+28 (ln 20): Call(print(_))
+29 (ln 20): Pop
+30 (ln 21): Null
+31 (ln 21): Return
+32 (ln 21): End
+getValue() Constants:
+00: "a"
+01: "b"
+getValue() Code:
+00 (ln 23): Load(Module, Class("List"))
+01 (ln 23): Call(new())
+02 (ln 23): Constant(0: "a")
+03 (ln 23): Call(addCore_(_))
+04 (ln 23): Constant(1: "b")
+05 (ln 23): Call(addCore_(_))
+06 (ln 23): Return
+07 (ln 23): End
+- Constants:
+00: "unary"
+- Code:
+00 (ln 26): Load(Module, Class("System"))
+01 (ln 26): Constant(0: "unary")
+02 (ln 26): Call(print(_))
+03 (ln 26): Pop
+04 (ln 27): Null
+05 (ln 27): Return
+06 (ln 27): End
+-(_) Constants:
+00: "binary "
+01: ""
+-(_) Code:
+00 (ln 30): Load(Module, Class("System"))
+01 (ln 30): Load(Module, Class("List"))
+02 (ln 30): Call(new())
+03 (ln 30): Constant(0: "binary ")
+04 (ln 30): Call(addCore_(_))
+05 (ln 30): Load(Local, 1)
+06 (ln 30): Call(addCore_(_))
+07 (ln 30): Constant(1: "")
+08 (ln 30): Call(addCore_(_))
+09 (ln 30): Call(join())
+10 (ln 30): Call(print(_))
+11 (ln 30): Pop
+12 (ln 31): Null
+13 (ln 31): Return
+14 (ln 31): End
+[_,_] Constants:
+00: "subscript "
+01: " "
+02: ""
+[_,_] Code:
+00 (ln 34): Load(Module, Class("System"))
+01 (ln 34): Load(Module, Class("List"))
+02 (ln 34): Call(new())
+03 (ln 34): Constant(0: "subscript ")
+04 (ln 34): Call(addCore_(_))
+05 (ln 34): Load(Local, 1)
+06 (ln 34): Call(addCore_(_))
+07 (ln 34): Constant(1: " ")
+08 (ln 34): Call(addCore_(_))
+09 (ln 34): Load(Local, 2)
+10 (ln 34): Call(addCore_(_))
+11 (ln 34): Constant(2: "")
+12 (ln 34): Call(addCore_(_))
+13 (ln 34): Call(join())
+14 (ln 34): Call(print(_))
+15 (ln 34): Pop
+16 (ln 35): Null
+17 (ln 35): Return
+18 (ln 35): End
+[_,_]=(_) Constants:
+00: "subscript set "
+01: " "
+02: ""
+[_,_]=(_) Code:
+00 (ln 38): Load(Module, Class("System"))
+01 (ln 38): Load(Module, Class("List"))
+02 (ln 38): Call(new())
+03 (ln 38): Constant(0: "subscript set ")
+04 (ln 38): Call(addCore_(_))
+05 (ln 38): Load(Local, 1)
+06 (ln 38): Call(addCore_(_))
+07 (ln 38): Constant(1: " ")
+08 (ln 38): Call(addCore_(_))
+09 (ln 38): Load(Local, 2)
+10 (ln 38): Call(addCore_(_))
+11 (ln 38): Constant(1: " ")
+12 (ln 38): Call(addCore_(_))
+13 (ln 38): Load(Local, 3)
+14 (ln 38): Call(addCore_(_))
+15 (ln 38): Constant(2: "")
+16 (ln 38): Call(addCore_(_))
+17 (ln 38): Call(join())
+18 (ln 38): Call(print(_))
+19 (ln 38): Pop
+20 (ln 39): Null
+21 (ln 39): Return
+22 (ln 39): End

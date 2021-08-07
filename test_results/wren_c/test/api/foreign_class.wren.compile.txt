@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "ForeignClass"
 01: "finalized"
 02: "Counter"
@@ -30,7 +30,7 @@ Constants:
 28: Fn(init new())
 29: Fn()
 30: Fn(new(_) block argument)
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "ForeignClass")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -57,31 +57,31 @@ Code:
 23 (ln 9): Load(Module, Null)
 24 (ln 9): Method(instance, value)
 25 (ln 12): Load(Module, Null)
-26 (ln 12): Call(Method, new())
+26 (ln 12): Call(new())
 27 (ln 12): Store(Module)
 28 (ln 12): Pop
 29 (ln 13): Load(Module, Class("System"))
 30 (ln 13): Load(Module, Null)
-31 (ln 13): Call(Getter, value)
-32 (ln 13): Call(Method, print(_))
+31 (ln 13): Call(value)
+32 (ln 13): Call(print(_))
 33 (ln 13): Pop
 34 (ln 14): Load(Module, Null)
 35 (ln 14): Constant(7: 3.1)
-36 (ln 14): Call(Method, increment(_))
+36 (ln 14): Call(increment(_))
 37 (ln 14): Pop
 38 (ln 15): Load(Module, Class("System"))
 39 (ln 15): Load(Module, Null)
-40 (ln 15): Call(Getter, value)
-41 (ln 15): Call(Method, print(_))
+40 (ln 15): Call(value)
+41 (ln 15): Call(print(_))
 42 (ln 15): Pop
 43 (ln 16): Load(Module, Null)
 44 (ln 16): Constant(8: 1.2)
-45 (ln 16): Call(Method, increment(_))
+45 (ln 16): Call(increment(_))
 46 (ln 16): Pop
 47 (ln 17): Load(Module, Class("System"))
 48 (ln 17): Load(Module, Null)
-49 (ln 17): Call(Getter, value)
-50 (ln 17): Call(Method, print(_))
+49 (ln 17): Call(value)
+50 (ln 17): Call(print(_))
 51 (ln 17): Pop
 52 (ln 20): Constant(9: "PointBase")
 53 (ln 20): Load(Module, Class("Object"))
@@ -118,43 +118,43 @@ Code:
 84 (ln 40): Constant(18: 1)
 85 (ln 40): Constant(19: 2)
 86 (ln 40): Constant(20: 3)
-87 (ln 40): Call(Method, new(_,_,_))
+87 (ln 40): Call(new(_,_,_))
 88 (ln 40): Store(Module)
 89 (ln 40): Pop
 90 (ln 41): Load(Module, Class("System"))
 91 (ln 41): Load(Module, Null)
-92 (ln 41): Call(Method, print(_))
+92 (ln 41): Call(print(_))
 93 (ln 41): Pop
 94 (ln 42): Load(Module, Null)
 95 (ln 42): Constant(20: 3)
 96 (ln 42): Constant(21: 4)
 97 (ln 42): Constant(22: 5)
-98 (ln 42): Call(Method, translate(_,_,_))
+98 (ln 42): Call(translate(_,_,_))
 99 (ln 42): Pop
 100 (ln 43): Load(Module, Class("System"))
 101 (ln 43): Load(Module, Null)
-102 (ln 43): Call(Method, print(_))
+102 (ln 43): Call(print(_))
 103 (ln 43): Pop
 104 (ln 45): Load(Module, Null)
-105 (ln 45): Call(Method, new())
+105 (ln 45): Call(new())
 106 (ln 45): Store(Module)
 107 (ln 45): Pop
 108 (ln 46): Load(Module, Class("System"))
 109 (ln 46): Load(Module, Null)
-110 (ln 46): Call(Method, print(_))
+110 (ln 46): Call(print(_))
 111 (ln 46): Pop
 112 (ln 48): Load(Module, Null)
-113 (ln 48): Call(Method, inherited())
+113 (ln 48): Call(inherited())
 114 (ln 48): Pop
 115 (ln 50): Load(Module, Class("Fiber"))
 116 (ln 52): Closure(23, [])
-117 (ln 52): Call(Method, new(_))
-118 (ln 52): Call(Method, try())
+117 (ln 52): Call(new(_))
+118 (ln 52): Call(try())
 119 (ln 52): Store(Module)
 120 (ln 52): Pop
 121 (ln 53): Load(Module, Class("System"))
 122 (ln 53): Load(Module, Null)
-123 (ln 53): Call(Method, print(_))
+123 (ln 53): Call(print(_))
 124 (ln 53): Pop
 125 (ln 56): Constant(24: "Resource")
 126 (ln 56): Load(Module, Class("Object"))
@@ -168,49 +168,49 @@ Code:
 134 (ln 57): Load(Module, Null)
 135 (ln 57): Method(static, new())
 136 (ln 60): Load(Module, Class("List"))
-137 (ln 60): Call(Method, new())
+137 (ln 60): Call(new())
 138 (ln 61): Load(Module, Null)
-139 (ln 61): Call(Method, new())
-140 (ln 61): Call(Method, addCore_(_))
+139 (ln 61): Call(new())
+140 (ln 61): Call(addCore_(_))
 141 (ln 62): Load(Module, Null)
-142 (ln 62): Call(Method, new())
-143 (ln 62): Call(Method, addCore_(_))
+142 (ln 62): Call(new())
+143 (ln 62): Call(addCore_(_))
 144 (ln 63): Load(Module, Null)
-145 (ln 63): Call(Method, new())
-146 (ln 63): Call(Method, addCore_(_))
+145 (ln 63): Call(new())
+146 (ln 63): Call(addCore_(_))
 147 (ln 64): Store(Module)
 148 (ln 64): Pop
 149 (ln 66): Load(Module, Class("System"))
-150 (ln 66): Call(Method, gc())
+150 (ln 66): Call(gc())
 151 (ln 66): Pop
 152 (ln 67): Load(Module, Class("System"))
 153 (ln 67): Load(Module, Null)
-154 (ln 67): Call(Getter, finalized)
-155 (ln 67): Call(Method, print(_))
+154 (ln 67): Call(finalized)
+155 (ln 67): Call(print(_))
 156 (ln 67): Pop
 157 (ln 69): Load(Module, Null)
 158 (ln 69): Constant(18: 1)
-159 (ln 69): Call(Method, -)
-160 (ln 69): Call(Method, removeAt(_))
+159 (ln 69): Call(-)
+160 (ln 69): Call(removeAt(_))
 161 (ln 69): Pop
 162 (ln 71): Load(Module, Class("System"))
-163 (ln 71): Call(Method, gc())
+163 (ln 71): Call(gc())
 164 (ln 71): Pop
 165 (ln 72): Load(Module, Class("System"))
 166 (ln 72): Load(Module, Null)
-167 (ln 72): Call(Getter, finalized)
-168 (ln 72): Call(Method, print(_))
+167 (ln 72): Call(finalized)
+168 (ln 72): Call(print(_))
 169 (ln 72): Pop
 170 (ln 74): Load(Module, Null)
-171 (ln 74): Call(Method, clear())
+171 (ln 74): Call(clear())
 172 (ln 74): Pop
 173 (ln 76): Load(Module, Class("System"))
-174 (ln 76): Call(Method, gc())
+174 (ln 76): Call(gc())
 175 (ln 76): Pop
 176 (ln 77): Load(Module, Class("System"))
 177 (ln 77): Load(Module, Null)
-178 (ln 77): Call(Getter, finalized)
-179 (ln 77): Call(Method, print(_))
+178 (ln 77): Call(finalized)
+179 (ln 77): Call(print(_))
 180 (ln 77): Pop
 181 (ln 80): Constant(27: "BadClass")
 182 (ln 80): Load(Module, Class("Object"))
@@ -225,14 +225,114 @@ Code:
 191 (ln 81): Method(static, new())
 192 (ln 84): Load(Module, Class("Fiber"))
 193 (ln 86): Closure(30, [])
-194 (ln 86): Call(Method, new(_))
-195 (ln 86): Call(Method, try())
+194 (ln 86): Call(new(_))
+195 (ln 86): Call(try())
 196 (ln 86): Store(Module)
 197 (ln 86): Pop
 198 (ln 87): Load(Module, Class("System"))
 199 (ln 87): Load(Module, Null)
-200 (ln 87): Call(Method, print(_))
+200 (ln 87): Call(print(_))
 201 (ln 87): Pop
 202 (ln 88): EndModule
 203 (ln 88): Return
 204 (ln 88): End
+init new() Code:
+00 (ln 7): Load(Local, 0)
+01 (ln 7): Return
+02 (ln 7): End
+ Code:
+00 (ln 7): ForeignConstruct
+01 (ln 7): Call(init new())
+02 (ln 7): Return
+03 (ln 7): End
+inherited() Constants:
+00: "inherited method"
+inherited() Code:
+00 (ln 22): Load(Module, Class("System"))
+01 (ln 22): Constant(0: "inherited method")
+02 (ln 22): Call(print(_))
+03 (ln 22): Pop
+04 (ln 23): Null
+05 (ln 23): Return
+06 (ln 23): End
+init new() Constants:
+00: "default"
+init new() Code:
+00 (ln 29): Load(Module, Class("System"))
+01 (ln 29): Constant(0: "default")
+02 (ln 29): Call(print(_))
+03 (ln 29): Pop
+04 (ln 30): Load(Local, 0)
+05 (ln 30): Return
+06 (ln 30): End
+ Code:
+00 (ln 30): ForeignConstruct
+01 (ln 30): Call(init new())
+02 (ln 30): Return
+03 (ln 30): End
+init new(_,_,_) Constants:
+00: ""
+01: ", "
+init new(_,_,_) Code:
+00 (ln 33): Load(Module, Class("System"))
+01 (ln 33): Load(Module, Class("List"))
+02 (ln 33): Call(new())
+03 (ln 33): Constant(0: "")
+04 (ln 33): Call(addCore_(_))
+05 (ln 33): Load(Local, 1)
+06 (ln 33): Call(addCore_(_))
+07 (ln 33): Constant(1: ", ")
+08 (ln 33): Call(addCore_(_))
+09 (ln 33): Load(Local, 2)
+10 (ln 33): Call(addCore_(_))
+11 (ln 33): Constant(1: ", ")
+12 (ln 33): Call(addCore_(_))
+13 (ln 33): Load(Local, 3)
+14 (ln 33): Call(addCore_(_))
+15 (ln 33): Constant(0: "")
+16 (ln 33): Call(addCore_(_))
+17 (ln 33): Call(join())
+18 (ln 33): Call(print(_))
+19 (ln 33): Pop
+20 (ln 34): Load(Local, 0)
+21 (ln 34): Return
+22 (ln 34): End
+ Code:
+00 (ln 34): ForeignConstruct
+01 (ln 34): Call(init new(_,_,_))
+02 (ln 34): Return
+03 (ln 34): End
+new(_) block argument Constants:
+00: "Subclass"
+new(_) block argument Code:
+00 (ln 51): Constant(0: "Subclass")
+01 (ln 51): Load(Module, Null)
+02 (ln 51): Class(0 fields)
+03 (ln 52): Null
+04 (ln 52): Return
+05 (ln 52): End
+init new() Code:
+00 (ln 57): Load(Local, 0)
+01 (ln 57): Return
+02 (ln 57): End
+ Code:
+00 (ln 57): ForeignConstruct
+01 (ln 57): Call(init new())
+02 (ln 57): Return
+03 (ln 57): End
+init new() Code:
+00 (ln 81): Load(Local, 0)
+01 (ln 81): Return
+02 (ln 81): End
+ Code:
+00 (ln 81): ForeignConstruct
+01 (ln 81): Call(init new())
+02 (ln 81): Return
+03 (ln 81): End
+new(_) block argument Code:
+00 (ln 85): Load(Module, Null)
+01 (ln 85): Call(new())
+02 (ln 85): Pop
+03 (ln 86): Null
+04 (ln 86): Return
+05 (ln 86): End

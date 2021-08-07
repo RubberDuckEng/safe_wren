@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: 123
-Code:
+<script> Code:
 00 (ln 1): ImportModule("meta")
 01 (ln 1): Pop
 02 (ln 1): ImportVariable("Meta")
@@ -8,7 +8,7 @@ Code:
 04 (ln 1): Pop
 05 (ln 3): Load(Module, Null)
 06 (ln 3): Constant(0: 123)
-07 (ln 3): Call(Method, eval(_))
+07 (ln 3): Call(eval(_))
 08 (ln 3): Pop
 09 (ln 4): EndModule
 10 (ln 4): Return

@@ -1,29 +1,29 @@
-Constants:
+<script> Constants:
 00: 1
 01: 400000
 02: "next"
 03: "done"
-Code:
+<script> Code:
 00 (ln 1): Null
 01 (ln 1): Store(Module)
 02 (ln 1): Pop
 03 (ln 3): Constant(0: 1)
 04 (ln 3): Constant(1: 400000)
-05 (ln 3): Call(Method, ..(_))
+05 (ln 3): Call(..(_))
 06 (ln 3): Null
 07 (ln 3): Load(Local, 1)
 08 (ln 3): Load(Local, 2)
-09 (ln 3): Call(Method, iterate(_))
+09 (ln 3): Call(iterate(_))
 10 (ln 3): Store(Local, 2)
 11 (ln 3): JumpIfFalse(12)
 12 (ln 3): Load(Local, 1)
 13 (ln 3): Load(Local, 2)
-14 (ln 3): Call(Method, iteratorValue(_))
+14 (ln 3): Call(iteratorValue(_))
 15 (ln 4): Load(Module, Class("Map"))
-16 (ln 4): Call(Method, new())
+16 (ln 4): Call(new())
 17 (ln 4): Constant(2: "next")
 18 (ln 4): Load(Module, Null)
-19 (ln 4): Call(Method, addCore_(_,_))
+19 (ln 4): Call(addCore_(_,_))
 20 (ln 4): Store(Module)
 21 (ln 4): Pop
 22 (ln 5): Pop
@@ -31,11 +31,11 @@ Code:
 24 (ln 5): Pop
 25 (ln 5): Pop
 26 (ln 7): Load(Module, Class("System"))
-27 (ln 7): Call(Method, gc())
+27 (ln 7): Call(gc())
 28 (ln 7): Pop
 29 (ln 8): Load(Module, Class("System"))
 30 (ln 8): Constant(3: "done")
-31 (ln 8): Call(Method, print(_))
+31 (ln 8): Call(print(_))
 32 (ln 8): Pop
 33 (ln 9): EndModule
 34 (ln 9): Return

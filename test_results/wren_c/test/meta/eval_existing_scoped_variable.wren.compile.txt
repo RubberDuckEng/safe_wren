@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "y = 2"
-Code:
+<script> Code:
 00 (ln 1): ImportModule("meta")
 01 (ln 1): Pop
 02 (ln 1): ImportVariable("Meta")
@@ -11,11 +11,11 @@ Code:
 07 (ln 3): Pop
 08 (ln 5): Load(Module, Null)
 09 (ln 5): Constant(0: "y = 2")
-10 (ln 5): Call(Method, eval(_))
+10 (ln 5): Call(eval(_))
 11 (ln 5): Pop
 12 (ln 7): Load(Module, Class("System"))
 13 (ln 7): Load(Module, Null)
-14 (ln 7): Call(Method, print(_))
+14 (ln 7): Call(print(_))
 15 (ln 7): Pop
 16 (ln 7): EndModule
 17 (ln 7): Return

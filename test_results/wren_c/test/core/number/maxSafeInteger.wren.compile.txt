@@ -1,9 +1,8 @@
-Constants:
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Load(Module, Class("Num"))
-02 (ln 1): Call(Getter, maxSafeInteger)
-03 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(maxSafeInteger)
+03 (ln 1): Call(print(_))
 04 (ln 1): Pop
 05 (ln 2): EndModule
 06 (ln 2): Return

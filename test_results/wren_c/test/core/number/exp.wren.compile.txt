@@ -1,23 +1,23 @@
-Constants:
+<script> Constants:
 00: 5
 01: 10
 02: 1
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 5)
-02 (ln 1): Call(Getter, exp)
-03 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(exp)
+03 (ln 1): Call(print(_))
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Class("System"))
 06 (ln 2): Constant(1: 10)
-07 (ln 2): Call(Getter, exp)
-08 (ln 2): Call(Method, print(_))
+07 (ln 2): Call(exp)
+08 (ln 2): Call(print(_))
 09 (ln 2): Pop
 10 (ln 3): Load(Module, Class("System"))
 11 (ln 3): Constant(2: 1)
-12 (ln 3): Call(Method, -)
-13 (ln 3): Call(Getter, exp)
-14 (ln 3): Call(Method, print(_))
+12 (ln 3): Call(-)
+13 (ln 3): Call(exp)
+14 (ln 3): Call(print(_))
 15 (ln 3): Pop
 16 (ln 4): EndModule
 17 (ln 4): Return

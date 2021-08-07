@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "VM"
 01: "nullConfig()"
 02: "multipleInterpretCalls()"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "VM")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -16,13 +16,13 @@ Code:
 10 (ln 3): Method(static, multipleInterpretCalls())
 11 (ln 7): Load(Module, Class("System"))
 12 (ln 7): Load(Module, Null)
-13 (ln 7): Call(Method, nullConfig())
-14 (ln 7): Call(Method, print(_))
+13 (ln 7): Call(nullConfig())
+14 (ln 7): Call(print(_))
 15 (ln 7): Pop
 16 (ln 8): Load(Module, Class("System"))
 17 (ln 8): Load(Module, Null)
-18 (ln 8): Call(Method, multipleInterpretCalls())
-19 (ln 8): Call(Method, print(_))
+18 (ln 8): Call(multipleInterpretCalls())
+19 (ln 8): Call(print(_))
 20 (ln 8): Pop
 21 (ln 9): EndModule
 22 (ln 9): Return

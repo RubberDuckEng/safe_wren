@@ -1,31 +1,31 @@
-Constants:
+<script> Constants:
 00: 65
 01: 0
 02: 255
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Load(Module, Class("String"))
 02 (ln 1): Constant(0: 65)
-03 (ln 1): Call(Method, fromByte(_))
-04 (ln 1): Call(Method, print(_))
+03 (ln 1): Call(fromByte(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Load(Module, Class("String"))
 08 (ln 2): Constant(1: 0)
-09 (ln 2): Call(Method, fromByte(_))
-10 (ln 2): Call(Getter, bytes)
+09 (ln 2): Call(fromByte(_))
+10 (ln 2): Call(bytes)
 11 (ln 2): Constant(1: 0)
-12 (ln 2): Call(Subscript, [_])
-13 (ln 2): Call(Method, print(_))
+12 (ln 2): Call([_])
+13 (ln 2): Call(print(_))
 14 (ln 2): Pop
 15 (ln 3): Load(Module, Class("System"))
 16 (ln 3): Load(Module, Class("String"))
 17 (ln 3): Constant(2: 255)
-18 (ln 3): Call(Method, fromByte(_))
-19 (ln 3): Call(Getter, bytes)
+18 (ln 3): Call(fromByte(_))
+19 (ln 3): Call(bytes)
 20 (ln 3): Constant(1: 0)
-21 (ln 3): Call(Subscript, [_])
-22 (ln 3): Call(Method, print(_))
+21 (ln 3): Call([_])
+22 (ln 3): Call(print(_))
 23 (ln 3): Pop
 24 (ln 4): EndModule
 25 (ln 4): Return

@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: 123
 01: 0
 02: 0.123
@@ -6,83 +6,83 @@ Constants:
 04: 1.23456789012345
 05: 0.000000000000000000000000000000000000000001
 06: 1
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 123)
-02 (ln 1): Call(Getter, fraction)
-03 (ln 1): Call(Method, print(_))
+02 (ln 1): Call(fraction)
+03 (ln 1): Call(print(_))
 04 (ln 1): Pop
 05 (ln 2): Load(Module, Class("System"))
 06 (ln 2): Constant(0: 123)
-07 (ln 2): Call(Method, -)
-08 (ln 2): Call(Getter, fraction)
-09 (ln 2): Call(Method, print(_))
+07 (ln 2): Call(-)
+08 (ln 2): Call(fraction)
+09 (ln 2): Call(print(_))
 10 (ln 2): Pop
 11 (ln 3): Load(Module, Class("System"))
 12 (ln 3): Constant(1: 0)
-13 (ln 3): Call(Getter, fraction)
-14 (ln 3): Call(Method, print(_))
+13 (ln 3): Call(fraction)
+14 (ln 3): Call(print(_))
 15 (ln 3): Pop
 16 (ln 4): Load(Module, Class("System"))
 17 (ln 4): Constant(1: 0)
-18 (ln 4): Call(Method, -)
-19 (ln 4): Call(Getter, fraction)
-20 (ln 4): Call(Method, print(_))
+18 (ln 4): Call(-)
+19 (ln 4): Call(fraction)
+20 (ln 4): Call(print(_))
 21 (ln 4): Pop
 22 (ln 5): Load(Module, Class("System"))
 23 (ln 5): Constant(2: 0.123)
-24 (ln 5): Call(Getter, fraction)
-25 (ln 5): Call(Method, print(_))
+24 (ln 5): Call(fraction)
+25 (ln 5): Call(print(_))
 26 (ln 5): Pop
 27 (ln 6): Load(Module, Class("System"))
 28 (ln 6): Constant(3: 12.3)
-29 (ln 6): Call(Getter, fraction)
-30 (ln 6): Call(Method, print(_))
+29 (ln 6): Call(fraction)
+30 (ln 6): Call(print(_))
 31 (ln 6): Pop
 32 (ln 7): Load(Module, Class("System"))
 33 (ln 7): Constant(2: 0.123)
-34 (ln 7): Call(Method, -)
-35 (ln 7): Call(Getter, fraction)
-36 (ln 7): Call(Method, print(_))
+34 (ln 7): Call(-)
+35 (ln 7): Call(fraction)
+36 (ln 7): Call(print(_))
 37 (ln 7): Pop
 38 (ln 8): Load(Module, Class("System"))
 39 (ln 8): Constant(3: 12.3)
-40 (ln 8): Call(Method, -)
-41 (ln 8): Call(Getter, fraction)
-42 (ln 8): Call(Method, print(_))
+40 (ln 8): Call(-)
+41 (ln 8): Call(fraction)
+42 (ln 8): Call(print(_))
 43 (ln 8): Pop
 44 (ln 12): Load(Module, Class("System"))
 45 (ln 12): Constant(4: 1.23456789012345)
-46 (ln 12): Call(Getter, fraction)
-47 (ln 12): Call(Method, print(_))
+46 (ln 12): Call(fraction)
+47 (ln 12): Call(print(_))
 48 (ln 12): Pop
 49 (ln 13): Load(Module, Class("System"))
 50 (ln 13): Constant(4: 1.23456789012345)
-51 (ln 13): Call(Method, -)
-52 (ln 13): Call(Getter, fraction)
-53 (ln 13): Call(Method, print(_))
+51 (ln 13): Call(-)
+52 (ln 13): Call(fraction)
+53 (ln 13): Call(print(_))
 54 (ln 13): Pop
 55 (ln 15): Load(Module, Class("System"))
 56 (ln 15): Constant(5: 0.000000000000000000000000000000000000000001)
-57 (ln 15): Call(Getter, fraction)
-58 (ln 15): Call(Method, print(_))
+57 (ln 15): Call(fraction)
+58 (ln 15): Call(print(_))
 59 (ln 15): Pop
 60 (ln 16): Load(Module, Class("System"))
 61 (ln 16): Constant(5: 0.000000000000000000000000000000000000000001)
-62 (ln 16): Call(Method, -)
-63 (ln 16): Call(Getter, fraction)
-64 (ln 16): Call(Method, print(_))
+62 (ln 16): Call(-)
+63 (ln 16): Call(fraction)
+64 (ln 16): Call(print(_))
 65 (ln 16): Pop
 66 (ln 18): Load(Module, Class("System"))
 67 (ln 18): Constant(6: 1)
-68 (ln 18): Call(Getter, fraction)
-69 (ln 18): Call(Method, print(_))
+68 (ln 18): Call(fraction)
+69 (ln 18): Call(print(_))
 70 (ln 18): Pop
 71 (ln 19): Load(Module, Class("System"))
 72 (ln 19): Constant(6: 1)
-73 (ln 19): Call(Method, -)
-74 (ln 19): Call(Getter, fraction)
-75 (ln 19): Call(Method, print(_))
+73 (ln 19): Call(-)
+74 (ln 19): Call(fraction)
+75 (ln 19): Call(print(_))
 76 (ln 19): Pop
 77 (ln 20): EndModule
 78 (ln 20): Return

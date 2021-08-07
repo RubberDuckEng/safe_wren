@@ -1,8 +1,8 @@
-Constants:
+<script> Constants:
 00: "Test"
 01: Fn(abortFiber())
 02: Fn(afterAbort(_,_))
-Code:
+<script> Code:
 00 (ln 6): Constant(0: "Test")
 01 (ln 6): Load(Module, Class("Object"))
 02 (ln 6): Class(0 fields)
@@ -17,3 +17,23 @@ Code:
 11 (ln 15): EndModule
 12 (ln 15): Return
 13 (ln 15): End
+abortFiber() Constants:
+00: "Abort!"
+abortFiber() Code:
+00 (ln 8): Load(Module, Class("Fiber"))
+01 (ln 8): Constant(0: "Abort!")
+02 (ln 8): Call(abort(_))
+03 (ln 8): Pop
+04 (ln 9): Null
+05 (ln 9): Return
+06 (ln 9): End
+afterAbort(_,_) Code:
+00 (ln 12): Load(Module, Class("System"))
+01 (ln 12): Load(Local, 1)
+02 (ln 12): Load(Local, 2)
+03 (ln 12): Call(+(_))
+04 (ln 12): Call(print(_))
+05 (ln 12): Pop
+06 (ln 13): Null
+07 (ln 13): Return
+08 (ln 13): End

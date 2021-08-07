@@ -1,7 +1,7 @@
-Constants:
+<script> Constants:
 00: "UserData"
 01: "test"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "UserData")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -12,8 +12,8 @@ Code:
 07 (ln 2): Method(static, test)
 08 (ln 5): Load(Module, Class("System"))
 09 (ln 5): Load(Module, Null)
-10 (ln 5): Call(Getter, test)
-11 (ln 5): Call(Method, print(_))
+10 (ln 5): Call(test)
+11 (ln 5): Call(print(_))
 12 (ln 5): Pop
 13 (ln 6): EndModule
 14 (ln 6): Return

@@ -1,11 +1,11 @@
-Constants:
+<script> Constants:
 00: "ResetStackForeign"
 01: Fn(init new(_))
 02: Fn()
 03: "Test"
 04: Fn(callConstruct())
 05: Fn(afterConstruct(_,_))
-Code:
+<script> Code:
 00 (ln 6): Constant(0: "ResetStackForeign")
 01 (ln 6): Load(Module, Class("Object"))
 02 (ln 6): ForeignClass
@@ -31,3 +31,32 @@ Code:
 22 (ln 19): EndModule
 23 (ln 19): Return
 24 (ln 19): End
+init new(_) Code:
+00 (ln 7): Load(Local, 0)
+01 (ln 7): Return
+02 (ln 7): End
+ Code:
+00 (ln 7): ForeignConstruct
+01 (ln 7): Call(init new(_))
+02 (ln 7): Return
+03 (ln 7): End
+callConstruct() Constants:
+00: 1
+callConstruct() Code:
+00 (ln 12): Load(Module, Null)
+01 (ln 12): Constant(0: 1)
+02 (ln 12): Call(new(_))
+03 (ln 12): Pop
+04 (ln 13): Null
+05 (ln 13): Return
+06 (ln 13): End
+afterConstruct(_,_) Code:
+00 (ln 16): Load(Module, Class("System"))
+01 (ln 16): Load(Local, 1)
+02 (ln 16): Load(Local, 2)
+03 (ln 16): Call(+(_))
+04 (ln 16): Call(print(_))
+05 (ln 16): Pop
+06 (ln 17): Null
+07 (ln 17): Return
+08 (ln 17): End

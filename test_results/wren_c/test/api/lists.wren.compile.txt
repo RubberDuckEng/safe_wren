@@ -1,4 +1,4 @@
-Constants:
+<script> Constants:
 00: "Lists"
 01: "newList()"
 02: "insert()"
@@ -8,7 +8,7 @@ Constants:
 06: 2
 07: 3
 08: 4
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Lists")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -27,62 +27,62 @@ Code:
 15 (ln 5): Load(Module, Null)
 16 (ln 5): Method(static, get(_,_))
 17 (ln 8): Load(Module, Null)
-18 (ln 8): Call(Method, newList())
+18 (ln 8): Call(newList())
 19 (ln 8): Store(Module)
 20 (ln 8): Pop
 21 (ln 9): Load(Module, Class("System"))
 22 (ln 9): Load(Module, Null)
 23 (ln 9): Load(Module, Class("List"))
-24 (ln 9): Call(Method, is(_))
-25 (ln 9): Call(Method, print(_))
+24 (ln 9): Call(is(_))
+25 (ln 9): Call(print(_))
 26 (ln 9): Pop
 27 (ln 10): Load(Module, Class("System"))
 28 (ln 10): Load(Module, Null)
-29 (ln 10): Call(Getter, count)
-30 (ln 10): Call(Method, print(_))
+29 (ln 10): Call(count)
+30 (ln 10): Call(print(_))
 31 (ln 10): Pop
 32 (ln 12): Load(Module, Class("System"))
 33 (ln 12): Load(Module, Null)
-34 (ln 12): Call(Method, insert())
-35 (ln 12): Call(Method, print(_))
+34 (ln 12): Call(insert())
+35 (ln 12): Call(print(_))
 36 (ln 12): Pop
 37 (ln 14): Load(Module, Class("System"))
 38 (ln 14): Load(Module, Null)
-39 (ln 14): Call(Method, set())
-40 (ln 14): Call(Method, print(_))
+39 (ln 14): Call(set())
+40 (ln 14): Call(print(_))
 41 (ln 14): Pop
 42 (ln 15): Load(Module, Class("System"))
 43 (ln 15): Load(Module, Null)
 44 (ln 15): Load(Module, Class("List"))
-45 (ln 15): Call(Method, new())
+45 (ln 15): Call(new())
 46 (ln 15): Constant(5: 1)
-47 (ln 15): Call(Method, addCore_(_))
+47 (ln 15): Call(addCore_(_))
 48 (ln 15): Constant(6: 2)
-49 (ln 15): Call(Method, addCore_(_))
+49 (ln 15): Call(addCore_(_))
 50 (ln 15): Constant(7: 3)
-51 (ln 15): Call(Method, addCore_(_))
+51 (ln 15): Call(addCore_(_))
 52 (ln 15): Constant(8: 4)
-53 (ln 15): Call(Method, addCore_(_))
+53 (ln 15): Call(addCore_(_))
 54 (ln 15): Constant(6: 2)
-55 (ln 15): Call(Method, -)
-56 (ln 15): Call(Method, get(_,_))
-57 (ln 15): Call(Method, print(_))
+55 (ln 15): Call(-)
+56 (ln 15): Call(get(_,_))
+57 (ln 15): Call(print(_))
 58 (ln 15): Pop
 59 (ln 16): Load(Module, Class("System"))
 60 (ln 16): Load(Module, Null)
 61 (ln 16): Load(Module, Class("List"))
-62 (ln 16): Call(Method, new())
+62 (ln 16): Call(new())
 63 (ln 16): Constant(5: 1)
-64 (ln 16): Call(Method, addCore_(_))
+64 (ln 16): Call(addCore_(_))
 65 (ln 16): Constant(6: 2)
-66 (ln 16): Call(Method, addCore_(_))
+66 (ln 16): Call(addCore_(_))
 67 (ln 16): Constant(7: 3)
-68 (ln 16): Call(Method, addCore_(_))
+68 (ln 16): Call(addCore_(_))
 69 (ln 16): Constant(8: 4)
-70 (ln 16): Call(Method, addCore_(_))
+70 (ln 16): Call(addCore_(_))
 71 (ln 16): Constant(5: 1)
-72 (ln 16): Call(Method, get(_,_))
-73 (ln 16): Call(Method, print(_))
+72 (ln 16): Call(get(_,_))
+73 (ln 16): Call(print(_))
 74 (ln 16): Pop
 75 (ln 17): EndModule
 76 (ln 17): Return

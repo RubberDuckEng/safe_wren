@@ -1,11 +1,11 @@
-Constants:
+<script> Constants:
 00: "Handle"
 01: "value=_"
 02: "value"
 03: "list"
 04: "of"
 05: "strings"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Handle")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -19,22 +19,22 @@ Code:
 10 (ln 3): Method(static, value)
 11 (ln 6): Load(Module, Null)
 12 (ln 6): Load(Module, Class("List"))
-13 (ln 6): Call(Method, new())
+13 (ln 6): Call(new())
 14 (ln 6): Constant(3: "list")
-15 (ln 6): Call(Method, addCore_(_))
+15 (ln 6): Call(addCore_(_))
 16 (ln 6): Constant(4: "of")
-17 (ln 6): Call(Method, addCore_(_))
+17 (ln 6): Call(addCore_(_))
 18 (ln 6): Constant(5: "strings")
-19 (ln 6): Call(Method, addCore_(_))
-20 (ln 6): Call(Setter, value=_)
+19 (ln 6): Call(addCore_(_))
+20 (ln 6): Call(value=_)
 21 (ln 6): Pop
 22 (ln 9): Load(Module, Class("System"))
-23 (ln 9): Call(Method, gc())
+23 (ln 9): Call(gc())
 24 (ln 9): Pop
 25 (ln 11): Load(Module, Class("System"))
 26 (ln 11): Load(Module, Null)
-27 (ln 11): Call(Getter, value)
-28 (ln 11): Call(Method, print(_))
+27 (ln 11): Call(value)
+28 (ln 11): Call(print(_))
 29 (ln 11): Pop
 30 (ln 12): EndModule
 31 (ln 12): Return

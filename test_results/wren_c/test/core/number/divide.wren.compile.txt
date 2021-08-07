@@ -1,79 +1,79 @@
-Constants:
+<script> Constants:
 00: 8
 01: 2
 02: 12.34
 03: 0.4
 04: 3
 05: 0
-Code:
+<script> Code:
 00 (ln 1): Load(Module, Class("System"))
 01 (ln 1): Constant(0: 8)
 02 (ln 1): Constant(1: 2)
-03 (ln 1): Call(Method, /(_))
-04 (ln 1): Call(Method, print(_))
+03 (ln 1): Call(/(_))
+04 (ln 1): Call(print(_))
 05 (ln 1): Pop
 06 (ln 2): Load(Module, Class("System"))
 07 (ln 2): Constant(2: 12.34)
 08 (ln 2): Constant(3: 0.4)
-09 (ln 2): Call(Method, -)
-10 (ln 2): Call(Method, /(_))
-11 (ln 2): Call(Method, print(_))
+09 (ln 2): Call(-)
+10 (ln 2): Call(/(_))
+11 (ln 2): Call(print(_))
 12 (ln 2): Pop
 13 (ln 5): Load(Module, Class("System"))
 14 (ln 5): Constant(4: 3)
 15 (ln 5): Constant(5: 0)
-16 (ln 5): Call(Method, /(_))
-17 (ln 5): Call(Method, print(_))
+16 (ln 5): Call(/(_))
+17 (ln 5): Call(print(_))
 18 (ln 5): Pop
 19 (ln 6): Load(Module, Class("System"))
 20 (ln 6): Constant(4: 3)
-21 (ln 6): Call(Method, -)
+21 (ln 6): Call(-)
 22 (ln 6): Constant(5: 0)
-23 (ln 6): Call(Method, /(_))
-24 (ln 6): Call(Method, print(_))
+23 (ln 6): Call(/(_))
+24 (ln 6): Call(print(_))
 25 (ln 6): Pop
 26 (ln 7): Load(Module, Class("System"))
 27 (ln 7): Constant(5: 0)
 28 (ln 7): Constant(5: 0)
-29 (ln 7): Call(Method, /(_))
-30 (ln 7): Call(Method, print(_))
+29 (ln 7): Call(/(_))
+30 (ln 7): Call(print(_))
 31 (ln 7): Pop
 32 (ln 8): Load(Module, Class("System"))
 33 (ln 8): Constant(5: 0)
-34 (ln 8): Call(Method, -)
+34 (ln 8): Call(-)
 35 (ln 8): Constant(5: 0)
-36 (ln 8): Call(Method, /(_))
-37 (ln 8): Call(Method, print(_))
+36 (ln 8): Call(/(_))
+37 (ln 8): Call(print(_))
 38 (ln 8): Pop
 39 (ln 9): Load(Module, Class("System"))
 40 (ln 9): Constant(4: 3)
 41 (ln 9): Constant(5: 0)
-42 (ln 9): Call(Method, -)
-43 (ln 9): Call(Method, /(_))
-44 (ln 9): Call(Method, print(_))
+42 (ln 9): Call(-)
+43 (ln 9): Call(/(_))
+44 (ln 9): Call(print(_))
 45 (ln 9): Pop
 46 (ln 10): Load(Module, Class("System"))
 47 (ln 10): Constant(4: 3)
-48 (ln 10): Call(Method, -)
+48 (ln 10): Call(-)
 49 (ln 10): Constant(5: 0)
-50 (ln 10): Call(Method, -)
-51 (ln 10): Call(Method, /(_))
-52 (ln 10): Call(Method, print(_))
+50 (ln 10): Call(-)
+51 (ln 10): Call(/(_))
+52 (ln 10): Call(print(_))
 53 (ln 10): Pop
 54 (ln 11): Load(Module, Class("System"))
 55 (ln 11): Constant(5: 0)
 56 (ln 11): Constant(5: 0)
-57 (ln 11): Call(Method, -)
-58 (ln 11): Call(Method, /(_))
-59 (ln 11): Call(Method, print(_))
+57 (ln 11): Call(-)
+58 (ln 11): Call(/(_))
+59 (ln 11): Call(print(_))
 60 (ln 11): Pop
 61 (ln 12): Load(Module, Class("System"))
 62 (ln 12): Constant(5: 0)
-63 (ln 12): Call(Method, -)
+63 (ln 12): Call(-)
 64 (ln 12): Constant(5: 0)
-65 (ln 12): Call(Method, -)
-66 (ln 12): Call(Method, /(_))
-67 (ln 12): Call(Method, print(_))
+65 (ln 12): Call(-)
+66 (ln 12): Call(/(_))
+67 (ln 12): Call(print(_))
 68 (ln 12): Pop
 69 (ln 13): EndModule
 70 (ln 13): Return

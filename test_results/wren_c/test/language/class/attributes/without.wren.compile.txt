@@ -1,6 +1,6 @@
-Constants:
+<script> Constants:
 00: "Without"
-Code:
+<script> Code:
 00 (ln 3): Constant(0: "Without")
 01 (ln 3): Load(Module, Class("Object"))
 02 (ln 3): Class(0 fields)
@@ -8,10 +8,10 @@ Code:
 04 (ln 3): Pop
 05 (ln 4): Load(Module, Class("System"))
 06 (ln 4): Load(Module, Null)
-07 (ln 4): Call(Getter, attributes)
+07 (ln 4): Call(attributes)
 08 (ln 4): Null
-09 (ln 4): Call(Method, ==(_))
-10 (ln 4): Call(Method, print(_))
+09 (ln 4): Call(==(_))
+10 (ln 4): Call(print(_))
 11 (ln 4): Pop
 12 (ln 5): EndModule
 13 (ln 5): Return

@@ -1,1 +1,1 @@
-[wren_c/test/language/comments/unterminated_nested_block line 2] Error: Unterminated Block Comment
+[wren_c/test/language/comments/unterminated_nested_block line 2] Error: Unterminated block comment.

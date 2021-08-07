@@ -1,11 +1,11 @@
-Constants:
+<script> Constants:
 00: "Resolution"
 01: "noResolver()"
 02: "returnsNull()"
 03: "changesString()"
 04: "shared()"
 05: "importer()"
-Code:
+<script> Code:
 00 (ln 1): Constant(0: "Resolution")
 01 (ln 1): Load(Module, Class("Object"))
 02 (ln 1): Class(0 fields)
@@ -28,28 +28,28 @@ Code:
 19 (ln 6): Method(static, importer())
 20 (ln 11): Load(Module, Class("System"))
 21 (ln 11): Load(Module, Null)
-22 (ln 11): Call(Method, noResolver())
-23 (ln 11): Call(Method, print(_))
+22 (ln 11): Call(noResolver())
+23 (ln 11): Call(print(_))
 24 (ln 11): Pop
 25 (ln 17): Load(Module, Class("System"))
 26 (ln 17): Load(Module, Null)
-27 (ln 17): Call(Method, returnsNull())
-28 (ln 17): Call(Method, print(_))
+27 (ln 17): Call(returnsNull())
+28 (ln 17): Call(print(_))
 29 (ln 17): Pop
 30 (ln 22): Load(Module, Class("System"))
 31 (ln 22): Load(Module, Null)
-32 (ln 22): Call(Method, changesString())
-33 (ln 22): Call(Method, print(_))
+32 (ln 22): Call(changesString())
+33 (ln 22): Call(print(_))
 34 (ln 22): Pop
 35 (ln 29): Load(Module, Class("System"))
 36 (ln 29): Load(Module, Null)
-37 (ln 29): Call(Method, shared())
-38 (ln 29): Call(Method, print(_))
+37 (ln 29): Call(shared())
+38 (ln 29): Call(print(_))
 39 (ln 29): Pop
 40 (ln 35): Load(Module, Class("System"))
 41 (ln 35): Load(Module, Null)
-42 (ln 35): Call(Method, importer())
-43 (ln 35): Call(Method, print(_))
+42 (ln 35): Call(importer())
+43 (ln 35): Call(print(_))
 44 (ln 35): Pop
 45 (ln 40): EndModule
 46 (ln 40): Return
