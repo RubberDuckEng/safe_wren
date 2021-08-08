@@ -33,21 +33,21 @@ with error text from any failed tests.  `test.py` will also update
 
 ## Ordered goals?
 * Time the tests / make faster
+* Re-enable benchmarks
+* Fancier test_expectations system
+ ** Config / Expectation pairs (c | FAIL, RUST | TIMEOUT)
+* Teach test.py how to easily switch between rust and c_rust and c
 * Upvalues
 * remove all uses of 'as' (use into() instead).
-* validateSuperclass could now use ClassSource to validate internal, etc.
+* validate_superclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
 * wrong line numbers for foreign method runtime errors.
-* Give different types to Symbol, Constant, etc.
+* Fully deploy separate types for Symbol, Constant, etc.
 * attributes
 * Scientific notation
 * static fields (emits to two compilers)
-* C API
 * Garbage Collection?
 * Sort methods to match wren_c order?
-
-## Future bugs
-* Push/Pop of scopes does not work with Result pattern.
 
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?

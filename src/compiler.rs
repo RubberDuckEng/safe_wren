@@ -1347,27 +1347,6 @@ fn emit_loop(ctx: &mut ParseContext, offsets: &LoopOffsets) {
     emit(ctx, Ops::Loop(backwards_by));
 }
 
-fn push_scope(ctx: &mut ParseContext) {
-    ctx.compiler_mut().scope_depth = ctx.compiler().scope_depth.one_deeper()
-}
-fn pop_scope(ctx: &mut ParseContext) {
-    let popped = emit_pops_for_locals(ctx, ctx.compiler().scope_depth);
-    let locals_len = ctx.compiler().locals.len();
-    ctx.compiler_mut().locals.truncate(locals_len - popped);
-    // self.num_slots -= popped;
-
-    ctx.compiler_mut().scope_depth = match ctx.compiler_mut().scope_depth {
-        ScopeDepth::Module => panic!("Can't pop from module scope!"),
-        ScopeDepth::Local(i) => {
-            if i == 0 {
-                ScopeDepth::Module
-            } else {
-                ScopeDepth::Local(i - 1)
-            }
-        }
-    }
-}
-
 impl fmt::Debug for Compiler {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_tuple("")
@@ -2734,7 +2713,7 @@ struct ScopePusher<'a, 'b> {
 
 impl<'a, 'b> ScopePusher<'a, 'b> {
     fn push_class(ctx: &'a mut ParseContext<'b>, class_info: ClassInfo) -> ScopePusher<'a, 'b> {
-        push_scope(ctx);
+        Self::push_scope(ctx);
         ctx.compiler_mut().enclosing_class = Some(RefCell::new(class_info));
         ScopePusher {
             ctx,
@@ -2744,11 +2723,32 @@ impl<'a, 'b> ScopePusher<'a, 'b> {
     }
 
     fn push_block(ctx: &'a mut ParseContext<'b>) -> ScopePusher<'a, 'b> {
-        push_scope(ctx);
+        Self::push_scope(ctx);
         ScopePusher {
             ctx,
             did_pop: false,
             did_set_class: false,
+        }
+    }
+
+    fn push_scope(ctx: &mut ParseContext) {
+        ctx.compiler_mut().scope_depth = ctx.compiler().scope_depth.one_deeper()
+    }
+
+    fn pop_scope(ctx: &mut ParseContext) {
+        let popped = emit_pops_for_locals(ctx, ctx.compiler().scope_depth);
+        let locals_len = ctx.compiler().locals.len();
+        ctx.compiler_mut().locals.truncate(locals_len - popped);
+        // self.num_slots -= popped;
+        ctx.compiler_mut().scope_depth = match ctx.compiler_mut().scope_depth {
+            ScopeDepth::Module => panic!("Can't pop from module scope!"),
+            ScopeDepth::Local(i) => {
+                if i == 0 {
+                    ScopeDepth::Module
+                } else {
+                    ScopeDepth::Local(i - 1)
+                }
+            }
         }
     }
 
@@ -2757,7 +2757,7 @@ impl<'a, 'b> ScopePusher<'a, 'b> {
         if self.did_set_class {
             self.ctx.compiler_mut().enclosing_class = None;
         }
-        pop_scope(self.ctx);
+        Self::pop_scope(self.ctx);
         self.did_pop = true;
     }
 }
