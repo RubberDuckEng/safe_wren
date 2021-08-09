@@ -57,10 +57,10 @@ def BENCHMARK(name, pattern):
     BENCHMARKS.append([name, regex, None])
 
 
-# Parse error.
+# Not implemented for wren_test_rust yet
 # BENCHMARK("api_call", "true")
 
-# Parse error.
+# Not implemented for wren_test_rust yet.
 # BENCHMARK("api_foreign_method", "100000000")
 
 BENCHMARK("binary_trees", """stretch tree of depth 13 check: -1
@@ -80,7 +80,7 @@ long lived tree of depth 12 check: -1""")
 # 32 trees of depth 12 check: -32
 # long lived tree of depth 12 check: -1""")
 
-# Parse error
+# Requires upvalues
 # BENCHMARK("delta_blue", "14065400")
 
 BENCHMARK("fib", r"""317811
@@ -89,17 +89,15 @@ BENCHMARK("fib", r"""317811
 317811
 317811""")
 
-# Fibers are not implemented yet.
+# Requires upvalues
 # BENCHMARK("fibers", r"""4999950000""")
 
 BENCHMARK("for", r"""499999500000""")
 
-# super not implemented yet.
-# BENCHMARK("method_call", r"""true
-# false""")
+BENCHMARK("method_call", r"""true
+false""")
 
-# Takes longer than a minute?  Maybe indefinite?
-# BENCHMARK("map_numeric", r"""2000001000000""")
+BENCHMARK("map_numeric", r"""2000001000000""")
 
 BENCHMARK("map_string", r"""12799920000""")
 
@@ -107,7 +105,7 @@ BENCHMARK("string_equals", r"""3000000""")
 
 LANGUAGES = [
     ("wren_rust",           [os.path.join(
-        WREN_RUST_BIN, 'wren_rust')], ".wren"),
+        WREN_RUST_BIN, 'wren_test')], ".wren"),
     ("wren_c",           [os.path.join(WREN_C_BIN, 'wren_test')], ".wren"),
     # Dart examples need updating for null-safety anyway.
     # ("dart",           ["dart", "run"],                ".dart"),
