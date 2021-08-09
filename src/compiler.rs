@@ -9,7 +9,21 @@ use std::ops::Range;
 use std::rc::Rc;
 use std::str;
 
-pub(crate) type Constant = usize;
+#[derive(Debug)]
+pub(crate) struct Constant(usize);
+
+impl fmt::Display for Constant {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl Constant {
+    pub fn as_index(&self) -> usize {
+        self.0
+    }
+}
+
 pub(crate) type Arity = u8;
 pub(crate) type JumpOffset = u16;
 
@@ -1026,7 +1040,7 @@ impl Precedence {
 
 #[derive(Debug)]
 pub(crate) enum Ops {
-    Constant(usize),
+    Constant(Constant),
     Boolean(bool), // Unclear if needed, could be constant?
     Null,          // Unclear if needed, could be constant?
     Call(Arity, Symbol),
@@ -1038,7 +1052,7 @@ pub(crate) enum Ops {
     ClassPlaceholder,
     Class(usize), // num_fields
     ForeignClass,
-    Closure(usize, Vec<Upvalue>),
+    Closure(Constant, Vec<Upvalue>),
     Construct,
     ForeignConstruct,
     Method(bool, usize), // METHOD_STATIC and METHOD_INSTANCE from wren_c
@@ -1201,8 +1215,8 @@ impl ConstantsBuilder {
         }
     }
 
-    fn lookup(&self, value: &Value) -> Option<&usize> {
-        self.hash.get(value)
+    fn lookup(&self, value: &Value) -> Option<Constant> {
+        self.hash.get(value).map(|u| Constant(*u))
     }
 
     fn len(&self) -> usize {
@@ -1212,11 +1226,11 @@ impl ConstantsBuilder {
 
     // This makes no attempt to check if it's already in the map
     // callers are expected to lookup first.
-    fn add(&mut self, value: Value) -> usize {
+    fn add(&mut self, value: Value) -> Constant {
         let index = self.list.len();
         self.list.push(value.clone());
         self.hash.insert(value, index);
-        index
+        Constant(index)
     }
 }
 
@@ -1358,9 +1372,9 @@ impl fmt::Debug for Compiler {
 
 // Adds [constant] to the constant pool and returns its index.
 // wren_c calls this addConstant
-fn ensure_constant(ctx: &mut ParseContext, constant: Value) -> Result<usize, WrenError> {
+fn ensure_constant(ctx: &mut ParseContext, constant: Value) -> Result<Constant, WrenError> {
     if let Some(index) = ctx.compiler().constants.lookup(&constant) {
-        Ok(*index)
+        Ok(index)
     } else if ctx.compiler().constants.len() < MAX_CONSTANTS {
         Ok(ctx.compiler_mut().constants.add(constant))
     } else {

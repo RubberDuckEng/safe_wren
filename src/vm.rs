@@ -9,7 +9,7 @@ use std::rc::Rc;
 use std::{str, usize};
 
 use crate::compiler::{
-    compile_in_module, wren_is_local_name, Arity, FnDebug, InputManager, Ops, Scope,
+    compile_in_module, wren_is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Scope,
 };
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 use crate::ffi::c_api::WrenConfiguration;
@@ -1364,8 +1364,10 @@ fn bind_method_code(class: &ObjClass, fn_obj: &mut ObjFn) {
     for op in &mut fn_obj.code {
         match op {
             Ops::CallSuper(_, _, super_constant) => {
-                fn_obj.constants[*super_constant] =
-                    Value::Class(class.superclass.as_ref().unwrap().clone())
+                let value = Value::Class(class.superclass.as_ref().unwrap().clone());
+                // Making this a function call triggers a second mut borrow. :/
+                // fn_obj.set_constant(super_constant, value);
+                fn_obj.constants[super_constant.as_index()] = value;
             }
             Ops::LoadField(field) => *field += field_adjustment(class),
             Ops::StoreField(field) => *field += field_adjustment(class),
@@ -1909,7 +1911,7 @@ impl VM {
             frame.pc += 1;
             match op {
                 Ops::Constant(index) => {
-                    frame.push(fn_obj.constants[*index].clone());
+                    frame.push(fn_obj.lookup_constant(index).clone());
                 }
                 Ops::Boolean(value) => {
                     frame.push(Value::Boolean(*value));
@@ -1921,7 +1923,7 @@ impl VM {
                     // +1 for implicit arg for 'this'.
                     let num_args = *arity as usize + 1;
                     // Compiler error if this is not a class.
-                    let superclass = fn_obj.constants[*constant].try_into_class().unwrap();
+                    let superclass = fn_obj.lookup_constant(constant).try_into_class().unwrap();
                     let action =
                         self.call_method(frame, num_args, *symbol, &superclass.borrow())?;
                     match action {
@@ -1966,8 +1968,8 @@ impl VM {
                     let class = this.try_into_class().expect("'this' should be a class.");
                     frame.stack[0] = self.create_foreign(&class)?;
                 }
-                Ops::Closure(constant_index, _upvalues) => {
-                    let fn_value = fn_obj.constants[*constant_index].clone();
+                Ops::Closure(constant, _upvalues) => {
+                    let fn_value = fn_obj.lookup_constant(constant).clone();
                     let fn_obj = fn_value
                         .try_into_fn()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
@@ -2225,7 +2227,7 @@ fn op_debug_string(
     };
 
     match op {
-        Ops::Constant(i) => format!("Constant({}: {:?})", i, fn_obj.constants[*i]),
+        Ops::Constant(i) => format!("Constant({}: {:?})", i, fn_obj.lookup_constant(i)),
         Ops::Boolean(b) => format!("Boolean {}", b),
         Ops::Null => format!("{:?}", op),
         Ops::CallSuper(_arity, symbol, _super_constant) => {
@@ -2449,6 +2451,14 @@ impl ObjFn {
             debug: compiler.fn_debug,
             module,
         }
+    }
+
+    // pub(crate) fn set_constant(&mut self, constant: &Constant, value: Value) {
+    //     self.constants[constant.as_index()] = value;
+    // }
+
+    pub(crate) fn lookup_constant(&self, constant: &Constant) -> &Value {
+        &self.constants[constant.as_index()]
     }
 
     pub(crate) fn stub_call(vm: &VM, signature: &str, symbol: Symbol) -> ObjFn {

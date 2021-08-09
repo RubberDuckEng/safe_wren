@@ -32,12 +32,12 @@ with error text from any failed tests.  `test.py` will also update
 `test_results/test_expectations.txt` lists all currently skipped tests and why.
 
 ## Ordered goals?
-* Time the tests / make faster
-* Re-enable benchmarks
+* Time the tests / make faster (next is vec::alloc from method calls)
 * Fancier test_expectations system
  ** Config / Expectation pairs (c | FAIL, RUST | TIMEOUT)
 * Teach test.py how to easily switch between rust and c_rust and c
 * Upvalues
+* Re-enable benchmarks which depend on upvalues.
 * remove all uses of 'as' (use into() instead).
 * validate_superclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
