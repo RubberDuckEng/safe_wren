@@ -1385,7 +1385,7 @@ fn bind_method_code(class: &ObjClass, fn_obj: &mut ObjFn) {
 fn bind_method(
     vm: &mut VM,
     is_static: bool,
-    symbol: usize,
+    symbol: Symbol,
     module: &Module,
     class: &mut ObjClass,
     method_value: Value,
@@ -1589,7 +1589,7 @@ impl VM {
         }
     }
 
-    fn method_not_found(&self, class: &ObjClass, symbol: usize) -> VMError {
+    fn method_not_found(&self, class: &ObjClass, symbol: Symbol) -> VMError {
         let name = self.methods.name_for_symbol(symbol);
         VMError::from_string(format!("{} does not implement '{}'.", class.name, name))
     }
@@ -1821,12 +1821,14 @@ impl VM {
     fn call_method(
         &mut self,
         frame: &mut CallFrame,
-        symbol: usize,
+        num_args: usize,
+        symbol: Symbol,
         class: &ObjClass,
-        args: Vec<Value>,
-    ) -> Result<Option<FunctionNext>, VMError> {
+    ) -> Result<FunctionNext, VMError> {
+        let this_offset = frame.stack.len() - num_args;
+        // Avoid allocing a new vector for the args.
+        let args = frame.stack.drain(this_offset..);
         // Get the Method record for this class for this symbol.
-        // This could return None instead of MethodNone?
         let method = class
             .lookup_method(symbol)
             .ok_or_else(|| self.method_not_found(&class, symbol))?;
@@ -1834,51 +1836,42 @@ impl VM {
         // Even if we got a Method doesn't mean *this* class implements it.
         match method {
             Method::ValuePrimitive(f) => {
-                let result = f(self, args)?;
-                frame.push(result);
-                Ok(None)
+                let value = f(self, args.as_slice())?;
+                Ok(FunctionNext::Return(value))
             }
             Method::FiberActionPrimitive(f) => {
-                let action = f(self, args)?;
-                Ok(Some(FunctionNext::FiberAction(action)))
+                let action = f(self, args.as_slice())?;
+                Ok(FunctionNext::FiberAction(action))
             }
             Method::FunctionCall => {
                 // Pushes a new stack frame.
                 // wren_rust (currently) keeps a separate stack
                 // per CallFrame, so underflows are caught on a
                 // per-function call basis.
-                Ok(Some(FunctionNext::Call(CallFrame {
+                let stack: Vec<Value> = args.collect();
+                Ok(FunctionNext::Call(CallFrame {
                     pc: 0,
-                    closure: check_arity(&args[0], args.len())?,
-                    stack: args,
-                })))
+                    closure: check_arity(&stack[0], stack.len())?,
+                    stack,
+                }))
             }
             Method::ForeignFunction(foreign) => {
-                let value = self.call_foreign(foreign, args)?;
-                frame.push(value);
-                Ok(None)
+                // call_foriegn would copy the args anyway, so copy them here.
+                let value = self.call_foreign(foreign, args.collect())?;
+                Ok(FunctionNext::Return(value))
             }
             Method::Block(closure) => {
                 // Pushes a new stack frame.
                 // wren_rust (currently) keeps a separate stack
                 // per CallFrame, so underflows are caught on a
                 // per-function call basis.
-                Ok(Some(FunctionNext::Call(CallFrame {
+                Ok(FunctionNext::Call(CallFrame {
                     pc: 0,
                     closure: closure.clone(),
-                    stack: args,
-                })))
+                    stack: args.collect(),
+                }))
             }
         }
-    }
-
-    fn args_for_call(&self, frame: &mut CallFrame, arity: Arity) -> Vec<Value> {
-        // Implicit arg for this.
-        let num_args = arity as usize + 1;
-        let this_offset = frame.stack.len() - num_args;
-        // Unlike wren_c, we remove the args from the stack
-        // and pass them to the function.
-        frame.stack.split_off(this_offset)
     }
 
     fn run_frame_in_fiber(
@@ -1925,25 +1918,42 @@ impl VM {
                     frame.push(Value::Null);
                 }
                 Ops::CallSuper(arity, symbol, constant) => {
-                    let args = self.args_for_call(frame, *arity);
+                    // +1 for implicit arg for 'this'.
+                    let num_args = *arity as usize + 1;
                     // Compiler error if this is not a class.
                     let superclass = fn_obj.constants[*constant].try_into_class().unwrap();
-                    if let Some(action) =
-                        self.call_method(frame, *symbol, &superclass.borrow(), args)?
-                    {
-                        return Ok(action);
-                    };
-                    // None means continue normal execution, no action needed.
+                    let action =
+                        self.call_method(frame, num_args, *symbol, &superclass.borrow())?;
+                    match action {
+                        FunctionNext::Return(value) => {
+                            // We got an immediate answer from a primitive or
+                            // foreign call, we can handle it here and continue.
+                            frame.push(value);
+                        }
+                        _ => {
+                            // Let the caller handle more complicated actions.
+                            return Ok(action);
+                        }
+                    }
                 }
                 Ops::Call(arity, symbol) => {
-                    let args = self.args_for_call(frame, *arity);
-                    let this_class = self.class_for_value(&args[0]);
-                    if let Some(action) =
-                        self.call_method(frame, *symbol, &this_class.borrow(), args)?
-                    {
-                        return Ok(action);
-                    };
-                    // None means continue normal execution, no action needed.
+                    // +1 for implicit arg for 'this'.
+                    let num_args = *arity as usize + 1;
+                    let this_offset = frame.stack.len() - num_args;
+                    let this_class = self.class_for_value(&frame.stack[this_offset]);
+                    let action =
+                        self.call_method(frame, num_args, *symbol, &this_class.borrow())?;
+                    match action {
+                        FunctionNext::Return(value) => {
+                            // We got an immediate answer from a primitive or
+                            // foreign call, we can handle it here and continue.
+                            frame.push(value);
+                        }
+                        _ => {
+                            // Let the caller handle more complicated actions.
+                            return Ok(action);
+                        }
+                    }
                 }
                 Ops::Construct => {
                     let this = frame.stack[0].clone();
@@ -2205,11 +2215,11 @@ fn op_debug_string(
 ) -> String {
     // If stable_output do not print the symbol, otherwise every time we
     // change wren_core.wren all compile.txt files change.
-    let unstable_num_arrow = |symbol: usize| match mode {
+    let unstable_num_arrow = |symbol: Symbol| match mode {
         DumpMode::HideSymbols => format!(""),
         DumpMode::ShowSymbols => format!("{} -> ", symbol),
     };
-    let comma_unstable_num = |symbol: usize| match mode {
+    let comma_unstable_num = |symbol: Symbol| match mode {
         DumpMode::HideSymbols => format!(""),
         DumpMode::ShowSymbols => format!(" {}", symbol),
     };
@@ -2556,8 +2566,8 @@ pub(crate) enum FiberAction {
 }
 
 // Unclear if this should take Vec or a slice?
-type ValuePrimitive = fn(vm: &VM, args: Vec<Value>) -> Result<Value>;
-type FiberActionPrimitive = fn(vm: &VM, args: Vec<Value>) -> Result<FiberAction>;
+type ValuePrimitive = fn(vm: &VM, args: &[Value]) -> Result<Value>;
+type FiberActionPrimitive = fn(vm: &VM, args: &[Value]) -> Result<FiberAction>;
 
 #[derive(Clone)]
 pub(crate) enum Method {
@@ -2669,7 +2679,7 @@ impl core::fmt::Debug for ObjClass {
 
 impl ObjClass {
     // wren_c calls this wrenBindMethod
-    pub(crate) fn set_method(&mut self, symbol: usize, method: Method) {
+    pub(crate) fn set_method(&mut self, symbol: Symbol, method: Method) {
         if symbol >= self.methods.len() {
             self.methods.resize(symbol + 1, None);
         }
@@ -2685,7 +2695,7 @@ impl ObjClass {
         }
     }
 
-    pub(crate) fn lookup_method(&self, symbol: usize) -> Option<&Method> {
+    pub(crate) fn lookup_method(&self, symbol: Symbol) -> Option<&Method> {
         match self.methods.get(symbol) {
             Some(maybe_method) => maybe_method.as_ref(),
             None => None,
