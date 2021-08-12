@@ -89,10 +89,6 @@ const MAX_METHOD_NAME: usize = 64;
 // is kept for consistency with wren_c for now.
 pub(crate) const MAX_VARIABLE_NAME: usize = 64;
 
-// This is written in bottom-up order, so the tokenization comes first, then
-// parsing/code generation. This minimizes the number of explicit forward
-// declarations needed.
-
 // The maximum number of local (i.e. not module level) variables that can be
 // declared in a single function, method, or chunk of top level code. This is
 // the maximum number of variables in scope at one time, and spans block scopes.
@@ -104,10 +100,6 @@ const MAX_LOCALS: usize = 256;
 
 // The maximum number of distinct constants that a function can contain.
 const MAX_CONSTANTS: usize = 1 << 16;
-
-// The maximum distance a Ops::Jump or Ops::JumpIfFalse instruction can move the
-// instruction pointer.
-// const MAX_JUMP: usize = 1 << 16;
 
 // The maximum depth that interpolation can nest. For example, this string has
 // three levels:
@@ -186,7 +178,7 @@ pub enum Token {
     Interpolation(String),
     Boolean(bool),
     Name(String),
-    // Field and StaticField have separate Grammar rules, hence separate.
+    // Field and StaticField have separate Grammar rules, hence separate Tokens.
     Field(String),
     StaticField(String),
     String(String),
@@ -217,7 +209,7 @@ impl ParseToken {
     }
 }
 
-// Is this really the tokenizer?
+// FIXME: Is this really the tokenizer?
 // Should have an input stream which it can pull (and cache) from
 // And then the ability to pull more when needed and look-ahead when needed.
 // Keeps track of when the current token starts, and knows how to start a new.
@@ -413,12 +405,10 @@ pub enum LexError {
 }
 
 impl LexError {
-    // Rename to error_str?
     pub(crate) fn from_str(msg: &str) -> LexError {
         LexError::Error(msg.into())
     }
 
-    // Rename to error_string?
     pub(crate) fn from_string(msg: String) -> LexError {
         LexError::Error(msg)
     }
@@ -937,7 +927,7 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
 
         if next == b'%' {
             if input.interpolation_allowed() {
-                // TODO: Allow format string.
+                // wren_c TODO: Allow format string.
                 if input.is_at_end() || input.next_unchecked() != b'(' {
                     return Err(LexError::from_str("Expect '(' after '%%'."));
                 }
@@ -955,8 +945,6 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
         }
 
         if next == b'\\' {
-            // FIXME: This should be part of the match instead.
-            // input next() should return Option.
             if input.is_at_end() {
                 return Err(LexError::UnterminatedString);
             }
@@ -1180,7 +1168,7 @@ struct ClassInfo {
     // True if the class being compiled is a foreign class.
     is_foreign_class: bool,
 
-    // // True if the current method being compiled is static.
+    // True if the current method being compiled is static.
     in_static_method: bool,
     // The signature of the method being compiled.
     signature: Option<Signature>,
@@ -1228,7 +1216,6 @@ impl FnDebug {
 // wren_c uses both a hash and a list when building constants
 // to allow both fast lookup (when there are lots of constants)
 // as well as fast copy from the compiler into the final function.
-// wren_c allows up to 65k constants.
 pub(crate) struct ConstantsBuilder {
     hash: HashMap<Value, usize>,
 
@@ -1249,7 +1236,7 @@ impl ConstantsBuilder {
     }
 
     fn len(&self) -> usize {
-        // self.list.len() and self.hash.len() should both be the same.
+        // self.list.len() and self.hash.len() MUST both be the same.
         self.list.len()
     }
 
@@ -1309,14 +1296,12 @@ impl Compiler {
                 // and should be popped by the callee.
                 depth: ScopeDepth::Module,
             }],
-            // locals: Vec::new(),
             code: Vec::new(),
             scope_depth: match parent {
                 None => ScopeDepth::Module,
                 Some(_) => ScopeDepth::Local(0),
             },
             loops: Vec::new(),
-            // num_slots: 0,
             enclosing_class: None,
             parent,
             upvalues: Vec::new(),
@@ -1416,13 +1401,12 @@ fn ensure_constant(ctx: &mut ParseContext, constant: Value) -> Result<Constant, 
 
 // Takes an InputManager.  Knows how to use a Tokenizer to break it up into
 // tokens one at a time.  Turns a stream of tokens into a tree of objects.
-// Module / Function / Closure are likely the eventual objects?
 // Parser has the lifetime of a given compilation of a module.
 struct Parser {
     input: InputManager,
-    previous: ParseToken,
-    current: ParseToken,
-    next: ParseToken,
+    previous: ParseToken, // Just consumed token.
+    current: ParseToken,  // Next to consume, peek()
+    next: ParseToken,     // After-next to consume, peek_next()
 }
 
 struct ParseContext<'a> {
@@ -1474,7 +1458,6 @@ impl<'a> ParseContext<'a> {
             "Error at end of file".into()
         } else {
             let name = previous_token_name(self);
-            // Match wren_c's variable name limits.
             if name.len() <= MAX_VARIABLE_NAME {
                 format!("Error at '{}'", name)
             } else {
@@ -1873,7 +1856,7 @@ fn signature_from_token(
 
 // This isn't needed, just here for ease of code porting.
 fn signature_symbol(ctx: &mut ParseContext, signature: &Signature) -> usize {
-    // Signature.full_name() is "signatureToString"
+    // Signature.full_name() is wren_c's "signatureToString"
     ctx.vm.methods.ensure_symbol(&signature.full_name())
 }
 
