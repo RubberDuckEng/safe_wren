@@ -1,6 +1,3 @@
-Unexpected output on stderr:
-Failed to open file "test/regression/442-000005.wren": stream did not contain valid UTF-8
+Unexpected error:
+[./test/regression/442-000005 line 12] Error: Invalid byte 0x03.
 Missing expected error on line 8.
-Expected return code 65 and got 66. Stderr:
-Failed to open file "test/regression/442-000005.wren": stream did not contain valid UTF-8
-

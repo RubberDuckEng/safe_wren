@@ -33,16 +33,18 @@ with error text from any failed tests.  `test.py` will also update
 
 ## Ordered goals?
 * Time the tests / make faster (next is vec::alloc from method calls)
+* Add a version of compile/interpret that takes bytes (for C compat).
 * Fancier test_expectations system
  ** Config / Expectation pairs (c | FAIL, RUST | TIMEOUT)
 * Teach test.py how to easily switch between rust and c_rust and c
 * Upvalues
+ ** May require us to combine all CallFrame stacks into one common stack?
+    since upvalues wish to compare offsets within the stack.
 * Re-enable benchmarks which depend on upvalues.
 * remove all uses of 'as' (use into() instead).
 * validate_superclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
 * wrong line numbers for foreign method runtime errors.
-* Fully deploy separate types for Symbol, Constant, etc.
 * attributes
 * Scientific notation
 * static fields (emits to two compilers)

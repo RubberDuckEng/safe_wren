@@ -186,18 +186,42 @@ pub enum InterpretResult {
 // Runs [source], a string of Wren source code in a new fiber in [vm] in the
 // context of resolved [module].
 impl VM {
+    // Should this take a &[u8]?
+    pub fn interpret_bytes(&mut self, module: &str, source_bytes: Vec<u8>) -> InterpretResult {
+        // Attempt to convert to String.
+        match String::from_utf8(source_bytes) {
+            Ok(source) => self.interpret(module, source),
+            Err(error) => {
+                // Convert any unicode failures into compile failures.
+                // Fake the line number according to the number of \n before the offset.
+                let utf8_error = error.utf8_error();
+                let source_bytes = error.as_bytes();
+                let first_bad_byte = utf8_error.valid_up_to() + 1;
+                let valid_bytes = &source_bytes[..first_bad_byte];
+                let newline_count = valid_bytes.iter().filter(|&n| *n == b'\n').count();
+                let line = newline_count + 1;
+                let bad_byte = source_bytes[first_bad_byte];
+                self.report_compile_error(
+                    module,
+                    line,
+                    &format!("Error: Invalid byte 0x{:02x}.", bad_byte),
+                );
+                InterpretResult::CompileError
+            }
+        }
+    }
+
+    fn report_compile_error(&self, module: &str, line: usize, message: &str) {
+        if let Some(error_fn) = self.config.error_fn {
+            error_fn(self, ErrorType::Compile, module, line, message);
+        }
+    }
+
+    // Should this take a &str?
     pub fn interpret(&mut self, module: &str, source: String) -> InterpretResult {
         match crate::compiler::wren_compile_source(self, module, source) {
-            Err(e) => {
-                if let Some(error_fn) = self.config.error_fn {
-                    error_fn(
-                        self,
-                        ErrorType::Compile,
-                        module,
-                        e.line,
-                        &e.error.to_string(),
-                    );
-                }
+            Err(error) => {
+                self.report_compile_error(module, error.line, &error.error.to_string());
                 InterpretResult::CompileError
             }
             Ok(closure) => {

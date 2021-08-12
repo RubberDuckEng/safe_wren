@@ -1,6 +1,0 @@
-Unexpected output on stderr:
-Failed to open file "test/regression/442-000357.wren": stream did not contain valid UTF-8
-Missing expected error on line 2.
-Expected return code 65 and got 66. Stderr:
-Failed to open file "test/regression/442-000357.wren": stream did not contain valid UTF-8
-

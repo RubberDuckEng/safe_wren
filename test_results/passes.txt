@@ -749,4 +749,16 @@ wren_c/test/random/sample_one.wren
 wren_c/test/random/sample_one_empty.wren
 wren_c/test/random/shuffle.wren
 wren_c/test/regression/429.wren
+wren_c/test/regression/442-000086.wren
+wren_c/test/regression/442-000088.wren
+wren_c/test/regression/442-000089.wren
+wren_c/test/regression/442-000100.wren
+wren_c/test/regression/442-000166.wren
+wren_c/test/regression/442-000181.wren
+wren_c/test/regression/442-000238.wren
+wren_c/test/regression/442-000295.wren
+wren_c/test/regression/442-000321.wren
+wren_c/test/regression/442-000348.wren
+wren_c/test/regression/442-000357.wren
+wren_c/test/regression/442-000440.wren
 wren_c/test/regression/561.wren

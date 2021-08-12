@@ -35,6 +35,14 @@ wren_c/test/language/constructor/cannot_be_static.wren
 wren_c/test/language/super/super_at_top_level.wren
 wren_c/test/language/method/duplicate_methods.wren
 
+# wren_c decodes unicode during lexing, and will report errors
+# before unicode failures.
+wren_c/test/regression/442-000007.wren
+wren_c/test/regression/442-000115.wren
+wren_c/test/regression/442-000665.wren
+wren_c/test/regression/442-000182.wren
+wren_c/test/regression/442-000005.wren
+
 # byte escapes \x get expanded through char
 # Fails because 171 expands to 194, 171 for rust:
 # https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d79f8bdf98be962582f31ea4a62fb658
@@ -115,27 +123,6 @@ wren_c/test/language/static_field/closure.wren
 wren_c/test/language/static_field/use_before_set.wren
 wren_c/test/language/static_field/nested_class.wren
 wren_c/example/syntax.wren
-
-# wren_rust only allows valid unicode and thus gives the wrong
-# exit code (NO_INPUT) and even if that was fixed would give the
-# wrong line number for the parse error (we never try to parse them)
-wren_c/test/regression/442-000007.wren
-wren_c/test/regression/442-000115.wren
-wren_c/test/regression/442-000348.wren
-wren_c/test/regression/442-000665.wren
-wren_c/test/regression/442-000357.wren
-wren_c/test/regression/442-000440.wren
-wren_c/test/regression/442-000182.wren
-wren_c/test/regression/442-000321.wren
-wren_c/test/regression/442-000088.wren
-wren_c/test/regression/442-000238.wren
-wren_c/test/regression/442-000100.wren
-wren_c/test/regression/442-000005.wren
-wren_c/test/regression/442-000181.wren
-wren_c/test/regression/442-000166.wren
-wren_c/test/regression/442-000089.wren
-wren_c/test/regression/442-000086.wren
-wren_c/test/regression/442-000295.wren
 
 
 # WONTFIX? wren_rust doesn't currently enforce MAX_JUMP, but even

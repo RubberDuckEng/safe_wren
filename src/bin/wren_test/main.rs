@@ -45,13 +45,8 @@ fn exit(code: ExitCode) -> ! {
 }
 
 fn run_file(vm: &mut VM, path: &str) -> ! {
-    let source = fs::read_to_string(path).unwrap_or_else(|e| {
+    let source = fs::read(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
-        // FIXME: wren_c appears to read the file as bytes and
-        // does not exit NO_INPUT for invalid UTF-8, but rather
-        // expects invalid UTF-8 to appear as compile errors
-        // including the line number they occured on.
-        // We can't pass those with this up-front decoding strategy.
         exit(ExitCode::NoInput);
     });
 
@@ -65,17 +60,10 @@ fn run_file(vm: &mut VM, path: &str) -> ! {
     if !module_name.starts_with(".") {
         module_name = format!("./{}", module_name);
     }
-    let result = vm.interpret(&module_name, source);
-    match result {
-        InterpretResult::CompileError => {
-            exit(ExitCode::CompileError);
-        }
-        InterpretResult::RuntimeError => {
-            exit(ExitCode::RuntimeError);
-        }
-        InterpretResult::Success => {
-            exit(ExitCode::Success);
-        }
+    match vm.interpret_bytes(&module_name, source) {
+        InterpretResult::CompileError => exit(ExitCode::CompileError),
+        InterpretResult::RuntimeError => exit(ExitCode::RuntimeError),
+        InterpretResult::Success => exit(ExitCode::Success),
     }
 }
 

@@ -328,8 +328,8 @@ pub extern "C" fn wrenInterpret(
 ) -> WrenInterpretResult {
     let vm = unsafe { std::mem::transmute::<*mut WrenVM, &mut VM>(c_vm) };
     let module = unsafe { CStr::from_ptr(c_module) }.to_str().unwrap();
-    let source = unsafe { CStr::from_ptr(c_source) }.to_str().unwrap().into();
-    vm.interpret(module, source).to_c()
+    let source = unsafe { CStr::from_ptr(c_source) };
+    vm.interpret_bytes(module, source.to_bytes().into()).to_c()
 }
 
 impl ForeignClassMethods {
