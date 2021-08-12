@@ -247,6 +247,23 @@ pub struct InputManager {
     parens: Vec<usize>,
 }
 
+impl Iterator for InputManager {
+    type Item = u8;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.offset < self.source.len() {
+            let val = self.source[self.offset];
+            if val == b'\n' {
+                self.line_number += 1;
+            }
+            self.offset += 1;
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
 impl InputManager {
     pub fn from_string(source: String) -> InputManager {
         InputManager::from_bytes(source.as_bytes().to_vec())
@@ -285,9 +302,9 @@ impl InputManager {
         }
     }
 
-    fn peek_is_fn(&self, precicate: fn(u8) -> bool) -> bool {
+    fn peek_is_fn(&self, precicate: fn(&u8) -> bool) -> bool {
         match self.peek() {
-            Some(c) => precicate(c),
+            Some(c) => precicate(&c),
             None => false,
         }
     }
@@ -307,28 +324,13 @@ impl InputManager {
         }
     }
 
-    fn peek_next_is_fn(&self, precicate: fn(u8) -> bool) -> bool {
+    fn peek_next_is_fn(&self, precicate: fn(&u8) -> bool) -> bool {
         match self.peek_next() {
-            Some(c) => precicate(c),
+            Some(c) => precicate(&c),
             None => false,
         }
     }
 
-    fn next_checked(&mut self) -> Option<u8> {
-        if self.offset < self.source.len() {
-            let val = self.source[self.offset];
-            if val == b'\n' {
-                self.line_number += 1;
-            }
-            self.offset += 1;
-            Some(val)
-        } else {
-            None
-        }
-    }
-
-    // FIXME: Move to next_checked instead, or at least
-    // rename this to next_unchecked.
     fn next_unchecked(&mut self) -> u8 {
         let val = self.source[self.offset];
         if val == b'\n' {
@@ -338,9 +340,12 @@ impl InputManager {
         val
     }
 
-    fn skip_while(&mut self, precicate: fn(u8) -> bool) {
+    // This is not *currently* the same as skip_while for
+    // the iterator, as it does not return an iterator
+    // thus you can ignore the return.
+    fn skip_while(&mut self, precicate: fn(&u8) -> bool) {
         while let Some(val) = self.peek() {
-            if !precicate(val) {
+            if !precicate(&val) {
                 break;
             }
             self.next_unchecked();
@@ -727,7 +732,7 @@ fn read_hex_number(input: &mut InputManager) -> Result<f64, LexError> {
 // and then turn that into a token.
 // Belongs on the Tokenizer/InputManager.
 fn read_number(input: &mut InputManager) -> Result<f64, LexError> {
-    fn is_digit(b: u8) -> bool {
+    fn is_digit(b: &u8) -> bool {
         b.is_ascii_digit()
     }
 
@@ -844,9 +849,7 @@ fn read_raw_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
 
     loop {
         // FIXME: We probably don't need to check all 3 every time?
-        let c = input
-            .next_checked()
-            .ok_or(LexError::UnterminatedRawString)?;
+        let c = input.next().ok_or(LexError::UnterminatedRawString)?;
         let c1 = input.peek().ok_or(LexError::UnterminatedRawString)?;
         let c2 = input.peek_next().ok_or(LexError::UnterminatedRawString)?;
 
