@@ -202,7 +202,7 @@ pub struct ParseToken {
 }
 
 impl ParseToken {
-    // FIXME: This should return a &str
+    // FIXME: This should return a &str if lifetimes can be worked out.
     pub fn name(&self, input: &InputManager) -> String {
         // If we decoded it to parse it, we can decode it again w/o error.
         String::from_utf8(input.source[self.bytes_range.clone()].into()).unwrap()
@@ -522,12 +522,6 @@ fn skip_block_comment(input: &mut InputManager) -> Result<(), LexError> {
     Ok(())
 }
 
-// Takes an InputManager (from which it gets source)
-// Produces tokens one at a time.  Keeps reference to current and next
-// as well as can look-ahead (and cache in a buffer if needed)?
-// Knows if it's at the end of the file.
-// struct Tokenizer {}
-
 fn is_whitespace(maybe_b: Option<u8>) -> bool {
     if let Some(b) = maybe_b {
         b == b' ' || b == b'\t' || b == b'\r'
@@ -702,10 +696,13 @@ fn make_number(input: &InputManager, is_hex: bool) -> Result<f64, LexError> {
 }
 
 // Reads the next character, which should be a hex digit (0-9, a-f, or A-F) and
-// returns its numeric value. If the character isn't a hex digit, returns -1.
+// returns its numeric value. If the character isn't a hex digit, returns None.
 fn read_hex_digit(input: &mut InputManager) -> Option<u8> {
-    // FIXME: Can't this just be input.next() and all the other
-    // input.next() become "b"?
+    // We use peek instead of next() here for the case where
+    // the next byte is not a digit and we don't want to have
+    // pulled it off the iterator.  If we had a backup() we
+    // could then just match next() instead.
+    // We can't peek().map() either, since we convert some values to None.
     match input.peek() {
         Some(b) => match b {
             b'0'..=b'9' => Some(input.next_unchecked() - b'0'),
@@ -760,7 +757,6 @@ fn read_number(input: &mut InputManager) -> Result<f64, LexError> {
 }
 
 fn keyword_token(name: &str) -> Option<Token> {
-    // FIXME: Hack until TokenType is separate from Token?
     match name {
         "true" => Some(Token::Boolean(true)),
         "false" => Some(Token::Boolean(false)),
@@ -2367,16 +2363,16 @@ fn bare_name(
 // Attempts to look up [name] in the functions enclosing the one being compiled
 // by [compiler]. If found, it adds an upvalue for it to this compiler's list
 // of upvalues (unless it's already in there) and returns its index. If not
-// found, returns -1.
+// found, returns None.
 //
 // If the name is found outside of the immediately enclosing function, this
 // will flatten the closure and add upvalues to all of the intermediate
 // functions so that it gets walked down to this one.
 //
-// If it reaches a method boundary, this stops and returns -1 since methods do
+// If it reaches a method boundary, this stops and returns None since methods do
 // not close over local variables.
 fn find_upvalue(_ctx: &ParseContext, _name: &str) -> Option<u16> {
-    // We can't support this until we support having a stack of compilers.
+    // FIXME: unimplemented.
     None
 }
 
@@ -2862,7 +2858,7 @@ fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usiz
 }
 
 // Attempts to look up the name in the local variables of [compiler]. If found,
-// returns its index, otherwise returns -1.
+// returns its index, otherwise returns None.
 // fn resolve_local(ctx: &mut ParseContext, name: &str) -> Option<usize> {
 //     // Look it up in the local scopes. Look in reverse order so that the most
 //     // nested variable is found first and shadows outer ones.
@@ -3402,8 +3398,6 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
         // Check if the method table already contains this symbol
         method_symbol = declare_method(scope.ctx, &signature)?;
 
-        // FIXME: handle foreign.
-
         if !is_foreign {
             consume_expecting(
                 scope.ctx,
@@ -3771,25 +3765,11 @@ impl From<LexError> for ParserError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug)] // Only so expect() can work.
 pub struct WrenError {
     pub module: String,
     pub line: usize,
     pub error: ParserError, // Probably shouldn't be public?
-}
-
-// FIXME: This is a stub.
-impl fmt::Display for WrenError {
-    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
-        Ok(())
-    }
-}
-
-// FIXME: This is a stub.
-impl error::Error for WrenError {
-    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
-        None
-    }
 }
 
 // This is called nextToken in wren_c, and consume_expecting is consume.
