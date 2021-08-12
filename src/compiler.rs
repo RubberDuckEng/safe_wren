@@ -197,7 +197,9 @@ impl ParseToken {
     // FIXME: This should return a &str if lifetimes can be worked out.
     pub fn name(&self, input: &InputManager) -> String {
         // If we decoded it to parse it, we can decode it again w/o error.
-        String::from_utf8(input.source[self.bytes_range.clone()].into()).unwrap()
+        str::from_utf8(&input.source[self.bytes_range.clone()])
+            .unwrap()
+            .into()
     }
 
     fn before_file() -> ParseToken {
