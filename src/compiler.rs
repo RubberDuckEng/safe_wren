@@ -329,7 +329,7 @@ impl InputManager {
 
     // FIXME: Move to next_checked instead, or at least
     // rename this to next_unchecked.
-    fn next(&mut self) -> u8 {
+    fn next_unchecked(&mut self) -> u8 {
         let val = self.source[self.offset];
         if val == b'\n' {
             self.line_number += 1;
@@ -343,7 +343,7 @@ impl InputManager {
             if !precicate(val) {
                 break;
             }
-            self.next();
+            self.next_unchecked();
         }
     }
 
@@ -478,7 +478,7 @@ impl error::Error for LexError {
 fn match_char(input: &mut InputManager, c: u8) -> bool {
     if let Some(next) = input.peek() {
         if next == c {
-            input.next();
+            input.next_unchecked();
             return true;
         }
     }
@@ -490,7 +490,7 @@ fn skip_line_comment(input: &mut InputManager) {
         if next == b'\n' {
             return;
         }
-        input.next();
+        input.next_unchecked();
     }
 }
 
@@ -499,17 +499,17 @@ fn skip_block_comment(input: &mut InputManager) -> Result<(), LexError> {
     while nesting > 0 {
         match input.peek() {
             Some(b'/') if input.peek_next() == Some(b'*') => {
-                input.next();
-                input.next();
+                input.next_unchecked();
+                input.next_unchecked();
                 nesting += 1;
             }
             Some(b'*') if input.peek_next() == Some(b'/') => {
-                input.next();
-                input.next();
+                input.next_unchecked();
+                input.next_unchecked();
                 nesting -= 1;
             }
             Some(_) => {
-                input.next();
+                input.next_unchecked();
             }
             None => return Err(LexError::UnterminatedBlockComment),
         }
@@ -539,7 +539,7 @@ fn two_char_token(
 ) -> ParseToken {
     let token = match input.peek() {
         Some(byte) if byte == second_byte => {
-            input.next();
+            input.next_unchecked();
             two_token
         }
         _ => one_token,
@@ -552,7 +552,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
     while !input.is_at_end() {
         // Reset token start at top of loop to avoid counting leading whitespace
         input.token_start_offset = input.offset;
-        let c = input.next();
+        let c = input.next_unchecked();
         match c {
             b'0' => {
                 let value = if input.peek_is(b'x') {
@@ -618,7 +618,7 @@ fn next_token(input: &mut InputManager) -> Result<ParseToken, LexError> {
             b']' => return Ok(input.make_token(Token::RightSquareBracket)),
             b' ' | b'\t' | b'\r' => {
                 while is_whitespace(input.peek()) {
-                    input.next();
+                    input.next_unchecked();
                 }
             }
             b'/' => {
@@ -703,9 +703,9 @@ fn read_hex_digit(input: &mut InputManager) -> Option<u8> {
     // input.next() become "b"?
     match input.peek() {
         Some(b) => match b {
-            b'0'..=b'9' => Some(input.next() - b'0'),
-            b'a'..=b'f' => Some(input.next() - b'a' + 10),
-            b'A'..=b'F' => Some(input.next() - b'A' + 10),
+            b'0'..=b'9' => Some(input.next_unchecked() - b'0'),
+            b'a'..=b'f' => Some(input.next_unchecked() - b'a' + 10),
+            b'A'..=b'F' => Some(input.next_unchecked() - b'A' + 10),
             _ => None,
         },
         _ => None,
@@ -715,7 +715,7 @@ fn read_hex_digit(input: &mut InputManager) -> Option<u8> {
 // Finishes lexing a hexadecimal number literal.
 fn read_hex_number(input: &mut InputManager) -> Result<f64, LexError> {
     // Skip past the `x` used to denote a hexadecimal literal.
-    input.next();
+    input.next_unchecked();
 
     // Iterate over all the valid hexadecimal digits found.
     while read_hex_digit(input).is_some() {}
@@ -736,7 +736,7 @@ fn read_number(input: &mut InputManager) -> Result<f64, LexError> {
     // See if it has a floating point. Make sure there is a digit after the "."
     // so we don't get confused by method calls on number literals.
     if input.peek_is(b'.') && input.peek_next_is_fn(is_digit) {
-        input.next();
+        input.next_unchecked();
         input.skip_while(is_digit);
     }
     // See if the number is in scientific notation.
@@ -794,7 +794,7 @@ fn read_name(first_byte: u8, input: &mut InputManager) -> Result<String, LexErro
     // This should be a string?
     let mut bytes = vec![first_byte];
     while is_name(input.peek()) || is_digit(input.peek()) {
-        bytes.push(input.next());
+        bytes.push(input.next_unchecked());
     }
 
     Ok(String::from_utf8(bytes)?)
@@ -832,8 +832,8 @@ fn read_escape(
 
 fn read_raw_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
     //consume the second and third "
-    input.next();
-    input.next();
+    input.next_unchecked();
+    input.next_unchecked();
 
     let mut string = String::new();
 
@@ -891,8 +891,8 @@ fn read_raw_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
     }
 
     //consume the second and third "
-    input.next();
-    input.next();
+    input.next_unchecked();
+    input.next_unchecked();
 
     let mut offset = 0;
     let mut count = string.len();
@@ -926,7 +926,7 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
         if input.is_at_end() {
             return Err(LexError::UnterminatedString);
         }
-        let next = input.next();
+        let next = input.next_unchecked();
         if next == b'"' {
             break;
         }
@@ -939,7 +939,7 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
         if next == b'%' {
             if input.interpolation_allowed() {
                 // TODO: Allow format string.
-                if input.is_at_end() || input.next() != b'(' {
+                if input.is_at_end() || input.next_unchecked() != b'(' {
                     return Err(LexError::from_str("Expect '(' after '%%'."));
                 }
 
@@ -961,7 +961,7 @@ fn read_string(input: &mut InputManager) -> Result<ParseToken, LexError> {
             if input.is_at_end() {
                 return Err(LexError::UnterminatedString);
             }
-            match input.next() {
+            match input.next_unchecked() {
                 b'"' => bytes.push(b'"'),
                 b'\\' => bytes.push(b'\\'),
                 b'%' => bytes.push(b'%'),
