@@ -4,6 +4,7 @@ include!(concat!(env!("OUT_DIR"), "/wren_core_source.rs"));
 
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::convert::TryFrom;
 use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::{str, usize};
@@ -495,6 +496,7 @@ impl ObjFiber {
             .fn_obj
             .borrow()
             .arity
+            .as_u8()
     }
 
     fn push_call_arg_or_return_value(&mut self, arg: Value) {
@@ -1921,7 +1923,7 @@ impl VM {
                 }
                 Ops::CallSuper(arity, symbol, constant) => {
                     // +1 for implicit arg for 'this'.
-                    let num_args = *arity as usize + 1;
+                    let num_args = arity.as_index() + 1;
                     // Compiler error if this is not a class.
                     let superclass = fn_obj.lookup_constant(constant).try_into_class().unwrap();
                     let action =
@@ -1940,7 +1942,7 @@ impl VM {
                 }
                 Ops::Call(arity, symbol) => {
                     // +1 for implicit arg for 'this'.
-                    let num_args = *arity as usize + 1;
+                    let num_args = arity.as_index() + 1;
                     let this_offset = frame.stack.len() - num_args;
                     let this_class = self.class_for_value(&frame.stack[this_offset]);
                     let action =
@@ -2131,7 +2133,7 @@ fn check_arity(value: &Value, num_args: usize) -> Result<Handle<ObjClosure>> {
         .expect("Receiver must be a closure.");
 
     // num_args includes implicit this, not counted in arity.
-    let arity = closure.borrow().fn_obj.borrow().arity as usize;
+    let arity = closure.borrow().fn_obj.borrow().arity.as_index();
     if num_args > arity {
         Ok(closure)
     } else {
@@ -2426,7 +2428,7 @@ impl Obj for ObjClosure {
 
 pub(crate) struct ObjFn {
     class_obj: Handle<ObjClass>,
-    pub(crate) arity: u8,
+    pub(crate) arity: Arity,
     pub(crate) constants: Vec<Value>,
     pub(crate) code: Vec<Ops>,
     pub(crate) debug: FnDebug,
@@ -2436,12 +2438,30 @@ pub(crate) struct ObjFn {
     pub(crate) module: Handle<Module>,
 }
 
+fn count_params_in_signature(signature: &str) -> usize {
+    let mut num_params = 0;
+    let signature_length = signature.len();
+    // Count normal arguments
+    if signature.ends_with(')') {
+        let left_paren_index = signature.rfind('(').unwrap();
+        let params = &signature[(left_paren_index + 1)..signature_length];
+        num_params += params.matches('_').count();
+    }
+    // Count subscript arguments.
+    if signature.starts_with('[') {
+        let right_brace_index = signature.find(']').unwrap();
+        let params = &signature[1..right_brace_index];
+        num_params += params.matches('_').count();
+    }
+    num_params
+}
+
 impl ObjFn {
     pub(crate) fn from_compiler(
         vm: &VM,
         module: Handle<Module>,
         compiler: Box<crate::compiler::Compiler>,
-        arity: u8,
+        arity: Arity,
     ) -> ObjFn {
         ObjFn {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
@@ -2462,31 +2482,15 @@ impl ObjFn {
     }
 
     pub(crate) fn stub_call(vm: &VM, signature: &str, symbol: Symbol) -> ObjFn {
-        let mut num_params = 0;
-        let signature_length = signature.len();
-        // Count normal arguments
-        if signature.ends_with(')') {
-            let left_paren_index = signature.rfind('(').unwrap();
-            let params = &signature[(left_paren_index + 1)..signature_length];
-            num_params += params.matches('_').count();
-        }
-        // Count subscript arguments.
-        if signature.starts_with('[') {
-            let right_brace_index = signature.find(']').unwrap();
-            let params = &signature[1..right_brace_index];
-            num_params += params.matches('_').count();
-        }
-
-        let code = vec![
-            Ops::Call(num_params as Arity, symbol),
-            Ops::Return,
-            Ops::End,
-        ];
+        let num_params_usize = count_params_in_signature(signature);
+        let num_params: u8 = u8::try_from(num_params_usize).unwrap();
+        let code = vec![Ops::Call(Arity(num_params), symbol), Ops::Return, Ops::End];
         let code_len = code.len();
 
         ObjFn {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
-            arity: num_params as Arity + 1,
+            // FIXME: Why is this Arity + 1 and the above is not?
+            arity: Arity(num_params + 1),
             code: code,
             constants: vec![],
             module: vm.last_imported_module.as_ref().unwrap().clone(), // Wrong?

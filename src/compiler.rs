@@ -9,10 +9,14 @@ use std::ops::Range;
 use std::rc::Rc;
 use std::str;
 
-#[derive(Debug)]
 pub(crate) struct Constant(usize);
 
 impl fmt::Display for Constant {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+impl fmt::Debug for Constant {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.0.fmt(f)
     }
@@ -24,7 +28,33 @@ impl Constant {
     }
 }
 
-pub(crate) type Arity = u8;
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub(crate) struct Arity(pub u8);
+
+impl fmt::Display for Arity {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl Arity {
+    pub fn as_index(&self) -> usize {
+        self.0 as usize
+    }
+
+    pub fn as_u8(&self) -> u8 {
+        self.0
+    }
+
+    pub fn minus_one(&self) -> Arity {
+        Arity(self.0 - 1)
+    }
+
+    pub fn plus_one(&self) -> Arity {
+        Arity(self.0 + 1)
+    }
+}
+
 pub(crate) type JumpOffset = u16;
 
 use crate::vm::{
@@ -1619,7 +1649,7 @@ pub(crate) struct Signature {
     // Not sure either of these are needed once the full name is compiled
     // It's possible this struct can go away.
     pub(crate) call_type: SignatureType,
-    pub(crate) arity: u8,
+    pub(crate) arity: Arity,
 }
 
 impl Signature {
@@ -1629,8 +1659,11 @@ impl Signature {
     // name from the symbol.
     fn full_name(&self) -> String {
         // FIXME: wren_c has special handling for SubscriptSetter.
-        fn args(arity: u8) -> String {
-            (0..arity).map(|_| "_").collect::<Vec<&str>>().join(",")
+        fn args(arity: Arity) -> String {
+            (0..arity.as_index())
+                .map(|_| "_")
+                .collect::<Vec<&str>>()
+                .join(",")
         }
         match self.call_type {
             SignatureType::Getter => self.bare_name.clone(),
@@ -1639,7 +1672,7 @@ impl Signature {
             SignatureType::Initializer => format!("init {}({})", self.bare_name, args(self.arity)),
             SignatureType::Subscript => format!("{}[{}]", self.bare_name, args(self.arity)), // name should always be empty
             SignatureType::SubscriptSetter => {
-                format!("{}[{}]=(_)", self.bare_name, args(self.arity - 1))
+                format!("{}[{}]=(_)", self.bare_name, args(self.arity.minus_one()))
             } // name should always be empty.
         }
     }
@@ -1647,7 +1680,7 @@ impl Signature {
         Signature {
             bare_name: bare_name.into(),
             call_type,
-            arity,
+            arity: Arity(arity),
         }
     }
 }
@@ -1671,7 +1704,7 @@ fn infix_op(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> 
 fn infix_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
     // Add the RHS parameter.
     signature.call_type = SignatureType::Method;
-    signature.arity = 1;
+    signature.arity = Arity(1);
 
     // Parse the parameter name.
     consume_expecting(ctx, Token::LeftParen, "Expect '(' after operator name.")?;
@@ -1696,7 +1729,7 @@ fn mixed_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<
     if match_current(ctx, Token::LeftParen)? {
         // Add the RHS parameter.
         signature.call_type = SignatureType::Method;
-        signature.arity = 1;
+        signature.arity = Arity(1);
 
         // Parse the parameter name.
         declare_named_variable(ctx)?;
@@ -1738,7 +1771,7 @@ fn call_method(ctx: &mut ParseContext, arity: u8, full_name: &str) {
     let signature = Signature {
         call_type: SignatureType::Method,
         bare_name: full_name.into(), // FIXME: Wrong.
-        arity,
+        arity: Arity(arity),
     };
     emit(ctx, Ops::Call(signature.arity, symbol));
 }
@@ -1846,11 +1879,11 @@ fn signature_symbol(ctx: &mut ParseContext, signature: &Signature) -> usize {
 }
 
 fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
-    let mut arg_count = 0;
+    let mut arg_count: u8 = 0;
     loop {
         ignore_newlines(ctx)?;
         arg_count += 1;
-        validate_num_parameters(ctx, arg_count)?;
+        validate_num_parameters(ctx, arg_count.into())?;
         expression(ctx)?;
         let found_comma = match_current(ctx, Token::Comma)?;
         if !found_comma {
@@ -1864,10 +1897,10 @@ fn finish_arguments_list(ctx: &mut ParseContext) -> Result<u8, WrenError> {
 
 // The VM can only handle a certain number of parameters, so check that we
 // haven't exceeded that and give a usable error.
-fn validate_num_parameters(ctx: &mut ParseContext, num_args: u8) -> Result<(), WrenError> {
+fn validate_num_parameters(ctx: &mut ParseContext, num_params: usize) -> Result<(), WrenError> {
     // wren_c checks == here and continues after the error.
-    let max: u8 = crate::vm::MAX_PARAMETERS as u8;
-    if num_args > max {
+    let max = crate::vm::MAX_PARAMETERS;
+    if num_params > max {
         return Err(ctx.error_string(format!("Methods cannot have more than {} parameters.", max)));
     }
     Ok(())
@@ -1881,8 +1914,8 @@ fn finish_parameter_list(
 ) -> Result<(), WrenError> {
     loop {
         ignore_newlines(ctx)?;
-        signature.arity += 1;
-        validate_num_parameters(ctx, signature.arity)?;
+        signature.arity = signature.arity.plus_one();
+        validate_num_parameters(ctx, signature.arity.as_index())?;
 
         // Define a local variable in the method for the parameter.
         declare_named_variable(ctx)?;
@@ -1901,7 +1934,7 @@ type Handle<T> = Rc<RefCell<T>>;
 fn end_compiler(
     ctx: &mut ParseContext,
     ending: Box<Compiler>,
-    arity: u8,
+    arity: Arity,
     name: String,
 ) -> Result<Handle<ObjFn>, WrenError> {
     let mut compiler = ending;
@@ -2045,13 +2078,13 @@ fn method_call(
     let mut called = Signature {
         bare_name: signature.bare_name,
         call_type: SignatureType::Getter,
-        arity: 0,
+        arity: Arity(0),
     };
     if match_current(ctx, Token::LeftParen)? {
         ignore_newlines(ctx)?;
         called.call_type = SignatureType::Method;
         if ctx.parser.current.token != Token::RightParen {
-            called.arity = finish_arguments_list(ctx)?;
+            called.arity = Arity(finish_arguments_list(ctx)?);
         }
         consume_expecting(ctx, Token::RightParen, "Expect ')' after arguments.")?;
     }
@@ -2060,7 +2093,7 @@ fn method_call(
     if match_current(ctx, Token::LeftCurlyBrace)? {
         // Include the block argument in the arity.
         called.call_type = SignatureType::Method;
-        called.arity += 1;
+        called.arity = called.arity.plus_one();
 
         let mut scope = PushCompiler::push_block(ctx);
 
@@ -2182,7 +2215,7 @@ fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> 
         // Add one for the implicit RHS arg.
         arity += 1;
         // Compile the assigned value.
-        validate_num_parameters(ctx, arity)?;
+        validate_num_parameters(ctx, arity.into())?;
         expression(ctx)?;
     }
     // Name is always empty for Subscripts, I think?
@@ -2390,7 +2423,7 @@ fn named_call(
 
         // Build the setter signature.
         signature.call_type = SignatureType::Setter;
-        signature.arity = 1;
+        signature.arity = Arity(1);
 
         // Compile the assigned value.
         expression(ctx)?;
@@ -2947,7 +2980,7 @@ fn create_constructor(
 
     let compiler = scope.pop();
     // FIXME: Where does this closure get put?
-    end_compiler(scope.ctx, compiler, 0, "".into())?;
+    end_compiler(scope.ctx, compiler, Arity(0), "".into())?;
     Ok(())
 }
 
@@ -3223,7 +3256,7 @@ fn maybe_setter(ctx: &mut ParseContext, signature: &mut Signature) -> Result<boo
     declare_named_variable(ctx)?;
     consume_expecting(ctx, Token::RightParen, "Expect ')' after parameter name.")?;
 
-    signature.arity += 1;
+    signature.arity = signature.arity.plus_one();
 
     Ok(true)
 }
@@ -3972,7 +4005,7 @@ pub(crate) fn wren_compile(
 
     let compiler = scope.pop();
     // wren_c uses (script) :shrug:
-    let fn_obj = end_compiler(scope.ctx, compiler, 0, "<script>".into())?;
+    let fn_obj = end_compiler(scope.ctx, compiler, Arity(0), "<script>".into())?;
     let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
     Ok(closure)
 }

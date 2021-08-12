@@ -446,7 +446,7 @@ fn bool_to_string(_vm: &VM, args: &[Value]) -> Result<Value> {
 
 fn fiber_new(vm: &VM, args: &[Value]) -> Result<Value> {
     let closure = validate_fn(&args[1], "Argument")?;
-    if closure.borrow().fn_obj.borrow().arity > 1 {
+    if closure.borrow().fn_obj.borrow().arity.as_index() > 1 {
         Err(VMError::from_str(
             "Function cannot take more than one parameter.",
         ))
@@ -846,7 +846,7 @@ fn fn_new(_vm: &VM, args: &[Value]) -> Result<Value> {
 fn fn_arity(_vm: &VM, args: &[Value]) -> Result<Value> {
     let closure = unwrap_this_as_closure(&args);
     let arity = closure.borrow().fn_obj.borrow().arity;
-    Ok(Value::from_u8(arity))
+    Ok(Value::from_usize(arity.as_index()))
 }
 
 fn fn_to_string(_vm: &VM, _args: &[Value]) -> Result<Value> {
