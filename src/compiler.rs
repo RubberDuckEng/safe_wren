@@ -1269,7 +1269,6 @@ pub(crate) struct Compiler {
     loops: Vec<LoopOffsets>, // wren_c uses stack-allocated objects instead.
 
     upvalues: Vec<Upvalue>,
-    parent: Option<Box<Compiler>>,
 
     enclosing_class: Option<RefCell<ClassInfo>>,
 
@@ -1284,7 +1283,7 @@ pub(crate) struct Compiler {
 }
 
 impl Compiler {
-    fn _with_parent_and_arg0_name(parent: Option<Box<Compiler>>, arg0_name: &str) -> Compiler {
+    fn _with_parent_and_arg0_name(parent: Option<&Compiler>, arg0_name: &str) -> Compiler {
         Compiler {
             constants: ConstantsBuilder::new(),
             locals: vec![Local {
@@ -1305,19 +1304,18 @@ impl Compiler {
             },
             loops: Vec::new(),
             enclosing_class: None,
-            parent,
             upvalues: Vec::new(),
             is_initializer: false, // Should this be tracked here?
             fn_debug: FnDebug::default(),
         }
     }
 
-    fn block(parent: Option<Box<Compiler>>) -> Compiler {
+    fn block(parent: Option<&Compiler>) -> Compiler {
         Compiler::_with_parent_and_arg0_name(parent, "")
     }
 
     // Parent isn't actually optional.
-    fn method(parent: Option<Box<Compiler>>) -> Compiler {
+    fn method(parent: Option<&Compiler>) -> Compiler {
         Compiler::_with_parent_and_arg0_name(parent, "this")
     }
 
@@ -1413,7 +1411,7 @@ struct Parser {
 
 struct ParseContext<'a> {
     parser: Parser,
-    _compiler: Option<Box<Compiler>>,
+    _compilers: Vec<Compiler>,
     vm: &'a mut VM,
     // We have the module during parse-time in order to be able to
     // make ObjFn objects (which hold a pointer to the module) as
@@ -1476,35 +1474,31 @@ impl<'a> ParseContext<'a> {
     }
 
     fn compiler(&self) -> &Compiler {
-        self._compiler.as_ref().unwrap().as_ref()
+        self._compilers.last().unwrap()
     }
 
     fn compiler_mut(&mut self) -> &mut Compiler {
-        self._compiler.as_mut().unwrap().as_mut()
+        self._compilers.last_mut().unwrap()
     }
 
     fn have_compiler(&self) -> bool {
-        self._compiler.is_some()
+        !self._compilers.is_empty()
     }
 
     fn inside_class_definition(&self) -> bool {
-        let mut maybe_compiler = &self._compiler;
-        while let Some(compiler) = maybe_compiler {
+        for compiler in self._compilers.iter().rev() {
             if compiler.enclosing_class.is_some() {
                 return true;
             }
-            maybe_compiler = &compiler.parent;
         }
         false
     }
 
     fn enclosing_method_signature(&self) -> Option<Signature> {
-        let mut maybe_compiler = &self._compiler;
-        while let Some(compiler) = maybe_compiler {
+        for compiler in self._compilers.iter().rev() {
             if let Some(class_info) = &compiler.enclosing_class {
                 return class_info.borrow().signature.clone();
             }
-            maybe_compiler = &compiler.parent;
         }
         None
     }
@@ -1513,12 +1507,10 @@ impl<'a> ParseContext<'a> {
     where
         F: Fn(&ParseContext, &Option<RefCell<ClassInfo>>) -> Result<T, WrenError>,
     {
-        let mut maybe_compiler = &self._compiler;
-        while let Some(compiler) = maybe_compiler {
+        for compiler in self._compilers.iter().rev() {
             if compiler.enclosing_class.is_some() {
                 return f(self, &compiler.enclosing_class);
             }
-            maybe_compiler = &compiler.parent;
         }
         f(self, &None)
     }
@@ -1917,7 +1909,7 @@ type Handle<T> = Rc<RefCell<T>>;
 // parent compiler to load the resulting function.
 fn end_compiler(
     ctx: &mut ParseContext,
-    ending: Box<Compiler>,
+    ending: Compiler,
     arity: Arity,
     name: String,
 ) -> Result<Handle<ObjFn>, WrenError> {
@@ -1993,13 +1985,8 @@ struct PushCompiler<'a, 'b> {
 
 impl<'a, 'b> PushCompiler<'a, 'b> {
     fn push_root(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
-        let current = ctx._compiler.take();
-        match current {
-            None => (),
-            Some(_) => panic!(),
-        }
-        // Maybe Compiler::root that doesn't take a parent?
-        ctx._compiler = Some(Box::new(Compiler::block(current)));
+        assert!(ctx._compilers.is_empty());
+        ctx._compilers.push(Compiler::block(None));
         PushCompiler {
             ctx,
             did_pop: false,
@@ -2007,13 +1994,8 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
     }
 
     fn push_block(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
-        let current = ctx._compiler.take();
-        match current {
-            None => panic!(),
-            Some(_) => (),
-        }
-        let compiler = Compiler::block(current);
-        ctx._compiler = Some(Box::new(compiler));
+        assert!(!ctx._compilers.is_empty());
+        ctx._compilers.push(Compiler::block(ctx._compilers.last()));
         PushCompiler {
             ctx,
             did_pop: false,
@@ -2021,23 +2003,18 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
     }
 
     fn push_method(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
-        let current = ctx._compiler.take();
-        match current {
-            None => panic!(),
-            Some(_) => (),
-        }
-        let compiler = Compiler::method(current);
-        ctx._compiler = Some(Box::new(compiler));
+        assert!(!ctx._compilers.is_empty());
+        ctx._compilers.push(Compiler::method(ctx._compilers.last()));
         PushCompiler {
             ctx,
             did_pop: false,
         }
     }
 
-    fn pop(&mut self) -> Box<Compiler> {
+    fn pop(&mut self) -> Compiler {
         assert!(!self.did_pop);
-        let mut compiler = self.ctx._compiler.take().unwrap();
-        self.ctx._compiler = compiler.parent.take();
+        // It's not valid to call this pop when empty.
+        let compiler = self.ctx._compilers.pop().unwrap();
         self.did_pop = true;
         compiler
     }
@@ -3924,7 +3901,7 @@ pub(crate) fn wren_compile(
             current: ParseToken::before_file(),
             next: ParseToken::before_file(),
         },
-        _compiler: None,
+        _compilers: vec![],
         module,
         vm,
         nesting: 0,

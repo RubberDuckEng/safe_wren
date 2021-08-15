@@ -2460,7 +2460,7 @@ impl ObjFn {
     pub(crate) fn from_compiler(
         vm: &VM,
         module: Handle<Module>,
-        compiler: Box<crate::compiler::Compiler>,
+        compiler: crate::compiler::Compiler,
         arity: Arity,
     ) -> ObjFn {
         ObjFn {
