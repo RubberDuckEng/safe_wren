@@ -1283,7 +1283,7 @@ pub(crate) struct Compiler {
 }
 
 impl Compiler {
-    fn _with_parent_and_arg0_name(parent: Option<&Compiler>, arg0_name: &str) -> Compiler {
+    fn _with_arg0_name(scope_depth: ScopeDepth, arg0_name: &str) -> Compiler {
         Compiler {
             constants: ConstantsBuilder::new(),
             locals: vec![Local {
@@ -1298,10 +1298,7 @@ impl Compiler {
                 depth: ScopeDepth::Module,
             }],
             code: Vec::new(),
-            scope_depth: match parent {
-                None => ScopeDepth::Module,
-                Some(_) => ScopeDepth::Local(0),
-            },
+            scope_depth,
             loops: Vec::new(),
             enclosing_class: None,
             upvalues: Vec::new(),
@@ -1310,13 +1307,16 @@ impl Compiler {
         }
     }
 
-    fn block(parent: Option<&Compiler>) -> Compiler {
-        Compiler::_with_parent_and_arg0_name(parent, "")
+    fn root() -> Compiler {
+        Compiler::_with_arg0_name(ScopeDepth::Module, "")
     }
 
-    // Parent isn't actually optional.
-    fn method(parent: Option<&Compiler>) -> Compiler {
-        Compiler::_with_parent_and_arg0_name(parent, "this")
+    fn block() -> Compiler {
+        Compiler::_with_arg0_name(ScopeDepth::Local(0), "")
+    }
+
+    fn method() -> Compiler {
+        Compiler::_with_arg0_name(ScopeDepth::Local(0), "this")
     }
 
     fn nested_local_scope_count(&self) -> usize {
@@ -1986,7 +1986,7 @@ struct PushCompiler<'a, 'b> {
 impl<'a, 'b> PushCompiler<'a, 'b> {
     fn push_root(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
         assert!(ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::block(None));
+        ctx._compilers.push(Compiler::root());
         PushCompiler {
             ctx,
             did_pop: false,
@@ -1995,7 +1995,7 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
 
     fn push_block(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
         assert!(!ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::block(ctx._compilers.last()));
+        ctx._compilers.push(Compiler::block());
         PushCompiler {
             ctx,
             did_pop: false,
@@ -2004,7 +2004,7 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
 
     fn push_method(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
         assert!(!ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::method(ctx._compilers.last()));
+        ctx._compilers.push(Compiler::method());
         PushCompiler {
             ctx,
             did_pop: false,
