@@ -1267,12 +1267,8 @@ pub(crate) struct Compiler {
     pub(crate) code: Vec<Ops>,
     scope_depth: ScopeDepth,
     loops: Vec<LoopOffsets>, // wren_c uses stack-allocated objects instead.
-
     upvalues: Vec<Upvalue>,
-
     enclosing_class: Option<RefCell<ClassInfo>>,
-
-    // Unclear if this will be used?
     is_initializer: bool,
     // wren_c has a numSlots / maxSlots optimization for recording from
     // the compiler how much stack space a given function will need
@@ -1485,34 +1481,42 @@ impl<'a> ParseContext<'a> {
         !self._compilers.is_empty()
     }
 
-    fn inside_class_definition(&self) -> bool {
+    fn enclosing_class_compiler(&self) -> Option<&Compiler> {
         for compiler in self._compilers.iter().rev() {
             if compiler.enclosing_class.is_some() {
-                return true;
-            }
-        }
-        false
-    }
-
-    fn enclosing_method_signature(&self) -> Option<Signature> {
-        for compiler in self._compilers.iter().rev() {
-            if let Some(class_info) = &compiler.enclosing_class {
-                return class_info.borrow().signature.clone();
+                return Some(compiler);
             }
         }
         None
     }
 
+    fn inside_class_definition(&self) -> bool {
+        self.enclosing_class_compiler().is_some()
+    }
+
+    fn enclosing_method_signature(&self) -> Option<Signature> {
+        self.enclosing_class_compiler()
+            .map(|c| {
+                c.enclosing_class
+                    .as_ref()
+                    .unwrap()
+                    .borrow()
+                    .signature
+                    .clone()
+            })
+            .flatten()
+    }
+
     fn call_with_enclosing_class<T, F>(&mut self, f: F) -> Result<T, WrenError>
     where
-        F: Fn(&ParseContext, &Option<RefCell<ClassInfo>>) -> Result<T, WrenError>,
+        F: Fn(&ParseContext, Option<&RefCell<ClassInfo>>) -> Result<T, WrenError>,
     {
-        for compiler in self._compilers.iter().rev() {
-            if compiler.enclosing_class.is_some() {
-                return f(self, &compiler.enclosing_class);
-            }
-        }
-        f(self, &None)
+        f(
+            self,
+            self.enclosing_class_compiler()
+                .map(|c| c.enclosing_class.as_ref())
+                .flatten(),
+        )
     }
 }
 
@@ -2234,7 +2238,7 @@ fn allow_line_before_dot(ctx: &mut ParseContext) -> Result<(), WrenError> {
 fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     let name = previous_token_name(ctx);
 
-    let field_lookup = |ctx: &ParseContext, maybe_class_info: &Option<RefCell<ClassInfo>>| {
+    let field_lookup = |ctx: &ParseContext, maybe_class_info: Option<&RefCell<ClassInfo>>| {
         match maybe_class_info {
             None => Err(ctx.error_str("Cannot reference a field outside of a class definition.")),
             Some(class_info) => {
