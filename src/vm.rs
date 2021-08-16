@@ -23,6 +23,8 @@ use crate::wren::{
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
+// FIXME: Are Symbols the same as Local and Upvalue indicies?
+// Do they have the same limits?
 pub(crate) type Symbol = usize;
 
 pub(crate) const CORE_MODULE_NAME: &str = "#core";
@@ -1992,6 +1994,9 @@ impl VM {
                     // the calling wren function CallFrame.
                     return Ok(FunctionNext::Return(frame.pop()?));
                 }
+                Ops::CloseUpvalues => {
+                    unimplemented!();
+                }
                 Ops::Class(num_fields) => {
                     create_class(
                         self,
@@ -2297,6 +2302,7 @@ fn op_debug_string(
         Ops::Loop(_) => format!("{:?}", op),
         Ops::Pop => format!("{:?}", op),
         Ops::Return => format!("{:?}", op),
+        Ops::CloseUpvalues => format!("{:?}", op),
         Ops::EndModule => format!("{:?}", op),
         Ops::End => format!("{:?}", op),
         Ops::ImportModule(_) => format!("{:?}", op),

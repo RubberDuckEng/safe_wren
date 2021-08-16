@@ -688,7 +688,6 @@ wren_c/test/language/variable/local_collide_with_method_parameter.wren
 wren_c/test/language/variable/local_in_initializer.wren
 wren_c/test/language/variable/local_in_middle_of_block.wren
 wren_c/test/language/variable/local_in_nested_block.wren
-wren_c/test/language/variable/local_outside_method.wren
 wren_c/test/language/variable/local_without_initializer.wren
 wren_c/test/language/variable/many_locals.wren
 wren_c/test/language/variable/many_nonsimultaneous_locals.wren

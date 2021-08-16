@@ -1097,6 +1097,7 @@ pub(crate) enum Ops {
 
     Loop(JumpOffset), // Jump backwards relative offset.
     Pop,
+    CloseUpvalues,
     Return,
     EndModule,
     End,
@@ -1106,6 +1107,8 @@ pub(crate) enum Ops {
 struct Local {
     name: String,
     depth: ScopeDepth,
+    // If this local variable is being used by another local as upvalue.
+    is_upvalue: bool,
 }
 
 #[derive(Copy, Clone, PartialEq, Debug, Eq)]
@@ -1116,11 +1119,13 @@ enum ScopeDepth {
 
 impl Ord for ScopeDepth {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        match (self, other) {
-            (ScopeDepth::Module, ScopeDepth::Module) => Ordering::Equal,
-            (ScopeDepth::Module, ScopeDepth::Local(_)) => Ordering::Less,
-            (ScopeDepth::Local(_), ScopeDepth::Module) => Ordering::Greater,
-            (ScopeDepth::Local(this), ScopeDepth::Local(that)) => this.cmp(that),
+        let depth = self.depth();
+        let other_depth = other.depth();
+        match (depth, other_depth) {
+            (None, None) => Ordering::Equal,
+            (None, Some(_)) => Ordering::Less,
+            (Some(_), None) => Ordering::Greater,
+            (Some(this), Some(that)) => this.cmp(&that),
         }
     }
 }
@@ -1138,13 +1143,27 @@ impl ScopeDepth {
             ScopeDepth::Module => ScopeDepth::Local(0),
         }
     }
+
+    fn depth(&self) -> Option<usize> {
+        match self {
+            ScopeDepth::Local(depth) => Some(*depth),
+            ScopeDepth::Module => None,
+        }
+    }
+
+    fn unwrap_depth(&self) -> usize {
+        match self {
+            ScopeDepth::Local(depth) => *depth,
+            ScopeDepth::Module => panic!("No local scopes."),
+        }
+    }
 }
 
 #[derive(Debug)]
 pub(crate) struct Upvalue {
     // True if this upvalue is capturing a local variable from the enclosing
     // function. False if it's capturing an upvalue.
-    is_local: bool,
+    is_local_in_parent: bool,
 
     // The index of the local or upvalue being captured in the enclosing function.
     index: usize,
@@ -1293,6 +1312,7 @@ impl Compiler {
                 // However "this" really is a local.  It's owned by the callee
                 // and should be popped by the callee.
                 depth: ScopeDepth::Module,
+                is_upvalue: false,
             }],
             code: Vec::new(),
             scope_depth,
@@ -1308,19 +1328,15 @@ impl Compiler {
         Compiler::_with_arg0_name(ScopeDepth::Module, "")
     }
 
+    // FIXME: Why do these always start at Local(0), even if the parent
+    // might already have a scopedepth?
+    // start_loop copies from parent, but nothing else does?
     fn block() -> Compiler {
         Compiler::_with_arg0_name(ScopeDepth::Local(0), "")
     }
 
     fn method() -> Compiler {
         Compiler::_with_arg0_name(ScopeDepth::Local(0), "this")
-    }
-
-    fn nested_local_scope_count(&self) -> usize {
-        match self.scope_depth {
-            ScopeDepth::Module => panic!("No local scopes."),
-            ScopeDepth::Local(i) => i,
-        }
     }
 
     fn emit_op_for_line(&mut self, op: Ops, line: usize) -> usize {
@@ -1333,21 +1349,21 @@ impl Compiler {
     // Adds an upvalue to [compiler]'s function with the given properties. Does not
     // add one if an upvalue for that variable is already in the list. Returns the
     // index of the upvalue.
-    // fn add_upvalue(&mut self, is_local: bool, index: usize) -> usize {
-    //     // Look for an existing one.
-    //     for (i, upvalue) in self.upvalues.iter().enumerate() {
-    //         if upvalue.is_local == is_local && upvalue.index == index {
-    //             return i;
-    //         }
-    //     }
+    fn ensure_upvalue(&mut self, is_local_in_parent: bool, index: usize) -> Symbol {
+        // Look for an existing one.
+        for (i, upvalue) in self.upvalues.iter().enumerate() {
+            if upvalue.is_local_in_parent == is_local_in_parent && upvalue.index == index {
+                return i;
+            }
+        }
 
-    //     // If we got here, it's a new upvalue.
-    //     self.upvalues.push(Upvalue {
-    //         is_local: is_local,
-    //         index: index,
-    //     });
-    //     self.upvalues.len() - 1
-    // }
+        // If we got here, it's a new upvalue.
+        self.upvalues.push(Upvalue {
+            is_local_in_parent,
+            index,
+        });
+        self.upvalues.len() - 1
+    }
 
     // Attempts to look up the name in the local variables of [compiler]. If found,
     // returns its index, otherwise returns None.
@@ -1362,7 +1378,8 @@ impl Compiler {
     fn add_local(&mut self, name: String) -> u16 {
         let local = Local {
             name,
-            depth: ScopeDepth::Local(self.nested_local_scope_count()),
+            depth: ScopeDepth::Local(self.scope_depth.unwrap_depth()),
+            is_upvalue: false,
         };
         self.locals.push(local);
         (self.locals.len() - 1) as u16
@@ -2386,20 +2403,72 @@ fn bare_name(
 //
 // If it reaches a method boundary, this stops and returns None since methods do
 // not close over local variables.
-fn find_upvalue(_ctx: &ParseContext, _name: &str) -> Option<u16> {
-    // FIXME: unimplemented.
-    None
+fn find_upvalue(ctx: &mut ParseContext, name: &str) -> Option<Symbol> {
+    ctx.find_and_hoist_upvalue(name)
 }
 
-fn resolve_non_module(ctx: &ParseContext, name: &str) -> Option<Variable> {
+struct FoundUpvalue {
+    compiler: usize,
+    local: usize,
+}
+
+impl<'a> ParseContext<'a> {
+    fn find_upvalue(&self, name: &str) -> Option<FoundUpvalue> {
+        // FIXME: Can this be turned into a simple for loop?
+        let mut compiler_index = self._compilers.len() - 1;
+        loop {
+            // If we are at the top level, we didn't find it.
+            if compiler_index < 1 {
+                return None;
+            }
+            // If we hit the method boundary (and the name isn't a static field), then
+            // stop looking for it. We'll instead treat it as a self send.
+            if !name.starts_with('_') && self._compilers[compiler_index].enclosing_class.is_some() {
+                return None;
+            }
+            // See if it's a local variable in the immediately enclosing function.
+            compiler_index -= 1;
+            if let Some(local_index) = self._compilers[compiler_index].resolve_local(name) {
+                return Some(FoundUpvalue {
+                    compiler: compiler_index,
+                    local: local_index,
+                });
+            }
+        }
+    }
+    // This both finds an upvalue as well as hoists up to the current scope.
+    fn find_and_hoist_upvalue(&mut self, name: &str) -> Option<Symbol> {
+        match self.find_upvalue(name) {
+            Some(upvalue) => {
+                // Mark the local as an upvalue so we know to close it when it
+                // goes out of scope.
+                self._compilers[upvalue.compiler].locals[upvalue.local].is_upvalue = true;
+                // Mark any intermediate scopes as having this upvalue, but not
+                // it being a local in their direct parent.
+                // This distinction is used by Ops::Closure to know whether it
+                // needs to create a new Upvalue object or it can reuse one
+                // from a parent scope.
+                for index in upvalue.compiler + 1..self._compilers.len() {
+                    self._compilers[index].ensure_upvalue(false, upvalue.local);
+                }
+                // Finally create the closed upvalue in the direct child.
+                return Some(
+                    self._compilers[upvalue.compiler + 1].ensure_upvalue(true, upvalue.local),
+                );
+            }
+            None => None,
+        }
+    }
+}
+
+fn resolve_non_module(ctx: &mut ParseContext, name: &str) -> Option<Variable> {
     // rposition to allow vars in deeper scopes to shadow shallower scopes.
     if let Some(index) = ctx.compiler().resolve_local(name) {
         return Some(Variable::local(index as u16));
     }
     if let Some(index) = find_upvalue(ctx, name) {
-        return Some(Variable::upvalue(index));
+        return Some(Variable::upvalue(index as u16));
     }
-
     None
 }
 
@@ -2834,6 +2903,11 @@ impl<'a, 'b> Drop for ScopePusher<'a, 'b> {
     }
 }
 
+struct PopsResult {
+    locals_handled: usize,
+    saw_upvalue: bool,
+}
+
 // Generates code to pop local variables at [depth] or greater. Does *not*
 // actually undeclare variables or pop any scopes, though. This is called
 // directly when compiling "break" statements to ditch the local variables
@@ -2850,30 +2924,49 @@ fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usiz
 
     // Note this *does not change* Compiler.locals, only issues pops.
     // Locals remain in compiler until pop_scope().
-    // FIXME: The only reason this is on ctx is for error context, it could
-    // be on Compiler instead.
-    fn emit_pops(ctx: &mut ParseContext, target_depth: usize) -> usize {
-        let mut pops_emitted = 0;
+    // FIXME: The only reason takes a ctx is for line numbers for the emit calls
+    fn walk_locals(ctx: &mut ParseContext, target_depth: usize) -> PopsResult {
+        let mut saw_upvalue = false;
+        let mut locals_handled = 0;
         for index in (0..ctx.compiler().locals.len()).rev() {
             // Scope the borrow of ctx for local.
-            {
+            let is_upvalue = {
                 let local = &ctx.compiler().locals[index];
-                let local_depth = match local.depth {
-                    ScopeDepth::Module => return pops_emitted, // Stop at the magical "this" (see hack note above in Compiler constructor).
-                    ScopeDepth::Local(i) => i,
+                let local_depth = match local.depth.depth() {
+                    // Stop at the magical "this" (see hack note above in Compiler constructor.
+                    None => {
+                        return PopsResult {
+                            locals_handled,
+                            saw_upvalue,
+                        }
+                    }
+                    Some(i) => i,
                 };
                 if local_depth < target_depth {
                     break;
                 }
+                local.is_upvalue
+            };
+            if is_upvalue {
+                saw_upvalue = true
+                // wren_c emits a close for each upvalue, but the VM itself
+                // only handles them in batches.
+            } else {
+                emit(ctx, Ops::Pop);
             }
-            // FIXME: Handle upvalues.
-            emit(ctx, Ops::Pop);
-            pops_emitted += 1;
+            locals_handled += 1;
         }
-        pops_emitted
+        PopsResult {
+            locals_handled,
+            saw_upvalue,
+        }
     }
 
-    emit_pops(ctx, target_depth)
+    let result = walk_locals(ctx, target_depth);
+    if result.saw_upvalue {
+        emit(ctx, Ops::CloseUpvalues);
+    }
+    result.locals_handled
 }
 
 // Break, continue, if, for, while, blocks, etc.
@@ -3101,7 +3194,7 @@ impl Compiler {
         }
 
         // Top-level module scope.
-        if self.scope_depth == ScopeDepth::Module {
+        if matches!(self.scope_depth, ScopeDepth::Module) {
             // Error handling missing.
             // Error handling should occur inside wren_define_variable, no?
             return Ok(wren_define_variable(module, &name, Value::Null)
@@ -3256,7 +3349,7 @@ fn maybe_setter(ctx: &mut ParseContext, signature: &mut Signature) -> Result<boo
     }
 
     // It's a setter.
-    signature.call_type = if signature.call_type == SignatureType::Subscript {
+    signature.call_type = if matches!(signature.call_type, SignatureType::Subscript) {
         SignatureType::SubscriptSetter
     } else {
         SignatureType::Setter
