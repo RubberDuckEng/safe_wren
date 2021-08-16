@@ -1,7 +1,7 @@
 Unexpected error:
-[./test/language/static_field/in_instance_method line 5] Error at '__a': Expected expression.
+[./test/language/static_field/in_instance_method line 5] Error at '__a': No upvalue support!
 Expected return code 0 and got 65. Stderr:
-[./test/language/static_field/in_instance_method line 5] Error at '__a': Expected expression.
+[./test/language/static_field/in_instance_method line 5] Error at '__a': No upvalue support!
 
 Missing expected output "1" on line 23.
 Missing expected output "2" on line 24.

@@ -1,6 +1,6 @@
 Unexpected error:
-[./test/language/static_field/default_to_null line 2] Error at '__field': Expected expression.
+[./test/language/static_field/default_to_null line 2] Error at '__field': No upvalue support!
 Expected return code 0 and got 65. Stderr:
-[./test/language/static_field/default_to_null line 2] Error at '__field': Expected expression.
+[./test/language/static_field/default_to_null line 2] Error at '__field': No upvalue support!
 
 Missing expected output "null" on line 5.

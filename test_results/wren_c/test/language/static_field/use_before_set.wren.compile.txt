@@ -1,1 +1,1 @@
-[wren_c/test/language/static_field/use_before_set line 2] Error at '__field': Expected expression.
+[wren_c/test/language/static_field/use_before_set line 2] Error at '__field': No upvalue support!

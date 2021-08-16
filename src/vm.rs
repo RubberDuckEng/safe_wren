@@ -1250,9 +1250,9 @@ pub(crate) struct CoreClasses {
 
 #[derive(Debug)]
 pub enum DefinitionError {
-    VariableAlreadyDefined,           // -1 in wren_c
-    TooManyVariables,                 // -2 in wren_c
-    LocalUsedBeforeDefinition(usize), // -3 in wren_c
+    VariableAlreadyDefined,                   // -1 in wren_c
+    TooManyVariables,                         // -2 in wren_c
+    LocalUsedBeforeDefinition(String, usize), // -3 in wren_c
 }
 
 impl From<ModuleLimitError> for DefinitionError {
@@ -1278,7 +1278,10 @@ pub(crate) fn wren_define_variable(
             let existing_value = &module.variables[symbol as usize];
             if let Some(line) = existing_value.try_into_num() {
                 if wren_is_local_name(name) {
-                    return Err(DefinitionError::LocalUsedBeforeDefinition(line as usize));
+                    return Err(DefinitionError::LocalUsedBeforeDefinition(
+                        name.into(),
+                        line as usize,
+                    ));
                 }
                 // An implicitly declared variable's value will always be a number.
                 // Now we have a real definition.

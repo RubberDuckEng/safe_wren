@@ -1,1 +1,1 @@
-[wren_c/test/language/static_field/in_instance_method line 5] Error at '__a': Expected expression.
+[wren_c/test/language/static_field/in_instance_method line 5] Error at '__a': No upvalue support!

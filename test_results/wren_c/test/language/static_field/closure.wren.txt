@@ -1,7 +1,7 @@
 Unexpected error:
-[./test/language/static_field/closure line 2] Error at '__field': Expected expression.
+[./test/language/static_field/closure line 2] Error at '__field': No upvalue support!
 Expected return code 0 and got 65. Stderr:
-[./test/language/static_field/closure line 2] Error at '__field': Expected expression.
+[./test/language/static_field/closure line 2] Error at '__field': No upvalue support!
 
 Missing expected output "Foo field" on line 14.
 Missing expected output "new value" on line 16.

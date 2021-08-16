@@ -1,1 +1,1 @@
-[wren_c/test/language/static_field/multiple line 3] Error at '__a': Expected expression.
+[wren_c/test/language/static_field/multiple line 3] Error at '__a': No upvalue support!

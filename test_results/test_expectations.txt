@@ -114,8 +114,7 @@ wren_c/test/language/super/super_in_closure_in_inherited_method.wren
 wren_c/test/language/super/closure.wren
 wren_c/test/random/sample_count_multiple.wren
 
-# static fields
-# Requires being able to parse to two compilers at the same time.
+# static fields, requires upvalue to actually work.
 wren_c/test/language/static_field/default_to_null.wren
 wren_c/test/language/static_field/multiple.wren
 wren_c/test/language/static_field/in_instance_method.wren
@@ -123,7 +122,6 @@ wren_c/test/language/static_field/closure.wren
 wren_c/test/language/static_field/use_before_set.wren
 wren_c/test/language/static_field/nested_class.wren
 wren_c/example/syntax.wren
-
 
 # WONTFIX? wren_rust doesn't currently enforce MAX_JUMP, but even
 # if we did, our opcode stream is different from wren_c's

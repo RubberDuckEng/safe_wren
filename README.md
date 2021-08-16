@@ -66,3 +66,4 @@ https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to 
 * If you yield from the root, it gets set to state=OTHER, presumably later you
 might be able to call things on it?
 * WrenConfiguration likely leaked for each WrenVM constructed/destructed?
+* Needlessly "closes" each upvalue separately instead of batching.

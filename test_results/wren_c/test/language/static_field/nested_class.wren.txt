@@ -1,7 +1,7 @@
 Unexpected error:
-[./test/language/static_field/nested_class line 5] Error at '__field': Expected expression.
+[./test/language/static_field/nested_class line 5] Error at '__field': No upvalue support!
 Expected return code 0 and got 65. Stderr:
-[./test/language/static_field/nested_class line 5] Error at '__field': Expected expression.
+[./test/language/static_field/nested_class line 5] Error at '__field': No upvalue support!
 
 Missing expected output "outer" on line 6.
 Missing expected output "inner" on line 13.

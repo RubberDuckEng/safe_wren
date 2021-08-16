@@ -1,6 +1,6 @@
 Unexpected error:
-[./test/language/static_field/use_before_set line 2] Error at '__field': Expected expression.
+[./test/language/static_field/use_before_set line 2] Error at '__field': No upvalue support!
 Expected return code 0 and got 65. Stderr:
-[./test/language/static_field/use_before_set line 2] Error at '__field': Expected expression.
+[./test/language/static_field/use_before_set line 2] Error at '__field': No upvalue support!
 
 Missing expected output "value" on line 8.

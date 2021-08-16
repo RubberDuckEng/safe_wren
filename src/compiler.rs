@@ -220,7 +220,7 @@ pub struct InputManager {
     offset: usize,
     // You never want to read this through parser.input.line_number
     // As the parser reads ahead a couple tokens.
-    // Rather you probably want parser.previous.line
+    // Rather you want parser.previous.line or ParseContext::line_number()
     line_number: usize,
     token_start_offset: usize,
 
@@ -325,6 +325,7 @@ impl InputManager {
         }
     }
 
+    // This should probably be renamed unwrap_next()?
     fn next_unchecked(&mut self) -> u8 {
         let val = self.source[self.offset];
         if val == b'\n' {
@@ -1347,6 +1348,40 @@ impl Compiler {
     //     });
     //     self.upvalues.len() - 1
     // }
+
+    // Attempts to look up the name in the local variables of [compiler]. If found,
+    // returns its index, otherwise returns None.
+    fn resolve_local(&self, name: &str) -> Option<usize> {
+        // Look it up in the local scopes. Look in reverse order so that the most
+        // nested variable is found first and shadows outer ones.
+        self.locals.iter().rposition(|l| l.name.eq(name))
+    }
+
+    // Create a new local variable with [name]. Assumes the current scope is local
+    // and the name is unique.
+    fn add_local(&mut self, name: String) -> u16 {
+        let local = Local {
+            name,
+            depth: ScopeDepth::Local(self.nested_local_scope_count()),
+        };
+        self.locals.push(local);
+        (self.locals.len() - 1) as u16
+    }
+
+    fn define_variable(&mut self, symbol: u16, line_number: usize) {
+        match self.scope_depth {
+            ScopeDepth::Local(_) => {
+                // Store the variable. If it's a local, the result of the initializer is
+                // in the correct slot on the stack already so we're done.
+            }
+            ScopeDepth::Module => {
+                // It's a module-level variable, so store the value in the module slot and
+                // then discard the temporary for the initializer.
+                self.emit_op_for_line(Ops::Store(Variable::module(symbol)), line_number);
+                self.emit_op_for_line(Ops::Pop, line_number);
+            }
+        }
+    }
 }
 
 fn emit_constant(ctx: &mut ParseContext, value: Value) -> Result<(), WrenError> {
@@ -1356,7 +1391,7 @@ fn emit_constant(ctx: &mut ParseContext, value: Value) -> Result<(), WrenError> 
 }
 
 fn emit(ctx: &mut ParseContext, op: Ops) -> usize {
-    let line = ctx.parser.previous.line;
+    let line = ctx.line_number();
     ctx.compiler_mut().emit_op_for_line(op, line)
 }
 
@@ -1429,7 +1464,7 @@ impl<'a> ParseContext<'a> {
 
     fn parse_error(&self, error: ParserError) -> WrenError {
         WrenError {
-            line: self.parser.previous.line,
+            line: self.line_number(),
             module: self.module_name(),
             error,
         }
@@ -1437,7 +1472,7 @@ impl<'a> ParseContext<'a> {
 
     fn grammar_error(&self, label: &str, message: String) -> WrenError {
         WrenError {
-            line: self.parser.previous.line,
+            line: self.line_number(),
             module: self.module_name(),
             error: ParserError::Grammar(format!("{}: {}", label, message)),
         }
@@ -1469,6 +1504,10 @@ impl<'a> ParseContext<'a> {
         self.grammar_error(&label, msg)
     }
 
+    fn line_number(&self) -> usize {
+        self.parser.previous.line
+    }
+
     fn compiler(&self) -> &Compiler {
         self._compilers.last().unwrap()
     }
@@ -1479,6 +1518,12 @@ impl<'a> ParseContext<'a> {
 
     fn have_compiler(&self) -> bool {
         !self._compilers.is_empty()
+    }
+
+    fn enclosing_class_compiler_index(&self) -> Option<usize> {
+        self._compilers
+            .iter()
+            .rposition(|compiler| compiler.enclosing_class.is_some())
     }
 
     fn enclosing_class_compiler(&self) -> Option<&Compiler> {
@@ -1921,7 +1966,7 @@ fn end_compiler(
     // Mark the end of the bytecode. Since it may contain multiple early returns,
     // we can't rely on CODE_RETURN to tell us we're at the end.
     // NOTE: emit() would use wrong compiler, emit manually:
-    let line = ctx.parser.previous.line;
+    let line = ctx.line_number();
     compiler.emit_op_for_line(Ops::End, line);
 
     // FIXME: Should this include the name of the directly enclosing class?
@@ -2276,36 +2321,40 @@ fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
-// fn static_field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
-//     // Look up the name in the scope chain.
-//     let name = ctx
-//         .parser
-//         .previous
-//         .name(&ctx.parser.input)
-//         .map_err(|e| ctx.parse_error(e.into()))?;
+fn static_field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
+    let name = previous_token_name(ctx);
 
-//     let class_compiler = getEnclosingClassCompiler(compiler);
-//     if class_compiler.is_none() {
-//         return Err(ctx.grammar_error("Cannot use a static field outside of a class definition."));
-//     }
+    let maybe_class_compiler_index = ctx.enclosing_class_compiler_index();
+    let class_compiler_index = maybe_class_compiler_index
+        .ok_or_else(|| ctx.error_str("Cannot use a static field outside of a class definition."))?;
 
-//     // If this is the first time we've seen this static field, implicitly
-//     // define it as a variable in the scope surrounding the class definition.
-//     if resolve_local(class_compiler, &name).is_none() {
-//         let symbol = declare_variable(class_compiler, name)?;
+    let line = ctx.line_number();
+    // Manually grab at .compilers to allow for a partial-borrow.
+    let class_compiler = &mut ctx._compilers[class_compiler_index];
+    // If this is the first time we've seen this static field, implicitly
+    // define it as a variable in the scope surrounding the class definition.
+    if class_compiler.resolve_local(&name).is_none() {
+        let result = class_compiler.declare_variable(&mut ctx.module.borrow_mut(), name);
+        // map_err takes a closure which requires exclusive access to ctx.
+        let symbol = match result {
+            Err(e) => return Err(map_declaration_error(e, ctx)),
+            Ok(symbol) => symbol,
+        };
 
-//         // Implicitly initialize it to null.
-//         emitOp(class_compiler, Ops::Null);
-//         define_variable(class_compiler, symbol);
-//     }
+        // Implicitly initialize it to null.
+        class_compiler.emit_op_for_line(Ops::Null, line);
+        class_compiler.define_variable(symbol, line);
+    }
 
-//     // It definitely exists now, so resolve it properly. This is different from
-//     // the above resolveLocal() call because we may have already closed over it
-//     // as an upvalue.
-//     let variable = resolve_name(ctx, &name).unwrap();
-//     bare_name(ctx, can_assign, variable);
-//     Ok(())
-// }
+    // It definitely exists now, so resolve it properly. This is different from
+    // the above resolveLocal() call because we may have already closed over it
+    // as an upvalue.
+    let name = previous_token_name(ctx);
+    // FIXME: This could just "unwrap" once upvalues work.
+    let variable = resolve_name(ctx, &name).ok_or_else(|| ctx.error_str("No upvalue support!"))?;
+    bare_name(ctx, can_assign, variable)?;
+    Ok(())
+}
 
 // Compiles a read or assignment to [variable].
 fn bare_name(
@@ -2344,7 +2393,7 @@ fn find_upvalue(_ctx: &ParseContext, _name: &str) -> Option<u16> {
 
 fn resolve_non_module(ctx: &ParseContext, name: &str) -> Option<Variable> {
     // rposition to allow vars in deeper scopes to shadow shallower scopes.
-    if let Some(index) = ctx.compiler().locals.iter().rposition(|l| l.name.eq(name)) {
+    if let Some(index) = ctx.compiler().resolve_local(name) {
         return Some(Variable::local(index as u16));
     }
     if let Some(index) = find_upvalue(ctx, name) {
@@ -2424,7 +2473,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
         None => {
             // Implicitly define a module-level variable in
             // the hopes that we get a real definition later.
-            let line_value = Value::from_usize(ctx.parser.previous.line);
+            let line_value = Value::from_usize(ctx.line_number());
             match ctx.module.borrow_mut().define_variable(&name, line_value) {
                 Ok(index) => index,
                 Err(ModuleLimitError::TooManyVariables) => {
@@ -2519,20 +2568,20 @@ impl<'a, 'b> Compiler {
 // Look up [name] in the current scope to see what variable it refers to.
 // Returns the variable either in module scope, local scope, or the enclosing
 // function's upvalue list.
-// fn resolve_name(ctx: &mut ParseContext, name: &str) -> Option<Variable> {
-//     let maybe_variable = resolve_non_module(ctx, name);
-//     if maybe_variable.is_some() {
-//         return maybe_variable;
-//     }
+fn resolve_name(ctx: &mut ParseContext, name: &str) -> Option<Variable> {
+    let maybe_variable = resolve_non_module(ctx, name);
+    if maybe_variable.is_some() {
+        return maybe_variable;
+    }
 
-//     if let Some(index) = ctx.vm.module.lookup_symbol(name) {
-//         return Some(Variable {
-//             scope: Scope::Module,
-//             index: index as usize,
-//         });
-//     }
-//     None
-// }
+    if let Some(index) = ctx.module.borrow().lookup_symbol(name) {
+        return Some(Variable {
+            scope: Scope::Module,
+            index: index as usize,
+        });
+    }
+    None
+}
 
 fn load_local(ctx: &mut ParseContext, index: u16) {
     emit(ctx, Ops::Load(Variable::local(index)));
@@ -2560,16 +2609,17 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
     // Verify that there is space to hidden local variables.
     // Note that we expect only two addLocal calls next to each other in the
     // following code.
+    // FIXME: This could turn into add_local error handling instead.
     if ctx.compiler().locals.len() + 2 > MAX_LOCALS {
         return Err(ctx.error_string(format!("Cannot declare more than {} variables in one scope. (Not enough space for for-loops internal variables)",
           MAX_LOCALS)));
     }
 
-    let seq_slot = add_local(ctx, "seq ".into());
+    let seq_slot = ctx.compiler_mut().add_local("seq ".into());
 
     // Create another hidden local for the iterator object.
     null(ctx, false)?;
-    let iter_slot = add_local(ctx, "iter ".into());
+    let iter_slot = ctx.compiler_mut().add_local("iter ".into());
 
     consume_expecting(ctx, Token::RightParen, "Expect ')' after loop expression.")?;
 
@@ -2593,7 +2643,7 @@ fn for_hidden_variable_scope(ctx: &mut ParseContext) -> Result<(), WrenError> {
     // each iteration so that closures for it don't all see the same one.
     {
         let scope = ScopePusher::push_block(ctx);
-        add_local(scope.ctx, name);
+        scope.ctx.compiler_mut().add_local(name);
         loop_body(scope.ctx)?;
     }
     end_loop(ctx);
@@ -2747,6 +2797,7 @@ impl<'a, 'b> ScopePusher<'a, 'b> {
         ctx.compiler_mut().scope_depth = ctx.compiler().scope_depth.one_deeper()
     }
 
+    // FIXME: This belongs on Compiler I think?
     fn pop_scope(ctx: &mut ParseContext) {
         let popped = emit_pops_for_locals(ctx, ctx.compiler().scope_depth);
         let locals_len = ctx.compiler().locals.len();
@@ -2799,6 +2850,8 @@ fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usiz
 
     // Note this *does not change* Compiler.locals, only issues pops.
     // Locals remain in compiler until pop_scope().
+    // FIXME: The only reason this is on ctx is for error context, it could
+    // be on Compiler instead.
     fn emit_pops(ctx: &mut ParseContext, target_depth: usize) -> usize {
         let mut pops_emitted = 0;
         for index in (0..ctx.compiler().locals.len()).rev() {
@@ -2822,19 +2875,6 @@ fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usiz
 
     emit_pops(ctx, target_depth)
 }
-
-// Attempts to look up the name in the local variables of [compiler]. If found,
-// returns its index, otherwise returns None.
-// fn resolve_local(ctx: &mut ParseContext, name: &str) -> Option<usize> {
-//     // Look it up in the local scopes. Look in reverse order so that the most
-//     // nested variable is found first and shadows outer ones.
-//     for (i, local) in ctx.compiler().locals.iter().enumerate().rev() {
-//         if local.name.eq(name) {
-//             return Some(i);
-//         }
-//     }
-//     None
-// }
 
 // Break, continue, if, for, while, blocks, etc.
 // Unlike expression, does not leave something on the stack.
@@ -3008,69 +3048,85 @@ fn declare_method(ctx: &mut ParseContext, signature: &Signature) -> Result<usize
     Ok(symbol)
 }
 
-// Create a new local variable with [name]. Assumes the current scope is local
-// and the name is unique.
-fn add_local(ctx: &mut ParseContext, name: String) -> u16 {
-    let local = Local {
-        name,
-        depth: ScopeDepth::Local(ctx.compiler().nested_local_scope_count()),
+#[derive(Debug)]
+pub enum DeclarationError {
+    VariableNameTooLong,
+    DefinitionError(DefinitionError),
+    AlreadyDeclared,
+    TooManyVariables,
+}
+
+fn map_declaration_error(error: DeclarationError, ctx: &ParseContext) -> WrenError {
+    let error_string = match error {
+        DeclarationError::VariableNameTooLong => format!(
+            "Cannot declare more than {} variables in one scope.",
+            MAX_LOCALS,
+        ),
+        DeclarationError::DefinitionError(e) => match e {
+            DefinitionError::LocalUsedBeforeDefinition(name, line) => format!(
+                "Variable '{}' referenced before this definition (first use at line {}).",
+                name, line
+            ),
+            DefinitionError::TooManyVariables => "Too many module variables defined.".into(),
+            DefinitionError::VariableAlreadyDefined => "Module variable is already defined.".into(),
+        },
+        DeclarationError::TooManyVariables => format!(
+            "Cannot declare more than {} variables in one scope.",
+            MAX_LOCALS,
+        ),
+        DeclarationError::AlreadyDeclared => "Variable is already declared in this scope.".into(),
     };
-    ctx.compiler_mut().locals.push(local);
-    (ctx.compiler().locals.len() - 1) as u16
+    ctx.error_string(error_string)
 }
 
 fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenError> {
-    // Enable in a separate change.
-    if name.len() > MAX_VARIABLE_NAME {
-        return Err(ctx.error_string(format!(
-            "Variable name cannot be longer than {} characters.",
-            MAX_VARIABLE_NAME
-        )));
-    }
-
-    // Top-level module scope.
-    if ctx.compiler().scope_depth == ScopeDepth::Module {
-        // Error handling missing.
-        // Error handling should occur inside wren_define_variable, no?
-        let result = wren_define_variable(&mut ctx.module.borrow_mut(), &name, Value::Null);
-        let symbol = result.map_err(|e| {
-            let msg = match e {
-                DefinitionError::LocalUsedBeforeDefinition(line) => format!(
-                    "Variable '{}' referenced before this definition (first use at line {}).",
-                    name, line
-                ),
-                DefinitionError::TooManyVariables => "Too many module variables defined.".into(),
-                DefinitionError::VariableAlreadyDefined => {
-                    "Module variable is already defined.".into()
-                }
-            };
-            ctx.error_string(msg)
-        })?;
-
-        return Ok(symbol);
-    }
-
-    // See if there is already a variable with this name declared in the current
-    // scope. (Outer scopes are OK: those get shadowed.)
-    for local in ctx.compiler().locals.iter().rev() {
-        // Once we escape this scope and hit an outer one, we can stop.
-        if local.depth < ctx.compiler().scope_depth {
-            break;
+    // compiler_mut() borrows the entire ctx, so grab the last compiler directly
+    // to allow partial borrows.
+    let result = ctx
+        ._compilers
+        .last_mut()
+        .unwrap()
+        .declare_variable(&mut ctx.module.borrow_mut(), name);
+    result.map_err(move |e| map_declaration_error(e, ctx))
+}
+impl Compiler {
+    fn declare_variable(
+        &mut self,
+        module: &mut Module,
+        name: String,
+    ) -> Result<u16, DeclarationError> {
+        // Enable in a separate change.
+        if name.len() > MAX_VARIABLE_NAME {
+            return Err(DeclarationError::VariableNameTooLong);
         }
-        if local.name.eq(&name) {
-            // Wren still returns, even after emitting the error!
-            return Err(ctx.error_str("Variable is already declared in this scope."));
+
+        // Top-level module scope.
+        if self.scope_depth == ScopeDepth::Module {
+            // Error handling missing.
+            // Error handling should occur inside wren_define_variable, no?
+            return Ok(wren_define_variable(module, &name, Value::Null)
+                .map_err(|e| DeclarationError::DefinitionError(e))?);
         }
-    }
 
-    if ctx.compiler().locals.len() >= MAX_LOCALS {
-        return Err(ctx.error_string(format!(
-            "Cannot declare more than {} variables in one scope.",
-            MAX_LOCALS,
-        )));
-    }
+        // See if there is already a variable with this name declared in the current
+        // scope. (Outer scopes are OK: those get shadowed.)
+        for local in self.locals.iter().rev() {
+            // Once we escape this scope and hit an outer one, we can stop.
+            if local.depth < self.scope_depth {
+                break;
+            }
+            if local.name.eq(&name) {
+                // Wren still returns, even after emitting the error!
+                return Err(DeclarationError::AlreadyDeclared);
+            }
+        }
 
-    Ok(add_local(ctx, name))
+        // This belongs inside add_local.
+        if self.locals.len() >= MAX_LOCALS {
+            return Err(DeclarationError::TooManyVariables);
+        }
+        Ok(self.add_local(name))
+    }
 }
 
 // Parses a name token and declares a variable in the current scope with that
@@ -3078,7 +3134,7 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
 fn declare_named_variable(ctx: &mut ParseContext) -> Result<u16, WrenError> {
     consume_expecting_name(ctx, "Expect variable name.")?;
     let name = previous_token_name(ctx);
-    declare_variable(ctx, name)
+    Ok(declare_variable(ctx, name)?)
 }
 
 // Compiles an "import" statement.
@@ -3127,8 +3183,8 @@ fn import(ctx: &mut ParseContext) -> Result<(), WrenError> {
             //This parses a name after the 'as' and defines it.
             declare_named_variable(ctx)
         } else {
-            //import "module" for Source
-            //Uses 'Source' as the name directly
+            // import "module" for Source
+            // Uses 'Source' as the name directly
             declare_variable(ctx, variable_name.clone())
         }?;
 
@@ -3179,18 +3235,8 @@ fn load_core_variable(ctx: &mut ParseContext, name: &str) {
 }
 
 fn define_variable(ctx: &mut ParseContext, symbol: u16) {
-    match ctx.compiler().scope_depth {
-        ScopeDepth::Local(_) => {
-            // Store the variable. If it's a local, the result of the initializer is
-            // in the correct slot on the stack already so we're done.
-        }
-        ScopeDepth::Module => {
-            // It's a module-level variable, so store the value in the module slot and
-            // then discard the temporary for the initializer.
-            emit(ctx, Ops::Store(Variable::module(symbol)));
-            emit(ctx, Ops::Pop);
-        }
-    }
+    let line = ctx.line_number();
+    ctx.compiler_mut().define_variable(symbol, line);
 }
 
 fn scope_for_definitions(ctx: &ParseContext) -> Scope {
@@ -3692,8 +3738,7 @@ impl Token {
                 precedence: Precedence::None,
             },
             Token::Field(_) => GrammarRule::prefix(field),
-            // Token::StaticField(_) => GrammarRule::prefix(static_field),
-            Token::StaticField(_) => GrammarRule::unused(), // FIXME: Wrong.
+            Token::StaticField(_) => GrammarRule::prefix(static_field),
             Token::Interpolation(_) => GrammarRule::prefix(string_interpolation),
         }
     }

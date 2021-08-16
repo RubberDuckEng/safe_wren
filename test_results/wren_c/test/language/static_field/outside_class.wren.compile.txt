@@ -1,1 +1,1 @@
-[wren_c/test/language/static_field/outside_class line 1] Error at '__field': Expected expression.
+[wren_c/test/language/static_field/outside_class line 1] Error at '__field': Cannot use a static field outside of a class definition.
