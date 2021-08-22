@@ -455,6 +455,7 @@ wren_c/test/language/closure/close_over_function_parameter.wren
 wren_c/test/language/closure/close_over_later_variable.wren
 wren_c/test/language/closure/close_over_method_parameter.wren
 wren_c/test/language/closure/closed_closure_in_function.wren
+wren_c/test/language/closure/nested_closure.wren
 wren_c/test/language/closure/open_closure_in_function.wren
 wren_c/test/language/closure/reference_closure_multiple_times.wren
 wren_c/test/language/closure/reuse_closure_slot.wren
@@ -684,6 +685,7 @@ wren_c/test/language/shebang/shebang.wren
 wren_c/test/language/shebang/shebang_at_eof.wren
 wren_c/test/language/shebang/shebang_at_other_line.wren
 wren_c/test/language/shebang/shebang_invalid.wren
+wren_c/test/language/static_field/closure.wren
 wren_c/test/language/static_field/default_to_null.wren
 wren_c/test/language/static_field/in_instance_method.wren
 wren_c/test/language/static_field/multiple.wren

@@ -53,7 +53,7 @@ closeOverGet Constants:
 00: Fn(new(_) block argument)
 closeOverGet Code:
 00 (ln 5): Load(Module, Class("Fn"))
-01 (ln 5): Closure(0, [Upvalue { is_local_in_parent: false, index: 1 }])
+01 (ln 5): Closure(0, [Upvalue { is_local_in_parent: false, index: 0 }])
 02 (ln 5): Call(new(_))
 03 (ln 5): Return
 04 (ln 6): Null
@@ -63,7 +63,7 @@ closeOverSet Constants:
 00: Fn(new(_) block argument)
 closeOverSet Code:
 00 (ln 9): Load(Module, Class("Fn"))
-01 (ln 9): Closure(0, [Upvalue { is_local_in_parent: false, index: 1 }])
+01 (ln 9): Closure(0, [Upvalue { is_local_in_parent: false, index: 0 }])
 02 (ln 9): Call(new(_))
 03 (ln 9): Return
 04 (ln 10): Null

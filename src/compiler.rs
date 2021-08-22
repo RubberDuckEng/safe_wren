@@ -1161,10 +1161,12 @@ impl ScopeDepth {
     }
 }
 
+// wren_c calls this CompilerUpvalue
 #[derive(Debug, Clone)]
 pub(crate) struct Upvalue {
     // True if this upvalue is capturing a local variable from the enclosing
     // function. False if it's capturing an upvalue.
+    // FIXME: This could be an enum instead of bool/usize pair.
     pub(crate) is_local_in_parent: bool,
 
     // The index of the local or upvalue being captured in the enclosing function.
@@ -1351,6 +1353,7 @@ impl Compiler {
     // Adds an upvalue to [compiler]'s function with the given properties. Does not
     // add one if an upvalue for that variable is already in the list. Returns the
     // index of the upvalue.
+    // wren_c calls this addUpvalue.
     fn ensure_upvalue(&mut self, is_local_in_parent: bool, index: usize) -> Symbol {
         // Look for an existing one.
         for (i, upvalue) in self.upvalues.iter().enumerate() {
@@ -2263,6 +2266,12 @@ pub enum Scope {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Variable {
     pub scope: Scope,
+    // FIXME: This should just be an enum with unique types for the three
+    // different uses of index.
+    // Note: Each Scope type uses this index to index into different things.
+    // module : module symbol table.
+    // local : stack offsets
+    // upvalue : offsets into Compiler::upvalues
     pub index: usize,
 }
 
@@ -2411,7 +2420,8 @@ fn find_upvalue(ctx: &mut ParseContext, name: &str) -> Option<Symbol> {
 
 struct FoundUpvalue {
     compiler: usize,
-    local: usize,
+    // This is a local variable offset in the above compiler.
+    index: usize,
 }
 
 impl<'a> ParseContext<'a> {
@@ -2433,30 +2443,39 @@ impl<'a> ParseContext<'a> {
             if let Some(local_index) = self._compilers[compiler_index].resolve_local(name) {
                 return Some(FoundUpvalue {
                     compiler: compiler_index,
-                    local: local_index,
+                    index: local_index,
                 });
             }
         }
     }
+
     // This both finds an upvalue as well as hoists up to the current scope.
     fn find_and_hoist_upvalue(&mut self, name: &str) -> Option<Symbol> {
+        // wren_c's version of this (findUpvalue) is recursive.
+
         match self.find_upvalue(name) {
             Some(upvalue) => {
                 // Mark the local as an upvalue so we know to close it when it
                 // goes out of scope.
-                self._compilers[upvalue.compiler].locals[upvalue.local].is_upvalue = true;
+                self._compilers[upvalue.compiler].locals[upvalue.index].is_upvalue = true;
                 // Mark any intermediate scopes as having this upvalue, but not
                 // it being a local in their direct parent.
                 // This distinction is used by Ops::Closure to know whether it
                 // needs to create a new Upvalue object or it can reuse one
                 // from a parent scope.
+                // Create the open upvalue in the direct child of the found value.
+                let mut upvalue_index =
+                    self._compilers[upvalue.compiler + 1].ensure_upvalue(true, upvalue.index);
+
+                // Each successive compiler inherits this upvalue, but may have
+                // a different index for it.
                 for index in (upvalue.compiler + 2)..self._compilers.len() {
-                    self._compilers[index].ensure_upvalue(false, upvalue.local);
+                    // NOTE: Pass each compiler the index into the *parent's*
+                    // upvalue list, not upvalue.index, rather upvalue_index.
+                    upvalue_index = self._compilers[index].ensure_upvalue(false, upvalue_index);
                 }
-                // Finally create the closed upvalue in the direct child.
-                return Some(
-                    self._compilers[upvalue.compiler + 1].ensure_upvalue(true, upvalue.local),
-                );
+                // Return the index from the closest compiler.
+                return Some(upvalue_index);
             }
             None => None,
         }

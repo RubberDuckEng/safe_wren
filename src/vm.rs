@@ -1996,9 +1996,7 @@ impl VM {
                             };
 
                             let upvalue = find_or_create_upvalue(fiber_ref, location);
-                            closure
-                                .borrow_mut()
-                                .set_upvalue(compiler_upvalue.index, upvalue);
+                            closure.borrow_mut().push_upvalue(upvalue);
                         } else {
                             // Use the same upvalue as the current call frame.
                             let stack = fiber.call_stack.borrow();
@@ -2009,9 +2007,7 @@ impl VM {
                                 .borrow()
                                 .upvalue(compiler_upvalue.index)
                                 .clone();
-                            closure
-                                .borrow_mut()
-                                .set_upvalue(compiler_upvalue.index, upvalue);
+                            closure.borrow_mut().push_upvalue(upvalue);
                         }
                     }
                 }
@@ -2686,7 +2682,7 @@ impl Obj for ObjList {
 pub(crate) struct ObjClosure {
     class_obj: Handle<ObjClass>,
     pub(crate) fn_obj: Handle<ObjFn>,
-    upvalues: Vec<Option<Handle<Upvalue>>>,
+    upvalues: Vec<Handle<Upvalue>>,
 }
 
 impl ObjClosure {
@@ -2699,19 +2695,12 @@ impl ObjClosure {
         }
     }
 
-    // Closures maintain a sparse map of variable index to Upvalue.
-    // Not all variables will end up as upvalues, so not all of these
-    // indicies will be filled.
-    fn set_upvalue(&mut self, _index: usize, upvalue: Handle<Upvalue>) {
-        // self.upvalues.resize(index + 1, None);
-        // self.upvalues[index] = Some(upvalue);
-        // FIXME: I think this is wrong, but it passes more tests, so
-        // keeping it for now to allow committing a checkpoint.
-        self.upvalues.push(Some(upvalue));
+    fn push_upvalue(&mut self, upvalue: Handle<Upvalue>) {
+        self.upvalues.push(upvalue)
     }
 
     fn upvalue(&self, index: usize) -> &Handle<Upvalue> {
-        self.upvalues[index].as_ref().unwrap()
+        &self.upvalues[index]
     }
 }
 
