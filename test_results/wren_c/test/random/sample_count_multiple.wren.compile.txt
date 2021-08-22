@@ -1,1 +1,203 @@
-[wren_c/test/random/sample_count_multiple line 17] Error at 'bitmask': Variable is used but not defined.
+<script> Constants:
+00: 12345
+01: 0
+02: 10
+03: 1
+04: 45
+05: 120
+06: 210
+07: 252
+08: 100
+09: Fn(each(_) block argument)
+10: "!!! "
+11: " "
+12: ""
+13: 50
+<script> Code:
+00 (ln 1): ImportModule("random")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Random")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Load(Module, Null)
+06 (ln 3): Constant(0: 12345)
+07 (ln 3): Call(new(_))
+08 (ln 3): Store(Module)
+09 (ln 3): Pop
+10 (ln 6): Constant(1: 0)
+11 (ln 6): Constant(2: 10)
+12 (ln 6): Call(...(_))
+13 (ln 6): Call(toList)
+14 (ln 6): Store(Module)
+15 (ln 6): Pop
+16 (ln 7): Load(Module, Class("List"))
+17 (ln 7): Call(new())
+18 (ln 7): Constant(3: 1)
+19 (ln 7): Call(addCore_(_))
+20 (ln 7): Constant(2: 10)
+21 (ln 7): Call(addCore_(_))
+22 (ln 7): Constant(4: 45)
+23 (ln 7): Call(addCore_(_))
+24 (ln 7): Constant(5: 120)
+25 (ln 7): Call(addCore_(_))
+26 (ln 7): Constant(6: 210)
+27 (ln 7): Call(addCore_(_))
+28 (ln 7): Constant(7: 252)
+29 (ln 7): Call(addCore_(_))
+30 (ln 7): Constant(6: 210)
+31 (ln 7): Call(addCore_(_))
+32 (ln 7): Constant(5: 120)
+33 (ln 7): Call(addCore_(_))
+34 (ln 7): Constant(4: 45)
+35 (ln 7): Call(addCore_(_))
+36 (ln 7): Constant(2: 10)
+37 (ln 7): Call(addCore_(_))
+38 (ln 7): Constant(3: 1)
+39 (ln 7): Call(addCore_(_))
+40 (ln 7): Store(Module)
+41 (ln 7): Pop
+42 (ln 9): Constant(1: 0)
+43 (ln 9): Constant(2: 10)
+44 (ln 9): Call(..(_))
+45 (ln 9): Null
+46 (ln 9): Load(Local, 1)
+47 (ln 9): Load(Local, 2)
+48 (ln 9): Call(iterate(_))
+49 (ln 9): Store(Local, 2)
+50 (ln 9): JumpIfFalse(120)
+51 (ln 9): Load(Local, 1)
+52 (ln 9): Load(Local, 2)
+53 (ln 9): Call(iteratorValue(_))
+54 (ln 10): Load(Module, Null)
+55 (ln 10): Load(Local, 3)
+56 (ln 10): Call([_])
+57 (ln 12): Load(Module, Class("Map"))
+58 (ln 12): Call(new())
+59 (ln 13): Constant(3: 1)
+60 (ln 13): Load(Local, 4)
+61 (ln 13): Constant(8: 100)
+62 (ln 13): Call(*(_))
+63 (ln 13): Call(..(_))
+64 (ln 13): Null
+65 (ln 13): Load(Local, 6)
+66 (ln 13): Load(Local, 7)
+67 (ln 13): Call(iterate(_))
+68 (ln 13): Store(Local, 7)
+69 (ln 13): JumpIfFalse(35)
+70 (ln 13): Load(Local, 6)
+71 (ln 13): Load(Local, 7)
+72 (ln 13): Call(iteratorValue(_))
+73 (ln 14): Load(Module, Null)
+74 (ln 14): Load(Module, Null)
+75 (ln 14): Load(Local, 3)
+76 (ln 14): Call(sample(_,_))
+77 (ln 16): Constant(1: 0)
+78 (ln 17): Load(Local, 9)
+79 (ln 17): Closure(9, [Upvalue { is_local_in_parent: true, index: 10 }])
+80 (ln 17): Call(each(_))
+81 (ln 17): Pop
+82 (ln 18): Load(Local, 5)
+83 (ln 18): Load(Local, 10)
+84 (ln 18): Call(containsKey(_))
+85 (ln 18): Call(!)
+86 (ln 18): JumpIfFalse(5)
+87 (ln 18): Load(Local, 5)
+88 (ln 18): Load(Local, 10)
+89 (ln 18): Constant(1: 0)
+90 (ln 18): Call([_]=(_))
+91 (ln 18): Pop
+92 (ln 19): Load(Local, 5)
+93 (ln 19): Load(Local, 10)
+94 (ln 19): Load(Local, 5)
+95 (ln 19): Load(Local, 10)
+96 (ln 19): Call([_])
+97 (ln 19): Constant(3: 1)
+98 (ln 19): Call(+(_))
+99 (ln 19): Call([_]=(_))
+100 (ln 19): Pop
+101 (ln 20): CloseUpvalues
+102 (ln 20): Pop
+103 (ln 20): Pop
+104 (ln 20): Loop(40)
+105 (ln 20): Pop
+106 (ln 20): Pop
+107 (ln 22): Load(Local, 5)
+108 (ln 22): Call(count)
+109 (ln 22): Load(Local, 4)
+110 (ln 22): Call(!=(_))
+111 (ln 22): JumpIfFalse(17)
+112 (ln 22): Load(Module, Class("System"))
+113 (ln 22): Load(Module, Class("List"))
+114 (ln 22): Call(new())
+115 (ln 22): Constant(10: "!!! ")
+116 (ln 22): Call(addCore_(_))
+117 (ln 22): Load(Local, 4)
+118 (ln 22): Call(addCore_(_))
+119 (ln 22): Constant(11: " ")
+120 (ln 22): Call(addCore_(_))
+121 (ln 22): Load(Local, 5)
+122 (ln 22): Call(count)
+123 (ln 22): Call(addCore_(_))
+124 (ln 22): Constant(12: "")
+125 (ln 22): Call(addCore_(_))
+126 (ln 22): Call(join())
+127 (ln 22): Call(print(_))
+128 (ln 22): Pop
+129 (ln 23): Load(Local, 5)
+130 (ln 23): Call(keys)
+131 (ln 23): Null
+132 (ln 23): Load(Local, 6)
+133 (ln 23): Load(Local, 7)
+134 (ln 23): Call(iterate(_))
+135 (ln 23): Store(Local, 7)
+136 (ln 23): JumpIfFalse(28)
+137 (ln 23): Load(Local, 6)
+138 (ln 23): Load(Local, 7)
+139 (ln 23): Call(iteratorValue(_))
+140 (ln 24): Load(Local, 5)
+141 (ln 24): Load(Local, 8)
+142 (ln 24): Call([_])
+143 (ln 24): Constant(8: 100)
+144 (ln 24): Call(-(_))
+145 (ln 24): Call(abs)
+146 (ln 25): Load(Local, 9)
+147 (ln 25): Constant(13: 50)
+148 (ln 25): Call(>(_))
+149 (ln 25): JumpIfFalse(12)
+150 (ln 25): Load(Module, Class("System"))
+151 (ln 25): Load(Module, Class("List"))
+152 (ln 25): Call(new())
+153 (ln 25): Constant(10: "!!! ")
+154 (ln 25): Call(addCore_(_))
+155 (ln 25): Load(Local, 9)
+156 (ln 25): Call(addCore_(_))
+157 (ln 25): Constant(12: "")
+158 (ln 25): Call(addCore_(_))
+159 (ln 25): Call(join())
+160 (ln 25): Call(print(_))
+161 (ln 25): Pop
+162 (ln 26): Pop
+163 (ln 26): Pop
+164 (ln 26): Loop(33)
+165 (ln 26): Pop
+166 (ln 26): Pop
+167 (ln 27): Pop
+168 (ln 27): Pop
+169 (ln 27): Pop
+170 (ln 27): Loop(125)
+171 (ln 27): Pop
+172 (ln 27): Pop
+173 (ln 28): EndModule
+174 (ln 28): Return
+175 (ln 28): End
+each(_) block argument Constants:
+00: 1
+each(_) block argument Code:
+00 (ln 17): Load(Upvalue, 0)
+01 (ln 17): Constant(0: 1)
+02 (ln 17): Load(Local, 1)
+03 (ln 17): Call(<<(_))
+04 (ln 17): Call(|(_))
+05 (ln 17): Store(Upvalue, 0)
+06 (ln 17): Return
+07 (ln 17): End

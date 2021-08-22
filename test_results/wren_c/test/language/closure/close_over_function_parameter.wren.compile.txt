@@ -1,1 +1,38 @@
-[wren_c/test/language/closure/close_over_function_parameter line 5] Error at 'param': Variable is used but not defined.
+<script> Constants:
+00: Fn(new(_) block argument)
+01: "param"
+<script> Code:
+00 (ln 1): Null
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 3): Load(Module, Class("Fn"))
+04 (ln 7): Closure(0, [])
+05 (ln 7): Call(new(_))
+06 (ln 7): Constant(1: "param")
+07 (ln 7): Call(call(_))
+08 (ln 7): Pop
+09 (ln 9): Load(Module, Null)
+10 (ln 9): Call(call())
+11 (ln 9): Pop
+12 (ln 10): EndModule
+13 (ln 10): Return
+14 (ln 10): End
+new(_) block argument Constants:
+00: Fn(new(_) block argument)
+new(_) block argument Code:
+00 (ln 4): Load(Module, Class("Fn"))
+01 (ln 6): Closure(0, [Upvalue { is_local_in_parent: true, index: 1 }])
+02 (ln 6): Call(new(_))
+03 (ln 6): Store(Module)
+04 (ln 6): Pop
+05 (ln 7): Null
+06 (ln 7): Return
+07 (ln 7): End
+new(_) block argument Code:
+00 (ln 5): Load(Module, Class("System"))
+01 (ln 5): Load(Upvalue, 0)
+02 (ln 5): Call(print(_))
+03 (ln 5): Pop
+04 (ln 6): Null
+05 (ln 6): Return
+06 (ln 6): End

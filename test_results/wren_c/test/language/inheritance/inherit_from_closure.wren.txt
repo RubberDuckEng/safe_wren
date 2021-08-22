@@ -1,6 +1,0 @@
-Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Fn'." and got:
-
-Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[./test/language/inheritance/inherit_from_closure line 5] Error at 'a': Variable is used but not defined.
-

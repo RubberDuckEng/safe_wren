@@ -1,1 +1,26 @@
-[wren_c/test/language/static_field/default_to_null line 2] Error at '__field': No upvalue support!
+<script> Constants:
+00: "Foo"
+01: Fn(write)
+<script> Code:
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Null
+06 (ln 2): Closure(1, [Upvalue { is_local_in_parent: true, index: 1 }])
+07 (ln 2): Load(Module, Null)
+08 (ln 2): Method(static, write)
+09 (ln 3): CloseUpvalues
+10 (ln 5): Load(Module, Null)
+11 (ln 5): Call(write)
+12 (ln 5): Pop
+13 (ln 6): EndModule
+14 (ln 6): Return
+15 (ln 6): End
+write Code:
+00 (ln 2): Load(Module, Class("System"))
+01 (ln 2): Load(Upvalue, 0)
+02 (ln 2): Call(print(_))
+03 (ln 2): Return
+04 (ln 2): End

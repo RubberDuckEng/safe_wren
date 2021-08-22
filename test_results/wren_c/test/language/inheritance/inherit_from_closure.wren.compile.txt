@@ -1,1 +1,30 @@
-[wren_c/test/language/inheritance/inherit_from_closure line 5] Error at 'a': Variable is used but not defined.
+<script> Constants:
+00: "a"
+01: Fn(new(_) block argument)
+02: "Subclass"
+<script> Code:
+00 (ln 1): Null
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 4): Constant(0: "a")
+04 (ln 5): Load(Module, Class("Fn"))
+05 (ln 5): Closure(1, [Upvalue { is_local_in_parent: true, index: 1 }])
+06 (ln 5): Call(new(_))
+07 (ln 5): Call(type)
+08 (ln 5): Store(Module)
+09 (ln 5): Pop
+10 (ln 6): CloseUpvalues
+11 (ln 8): Constant(2: "Subclass")
+12 (ln 8): Load(Module, Null)
+13 (ln 8): Class(0 fields)
+14 (ln 8): Store(Module)
+15 (ln 8): Pop
+16 (ln 9): EndModule
+17 (ln 9): Return
+18 (ln 9): End
+new(_) block argument Code:
+00 (ln 5): Load(Module, Class("System"))
+01 (ln 5): Load(Upvalue, 0)
+02 (ln 5): Call(print(_))
+03 (ln 5): Return
+04 (ln 5): End

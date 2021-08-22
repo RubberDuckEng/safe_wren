@@ -1097,6 +1097,8 @@ pub(crate) enum Ops {
 
     Loop(JumpOffset), // Jump backwards relative offset.
     Pop,
+    // CloseUpvalues replaces Pop for Locals to ensure any created
+    // upvalues get closed when the local goes out of scope.
     CloseUpvalues,
     Return,
     EndModule,
@@ -1159,14 +1161,14 @@ impl ScopeDepth {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(crate) struct Upvalue {
     // True if this upvalue is capturing a local variable from the enclosing
     // function. False if it's capturing an upvalue.
-    is_local_in_parent: bool,
+    pub(crate) is_local_in_parent: bool,
 
     // The index of the local or upvalue being captured in the enclosing function.
-    index: usize,
+    pub(crate) index: usize,
 }
 
 // Bookkeeping information for compiling a class definition.
@@ -2448,7 +2450,7 @@ impl<'a> ParseContext<'a> {
                 // This distinction is used by Ops::Closure to know whether it
                 // needs to create a new Upvalue object or it can reuse one
                 // from a parent scope.
-                for index in upvalue.compiler + 1..self._compilers.len() {
+                for index in (upvalue.compiler + 2)..self._compilers.len() {
                     self._compilers[index].ensure_upvalue(false, upvalue.local);
                 }
                 // Finally create the closed upvalue in the direct child.
@@ -2903,11 +2905,6 @@ impl<'a, 'b> Drop for ScopePusher<'a, 'b> {
     }
 }
 
-struct PopsResult {
-    locals_handled: usize,
-    saw_upvalue: bool,
-}
-
 // Generates code to pop local variables at [depth] or greater. Does *not*
 // actually undeclare variables or pop any scopes, though. This is called
 // directly when compiling "break" statements to ditch the local variables
@@ -2922,11 +2919,10 @@ fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usiz
         ScopeDepth::Local(i) => i,
     };
 
-    // Note this *does not change* Compiler.locals, only issues pops.
-    // Locals remain in compiler until pop_scope().
+    // Note this *does not change* Compiler.locals, only issues pops and upvalue
+    // closures.  Locals remain in compiler until pop_scope().
     // FIXME: The only reason takes a ctx is for line numbers for the emit calls
-    fn walk_locals(ctx: &mut ParseContext, target_depth: usize) -> PopsResult {
-        let mut saw_upvalue = false;
+    fn pop_locals(ctx: &mut ParseContext, target_depth: usize) -> usize {
         let mut locals_handled = 0;
         for index in (0..ctx.compiler().locals.len()).rev() {
             // Scope the borrow of ctx for local.
@@ -2934,12 +2930,7 @@ fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usiz
                 let local = &ctx.compiler().locals[index];
                 let local_depth = match local.depth.depth() {
                     // Stop at the magical "this" (see hack note above in Compiler constructor.
-                    None => {
-                        return PopsResult {
-                            locals_handled,
-                            saw_upvalue,
-                        }
-                    }
+                    None => return locals_handled,
                     Some(i) => i,
                 };
                 if local_depth < target_depth {
@@ -2948,25 +2939,16 @@ fn emit_pops_for_locals(ctx: &mut ParseContext, scope_depth: ScopeDepth) -> usiz
                 local.is_upvalue
             };
             if is_upvalue {
-                saw_upvalue = true
-                // wren_c emits a close for each upvalue, but the VM itself
-                // only handles them in batches.
+                // Pops the local and closes any upvalues referencing it.
+                emit(ctx, Ops::CloseUpvalues);
             } else {
                 emit(ctx, Ops::Pop);
             }
             locals_handled += 1;
         }
-        PopsResult {
-            locals_handled,
-            saw_upvalue,
-        }
+        locals_handled
     }
-
-    let result = walk_locals(ctx, target_depth);
-    if result.saw_upvalue {
-        emit(ctx, Ops::CloseUpvalues);
-    }
-    result.locals_handled
+    pop_locals(ctx, target_depth)
 }
 
 // Break, continue, if, for, while, blocks, etc.

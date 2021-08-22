@@ -1,11 +1,3 @@
-Unexpected error:
-[./test/language/inheritance/inherited_fields_in_closure line 5] Error at '_field': Could not resolve 'this'
-Expected return code 0 and got 65. Stderr:
-[./test/language/inheritance/inherited_fields_in_closure line 5] Error at '_field': Could not resolve 'this'
-
-Missing expected output "Foo field" on line 29.
-Missing expected output "Bar field" on line 30.
-Missing expected output "new foo value" on line 32.
-Missing expected output "Bar field" on line 33.
-Missing expected output "new foo value" on line 35.
-Missing expected output "new bar value" on line 36.
+Expected output "Bar field" on line 30 and got "Foo field".
+Expected output "Bar field" on line 33 and got "new foo value".
+Expected output "new foo value" on line 35 and got "new bar value".

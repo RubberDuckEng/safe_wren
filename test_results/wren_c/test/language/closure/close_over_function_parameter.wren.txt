@@ -1,6 +1,0 @@
-Unexpected error:
-[./test/language/closure/close_over_function_parameter line 5] Error at 'param': Variable is used but not defined.
-Expected return code 0 and got 65. Stderr:
-[./test/language/closure/close_over_function_parameter line 5] Error at 'param': Variable is used but not defined.
-
-Missing expected output "param" on line 9.

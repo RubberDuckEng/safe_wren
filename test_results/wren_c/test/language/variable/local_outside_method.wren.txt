@@ -1,0 +1,2 @@
+Expected output "method" on line 20 and got "variable".
+Expected output "class method" on line 21 and got "variable".

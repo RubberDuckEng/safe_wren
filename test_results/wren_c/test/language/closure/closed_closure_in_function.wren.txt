@@ -1,6 +1,0 @@
-Unexpected error:
-[./test/language/closure/closed_closure_in_function line 6] Error at 'local': Variable is used but not defined.
-Expected return code 0 and got 65. Stderr:
-[./test/language/closure/closed_closure_in_function line 6] Error at 'local': Variable is used but not defined.
-
-Missing expected output "local" on line 10.

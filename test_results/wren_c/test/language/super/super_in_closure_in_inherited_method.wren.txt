@@ -1,6 +1,9 @@
-Unexpected error:
-[./test/language/super/super_in_closure_in_inherited_method line 3] Error at 'super': Could not resolve 'this'
-Expected return code 0 and got 65. Stderr:
-[./test/language/super/super_in_closure_in_inherited_method line 3] Error at 'super': Could not resolve 'this'
+Unexpected output on stderr:
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', src/vm.rs:2233:88
+Unexpected output on stderr:
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Expected return code 0 and got 101. Stderr:
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', src/vm.rs:2233:88
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 Missing expected output "instance of B" on line 13.

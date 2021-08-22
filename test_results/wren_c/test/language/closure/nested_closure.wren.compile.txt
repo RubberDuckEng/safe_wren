@@ -1,1 +1,72 @@
-[wren_c/test/language/closure/nested_closure line 10] Error at 'a': Variable is used but not defined.
+<script> Constants:
+00: Fn(new(_) block argument)
+<script> Code:
+00 (ln 1): Null
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 3): Load(Module, Class("Fn"))
+04 (ln 16): Closure(0, [])
+05 (ln 16): Call(new(_))
+06 (ln 16): Call(call())
+07 (ln 16): Pop
+08 (ln 18): Load(Module, Null)
+09 (ln 18): Call(call())
+10 (ln 18): Pop
+11 (ln 22): EndModule
+12 (ln 22): Return
+13 (ln 22): End
+new(_) block argument Constants:
+00: "a"
+01: Fn(new(_) block argument)
+new(_) block argument Code:
+00 (ln 4): Constant(0: "a")
+01 (ln 5): Load(Module, Class("Fn"))
+02 (ln 15): Closure(1, [Upvalue { is_local_in_parent: true, index: 1 }])
+03 (ln 15): Call(new(_))
+04 (ln 15): Call(call())
+05 (ln 15): Pop
+06 (ln 16): Null
+07 (ln 16): Return
+08 (ln 16): End
+new(_) block argument Constants:
+00: "b"
+01: Fn(new(_) block argument)
+new(_) block argument Code:
+00 (ln 6): Constant(0: "b")
+01 (ln 7): Load(Module, Class("Fn"))
+02 (ln 14): Closure(1, [Upvalue { is_local_in_parent: false, index: 1 }, Upvalue { is_local_in_parent: true, index: 1 }])
+03 (ln 14): Call(new(_))
+04 (ln 14): Call(call())
+05 (ln 14): Pop
+06 (ln 15): Null
+07 (ln 15): Return
+08 (ln 15): End
+new(_) block argument Constants:
+00: "c"
+01: Fn(new(_) block argument)
+new(_) block argument Code:
+00 (ln 8): Constant(0: "c")
+01 (ln 9): Load(Module, Class("Fn"))
+02 (ln 13): Closure(1, [Upvalue { is_local_in_parent: false, index: 1 }, Upvalue { is_local_in_parent: true, index: 1 }])
+03 (ln 13): Call(new(_))
+04 (ln 13): Store(Module)
+05 (ln 13): Pop
+06 (ln 14): Null
+07 (ln 14): Return
+08 (ln 14): End
+new(_) block argument Code:
+00 (ln 10): Load(Module, Class("System"))
+01 (ln 10): Load(Upvalue, 0)
+02 (ln 10): Call(print(_))
+03 (ln 10): Pop
+04 (ln 11): Load(Module, Class("System"))
+05 (ln 11): Load(Upvalue, 1)
+06 (ln 11): Call(print(_))
+07 (ln 11): Pop
+08 (ln 12): Load(Module, Class("System"))
+09 (ln 12): Load(Upvalue, 1)
+10 (ln 12): Call(print(_))
+11 (ln 12): Pop
+12 (ln 13): Null
+13 (ln 13): Return
+14 (ln 13): End

@@ -1,7 +1,10 @@
-Unexpected error:
-[./test/language/static_field/closure line 2] Error at '__field': No upvalue support!
-Expected return code 0 and got 65. Stderr:
-[./test/language/static_field/closure line 2] Error at '__field': No upvalue support!
+Unexpected output on stderr:
+thread 'main' panicked at 'index out of bounds: the len is 1 but the index is 1', src/vm.rs:2762:9
+Unexpected output on stderr:
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Expected return code 0 and got 101. Stderr:
+thread 'main' panicked at 'index out of bounds: the len is 1 but the index is 1', src/vm.rs:2762:9
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 Missing expected output "Foo field" on line 14.
 Missing expected output "new value" on line 16.

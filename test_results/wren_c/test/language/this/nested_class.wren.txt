@@ -1,8 +1,0 @@
-Unexpected error:
-[./test/language/this/nested_class line 8] Error at 'this': Could not resolve 'this'
-Expected return code 0 and got 65. Stderr:
-[./test/language/this/nested_class line 8] Error at 'this': Could not resolve 'this'
-
-Missing expected output "Outer" on line 5.
-Missing expected output "Outer" on line 8.
-Missing expected output "Inner" on line 14.

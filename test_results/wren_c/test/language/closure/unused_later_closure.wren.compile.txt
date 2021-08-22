@@ -1,1 +1,40 @@
-[wren_c/test/language/closure/unused_later_closure line 14] Error at 'a': Variable is used but not defined.
+<script> Constants:
+00: "a"
+01: "b"
+02: Fn(new(_) block argument)
+03: Fn(new(_) block argument)
+<script> Code:
+00 (ln 7): Null
+01 (ln 7): Store(Module)
+02 (ln 7): Pop
+03 (ln 10): Constant(0: "a")
+04 (ln 13): Constant(1: "b")
+05 (ln 14): Load(Module, Class("Fn"))
+06 (ln 14): Closure(2, [Upvalue { is_local_in_parent: true, index: 1 }])
+07 (ln 14): Call(new(_))
+08 (ln 14): Store(Module)
+09 (ln 14): Pop
+10 (ln 15): Boolean false
+11 (ln 15): JumpIfFalse(4)
+12 (ln 15): Load(Module, Class("Fn"))
+13 (ln 15): Closure(3, [Upvalue { is_local_in_parent: true, index: 2 }])
+14 (ln 15): Call(new(_))
+15 (ln 15): Pop
+16 (ln 16): CloseUpvalues
+17 (ln 18): Load(Module, Class("System"))
+18 (ln 18): Load(Module, Null)
+19 (ln 18): Call(call())
+20 (ln 18): Call(print(_))
+21 (ln 18): Pop
+22 (ln 19): CloseUpvalues
+23 (ln 20): EndModule
+24 (ln 20): Return
+25 (ln 20): End
+new(_) block argument Code:
+00 (ln 14): Load(Upvalue, 0)
+01 (ln 14): Return
+02 (ln 14): End
+new(_) block argument Code:
+00 (ln 15): Load(Upvalue, 0)
+01 (ln 15): Return
+02 (ln 15): End

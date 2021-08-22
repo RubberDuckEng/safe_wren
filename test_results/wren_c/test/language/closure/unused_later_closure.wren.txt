@@ -1,6 +1,0 @@
-Unexpected error:
-[./test/language/closure/unused_later_closure line 14] Error at 'a': Variable is used but not defined.
-Expected return code 0 and got 65. Stderr:
-[./test/language/closure/unused_later_closure line 14] Error at 'a': Variable is used but not defined.
-
-Missing expected output "a" on line 18.

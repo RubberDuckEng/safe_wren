@@ -1,1 +1,1 @@
-[wren_c/example/syntax line 19] Error at 'block': Could not resolve 'this'
+[wren_c/example/syntax line 133] Error: Integer parsing number too large to fit in target type

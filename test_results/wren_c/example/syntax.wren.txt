@@ -1,5 +1,5 @@
 Unexpected error:
-[./example/syntax line 19] Error at 'block': Could not resolve 'this'
+[./example/syntax line 133] Error: Integer parsing number too large to fit in target type
 Expected return code 0 and got 65. Stderr:
-[./example/syntax line 19] Error at 'block': Could not resolve 'this'
+[./example/syntax line 133] Error: Integer parsing number too large to fit in target type
 

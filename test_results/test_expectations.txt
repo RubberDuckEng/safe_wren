@@ -82,46 +82,13 @@ wren_c/test/language/class/attributes/invalid_expression.wren
 wren_c/test/language/class/attributes/methods.wren
 
 # closures / upvalues
-wren_c/test/language/inheritance/inherit_from_closure.wren
-wren_c/test/language/inheritance/inherited_fields_in_closure.wren
-wren_c/test/language/this/nested_closure.wren
-wren_c/test/language/this/closure.wren
-wren_c/test/language/this/nested_class.wren
-wren_c/test/language/while/return_closure.wren
-wren_c/test/language/while/closure_in_body.wren
-wren_c/test/language/continue/closure_in_for.wren
-wren_c/test/language/continue/closure_in_while.wren
-wren_c/test/language/field/closure.wren
-wren_c/test/language/for/return_closure.wren
-wren_c/test/language/for/closure_in_body.wren
-wren_c/test/language/for/close_over_loop_variable.wren
-wren_c/test/language/closure/close_over_later_variable.wren
-wren_c/test/language/closure/close_over_method_parameter.wren
-wren_c/test/language/closure/assign_to_closure.wren
 wren_c/test/language/closure/nested_closure.wren
-wren_c/test/language/closure/reuse_closure_slot.wren
-wren_c/test/language/closure/closed_closure_in_function.wren
-wren_c/test/language/closure/unused_closure.wren
-wren_c/test/language/closure/reference_closure_multiple_times.wren
-wren_c/test/language/closure/close_over_function_parameter.wren
-wren_c/test/language/closure/open_closure_in_function.wren
-wren_c/test/language/closure/shadow_closure_with_local.wren
-wren_c/test/language/closure/unused_later_closure.wren
-wren_c/test/language/break/closure_in_for.wren
-wren_c/test/language/break/closure_in_while.wren
-wren_c/test/language/fiber/closure.wren
-wren_c/test/language/super/super_in_closure_in_inherited_method.wren
-wren_c/test/language/super/closure.wren
-wren_c/test/random/sample_count_multiple.wren
 wren_c/test/language/variable/local_outside_method.wren
-
-# static fields, requires upvalue to actually work.
-wren_c/test/language/static_field/default_to_null.wren
-wren_c/test/language/static_field/multiple.wren
-wren_c/test/language/static_field/in_instance_method.wren
+wren_c/test/language/inheritance/inherited_fields_in_closure.wren
+wren_c/test/language/super/closure.wren
+wren_c/test/language/super/super_in_closure_in_inherited_method.wren
+wren_c/test/random/sample_count_multiple.wren
 wren_c/test/language/static_field/closure.wren
-wren_c/test/language/static_field/use_before_set.wren
-wren_c/test/language/static_field/nested_class.wren
 wren_c/example/syntax.wren
 
 # WONTFIX? wren_rust doesn't currently enforce MAX_JUMP, but even
@@ -145,7 +112,6 @@ wren_c/test/api/reset_stack_after_foreign_construct.wren
 wren_c/test/api/resolution.wren
 wren_c/test/api/slots.wren
 wren_c/test/api/user_data.wren
-
 
 # Num.toString doesn't print correct # of digits or round.
 wren_c/test/core/number/acos.wren

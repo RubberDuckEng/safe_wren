@@ -21,13 +21,13 @@
 10 (ln 7): Closure(4, [])
 11 (ln 7): Load(Local, 2)
 12 (ln 7): Method(instance, foo)
-13 (ln 11): Closure(5, [])
+13 (ln 11): Closure(5, [Upvalue { is_local_in_parent: true, index: 1 }])
 14 (ln 11): Load(Local, 2)
 15 (ln 11): Method(instance, method)
 16 (ln 13): Closure(6, [])
 17 (ln 13): Load(Local, 2)
 18 (ln 13): Method(static, foo)
-19 (ln 17): Closure(7, [])
+19 (ln 17): Closure(7, [Upvalue { is_local_in_parent: true, index: 1 }])
 20 (ln 17): Load(Local, 2)
 21 (ln 17): Method(static, classMethod)
 22 (ln 20): Load(Local, 2)
@@ -38,7 +38,7 @@
 27 (ln 21): Call(classMethod)
 28 (ln 21): Pop
 29 (ln 22): Pop
-30 (ln 22): Pop
+30 (ln 22): CloseUpvalues
 31 (ln 23): EndModule
 32 (ln 23): Return
 33 (ln 23): End
@@ -59,13 +59,12 @@ foo Code:
 02 (ln 7): End
 method Code:
 00 (ln 10): Load(Module, Class("System"))
-01 (ln 10): Load(Local, 0)
-02 (ln 10): Call(foo)
-03 (ln 10): Call(print(_))
-04 (ln 10): Pop
-05 (ln 11): Null
-06 (ln 11): Return
-07 (ln 11): End
+01 (ln 10): Load(Upvalue, 0)
+02 (ln 10): Call(print(_))
+03 (ln 10): Pop
+04 (ln 11): Null
+05 (ln 11): Return
+06 (ln 11): End
 foo Constants:
 00: "class method"
 foo Code:
@@ -74,10 +73,9 @@ foo Code:
 02 (ln 13): End
 classMethod Code:
 00 (ln 16): Load(Module, Class("System"))
-01 (ln 16): Load(Local, 0)
-02 (ln 16): Call(foo)
-03 (ln 16): Call(print(_))
-04 (ln 16): Pop
-05 (ln 17): Null
-06 (ln 17): Return
-07 (ln 17): End
+01 (ln 16): Load(Upvalue, 0)
+02 (ln 16): Call(print(_))
+03 (ln 16): Pop
+04 (ln 17): Null
+05 (ln 17): Return
+06 (ln 17): End

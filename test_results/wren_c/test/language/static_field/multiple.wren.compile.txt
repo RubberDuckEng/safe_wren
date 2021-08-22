@@ -1,1 +1,88 @@
-[wren_c/test/language/static_field/multiple line 3] Error at '__a': No upvalue support!
+<script> Constants:
+00: "Foo"
+01: Fn(set(_,_,_,_,_))
+02: Fn(write)
+03: 1
+04: 2
+05: 3
+06: 4
+07: 5
+<script> Code:
+00 (ln 1): Constant(0: "Foo")
+01 (ln 1): Load(Module, Class("Object"))
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 3): Null
+06 (ln 4): Null
+07 (ln 5): Null
+08 (ln 6): Null
+09 (ln 7): Null
+10 (ln 8): Closure(1, [Upvalue { is_local_in_parent: true, index: 1 }, Upvalue { is_local_in_parent: true, index: 2 }, Upvalue { is_local_in_parent: true, index: 3 }, Upvalue { is_local_in_parent: true, index: 4 }, Upvalue { is_local_in_parent: true, index: 5 }])
+11 (ln 8): Load(Module, Null)
+12 (ln 8): Method(static, set(_,_,_,_,_))
+13 (ln 16): Closure(2, [Upvalue { is_local_in_parent: true, index: 1 }, Upvalue { is_local_in_parent: true, index: 2 }, Upvalue { is_local_in_parent: true, index: 3 }, Upvalue { is_local_in_parent: true, index: 4 }, Upvalue { is_local_in_parent: true, index: 5 }])
+14 (ln 16): Load(Module, Null)
+15 (ln 16): Method(static, write)
+16 (ln 17): CloseUpvalues
+17 (ln 17): CloseUpvalues
+18 (ln 17): CloseUpvalues
+19 (ln 17): CloseUpvalues
+20 (ln 17): CloseUpvalues
+21 (ln 19): Load(Module, Null)
+22 (ln 19): Constant(3: 1)
+23 (ln 19): Constant(4: 2)
+24 (ln 19): Constant(5: 3)
+25 (ln 19): Constant(6: 4)
+26 (ln 19): Constant(7: 5)
+27 (ln 19): Call(set(_,_,_,_,_))
+28 (ln 19): Pop
+29 (ln 20): Load(Module, Null)
+30 (ln 20): Call(write)
+31 (ln 20): Pop
+32 (ln 26): EndModule
+33 (ln 26): Return
+34 (ln 26): End
+set(_,_,_,_,_) Code:
+00 (ln 3): Load(Local, 1)
+01 (ln 3): Store(Upvalue, 0)
+02 (ln 3): Pop
+03 (ln 4): Load(Local, 2)
+04 (ln 4): Store(Upvalue, 1)
+05 (ln 4): Pop
+06 (ln 5): Load(Local, 3)
+07 (ln 5): Store(Upvalue, 2)
+08 (ln 5): Pop
+09 (ln 6): Load(Local, 4)
+10 (ln 6): Store(Upvalue, 3)
+11 (ln 6): Pop
+12 (ln 7): Load(Local, 5)
+13 (ln 7): Store(Upvalue, 4)
+14 (ln 7): Pop
+15 (ln 8): Null
+16 (ln 8): Return
+17 (ln 8): End
+write Code:
+00 (ln 11): Load(Module, Class("System"))
+01 (ln 11): Load(Upvalue, 0)
+02 (ln 11): Call(print(_))
+03 (ln 11): Pop
+04 (ln 12): Load(Module, Class("System"))
+05 (ln 12): Load(Upvalue, 1)
+06 (ln 12): Call(print(_))
+07 (ln 12): Pop
+08 (ln 13): Load(Module, Class("System"))
+09 (ln 13): Load(Upvalue, 2)
+10 (ln 13): Call(print(_))
+11 (ln 13): Pop
+12 (ln 14): Load(Module, Class("System"))
+13 (ln 14): Load(Upvalue, 3)
+14 (ln 14): Call(print(_))
+15 (ln 14): Pop
+16 (ln 15): Load(Module, Class("System"))
+17 (ln 15): Load(Upvalue, 4)
+18 (ln 15): Call(print(_))
+19 (ln 15): Pop
+20 (ln 16): Null
+21 (ln 16): Return
+22 (ln 16): End

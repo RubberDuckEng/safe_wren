@@ -1,1 +1,34 @@
-[wren_c/test/language/closure/shadow_closure_with_local line 5] Error at 'foo': Variable is used but not defined.
+<script> Constants:
+00: "closure"
+01: Fn(new(_) block argument)
+<script> Code:
+00 (ln 2): Constant(0: "closure")
+01 (ln 3): Load(Module, Class("Fn"))
+02 (ln 10): Closure(1, [Upvalue { is_local_in_parent: true, index: 1 }])
+03 (ln 10): Call(new(_))
+04 (ln 10): Call(call())
+05 (ln 10): Pop
+06 (ln 11): CloseUpvalues
+07 (ln 12): EndModule
+08 (ln 12): Return
+09 (ln 12): End
+new(_) block argument Constants:
+00: "shadow"
+new(_) block argument Code:
+00 (ln 5): Load(Module, Class("System"))
+01 (ln 5): Load(Upvalue, 0)
+02 (ln 5): Call(print(_))
+03 (ln 5): Pop
+04 (ln 6): Constant(0: "shadow")
+05 (ln 7): Load(Module, Class("System"))
+06 (ln 7): Load(Local, 1)
+07 (ln 7): Call(print(_))
+08 (ln 7): Pop
+09 (ln 8): Pop
+10 (ln 9): Load(Module, Class("System"))
+11 (ln 9): Load(Upvalue, 0)
+12 (ln 9): Call(print(_))
+13 (ln 9): Pop
+14 (ln 10): Null
+15 (ln 10): Return
+16 (ln 10): End

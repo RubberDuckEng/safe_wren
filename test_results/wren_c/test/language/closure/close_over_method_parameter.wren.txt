@@ -1,6 +1,0 @@
-Unexpected error:
-[./test/language/closure/close_over_method_parameter line 8] Error at 'param': Could not resolve 'this'
-Expected return code 0 and got 65. Stderr:
-[./test/language/closure/close_over_method_parameter line 8] Error at 'param': Could not resolve 'this'
-
-Missing expected output "param" on line 14.

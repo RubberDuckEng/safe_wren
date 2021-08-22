@@ -1,7 +1,0 @@
-Unexpected error:
-[./test/language/closure/close_over_later_variable line 10] Error at 'b': Variable is used but not defined.
-Expected return code 0 and got 65. Stderr:
-[./test/language/closure/close_over_later_variable line 10] Error at 'b': Variable is used but not defined.
-
-Missing expected output "b" on line 10.
-Missing expected output "a" on line 11.

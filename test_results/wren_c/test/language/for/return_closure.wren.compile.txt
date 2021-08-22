@@ -1,1 +1,58 @@
-[wren_c/test/language/for/return_closure line 3] Error at 'i': Variable is used but not defined.
+<script> Constants:
+00: Fn(new(_) block argument)
+<script> Code:
+00 (ln 1): Load(Module, Class("Fn"))
+01 (ln 5): Closure(0, [])
+02 (ln 5): Call(new(_))
+03 (ln 5): Store(Module)
+04 (ln 5): Pop
+05 (ln 7): Load(Module, Null)
+06 (ln 7): Call(call())
+07 (ln 7): Store(Module)
+08 (ln 7): Pop
+09 (ln 8): Load(Module, Null)
+10 (ln 8): Call(call())
+11 (ln 8): Pop
+12 (ln 10): EndModule
+13 (ln 10): Return
+14 (ln 10): End
+new(_) block argument Constants:
+00: 1
+01: 2
+02: 3
+03: Fn(new(_) block argument)
+new(_) block argument Code:
+00 (ln 2): Load(Module, Class("List"))
+01 (ln 2): Call(new())
+02 (ln 2): Constant(0: 1)
+03 (ln 2): Call(addCore_(_))
+04 (ln 2): Constant(1: 2)
+05 (ln 2): Call(addCore_(_))
+06 (ln 2): Constant(2: 3)
+07 (ln 2): Call(addCore_(_))
+08 (ln 2): Null
+09 (ln 2): Load(Local, 1)
+10 (ln 2): Load(Local, 2)
+11 (ln 2): Call(iterate(_))
+12 (ln 2): Store(Local, 2)
+13 (ln 2): JumpIfFalse(9)
+14 (ln 2): Load(Local, 1)
+15 (ln 2): Load(Local, 2)
+16 (ln 2): Call(iteratorValue(_))
+17 (ln 3): Load(Module, Class("Fn"))
+18 (ln 3): Closure(3, [Upvalue { is_local_in_parent: true, index: 3 }])
+19 (ln 3): Call(new(_))
+20 (ln 3): Return
+21 (ln 4): CloseUpvalues
+22 (ln 4): Loop(14)
+23 (ln 4): Pop
+24 (ln 4): Pop
+25 (ln 5): Null
+26 (ln 5): Return
+27 (ln 5): End
+new(_) block argument Code:
+00 (ln 3): Load(Module, Class("System"))
+01 (ln 3): Load(Upvalue, 0)
+02 (ln 3): Call(print(_))
+03 (ln 3): Return
+04 (ln 3): End

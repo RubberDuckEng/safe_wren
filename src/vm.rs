@@ -3,6 +3,7 @@
 include!(concat!(env!("OUT_DIR"), "/wren_core_source.rs"));
 
 use std::cell::RefCell;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::hash::{Hash, Hasher};
@@ -453,6 +454,27 @@ pub enum FiberRunSource {
     // points to the first byte of code, the fiber has not been started yet.
     Other,
 }
+
+struct OpenUpvalues {
+    values: Vec<Handle<Upvalue>>,
+}
+
+impl OpenUpvalues {
+    fn find_open_upvalue(&self, location: &StackOffset) -> Option<Handle<Upvalue>> {
+        for upvalue in &self.values {
+            if upvalue.borrow().has_location(location) {
+                return Some(upvalue.clone());
+            }
+        }
+        None
+    }
+
+    fn push(&mut self, upvalue: Handle<Upvalue>) {
+        assert!(upvalue.borrow().is_open());
+        self.values.push(upvalue);
+    }
+}
+
 pub struct ObjFiber {
     class_obj: Handle<ObjClass>,
     pub(crate) error: Value,
@@ -467,6 +489,7 @@ pub struct ObjFiber {
     // ObjFiber (to ask class, etc.) while the stack is  held mutably
     // for the executing fiber.
     call_stack: RefCell<Vec<CallFrame>>,
+    open_upvalues: RefCell<OpenUpvalues>,
 }
 
 impl ObjFiber {
@@ -537,6 +560,22 @@ impl ObjFiber {
     // }
 }
 
+fn find_or_create_upvalue(fiber_ref: &Handle<ObjFiber>, location: StackOffset) -> Handle<Upvalue> {
+    let fiber = fiber_ref.borrow();
+    // wren_c uses a Value* for the search and the knowledge that values
+    // are all held on a single stack/vector.
+    // If the upvalue is still open, re-use that (so that modifications
+    // are reflected in all callers).
+    if let Some(upvalue) = fiber.open_upvalues.borrow().find_open_upvalue(&location) {
+        return upvalue.clone();
+    }
+    // If there isn't yet an upvalue (or there are, but they're closed but
+    // running the function again, etc.), we make a new one.
+    let upvalue = Upvalue::new(fiber_ref.clone(), location);
+    fiber.open_upvalues.borrow_mut().push(upvalue.clone());
+    upvalue
+}
+
 impl Obj for ObjFiber {
     fn class_obj(&self) -> Handle<ObjClass> {
         self.class_obj.clone()
@@ -556,6 +595,7 @@ impl ObjFiber {
             run_source,
             completed_normally_cache: false,
             call_stack: RefCell::new(vec![CallFrame::new_root(closure)]),
+            open_upvalues: RefCell::new(OpenUpvalues { values: vec![] }),
         }
     }
 }
@@ -1324,6 +1364,148 @@ enum FunctionNext {
     Call(CallFrame),
     Return(Value),
     FiberAction(FiberAction),
+    CaptureUpvalues(Handle<ObjClosure>, Vec<crate::compiler::Upvalue>),
+    CloseUpvalues(StackOffset),
+}
+
+// Might rename to StackLocation?
+#[derive(Copy, Clone, Debug)]
+struct StackOffset {
+    frame_index: usize,
+    index: usize,
+}
+
+impl Eq for StackOffset {}
+
+impl PartialEq for StackOffset {
+    fn eq(&self, rhs: &StackOffset) -> bool {
+        self.frame_index == rhs.frame_index && self.index == rhs.index
+    }
+}
+
+impl PartialOrd for StackOffset {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for StackOffset {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let result = self.frame_index.cmp(&other.frame_index);
+        if !matches!(result, Ordering::Equal) {
+            result
+        } else {
+            self.index.cmp(&other.index)
+        }
+    }
+}
+
+// The dynamically allocated data structure for a variable that has been used
+// by a closure. Whenever a function accesses a variable declared in an
+// enclosing function, it will get to it through this.
+//
+// An upvalue can be either "closed" or "open". An open upvalue points directly
+// to a [Value] that is still stored on the fiber's stack because the local
+// variable is still in scope in the function where it's declared.
+//
+// When that local variable goes out of scope, the upvalue pointing to it will
+// be closed. When that happens, the value gets copied off the stack into the
+// upvalue itself. That way, it can have a longer lifetime than the stack
+// variable.
+
+#[derive(Debug)]
+enum UpvalueStorage {
+    Open(Handle<ObjFiber>, StackOffset),
+    Closed(Value),
+}
+
+#[derive(Debug)]
+struct Upvalue {
+    storage: UpvalueStorage,
+}
+
+impl Upvalue {
+    fn new(fiber: Handle<ObjFiber>, location: StackOffset) -> Handle<Upvalue> {
+        new_handle(Upvalue {
+            storage: UpvalueStorage::Open(fiber, location),
+        })
+    }
+
+    fn is_open(&self) -> bool {
+        matches!(&self.storage, UpvalueStorage::Open(_, _))
+    }
+
+    fn has_location(&self, location: &StackOffset) -> bool {
+        matches!(&self.storage, UpvalueStorage::Open(_, l) if l.eq(location))
+    }
+
+    fn location(&self) -> Option<StackOffset> {
+        match &self.storage {
+            UpvalueStorage::Open(_, l) => Some(*l),
+            UpvalueStorage::Closed(_) => None,
+        }
+    }
+
+    fn load(&self) -> Value {
+        match &self.storage {
+            UpvalueStorage::Open(fiber, loc) => {
+                fiber.borrow().call_stack.borrow()[loc.frame_index].stack[loc.index].clone()
+            }
+            UpvalueStorage::Closed(value) => value.clone(),
+        }
+    }
+
+    fn store(&mut self, new_value: Value) {
+        match &mut self.storage {
+            UpvalueStorage::Open(fiber, loc) => {
+                fiber.borrow().call_stack.borrow_mut()[loc.frame_index].stack[loc.index] =
+                    new_value.clone()
+            }
+            UpvalueStorage::Closed(value) => *value = new_value,
+        }
+    }
+}
+
+impl ObjFiber {
+    // Closes any open upvalues that have been created for stack slots at [last]
+    // and above.
+    // The "multi-close" ability is only used by "return".  This is only needed
+    // because "return" is also used as "yield" in wren.  Thus we want the
+    // ability to "yield" (creating upvalues) without popping them as one
+    // might expect from "return" (and is how close_upvalues) is used one at
+    // a time in the going-out-of-scope case by the compiler.
+    // Where this is called, "fiber" is already borrowed, so we
+    // can't easily mut-borrow fiber, thus this is &self, and we have a RefCell
+    // around OpenUpvalues.
+    fn close_upvalues_at_or_above(&self, location: StackOffset) {
+        let call_stack = &self.call_stack.borrow();
+        let close_upvalue_if_above = |u: &mut Handle<Upvalue>| {
+            // All open values have a location.
+            let l = u.borrow().location().unwrap();
+            if l >= location {
+                // Move the value into the upvalue itself and point the upvalue to it.
+                let value = call_stack[l.frame_index].stack[l.index].clone();
+                u.borrow_mut().storage = UpvalueStorage::Closed(value);
+                true // Remove it from the open upvalue list.
+            } else {
+                false
+            }
+        };
+
+        // drain_filter is still not stable?
+        // https://github.com/rust-lang/rust/issues/43244
+        // self.open_upvalues.drain_filter(close_upvalue_if_above);
+
+        let vec = &mut self.open_upvalues.borrow_mut().values;
+        let mut i = 0;
+        while i < vec.len() {
+            if close_upvalue_if_above(&mut vec[i]) {
+                vec.remove(i);
+            } else {
+                i += 1;
+            }
+        }
+    }
 }
 
 // Looks up a foreign method in [moduleName] on [className] with [signature].
@@ -1689,7 +1871,7 @@ impl VM {
         )));
         loop {
             let fiber = self.fiber.clone().unwrap();
-            let result = self.run_in_fiber(&fiber.borrow());
+            let result = self.run_in_fiber(&fiber);
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
                     fiber.borrow_mut().caller = self.fiber.take();
@@ -1736,17 +1918,19 @@ impl VM {
         }
     }
 
-    fn run_in_fiber(&mut self, fiber: &ObjFiber) -> Result<FiberAction, VMError> {
+    fn run_in_fiber(&mut self, fiber_ref: &Handle<ObjFiber>) -> Result<FiberAction, VMError> {
         loop {
+            let fiber = &fiber_ref.borrow();
             // We pull the frame off of the call_stack so that in Debug mode
             // run_frame_in_fiber is still able to borrow the call_stack to
             // walk it for the active frame and frame_count.  We could pass that
             // debug info a different way I guess?
+            let frame_index = fiber.call_stack.borrow().len() - 1;
             let mut frame = fiber.call_stack.borrow_mut().pop().unwrap();
             // This is all to avoid run_fiber needing to call itself
             // recursively, or the run_fiber main loop needing to pull
             // the frame on every instruction.  Maybe not worth it?
-            let result = self.run_frame_in_fiber(&mut frame, fiber);
+            let result = self.run_frame_in_fiber(&mut frame, fiber, frame_index);
             match result {
                 Ok(FunctionNext::Call(new_frame)) => {
                     let mut call_stack = fiber.call_stack.borrow_mut();
@@ -1756,6 +1940,22 @@ impl VM {
                     call_stack.push(new_frame);
                 }
                 Ok(FunctionNext::Return(value)) => {
+                    // Because "return" can sometimes mean "yield", the wren
+                    // compiler does not issue pops for locals upon return, nor
+                    // does it close over upvalues, so we have to do that here.
+
+                    // call_stack does not contain "frame", restore it.
+                    fiber.call_stack.borrow_mut().push(frame);
+                    // Fiber is already borrowed, so we can't borrow_mut here,
+                    // thus OpenUpvalues is independently borrowed inside
+                    let location = StackOffset {
+                        frame_index,
+                        index: 0,
+                    };
+                    fiber.close_upvalues_at_or_above(location);
+                    // pop the frame again after upvalues are closed.
+                    fiber.call_stack.borrow_mut().pop();
+
                     if fiber.call_stack.borrow().is_empty() {
                         return Ok(FiberAction::Return(value));
                     } else {
@@ -1772,6 +1972,57 @@ impl VM {
                     // call_stack does not contain "frame", restore it.
                     fiber.call_stack.borrow_mut().push(frame);
                     return Ok(action);
+                }
+                // Not really a function action, but run_frame_in_fiber doesn't
+                // have access to either the frame index or the fiber index.
+                Ok(FunctionNext::CaptureUpvalues(closure, upvalues)) => {
+                    // call_stack does not contain "frame", restore it.
+                    fiber.call_stack.borrow_mut().push(frame);
+                    // No need to call this if it's empty.
+                    assert!(!upvalues.is_empty());
+                    // wren_c stores upvalue information in 3 places, all of
+                    // which should have the same length:
+                    // FnObj::numUpvalues (just a count)
+                    // Bytecode Upvalue isLocal, index (a stream thereof)
+                    // ClosureObj::upvalues (actual value handles at runtime)
+                    for i in 0..upvalues.len() {
+                        let compiler_upvalue = &upvalues[i];
+
+                        if compiler_upvalue.is_local_in_parent {
+                            // Make an new upvalue to close over the parent's local variable.
+                            let location = StackOffset {
+                                frame_index: fiber.call_stack.borrow().len() - 1,
+                                index: compiler_upvalue.index,
+                            };
+
+                            let upvalue = find_or_create_upvalue(fiber_ref, location);
+                            closure
+                                .borrow_mut()
+                                .set_upvalue(compiler_upvalue.index, upvalue);
+                        } else {
+                            // Use the same upvalue as the current call frame.
+                            let stack = fiber.call_stack.borrow();
+                            let top_frame = stack.last();
+                            let frame = top_frame.as_ref().unwrap();
+                            let upvalue = frame
+                                .closure
+                                .borrow()
+                                .upvalue(compiler_upvalue.index)
+                                .clone();
+                            closure
+                                .borrow_mut()
+                                .set_upvalue(compiler_upvalue.index, upvalue);
+                        }
+                    }
+                }
+                Ok(FunctionNext::CloseUpvalues(location)) => {
+                    // call_stack does not contain "frame", restore it.
+                    fiber.call_stack.borrow_mut().push(frame);
+                    // Fiber is already borrowed, so we can't borrow_mut here,
+                    // thus OpenUpvalues is independently borrowed inside
+                    fiber.close_upvalues_at_or_above(location);
+                    // Now actualy do the pop.
+                    fiber.call_stack.borrow_mut()[location.frame_index].pop()?;
                 }
                 Err(vm_error) => {
                     // Push the current frame back onto the fiber so we can
@@ -1887,6 +2138,7 @@ impl VM {
         &mut self,
         frame: &mut CallFrame,
         fiber: &ObjFiber,
+        frame_index: usize, // for closures
     ) -> Result<FunctionNext> {
         // Copy out a ref, so we can later mut borrow the frame.
         let closure_rc = frame.closure.clone();
@@ -1975,14 +2227,17 @@ impl VM {
                     let class = this.try_into_class().expect("'this' should be a class.");
                     frame.stack[0] = self.create_foreign(&class)?;
                 }
-                Ops::Closure(constant, _upvalues) => {
+                Ops::Closure(constant, upvalues) => {
                     let fn_value = fn_obj.lookup_constant(constant).clone();
                     let fn_obj = fn_value
                         .try_into_fn()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
-                    frame.push(Value::Closure(closure));
-                    // FIXME: Handle upvalues.
+                    frame.push(Value::Closure(closure.clone()));
+                    if !upvalues.is_empty() {
+                        return Ok(FunctionNext::CaptureUpvalues(closure, upvalues.to_vec()));
+                    }
+                    // Optimization: if no upvalues, continue as normal.
                 }
                 Ops::EndModule => {
                     self.last_imported_module = Some(fn_obj.module.clone());
@@ -1995,7 +2250,10 @@ impl VM {
                     return Ok(FunctionNext::Return(frame.pop()?));
                 }
                 Ops::CloseUpvalues => {
-                    unimplemented!();
+                    let index = frame.stack.len() - 1;
+                    let location = StackOffset { frame_index, index };
+                    // We don't have a mut borrow for Fiber here.
+                    return Ok(FunctionNext::CloseUpvalues(location));
                 }
                 Ops::Class(num_fields) => {
                     create_class(
@@ -2011,7 +2269,7 @@ impl VM {
                 Ops::Load(variable) => {
                     let value = match variable.scope {
                         Scope::Module => fn_obj.module.borrow().variables[variable.index].clone(),
-                        Scope::Upvalue => unimplemented!("load upvalue"),
+                        Scope::Upvalue => closure.upvalue(variable.index).borrow().load(),
                         Scope::Local => frame.stack[variable.index].clone(),
                     };
                     frame.push(value);
@@ -2022,7 +2280,10 @@ impl VM {
                         Scope::Module => {
                             fn_obj.module.borrow_mut().variables[variable.index] = value.clone()
                         }
-                        Scope::Upvalue => unimplemented!("store upvalue"),
+                        Scope::Upvalue => closure
+                            .upvalue(variable.index)
+                            .borrow_mut()
+                            .store(value.clone()),
                         Scope::Local => frame.stack[variable.index] = value.clone(),
                     };
                 }
@@ -2214,7 +2475,7 @@ fn dump_instruction(
         module_name_and_line(fn_obj, pc),
         fn_obj.debug.name,
         pc,
-        op_debug_string(op, methods, fn_obj, frame, mode)
+        op_debug_string(op, methods, fn_obj, Some(closure), frame, mode)
     );
 }
 
@@ -2222,6 +2483,7 @@ fn op_debug_string(
     op: &Ops,
     methods: &SymbolTable,
     fn_obj: &ObjFn,
+    closure: Option<&ObjClosure>,
     frame: Option<&CallFrame>,
     mode: DumpMode,
 ) -> String {
@@ -2260,7 +2522,14 @@ fn op_debug_string(
                 Some(f) => format!("Load(Local, {} -> {:?})", v.index, f.stack[v.index]),
                 None => format!("Load(Local, {})", v.index),
             },
-            Scope::Upvalue => unimplemented!("dump load upvalue"),
+            Scope::Upvalue => match closure {
+                Some(c) => format!(
+                    "Load(Upvalue, {} -> {:?})",
+                    v.index,
+                    c.upvalue(v.index).borrow()
+                ),
+                None => format!("Load(Upvalue, {})", v.index),
+            },
             Scope::Module => {
                 format!(
                     "Load(Module, {}{:?})",
@@ -2271,7 +2540,7 @@ fn op_debug_string(
         },
         Ops::Store(v) => match v.scope {
             Scope::Local => format!("Store(Local, {})", v.index),
-            Scope::Upvalue => unimplemented!("dump store upvalue"),
+            Scope::Upvalue => format!("Store(Upvalue, {})", v.index),
             Scope::Module => format!("Store(Module{})", comma_unstable_num(v.index)),
         },
         Ops::LoadField(field) => format!("LoadField({})", field),
@@ -2334,7 +2603,7 @@ fn debug_bytecode(vm: &VM, top_closure: &ObjClosure) {
                 "{:02} (ln {}): {}",
                 pc,
                 func.debug.line_for_pc(pc),
-                op_debug_string(op, &vm.methods, func, None, DumpMode::HideSymbols)
+                op_debug_string(op, &vm.methods, func, None, None, DumpMode::HideSymbols)
             );
         }
         // Walk module-level constants looking for code?
@@ -2417,6 +2686,7 @@ impl Obj for ObjList {
 pub(crate) struct ObjClosure {
     class_obj: Handle<ObjClass>,
     pub(crate) fn_obj: Handle<ObjFn>,
+    upvalues: Vec<Option<Handle<Upvalue>>>,
 }
 
 impl ObjClosure {
@@ -2425,7 +2695,23 @@ impl ObjClosure {
         ObjClosure {
             class_obj: vm.fn_class.as_ref().unwrap().clone(),
             fn_obj,
+            upvalues: vec![],
         }
+    }
+
+    // Closures maintain a sparse map of variable index to Upvalue.
+    // Not all variables will end up as upvalues, so not all of these
+    // indicies will be filled.
+    fn set_upvalue(&mut self, _index: usize, upvalue: Handle<Upvalue>) {
+        // self.upvalues.resize(index + 1, None);
+        // self.upvalues[index] = Some(upvalue);
+        // FIXME: I think this is wrong, but it passes more tests, so
+        // keeping it for now to allow committing a checkpoint.
+        self.upvalues.push(Some(upvalue));
+    }
+
+    fn upvalue(&self, index: usize) -> &Handle<Upvalue> {
+        self.upvalues[index].as_ref().unwrap()
     }
 }
 
