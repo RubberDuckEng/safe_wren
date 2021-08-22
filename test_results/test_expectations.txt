@@ -81,10 +81,16 @@ wren_c/test/language/class/attributes/literals.wren
 wren_c/test/language/class/attributes/invalid_expression.wren
 wren_c/test/language/class/attributes/methods.wren
 
-# closures / upvalues
+# Methods should shadow closure variables
 wren_c/test/language/variable/local_outside_method.wren
-wren_c/test/random/sample_count_multiple.wren
+
+# Expects 0x1234567890ABCDEF to be a valid number, despite it being larger
+# than Num.maxSafeInteger.  This might be WONTFIX?
+# wren_c allows the parsing of it, but does not represent it precisely.
 wren_c/example/syntax.wren
+
+# Times out, needs profiling.
+wren_c/test/random/sample_count_multiple.wren
 
 # WONTFIX? wren_rust doesn't currently enforce MAX_JUMP, but even
 # if we did, our opcode stream is different from wren_c's
