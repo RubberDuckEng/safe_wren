@@ -1,3 +1,0 @@
-Expected output "Bar field" on line 30 and got "Foo field".
-Expected output "Bar field" on line 33 and got "new foo value".
-Expected output "new foo value" on line 35 and got "new bar value".

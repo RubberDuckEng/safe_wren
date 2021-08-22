@@ -83,9 +83,6 @@ wren_c/test/language/class/attributes/methods.wren
 
 # closures / upvalues
 wren_c/test/language/variable/local_outside_method.wren
-wren_c/test/language/inheritance/inherited_fields_in_closure.wren
-wren_c/test/language/super/closure.wren
-wren_c/test/language/super/super_in_closure_in_inherited_method.wren
 wren_c/test/random/sample_count_multiple.wren
 wren_c/example/syntax.wren
 

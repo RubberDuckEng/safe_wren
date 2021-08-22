@@ -1560,7 +1560,11 @@ fn bind_method_code(class: &ObjClass, fn_obj: &mut ObjFn) {
             }
             Ops::LoadField(field) => *field += field_adjustment(class),
             Ops::StoreField(field) => *field += field_adjustment(class),
-            // FIXME: recurse into nested closures
+            Ops::Closure(constant, _) => {
+                // Bind the nested closure too.
+                let fn_obj = fn_obj.constants[constant.as_index()].try_into_fn().unwrap();
+                bind_method_code(class, &mut fn_obj.borrow_mut());
+            }
             _ => {}
         };
     }

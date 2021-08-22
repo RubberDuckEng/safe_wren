@@ -562,6 +562,7 @@ wren_c/test/language/inheritance/inherit_from_num.wren
 wren_c/test/language/inheritance/inherit_from_range.wren
 wren_c/test/language/inheritance/inherit_from_string.wren
 wren_c/test/language/inheritance/inherit_methods.wren
+wren_c/test/language/inheritance/inherited_fields_in_closure.wren
 wren_c/test/language/inheritance/is.wren
 wren_c/test/language/interpolation/empty.wren
 wren_c/test/language/interpolation/interpolation.wren
@@ -697,9 +698,11 @@ wren_c/test/language/string/literals.wren
 wren_c/test/language/super/call_different_arity.wren
 wren_c/test/language/super/call_other_method.wren
 wren_c/test/language/super/call_same_method.wren
+wren_c/test/language/super/closure.wren
 wren_c/test/language/super/implicit_name.wren
 wren_c/test/language/super/indirectly_inherited.wren
 wren_c/test/language/super/no_superclass_method.wren
+wren_c/test/language/super/super_in_closure_in_inherited_method.wren
 wren_c/test/language/super/super_in_inherited_method.wren
 wren_c/test/language/super/super_in_top_level_function.wren
 wren_c/test/language/this/closure.wren
