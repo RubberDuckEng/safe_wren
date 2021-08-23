@@ -1,1 +1,0 @@
-Expected output "2.86" on line 3 and got "2.8600000000000003".

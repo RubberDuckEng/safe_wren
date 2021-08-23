@@ -1,6 +1,6 @@
 // analog to wren_core.c from wren_c.
 
-use crate::vm::*;
+use crate::{float_to_string, vm::*};
 use std::collections::VecDeque;
 use std::ops::*;
 
@@ -254,25 +254,10 @@ fn wren_num_to_string(num: f64) -> String {
         return "-0".into();
     }
 
-    // wren_c uses sprintf(buffer, "%.14g", value)
-    // It's not clear how to set a maximum precision without also
-    // forcing rust to use that precision always.
-    // e.g. "{:.14}" would always print 14 digits.
+    // wren_c uses sprintf(buffer, "%.14g", value).  Rust doesn't
+    // support %g, so we had to write our own.
     // See also https://github.com/rust-lang/rfcs/issues/844
-
-    // Hacks to get us closer:
-    let log_x = num.abs().log10();
-    if (-4.0..=14.0).contains(&log_x) || num == 0.0 {
-        format!("{}", num)
-    } else {
-        let sci = format!("{:e}", num);
-        // rust prints "1e10" rather than "1e+10" which wren_c expects.
-        if num < 1.0 {
-            sci
-        } else {
-            sci.replace("e", "e+")
-        }
-    }
+    float_to_string::float_to_shortest_string(num, 14)
 }
 
 fn num_to_string(_vm: &VM, args: &[Value]) -> Result<Value> {

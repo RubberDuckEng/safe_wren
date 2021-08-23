@@ -1,2 +1,0 @@
-Expected output "1.5707963267949" on line 1 and got "1.5707963267948966".
-Expected output "3.1415926535898" on line 3 and got "3.141592653589793".

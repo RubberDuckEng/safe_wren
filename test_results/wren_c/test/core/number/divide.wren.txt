@@ -1,1 +1,0 @@
-Expected output "-30.85" on line 2 and got "-30.849999999999998".

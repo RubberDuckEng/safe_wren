@@ -1,4 +1,0 @@
-Expected output "0.3" on line 6 and got "0.3000000000000007".
-Expected output "-0.3" on line 8 and got "-0.3000000000000007".
-Expected output "0.23456789012345" on line 12 and got "0.23456789012345003".
-Expected output "-0.23456789012345" on line 13 and got "-0.23456789012345003".

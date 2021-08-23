@@ -10,6 +10,7 @@ pub mod wren;
 mod ffi {
     pub mod c_api;
 }
+mod float_to_string;
 
 extern crate libc;
 

@@ -114,25 +114,6 @@ wren_c/test/api/resolution.wren
 wren_c/test/api/slots.wren
 wren_c/test/api/user_data.wren
 
-# Num.toString doesn't print correct # of digits or round.
-wren_c/test/core/number/acos.wren
-wren_c/test/core/number/asin.wren
-wren_c/test/core/number/atan.wren
-wren_c/test/core/number/atan2.wren
-wren_c/test/core/number/cbrt.wren
-wren_c/test/core/number/divide.wren
-wren_c/test/core/number/exp.wren
-wren_c/test/core/number/fraction.wren
-wren_c/test/core/number/largest.wren
-wren_c/test/core/number/log.wren
-wren_c/test/core/number/log2.wren
-wren_c/test/core/number/maxSafeInteger.wren
-wren_c/test/core/number/minSafeInteger.wren
-wren_c/test/core/number/minus.wren
-wren_c/test/core/number/smallest.wren
-wren_c/test/core/number/sqrt.wren
-wren_c/test/core/number/tan.wren
-
 # Times out on linux, stack-overflow on windows
 # Will require fancier tear-down behavior to avoid
 # long Drop recursion chains.
