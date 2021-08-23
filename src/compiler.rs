@@ -3153,8 +3153,8 @@ pub enum DeclarationError {
 fn map_declaration_error(error: DeclarationError, ctx: &ParseContext) -> WrenError {
     let error_string = match error {
         DeclarationError::VariableNameTooLong => format!(
-            "Cannot declare more than {} variables in one scope.",
-            MAX_LOCALS,
+            "Variable name cannot be longer than {} characters.",
+            MAX_VARIABLE_NAME,
         ),
         DeclarationError::DefinitionError(e) => match e {
             DefinitionError::LocalUsedBeforeDefinition(name, line) => format!(

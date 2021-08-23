@@ -1,8 +1,5 @@
-Expected runtime error "Cannot call root fiber." and got:
-
-Expected stack trace and got:
-Expected return code 70 and got 65. Stderr:
-[./test/api/call_wren_call_root line 8] Error at 'root': Could not resolve 'this'
+Expected runtime error "Cannot call root fiber." and got none.
+Expected return code 70 and got 0. Stderr:
 
 Missing expected output "begin root" on line 4.
 Missing expected output "in new fiber" on line 7.
