@@ -5,6 +5,7 @@
 // into a separate executable.
 
 use std::env;
+use std::fs;
 
 extern crate wren_rust;
 
@@ -12,7 +13,7 @@ use wren_rust::wren_debug::{interpret_and_print_vm, print_bytecode, print_tokens
 
 fn print_usage() {
     println!("Usage:");
-    println!("wren_debug MODE PATH_OR_STRING");
+    println!("wren_debug MODE PATH | --string STRING");
     println!("");
     println!("MODE        DESCRIPTION");
     println!("tokenize -> print token stream");
@@ -20,20 +21,46 @@ fn print_usage() {
     println!("interpet -> interpet with debugging enabled");
 }
 
-fn main() {
+struct ArgsResult {
+    command: String,
+    bytes: Vec<u8>,
+    module_name: String,
+}
+
+fn parse_args() -> ArgsResult {
     let args: Vec<_> = env::args().collect();
     if args.len() < 2 {
         print_usage();
-        return;
+        std::process::exit(1);
     }
-    let command = &args[1];
-    if command.eq("tokenize") {
-        print_tokens(&args[2]);
-    } else if command.eq("compile") {
-        print_bytecode(&args[2]);
-    } else if command.eq("interpret") {
-        interpret_and_print_vm(&args[2]);
+    let command = args[1].clone();
+    if args[2].eq("--string") {
+        ArgsResult {
+            command,
+            bytes: args[2].as_bytes().into(),
+            module_name: "<inline>".into(),
+        }
     } else {
-        print_usage();
+        let path = &args[2];
+        let bytes = fs::read(path).unwrap_or_else(|e| {
+            eprintln!("Failed to open file \"{}\": {}", path, e);
+            std::process::exit(-1);
+        });
+        let module_name = path.strip_prefix(".wren").unwrap_or(path).into();
+        ArgsResult {
+            command,
+            bytes,
+            module_name,
+        }
+    }
+}
+
+fn main() {
+    let args = parse_args();
+    match args.command.as_str() {
+        "tokenize" => print_tokens(args.bytes),
+        "compile" => print_bytecode(args.bytes, args.module_name),
+        "interpret" => interpret_and_print_vm(args.bytes, args.module_name),
+        _ => print_usage(),
     }
 }

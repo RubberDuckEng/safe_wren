@@ -1,7 +1,4 @@
-// Uses APIs which are not public, eventually to be split from
-// wren_test (which only uses public APIs).
-
-use std::fs;
+// For debugging wren_rust.  Uses APIs which are not public.
 
 use crate::compiler::{compile_in_module, lex, InputManager, WrenError};
 use crate::test::test_config;
@@ -13,7 +10,7 @@ fn print_compile_error(e: WrenError) {
     eprintln!("[{} line {}] {}", e.module, e.line, e.error);
 }
 
-// wren_test expects:
+// wren_test uses:
 // Index must be a number.
 // [.test/core/string.../iterator_value_not_num line 1] in (script)
 fn print_runtime_error(e: RuntimeError) {
@@ -26,37 +23,14 @@ fn print_runtime_error(e: RuntimeError) {
     }
 }
 
-struct CompileInput {
-    input: InputManager,
-    module_name: String,
-}
-
-fn input_from_source_or_path(source_or_path: &str) -> CompileInput {
-    if source_or_path.ends_with(".wren") {
-        let source = fs::read_to_string(source_or_path).unwrap_or_else(|_| {
-            eprintln!("Could not find file \"{}\".", source_or_path);
-            std::process::exit(-1);
-        });
-        CompileInput {
-            input: InputManager::from_string(source),
-            module_name: source_or_path.strip_suffix(".wren").unwrap().into(),
-        }
-    } else {
-        CompileInput {
-            input: InputManager::from_string(source_or_path.to_string()),
-            module_name: "<inline>".into(),
-        }
-    }
-}
-
-pub fn print_tokens(source_or_path: &str) {
-    let mut input = input_from_source_or_path(source_or_path);
-    let result = lex(&mut input.input);
+pub fn print_tokens(bytes: Vec<u8>) {
+    let mut input = InputManager::from_bytes(bytes);
+    let result = lex(&mut input);
 
     if let Ok(tokens) = result {
         let mut as_string = Vec::new();
         for token in tokens {
-            as_string.push(format!("{:?} '{}'", token.token, token.name(&input.input)));
+            as_string.push(format!("{:?} '{}'", token.token, token.name(&input)));
         }
         println!("Tokens: [{}]", as_string.join(", "));
     } else {
@@ -64,21 +38,21 @@ pub fn print_tokens(source_or_path: &str) {
     }
 }
 
-pub fn print_bytecode(source_or_path: &str) {
+pub fn print_bytecode(bytes: Vec<u8>, module_name: String) {
+    let input = InputManager::from_bytes(bytes);
     let mut vm = VM::new(test_config());
-    let input = input_from_source_or_path(source_or_path);
-    let result = compile_in_module(&mut vm, &input.module_name, input.input);
+    let result = compile_in_module(&mut vm, &module_name, input);
     match result {
         Ok(closure) => wren_debug_bytecode(&vm, &closure.borrow()),
         Err(e) => print_compile_error(e),
     }
 }
 
-pub fn interpret_and_print_vm(source_or_path: &str) {
+pub fn interpret_and_print_vm(bytes: Vec<u8>, module_name: String) {
+    let input = InputManager::from_bytes(bytes);
     let mut vm = VM::new(test_config());
     vm.config.debug_level = Some(DebugLevel::NonCore);
-    let input = input_from_source_or_path(source_or_path);
-    let result = compile_in_module(&mut vm, &input.module_name, input.input);
+    let result = compile_in_module(&mut vm, &module_name, input);
     match result {
         Ok(closure) => match vm.run(closure) {
             Ok(_) => println!("{:?}", vm),
