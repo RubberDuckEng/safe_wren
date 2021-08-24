@@ -7,8 +7,8 @@ use wren_rust::*;
 
 fuzz_target!(|data: &[u8]| {
     if let Ok(source) = std::str::from_utf8(data) {
-        let config = WrenConfiguration::default();
-        let mut vm = WrenVM::new(config);
-        wren_interpret(&mut vm, "module", source.to_string());
+        let config = Configuration::default();
+        let mut vm = VM::new(config);
+        vm.interpret("module", source.to_string());
     }
 });
