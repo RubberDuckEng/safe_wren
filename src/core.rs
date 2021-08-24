@@ -210,7 +210,18 @@ fn num_clamp(_vm: &VM, args: &[Value]) -> Result<Value> {
     let value = validate_num(&args[0], "this")?;
     let min = validate_num(&args[1], "Min value")?;
     let max = validate_num(&args[2], "Max value")?;
-    Ok(Value::Num(value.clamp(min, max)))
+
+    // Rust's f64::clamp panic's if min > max.
+    let result = if value < min {
+        min
+    } else {
+        if value > max {
+            max
+        } else {
+            value
+        }
+    };
+    Ok(Value::Num(result))
 }
 
 num_unary_op!(num_sin, sin, Num);
