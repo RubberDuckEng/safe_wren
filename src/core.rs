@@ -132,12 +132,12 @@ overflowing_bitwise_num_op!(num_bitwise_shr, overflowing_shr, Num);
 fn num_range_inclusive(vm: &VM, args: &[Value]) -> Result<Value> {
     let start = validate_num(&args[0], "Left hand side of range")?;
     let end = validate_num(&args[1], "Right hand side of range")?;
-    Ok(Value::Range(wren_new_range(vm, start, end, true)))
+    Ok(Value::Range(vm.new_range(start, end, true)))
 }
 fn num_range_exclusive(vm: &VM, args: &[Value]) -> Result<Value> {
     let start = validate_num(&args[0], "Left hand side of range")?;
     let end = validate_num(&args[1], "Right hand side of range")?;
-    Ok(Value::Range(wren_new_range(vm, start, end, false)))
+    Ok(Value::Range(vm.new_range(start, end, false)))
 }
 num_binary_op!(num_atan2, atan2, Num, "x value");
 num_binary_op!(num_pow, powf, Num, "Power value");
@@ -447,7 +447,7 @@ fn fiber_new(vm: &VM, args: &[Value]) -> Result<Value> {
             "Function cannot take more than one parameter.",
         ))
     } else {
-        Ok(Value::Fiber(wren_new_fiber(vm, closure)))
+        Ok(Value::Fiber(vm.new_fiber(closure)))
     }
 }
 
@@ -797,7 +797,6 @@ fn string_iterate_byte(_vm: &VM, args: &[Value]) -> Result<Value> {
     })
 }
 
-// Is this API?
 fn wren_string_code_point_at(string: String, index: usize) -> Value {
     let mut chars = string.char_indices();
     let mut previous: char = char::default();
@@ -850,7 +849,7 @@ fn fn_to_string(_vm: &VM, _args: &[Value]) -> Result<Value> {
 }
 
 fn map_new(vm: &VM, _args: &[Value]) -> Result<Value> {
-    Ok(Value::Map(wren_new_map(vm)))
+    Ok(Value::Map(vm.new_map()))
 }
 
 fn map_subscript(vm: &VM, args: &[Value]) -> Result<Value> {
@@ -874,7 +873,7 @@ fn map_subscript_setter(vm: &VM, args: &[Value]) -> Result<Value> {
     Ok(value.clone())
 }
 
-fn wren_map_is_valid_key(arg: &Value) -> bool {
+fn map_is_valid_key(arg: &Value) -> bool {
     matches!(
         arg,
         Value::Boolean(_)
@@ -887,7 +886,7 @@ fn wren_map_is_valid_key(arg: &Value) -> bool {
 }
 
 fn validate_key(_vm: &VM, arg: &Value) -> Result<bool> {
-    if wren_map_is_valid_key(arg) {
+    if map_is_valid_key(arg) {
         Ok(true)
     } else {
         Err(VMError::from_str("Key must be a value type."))
@@ -986,11 +985,11 @@ fn list_filled(vm: &VM, args: &[Value]) -> Result<Value> {
         return Err(VMError::from_str("Size cannot be negative."));
     }
     let contents = vec![args[2].clone(); size as usize];
-    Ok(Value::List(wren_new_list(vm, contents)))
+    Ok(Value::List(vm.new_list(contents)))
 }
 
 fn list_new(vm: &VM, _args: &[Value]) -> Result<Value> {
-    Ok(Value::List(wren_new_list(vm, Vec::new())))
+    Ok(Value::List(vm.new_list(Vec::new())))
 }
 
 struct Range {
@@ -1074,14 +1073,14 @@ fn list_subscript(vm: &VM, args: &[Value]) -> Result<Value> {
         Value::Range(r) => {
             let range = calculate_range(&r.borrow(), list.borrow().len())?;
             if range.range.is_empty() {
-                return Ok(Value::List(wren_new_list(vm, Vec::new())));
+                return Ok(Value::List(vm.new_list(Vec::new())));
             }
             let slice = &list.borrow().elements[range.range];
             let mut vec = slice.to_vec();
             if range.reverse {
                 vec.reverse();
             }
-            Ok(Value::List(wren_new_list(vm, vec)))
+            Ok(Value::List(vm.new_list(vec)))
         }
         _ => Err(VMError::from_str("Subscript must be a number or a range.")),
     }
@@ -1344,7 +1343,7 @@ pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
 
     // Now we can define Class, which is a subclass of Object.
     let class = define_class(core_module, "Class");
-    wren_bind_superclass(&mut class.borrow_mut(), &object);
+    bind_superclass(&mut class.borrow_mut(), &object);
     primitive!(vm, class, "name", class_name);
     primitive!(vm, class, "supertype", class_supertype);
     primitive!(vm, class, "toString", class_to_string);
@@ -1356,7 +1355,7 @@ pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
     object.borrow_mut().class = Some(object_metaclass.clone());
     object_metaclass.borrow_mut().class = Some(class.clone());
     class.borrow_mut().class = Some(class.clone());
-    wren_bind_superclass(&mut object_metaclass.borrow_mut(), &class);
+    bind_superclass(&mut object_metaclass.borrow_mut(), &class);
 
     primitive_static!(vm, object, "same(_,_)", object_same);
 
@@ -1390,8 +1389,12 @@ fn create_and_define_class(
     name: &str,
     superclass: &Handle<ObjClass>,
 ) -> Handle<ObjClass> {
-    let class = wren_new_class(vm, &superclass, ClassSource::Internal, name.into()).unwrap();
-    wren_define_variable(module, name, Value::Class(class.clone())).unwrap();
+    let class = vm
+        .new_class(&superclass, ClassSource::Internal, name.into())
+        .unwrap();
+    module
+        .define_variable(name, Value::Class(class.clone()))
+        .unwrap();
     class
 }
 

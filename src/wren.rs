@@ -219,7 +219,7 @@ impl VM {
 
     // Should this take a &str?
     pub fn interpret(&mut self, module: &str, source: String) -> InterpretResult {
-        match crate::compiler::wren_compile_source(self, module, source) {
+        match self.compile_source(module, source) {
             Err(error) => {
                 self.report_compile_error(module, error.line, &error.error.to_string());
                 InterpretResult::CompileError

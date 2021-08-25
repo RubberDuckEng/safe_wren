@@ -58,8 +58,8 @@ impl Arity {
 pub(crate) type JumpOffset = u16;
 
 use crate::vm::{
-    new_handle, wren_define_variable, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn,
-    Symbol, SymbolTable, Value, MAX_FIELDS, VM,
+    new_handle, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn, Symbol, SymbolTable,
+    Value, MAX_FIELDS, VM,
 };
 
 // Maximum times grammar is allowed to recurse through parse_precedence
@@ -2495,7 +2495,7 @@ fn resolve_non_module(ctx: &mut ParseContext, name: &str) -> Option<Variable> {
 
 // wren_c just checks if the first byte is lowercase.
 // this exists to be shared with vm.rs.
-pub(crate) fn wren_is_local_name(name: &str) -> bool {
+pub(crate) fn is_local_name(name: &str) -> bool {
     matches!(name.as_bytes().get(0).unwrap(), b'a'..=b'z')
 }
 
@@ -2551,7 +2551,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
 
     // If we're inside a method and the name is lowercase, treat it as a method
     // on this.
-    if wren_is_local_name(&name) && ctx.inside_class_definition() {
+    if is_local_name(&name) && ctx.inside_class_definition() {
         load_this(ctx)?;
         return named_call(ctx, can_assign, CallType::Instance);
     }
@@ -2564,7 +2564,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
             // Implicitly define a module-level variable in
             // the hopes that we get a real definition later.
             let line_value = Value::from_usize(ctx.line_number());
-            match ctx.module.borrow_mut().define_variable(&name, line_value) {
+            match ctx.module.borrow_mut().add_variable(&name, line_value) {
                 Ok(index) => index,
                 Err(ModuleLimitError::TooManyVariables) => {
                     return Err(ctx.error_str("Too many module variables defined."));
@@ -3198,7 +3198,8 @@ impl Compiler {
         if matches!(self.scope_depth, ScopeDepth::Module) {
             // Error handling missing.
             // Error handling should occur inside wren_define_variable, no?
-            return Ok(wren_define_variable(module, &name, Value::Null)
+            return Ok(module
+                .define_variable(&name, Value::Null)
                 .map_err(|e| DeclarationError::DefinitionError(e))?);
         }
 
@@ -4010,90 +4011,95 @@ fn ignore_newlines(ctx: &mut ParseContext) -> Result<(), WrenError> {
     Ok(())
 }
 
-pub(crate) fn compile_in_module(
-    vm: &mut VM,
-    module_name: &str,
-    input: InputManager,
-) -> Result<Handle<ObjClosure>, WrenError> {
-    // When compiling, we create a module and register it.
-    let module = vm.lookup_or_register_empty_module(module_name);
-    wren_compile(vm, input, module)
-}
-
-pub(crate) fn wren_compile_source(
-    vm: &mut VM,
-    module_name: &str,
-    source: String,
-) -> Result<Handle<ObjClosure>, WrenError> {
-    let input = InputManager::from_string(source);
-    compile_in_module(vm, module_name, input)
-}
-
-pub(crate) fn wren_compile(
-    vm: &mut VM,
-    input: InputManager,
-    module: Handle<Module>,
-) -> Result<Handle<ObjClosure>, WrenError> {
-    let num_existing_variables = module.borrow().variable_count();
-
-    // Init the parser & compiler
-    let mut parse_context = ParseContext {
-        parser: Parser {
-            input,
-            previous: ParseToken::before_file(),
-            current: ParseToken::before_file(),
-            next: ParseToken::before_file(),
-        },
-        _compilers: vec![],
-        module,
-        vm,
-        nesting: 0,
-    };
-
-    let mut scope = PushCompiler::push_root(&mut parse_context);
-
-    consume(scope.ctx)?; // Fill next
-    consume(scope.ctx)?; // Move next -> current
-
-    ignore_newlines(scope.ctx)?;
-    loop {
-        let found_eof = match_current(scope.ctx, Token::EndOfFile)?;
-        if found_eof {
-            break;
-        }
-        definition(scope.ctx)?;
-
-        let found_newline = match_at_least_one_line(scope.ctx)?;
-        // If there is no newline we must be EOF?
-        if !found_newline {
-            consume_expecting(scope.ctx, Token::EndOfFile, "Expect end of file.")?;
-            break;
-        }
+impl VM {
+    // called wrenCompileInModule in wren_c
+    pub(crate) fn compile_in_module(
+        &mut self,
+        module_name: &str,
+        input: InputManager,
+    ) -> Result<Handle<ObjClosure>, WrenError> {
+        // When compiling, we create a module and register it.
+        let module = self.lookup_or_register_empty_module(module_name);
+        self.compile(input, module)
     }
-    emit(scope.ctx, Ops::EndModule);
-    emit(scope.ctx, Ops::Return);
 
-    let handle_undefined = |name: &str, line_number: usize| -> Result<(), WrenError> {
-        Err(WrenError {
-            line: line_number,
-            module: scope.ctx.module_name(),
-            // FIXME: Manual generation of label here is hacky.
-            error: ParserError::Grammar(format!(
-                "Error at '{}': {}",
-                name, "Variable is used but not defined."
-            )),
-        })
-    };
+    // called wrenCompileSource in wren_c
+    pub(crate) fn compile_source(
+        &mut self,
+        module_name: &str,
+        source: String,
+    ) -> Result<Handle<ObjClosure>, WrenError> {
+        let input = InputManager::from_string(source);
+        self.compile_in_module(module_name, input)
+    }
 
-    scope
-        .ctx
-        .module
-        .borrow()
-        .check_for_undefined_variables(num_existing_variables, handle_undefined)?;
+    // called wrenCompile in wren_c
+    pub(crate) fn compile(
+        &mut self,
+        input: InputManager,
+        module: Handle<Module>,
+    ) -> Result<Handle<ObjClosure>, WrenError> {
+        let num_existing_variables = module.borrow().variable_count();
 
-    let compiler = scope.pop();
-    // wren_c uses (script) :shrug:
-    let fn_obj = end_compiler(scope.ctx, compiler, Arity(0), "<script>".into())?;
-    let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
-    Ok(closure)
+        // Init the parser & compiler
+        let mut parse_context = ParseContext {
+            parser: Parser {
+                input,
+                previous: ParseToken::before_file(),
+                current: ParseToken::before_file(),
+                next: ParseToken::before_file(),
+            },
+            _compilers: vec![],
+            module,
+            vm: self,
+            nesting: 0,
+        };
+
+        let mut scope = PushCompiler::push_root(&mut parse_context);
+
+        consume(scope.ctx)?; // Fill next
+        consume(scope.ctx)?; // Move next -> current
+
+        ignore_newlines(scope.ctx)?;
+        loop {
+            let found_eof = match_current(scope.ctx, Token::EndOfFile)?;
+            if found_eof {
+                break;
+            }
+            definition(scope.ctx)?;
+
+            let found_newline = match_at_least_one_line(scope.ctx)?;
+            // If there is no newline we must be EOF?
+            if !found_newline {
+                consume_expecting(scope.ctx, Token::EndOfFile, "Expect end of file.")?;
+                break;
+            }
+        }
+        emit(scope.ctx, Ops::EndModule);
+        emit(scope.ctx, Ops::Return);
+
+        let handle_undefined = |name: &str, line_number: usize| -> Result<(), WrenError> {
+            Err(WrenError {
+                line: line_number,
+                module: scope.ctx.module_name(),
+                // FIXME: Manual generation of label here is hacky.
+                error: ParserError::Grammar(format!(
+                    "Error at '{}': {}",
+                    name, "Variable is used but not defined."
+                )),
+            })
+        };
+
+        scope
+            .ctx
+            .module
+            .borrow()
+            .check_for_undefined_variables(num_existing_variables, handle_undefined)?;
+
+        let compiler = scope.pop();
+        // wren_c uses (script) :shrug:
+        let fn_obj = end_compiler(scope.ctx, compiler, Arity(0), "<script>".into())?;
+        let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
+        Ok(closure)
+    }
 }

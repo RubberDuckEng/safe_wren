@@ -1,8 +1,8 @@
 // For debugging wren_rust.  Uses APIs which are not public.
 
-use crate::compiler::{compile_in_module, lex, InputManager, WrenError};
+use crate::compiler::{lex, InputManager, WrenError};
 use crate::test::test_config;
-use crate::vm::{wren_debug_bytecode, RuntimeError, VM};
+use crate::vm::{debug_bytecode, RuntimeError, VM};
 use crate::wren::DebugLevel;
 
 fn print_compile_error(e: WrenError) {
@@ -41,9 +41,9 @@ pub fn print_tokens(bytes: Vec<u8>) {
 pub fn print_bytecode(bytes: Vec<u8>, module_name: String) {
     let input = InputManager::from_bytes(bytes);
     let mut vm = VM::new(test_config());
-    let result = compile_in_module(&mut vm, &module_name, input);
+    let result = vm.compile_in_module(&module_name, input);
     match result {
-        Ok(closure) => wren_debug_bytecode(&vm, &closure.borrow()),
+        Ok(closure) => debug_bytecode(&vm, &closure.borrow()),
         Err(e) => print_compile_error(e),
     }
 }
@@ -52,7 +52,7 @@ pub fn interpret_and_print_vm(bytes: Vec<u8>, module_name: String) {
     let input = InputManager::from_bytes(bytes);
     let mut vm = VM::new(test_config());
     vm.config.debug_level = Some(DebugLevel::NonCore);
-    let result = compile_in_module(&mut vm, &module_name, input);
+    let result = vm.compile_in_module(&module_name, input);
     match result {
         Ok(closure) => match vm.run(closure) {
             Ok(_) => println!("{:?}", vm),

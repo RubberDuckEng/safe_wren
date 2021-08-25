@@ -10,9 +10,7 @@ use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::{str, usize};
 
-use crate::compiler::{
-    compile_in_module, wren_is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Scope,
-};
+use crate::compiler::{is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Scope};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 use crate::ffi::c_api::WrenConfiguration;
 use crate::opt::random_bindings::{
@@ -272,7 +270,7 @@ impl Module {
         self.variables[index] = value;
     }
 
-    pub(crate) fn define_variable(
+    pub(crate) fn add_variable(
         &mut self,
         name: &str,
         value: Value,
@@ -600,10 +598,6 @@ impl ObjFiber {
     }
 }
 
-pub(crate) fn wren_new_fiber(vm: &VM, closure: Handle<ObjClosure>) -> Handle<ObjFiber> {
-    new_handle(ObjFiber::new(vm, closure, FiberRunSource::Other))
-}
-
 impl core::fmt::Debug for ObjFiber {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let stack = self.call_stack.borrow();
@@ -795,7 +789,7 @@ impl VM {
 
     pub fn set_slot_new_list(&mut self, slot: Slot) {
         assert!(self.api.is_some());
-        let value = Value::List(wren_new_list(self, vec![]));
+        let value = Value::List(self.new_list(vec![]));
         if let Some(api) = &mut self.api {
             api.stack[slot] = value;
         }
@@ -831,7 +825,7 @@ impl VM {
 
     pub fn set_slot_new_map(&mut self, slot: Slot) {
         assert!(self.api.is_some());
-        let value = Value::Map(wren_new_map(self));
+        let value = Value::Map(self.new_map());
         if let Some(api) = &mut self.api {
             api.stack[slot] = value;
         }
@@ -1067,29 +1061,50 @@ impl core::fmt::Debug for VM {
     }
 }
 
-pub(crate) fn wren_new_list(vm: &VM, contents: Vec<Value>) -> Handle<ObjList> {
-    new_handle(ObjList {
-        class_obj: vm.core.as_ref().unwrap().list.clone(),
-        elements: contents,
-    })
+impl VM {
+    pub(crate) fn new_list(&self, contents: Vec<Value>) -> Handle<ObjList> {
+        new_handle(ObjList {
+            class_obj: self.core.as_ref().unwrap().list.clone(),
+            elements: contents,
+        })
+    }
+
+    pub(crate) fn new_map(&self) -> Handle<ObjMap> {
+        new_handle(ObjMap {
+            class_obj: self.core.as_ref().unwrap().map.clone(),
+            data: HashMap::new(),
+        })
+    }
+
+    pub(crate) fn new_range(&self, from: f64, to: f64, is_inclusive: bool) -> Handle<ObjRange> {
+        new_handle(ObjRange {
+            class_obj: self.core.as_ref().unwrap().range.clone(),
+            from,
+            to,
+            is_inclusive,
+        })
+    }
+
+    pub(crate) fn new_fiber(&self, closure: Handle<ObjClosure>) -> Handle<ObjFiber> {
+        new_handle(ObjFiber::new(self, closure, FiberRunSource::Other))
+    }
+
+    pub(crate) fn new_class(
+        &self,
+        superclass: &Handle<ObjClass>,
+        source: ClassSource,
+        name: String,
+    ) -> Result<Handle<ObjClass>> {
+        new_class_with_class_class(
+            superclass,
+            source,
+            name,
+            &self.class_class.as_ref().unwrap(),
+        )
+    }
 }
 
-pub(crate) fn wren_new_map(vm: &VM) -> Handle<ObjMap> {
-    new_handle(ObjMap {
-        class_obj: vm.core.as_ref().unwrap().map.clone(),
-        data: HashMap::new(),
-    })
-}
-
-pub(crate) fn wren_new_range(vm: &VM, from: f64, to: f64, is_inclusive: bool) -> Handle<ObjRange> {
-    new_handle(ObjRange {
-        class_obj: vm.core.as_ref().unwrap().range.clone(),
-        from,
-        to,
-        is_inclusive,
-    })
-}
-pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<ObjClass>) {
+pub(crate) fn bind_superclass(subclass: &mut ObjClass, superclass: &Handle<ObjClass>) {
     subclass.superclass = Some(superclass.clone());
 
     // Include the superclass in the total number of fields.
@@ -1110,7 +1125,7 @@ pub(crate) fn wren_bind_superclass(subclass: &mut ObjClass, superclass: &Handle<
     subclass.inherit_methods_from(&superclass.borrow());
 }
 
-fn wren_new_single_class(source: ClassSource, name: String) -> Handle<ObjClass> {
+fn new_single_class(source: ClassSource, name: String) -> Handle<ObjClass> {
     // the wren_c version does a lot more?  Unclear if this should.
     new_handle(ObjClass {
         name,
@@ -1125,7 +1140,7 @@ fn wren_new_single_class(source: ClassSource, name: String) -> Handle<ObjClass> 
 // out this is an interpret time function (only creates classes)
 // and does not do any of the declaration work base_class does.
 // Keeping it for now in case it's useful later.
-fn wren_new_class_with_class_class(
+fn new_class_with_class_class(
     superclass: &Handle<ObjClass>,
     source: ClassSource,
     name_string: String,
@@ -1136,27 +1151,18 @@ fn wren_new_class_with_class_class(
     let metaclass_name_string = format!("{} metaclass", name_string);
     // let metaclass_name = Value::from_string(metaclass_name_string);
 
-    let metaclass = wren_new_single_class(ClassSource::Internal, metaclass_name_string);
+    let metaclass = new_single_class(ClassSource::Internal, metaclass_name_string);
     metaclass.borrow_mut().class = Some(class_class.clone());
 
     // Metaclasses always inherit Class and do not parallel the non-metaclass
     // hierarchy.
-    wren_bind_superclass(&mut metaclass.borrow_mut(), class_class);
+    bind_superclass(&mut metaclass.borrow_mut(), class_class);
 
-    let class = wren_new_single_class(source, name_string);
+    let class = new_single_class(source, name_string);
     class.borrow_mut().class = Some(metaclass);
-    wren_bind_superclass(&mut class.borrow_mut(), superclass);
+    bind_superclass(&mut class.borrow_mut(), superclass);
 
     Ok(class)
-}
-
-pub(crate) fn wren_new_class(
-    vm: &VM,
-    superclass: &Handle<ObjClass>,
-    source: ClassSource,
-    name: String,
-) -> Result<Handle<ObjClass>> {
-    wren_new_class_with_class_class(superclass, source, name, &vm.class_class.as_ref().unwrap())
 }
 
 fn validate_superclass(
@@ -1264,7 +1270,7 @@ fn create_class(
         .ok_or_else(|| VMError::from_str("Class name not string."))?;
     let superclass = validate_superclass(&name, superclass_value, &source)?;
 
-    let class = wren_new_class(vm, &superclass, source.clone(), name)?;
+    let class = vm.new_class(&superclass, source.clone(), name)?;
     if let ClassSource::Foreign = source {
         bind_foreign_class(vm, &mut class.borrow_mut(), module)
     }
@@ -1305,32 +1311,34 @@ impl From<ModuleLimitError> for DefinitionError {
     }
 }
 
-pub(crate) fn wren_define_variable(
-    module: &mut Module,
-    name: &str,
-    value: Value,
-) -> Result<u16, DefinitionError> {
-    // See if the variable is already explicitly or implicitly declared.
-    match module.lookup_symbol(name) {
-        None => {
-            // New variable!
-            module.define_variable(name, value).map_err(From::from)
-        }
-        Some(symbol) => {
-            let existing_value = &module.variables[symbol as usize];
-            if let Some(line) = existing_value.try_into_num() {
-                if wren_is_local_name(name) {
-                    return Err(DefinitionError::LocalUsedBeforeDefinition(
-                        name.into(),
-                        line as usize,
-                    ));
+impl Module {
+    pub(crate) fn define_variable(
+        &mut self,
+        name: &str,
+        value: Value,
+    ) -> Result<u16, DefinitionError> {
+        // See if the variable is already explicitly or implicitly declared.
+        match self.lookup_symbol(name) {
+            None => {
+                // New variable!
+                self.add_variable(name, value).map_err(From::from)
+            }
+            Some(symbol) => {
+                let existing_value = &self.variables[symbol as usize];
+                if let Some(line) = existing_value.try_into_num() {
+                    if is_local_name(name) {
+                        return Err(DefinitionError::LocalUsedBeforeDefinition(
+                            name.into(),
+                            line as usize,
+                        ));
+                    }
+                    // An implicitly declared variable's value will always be a number.
+                    // Now we have a real definition.
+                    self.replace_implicit_definition(symbol, value);
+                    Ok(symbol)
+                } else {
+                    Err(DefinitionError::VariableAlreadyDefined)
                 }
-                // An implicitly declared variable's value will always be a number.
-                // Now we have a real definition.
-                module.replace_implicit_definition(symbol, value);
-                Ok(symbol)
-            } else {
-                Err(DefinitionError::VariableAlreadyDefined)
             }
         }
     }
@@ -1347,7 +1355,9 @@ pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> 
         source: ClassSource::Internal,
     });
 
-    wren_define_variable(module, name, Value::Class(class.clone())).expect("defined");
+    module
+        .define_variable(name, Value::Class(class.clone()))
+        .expect("defined");
     class
 }
 
@@ -1355,7 +1365,9 @@ pub(crate) fn load_wren_core(vm: &mut VM, module_name: &str) {
     // wren_core_source() is generated by build.rs from wren_core.wren
     let source = wren_core_source();
     let input = InputManager::from_str(source);
-    let closure = compile_in_module(vm, module_name, input).expect("compile wren_core");
+    let closure = vm
+        .compile_in_module(module_name, input)
+        .expect("compile wren_core");
     // debug_bytecode(vm, &closure.borrow(), module);
     vm.run(closure).expect("run wren_core");
 }
@@ -1660,7 +1672,8 @@ fn import_module(vm: &mut VM, importer_name: &str, unresolved_name: &str) -> Res
         .ok_or_else(|| VMError::from_string(format!("Could not load module '{}'.", name)))?;
 
     let input = InputManager::from_string(result.source);
-    let closure = compile_in_module(vm, &name, input)
+    let closure = vm
+        .compile_in_module(&name, input)
         .map_err(|_| VMError::from_string(format!("Could not compile module '{}'.", name)))?;
 
     // Return the closure that executes the module.
@@ -2579,11 +2592,7 @@ fn op_debug_string(
     }
 }
 
-pub(crate) fn wren_debug_bytecode(vm: &VM, closure: &ObjClosure) {
-    debug_bytecode(vm, closure);
-}
-
-fn debug_bytecode(vm: &VM, top_closure: &ObjClosure) {
+pub(crate) fn debug_bytecode(vm: &VM, top_closure: &ObjClosure) {
     let mut fn_objs = vec![top_closure.fn_obj.clone()];
 
     loop {

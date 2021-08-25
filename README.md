@@ -36,17 +36,18 @@ with error text from any failed tests.  `test.py` will also update
 * Fancier test_expectations system
  ** Config / Expectation pairs (c | FAIL, RUST | TIMEOUT)
 * Teach test.py how to easily switch between rust and c_rust and c
-* Re-enable benchmarks which depend on upvalues.
+* Fix delta blue (closure error!)
 * remove all uses of 'as' (use into() instead).
 * validate_superclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
 * wrong line numbers for foreign method runtime errors.
 * attributes
-* Scientific notation
-* static fields (emits to two compilers)
 * Garbage Collection?
 * Sort methods to match wren_c order?
 * Variable should be an enum w/ each scope type holding a differnt usize type.
+* Look at some of the slow-unit fuzz results
+ ** fuzz/artifacts/fuzz_target_1/slow-unit-63ea01d2d5ba869bdb889c3b51b21350d5a4ffea (lookup_symbol should be a hash)
+ ** fuzz/artifacts/fuzz_target_1/slow-unit-355b25c3fc10bfd14a363cf737abf3a07bab4a1e (needless stack resizing)
 
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?
