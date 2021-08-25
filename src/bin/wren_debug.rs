@@ -46,7 +46,7 @@ fn parse_args() -> ArgsResult {
             eprintln!("Failed to open file \"{}\": {}", path, e);
             std::process::exit(-1);
         });
-        let module_name = path.strip_prefix(".wren").unwrap_or(path).into();
+        let module_name = path.strip_suffix(".wren").unwrap_or(path).into();
         ArgsResult {
             command,
             bytes,

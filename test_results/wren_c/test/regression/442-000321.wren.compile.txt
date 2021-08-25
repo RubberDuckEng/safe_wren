@@ -1,1 +1,1 @@
-Could not find file "wren_c/test/regression/442-000321.wren".
+[wren_c/test/regression/442-000321 line 1] Error: Unexpected char ''

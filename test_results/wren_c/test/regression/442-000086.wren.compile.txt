@@ -1,1 +1,1 @@
-Could not find file "wren_c/test/regression/442-000086.wren".
+[wren_c/test/regression/442-000086 line 2] Error: Unexpected char '«'
