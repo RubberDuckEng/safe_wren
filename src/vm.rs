@@ -10,7 +10,7 @@ use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use std::{str, usize};
 
-use crate::compiler::{is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Scope};
+use crate::compiler::{is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Variable};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
 use crate::ffi::c_api::WrenConfiguration;
 use crate::opt::random_bindings::{
@@ -2280,24 +2280,23 @@ impl VM {
                     create_class(self, frame, ClassSource::Foreign, &fn_obj.module.borrow())?;
                 }
                 Ops::Load(variable) => {
-                    let value = match variable.scope {
-                        Scope::Module => fn_obj.module.borrow().variables[variable.index].clone(),
-                        Scope::Upvalue => closure.upvalue(variable.index).borrow().load(),
-                        Scope::Local => frame.stack[variable.index].clone(),
+                    let value = match *variable {
+                        Variable::Module(index) => fn_obj.module.borrow().variables[index].clone(),
+                        Variable::Upvalue(index) => closure.upvalue(index).borrow().load(),
+                        Variable::Local(index) => frame.stack[index].clone(),
                     };
                     frame.push(value);
                 }
                 Ops::Store(variable) => {
                     let value = frame.peek()?;
-                    match variable.scope {
-                        Scope::Module => {
-                            fn_obj.module.borrow_mut().variables[variable.index] = value.clone()
+                    match *variable {
+                        Variable::Module(index) => {
+                            fn_obj.module.borrow_mut().variables[index] = value.clone()
                         }
-                        Scope::Upvalue => closure
-                            .upvalue(variable.index)
-                            .borrow_mut()
-                            .store(value.clone()),
-                        Scope::Local => frame.stack[variable.index] = value.clone(),
+                        Variable::Upvalue(index) => {
+                            closure.upvalue(index).borrow_mut().store(value.clone())
+                        }
+                        Variable::Local(index) => frame.stack[index] = value.clone(),
                     };
                 }
                 Ops::LoadField(symbol) => {
@@ -2529,32 +2528,32 @@ fn op_debug_string(
                 methods.name_for_symbol(*symbol)
             )
         }
-        Ops::Load(v) => match v.scope {
-            Scope::Local => match frame {
+        Ops::Load(v) => match *v {
+            Variable::Local(index) => match frame {
                 // Do not hide symbols for locals, they're stable-enough.
-                Some(f) => format!("Load(Local, {} -> {:?})", v.index, f.stack[v.index]),
-                None => format!("Load(Local, {})", v.index),
+                Some(f) => format!("Load(Local, {} -> {:?})", index, f.stack[index]),
+                None => format!("Load(Local, {})", index),
             },
-            Scope::Upvalue => match closure {
+            Variable::Upvalue(index) => match closure {
                 Some(c) => format!(
                     "Load(Upvalue, {} -> {:?})",
-                    v.index,
-                    c.upvalue(v.index).borrow()
+                    index,
+                    c.upvalue(index).borrow()
                 ),
-                None => format!("Load(Upvalue, {})", v.index),
+                None => format!("Load(Upvalue, {})", index),
             },
-            Scope::Module => {
+            Variable::Module(index) => {
                 format!(
                     "Load(Module, {}{:?})",
-                    unstable_num_arrow(v.index),
-                    fn_obj.module.borrow().variables[v.index]
+                    unstable_num_arrow(index),
+                    fn_obj.module.borrow().variables[index]
                 )
             }
         },
-        Ops::Store(v) => match v.scope {
-            Scope::Local => format!("Store(Local, {})", v.index),
-            Scope::Upvalue => format!("Store(Upvalue, {})", v.index),
-            Scope::Module => format!("Store(Module{})", comma_unstable_num(v.index)),
+        Ops::Store(v) => match *v {
+            Variable::Local(index) => format!("Store(Local, {})", index),
+            Variable::Upvalue(index) => format!("Store(Upvalue, {})", index),
+            Variable::Module(index) => format!("Store(Module{})", comma_unstable_num(index)),
         },
         Ops::LoadField(field) => format!("LoadField({})", field),
         Ops::StoreField(field) => format!("StoreField({})", field),

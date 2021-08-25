@@ -2033,13 +2033,7 @@ fn finish_body(ctx: &mut ParseContext) -> Result<(), WrenError> {
         }
 
         // The receiver is always stored in the first local slot.
-        emit(
-            ctx,
-            Ops::Load(Variable {
-                scope: Scope::Local,
-                index: 0,
-            }),
-        );
+        emit(ctx, Ops::Load(Variable::Local(0)));
     } else if !is_expression_body {
         // Implicitly return null in statement bodies.
         emit(ctx, Ops::Null);
@@ -2256,23 +2250,15 @@ fn subscript(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> 
     Ok(())
 }
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum Scope {
-    Local,
-    Upvalue,
-    Module,
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct Variable {
-    pub scope: Scope,
-    // FIXME: This should just be an enum with unique types for the three
-    // different uses of index.
-    // Note: Each Scope type uses this index to index into different things.
+#[derive(Debug, Copy, Clone)]
+pub(crate) enum Variable {
+    // FIXME: These should all have different types.
     // module : module symbol table.
     // local : stack offsets
     // upvalue : offsets into Compiler::upvalues
-    pub index: usize,
+    Local(usize),
+    Upvalue(usize),
+    Module(usize),
 }
 
 impl Variable {
@@ -2280,24 +2266,15 @@ impl Variable {
     // but stored (for now) as usize for easy use on the VM size
     // for vector lookups.  Not sure if this is right.
     fn module(symbol: u16) -> Variable {
-        Variable {
-            scope: Scope::Module,
-            index: symbol as usize,
-        }
+        Variable::Module(symbol as usize)
     }
 
     fn upvalue(symbol: u16) -> Variable {
-        Variable {
-            scope: Scope::Upvalue,
-            index: symbol as usize,
-        }
+        Variable::Upvalue(symbol as usize)
     }
 
     fn local(symbol: u16) -> Variable {
-        Variable {
-            scope: Scope::Local,
-            index: symbol as usize,
-        }
+        Variable::Local(symbol as usize)
     }
 }
 
@@ -2378,8 +2355,7 @@ fn static_field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenErro
     // the above resolveLocal() call because we may have already closed over it
     // as an upvalue.
     let name = previous_token_name(ctx);
-    // FIXME: This could just "unwrap" once upvalues work.
-    let variable = resolve_name(ctx, &name).ok_or_else(|| ctx.error_str("No upvalue support!"))?;
+    let variable = resolve_name(ctx, &name).unwrap();
     bare_name(ctx, can_assign, variable)?;
     Ok(())
 }
@@ -2665,10 +2641,7 @@ fn resolve_name(ctx: &mut ParseContext, name: &str) -> Option<Variable> {
     }
 
     if let Some(index) = ctx.module.borrow().lookup_symbol(name) {
-        return Some(Variable {
-            scope: Scope::Module,
-            index: index as usize,
-        });
+        return Some(Variable::module(index));
     }
     None
 }
@@ -3183,6 +3156,7 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
         .declare_variable(&mut ctx.module.borrow_mut(), name);
     result.map_err(move |e| map_declaration_error(e, ctx))
 }
+
 impl Compiler {
     fn declare_variable(
         &mut self,
@@ -3334,13 +3308,6 @@ fn define_variable(ctx: &mut ParseContext, symbol: u16) {
     ctx.compiler_mut().define_variable(symbol, line);
 }
 
-fn scope_for_definitions(ctx: &ParseContext) -> Scope {
-    match ctx.compiler().scope_depth {
-        ScopeDepth::Local(_) => Scope::Local,
-        ScopeDepth::Module => Scope::Module,
-    }
-}
-
 // Compiles an optional setter parameter in a method [signature].
 //
 // Returns `true` if it was a setter.
@@ -3406,6 +3373,7 @@ fn parameter_list(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(
     finish_parameter_list(ctx, signature)?;
     consume_expecting(ctx, Token::RightParen, "Expect ')' after parameters.")
 }
+
 // Compiles a method signature for a named method or setter.
 fn named_signature(ctx: &mut ParseContext, signature: &mut Signature) -> Result<(), WrenError> {
     signature.call_type = SignatureType::Getter;
@@ -3450,7 +3418,7 @@ fn constructor_signature(
 //
 // Returns `true` if it compiled successfully, or `false` if the method couldn't
 // be parsed.
-fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, WrenError> {
+fn method(ctx: &mut ParseContext, class_variable: Variable) -> Result<bool, WrenError> {
     // Parse any attributes before the method and store them
     //   if (matchAttribute(compiler))
     //   {
@@ -3525,7 +3493,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
 
     // Define the method. For a constructor, this defines the instance
     // initializer method.
-    define_method(ctx, class_variable.clone(), is_static, method_symbol);
+    define_method(ctx, class_variable, is_static, method_symbol);
 
     if signature.call_type == SignatureType::Initializer {
         // Also define a matching constructor method on the metaclass.
@@ -3533,7 +3501,7 @@ fn method(ctx: &mut ParseContext, class_variable: &Variable) -> Result<bool, Wre
         let constructor_symbol = signature_symbol(ctx, &signature);
 
         create_constructor(ctx, signature, method_symbol)?;
-        define_method(ctx, class_variable.clone(), true, constructor_symbol);
+        define_method(ctx, class_variable, true, constructor_symbol);
     }
 
     Ok(true)
@@ -3544,9 +3512,9 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     // Create a variable to store the class in.
 
     let class_symbol = declare_named_variable(ctx)?;
-    let class_variable = Variable {
-        scope: scope_for_definitions(ctx),
-        index: class_symbol as usize,
+    let class_variable = match ctx.compiler().scope_depth {
+        ScopeDepth::Local(_) => Variable::local(class_symbol),
+        ScopeDepth::Module => Variable::module(class_symbol),
     };
     // FIXME: Should declare_named_variable return the name too?
     let name = previous_token_name(ctx);
@@ -3603,7 +3571,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
         match_at_least_one_line(scope.ctx)?;
 
         while !match_current(scope.ctx, Token::RightCurlyBrace)? {
-            if !method(scope.ctx, &class_variable)? {
+            if !method(scope.ctx, class_variable)? {
                 break;
             }
 
