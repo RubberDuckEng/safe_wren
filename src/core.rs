@@ -540,13 +540,9 @@ fn fiber_is_done(_vm: &VM, args: &[Value]) -> Result<Value> {
     Ok(Value::Boolean(is_done))
 }
 
-// Prepare to transfer execution to [fiber] coming from the current fiber whose
-// stack has [args].
+// Prepare to transfer execution to [fiber] coming from the current fiber.
 //
-// [isCall] is true if [fiber] is being called and not transferred.
-//
-// [hasValue] is true if a value in [args] is being passed to the new fiber.
-// Otherwise, `null` is implicitly being passed.
+// [is_call] is true if [fiber] is being called and not transferred.
 // This is called runFiber in wren_c.
 fn validate_fiber_action(fiber: &ObjFiber, is_call: bool, verb: &str) -> Result<()> {
     if fiber.has_error() {
@@ -1343,7 +1339,7 @@ pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
 
     // Now we can define Class, which is a subclass of Object.
     let class = define_class(core_module, "Class");
-    bind_superclass(&mut class.borrow_mut(), &object);
+    class.borrow_mut().bind_superclass(&object);
     primitive!(vm, class, "name", class_name);
     primitive!(vm, class, "supertype", class_supertype);
     primitive!(vm, class, "toString", class_to_string);
@@ -1355,7 +1351,7 @@ pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
     object.borrow_mut().class = Some(object_metaclass.clone());
     object_metaclass.borrow_mut().class = Some(class.clone());
     class.borrow_mut().class = Some(class.clone());
-    bind_superclass(&mut object_metaclass.borrow_mut(), &class);
+    object_metaclass.borrow_mut().bind_superclass(&class);
 
     primitive_static!(vm, object, "same(_,_)", object_same);
 

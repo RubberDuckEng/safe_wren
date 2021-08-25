@@ -44,7 +44,7 @@ with error text from any failed tests.  `test.py` will also update
 * attributes
 * Garbage Collection?
 * Sort methods to match wren_c order?
-* Variable should be an enum w/ each scope type holding a differnt usize type.
+* Variable should use a different type for each scope type.
 * Look at some of the slow-unit fuzz results
  ** fuzz/artifacts/fuzz_target_1/slow-unit-63ea01d2d5ba869bdb889c3b51b21350d5a4ffea (lookup_symbol should be a hash)
  ** fuzz/artifacts/fuzz_target_1/slow-unit-355b25c3fc10bfd14a363cf737abf3a07bab4a1e (needless stack resizing)
