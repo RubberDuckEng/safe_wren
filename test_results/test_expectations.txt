@@ -63,14 +63,14 @@ wren_c/test/core/string_code_point_sequence/subscript_incomplete.wren
 # I'm not entirely sure how/why this works in wren_c
 wren_c/test/language/super/super_in_static_method.wren
 
-# Block comments
+# Untermininated block comment error on wrong line.
 wren_c/test/language/comments/unterminated_block.wren
 wren_c/test/language/comments/unterminated_nested_block.wren
 
 # Missing System.gc()
 wren_c/test/language/deeply_nested_gc.wren
 
-# class attributes
+# Missing Class attributes
 wren_c/test/language/class/attributes/duplicate_keys.wren
 wren_c/test/language/class/attributes/groups.wren
 wren_c/test/language/class/attributes/attributes.wren
@@ -90,6 +90,7 @@ wren_c/test/language/variable/local_outside_method.wren
 wren_c/example/syntax.wren
 
 # Times out, needs profiling.
+# Slow from Vec::reserve, and lots of call_method?
 wren_c/test/random/sample_count_multiple.wren
 
 # WONTFIX? wren_rust doesn't currently enforce MAX_JUMP, but even

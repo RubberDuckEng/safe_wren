@@ -32,19 +32,24 @@ with error text from any failed tests.  `test.py` will also update
 `test_results/test_expectations.txt` lists all currently skipped tests and why.
 
 ## Ordered goals?
+* Fix delta blue (closure error!)
+* fix local_outside_method.wren
 * Time the tests / make faster (next is vec::alloc from method calls)
 * Fancier test_expectations system
  ** Config / Expectation pairs (c | FAIL, RUST | TIMEOUT)
 * Teach test.py how to easily switch between rust and c_rust and c
-* Fix delta blue (closure error!)
 * remove all uses of 'as' (use into() instead).
 * validate_superclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
 * wrong line numbers for foreign method runtime errors.
 * attributes
+* rust implementation of meta package.
+* continue after failure during compiling?
+* \x should not round-trip through char.
 * Garbage Collection?
 * Sort methods to match wren_c order?
 * Variable should use a different type for each scope type.
+* fuzz both wren_c and wren_rust and compare output?
 * Look at some of the slow-unit fuzz results
  ** fuzz/artifacts/fuzz_target_1/slow-unit-63ea01d2d5ba869bdb889c3b51b21350d5a4ffea (lookup_symbol should be a hash)
  ** fuzz/artifacts/fuzz_target_1/slow-unit-355b25c3fc10bfd14a363cf737abf3a07bab4a1e (needless stack resizing)
@@ -64,4 +69,3 @@ https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to 
 * If you yield from the root, it gets set to state=OTHER, presumably later you
 might be able to call things on it?
 * WrenConfiguration likely leaked for each WrenVM constructed/destructed?
-* Needlessly "closes" each upvalue separately instead of batching.
