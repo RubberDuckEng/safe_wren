@@ -1,5 +1,10 @@
-
+*.log
 target
 corpus
 artifacts
 coverage
+
+wren_c_corpus
+wren_c_artifacts
+
+fuzz_targets/wren_c

@@ -2326,6 +2326,13 @@ fn field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     Ok(())
 }
 
+// Static fields are *not* fields (misnomer), but rather they are variables
+// scoped to the context in which the class was defined.  So if the class
+// is defined at the module scope, __field is then a module variables.
+// But if the class is inside some method, it's similarly scoped to the
+// inside of that method.
+// Instance fields (e.g. _field) are stored on instances constructed from
+// the class and are tracked in ClassInfo.fields during compiling.
 fn static_field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
     let name = previous_token_name(ctx);
 

@@ -31,6 +31,12 @@ with error text from any failed tests.  `test.py` will also update
 
 `test_results/test_expectations.txt` lists all currently skipped tests and why.
 
+## Launch list?
+* Example using rust API
+* Example using C API
+* Publish to Cargo
+* Announce to wren-lang
+
 ## Ordered goals?
 * Fix delta blue (closure error!)
 * fix local_outside_method.wren
@@ -53,6 +59,7 @@ with error text from any failed tests.  `test.py` will also update
 * Look at some of the slow-unit fuzz results
  ** fuzz/artifacts/fuzz_target_1/slow-unit-63ea01d2d5ba869bdb889c3b51b21350d5a4ffea (lookup_symbol should be a hash)
  ** fuzz/artifacts/fuzz_target_1/slow-unit-355b25c3fc10bfd14a363cf737abf3a07bab4a1e (needless stack resizing)
+* wren_debug interpret wren_c/test/language/static_field/nested_class.wren does out of bound lookup in line_for_pc.
 
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?

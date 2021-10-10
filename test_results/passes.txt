@@ -26,6 +26,7 @@ test/map/equality.wren
 test/map/iterate.wren
 test/map/key_iterate.wren
 test/map/value_iterate.wren
+test/module/scoped/scoped.wren
 test/num/clamp_min_larger_than_max.wren
 test/num/shift_overflow.wren
 test/num/sign_edge.wren

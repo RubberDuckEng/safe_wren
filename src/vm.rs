@@ -407,32 +407,21 @@ impl SymbolTable {
 
 pub struct CallFrame {
     // Program counter (offset into current code block)
+    // wren_c calls this ip (instruction pointer) and makes
+    // it an actual pointer.
     pc: usize,
     // The closure being executed.
     closure: Handle<ObjClosure>,
-    stack: Vec<Value>,
+    stack_start: usize,
 }
 
 impl CallFrame {
-    fn new_root(closure: Handle<ObjClosure>) -> CallFrame {
-        // The root frame (for an import or interpret)
-        // always has the closure at the bottom of the stack.
+    fn new(closure: Handle<ObjClosure>, stack_start: usize) -> CallFrame {
         CallFrame {
             pc: 0,
-            closure: closure.clone(),
-            stack: vec![Value::Closure(closure)],
+            closure,
+            stack_start,
         }
-    }
-}
-
-impl core::fmt::Debug for CallFrame {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(
-            f,
-            "stack: (len {}, top {:?}), ",
-            self.stack.len(),
-            self.stack.last()
-        )
     }
 }
 
@@ -483,6 +472,7 @@ pub struct ObjFiber {
     // FIXME: This is probably better as an enum?
     pub(crate) completed_normally_cache: bool,
     run_source: FiberRunSource,
+    stack: RefCell<Vec<Value>>,
     // Hels in a RefCell so others can interact with the rest of
     // ObjFiber (to ask class, etc.) while the stack is  held mutably
     // for the executing fiber.
@@ -529,12 +519,12 @@ impl ObjFiber {
             // This exact check of arity == 1 is OK, because
             // Fiber.new also checks arity is either 0 or 1.
             if self.arity() == 1 {
-                self.call_stack.borrow_mut()[0].push(arg);
+                self.push(arg);
             }
         } else {
             // The fiber is being resumed, make yield(), transfer()
             // or transferError() return the result.
-            self.call_stack.borrow_mut().last_mut().unwrap().push(arg);
+            self.push(arg);
         }
     }
 
@@ -542,7 +532,7 @@ impl ObjFiber {
         // Push the argument to the fiber call, try or transfer
         // or the return value from a yield or transfer
         // onto the top-most frame of the callstack.
-        self.call_stack.borrow_mut().last_mut().unwrap().push(arg);
+        self.push(arg);
     }
 
     pub(crate) fn error(&self) -> Value {
@@ -551,6 +541,78 @@ impl ObjFiber {
 
     pub fn has_error(&self) -> bool {
         !self.error.is_null()
+    }
+
+    fn index_for_stack_offset(&self, offset: StackOffset) -> usize {
+        self.call_stack.borrow()[offset.frame_index].stack_start + offset.index
+    }
+
+    fn load(&self, loc: StackOffset) -> Value {
+        let index = self.index_for_stack_offset(loc);
+        self.stack.borrow()[index].clone()
+    }
+
+    fn store(&self, loc: StackOffset, value: Value) {
+        let index = self.index_for_stack_offset(loc);
+        self.stack.borrow_mut()[index] = value
+    }
+
+    // FIXME: Should this take a Frame for bounds checking?
+    fn push(&self, value: Value) {
+        self.stack.borrow_mut().push(value);
+    }
+
+    // FIXME: No longer needs to be Result, now that Stack Underflow panics
+    fn pop(&self) -> Result<Value> {
+        Ok(self.stack.borrow_mut().pop().expect("Stack underflow"))
+    }
+
+    // FIXME: No longer needs to be Result, now that Stack Underflow panics
+    // FIXME: This could return a &Value instead of Value, but the only
+    // two callers who *do not* immediately clone() are And and Or ops.
+    fn peek(&self) -> Result<Value> {
+        Ok(self.stack.borrow().last().expect("Stack underflow").clone())
+    }
+
+    fn load_this(&self, frame: &CallFrame) -> Value {
+        self.load_local(frame, 0)
+    }
+
+    fn store_this(&self, frame: &CallFrame, value: Value) {
+        self.store_local(frame, 0, value)
+    }
+
+    fn load_local(&self, frame: &CallFrame, offset: usize) -> Value {
+        // FIXME: bounds-check the number of locals based on compiler data?
+        self.stack.borrow()[frame.stack_start + offset].clone()
+    }
+
+    fn store_local(&self, frame: &CallFrame, offset: usize, value: Value) {
+        // FIXME: bounds-check the number of locals based on compiler data?
+        self.stack.borrow_mut()[frame.stack_start + offset] = value
+    }
+
+    fn dump_stack(&self, frame: &CallFrame, active_module: &str, frame_depth: usize) {
+        // Print the stack left (top) to right (bottom)
+        let mut as_string = Vec::new();
+        for (index, value) in self
+            .stack
+            .borrow()
+            .iter()
+            .skip(frame.stack_start)
+            .enumerate()
+            .rev()
+        {
+            let debug = format!("{:?}", value);
+            as_string.push(format!("{}: {:10}", index, debug));
+        }
+        as_string.reverse();
+        println!(
+            "{:10}  Stack({:2}): {}",
+            active_module,
+            frame_depth,
+            as_string.join(" ")
+        );
     }
 }
 
@@ -588,7 +650,8 @@ impl ObjFiber {
             caller: None,
             run_source,
             completed_normally_cache: false,
-            call_stack: RefCell::new(vec![CallFrame::new_root(closure)]),
+            call_stack: RefCell::new(vec![CallFrame::new(closure.clone(), 0)]),
+            stack: RefCell::new(vec![Value::Closure(closure)]),
             open_upvalues: RefCell::new(OpenUpvalues { values: vec![] }),
         }
     }
@@ -597,12 +660,7 @@ impl ObjFiber {
 impl core::fmt::Debug for ObjFiber {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let stack = self.call_stack.borrow();
-        write!(
-            f,
-            "call_stack: (len {}, top {:?}), ",
-            stack.len(),
-            stack.last()
-        )
+        write!(f, "call_stack: (len {}), ", stack.len())
     }
 }
 
@@ -1251,15 +1309,10 @@ fn bind_foreign_class(vm: &mut VM, class: &mut ObjClass, module: &Module) {
     }
 }
 
-fn create_class(
-    vm: &mut VM,
-    frame: &mut CallFrame,
-    source: ClassSource,
-    module: &Module,
-) -> Result<()> {
+fn create_class(vm: &mut VM, fiber: &ObjFiber, source: ClassSource, module: &Module) -> Result<()> {
     // Pull the name and superclass off the stack.
-    let superclass_value = frame.pop()?;
-    let name_value = frame.pop()?;
+    let superclass_value = fiber.pop()?;
+    let name_value = fiber.pop()?;
 
     let name = name_value
         .try_into_string()
@@ -1271,7 +1324,7 @@ fn create_class(
         bind_foreign_class(vm, &mut class.borrow_mut(), module)
     }
     // After bind_foreign_class to avoid a clone, should not make a differnce.
-    frame.push(Value::Class(class));
+    fiber.push(Value::Class(class));
     Ok(())
 }
 
@@ -1371,17 +1424,20 @@ impl VM {
 }
 
 enum FunctionNext {
-    Call(CallFrame),
+    Call(Handle<ObjClosure>, usize),
     Return(Value),
     FiberAction(FiberAction),
     CaptureUpvalues(Handle<ObjClosure>, Vec<crate::compiler::Upvalue>),
     CloseUpvalues(StackOffset),
 }
 
-// Might rename to StackLocation?
+// FIXME: Unclear if this is needed now that we have a single unified stack!
 #[derive(Copy, Clone, Debug)]
 struct StackOffset {
+    // CAUTION: It's very easy to create this with a wrong index.
     frame_index: usize,
+    // index is assumed to be relative, to the stack_start
+    // which is referenced in the frame refered to by the frame_index.
     index: usize,
 }
 
@@ -1458,19 +1514,14 @@ impl Upvalue {
 
     fn load(&self) -> Value {
         match &self.storage {
-            UpvalueStorage::Open(fiber, loc) => {
-                fiber.borrow().call_stack.borrow()[loc.frame_index].stack[loc.index].clone()
-            }
+            UpvalueStorage::Open(fiber, loc) => fiber.borrow().load(*loc),
             UpvalueStorage::Closed(value) => value.clone(),
         }
     }
 
     fn store(&mut self, new_value: Value) {
         match &mut self.storage {
-            UpvalueStorage::Open(fiber, loc) => {
-                fiber.borrow().call_stack.borrow_mut()[loc.frame_index].stack[loc.index] =
-                    new_value.clone()
-            }
+            UpvalueStorage::Open(fiber, loc) => fiber.borrow().store(*loc, new_value),
             UpvalueStorage::Closed(value) => *value = new_value,
         }
     }
@@ -1488,13 +1539,12 @@ impl ObjFiber {
     // can't easily mut-borrow fiber, thus this is &self, and we have a RefCell
     // around OpenUpvalues.
     fn close_upvalues_at_or_above(&self, location: StackOffset) {
-        let call_stack = &self.call_stack.borrow();
         let close_upvalue_if_above = |u: &mut Handle<Upvalue>| {
             // All open values have a location.
             let l = u.borrow().location().unwrap();
             if l >= location {
                 // Move the value into the upvalue itself and point the upvalue to it.
-                let value = call_stack[l.frame_index].stack[l.index].clone();
+                let value = self.load(l);
                 u.borrow_mut().storage = UpvalueStorage::Closed(value);
                 true // Remove it from the open upvalue list.
             } else {
@@ -1947,12 +1997,17 @@ impl VM {
             // the frame on every instruction.  Maybe not worth it?
             let result = self.run_frame_in_fiber(&mut frame, fiber, frame_index);
             match result {
-                Ok(FunctionNext::Call(new_frame)) => {
+                Ok(FunctionNext::Call(closure, num_args)) => {
+                    // Push the closure and the args on the stack?
                     let mut call_stack = fiber.call_stack.borrow_mut();
                     // call_stack does not contain "frame", restore it.
                     call_stack.push(frame);
                     // Now push our new frame!
-                    call_stack.push(new_frame);
+                    call_stack.push(CallFrame {
+                        pc: 0,
+                        closure: closure,
+                        stack_start: fiber.stack.borrow().len() - num_args,
+                    });
                 }
                 Ok(FunctionNext::Return(value)) => {
                     // Because "return" can sometimes mean "yield", the wren
@@ -1969,18 +2024,14 @@ impl VM {
                     };
                     fiber.close_upvalues_at_or_above(location);
                     // pop the frame again after upvalues are closed.
-                    fiber.call_stack.borrow_mut().pop();
+                    let frame = fiber.call_stack.borrow_mut().pop().unwrap();
+                    fiber.stack.borrow_mut().truncate(frame.stack_start);
 
                     if fiber.call_stack.borrow().is_empty() {
                         return Ok(FiberAction::Return(value));
                     } else {
                         // Push the return value onto the calling stack.
-                        fiber
-                            .call_stack
-                            .borrow_mut()
-                            .last_mut()
-                            .unwrap()
-                            .push(value);
+                        fiber.push(value);
                     }
                 }
                 Ok(FunctionNext::FiberAction(action)) => {
@@ -2007,6 +2058,9 @@ impl VM {
                             // Make an new upvalue to close over the parent's local variable.
                             let location = StackOffset {
                                 frame_index: fiber.call_stack.borrow().len() - 1,
+                                // FIXME: Confirm that compiler.upvalue.index
+                                // is relative to frame.stack_start?
+                                // If not, this is wrong.
                                 index: compiler_upvalue.index,
                             };
 
@@ -2033,7 +2087,7 @@ impl VM {
                     // thus OpenUpvalues is independently borrowed inside
                     fiber.close_upvalues_at_or_above(location);
                     // Now actualy do the pop.
-                    fiber.call_stack.borrow_mut()[location.frame_index].pop()?;
+                    fiber.pop()?;
                 }
                 Err(vm_error) => {
                     // Push the current frame back onto the fiber so we can
@@ -2091,58 +2145,46 @@ impl VM {
 
     fn call_method(
         &mut self,
-        frame: &mut CallFrame,
+        fiber: &ObjFiber,
+        _frame: &mut CallFrame,
         num_args: usize,
         symbol: Symbol,
         class: &ObjClass,
     ) -> Result<FunctionNext, VMError> {
-        let this_offset = frame.stack.len() - num_args;
-        // Avoid allocing a new vector for the args.
-        let args = frame.stack.drain(this_offset..);
         // Get the Method record for this class for this symbol.
         let method = class
             .lookup_method(symbol)
             .ok_or_else(|| self.method_not_found(&class, symbol))?;
 
+        let this_offset = fiber.stack.borrow().len() - num_args;
+
         // Even if we got a Method doesn't mean *this* class implements it.
-        match method {
+        let result = match method {
             Method::ValuePrimitive(f) => {
-                let value = f(self, args.as_slice())?;
-                Ok(FunctionNext::Return(value))
+                let value = f(self, &fiber.stack.borrow()[this_offset..])?;
+                fiber.stack.borrow_mut().truncate(this_offset);
+                FunctionNext::Return(value)
             }
             Method::FiberActionPrimitive(f) => {
-                let action = f(self, args.as_slice())?;
-                Ok(FunctionNext::FiberAction(action))
+                let action = f(self, &fiber.stack.borrow()[this_offset..])?;
+                fiber.stack.borrow_mut().truncate(this_offset);
+                FunctionNext::FiberAction(action)
             }
             Method::FunctionCall => {
+                let args = &fiber.stack.borrow()[this_offset..];
                 // Pushes a new stack frame.
-                // wren_rust (currently) keeps a separate stack
-                // per CallFrame, so underflows are caught on a
-                // per-function call basis.
-                let stack: Vec<Value> = args.collect();
-                Ok(FunctionNext::Call(CallFrame {
-                    pc: 0,
-                    closure: check_arity(&stack[0], stack.len())?,
-                    stack,
-                }))
+                let closure = check_arity(&args[0], args.len())?;
+                FunctionNext::Call(closure, num_args)
             }
             Method::ForeignFunction(foreign) => {
                 // call_foriegn would copy the args anyway, so copy them here.
-                let value = self.call_foreign(foreign, args.collect())?;
-                Ok(FunctionNext::Return(value))
+                let value =
+                    self.call_foreign(foreign, fiber.stack.borrow_mut().split_off(this_offset))?;
+                FunctionNext::Return(value)
             }
-            Method::Block(closure) => {
-                // Pushes a new stack frame.
-                // wren_rust (currently) keeps a separate stack
-                // per CallFrame, so underflows are caught on a
-                // per-function call basis.
-                Ok(FunctionNext::Call(CallFrame {
-                    pc: 0,
-                    closure: closure.clone(),
-                    stack: args.collect(),
-                }))
-            }
-        }
+            Method::Block(closure) => FunctionNext::Call(closure.clone(), num_args),
+        };
+        Ok(result)
     }
 
     fn run_frame_in_fiber(
@@ -2168,26 +2210,26 @@ impl VM {
                     }
                 };
                 let frame_depth = fiber.call_stack.borrow().len(); // Does not include current frame.
-                frame.dump_stack(&top_module_name, frame_depth);
+                fiber.dump_stack(frame, &top_module_name, frame_depth);
                 dump_instruction(
                     frame.pc,
                     op,
                     &self.methods,
                     &frame.closure.borrow(),
-                    Some(frame),
+                    Some(&fiber.stack.borrow()[frame.stack_start..]),
                     DumpMode::ShowSymbols,
                 );
             }
             frame.pc += 1;
             match op {
                 Ops::Constant(index) => {
-                    frame.push(fn_obj.lookup_constant(index).clone());
+                    fiber.push(fn_obj.lookup_constant(index).clone());
                 }
                 Ops::Boolean(value) => {
-                    frame.push(Value::Boolean(*value));
+                    fiber.push(Value::Boolean(*value));
                 }
                 Ops::Null => {
-                    frame.push(Value::Null);
+                    fiber.push(Value::Null);
                 }
                 Ops::CallSuper(arity, symbol, constant) => {
                     // +1 for implicit arg for 'this'.
@@ -2195,12 +2237,12 @@ impl VM {
                     // Compiler error if this is not a class.
                     let superclass = fn_obj.lookup_constant(constant).try_into_class().unwrap();
                     let action =
-                        self.call_method(frame, num_args, *symbol, &superclass.borrow())?;
+                        self.call_method(fiber, frame, num_args, *symbol, &superclass.borrow())?;
                     match action {
                         FunctionNext::Return(value) => {
                             // We got an immediate answer from a primitive or
                             // foreign call, we can handle it here and continue.
-                            frame.push(value);
+                            fiber.push(value);
                         }
                         _ => {
                             // Let the caller handle more complicated actions.
@@ -2211,15 +2253,15 @@ impl VM {
                 Ops::Call(arity, symbol) => {
                     // +1 for implicit arg for 'this'.
                     let num_args = arity.as_index() + 1;
-                    let this_offset = frame.stack.len() - num_args;
-                    let this_class = self.class_for_value(&frame.stack[this_offset]);
+                    let this_offset = fiber.stack.borrow().len() - num_args;
+                    let this_class = self.class_for_value(&fiber.stack.borrow()[this_offset]);
                     let action =
-                        self.call_method(frame, num_args, *symbol, &this_class.borrow())?;
+                        self.call_method(fiber, frame, num_args, *symbol, &this_class.borrow())?;
                     match action {
                         FunctionNext::Return(value) => {
                             // We got an immediate answer from a primitive or
                             // foreign call, we can handle it here and continue.
-                            frame.push(value);
+                            fiber.push(value);
                         }
                         _ => {
                             // Let the caller handle more complicated actions.
@@ -2227,16 +2269,19 @@ impl VM {
                         }
                     }
                 }
+                // Called as part of constructors to fix "this" to be an
+                // instance before continuing construction.
                 Ops::Construct => {
-                    let this = frame.stack[0].clone();
+                    let this = fiber.load_this(frame);
                     let class = this.try_into_class().expect("'this' should be a class.");
                     let instance = Value::Instance(new_handle(ObjInstance::new(class)));
-                    frame.stack[0] = instance;
+                    fiber.store_this(frame, instance);
                 }
                 Ops::ForeignConstruct => {
-                    let this = frame.stack[0].clone();
+                    let this = fiber.load_this(frame);
                     let class = this.try_into_class().expect("'this' should be a class.");
-                    frame.stack[0] = self.create_foreign(&class)?;
+                    let instance = self.create_foreign(&class)?;
+                    fiber.store_this(frame, instance);
                 }
                 Ops::Closure(constant, upvalues) => {
                     let fn_value = fn_obj.lookup_constant(constant).clone();
@@ -2244,7 +2289,7 @@ impl VM {
                         .try_into_fn()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
-                    frame.push(Value::Closure(closure.clone()));
+                    fiber.push(Value::Closure(closure.clone()));
                     if !upvalues.is_empty() {
                         return Ok(FunctionNext::CaptureUpvalues(closure, upvalues.to_vec()));
                     }
@@ -2252,78 +2297,80 @@ impl VM {
                 }
                 Ops::EndModule => {
                     self.last_imported_module = Some(fn_obj.module.clone());
-                    frame.push(Value::Null); // Is this the return value?
+                    fiber.push(Value::Null); // Is this the return value?
                 }
                 Ops::Return => {
                     // The top of our stack is returned and then the caller of
                     // this rust function will push the return onto the stack of
                     // the calling wren function CallFrame.
-                    return Ok(FunctionNext::Return(frame.pop()?));
+                    return Ok(FunctionNext::Return(fiber.pop()?));
                 }
                 Ops::CloseUpvalues => {
-                    let index = frame.stack.len() - 1;
+                    let absolute_index = fiber.stack.borrow().len() - 1;
+                    let index = absolute_index - frame.stack_start;
                     let location = StackOffset { frame_index, index };
-                    // We don't have a mut borrow for Fiber here.
+                    // We don't have a mut borrow for Fiber here, return out
+                    // to a context which does to do the mutations.
                     return Ok(FunctionNext::CloseUpvalues(location));
                 }
                 Ops::Class(num_fields) => {
                     create_class(
                         self,
-                        frame,
+                        fiber,
                         ClassSource::Source(*num_fields),
                         &fn_obj.module.borrow(),
                     )?;
                 }
                 Ops::ForeignClass => {
-                    create_class(self, frame, ClassSource::Foreign, &fn_obj.module.borrow())?;
+                    create_class(self, fiber, ClassSource::Foreign, &fn_obj.module.borrow())?;
                 }
                 Ops::Load(variable) => {
                     let value = match *variable {
                         Variable::Module(index) => fn_obj.module.borrow().variables[index].clone(),
                         Variable::Upvalue(index) => closure.upvalue(index).borrow().load(),
-                        Variable::Local(index) => frame.stack[index].clone(),
+                        Variable::Local(index) => fiber.load_local(frame, index),
                     };
-                    frame.push(value);
+                    fiber.push(value);
                 }
                 Ops::Store(variable) => {
-                    let value = frame.peek()?;
+                    let value = fiber.peek()?;
                     match *variable {
                         Variable::Module(index) => {
-                            fn_obj.module.borrow_mut().variables[index] = value.clone()
+                            fn_obj.module.borrow_mut().variables[index] = value
                         }
                         Variable::Upvalue(index) => {
-                            closure.upvalue(index).borrow_mut().store(value.clone())
+                            closure.upvalue(index).borrow_mut().store(value)
                         }
-                        Variable::Local(index) => frame.stack[index] = value.clone(),
+                        Variable::Local(index) => fiber.store_local(frame, index, value),
                     };
                 }
                 Ops::LoadField(symbol) => {
-                    let receiver = frame.pop()?;
+                    let receiver = fiber.pop()?;
                     let instance = receiver
                         .try_into_instance()
                         .ok_or_else(|| VMError::from_str("Receiver should be instance."))?;
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
                     }
-                    frame.push(instance.borrow().fields[*symbol].clone());
+                    fiber.push(instance.borrow().fields[*symbol].clone());
                 }
                 Ops::StoreField(symbol) => {
-                    let receiver = frame.pop()?;
+                    let receiver = fiber.pop()?;
                     let instance = receiver
                         .try_into_instance()
                         .ok_or_else(|| VMError::from_str("Receiver should be instance."))?;
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
                     }
-                    instance.borrow_mut().fields[*symbol] = frame.peek()?.clone();
+                    instance.borrow_mut().fields[*symbol] = fiber.peek()?;
                 }
                 Ops::Pop => {
-                    frame.pop()?;
+                    fiber.pop()?;
                 }
                 Ops::Method(is_static, symbol) => {
                     // wren_c peeks first then drops after bind, unclear why
-                    let class = frame.pop()?.try_into_class().unwrap();
-                    let method = frame.pop()?;
+                    let class = fiber.pop()?.try_into_class().unwrap();
+                    let method = fiber.pop()?;
                     bind_method(
                         self,
                         *is_static,
@@ -2349,12 +2396,13 @@ impl VM {
                     // If we get a closure, call it to execute the module body.
                     match result {
                         ImportResult::New(closure) => {
-                            return Ok(FunctionNext::Call(CallFrame::new_root(closure)));
+                            // Imports are a bit like calling a function, except with zero args.
+                            return Ok(FunctionNext::Call(closure, 0));
                         }
                         ImportResult::Existing(module) => {
                             // The module has already been loaded. Remember it so we can import
                             // variables from it if needed.
-                            frame.push(Value::from_str("dummy for module"));
+                            fiber.push(Value::from_str("dummy for module"));
                             self.last_imported_module = Some(module);
                         }
                     }
@@ -2365,7 +2413,7 @@ impl VM {
                         .as_ref()
                         .expect("Should have already imported module.");
                     let value = get_module_variable(self, &module.borrow(), variable_name)?;
-                    frame.push(value);
+                    fiber.push(value);
                 }
                 Ops::Loop(offset_backwards) => {
                     frame.pc -= *offset_backwards as usize;
@@ -2374,26 +2422,26 @@ impl VM {
                     frame.pc += *offset_forward as usize;
                 }
                 Ops::JumpIfFalse(offset_forward) => {
-                    let value = frame.pop()?;
+                    let value = fiber.pop()?;
                     if value.is_falsey() {
                         frame.pc += *offset_forward as usize;
                     }
                 }
                 Ops::And(offset_forward) => {
                     // This differs from JumpIfFalse in whether it pops
-                    let value = frame.peek()?;
+                    let value = fiber.peek()?;
                     if value.is_falsey() {
                         frame.pc += *offset_forward as usize;
                     } else {
-                        frame.pop()?;
+                        fiber.pop()?;
                     }
                 }
                 Ops::Or(offset_forward) => {
-                    let value = frame.peek()?;
+                    let value = fiber.peek()?;
                     if !value.is_falsey() {
                         frame.pc += *offset_forward as usize;
                     } else {
-                        frame.pop()?;
+                        fiber.pop()?;
                     }
                 }
                 Ops::ClassPlaceholder => unimplemented!(),
@@ -2421,38 +2469,6 @@ fn check_arity(value: &Value, num_args: usize) -> Result<Handle<ObjClosure>> {
     }
 }
 
-impl CallFrame {
-    fn push(&mut self, value: Value) {
-        self.stack.push(value);
-    }
-
-    // FIXME: No longer needs to be Result, now that Stack Underflow panics
-    fn pop(&mut self) -> Result<Value> {
-        Ok(self.stack.pop().expect("Stack underflow"))
-    }
-
-    // FIXME: No longer needs to be Result, now that Stack Underflow panics
-    fn peek(&mut self) -> Result<&Value> {
-        Ok(self.stack.last().expect("Stack underflow"))
-    }
-
-    fn dump_stack(&self, active_module: &str, frame_depth: usize) {
-        // Print the stack left (top) to right (bottom)
-        let mut as_string = Vec::new();
-        for (index, value) in self.stack.iter().enumerate().rev() {
-            let debug = format!("{:?}", value);
-            as_string.push(format!("{}: {:10}", index, debug));
-        }
-        as_string.reverse();
-        println!(
-            "{:10}  Stack({:2}): {}",
-            active_module,
-            frame_depth,
-            as_string.join(" ")
-        );
-    }
-}
-
 enum DumpMode {
     ShowSymbols,
     HideSymbols,
@@ -2475,7 +2491,7 @@ fn dump_instruction(
     op: &Ops,
     methods: &SymbolTable,
     closure: &ObjClosure,
-    frame: Option<&CallFrame>,
+    stack: Option<&[Value]>,
     mode: DumpMode,
 ) {
     let fn_obj = &closure.fn_obj.borrow();
@@ -2484,7 +2500,7 @@ fn dump_instruction(
         module_name_and_line(fn_obj, pc),
         fn_obj.debug.name,
         pc,
-        op_debug_string(op, methods, fn_obj, Some(closure), frame, mode)
+        op_debug_string(op, methods, fn_obj, Some(closure), stack, mode)
     );
 }
 
@@ -2493,7 +2509,7 @@ fn op_debug_string(
     methods: &SymbolTable,
     fn_obj: &ObjFn,
     closure: Option<&ObjClosure>,
-    frame: Option<&CallFrame>,
+    stack: Option<&[Value]>,
     mode: DumpMode,
 ) -> String {
     // If stable_output do not print the symbol, otherwise every time we
@@ -2526,9 +2542,9 @@ fn op_debug_string(
             )
         }
         Ops::Load(v) => match *v {
-            Variable::Local(index) => match frame {
+            Variable::Local(index) => match stack {
                 // Do not hide symbols for locals, they're stable-enough.
-                Some(f) => format!("Load(Local, {} -> {:?})", index, f.stack[index]),
+                Some(s) => format!("Load(Local, {} -> {:?})", index, s[index]),
                 None => format!("Load(Local, {})", index),
             },
             Variable::Upvalue(index) => match closure {
