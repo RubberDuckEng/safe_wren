@@ -558,6 +558,7 @@ impl ObjFiber {
     }
 
     // FIXME: Should this take a Frame for bounds checking?
+    #[inline]
     fn push(&self, value: Value) {
         self.stack.borrow_mut().push(value);
     }

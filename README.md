@@ -71,6 +71,9 @@ with error text from any failed tests.  `test.py` will also update
 https://stackoverflow.com/questions/62338832/how-to-hold-rust-objects-in-rust-code-created-through-c
 https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to imply so?
 
+### Benchamarking notes
+* map_numeric heavily tests Value::PartialEq
+
 ### wren_c bugs
 * closures/functions defined in wren_core.wren end up with a null class pointer?
 * If you yield from the root, it gets set to state=OTHER, presumably later you
