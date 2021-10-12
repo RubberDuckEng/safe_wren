@@ -80,8 +80,7 @@ long lived tree of depth 12 check: -1""")
 # 32 trees of depth 12 check: -32
 # long lived tree of depth 12 check: -1""")
 
-# Requires upvalues
-# BENCHMARK("delta_blue", "14065400")
+BENCHMARK("delta_blue", "14065400")
 
 BENCHMARK("fib", r"""317811
 317811
@@ -89,8 +88,7 @@ BENCHMARK("fib", r"""317811
 317811
 317811""")
 
-# Requires upvalues
-# BENCHMARK("fibers", r"""4999950000""")
+BENCHMARK("fibers", r"""4999950000""")
 
 BENCHMARK("for", r"""499999500000""")
 
