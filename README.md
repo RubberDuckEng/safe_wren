@@ -72,7 +72,19 @@ https://stackoverflow.com/questions/62338832/how-to-hold-rust-objects-in-rust-co
 https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to imply so?
 
 ### Benchamarking notes
+* Current numbers show wren_rust to be about 2.5x-9x slower than wren_c across
+  the various microbenchmarks.  Unclear what real-world effect this would have.
+* Value::clone is apparent in many benchmarks.
+* Using move/drain semantics when calling args from the stack could help avoid
+  needing to clone values when converting them with try_into_X.
+  Or at least make try_into_X use move semenatics and the clone explicit in
+  the caller.
+* class_for_value under call_method shows up at ~5% on several benchmarks.
 * map_numeric heavily tests Value::PartialEq
+* binary_trees leans heavily (at least 20% of time) on ptr::drop_in_place
+  (deallocation) of RefCell<ObjInstance>.  GC would reduce this.
+* map_string spends 57% of time in core::string_plus, and 20% of time
+  truncating the stack.
 
 ### wren_c bugs
 * closures/functions defined in wren_core.wren end up with a null class pointer?

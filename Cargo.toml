@@ -19,3 +19,4 @@ crate-type = ["lib", "cdylib"]
 
 [profile.release] 
 debug = true
+split-debuginfo = "packed"

@@ -558,7 +558,7 @@ impl ObjFiber {
     }
 
     // FIXME: Should this take a Frame for bounds checking?
-    #[inline]
+    #[inline] // 3% on map_numeric
     fn push(&self, value: Value) {
         self.stack.borrow_mut().push(value);
     }
@@ -2144,6 +2144,7 @@ impl VM {
         }
     }
 
+    // ~80% of benchmark time is spent under this function.
     fn call_method(
         &mut self,
         fiber: &ObjFiber,
@@ -2195,6 +2196,7 @@ impl VM {
         frame_index: usize, // for closures
     ) -> Result<FunctionNext> {
         // Copy out a ref, so we can later mut borrow the frame.
+        // FIXME: Cloning every op *cannot* be correct!
         let closure_rc = frame.closure.clone();
         let closure = closure_rc.borrow();
         let fn_obj = closure.fn_obj.borrow();
@@ -2290,6 +2292,7 @@ impl VM {
                         .try_into_fn()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
                     let closure = new_handle(ObjClosure::new(self, fn_obj));
+                    // FIXME: Avoid this clone in the empty-upvalues case.
                     fiber.push(Value::Closure(closure.clone()));
                     if !upvalues.is_empty() {
                         return Ok(FunctionNext::CaptureUpvalues(closure, upvalues.to_vec()));
