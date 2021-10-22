@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'wren_rust'",
+            "name": "Debug executable 'safe_wren'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=wren_rust",
-                    "--package=wren_rust"
+                    "--bin=safe_wren",
+                    "--package=safe_wren"
                 ],
                 "filter": {
-                    "name": "wren_rust",
+                    "name": "safe_wren",
                     "kind": "bin"
                 }
             },
@@ -27,16 +27,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'wren_rust'",
+            "name": "Debug unit tests in executable 'safe_wren'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=wren_rust",
-                    "--package=wren_rust"
+                    "--bin=safe_wren",
+                    "--package=safe_wren"
                 ],
                 "filter": {
-                    "name": "wren_rust",
+                    "name": "safe_wren",
                     "kind": "bin"
                 }
             },

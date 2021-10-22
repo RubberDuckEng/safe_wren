@@ -1,4 +1,4 @@
-use wren_rust::wren::{ForeignMethodFn, VM};
+use safe_wren::wren::{ForeignMethodFn, VM};
 
 fn runtime_error(vm: &mut VM) {
     vm.ensure_slots(1);

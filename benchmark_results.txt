@@ -1,4 +1,4 @@
-All taken Oct 10, 2021 from MacBook Pro.
+Taken Oct 10, 2021 from MacBook Pro.
 
 wren_c:
 binary_trees - wren_c          .......... 0.26s 0.0252 no baseline
@@ -10,36 +10,24 @@ map_string - wren_c            .......... 0.10s 0.0019 no baseline
 string_equals - wren_c         .......... 0.19s 0.0135 no baseline
 
 
-unified_stack:
-
-binary_trees - wren_rust       .......... 1.28s 0.0459 169.65% relative to baseline
-fib - wren_rust                .......... 1.19s 0.0100 205.85% relative to baseline
-for - wren_rust                .......... 0.44s 0.0029  76.30% relative to baseline
-method_call - wren_rust        .......... 0.89s 0.0054 197.45% relative to baseline
-map_numeric - wren_rust        .......... 2.53s 0.0162  80.97% relative to baseline
-map_string - wren_rust         .......... 0.23s 0.0052  76.41% relative to baseline
-string_equals - wren_rust      .......... 0.93s 0.0180  82.76% relative to baseline
-
-
-unified_stack + push inline:
-
-binary_trees - wren_rust       .......... 1.25s 0.0626 173.42% relative to baseline
-fib - wren_rust                .......... 1.09s 0.0821 224.92% relative to baseline
-for - wren_rust                .......... 0.38s 0.0039  88.84% relative to baseline
-method_call - wren_rust        .......... 0.83s 0.0043 210.91% relative to baseline
-map_numeric - wren_rust        .......... 2.17s 0.0725  94.46% relative to baseline
-map_string - wren_rust         .......... 0.19s 0.0072  92.84% relative to baseline
-string_equals - wren_rust      .......... 0.86s 0.0040  89.17% relative to baseline
+safe_wren:
+binary_trees - safe_wren       .......... 1.25s 0.0626 173.42% relative to baseline
+fib - safe_wren                .......... 1.09s 0.0821 224.92% relative to baseline
+for - safe_wren                .......... 0.38s 0.0039  88.84% relative to baseline
+method_call - safe_wren        .......... 0.83s 0.0043 210.91% relative to baseline
+map_numeric - safe_wren        .......... 2.17s 0.0725  94.46% relative to baseline
+map_string - safe_wren         .......... 0.19s 0.0072  92.84% relative to baseline
+string_equals - safe_wren      .......... 0.86s 0.0040  89.17% relative to baseline
 
 
 Taken from WSL2 on Oct 11, 2021:
 
-binary_trees - wren_rust       .......... 0.88s 0.0146 no baseline
-delta_blue - wren_rust         .......... 0.78s 0.0222 no baseline
-fib - wren_rust                .......... 1.05s 0.0214 no baseline
-fibers - wren_rust             .......... 0.11s 0.0046 no baseline
-for - wren_rust                .......... 0.37s 0.0089 no baseline
-method_call - wren_rust        .......... 0.74s 0.0364 no baseline
-map_numeric - wren_rust        .......... 2.24s 0.0397 no baseline
-map_string - wren_rust         .......... 0.19s 0.0044 no baseline
-string_equals - wren_rust      .......... 0.85s 0.0112 no baseline
+binary_trees - safe_wren       .......... 0.88s 0.0146 no baseline
+delta_blue - safe_wren         .......... 0.78s 0.0222 no baseline
+fib - safe_wren                .......... 1.05s 0.0214 no baseline
+fibers - safe_wren             .......... 0.11s 0.0046 no baseline
+for - safe_wren                .......... 0.37s 0.0089 no baseline
+method_call - safe_wren        .......... 0.74s 0.0364 no baseline
+map_numeric - safe_wren        .......... 2.24s 0.0397 no baseline
+map_string - safe_wren         .......... 0.19s 0.0044 no baseline
+string_equals - safe_wren      .......... 0.85s 0.0112 no baseline

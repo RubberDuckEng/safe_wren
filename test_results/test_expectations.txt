@@ -10,7 +10,7 @@ wren_c/test/meta/get_module_variables_not_string.wren
 wren_c/test/meta/eval_compile_error.wren
 
 # wren_c continues after most failures during compiling
-# hence for wren_rust we get wrong line numbers sometimes.
+# hence for safe_wren we get wrong line numbers sometimes.
 wren_c/test/language/string/incomplete_unicode_escape_at_eof.wren
 wren_c/test/language/string/incomplete_long_unicode_escape.wren
 wren_c/test/language/string/incomplete_unicode_escape.wren
@@ -93,7 +93,7 @@ wren_c/example/syntax.wren
 # Slow from Vec::reserve, and lots of call_method?
 wren_c/test/random/sample_count_multiple.wren
 
-# WONTFIX? wren_rust doesn't currently enforce MAX_JUMP, but even
+# WONTFIX? safe_wren doesn't currently enforce MAX_JUMP, but even
 # if we did, our opcode stream is different from wren_c's
 # so these limit tests wouldn't work.
 wren_c/test/limit/jump_too_far.wren

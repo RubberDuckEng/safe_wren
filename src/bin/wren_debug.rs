@@ -1,5 +1,5 @@
 // analog to main.c from wren_test in wren_c.
-// wren_rust's version of wren_test.  Should only use public APIs
+// safe_wren's version of wren_test.  Should only use public APIs
 // Currently has additional --tokenize, --compile and --interpret
 // options, which do use private interfaces and should be split out
 // into a separate executable.
@@ -7,9 +7,9 @@
 use std::env;
 use std::fs;
 
-extern crate wren_rust;
+extern crate safe_wren;
 
-use wren_rust::wren_debug::{interpret_and_print_vm, print_bytecode, print_tokens};
+use safe_wren::wren_debug::{interpret_and_print_vm, print_bytecode, print_tokens};
 
 fn print_usage() {
     println!("Usage:");

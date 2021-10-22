@@ -1,4 +1,4 @@
-// public API for wren_rust
+// public API for safe_wren
 
 mod compiler;
 mod core;

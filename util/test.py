@@ -22,12 +22,12 @@ args = parser.parse_args(sys.argv[1:])
 config = args.suffix.lstrip('_d')
 is_debug = args.suffix.startswith('_d')
 
-WREN_RUST_DIR = dirname(dirname(realpath(__file__)))
-WREN_DIR = join(WREN_RUST_DIR, 'wren_c')
-WREN_TEST = join(WREN_RUST_DIR, 'target', 'debug', 'wren_test' + args.suffix)
-WREN_DEBUG = join(WREN_RUST_DIR, 'target', 'debug', 'wren_debug' + args.suffix)
+safe_wren_DIR = dirname(dirname(realpath(__file__)))
+WREN_DIR = join(safe_wren_DIR, 'wren_c')
+WREN_TEST = join(safe_wren_DIR, 'target', 'debug', 'wren_test' + args.suffix)
+WREN_DEBUG = join(safe_wren_DIR, 'target', 'debug', 'wren_debug' + args.suffix)
 
-RESULTS_DIR = join(WREN_RUST_DIR, 'test_results')
+RESULTS_DIR = join(safe_wren_DIR, 'test_results')
 EXPECTATIONS_PATH = join(RESULTS_DIR, "test_expectations.txt")
 
 WREN_TEST_WITH_EXT = WREN_TEST
@@ -494,7 +494,7 @@ def run_example(path):
 
 
 walk(join(WREN_DIR, 'test'), run_test, ignored=['api', 'benchmark'])
-walk(join(WREN_RUST_DIR, 'test'), run_test)
+walk(join(safe_wren_DIR, 'test'), run_test)
 walk(join(WREN_DIR, 'test', 'api'), run_api_test)
 walk(join(WREN_DIR, 'example'), run_example)
 

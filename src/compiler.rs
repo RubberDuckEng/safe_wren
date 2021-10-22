@@ -85,7 +85,7 @@ const MAX_METHOD_NAME: usize = 64;
 // This is for buffer pre-allocation, rather than limit enforcement.
 // const MAX_METHOD_SIGNATURE: usize = MAX_METHOD_NAME + (MAX_PARAMETERS * 2) + 6;
 
-// The maximum length of an identifier.  This isn't needed in wren_rust, but
+// The maximum length of an identifier.  This isn't needed in safe_wren, but
 // is kept for consistency with wren_c for now.
 pub(crate) const MAX_VARIABLE_NAME: usize = 64;
 

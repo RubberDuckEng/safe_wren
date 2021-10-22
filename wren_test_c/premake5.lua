@@ -18,7 +18,7 @@ project "wren_test"
   language "C"
   cdialect "C99"
   targetdir "bin"
-  links { "wren_rust" }
+  links { "safe_wren" }
   libdirs { "../target/debug" }
 
   prebuildcommands { "cargo build" }

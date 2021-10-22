@@ -1236,7 +1236,7 @@ fn validate_superclass(
     })?;
 
     // In wren_c, this is required since wren_c does blind-casts
-    // of "this" in primitives.  wren_rust also does unwrap() and would
+    // of "this" in primitives.  safe_wren also does unwrap() and would
     // (safely) panic if "this" were a ObjInstance subclass.
     // FIXME: Merge with match below by checking ClassSource::Internal?
     match &superclass.borrow().name[..] {

@@ -1,9 +1,9 @@
 #![no_main]
 use libfuzzer_sys::fuzz_target;
 
-extern crate wren_rust;
+extern crate safe_wren;
 
-use wren_rust::*;
+use safe_wren::*;
 
 fuzz_target!(|data: &[u8]| {
     if let Ok(source) = std::str::from_utf8(data) {

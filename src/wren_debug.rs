@@ -1,4 +1,4 @@
-// For debugging wren_rust.  Uses APIs which are not public.
+// For debugging safe_wren.  Uses APIs which are not public.
 
 use crate::compiler::{lex, InputManager, WrenError};
 use crate::test::test_config;

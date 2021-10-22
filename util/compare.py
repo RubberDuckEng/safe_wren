@@ -16,9 +16,9 @@ parser = ArgumentParser()
 parser.add_argument('test_path')
 args = parser.parse_args(sys.argv[1:])
 
-WREN_RUST_DIR = dirname(dirname(realpath(__file__)))
-WREN_DIR = join(WREN_RUST_DIR, 'wren_c')
-WREN_RUST_TEST = join(WREN_RUST_DIR, 'target', 'debug',
+safe_wren_DIR = dirname(dirname(realpath(__file__)))
+WREN_DIR = join(safe_wren_DIR, 'wren_c')
+safe_wren_TEST = join(safe_wren_DIR, 'target', 'debug',
                       'wren_test')
 WREN_C_TEST = join(WREN_DIR, 'bin', 'wren_test')
 
@@ -36,5 +36,5 @@ def run(runner, test_path):
 print("wren_c")
 print(run(WREN_C_TEST, args.test_path))
 
-print("wren_rust")
-print(run(WREN_RUST_TEST, args.test_path))
+print("safe_wren")
+print(run(safe_wren_TEST, args.test_path))

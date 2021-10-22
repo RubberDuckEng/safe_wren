@@ -5,7 +5,7 @@
 
 pub use crate::vm::{SlotType, UserData, VM};
 
-pub static VERSION_STRING: &str = "wren_rust-0.1";
+pub static VERSION_STRING: &str = "safe_wren-0.1";
 
 // A function callable from Wren code, but implemented in another language.
 // FIXME: How does this report errors?

@@ -1,22 +1,26 @@
 [package]
-name = "wren_rust"
+name = "safe_wren"
 version = "0.1.0"
 authors = ["Eric Seidel <github@eseidel.com>"]
 edition = "2018"
 default-run = "wren_test"
 build = "build.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+# Used for exposing C bindings in src/ffi/c_apis.rs
 libc = "0.2.98"
 
 [build-dependencies]
+# Used by build.rs
 cc = "1.0"
 
 [lib]
-crate-type = ["lib", "cdylib"]  
+# Build a rust library, c library and c static-library
+crate-type = ["lib", "cdylib", "staticlib"]
 
-[profile.release] 
+[profile.release]
+# Include symbols when debugging
+# TODO: Remove this from release, make a new "profile" target?
 debug = true
+# Ensure .dsym is produced on Mac:
 split-debuginfo = "packed"

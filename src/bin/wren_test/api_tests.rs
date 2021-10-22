@@ -1,5 +1,5 @@
 use super::error::error_bind_method;
-use wren_rust::wren::{ForeignMethodFn, VM};
+use safe_wren::wren::{ForeignMethodFn, VM};
 
 pub fn api_test_bind_foreign_method_fn(
     _vm: &VM,

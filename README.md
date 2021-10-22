@@ -1,13 +1,37 @@
-# wren_rust
-An (incomplete) implementation of Wren (wren.io) in Rust
+# safe_wren
+A mostly-complete implementation of Wren (wren.io) in Rust.
+
+## Similaries to wren_c
+* Passes ~90% of wren_c tests
+* Exposes ~90% of wren_c C API
 
 ## Differences from wren_c
-* reference-counted, no garbage collected.
-* expects utf8 input
-* Strings are always utf8 (do not allow invalid utf8 bytes)
-* does not allow overriding allocator (yet?)
+* Never crashes to bad input (but can currently still be timed-out via infinite loops)
+* Reference-counted, no garbage collected (in progress).
+* Stops at first compile error (instead of continuing)
+* Requires utf8 input and strings are always utf8 (does not allow invalid utf8 bytes)
+* Does not allow overriding allocator (yet)
+* Missing opt-meta, and class attributes
+* About 2x slower than wren_c on some microbenchmarks (should be compariable after GC work completes)
 
 ## Usage
+
+### From an existing C project:
+
+`cargo build --release` produces libsafe_wren.a and libsafe_wren.so
+which are drop-in replacements for wren.a and wren.so and compatible
+with wren.h found at (wren_c/src/include/wren.h).
+
+
+### From Rust:
+Add a dependency to your cargo.toml, e.g.
+
+```
+[dependencies]
+safe_wren = "0.1.0"
+```
+
+## Development
 
 There are two binaries:
 - wren_test -- used for testing uses only public API
@@ -31,13 +55,15 @@ with error text from any failed tests.  `test.py` will also update
 
 `test_results/test_expectations.txt` lists all currently skipped tests and why.
 
-## Launch list?
+## Work yet to do
+
+### Launch list?
 * Example using rust API
 * Example using C API
 * Publish to Cargo
 * Announce to wren-lang
 
-## Ordered goals?
+### Ordered goals?
 * Fix delta blue (closure error!)
 * fix local_outside_method.wren
 * Time the tests / make faster (next is vec::alloc from method calls)
@@ -55,7 +81,7 @@ with error text from any failed tests.  `test.py` will also update
 * Garbage Collection?
 * Sort methods to match wren_c order?
 * Variable should use a different type for each scope type.
-* fuzz both wren_c and wren_rust and compare output?
+* fuzz both wren_c and safe_wren and compare output?
 * Look at some of the slow-unit fuzz results
  ** fuzz/artifacts/fuzz_target_1/slow-unit-63ea01d2d5ba869bdb889c3b51b21350d5a4ffea (lookup_symbol should be a hash)
  ** fuzz/artifacts/fuzz_target_1/slow-unit-355b25c3fc10bfd14a363cf737abf3a07bab4a1e (needless stack resizing)
@@ -71,8 +97,8 @@ with error text from any failed tests.  `test.py` will also update
 https://stackoverflow.com/questions/62338832/how-to-hold-rust-objects-in-rust-code-created-through-c
 https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to imply so?
 
-### Benchamarking notes
-* Current numbers show wren_rust to be about 2.5x-9x slower than wren_c across
+### Benchmarking notes
+* Current numbers show safe_wren to be about 2.5x-9x slower than wren_c across
   the various microbenchmarks.  Unclear what real-world effect this would have.
 * Value::clone is apparent in many benchmarks.
 * Using move/drain semantics when calling args from the stack could help avoid
@@ -86,7 +112,7 @@ https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to 
 * map_string spends 57% of time in core::string_plus, and 20% of time
   truncating the stack.
 
-### wren_c bugs
+## wren_c bugs
 * closures/functions defined in wren_core.wren end up with a null class pointer?
 * If you yield from the root, it gets set to state=OTHER, presumably later you
 might be able to call things on it?

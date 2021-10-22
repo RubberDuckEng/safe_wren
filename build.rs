@@ -11,7 +11,7 @@ fn comment_out(before: String, line: &str) -> String {
 fn generate_wren_core_source_rs() {
     let wren_core_wren_path = Path::new("wren_c/src/vm/wren_core.wren");
     let source = fs::read_to_string(wren_core_wren_path).unwrap();
-    // Fiber and Fn are both defined in code in wren_rust.
+    // Fiber and Fn are both defined in code in safe_wren.
     let modified = comment_out(comment_out(source, "class Fiber {}"), "class Fn {}");
     let code = format!(
         "pub fn wren_core_source() -> &'static str {{

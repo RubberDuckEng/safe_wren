@@ -1,5 +1,5 @@
 // analog to main.c from wren_test in wren_c.
-// wren_rust's version of wren_test.  Should only use public APIs
+// safe_wren's version of wren_test.  Should only use public APIs
 // Currently has additional --tokenize, --compile and --interpret
 // options, which do use private interfaces and should be split out
 // into a separate executable.
@@ -7,14 +7,14 @@
 use std::env;
 use std::fs;
 
-extern crate wren_rust;
+extern crate safe_wren;
 
 mod api_tests;
 mod error;
 
 use api_tests::api_test_bind_foreign_method_fn;
-use wren_rust::test::test_config;
-use wren_rust::wren::*;
+use safe_wren::test::test_config;
+use safe_wren::wren::*;
 
 enum ExitCode {
     Success = 0,

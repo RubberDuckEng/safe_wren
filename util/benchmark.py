@@ -39,10 +39,10 @@ from os.path import relpath
 #
 # To generate a baseline file, run this script with "--generate-baseline".
 
-WREN_RUST_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-WREN_C_DIR = os.path.join(WREN_RUST_DIR, 'wren_c')
+safe_wren_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+WREN_C_DIR = os.path.join(safe_wren_DIR, 'wren_c')
 WREN_C_BIN = os.path.join(WREN_C_DIR, 'bin')
-WREN_RUST_BIN = os.path.join(WREN_RUST_DIR, 'target', 'release')
+safe_wren_BIN = os.path.join(safe_wren_DIR, 'target', 'release')
 BENCHMARK_DIR = os.path.join(WREN_C_DIR, 'test', 'benchmark')
 BENCHMARK_DIR = relpath(BENCHMARK_DIR).replace("\\", "/")
 
@@ -102,8 +102,8 @@ BENCHMARK("map_string", r"""12799920000""")
 BENCHMARK("string_equals", r"""3000000""")
 
 LANGUAGES = [
-    ("wren_rust",           [os.path.join(
-        WREN_RUST_BIN, 'wren_test')], ".wren"),
+    ("safe_wren",           [os.path.join(
+        safe_wren_BIN, 'wren_test')], ".wren"),
     ("wren_c",           [os.path.join(WREN_C_BIN, 'wren_test')], ".wren"),
     # Dart examples need updating for null-safety anyway.
     # ("dart",           ["dart", "run"],                ".dart"),
@@ -213,7 +213,7 @@ def run_benchmark_language(benchmark, language, benchmark_result):
     score = get_score(best)
 
     comparison = ""
-    if language[0] == "wren_rust":
+    if language[0] == "safe_wren":
         if benchmark[2] != None:
             ratio = 100 * score / benchmark[2]
             comparison = "{:6.2f}% relative to baseline".format(ratio)
@@ -223,9 +223,9 @@ def run_benchmark_language(benchmark, language, benchmark_result):
                 comparison = red(comparison)
         else:
             comparison = "no baseline"
-    elif "wren_rust" in benchmark_result:
-        # Hack: assumes wren_rust gets run first.
-        wren_score = benchmark_result["wren_rust"]["score"]
+    elif "safe_wren" in benchmark_result:
+        # Hack: assumes safe_wren gets run first.
+        wren_score = benchmark_result["safe_wren"]["score"]
         ratio = 100.0 * wren_score / score
         comparison = "{:6.2f}%".format(ratio)
         if ratio > 105:
