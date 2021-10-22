@@ -4,18 +4,22 @@ A nearly-complete implementation of the Wren language (wren.io) in Rust.
 The original https://github.com/wren-lang/wren from wren.io is
 refered to as `wren_c` to disambiguate from this `safe_wren`.
 
+This should be considered a alpha release.  safe_wren has only been used
+locally for test cases and command line, we've not yet seen it integrated
+with larger programs.  Feedback welcome: https://github.com/RubberDuckEng/safe_wren/issues
+
 ## Similaries to wren_c
 * Passes ~90% of wren_c tests
 * Exposes ~90% of wren_c C API
 
 ## Differences from wren_c
 * Never crashes to bad input (but can currently still be timed-out via infinite loops)
-* Reference-counted, no garbage collected (in progress).
+* Reference-counted, not (yet) garbage collected (in progress).
 * Stops at first compile error (instead of continuing)
-* Requires utf8 input and strings are always utf8 (does not allow invalid utf8 bytes)
+* Requires utf8 input and wren `String`s are strings of utf8, not byte-buffers (safe_wren does not allow invalid utf8 bytes)
 * Does not allow overriding allocator (yet)
-* Missing opt-meta, and class attributes
-* About 2x slower than wren_c on some microbenchmarks (should be compariable after GC work completes)
+* Still missing opt-meta, and class attributes
+* Currently about 2x slower than wren_c on some microbenchmarks (should be compariable after GC work completes)
 
 ## Usage
 
@@ -37,39 +41,54 @@ safe_wren = "0.1.0"
 
 ## Development
 
-There are two binaries:
-- `wren_test` -- used for testing uses only public API
+Two binaries are provided for development:
+- `wren_test` -- used for testing, uses only public API
 - `wren_debug` -- used for debugging vm, uses private calls.
 
-`cargo run FILENAME_OR_STRING`
-will run `wren_test` against a file or string.
+`cargo run FILENAME_OR_STRING` will run `wren_test` against a file or string.
 
 
-`cargo run --bin=wren_debug FILENAME_OR_STRING` will run `wren_debug`
+`cargo run --bin=wren_debug COMMAND FILENAME_OR_STRING` will run `wren_debug`
 
-`wren_debug` sub-commands:
-`tokenize` Dumps token stream.
-`compile`  Dumps compiler bytecode.
-`interpret` Similar to no arguments, excepts prints VM state after run.
+`wren_debug` commands:
+* `tokenize` Dumps token stream.
+* `compile`  Dumps compiler bytecode.
+* `interpret` Similar to `wren_test`, excepts prints VM state after run.
 
 
 `python3 util/test.py` will run the tests, including updating `test_results/*`
 with error text from any failed tests.  `test.py` will also update
 `test_results/passes.txt` with the list of passing tests.
 
+`python3 util/to_fix.py` will summarize `test_results/*`.
+
 `test_results/test_expectations.txt` lists all currently skipped tests and why.
+
+`python3 utils/compare.py` will compare output for wren_test from safe_wren vs. wren_c.
+
+`cargo fuzz` works, follow instructions at https://rust-fuzz.github.io/book/cargo-fuzz.html
+will require using nightly rust toolchains as of Oct 2021.  I haven't seen crashes in months
+mostly it finds timeouts due to lack of a timeout mechanism in safe_wren (yet).
+
+@eseidel's normal development loop:
+1. Figure out what the next issue to tackle (this `README.md` or `test_results/test_expectations.txt`).
+2. Implement it, fight the rust compiler until it compiles.
+3. Write a small test in `tests/bringup`.
+4. Use `cargo run` on the test, if fails go back to debugging.
+5. Use `cargo run --bin=wren_debug interpret` to see what interpreter is doing.
+6. Use `cargo build && python3 util/test.py; python3 util/to_fix.py` to run all tests and update `common_test_errors.txt`.
+7. Repeat.
 
 ## Work yet to do
 
 ### Launch list?
 * Example using rust API
 * Example using C API
-* Publish to Cargo
 * Announce to wren-lang
 * Generate and publish Rust docs.
 
 ### Ordered goals?
-* Fix delta blue (closure error!)
+* Garbage Collection, in progress: https://github.com/RubberDuckEng/vmgc
 * fix local_outside_method.wren
 * Time the tests / make faster (next is vec::alloc from method calls)
 * Fancier test_expectations system
@@ -79,14 +98,14 @@ with error text from any failed tests.  `test.py` will also update
 * validate_superclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
 * wrong line numbers for foreign method runtime errors.
-* attributes
+* Class attributes: https://wren.io/classes.html#attributes
 * rust implementation of meta package.
 * continue after failure during compiling?
 * \x should not round-trip through char.
-* Garbage Collection?
 * Sort methods to match wren_c order?
 * Variable should use a different type for each scope type.
 * fuzz both wren_c and safe_wren and compare output?
+* Add a timeout mechanism for slow/infinite loops/scripts.
 * Look at some of the slow-unit fuzz results
  ** fuzz/artifacts/fuzz_target_1/slow-unit-63ea01d2d5ba869bdb889c3b51b21350d5a4ffea (lookup_symbol should be a hash)
  ** fuzz/artifacts/fuzz_target_1/slow-unit-355b25c3fc10bfd14a363cf737abf3a07bab4a1e (needless stack resizing)
@@ -94,6 +113,7 @@ with error text from any failed tests.  `test.py` will also update
 
 ### Leads to pursue
 * Making InputManager an Iterator, could make easier the "skip until" pattern?
+  e.g. https://doc.rust-lang.org/stable/std/iter/struct.Peekable.html
 * https://docs.rs/once_cell/1.8.0/once_cell/
 * https://docs.rs/anyhow/1.0.41/anyhow/
 * Try optimizing for size: https://github.com/johnthagen/min-sized-rust
