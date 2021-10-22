@@ -1,5 +1,8 @@
 # safe_wren
-A mostly-complete implementation of Wren (wren.io) in Rust.
+A nearly-complete implementation of the Wren language (wren.io) in Rust.
+
+The original https://github.com/wren-lang/wren from wren.io is
+refered to as `wren_c` to disambiguate from this `safe_wren`.
 
 ## Similaries to wren_c
 * Passes ~90% of wren_c tests
@@ -18,13 +21,14 @@ A mostly-complete implementation of Wren (wren.io) in Rust.
 
 ### From an existing C project:
 
-`cargo build --release` produces libsafe_wren.a and libsafe_wren.so
-which are drop-in replacements for wren.a and wren.so and compatible
-with wren.h found at (wren_c/src/include/wren.h).
+`cargo build --release` produces `target/release/libsafe_wren.a` and
+`target/release/libsafe_wren.so` which are drop-in replacements for
+`wren.a` and `wren.so` and compatible with `wren.h`
+found at (`wren_c/src/include/wren.h`).
 
 
 ### From Rust:
-Add a dependency to your cargo.toml, e.g.
+Add a dependency to your `cargo.toml`, e.g.
 
 ```
 [dependencies]
@@ -34,16 +38,16 @@ safe_wren = "0.1.0"
 ## Development
 
 There are two binaries:
-- wren_test -- used for testing uses only public API
-- wren_debug -- used for debugging vm, uses private calls.
+- `wren_test` -- used for testing uses only public API
+- `wren_debug` -- used for debugging vm, uses private calls.
 
 `cargo run FILENAME_OR_STRING`
-will run wren_test against a file or string.
+will run `wren_test` against a file or string.
 
 
-`cargo run --bin=wren_debug FILENAME_OR_STRING` will run wren_debug
+`cargo run --bin=wren_debug FILENAME_OR_STRING` will run `wren_debug`
 
-wren_debug sub-commands:
+`wren_debug` sub-commands:
 `tokenize` Dumps token stream.
 `compile`  Dumps compiler bytecode.
 `interpret` Similar to no arguments, excepts prints VM state after run.
@@ -69,7 +73,7 @@ with error text from any failed tests.  `test.py` will also update
 * Time the tests / make faster (next is vec::alloc from method calls)
 * Fancier test_expectations system
  ** Config / Expectation pairs (c | FAIL, RUST | TIMEOUT)
-* Teach test.py how to easily switch between rust and c_rust and c
+* Teach `utils/test.py` how to easily switch between rust and c_rust and c
 * remove all uses of 'as' (use into() instead).
 * validate_superclass could now use ClassSource to validate internal, etc.
 * String codepoint APIs (including String.iterate)
