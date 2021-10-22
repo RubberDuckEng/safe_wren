@@ -66,6 +66,7 @@ with error text from any failed tests.  `test.py` will also update
 * Example using C API
 * Publish to Cargo
 * Announce to wren-lang
+* Generate and publish Rust docs.
 
 ### Ordered goals?
 * Fix delta blue (closure error!)
