@@ -5,6 +5,13 @@ authors = ["Eric Seidel <github@eseidel.com>"]
 edition = "2018"
 default-run = "wren_test"
 build = "build.rs"
+license = "MIT"
+license-file = "LICENSE"
+description = "A safe, pure-rust implementation of wren.io, drop-in replacement for wren.io's C implementation."
+repository = "https://github.com/rubberduckeng/safe_wren"
+keywords = ["interpreter", "language", "lua", "embed", "scripting"]
+categories = ["compilers"]
+
 
 [dependencies]
 # Used for exposing C bindings in src/ffi/c_apis.rs
