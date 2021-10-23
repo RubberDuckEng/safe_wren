@@ -19,7 +19,7 @@ with larger programs.  Feedback welcome: https://github.com/RubberDuckEng/safe_w
 * Requires utf8 input and wren `String`s are strings of utf8, not byte-buffers (safe_wren does not allow invalid utf8 bytes)
 * Does not allow overriding allocator (yet)
 * Still missing opt-meta, and class attributes
-* Currently about 2x slower than wren_c on some microbenchmarks (should be compariable after GC work completes)
+* Currently about 2x slower than wren_c on some microbenchmarks (should be comparable after GC work completes)
 
 ## Usage
 
