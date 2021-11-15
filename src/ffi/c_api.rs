@@ -1,4 +1,4 @@
-use crate::vm::Value;
+use crate::value::Value;
 use crate::wren::*;
 use libc::{c_char, c_int, c_uint, size_t};
 use std::boxed::Box;

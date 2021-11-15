@@ -5,6 +5,7 @@ mod core;
 mod opt {
     pub mod random_bindings;
 }
+mod value;
 mod vm;
 pub mod wren;
 mod ffi {

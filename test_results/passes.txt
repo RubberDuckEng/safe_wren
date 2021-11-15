@@ -815,4 +815,3 @@ wren_c/test/regression/442-000321.wren
 wren_c/test/regression/442-000348.wren
 wren_c/test/regression/442-000357.wren
 wren_c/test/regression/442-000440.wren
-wren_c/test/regression/561.wren

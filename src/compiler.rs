@@ -57,9 +57,9 @@ impl Arity {
 
 pub(crate) type JumpOffset = u16;
 
+use crate::value::{ObjClosure, ObjFn, Value};
 use crate::vm::{
-    new_handle, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn, Symbol, SymbolTable,
-    Value, MAX_FIELDS, VM,
+    new_handle, DefinitionError, Module, ModuleLimitError, Symbol, SymbolTable, MAX_FIELDS, VM,
 };
 
 // Maximum times grammar is allowed to recurse through parse_precedence

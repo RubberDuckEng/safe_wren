@@ -1,6 +1,6 @@
 // analog to wren_core.c from wren_c.
 
-use crate::{float_to_string, vm::*};
+use crate::{float_to_string, value::*, vm::*};
 use std::collections::VecDeque;
 use std::ops::*;
 
