@@ -1,12 +1,13 @@
 // analog to wren_compiler.c from wren_c.
 
+use vmgc::heap::*;
+use vmgc::object::{List, Map};
+
 use std::cell::RefCell;
 use std::cmp::{Ord, Ordering};
-use std::collections::HashMap;
 use std::error;
 use std::fmt;
 use std::ops::Range;
-use std::rc::Rc;
 use std::str;
 
 pub(crate) struct Constant(usize);
@@ -57,9 +58,11 @@ impl Arity {
 
 pub(crate) type JumpOffset = u16;
 
+use vmgc::heap::GlobalHandle;
+
 use crate::vm::{
-    new_handle, DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn, Symbol, SymbolTable,
-    Value, MAX_FIELDS, VM,
+    DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn, Symbol, SymbolTable, MAX_FIELDS,
+    VM,
 };
 
 // Maximum times grammar is allowed to recurse through parse_precedence
@@ -1243,22 +1246,23 @@ impl FnDebug {
 // to allow both fast lookup (when there are lots of constants)
 // as well as fast copy from the compiler into the final function.
 pub(crate) struct ConstantsBuilder {
-    hash: HashMap<Value, usize>,
+    hash: GlobalHandle<Map>,
 
     // public for deconstruction in end_compiler.
-    pub(crate) list: Vec<Value>,
+    pub(crate) list: GlobalHandle<List>,
 }
 
 impl ConstantsBuilder {
-    fn new() -> ConstantsBuilder {
+    fn new(heap: &Heap) -> ConstantsBuilder {
+        let scope = HandleScope::new(heap);
         ConstantsBuilder {
-            hash: HashMap::new(),
-            list: Vec::new(),
+            hash: scope.create_null(),
+            list: scope.create_null(),
         }
     }
 
-    fn lookup(&self, value: &Value) -> Option<Constant> {
-        self.hash.get(value).map(|u| Constant(*u))
+    fn lookup(&self, value: LocalHandle<()>) -> Option<Constant> {
+        self.hash.as_mut().get(value).map(|u| Constant(*u))
     }
 
     fn len(&self) -> usize {
@@ -1268,7 +1272,7 @@ impl ConstantsBuilder {
 
     // This makes no attempt to check if it's already in the map
     // callers are expected to lookup first.
-    fn add(&mut self, value: Value) -> Constant {
+    fn add(&mut self, value: LocalHandle<()>) -> Constant {
         let index = self.list.len();
         self.list.push(value.clone());
         self.hash.insert(value, index);
@@ -1406,7 +1410,7 @@ impl Compiler {
     }
 }
 
-fn emit_constant(ctx: &mut ParseContext, value: Value) -> Result<(), WrenError> {
+fn emit_constant(ctx: &mut ParseContext, value: LocalHandle<()>) -> Result<(), WrenError> {
     let index = ensure_constant(ctx, value)?;
     emit(ctx, Ops::Constant(index));
     Ok(())
@@ -1439,7 +1443,10 @@ impl fmt::Debug for Compiler {
 
 // Adds [constant] to the constant pool and returns its index.
 // wren_c calls this addConstant
-fn ensure_constant(ctx: &mut ParseContext, constant: Value) -> Result<Constant, WrenError> {
+fn ensure_constant(
+    ctx: &mut ParseContext,
+    constant: LocalHandle<()>,
+) -> Result<Constant, WrenError> {
     if let Some(index) = ctx.compiler().constants.lookup(&constant) {
         Ok(index)
     } else if ctx.compiler().constants.len() < MAX_CONSTANTS {
@@ -1471,8 +1478,24 @@ struct ParseContext<'a> {
     // well as be able to look-up and define variables on the module.
     // IIRC, we only ever define functions on the module during parse time
     // all other variables are placeholders.
-    module: Handle<Module>,
+    module: GlobalHandle<Module>,
     nesting: usize,
+    scope: HandleScope<'a>,
+}
+
+impl<'a> ParseContext<'a> {
+    fn wrap_num(&self, value: f64) -> LocalHandle<f64> {
+        self.scope.create_num(value)
+    }
+    fn wrap_string(&self, value: String) -> LocalHandle<String> {
+        self.scope.take(value)
+    }
+    fn wrap_str(&self, value: str) -> LocalHandle<String> {
+        self.scope.take(value.to_string())
+    }
+    fn null(&self) -> LocalHandle<String> {
+        self.scope.create_null()
+    }
 }
 
 impl<'a> ParseContext<'a> {
@@ -1597,9 +1620,9 @@ type MethodSignatureParslet =
 fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
     let value = match &ctx.parser.previous.token {
-        Token::Num(n) => Value::Num(*n),
-        Token::String(s) => Value::from_str(s),
-        Token::Interpolation(s) => Value::from_str(s),
+        Token::Num(n) => ctx.wrap_num(*n),
+        Token::String(s) => ctx.wrap_str(s),
+        Token::Interpolation(s) => ctx.wrap_str(s),
         _ => {
             let name = previous_token_name(ctx);
             return Err(ctx.error_string(format!("Invalid literal {}", name)));
@@ -1806,7 +1829,7 @@ fn call_signature(ctx: &mut ParseContext, signature: Signature, call_type: CallT
             // We bind it at class definition time by storing a reference to the
             // superclass, initially Null. When the method is bound, we'll look
             // up the superclass then and store it in this slot.
-            let super_const = ctx.compiler_mut().constants.add(Value::Null);
+            let super_const = ctx.compiler_mut().constants.add(ctx.null());
             emit(ctx, Ops::CallSuper(signature.arity, symbol, super_const));
         }
     }
@@ -1973,17 +1996,17 @@ fn finish_parameter_list(
     Ok(())
 }
 
-type Handle<T> = Rc<RefCell<T>>;
+// type Handle<T> = Rc<RefCell<T>>;
 
 // Finishes [compiler], which is compiling a function, method, or chunk of top
 // level code. If there is a parent compiler, then this emits code in the
 // parent compiler to load the resulting function.
-fn end_compiler(
-    ctx: &mut ParseContext,
+fn end_compiler<'a>(
+    ctx: &mut ParseContext<'a>,
     ending: Compiler,
     arity: Arity,
     name: String,
-) -> Result<Handle<ObjFn>, WrenError> {
+) -> Result<LocalHandle<'a, ObjFn>, WrenError> {
     let mut compiler = ending;
     // Mark the end of the bytecode. Since it may contain multiple early returns,
     // we can't rely on CODE_RETURN to tell us we're at the end.
@@ -1997,7 +2020,7 @@ fn end_compiler(
 
     // We're done with the compiler, create an ObjFn from it.
     let upvalues = std::mem::take(&mut compiler.upvalues);
-    let fn_obj = new_handle(ObjFn::from_compiler(
+    let fn_obj = ctx.new_fn(ObjFn::from_compiler(
         ctx.vm,
         ctx.module.clone(),
         compiler,
@@ -2012,7 +2035,7 @@ fn end_compiler(
         // makes creating a function a little slower, but makes invoking them
         // faster. Given that functions are invoked more often than they are
         // created, this is a win.
-        let constant = ensure_constant(ctx, Value::Fn(fn_obj.clone()))?;
+        let constant = ensure_constant(ctx, fn_obj)?;
         emit(ctx, Ops::Closure(constant, upvalues));
     }
 
@@ -2546,7 +2569,7 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
         None => {
             // Implicitly define a module-level variable in
             // the hopes that we get a real definition later.
-            let line_value = Value::from_usize(ctx.line_number());
+            let line_value = ctx.wrap_usize(ctx.line_number());
             match ctx.module.borrow_mut().add_variable(&name, line_value) {
                 Ok(index) => index,
                 Err(ModuleLimitError::TooManyVariables) => {
@@ -3167,6 +3190,7 @@ fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenErr
 impl Compiler {
     fn declare_variable(
         &mut self,
+        scope: &HandleScope,
         module: &mut Module,
         name: String,
     ) -> Result<u16, DeclarationError> {
@@ -3180,7 +3204,7 @@ impl Compiler {
             // Error handling missing.
             // Error handling should occur inside wren_define_variable, no?
             return Ok(module
-                .define_variable(&name, Value::Null)
+                .define_variable(&name, scope.create_null())
                 .map_err(|e| DeclarationError::DefinitionError(e))?);
         }
 
@@ -3495,7 +3519,7 @@ fn method(ctx: &mut ParseContext, class_variable: Variable) -> Result<bool, Wren
 
     // Outside the scope block so we can emit to the outer compiler:
     if is_foreign {
-        emit_constant(ctx, Value::from_string(signature.full_name()))?;
+        emit_constant(ctx, ctx.wrap_string(signature.full_name()))?;
     }
 
     // Define the method. For a constructor, this defines the instance
@@ -3527,7 +3551,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     let name = previous_token_name(ctx);
 
     // FIXME: Clone shouldn't be needed.
-    let class_name = Value::String(Rc::new(name.clone()));
+    let class_name = ctx.wrap_string(name);
 
     // Make a string constant for the name.
     emit_constant(ctx, class_name)?;
@@ -3988,32 +4012,35 @@ fn ignore_newlines(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 impl VM {
     // called wrenCompileInModule in wren_c
-    pub(crate) fn compile_in_module(
+    pub(crate) fn compile_in_module<'a>(
         &mut self,
+        scope: &HandleScope<'a>,
         module_name: &str,
         input: InputManager,
-    ) -> Result<Handle<ObjClosure>, WrenError> {
+    ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
         // When compiling, we create a module and register it.
         let module = self.lookup_or_register_empty_module(module_name);
-        self.compile(input, module)
+        self.compile(input, module, scope)
     }
 
     // called wrenCompileSource in wren_c
-    pub(crate) fn compile_source(
+    pub(crate) fn compile_source<'a>(
         &mut self,
+        scope: &HandleScope<'a>,
         module_name: &str,
         source: String,
-    ) -> Result<Handle<ObjClosure>, WrenError> {
+    ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
         let input = InputManager::from_string(source);
         self.compile_in_module(module_name, input)
     }
 
     // called wrenCompile in wren_c
-    pub(crate) fn compile(
+    pub(crate) fn compile<'a>(
         &mut self,
+        handles: &HandleScope<'a>,
         input: InputManager,
-        module: Handle<Module>,
-    ) -> Result<Handle<ObjClosure>, WrenError> {
+        module: LocalHandle<Module>,
+    ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
         let num_existing_variables = module.borrow().variable_count();
 
         // Init the parser & compiler
@@ -4028,6 +4055,7 @@ impl VM {
             module,
             vm: self,
             nesting: 0,
+            scope: HandleScope::new(self.heap),
         };
 
         let mut scope = PushCompiler::push_root(&mut parse_context);
@@ -4074,7 +4102,7 @@ impl VM {
         let compiler = scope.pop();
         // wren_c uses (script) :shrug:
         let fn_obj = end_compiler(scope.ctx, compiler, Arity(0), "<script>".into())?;
-        let closure = new_handle(ObjClosure::new(scope.ctx.vm, fn_obj));
+        let closure = handles.take(ObjClosure::new(scope.ctx.vm, fn_obj));
         Ok(closure)
     }
 }

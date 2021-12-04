@@ -1,4 +1,3 @@
-use crate::vm::Value;
 use crate::wren::*;
 use libc::{c_char, c_int, c_uint, size_t};
 use std::boxed::Box;
@@ -488,17 +487,17 @@ pub extern "C" fn wrenGetSlotString(_vm: *mut WrenVM, _slot: c_int) -> *const c_
     std::ptr::null()
 }
 
-impl Value {
-    fn into_handle(&self) -> *mut WrenHandle {
-        let value_ptr = Box::into_raw(Box::new(self.clone()));
-        unsafe { std::mem::transmute::<*mut Value, *mut WrenHandle>(value_ptr) }
-    }
+// impl Value {
+//     fn into_handle(&self) -> *mut WrenHandle {
+//         let value_ptr = Box::into_raw(Box::new(self.clone()));
+//         unsafe { std::mem::transmute::<*mut Value, *mut WrenHandle>(value_ptr) }
+//     }
 
-    fn from_handle(handle: *mut WrenHandle) -> Box<Value> {
-        let value_ptr = unsafe { std::mem::transmute::<*mut WrenHandle, *mut Value>(handle) };
-        unsafe { Box::from_raw(value_ptr) }
-    }
-}
+//     fn from_handle(handle: *mut WrenHandle) -> Box<Value> {
+//         let value_ptr = unsafe { std::mem::transmute::<*mut WrenHandle, *mut Value>(handle) };
+//         unsafe { Box::from_raw(value_ptr) }
+//     }
+// }
 
 #[no_mangle]
 pub extern "C" fn wrenGetSlotHandle(c_vm: *mut WrenVM, c_slot: c_int) -> *mut WrenHandle {
