@@ -6,20 +6,19 @@ use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::TryFrom;
-use std::hash::Hasher;
+use std::hash::{Hash, Hasher};
+use std::rc::Rc;
 use std::{str, usize};
 
 use crate::compiler::{is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Variable};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-// use crate::ffi::c_api::WrenConfiguration;
-// use crate::opt::random_bindings::{
-//     random_bind_foreign_class, random_bind_foreign_method, random_source,
-// };
-use crate::wren::{Configuration, DebugLevel, ForeignMethodFn, LoadModuleResult, Slot};
-
-use vmgc::heap::*;
-use vmgc::object::*;
-use vmgc::pointer::ObjectType;
+use crate::ffi::c_api::WrenConfiguration;
+use crate::opt::random_bindings::{
+    random_bind_foreign_class, random_bind_foreign_method, random_source,
+};
+use crate::wren::{
+    Configuration, DebugLevel, ForeignMethodFn, InterpretResult, LoadModuleResult, Slot,
+};
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -47,7 +46,7 @@ pub(crate) const MAX_FIELDS: usize = 255;
 #[derive(Debug)]
 pub(crate) enum VMError {
     Error(String),
-    FiberAbort(GlobalHandle<()>),
+    FiberAbort(Value),
 }
 
 impl VMError {
@@ -61,42 +60,173 @@ impl VMError {
         VMError::Error(msg)
     }
 
-    fn as_try_return_value<'a>(&self, scope: &HandleScope<'a>) -> LocalHandle<'a, ()> {
+    fn as_try_return_value(&self) -> Value {
         match self {
-            VMError::Error(string) => scope.wrap_str(string),
-            VMError::FiberAbort(value) => scope.from_global(value),
+            VMError::Error(string) => Value::from_str(string),
+            VMError::FiberAbort(value) => value.clone(),
         }
     }
 }
 
-// impl Hash for Value {
-//     // See hashObject in wren_c wren_value.c
-//             Value::String(v) => v.hash(state),
-//             Value::Class(v) => v.borrow().name.hash(state),
-//             Value::Range(v) => {
-//                 hash_f64(v.borrow().from, state);
-//                 hash_f64(v.borrow().to, state);
-//                 // wren_c doesn't hash inclusive, but we could?
-//             }
-//     }
-// }
+#[derive(Clone)]
+pub(crate) enum Value {
+    Null,
+    Num(f64),
+    Boolean(bool),
+    String(Rc<String>),
+    // Split these off and replace with Object(Handle<dyn Obj>)
+    Class(Handle<ObjClass>),
+    Range(Handle<ObjRange>),
+    Fn(Handle<ObjFn>),
+    Closure(Handle<ObjClosure>),
+    List(Handle<ObjList>),
+    Map(Handle<ObjMap>),
+    Fiber(Handle<ObjFiber>),
+    Instance(Handle<ObjInstance>),
+    Foreign(Handle<ObjForeign>),
+}
 
-// eq
-//             (Value::Range(a_range), Value::Range(b_range)) => {
-//                 let a = a_range.borrow();
-//                 let b = b_range.borrow();
-//                 a.from == b.from && a.to == b.to && a.is_inclusive == b.is_inclusive
-//             }
-//             (Value::String(a_string), Value::String(b_string)) => a_string.eq(&b_string),
-//             (Value::Class(a), Value::Class(b)) => a.as_ptr() == b.as_ptr(),
+impl Hash for Value {
+    // See hashObject in wren_c wren_value.c
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        fn hash_f64<H: Hasher>(num: f64, state: &mut H) {
+            let bits: u64 = num.to_bits();
+            bits.hash(state);
+        }
+        match self {
+            Value::Null => 0.hash(state),
+            Value::Num(f64_ref) => hash_f64(*f64_ref, state),
+            Value::Boolean(v) => v.hash(state),
+            Value::String(v) => v.hash(state),
+            Value::Class(v) => v.borrow().name.hash(state),
+            Value::Range(v) => {
+                hash_f64(v.borrow().from, state);
+                hash_f64(v.borrow().to, state);
+                // wren_c doesn't hash inclusive, but we could?
+            }
+            // FIXME: wren_c defines a hash for Fn for internal usage?
+            Value::Fn(v) => v.as_ptr().hash(state),
+            // FIXME: The rest of these may be wrong?
+            Value::Closure(v) => v.as_ptr().hash(state),
+            Value::List(v) => v.as_ptr().hash(state),
+            Value::Map(v) => v.as_ptr().hash(state),
+            Value::Fiber(v) => v.as_ptr().hash(state),
+            Value::Instance(v) => v.as_ptr().hash(state),
+            Value::Foreign(v) => v.as_ptr().hash(state),
+        }
+    }
+}
 
-// FIXME: Should use HostObject to make tracable.
+impl PartialEq for Value {
+    fn eq(&self, rhs: &Value) -> bool {
+        // wren_c does memcmp here (e.g. wrenValuesEqual)
+        // However the code below seems to pass all the tests.
+        match (self, rhs) {
+            (Value::Null, Value::Null) => true,
+            (Value::Num(a), Value::Num(b)) => a == b,
+            (Value::Boolean(a), Value::Boolean(b)) => a == b,
+            (Value::Range(a_range), Value::Range(b_range)) => {
+                let a = a_range.borrow();
+                let b = b_range.borrow();
+                a.from == b.from && a.to == b.to && a.is_inclusive == b.is_inclusive
+            }
+            (Value::String(a_string), Value::String(b_string)) => a_string.eq(&b_string),
+            (Value::Class(a), Value::Class(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Instance(a), Value::Instance(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Fn(a), Value::Fn(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::List(a), Value::List(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Map(a), Value::Map(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Closure(a), Value::Closure(b)) => a.as_ptr() == b.as_ptr(),
+            (Value::Fiber(a), Value::Fiber(b)) => a.as_ptr() == b.as_ptr(),
+            // FIXME: This catch-all is kinda dangerous as it prevents
+            // warnings when we add new types to Value.
+            // Some way to only catch-all for (T, S) where T != S
+            // would be more future-proof.
+            _ => false,
+        }
+    }
+}
+
+impl Eq for Value {}
+
+impl core::fmt::Debug for Value {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Value::Null => write!(f, "Null"),
+            Value::Num(n) => write!(f, "{}", n),
+            Value::Boolean(b) => write!(f, "{}", b),
+            Value::String(s) => write!(f, "\"{}\"", s),
+            Value::Class(c) => write!(f, "Class(\"{}\")", c.borrow().name),
+            Value::Range(r) => write!(f, "{:?}", r.borrow()),
+            Value::List(l) => write!(f, "List(len: {})", l.borrow().len()),
+            Value::Map(m) => write!(f, "Map(len: {})", m.borrow().len()),
+            Value::Fiber(_) => write!(f, "Fiber()"),
+            Value::Fn(c) => write!(f, "Fn({})", c.borrow().debug.name),
+            Value::Closure(c) => write!(f, "{}", c.borrow().fn_obj.borrow().debug.name),
+            Value::Instance(o) => write!(
+                f,
+                "Instance({})",
+                // FIXME: Probably needs a helper on ObjInstance?
+                o.borrow().class_obj().borrow().name
+            ),
+            Value::Foreign(o) => write!(f, "Foreign({})", o.borrow().class_obj().borrow().name),
+        }
+    }
+}
+
+impl Value {
+    pub(crate) fn from_string(string: String) -> Value {
+        Value::String(Rc::new(string))
+    }
+
+    pub(crate) fn from_str(string: &str) -> Value {
+        Self::from_string(string.into())
+    }
+
+    // Make num casts explicit and easily searchable:
+    pub(crate) fn from_usize(num: usize) -> Value {
+        Self::Num(num as f64)
+    }
+    pub(crate) fn from_u8(num: u8) -> Value {
+        Self::Num(num as f64)
+    }
+    pub(crate) fn from_u32(num: u32) -> Value {
+        Self::Num(num as f64)
+    }
+
+    // Different from "is truthy" used by "as_bool" in wren_c
+    // Unclear if this is only ever called on a known-bool?
+    pub(crate) fn equals_true(&self) -> bool {
+        matches!(self, Value::Boolean(true))
+    }
+
+    // In Wren false and null are false, everything else is true.
+    fn is_truthy(&self) -> bool {
+        match self {
+            Value::Null => false,
+            Value::Boolean(b) => *b,
+            _ => true,
+        }
+    }
+
+    fn is_falsey(&self) -> bool {
+        !self.is_truthy()
+    }
+
+    pub(crate) fn is_null(&self) -> bool {
+        matches!(self, Value::Null)
+    }
+    pub(crate) fn is_num(&self) -> bool {
+        matches!(self, Value::Num(_))
+    }
+}
+
 #[derive(Debug)]
 pub(crate) struct Module {
     pub name: String,
 
     // Should this just be a map?  wren_utils.h suggests so?
-    variables: GlobalHandle<List>,
+    variables: Vec<Value>,
     variable_names: Vec<String>,
 }
 
@@ -134,7 +264,7 @@ impl Module {
         Ok(())
     }
 
-    pub(crate) fn replace_implicit_definition(&mut self, symbol: u16, value: LocalHandle<()>) {
+    pub(crate) fn replace_implicit_definition(&mut self, symbol: u16, value: Value) {
         let index = symbol as usize;
         assert!(self.variables[index].is_num());
         self.variables[index] = value;
@@ -143,7 +273,7 @@ impl Module {
     pub(crate) fn add_variable(
         &mut self,
         name: &str,
-        value: LocalHandle<()>,
+        value: Value,
     ) -> Result<u16, ModuleLimitError> {
         if self.variables.len() == MAX_MODULE_VARS {
             Err(ModuleLimitError::TooManyVariables)
@@ -154,16 +284,12 @@ impl Module {
         }
     }
 
-    pub(crate) fn variable_by_name(
-        &self,
-        scope: &HandleScope,
-        name: &str,
-    ) -> Option<LocalHandle<()>> {
+    pub(crate) fn variable_by_name(&self, name: &str) -> Option<Value> {
         self.lookup_symbol(name)
-            .map(|index| scope.from_global(self.variables[index as usize]))
+            .map(|index| self.variables[index as usize].clone())
     }
 
-    pub(crate) fn expect_class(&self, name: &str) -> LocalHandle<ObjClass> {
+    pub(crate) fn expect_class(&self, name: &str) -> Handle<ObjClass> {
         let symbol = self
             .lookup_symbol(name)
             .unwrap_or_else(|| panic!("failed to load {}", name));
@@ -192,7 +318,7 @@ pub struct RuntimeError {
 }
 
 impl RuntimeError {
-    fn from_error_value(value: LocalHandle<()>, stack_trace: StackTrace) -> RuntimeError {
+    fn from_error_value(value: Value, stack_trace: StackTrace) -> RuntimeError {
         let maybe_msg = value.try_into_string();
         RuntimeError {
             // [error object] matches wren_c wrenDebugPrintStackTrace
@@ -213,38 +339,38 @@ macro_rules! try_into {
     };
 }
 
-// impl Value {
-//     pub fn try_into_num(&self) -> Option<f64> {
-//         match self {
-//             Value::Num(value) => Some(*value),
-//             _ => None,
-//         }
-//     }
+impl Value {
+    pub fn try_into_num(&self) -> Option<f64> {
+        match self {
+            Value::Num(value) => Some(*value),
+            _ => None,
+        }
+    }
 
-//     pub fn try_into_bool(&self) -> Option<bool> {
-//         match self {
-//             Value::Boolean(value) => Some(*value),
-//             _ => None,
-//         }
-//     }
+    pub fn try_into_bool(&self) -> Option<bool> {
+        match self {
+            Value::Boolean(value) => Some(*value),
+            _ => None,
+        }
+    }
 
-//     pub fn try_into_string(&self) -> Option<String> {
-//         match self {
-//             Value::String(string) => Some(string.as_ref().clone()),
-//             _ => None,
-//         }
-//     }
+    pub fn try_into_string(&self) -> Option<String> {
+        match self {
+            Value::String(string) => Some(string.as_ref().clone()),
+            _ => None,
+        }
+    }
 
-//     try_into!(try_into_range, Range, ObjRange);
-//     try_into!(try_into_map, Map, ObjMap);
-//     try_into!(try_into_class, Class, ObjClass);
-//     try_into!(try_into_list, List, ObjList);
-//     try_into!(try_into_fn, Fn, ObjFn);
-//     try_into!(try_into_closure, Closure, ObjClosure);
-//     try_into!(try_into_instance, Instance, ObjInstance);
-//     try_into!(try_into_fiber, Fiber, ObjFiber);
-//     try_into!(try_into_foreign, Foreign, ObjForeign);
-// }
+    try_into!(try_into_range, Range, ObjRange);
+    try_into!(try_into_map, Map, ObjMap);
+    try_into!(try_into_class, Class, ObjClass);
+    try_into!(try_into_list, List, ObjList);
+    try_into!(try_into_fn, Fn, ObjFn);
+    try_into!(try_into_closure, Closure, ObjClosure);
+    try_into!(try_into_instance, Instance, ObjInstance);
+    try_into!(try_into_fiber, Fiber, ObjFiber);
+    try_into!(try_into_foreign, Foreign, ObjForeign);
+}
 
 #[derive(Debug, Default)]
 pub struct SymbolTable {
@@ -285,13 +411,12 @@ pub struct CallFrame {
     // it an actual pointer.
     pc: usize,
     // The closure being executed.
-    closure: GlobalHandle<ObjClosure>,
+    closure: Handle<ObjClosure>,
     stack_start: usize,
 }
 
 impl CallFrame {
-    // FIXME: Should this be heap handles?
-    fn new(closure: LocalHandle<ObjClosure>, stack_start: usize) -> CallFrame {
+    fn new(closure: Handle<ObjClosure>, stack_start: usize) -> CallFrame {
         CallFrame {
             pc: 0,
             closure,
@@ -318,12 +443,11 @@ pub enum FiberRunSource {
 }
 
 struct OpenUpvalues {
-    // TODO: What type should this be.
-    values: GlobalHandle<List>, // List<Upvalue>,
+    values: Vec<Handle<Upvalue>>,
 }
 
 impl OpenUpvalues {
-    fn find_open_upvalue(&self, location: &StackOffset) -> Option<LocalHandle<Upvalue>> {
+    fn find_open_upvalue(&self, location: &StackOffset) -> Option<Handle<Upvalue>> {
         for upvalue in &self.values {
             if upvalue.borrow().has_location(location) {
                 return Some(upvalue.clone());
@@ -332,39 +456,28 @@ impl OpenUpvalues {
         None
     }
 
-    fn push(&mut self, upvalue: LocalHandle<Upvalue>) {
+    fn push(&mut self, upvalue: Handle<Upvalue>) {
         assert!(upvalue.borrow().is_open());
         self.values.push(upvalue);
     }
 }
 
 pub struct ObjFiber {
-    class_obj: HeapHandle<ObjClass>,
-    pub(crate) error: HeapHandle<()>,
-    pub(crate) caller: HeapHandle<ObjFiber>,
+    class_obj: Handle<ObjClass>,
+    pub(crate) error: Value,
+    pub(crate) caller: Option<Handle<ObjFiber>>,
     // We can't grab at the call_stack to check if empty
     // while it might be held mutably for execution, so we cache
     // the "completed_normally" bool here.
     // FIXME: This is probably better as an enum?
     pub(crate) completed_normally_cache: bool,
     run_source: FiberRunSource,
-    stack: HeapHandle<List>,
+    stack: RefCell<Vec<Value>>,
     // Hels in a RefCell so others can interact with the rest of
     // ObjFiber (to ask class, etc.) while the stack is  held mutably
     // for the executing fiber.
     call_stack: RefCell<Vec<CallFrame>>,
     open_upvalues: RefCell<OpenUpvalues>,
-}
-
-impl Traceable for ObjFiber {
-    fn trace(&mut self, visitor: &mut ObjectVisitor) {
-        self.class_obj.trace(visitor);
-        self.error.trace(visitor);
-        self.caller.trace(visitor);
-        self.stack.trace(visitor);
-        // FIXME: CallFrames too?
-        self.open_upvalues.borrow().trace(visitor);
-    }
 }
 
 impl ObjFiber {
@@ -381,10 +494,7 @@ impl ObjFiber {
         matches!(self.run_source, FiberRunSource::Try)
     }
 
-    fn return_from_fiber_take_caller<'a>(
-        &mut self,
-        scope: &HandleScope<'a>,
-    ) -> Option<LocalHandle<'a, ObjFiber>> {
+    fn return_from_fiber_take_caller(&mut self) -> Option<Handle<ObjFiber>> {
         let caller = self.caller.take();
         self.completed_normally_cache = self.call_stack.borrow().is_empty();
         caller
@@ -402,7 +512,7 @@ impl ObjFiber {
             .as_u8()
     }
 
-    fn push_call_arg_or_return_value(&mut self, arg: LocalHandle<()>) {
+    fn push_call_arg_or_return_value(&mut self, arg: Value) {
         if self.just_started() {
             // The fiber is being started for the first time. If its
             // function takes a parameter, bind an argument to it.
@@ -418,15 +528,15 @@ impl ObjFiber {
         }
     }
 
-    fn push_return_value(&mut self, arg: LocalHandle<()>) {
+    fn push_return_value(&mut self, arg: Value) {
         // Push the argument to the fiber call, try or transfer
         // or the return value from a yield or transfer
         // onto the top-most frame of the callstack.
         self.push(arg);
     }
 
-    pub(crate) fn error(&self) -> &HeapHandle<()> {
-        &self.error
+    pub(crate) fn error(&self) -> Value {
+        self.error.clone()
     }
 
     pub fn has_error(&self) -> bool {
@@ -437,48 +547,48 @@ impl ObjFiber {
         self.call_stack.borrow()[offset.frame_index].stack_start + offset.index
     }
 
-    fn load(&self, loc: StackOffset) -> &HeapHandle<()> {
+    fn load(&self, loc: StackOffset) -> Value {
         let index = self.index_for_stack_offset(loc);
-        self.stack.borrow()[index]
+        self.stack.borrow()[index].clone()
     }
 
-    fn store(&self, loc: StackOffset, value: LocalHandle<()>) {
+    fn store(&self, loc: StackOffset, value: Value) {
         let index = self.index_for_stack_offset(loc);
         self.stack.borrow_mut()[index] = value
     }
 
     // FIXME: Should this take a Frame for bounds checking?
     #[inline] // 3% on map_numeric
-    fn push(&self, value: LocalHandle<()>) {
+    fn push(&self, value: Value) {
         self.stack.borrow_mut().push(value);
     }
 
-    // // FIXME: No longer needs to be Result, now that Stack Underflow panics
-    // fn pop(&self) -> Result<Value> {
-    //     Ok(self.stack.borrow_mut().pop().expect("Stack underflow"))
-    // }
+    // FIXME: No longer needs to be Result, now that Stack Underflow panics
+    fn pop(&self) -> Result<Value> {
+        Ok(self.stack.borrow_mut().pop().expect("Stack underflow"))
+    }
 
     // FIXME: No longer needs to be Result, now that Stack Underflow panics
     // FIXME: This could return a &Value instead of Value, but the only
     // two callers who *do not* immediately clone() are And and Or ops.
-    fn peek(&self) -> Result<&HeapHandle<()>> {
-        Ok(self.stack.borrow().last().expect("Stack underflow"))
+    fn peek(&self) -> Result<Value> {
+        Ok(self.stack.borrow().last().expect("Stack underflow").clone())
     }
 
-    fn load_this(&self, frame: &CallFrame) -> &HeapHandle<()> {
+    fn load_this(&self, frame: &CallFrame) -> Value {
         self.load_local(frame, 0)
     }
 
-    fn store_this(&self, frame: &CallFrame, value: LocalHandle<()>) {
+    fn store_this(&self, frame: &CallFrame, value: Value) {
         self.store_local(frame, 0, value)
     }
 
-    fn load_local(&self, frame: &CallFrame, offset: usize) -> &HeapHandle<()> {
+    fn load_local(&self, frame: &CallFrame, offset: usize) -> Value {
         // FIXME: bounds-check the number of locals based on compiler data?
-        self.stack.borrow()[frame.stack_start + offset]
+        self.stack.borrow()[frame.stack_start + offset].clone()
     }
 
-    fn store_local(&self, frame: &CallFrame, offset: usize, value: LocalHandle<()>) {
+    fn store_local(&self, frame: &CallFrame, offset: usize, value: Value) {
         // FIXME: bounds-check the number of locals based on compiler data?
         self.stack.borrow_mut()[frame.stack_start + offset] = value
     }
@@ -507,53 +617,42 @@ impl ObjFiber {
     }
 }
 
-fn find_or_create_upvalue<'a>(
-    fiber_ref: &LocalHandle<'a, ObjFiber>,
-    location: StackOffset,
-    scope: &HandleScope<'a>,
-) -> LocalHandle<'a, Upvalue> {
-    let fiber = fiber_ref.as_ref();
+fn find_or_create_upvalue(fiber_ref: &Handle<ObjFiber>, location: StackOffset) -> Handle<Upvalue> {
+    let fiber = fiber_ref.borrow();
     // wren_c uses a Value* for the search and the knowledge that values
     // are all held on a single stack/vector.
     // If the upvalue is still open, re-use that (so that modifications
     // are reflected in all callers).
     if let Some(upvalue) = fiber.open_upvalues.borrow().find_open_upvalue(&location) {
-        return upvalue;
+        return upvalue.clone();
     }
     // If there isn't yet an upvalue (or there are, but they're closed but
     // running the function again, etc.), we make a new one.
-    let upvalue = scope.take(Upvalue::new(GlobalHandle::from(fiber_ref), location));
-    fiber.open_upvalues.borrow_mut().push(upvalue);
+    let upvalue = Upvalue::new(fiber_ref.clone(), location);
+    fiber.open_upvalues.borrow_mut().push(upvalue.clone());
     upvalue
 }
 
 impl Obj for ObjFiber {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
-impl HostObject for ObjFiber {
-    const TYPE_ID: ObjectType = ObjectType::Host;
-}
-
 impl ObjFiber {
-    pub(crate) fn new<'a>(
+    pub(crate) fn new(
         vm: &VM,
-        scope: &HandleScope<'a>,
-        closure: LocalHandle<ObjClosure>,
+        closure: Handle<ObjClosure>,
         run_source: FiberRunSource,
-    ) -> LocalHandle<'a, ObjFiber> {
-        let stack = scope.create::<List>().unwrap();
-        stack.push_ptr(closure.ptr());
+    ) -> ObjFiber {
         ObjFiber {
-            class_obj: vm.fiber_class,
-            error: scope.create_null(),
+            class_obj: vm.fiber_class.as_ref().unwrap().clone(),
+            error: Value::Null,
             caller: None,
             run_source,
             completed_normally_cache: false,
             call_stack: RefCell::new(vec![CallFrame::new(closure.clone(), 0)]),
-            stack: RefCell::new(stack),
+            stack: RefCell::new(vec![Value::Closure(closure)]),
             open_upvalues: RefCell::new(OpenUpvalues { values: vec![] }),
         }
     }
@@ -566,67 +665,66 @@ impl core::fmt::Debug for ObjFiber {
     }
 }
 
-// struct Api {
-//     stack: GlobalHandle<List>,
-//     error: GlobalHandle<()>,
-// }
+struct Api {
+    stack: Vec<Value>,
+    error: Value,
+}
 
-// impl Api {
-//     fn new(slots: usize) -> Api {
-//         Api {
-//             stack: vec![Value::Null; slots],
-//             error: Value::Null,
-//         }
-//     }
+impl Api {
+    fn new(slots: usize) -> Api {
+        Api {
+            stack: vec![Value::Null; slots],
+            error: Value::Null,
+        }
+    }
 
-//     fn with_stack(stack: Vec<Value>) -> Api {
-//         Api {
-//             stack,
-//             error: Value::Null,
-//         }
-//     }
+    fn with_stack(stack: Vec<Value>) -> Api {
+        Api {
+            stack,
+            error: Value::Null,
+        }
+    }
 
-//     fn ensure(&mut self, slots: usize) {
-//         if slots >= self.stack.len() {
-//             self.stack.resize(slots + 1, Value::Null);
-//         }
-//     }
+    fn ensure(&mut self, slots: usize) {
+        if slots >= self.stack.len() {
+            self.stack.resize(slots + 1, Value::Null);
+        }
+    }
 
-//     fn into_return_value(self) -> Value {
-//         // Take without copy.
-//         self.stack.into_iter().next().unwrap()
-//     }
-// }
+    fn into_return_value(self) -> Value {
+        // Take without copy.
+        self.stack.into_iter().next().unwrap()
+    }
+}
 
 pub struct VM {
     // Current executing Fiber (should eventually be a list?)
-    pub(crate) fiber: GlobalHandle<ObjFiber>,
+    pub(crate) fiber: Option<Handle<ObjFiber>>,
     // Single global symbol table for all method names (matches wren_c)
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
-    modules: GlobalHandle<Map>, // <String, Module>>,
-
-    heap: Heap,
+    modules: HashMap<String, Handle<Module>>,
 
     // The Core module is created first (empty)
-    pub(crate) core_module: GlobalHandle<Module>,
+    pub(crate) core_module: Option<Handle<Module>>,
     // Then Class
-    pub(crate) class_class: GlobalHandle<ObjClass>,
+    pub(crate) class_class: Option<Handle<ObjClass>>,
     // Then Fn and Fiber (which are used by wren_core.wren)
-    pub(crate) fn_class: GlobalHandle<ObjClass>,
-    pub(crate) fiber_class: GlobalHandle<ObjClass>,
+    pub(crate) fn_class: Option<Handle<ObjClass>>,
+    pub(crate) fiber_class: Option<Handle<ObjClass>>,
     // Finally the rest of wren_core.wren
     pub(crate) core: Option<CoreClasses>,
     pub(crate) start_time: std::time::Instant,
-    pub(crate) last_imported_module: Option<GlobalHandle<Module>>,
+    pub(crate) last_imported_module: Option<Handle<Module>>,
     pub(crate) config: Configuration,
+
     // Args for the foreign function being called.
     // wren_c calls this apiStack
-    // api: Option<Api>,
+    api: Option<Api>,
     // Hold onto the function pointers for the C API so we can
     // use rust function pointers in the normal config and just
     // look up the c ones here through the VM pointer.
-    // pub(crate) c_config: WrenConfiguration,
+    pub(crate) c_config: WrenConfiguration,
 }
 
 pub trait UserData {
@@ -650,26 +748,26 @@ pub enum SlotType {
 // shift to be the *rust* API and follow *rust* patterns.  All the C-isms
 // should move into c_api.rs.
 impl VM {
-    // pub fn ensure_slots(&mut self, slots: usize) {
-    //     match &mut self.api {
-    //         None => self.api = Some(Api::new(slots)),
-    //         Some(api) => api.ensure(slots),
-    //     }
-    // }
+    pub fn ensure_slots(&mut self, slots: usize) {
+        match &mut self.api {
+            None => self.api = Some(Api::new(slots)),
+            Some(api) => api.ensure(slots),
+        }
+    }
 
-    // pub fn set_slot_string(&mut self, slot: Slot, string: &str) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::from_str(string);
-    //     }
-    // }
+    pub fn set_slot_string(&mut self, slot: Slot, string: &str) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::from_str(string);
+        }
+    }
 
-    // pub fn abort_fiber(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.error = api.stack[slot].clone();
-    //     }
-    // }
+    pub fn abort_fiber(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.error = api.stack[slot].clone();
+        }
+    }
 
     pub fn has_module(&self, module_name: &str) -> bool {
         self.modules.contains_key(module_name)
@@ -685,18 +783,12 @@ impl VM {
         }
     }
 
-    pub fn get_variable(
-        &mut self,
-        scope: &HandleScope,
-        module_name: &str,
-        variable_name: &str,
-        slot: Slot,
-    ) {
+    pub fn get_variable(&mut self, module_name: &str, variable_name: &str, slot: Slot) {
         let value = if let Some(module) = self.modules.get(module_name) {
             // What if the module is mut_borrowed for execution?
             module
                 .borrow()
-                .variable_by_name(scope, variable_name)
+                .variable_by_name(variable_name)
                 .unwrap()
                 .clone()
         } else {
@@ -706,308 +798,312 @@ impl VM {
         self.set_value_for_slot(slot, value);
     }
 
-    // pub fn set_slot_new_foreign(
-    //     &mut self,
-    //     slot: Slot,
-    //     class_slot: Slot,
-    //     user_data: Box<dyn UserData>,
-    // ) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         let class = api.stack[class_slot]
-    //             .try_into_class()
-    //             .expect("Slot must hold a class.");
-    //         assert!(matches!(class.borrow().source, ClassSource::Foreign));
-    //         api.stack[slot] = Value::Foreign(new_handle(ObjForeign::new(class, user_data)))
-    //     }
-    // }
+    pub fn set_slot_new_foreign(
+        &mut self,
+        slot: Slot,
+        class_slot: Slot,
+        user_data: Box<dyn UserData>,
+    ) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            let class = api.stack[class_slot]
+                .try_into_class()
+                .expect("Slot must hold a class.");
+            assert!(matches!(class.borrow().source, ClassSource::Foreign));
+            api.stack[slot] = Value::Foreign(new_handle(ObjForeign::new(class, user_data)))
+        }
+    }
 
-    // pub fn slot_count(&self) -> usize {
-    //     match &self.api {
-    //         None => 0,
-    //         Some(api) => api.stack.len(),
-    //     }
-    // }
+    pub fn slot_count(&self) -> usize {
+        match &self.api {
+            None => 0,
+            Some(api) => api.stack.len(),
+        }
+    }
 
-    // pub fn set_slot_null(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::Null;
-    //     }
-    // }
+    pub fn set_slot_null(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::Null;
+        }
+    }
 
-    // pub fn get_slot_double(&mut self, slot: Slot) -> f64 {
-    //     assert!(self.api.is_some());
-    //     self.api.as_ref().unwrap().stack[slot]
-    //         .try_into_num()
-    //         .expect("slot is not a num")
-    // }
+    pub fn get_slot_double(&mut self, slot: Slot) -> f64 {
+        assert!(self.api.is_some());
+        self.api.as_ref().unwrap().stack[slot]
+            .try_into_num()
+            .expect("slot is not a num")
+    }
 
-    // pub fn set_slot_double(&mut self, slot: Slot, num: f64) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::Num(num)
-    //     }
-    // }
+    pub fn set_slot_double(&mut self, slot: Slot, num: f64) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::Num(num)
+        }
+    }
 
-    // pub fn set_slot_new_list(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let value = Value::List(self.new_list(vec![]));
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = value;
-    //     }
-    // }
+    pub fn set_slot_new_list(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        let value = Value::List(self.new_list(vec![]));
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = value;
+        }
+    }
 
-    // pub fn get_list_count(&mut self, slot: Slot) -> usize {
-    //     assert!(self.api.is_some());
-    //     let list = self.value_for_slot(slot).try_into_list().unwrap();
-    //     let count = list.borrow().len();
-    //     count
-    // }
+    pub fn get_list_count(&mut self, slot: Slot) -> usize {
+        assert!(self.api.is_some());
+        let list = self.value_for_slot(slot).try_into_list().unwrap();
+        let count = list.borrow().len();
+        count
+    }
 
-    // pub fn get_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let list_ref = self.value_for_slot(list_slot).try_into_list().unwrap();
-    //     let list = list_ref.borrow();
-    //     self.set_value_for_slot(element_slot, list.elements[index].clone())
-    // }
+    pub fn get_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
+        assert!(self.api.is_some());
+        let list_ref = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let list = list_ref.borrow();
+        self.set_value_for_slot(element_slot, list.elements[index].clone())
+    }
 
-    // pub fn set_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let list = self.value_for_slot(list_slot).try_into_list().unwrap();
-    //     let element = self.value_for_slot(element_slot);
-    //     list.borrow_mut().elements[index] = element.clone();
-    // }
+    pub fn set_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
+        assert!(self.api.is_some());
+        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let element = self.value_for_slot(element_slot);
+        list.borrow_mut().elements[index] = element.clone();
+    }
 
-    // pub fn insert_in_list(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let list = self.value_for_slot(list_slot).try_into_list().unwrap();
-    //     let element = self.value_for_slot(element_slot);
-    //     list.borrow_mut().elements.insert(index, element.clone());
-    // }
+    pub fn insert_in_list(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
+        assert!(self.api.is_some());
+        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let element = self.value_for_slot(element_slot);
+        list.borrow_mut().elements.insert(index, element.clone());
+    }
 
-    // pub fn set_slot_new_map(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let value = Value::Map(self.new_map());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = value;
-    //     }
-    // }
+    pub fn set_slot_new_map(&mut self, slot: Slot) {
+        assert!(self.api.is_some());
+        let value = Value::Map(self.new_map());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = value;
+        }
+    }
 
-    // pub fn map_contains_key(&self, map_slot: Slot, key_slot: Slot) -> bool {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot);
-    //     let contains = map.borrow().contains_key(key);
-    //     contains
-    // }
+    pub fn map_contains_key(&self, map_slot: Slot, key_slot: Slot) -> bool {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let contains = map.borrow().contains_key(key);
+        contains
+    }
 
-    // pub fn get_map_value(&mut self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot);
-    //     let value = map.borrow().data[key].clone();
-    //     self.set_value_for_slot(value_slot, value)
-    // }
+    pub fn get_map_value(&mut self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let value = map.borrow().data[key].clone();
+        self.set_value_for_slot(value_slot, value)
+    }
 
-    // pub fn set_map_value(&self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot).clone();
-    //     let value = self.value_for_slot(value_slot).clone();
-    //     map.borrow_mut().data.insert(key, value);
-    // }
+    pub fn set_map_value(&self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot).clone();
+        let value = self.value_for_slot(value_slot).clone();
+        map.borrow_mut().data.insert(key, value);
+    }
 
-    // pub fn remove_map_value(&mut self, map_slot: Slot, key_slot: Slot, removed_value_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot);
-    //     let value = map.borrow_mut().data.remove(key).unwrap_or(Value::Null);
-    //     self.set_value_for_slot(removed_value_slot, value);
-    // }
+    pub fn remove_map_value(&mut self, map_slot: Slot, key_slot: Slot, removed_value_slot: Slot) {
+        assert!(self.api.is_some());
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let value = map.borrow_mut().data.remove(key).unwrap_or(Value::Null);
+        self.set_value_for_slot(removed_value_slot, value);
+    }
 
-    // pub fn get_slot_bool(&mut self, slot: Slot) -> bool {
-    //     assert!(self.api.is_some());
-    //     self.api.as_ref().unwrap().stack[slot]
-    //         .try_into_bool()
-    //         .expect("slot is not a bool")
-    // }
+    pub fn get_slot_bool(&mut self, slot: Slot) -> bool {
+        assert!(self.api.is_some());
+        self.api.as_ref().unwrap().stack[slot]
+            .try_into_bool()
+            .expect("slot is not a bool")
+    }
 
-    // pub fn set_slot_bool(&mut self, slot: Slot, value: bool) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::Boolean(value)
-    //     }
-    // }
+    pub fn set_slot_bool(&mut self, slot: Slot, value: bool) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = Value::Boolean(value)
+        }
+    }
 
-    // // This isn't quite right for the rust API, but is used by the C API.
-    // pub(crate) fn call_handle_for_signature(&mut self, signature: &str) -> Value {
-    //     let symbol = self.methods.ensure_symbol(signature);
-    //     // Create a little stub function that assumes the arguments are on the
-    //     // stack and calls the method.
-    //     let fn_obj = ObjFn::stub_call(self, signature, symbol);
-    //     let closure = ObjClosure::new(self, new_handle(fn_obj));
-    //     Value::Closure(new_handle(closure))
-    // }
+    // This isn't quite right for the rust API, but is used by the C API.
+    pub(crate) fn call_handle_for_signature(&mut self, signature: &str) -> Value {
+        let symbol = self.methods.ensure_symbol(signature);
+        // Create a little stub function that assumes the arguments are on the
+        // stack and calls the method.
+        let fn_obj = ObjFn::stub_call(self, signature, symbol);
+        let closure = ObjClosure::new(self, new_handle(fn_obj));
+        Value::Closure(new_handle(closure))
+    }
 
-    // // This is just a (non-functional) stub for the C API as well.
-    // pub(crate) fn call(&mut self, _method: &Value) -> InterpretResult {
-    //     self.set_value_for_slot(0, Value::Null);
-    //     InterpretResult::Success
-    // }
+    // This is just a (non-functional) stub for the C API as well.
+    pub(crate) fn call(&mut self, _method: &Value) -> InterpretResult {
+        self.set_value_for_slot(0, Value::Null);
+        InterpretResult::Success
+    }
 
-    // // Allows c_api to write addition APIs which the rust public API
-    // // may not also share.
-    // pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
-    //     &self.api.as_ref().unwrap().stack[slot]
-    // }
+    // Allows c_api to write addition APIs which the rust public API
+    // may not also share.
+    pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
+        &self.api.as_ref().unwrap().stack[slot]
+    }
 
-    // pub(crate) fn set_value_for_slot(&mut self, slot: Slot, value: Value) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = value;
-    //     }
-    // }
+    pub(crate) fn set_value_for_slot(&mut self, slot: Slot, value: Value) {
+        assert!(self.api.is_some());
+        if let Some(api) = &mut self.api {
+            api.stack[slot] = value;
+        }
+    }
 
-    // // Maybe return Option<SlotType> and None on failure instead of panick?
-    // pub fn type_for_slot(&self, slot: Slot) -> SlotType {
-    //     match self.value_for_slot(slot) {
-    //         Value::Boolean(_) => SlotType::Bool,
-    //         Value::Num(_) => SlotType::Num,
-    //         Value::Foreign(_) => SlotType::Foreign,
-    //         Value::List(_) => SlotType::List,
-    //         Value::Map(_) => SlotType::Map,
-    //         Value::Null => SlotType::Null,
-    //         Value::String(_) => SlotType::String,
-    //         _ => SlotType::Unknown,
-    //     }
-    // }
+    // Maybe return Option<SlotType> and None on failure instead of panick?
+    pub fn type_for_slot(&self, slot: Slot) -> SlotType {
+        match self.value_for_slot(slot) {
+            Value::Boolean(_) => SlotType::Bool,
+            Value::Num(_) => SlotType::Num,
+            Value::Foreign(_) => SlotType::Foreign,
+            Value::List(_) => SlotType::List,
+            Value::Map(_) => SlotType::Map,
+            Value::Null => SlotType::Null,
+            Value::String(_) => SlotType::String,
+            _ => SlotType::Unknown,
+        }
+    }
 }
 
-// impl Clear for Module {
-//     fn clear(&mut self) {
-//         self.variables.clear();
-//         self.variable_names.clear();
-//     }
-// }
+pub trait Clear {
+    fn clear(&mut self);
+}
 
-// impl Clear for ObjFiber {
-//     fn clear(&mut self) {
-//         self.call_stack.borrow_mut().clear();
-//     }
-// }
+impl Clear for Module {
+    fn clear(&mut self) {
+        self.variables.clear();
+        self.variable_names.clear();
+    }
+}
 
-// impl Clear for ObjClass {
-//     fn clear(&mut self) {
-//         clear_class(self.class.take());
-//         clear_class(self.superclass.take());
-//         self.methods.clear();
-//     }
-// }
+impl Clear for ObjFiber {
+    fn clear(&mut self) {
+        self.call_stack.borrow_mut().clear();
+    }
+}
 
-// fn clear_class(maybe_class: Option<Handle<ObjClass>>) {
-//     if let Some(class) = maybe_class {
-//         class.take().clear();
-//     }
-// }
+impl Clear for ObjClass {
+    fn clear(&mut self) {
+        clear_class(self.class.take());
+        clear_class(self.superclass.take());
+        self.methods.clear();
+    }
+}
 
-// impl Clear for ObjInstance {
-//     fn clear(&mut self) {
-//         self.class_obj.borrow_mut().clear();
-//         self.fields.clear();
-//     }
-// }
+fn clear_class(maybe_class: Option<Handle<ObjClass>>) {
+    if let Some(class) = maybe_class {
+        class.take().clear();
+    }
+}
 
-// impl Clear for ObjForeign {
-//     fn clear(&mut self) {
-//         self.class_obj.borrow_mut().clear();
-//     }
-// }
+impl Clear for ObjInstance {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
+        self.fields.clear();
+    }
+}
 
-// impl Clear for ObjList {
-//     fn clear(&mut self) {
-//         self.elements.clear();
-//     }
-// }
+impl Clear for ObjForeign {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
+    }
+}
 
-// impl Clear for ObjMap {
-//     fn clear(&mut self) {
-//         self.data.clear();
-//     }
-// }
+impl Clear for ObjList {
+    fn clear(&mut self) {
+        self.elements.clear();
+    }
+}
 
-// impl Clear for ObjRange {
-//     fn clear(&mut self) {
-//         // No object references held.
-//     }
-// }
+impl Clear for ObjMap {
+    fn clear(&mut self) {
+        self.data.clear();
+    }
+}
 
-// impl Clear for ObjFn {
-//     fn clear(&mut self) {
-//         self.class_obj.borrow_mut().clear();
-//         self.constants.clear();
-//         self.code.clear();
-//         self.module.borrow_mut().clear();
-//     }
-// }
+impl Clear for ObjRange {
+    fn clear(&mut self) {
+        // No object references held.
+    }
+}
 
-// impl Clear for ObjClosure {
-//     fn clear(&mut self) {
-//         self.class_obj.borrow_mut().clear();
-//         self.fn_obj.borrow_mut().clear();
-//     }
-// }
+impl Clear for ObjFn {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
+        self.constants.clear();
+        self.code.clear();
+        self.module.borrow_mut().clear();
+    }
+}
 
-// fn clear_maybe_module(maybe_module: Option<Handle<Module>>) {
-//     if let Some(module) = maybe_module {
-//         module.borrow_mut().clear();
-//     }
-// }
+impl Clear for ObjClosure {
+    fn clear(&mut self) {
+        self.class_obj.borrow_mut().clear();
+        self.fn_obj.borrow_mut().clear();
+    }
+}
 
-// impl Drop for VM {
-//     fn drop(&mut self) {
-//         // Tear down all fibers, including all stacks.
-//         // Eventually code will be able to hold onto fibers.
-//         if let Some(fiber) = &self.fiber {
-//             fiber.borrow_mut().clear();
-//         }
+fn clear_maybe_module(maybe_module: Option<Handle<Module>>) {
+    if let Some(module) = maybe_module {
+        module.borrow_mut().clear();
+    }
+}
 
-//         // Modules keep references to functions
-//         // functions keep references to modules.
-//         clear_maybe_module(self.core_module.take());
-//         clear_maybe_module(self.last_imported_module.take());
-//         for module in self.modules.values() {
-//             module.borrow_mut().clear();
-//         }
+impl Drop for VM {
+    fn drop(&mut self) {
+        // Tear down all fibers, including all stacks.
+        // Eventually code will be able to hold onto fibers.
+        if let Some(fiber) = &self.fiber {
+            fiber.borrow_mut().clear();
+        }
 
-//         // Classes hold onto Methods, which include Functions.
-//         clear_class(self.class_class.take());
-//         clear_class(self.fn_class.take());
-//         clear_class(self.fiber_class.take());
+        // Modules keep references to functions
+        // functions keep references to modules.
+        clear_maybe_module(self.core_module.take());
+        clear_maybe_module(self.last_imported_module.take());
+        for module in self.modules.values() {
+            module.borrow_mut().clear();
+        }
 
-//         if let Some(core) = self.core.take() {
-//             core.num.borrow_mut().clear();
-//             core.bool_class.borrow_mut().clear();
-//             core.null.borrow_mut().clear();
-//             core.string.borrow_mut().clear();
-//             core.range.borrow_mut().clear();
-//             core.list.borrow_mut().clear();
-//             core.map.borrow_mut().clear();
-//         }
-//     }
-// }
+        // Classes hold onto Methods, which include Functions.
+        clear_class(self.class_class.take());
+        clear_class(self.fn_class.take());
+        clear_class(self.fiber_class.take());
+
+        if let Some(core) = self.core.take() {
+            core.num.borrow_mut().clear();
+            core.bool_class.borrow_mut().clear();
+            core.null.borrow_mut().clear();
+            core.string.borrow_mut().clear();
+            core.range.borrow_mut().clear();
+            core.list.borrow_mut().clear();
+            core.map.borrow_mut().clear();
+        }
+    }
+}
 
 impl core::fmt::Debug for VM {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -1021,32 +1117,22 @@ impl core::fmt::Debug for VM {
 }
 
 impl VM {
-    pub(crate) fn new_list(
-        &self,
-        scope: &HandleScope,
-        contents: Vec<LocalHandle<()>>,
-    ) -> LocalHandle<ObjList> {
-        scope.take(ObjList {
+    pub(crate) fn new_list(&self, contents: Vec<Value>) -> Handle<ObjList> {
+        new_handle(ObjList {
             class_obj: self.core.as_ref().unwrap().list.clone(),
             elements: contents,
         })
     }
 
-    pub(crate) fn new_map(&self, scope: &HandleScope) -> LocalHandle<ObjMap> {
-        scope.take(ObjMap {
+    pub(crate) fn new_map(&self) -> Handle<ObjMap> {
+        new_handle(ObjMap {
             class_obj: self.core.as_ref().unwrap().map.clone(),
             data: HashMap::new(),
         })
     }
 
-    pub(crate) fn new_range(
-        &self,
-        scope: &HandleScope,
-        from: f64,
-        to: f64,
-        is_inclusive: bool,
-    ) -> LocalHandle<ObjRange> {
-        scope.take(ObjRange {
+    pub(crate) fn new_range(&self, from: f64, to: f64, is_inclusive: bool) -> Handle<ObjRange> {
+        new_handle(ObjRange {
             class_obj: self.core.as_ref().unwrap().range.clone(),
             from,
             to,
@@ -1054,23 +1140,17 @@ impl VM {
         })
     }
 
-    pub(crate) fn new_fiber(
-        &self,
-        scope: &HandleScope,
-        closure: LocalHandle<ObjClosure>,
-    ) -> LocalHandle<ObjFiber> {
-        scope.take(ObjFiber::new(self, closure, FiberRunSource::Other))
+    pub(crate) fn new_fiber(&self, closure: Handle<ObjClosure>) -> Handle<ObjFiber> {
+        new_handle(ObjFiber::new(self, closure, FiberRunSource::Other))
     }
 
-    pub(crate) fn new_class<'a>(
+    pub(crate) fn new_class(
         &self,
-        scope: &HandleScope<'a>,
-        superclass: &LocalHandle<ObjClass>,
+        superclass: &Handle<ObjClass>,
         source: ClassSource,
         name: String,
-    ) -> Result<LocalHandle<'a, ObjClass>> {
+    ) -> Result<Handle<ObjClass>> {
         new_class_with_class_class(
-            scope,
             superclass,
             source,
             name,
@@ -1080,7 +1160,7 @@ impl VM {
 }
 
 impl ObjClass {
-    pub(crate) fn bind_superclass(&mut self, superclass: &LocalHandle<ObjClass>) {
+    pub(crate) fn bind_superclass(&mut self, superclass: &Handle<ObjClass>) {
         self.superclass = Some(superclass.clone());
 
         // Include the superclass in the total number of fields.
@@ -1102,13 +1182,9 @@ impl ObjClass {
     }
 }
 
-fn new_single_class<'a>(
-    scope: &HandleScope<'a>,
-    source: ClassSource,
-    name: String,
-) -> LocalHandle<'a, ObjClass> {
+fn new_single_class(source: ClassSource, name: String) -> Handle<ObjClass> {
     // the wren_c version does a lot more?  Unclear if this should.
-    scope.take(ObjClass {
+    new_handle(ObjClass {
         name,
         methods: Vec::new(),
         class: None,
@@ -1121,13 +1197,12 @@ fn new_single_class<'a>(
 // out this is an interpret time function (only creates classes)
 // and does not do any of the declaration work base_class does.
 // Keeping it for now in case it's useful later.
-fn new_class_with_class_class<'a>(
-    scope: &HandleScope<'a>,
-    superclass: &HeapHandle<ObjClass>,
+fn new_class_with_class_class(
+    superclass: &Handle<ObjClass>,
     source: ClassSource,
     name_string: String,
-    class_class: &HeapHandle<ObjClass>,
-) -> Result<LocalHandle<'a, ObjClass>> {
+    class_class: &Handle<ObjClass>,
+) -> Result<Handle<ObjClass>> {
     // Create the metaclass.
 
     let metaclass_name_string = format!("{} metaclass", name_string);
@@ -1140,18 +1215,18 @@ fn new_class_with_class_class<'a>(
     // hierarchy.
     metaclass.borrow_mut().bind_superclass(class_class);
 
-    let class = new_single_class(scope, source, name_string);
+    let class = new_single_class(source, name_string);
     class.borrow_mut().class = Some(metaclass);
     class.borrow_mut().bind_superclass(superclass);
 
     Ok(class)
 }
 
-fn validate_superclass<'a>(
+fn validate_superclass(
     name: &str,
-    superclass_value: LocalHandle<'a, ()>,
+    superclass_value: Value,
     source: &ClassSource,
-) -> Result<LocalHandle<'a, ObjClass>> {
+) -> Result<Handle<ObjClass>> {
     // Make sure the superclass is a class.
     let superclass = superclass_value.try_into_class().ok_or_else(|| {
         VMError::from_string(format!(
@@ -1226,22 +1301,16 @@ fn bind_foreign_class(vm: &mut VM, class: &mut ObjClass, module: &Module) {
         // assert!("Allocator required for foreign classes");
     }
 
-    // if module.name.eq("random") {
-    //     let methods = random_bind_foreign_class(vm, &module.name, &class.name);
-    //     class.set_method(allocate_symbol, Method::ForeignFunction(methods.allocate));
-    //     // if let Some(finalize) = methods.finalize {
-    //     //     class.set_method(finalize_symbol, Method::ForeignFunction(finalize));
-    //     // }
-    // }
+    if module.name.eq("random") {
+        let methods = random_bind_foreign_class(vm, &module.name, &class.name);
+        class.set_method(allocate_symbol, Method::ForeignFunction(methods.allocate));
+        // if let Some(finalize) = methods.finalize {
+        //     class.set_method(finalize_symbol, Method::ForeignFunction(finalize));
+        // }
+    }
 }
 
-fn create_class<'a>(
-    vm: &mut VM,
-    scope: &HandleScope<'a>,
-    fiber: &ObjFiber,
-    source: ClassSource,
-    module: &Module,
-) -> Result<()> {
+fn create_class(vm: &mut VM, fiber: &ObjFiber, source: ClassSource, module: &Module) -> Result<()> {
     // Pull the name and superclass off the stack.
     let superclass_value = fiber.pop()?;
     let name_value = fiber.pop()?;
@@ -1256,25 +1325,25 @@ fn create_class<'a>(
         bind_foreign_class(vm, &mut class.borrow_mut(), module)
     }
     // After bind_foreign_class to avoid a clone, should not make a differnce.
-    fiber.push(class);
+    fiber.push(Value::Class(class));
     Ok(())
 }
 
-// type Handle<T> = Rc<RefCell<T>>;
+type Handle<T> = Rc<RefCell<T>>;
 
-// pub(crate) fn new_handle<T>(t: T) -> Handle<T> {
-//     Rc::new(RefCell::new(t))
-// }
+pub(crate) fn new_handle<T>(t: T) -> Handle<T> {
+    Rc::new(RefCell::new(t))
+}
 
 #[derive(Debug)]
 pub(crate) struct CoreClasses {
-    pub(crate) num: GlobalHandle<ObjClass>,
-    pub(crate) bool_class: GlobalHandle<ObjClass>,
-    pub(crate) null: GlobalHandle<ObjClass>,
-    pub(crate) string: GlobalHandle<ObjClass>,
-    pub(crate) range: GlobalHandle<ObjClass>,
-    pub(crate) list: GlobalHandle<ObjClass>,
-    pub(crate) map: GlobalHandle<ObjClass>,
+    pub(crate) num: Handle<ObjClass>,
+    pub(crate) bool_class: Handle<ObjClass>,
+    pub(crate) null: Handle<ObjClass>,
+    pub(crate) string: Handle<ObjClass>,
+    pub(crate) range: Handle<ObjClass>,
+    pub(crate) list: Handle<ObjClass>,
+    pub(crate) map: Handle<ObjClass>,
 }
 
 #[derive(Debug)]
@@ -1296,7 +1365,7 @@ impl Module {
     pub(crate) fn define_variable(
         &mut self,
         name: &str,
-        value: LocalHandle<()>,
+        value: Value,
     ) -> Result<u16, DefinitionError> {
         // See if the variable is already explicitly or implicitly declared.
         match self.lookup_symbol(name) {
@@ -1327,22 +1396,18 @@ impl Module {
 
 // NOTE: This is only designed for Object and Class and does not fully
 // wire up a class!
-pub(crate) fn define_class<'a>(
-    scope: &HandleScope<'a>,
-    module: &mut Module,
-    name: &str,
-) -> LocalHandle<'a, ObjClass> {
-    let class = scope
-        .take(ObjClass {
-            name: name.into(),
-            methods: Vec::new(),
-            class: None,
-            superclass: None,
-            source: ClassSource::Internal,
-        })
-        .unwrap();
+pub(crate) fn define_class(module: &mut Module, name: &str) -> Handle<ObjClass> {
+    let class = new_handle(ObjClass {
+        name: name.into(),
+        methods: Vec::new(),
+        class: None,
+        superclass: None,
+        source: ClassSource::Internal,
+    });
 
-    module.define_variable(name, class).expect("defined");
+    module
+        .define_variable(name, Value::Class(class.clone()))
+        .expect("defined");
     class
 }
 
@@ -1360,11 +1425,10 @@ impl VM {
 }
 
 enum FunctionNext {
-    // FIXME: Use LocalHandle with the right lifetime?
-    Call(GlobalHandle<ObjClosure>, usize),
-    Return(GlobalHandle<()>),
+    Call(Handle<ObjClosure>, usize),
+    Return(Value),
     FiberAction(FiberAction),
-    CaptureUpvalues(GlobalHandle<ObjClosure>, Vec<crate::compiler::Upvalue>),
+    CaptureUpvalues(Handle<ObjClosure>, Vec<crate::compiler::Upvalue>),
     CloseUpvalues(StackOffset),
 }
 
@@ -1418,9 +1482,8 @@ impl Ord for StackOffset {
 
 #[derive(Debug)]
 enum UpvalueStorage {
-    // TODO: These could be HeapHandles?
-    Open(GlobalHandle<ObjFiber>, StackOffset),
-    Closed(GlobalHandle<()>),
+    Open(Handle<ObjFiber>, StackOffset),
+    Closed(Value),
 }
 
 #[derive(Debug)]
@@ -1429,10 +1492,10 @@ struct Upvalue {
 }
 
 impl Upvalue {
-    fn new(fiber: LocalHandle<ObjFiber>, location: StackOffset) -> Upvalue {
-        Upvalue {
+    fn new(fiber: Handle<ObjFiber>, location: StackOffset) -> Handle<Upvalue> {
+        new_handle(Upvalue {
             storage: UpvalueStorage::Open(fiber, location),
-        }
+        })
     }
 
     fn is_open(&self) -> bool {
@@ -1450,16 +1513,16 @@ impl Upvalue {
         }
     }
 
-    fn load(&self, scope: &HandleScope) -> LocalHandle<()> {
+    fn load(&self) -> Value {
         match &self.storage {
-            UpvalueStorage::Open(fiber, loc) => fiber.as_ref().load(*loc),
-            UpvalueStorage::Closed(value) => scope.from_global(value),
+            UpvalueStorage::Open(fiber, loc) => fiber.borrow().load(*loc),
+            UpvalueStorage::Closed(value) => value.clone(),
         }
     }
 
-    fn store(&mut self, new_value: LocalHandle<()>) {
+    fn store(&mut self, new_value: Value) {
         match &mut self.storage {
-            UpvalueStorage::Open(fiber, loc) => fiber.as_mut().store(*loc, new_value),
+            UpvalueStorage::Open(fiber, loc) => fiber.borrow().store(*loc, new_value),
             UpvalueStorage::Closed(value) => *value = new_value,
         }
     }
@@ -1477,7 +1540,7 @@ impl ObjFiber {
     // can't easily mut-borrow fiber, thus this is &self, and we have a RefCell
     // around OpenUpvalues.
     fn close_upvalues_at_or_above(&self, location: StackOffset) {
-        let close_upvalue_if_above = |u: &mut HeapHandle<Upvalue>| {
+        let close_upvalue_if_above = |u: &mut Handle<Upvalue>| {
             // All open values have a location.
             let l = u.borrow().location().unwrap();
             if l >= location {
@@ -1525,11 +1588,11 @@ fn find_foreign_method(
         }
     }
 
-    // if module_name.eq("random") {
-    //     return Some(random_bind_foreign_method(
-    //         vm, class_name, is_static, signature,
-    //     ));
-    // }
+    if module_name.eq("random") {
+        return Some(random_bind_foreign_method(
+            vm, class_name, is_static, signature,
+        ));
+    }
     // FIXME: support opt_meta
     None
 }
@@ -1551,7 +1614,7 @@ fn bind_method_code(class: &ObjClass, fn_obj: &mut ObjFn) {
     for op in &mut fn_obj.code {
         match op {
             Ops::CallSuper(_, _, super_constant) => {
-                let value = class.superclass;
+                let value = Value::Class(class.superclass.as_ref().unwrap().clone());
                 // Making this a function call triggers a second mut borrow. :/
                 // fn_obj.set_constant(super_constant, value);
                 fn_obj.constants[super_constant.as_index()] = value;
@@ -1581,7 +1644,7 @@ fn bind_method(
     symbol: Symbol,
     module: &Module,
     class: &mut ObjClass,
-    method_value: LocalHandle<()>,
+    method_value: Value,
 ) -> Result<()> {
     let method = match method_value {
         Value::String(signature) => {
@@ -1628,8 +1691,8 @@ fn resolve_module(vm: &mut VM, importer: &str, name: &str) -> String {
 }
 
 enum ImportResult {
-    Existing(GlobalHandle<Module>),
-    New(GlobalHandle<ObjClosure>),
+    Existing(Handle<Module>),
+    New(Handle<ObjClosure>),
 }
 
 fn try_load_module(vm: &mut VM, name: &str) -> Option<LoadModuleResult> {
@@ -1638,11 +1701,11 @@ fn try_load_module(vm: &mut VM, name: &str) -> Option<LoadModuleResult> {
             return Some(result);
         }
     }
-    // if name.eq("random") {
-    //     return Some(LoadModuleResult {
-    //         source: random_source(),
-    //     });
-    // }
+    if name.eq("random") {
+        return Some(LoadModuleResult {
+            source: random_source(),
+        });
+    }
     None
 }
 
@@ -1666,20 +1729,13 @@ fn import_module(vm: &mut VM, importer_name: &str, unresolved_name: &str) -> Res
     Ok(ImportResult::New(closure))
 }
 
-// Unclear if this needs to be a separate function?
-fn get_module_variable<'a>(
-    scope: &HandleScope<'a>,
-    module: &Module,
-    variable_name: &str,
-) -> Result<LocalHandle<'a, ()>> {
-    module
-        .variable_by_name(scope, variable_name)
-        .ok_or_else(|| {
-            VMError::from_string(format!(
-                "Could not find a variable named '{}' in module '{}'.",
-                variable_name, module.name
-            ))
-        })
+fn get_module_variable(_vm: &VM, module: &Module, variable_name: &str) -> Result<Value> {
+    module.variable_by_name(variable_name).ok_or_else(|| {
+        VMError::from_string(format!(
+            "Could not find a variable named '{}' in module '{}'.",
+            variable_name, module.name
+        ))
+    })
 }
 
 impl VM {
@@ -1693,13 +1749,12 @@ impl VM {
             class_class: None,
             fn_class: None,
             fiber_class: None,
-            heap: Heap::new(1000),
             modules: HashMap::new(),
             start_time: std::time::Instant::now(),
             last_imported_module: None,
             config,
-            // api: None,
-            // c_config: WrenConfiguration::default(),
+            api: None,
+            c_config: WrenConfiguration::default(),
         };
 
         // FIXME: This shouldn't be needed anymore.  We no longer
@@ -1720,7 +1775,7 @@ impl VM {
         init_base_classes(&mut vm, &mut stub_core);
         vm.class_class = Some(stub_core.expect_class("Class"));
         init_fn_and_fiber(&mut vm, &mut stub_core);
-        vm.core_module = Some(stub_core);
+        vm.core_module = Some(new_handle(stub_core));
         let core_name = CORE_MODULE_NAME;
         vm.load_wren_core(core_name);
         vm.core_module = Some(vm.modules.remove(core_name).unwrap());
@@ -1728,57 +1783,48 @@ impl VM {
         vm
     }
 
-    pub(crate) fn lookup_or_register_empty_module<'a>(
-        &mut self,
-        name: &str,
-        scope: &HandleScope<'a>,
-    ) -> LocalHandle<Module> {
+    pub(crate) fn lookup_or_register_empty_module(&mut self, name: &str) -> Handle<Module> {
         if let Some(m) = self.modules.get(name) {
             return m.clone();
         }
-        let module = self.new_module_with_name(scope, name);
+        let module = self.new_module_with_name(name);
         self.register_module(module.clone());
         module
     }
 
-    pub(crate) fn new_module_with_name<'a>(
-        &self,
-        scope: &HandleScope<'a>,
-        name: &str,
-    ) -> LocalHandle<'a, Module> {
+    pub(crate) fn new_module_with_name(&self, name: &str) -> Handle<Module> {
         // We automatically import Core into all modules.
         // Implicitly import the core module.
         let core = self.core_module.as_ref().unwrap().borrow();
-        scope.take(Module {
+        new_handle(Module {
             name: name.into(),
-            // FIXME: These clone the handle, not the contents!
-            // variable_names: core.variable_names.clone(),
-            // variables: core.variables.clone(),
+            variable_names: core.variable_names.clone(),
+            variables: core.variables.clone(),
         })
     }
 
-    pub(crate) fn register_module(&mut self, module: LocalHandle<Module>) {
+    pub(crate) fn register_module(&mut self, module: Handle<Module>) {
         let name = module.borrow().name.clone();
         self.modules.insert(name, module);
     }
 
     // called wrenGetClass in wren_c.
-    pub(crate) fn class_for_value<'a>(&self, value: &LocalHandle<()>) -> &HeapHandle<ObjClass> {
+    pub(crate) fn class_for_value(&self, value: &Value) -> Handle<ObjClass> {
         let core = self.core.as_ref().unwrap();
         match value {
-            // Value::Null => core.null.clone(),
-            // Value::Num(_) => core.num.clone(),
-            // Value::Boolean(_) => core.bool_class.clone(),
-            // Value::String(_) => core.string.clone(),
-            // Value::Class(o) => o.borrow().class_obj(),
-            // Value::List(o) => o.borrow().class_obj(),
-            // Value::Map(o) => o.borrow().class_obj(),
-            // Value::Range(o) => o.borrow().class_obj(),
-            // Value::Fiber(o) => o.borrow().class_obj(),
-            // Value::Fn(o) => o.borrow().class_obj(),
-            // Value::Closure(o) => o.borrow().class_obj(),
-            // Value::Instance(o) => o.borrow().class_obj(),
-            // Value::Foreign(o) => o.borrow().class_obj(),
+            Value::Null => core.null.clone(),
+            Value::Num(_) => core.num.clone(),
+            Value::Boolean(_) => core.bool_class.clone(),
+            Value::String(_) => core.string.clone(),
+            Value::Class(o) => o.borrow().class_obj(),
+            Value::List(o) => o.borrow().class_obj(),
+            Value::Map(o) => o.borrow().class_obj(),
+            Value::Range(o) => o.borrow().class_obj(),
+            Value::Fiber(o) => o.borrow().class_obj(),
+            Value::Fn(o) => o.borrow().class_obj(),
+            Value::Closure(o) => o.borrow().class_obj(),
+            Value::Instance(o) => o.borrow().class_obj(),
+            Value::Foreign(o) => o.borrow().class_obj(),
         }
     }
 
@@ -1834,19 +1880,19 @@ impl VM {
         }
     }
 
-    // fn call_foreign(&mut self, foreign: &ForeignMethodFn, args: Vec<Value>) -> Result<Value> {
-    //     assert!(self.api.is_none(), "Cannot already be in foreign call.");
-    //     self.api = Some(Api::with_stack(args));
-    //     foreign(self);
-    //     let api = self.api.take().unwrap();
-    //     if api.error.is_null() {
-    //         Ok(api.into_return_value())
-    //     } else {
-    //         Err(VMError::FiberAbort(api.error))
-    //     }
-    // }
+    fn call_foreign(&mut self, foreign: &ForeignMethodFn, args: Vec<Value>) -> Result<Value> {
+        assert!(self.api.is_none(), "Cannot already be in foreign call.");
+        self.api = Some(Api::with_stack(args));
+        foreign(self);
+        let api = self.api.take().unwrap();
+        if api.error.is_null() {
+            Ok(api.into_return_value())
+        } else {
+            Err(VMError::FiberAbort(api.error))
+        }
+    }
 
-    fn cascade_error(&mut self, error: LocalHandle<()>) -> Result<(), RuntimeError> {
+    fn cascade_error(&mut self, error: Value) -> Result<(), RuntimeError> {
         let stack_trace_fiber = self.fiber.clone().unwrap();
         loop {
             let callee = self.fiber.clone().unwrap();
@@ -1883,33 +1929,32 @@ impl VM {
         Ok(())
     }
 
-    pub(crate) fn run(
-        &mut self,
-        closure: LocalHandle<ObjClosure>,
-    ) -> Result<GlobalHandle<()>, RuntimeError> {
-        let scope = HandleScope::new(&self.heap);
-        self.fiber =
-            GlobalHandle::from(scope.take(ObjFiber::new(self, closure, FiberRunSource::Root)));
+    pub(crate) fn run(&mut self, closure: Handle<ObjClosure>) -> Result<Value, RuntimeError> {
+        self.fiber = Some(new_handle(ObjFiber::new(
+            self,
+            closure,
+            FiberRunSource::Root,
+        )));
         loop {
-            let fiber = self.fiber;
+            let fiber = self.fiber.clone().unwrap();
             let result = self.run_in_fiber(&fiber);
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
                     fiber.borrow_mut().caller = self.fiber.take();
                     fiber.borrow_mut().push_call_arg_or_return_value(arg);
-                    self.fiber = fiber;
+                    self.fiber = Some(fiber.clone());
                 }
                 Ok(FiberAction::Try(fiber, arg)) => {
                     fiber.borrow_mut().caller = self.fiber.take();
                     fiber.borrow_mut().push_call_arg_or_return_value(arg);
                     fiber.borrow_mut().run_source = FiberRunSource::Try;
-                    self.fiber = fiber;
+                    self.fiber = Some(fiber.clone());
                 }
                 Ok(FiberAction::Suspend) => {
                     self.fiber = None;
                     // FIXME: This return value is wrong.
                     // The api should not return a value for Fiber.suspend.
-                    return Ok(GlobalHandle::from(scope.create_null()));
+                    return Ok(Value::Null);
                 }
                 Ok(FiberAction::Return(value)) => {
                     let caller = if let Some(fiber) = &self.fiber {
@@ -1939,7 +1984,7 @@ impl VM {
         }
     }
 
-    fn run_in_fiber(&mut self, fiber_ref: &LocalHandle<ObjFiber>) -> Result<FiberAction, VMError> {
+    fn run_in_fiber(&mut self, fiber_ref: &Handle<ObjFiber>) -> Result<FiberAction, VMError> {
         loop {
             let fiber = &fiber_ref.borrow();
             // We pull the frame off of the call_stack so that in Debug mode
@@ -2065,39 +2110,39 @@ impl VM {
         }
     }
 
-    // fn create_foreign<'a>(&mut self, &HandleScope<'a>, class_handle: &LocalHandle<ObjClass>) -> Result<LocalHandle<'a, ()>> {
-    //     // wren_c makes these all asserts, but I'm not sure why?
-    //     fn vm_assert(condition: bool, msg: &str) -> Result<()> {
-    //         if condition {
-    //             Ok(())
-    //         } else {
-    //             Err(VMError::from_str(msg))
-    //         }
-    //     }
+    fn create_foreign(&mut self, class_handle: &Handle<ObjClass>) -> Result<Value> {
+        // wren_c makes these all asserts, but I'm not sure why?
+        fn vm_assert(condition: bool, msg: &str) -> Result<()> {
+            if condition {
+                Ok(())
+            } else {
+                Err(VMError::from_str(msg))
+            }
+        }
 
-    //     let class = class_handle.borrow();
-    //     vm_assert(class.is_foreign(), "Class must be a foreign class.")?;
+        let class = class_handle.borrow();
+        vm_assert(class.is_foreign(), "Class must be a foreign class.")?;
 
-    //     // wren_c TODO: Don't look up every time.
-    //     let symbol = self
-    //         .methods
-    //         .symbol_for_name("<allocate>")
-    //         .ok_or_else(|| VMError::from_str("Should have defined <allocate> symbol."))?;
+        // wren_c TODO: Don't look up every time.
+        let symbol = self
+            .methods
+            .symbol_for_name("<allocate>")
+            .ok_or_else(|| VMError::from_str("Should have defined <allocate> symbol."))?;
 
-    //     vm_assert(class.methods.len() > symbol, "Class should have allocator.")?;
-    //     let method = class
-    //         .lookup_method(symbol)
-    //         .ok_or_else(|| VMError::from_str("Class should have allocator."))?;
+        vm_assert(class.methods.len() > symbol, "Class should have allocator.")?;
+        let method = class
+            .lookup_method(symbol)
+            .ok_or_else(|| VMError::from_str("Class should have allocator."))?;
 
-    //     // Pass the constructor arguments to the allocator as well.
-    //     match method {
-    //         Method::ForeignFunction(foreign) => {
-    //             let args = vec![Value::Class(class_handle.clone())];
-    //             self.call_foreign(foreign, args)
-    //         }
-    //         _ => Err(VMError::from_str("Allocator should be foreign.")),
-    //     }
-    // }
+        // Pass the constructor arguments to the allocator as well.
+        match method {
+            Method::ForeignFunction(foreign) => {
+                let args = vec![Value::Class(class_handle.clone())];
+                self.call_foreign(foreign, args)
+            }
+            _ => Err(VMError::from_str("Allocator should be foreign.")),
+        }
+    }
 
     // ~80% of benchmark time is spent under this function.
     fn call_method(
@@ -2150,8 +2195,6 @@ impl VM {
         fiber: &ObjFiber,
         frame_index: usize, // for closures
     ) -> Result<FunctionNext> {
-        // FIXME: Unclear when we should start a new scope?
-        let scope = HandleScope::new(&self.heap);
         // Copy out a ref, so we can later mut borrow the frame.
         // FIXME: Cloning every op *cannot* be correct!
         let closure_rc = frame.closure.clone();
@@ -2186,10 +2229,10 @@ impl VM {
                     fiber.push(fn_obj.lookup_constant(index).clone());
                 }
                 Ops::Boolean(value) => {
-                    fiber.push(scope.create_bool(*value));
+                    fiber.push(Value::Boolean(*value));
                 }
                 Ops::Null => {
-                    fiber.push(scope.create_null());
+                    fiber.push(Value::Null);
                 }
                 Ops::CallSuper(arity, symbol, constant) => {
                     // +1 for implicit arg for 'this'.
@@ -2234,23 +2277,23 @@ impl VM {
                 Ops::Construct => {
                     let this = fiber.load_this(frame);
                     let class = this.try_into_class().expect("'this' should be a class.");
-                    let instance = ObjInstance::new(&scope, class);
+                    let instance = Value::Instance(new_handle(ObjInstance::new(class)));
                     fiber.store_this(frame, instance);
                 }
                 Ops::ForeignConstruct => {
-                    unimplemented!("ForeignConstruct");
-                    // let this = fiber.load_this(frame);
-                    // let class = this.try_into_class().expect("'this' should be a class.");
-                    // let instance = self.create_foreign(&class)?;
-                    // fiber.store_this(frame, instance);
+                    let this = fiber.load_this(frame);
+                    let class = this.try_into_class().expect("'this' should be a class.");
+                    let instance = self.create_foreign(&class)?;
+                    fiber.store_this(frame, instance);
                 }
                 Ops::Closure(constant, upvalues) => {
                     let fn_value = fn_obj.lookup_constant(constant).clone();
                     let fn_obj = fn_value
                         .try_into_fn()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
-                    let closure = scope.take(ObjClosure::new(self, fn_obj));
-                    fiber.push(closure);
+                    let closure = new_handle(ObjClosure::new(self, fn_obj));
+                    // FIXME: Avoid this clone in the empty-upvalues case.
+                    fiber.push(Value::Closure(closure.clone()));
                     if !upvalues.is_empty() {
                         return Ok(FunctionNext::CaptureUpvalues(closure, upvalues.to_vec()));
                     }
@@ -2258,7 +2301,7 @@ impl VM {
                 }
                 Ops::EndModule => {
                     self.last_imported_module = Some(fn_obj.module.clone());
-                    fiber.push(scope.create_null()); // Is this the return value?
+                    fiber.push(Value::Null); // Is this the return value?
                 }
                 Ops::Return => {
                     // The top of our stack is returned and then the caller of
@@ -2363,7 +2406,7 @@ impl VM {
                         ImportResult::Existing(module) => {
                             // The module has already been loaded. Remember it so we can import
                             // variables from it if needed.
-                            fiber.push(scope.create("dummy for module".to_string()));
+                            fiber.push(Value::from_str("dummy for module"));
                             self.last_imported_module = Some(module);
                         }
                     }
@@ -2415,7 +2458,7 @@ impl VM {
     }
 }
 
-fn check_arity(value: &HeapHandle<()>, num_args: usize) -> Result<HeapHandle<ObjClosure>> {
+fn check_arity(value: &Value, num_args: usize) -> Result<Handle<ObjClosure>> {
     let closure = value
         .try_into_closure()
         .expect("Receiver must be a closure.");
@@ -2452,7 +2495,7 @@ fn dump_instruction(
     op: &Ops,
     methods: &SymbolTable,
     closure: &ObjClosure,
-    stack: Option<&[HeapHandle<()>]>,
+    stack: Option<&[Value]>,
     mode: DumpMode,
 ) {
     let fn_obj = &closure.fn_obj.borrow();
@@ -2470,7 +2513,7 @@ fn op_debug_string(
     methods: &SymbolTable,
     fn_obj: &ObjFn,
     closure: Option<&ObjClosure>,
-    stack: Option<&[HeapHandle<()>]>,
+    stack: Option<&[Value]>,
     mode: DumpMode,
 ) -> String {
     // If stable_output do not print the symbol, otherwise every time we
@@ -2590,7 +2633,6 @@ pub(crate) fn debug_bytecode(vm: &VM, top_closure: &ObjClosure) {
         }
         // Walk module-level constants looking for code?
         for const_value in &func.constants {
-            // FIXME: How do we up-cast to a HeapHandle<ObjFn>?
             if let Value::Fn(fn_obj) = const_value {
                 fn_objs.push(fn_obj.clone());
             }
@@ -2603,13 +2645,13 @@ pub(crate) fn debug_bytecode(vm: &VM, top_closure: &ObjClosure) {
     }
 }
 
-pub trait Obj: HostObject {
+pub trait Obj: Clear {
     // The object's class.
-    fn class_obj(&self) -> &HeapHandle<ObjClass>;
+    fn class_obj(&self) -> Handle<ObjClass>;
 }
 
 pub(crate) struct ObjRange {
-    class_obj: HeapHandle<ObjClass>,
+    class_obj: Handle<ObjClass>,
     // The beginning of the range.
     pub(crate) from: f64,
     // The end of the range. May be greater or less than [from].
@@ -2629,8 +2671,8 @@ impl ObjRange {
 }
 
 pub(crate) struct ObjMap {
-    class_obj: HeapHandle<ObjClass>,
-    pub(crate) data: Map,
+    class_obj: Handle<ObjClass>,
+    pub(crate) data: HashMap<Value, Value>,
 }
 
 impl ObjMap {
@@ -2638,20 +2680,20 @@ impl ObjMap {
         self.data.len()
     }
 
-    pub fn contains_key(&self, key: &LocalHandle<()>) -> bool {
+    pub fn contains_key(&self, key: &Value) -> bool {
         self.data.contains_key(key)
     }
 }
 
 impl Obj for ObjMap {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
 pub(crate) struct ObjList {
-    class_obj: HeapHandle<ObjClass>,
-    pub(crate) elements: List,
+    class_obj: Handle<ObjClass>,
+    pub(crate) elements: Vec<Value>,
 }
 
 impl ObjList {
@@ -2661,56 +2703,52 @@ impl ObjList {
 }
 
 impl Obj for ObjList {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
 pub(crate) struct ObjClosure {
-    class_obj: HeapHandle<ObjClass>,
-    pub(crate) fn_obj: HeapHandle<ObjFn>,
-    upvalues: List, // FIXME: List<Upvalue>,
+    class_obj: Handle<ObjClass>,
+    pub(crate) fn_obj: Handle<ObjFn>,
+    upvalues: Vec<Handle<Upvalue>>,
 }
 
 impl ObjClosure {
-    pub(crate) fn new<'a>(
-        vm: &VM,
-        scope: &HandleScope<'a>,
-        fn_obj: LocalHandle<ObjFn>,
-    ) -> LocalHandle<'a, ObjClosure> {
+    pub(crate) fn new(vm: &VM, fn_obj: Handle<ObjFn>) -> ObjClosure {
         // FIXME: Is this really supposed to also be class = fn?
-        scope.take(ObjClosure {
-            class_obj: vm.fn_class,
+        ObjClosure {
+            class_obj: vm.fn_class.as_ref().unwrap().clone(),
             fn_obj,
             upvalues: vec![],
-        })
+        }
     }
 
-    fn push_upvalue(&mut self, upvalue: LocalHandle<Upvalue>) {
+    fn push_upvalue(&mut self, upvalue: Handle<Upvalue>) {
         self.upvalues.push(upvalue)
     }
 
-    fn upvalue(&self, index: usize) -> &HeapHandle<Upvalue> {
+    fn upvalue(&self, index: usize) -> &Handle<Upvalue> {
         &self.upvalues[index]
     }
 }
 
 impl Obj for ObjClosure {
-    fn class_obj(&self) -> HeapHandle<ObjClass> {
-        self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
 pub(crate) struct ObjFn {
-    class_obj: HeapHandle<ObjClass>,
+    class_obj: Handle<ObjClass>,
     pub(crate) arity: Arity,
-    pub(crate) constants: List,
+    pub(crate) constants: Vec<Value>,
     pub(crate) code: Vec<Ops>,
     pub(crate) debug: FnDebug,
     // This is needed so that we can find the Module through which to
     // do module-level loads/stores when executing.  This is *definitely*
-    // circular reference.
-    pub(crate) module: HeapHandle<Module>,
+    // circular reference however.  Maybe there is another way?
+    pub(crate) module: Handle<Module>,
 }
 
 fn count_params_in_signature(signature: &str) -> usize {
@@ -2732,110 +2770,96 @@ fn count_params_in_signature(signature: &str) -> usize {
 }
 
 impl ObjFn {
-    pub(crate) fn from_compiler<'a>(
+    pub(crate) fn from_compiler(
         vm: &VM,
-        scope: &HandleScope<'a>,
-        module: &HeapHandle<Module>,
+        module: Handle<Module>,
         compiler: crate::compiler::Compiler,
         arity: Arity,
     ) -> ObjFn {
-        scope.take(ObjFn {
-            class_obj: vm.fn_class,
+        ObjFn {
+            class_obj: vm.fn_class.as_ref().unwrap().clone(),
             constants: compiler.constants.list,
             code: compiler.code,
             arity,
             debug: compiler.fn_debug,
             module,
-        })
+        }
     }
 
     // pub(crate) fn set_constant(&mut self, constant: &Constant, value: Value) {
     //     self.constants[constant.as_index()] = value;
     // }
 
-    pub(crate) fn lookup_constant(&self, constant: &Constant) -> &HeapHandle<()> {
+    pub(crate) fn lookup_constant(&self, constant: &Constant) -> &Value {
         &self.constants[constant.as_index()]
     }
 
-    pub(crate) fn stub_call<'a>(
-        vm: &VM,
-        scope: &HandleScope<'a>,
-        signature: &str,
-        symbol: Symbol,
-    ) -> LocalHandle<'a, ObjFn> {
+    pub(crate) fn stub_call(vm: &VM, signature: &str, symbol: Symbol) -> ObjFn {
         let num_params_usize = count_params_in_signature(signature);
         let num_params: u8 = u8::try_from(num_params_usize).unwrap();
         let code = vec![Ops::Call(Arity(num_params), symbol), Ops::Return, Ops::End];
         let code_len = code.len();
 
-        scope.take(ObjFn {
-            class_obj: vm.fn_class,
+        ObjFn {
+            class_obj: vm.fn_class.as_ref().unwrap().clone(),
             // FIXME: Why is this Arity + 1 and the above is not?
             arity: Arity(num_params + 1),
             code: code,
             constants: vec![],
-            module: vm.last_imported_module, // Wrong?
+            module: vm.last_imported_module.as_ref().unwrap().clone(), // Wrong?
             debug: FnDebug::generated(signature, code_len),
-        })
+        }
     }
 }
 
 impl Obj for ObjFn {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
 pub(crate) struct ObjInstance {
-    class_obj: HeapHandle<ObjClass>,
-    fields: List,
+    class_obj: Handle<ObjClass>,
+    fields: Vec<Value>,
 }
 
 impl ObjInstance {
-    pub(crate) fn new<'a>(
-        scope: &HandleScope<'a>,
-        class: LocalHandle<ObjClass>,
-    ) -> LocalHandle<'a, ObjInstance> {
+    pub(crate) fn new(class: Handle<ObjClass>) -> ObjInstance {
         let num_fields = class
             .borrow()
             .num_fields()
             .expect("Compiler emitted Construct for non-source class.");
-        // FIXME: Need a vec!-like constructor for List?
         let fields = vec![Value::Null; num_fields];
-        scope.take(ObjInstance {
+        ObjInstance {
             class_obj: class,
             fields,
-        })
+        }
     }
 }
 
 impl Obj for ObjInstance {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
 pub(crate) struct ObjForeign {
-    class_obj: HeapHandle<ObjClass>,
+    class_obj: Handle<ObjClass>,
     pub user_data: Box<dyn UserData>,
 }
 
 impl ObjForeign {
-    pub(crate) fn new<'a>(
-        class: LocalHandle<ObjClass>,
-        scope: &HandleScope<'a>,
-        user_data: Box<dyn UserData>,
-    ) -> LocalHandle<'a, ObjForeign> {
-        scope.take(ObjForeign {
+    pub(crate) fn new(class: Handle<ObjClass>, user_data: Box<dyn UserData>) -> ObjForeign {
+        ObjForeign {
             class_obj: class,
             user_data,
-        })
+        }
     }
 }
 
 impl Obj for ObjForeign {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -2847,8 +2871,8 @@ impl core::fmt::Debug for ObjRange {
 }
 
 impl Obj for ObjRange {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class_obj
+    fn class_obj(&self) -> Handle<ObjClass> {
+        self.class_obj.clone()
     }
 }
 
@@ -2859,18 +2883,18 @@ impl Obj for ObjRange {
 // }
 
 pub(crate) enum FiberAction {
-    // FIXME: Could something trace FiberAction and these be HeapHandles?
-    Call(GlobalHandle<ObjFiber>, GlobalHandle<()>),
-    Transfer(GlobalHandle<ObjFiber>, GlobalHandle<()>),
-    TransferError(GlobalHandle<ObjFiber>, GlobalHandle<()>),
+    Call(Handle<ObjFiber>, Value),
+    Transfer(Handle<ObjFiber>, Value),
+    TransferError(Handle<ObjFiber>, Value),
     // AFAICT, Return and Yield are the same.
-    Return(GlobalHandle<()>),
-    Try(GlobalHandle<ObjFiber>, GlobalHandle<()>),
+    Return(Value),
+    Try(Handle<ObjFiber>, Value),
     Suspend,
 }
 
-type ValuePrimitive = fn(vm: &VM, args: &[HeapHandle<()>], out: &mut HeapHandle<()>) -> Result<()>;
-type FiberActionPrimitive = fn(vm: &VM, args: &[HeapHandle<()>]) -> Result<FiberAction>;
+// Unclear if this should take Vec or a slice?
+type ValuePrimitive = fn(vm: &VM, args: &[Value]) -> Result<Value>;
+type FiberActionPrimitive = fn(vm: &VM, args: &[Value]) -> Result<FiberAction>;
 
 #[derive(Clone)]
 pub(crate) enum Method {
@@ -2886,7 +2910,7 @@ pub(crate) enum Method {
     ForeignFunction(ForeignMethodFn),
 
     // A normal user-defined method.
-    Block(GlobalHandle<ObjClosure>),
+    Block(Handle<ObjClosure>),
 }
 
 impl core::fmt::Debug for Method {
@@ -2919,12 +2943,14 @@ impl Default for ClassSource {
 // Derive from Default to allow take() to work during clear().
 #[derive(Default)]
 pub struct ObjClass {
-    // Class can be null during Object and Class and Object metaclass
-    // initialization starting with class = null and then filling in.
-    pub(crate) class: HeapHandle<ObjClass>,
+    // Class is option Option due to Object and Class and Object metaclass
+    // initialization starting with class = None and then filling in.
+    // The Option is also used during clear() teardown during VM::drop.
+    // We could use a dummy class to start intead and make this non-optional.
+    pub(crate) class: Option<Handle<ObjClass>>,
 
     // Class is the only class w/o a superclass, all others this is Some(class).
-    pub(crate) superclass: HeapHandle<ObjClass>,
+    pub(crate) superclass: Option<Handle<ObjClass>>,
 
     // What created this class.  Including the number of fields it has if it
     // was created from source, rather than internal or foreign.
@@ -3005,26 +3031,27 @@ impl ObjClass {
 }
 
 impl Obj for ObjClass {
-    fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class
+    fn class_obj(&self) -> Handle<ObjClass> {
+        // FIXME: Fix to be non-Option and remove unwrap.
+        self.class.as_ref().unwrap().clone()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    // #[test]
-    // fn value_num_hash_unique() {
-    //     fn hash_as_value(num: f64) -> u64 {
-    //         use std::hash::{Hash, Hasher};
-    //         let value = super::Value::Num(num);
-    //         let mut s = std::collections::hash_map::DefaultHasher::new();
-    //         value.hash(&mut s);
-    //         s.finish()
-    //     }
-    //     assert_ne!(hash_as_value(1.0), hash_as_value(2.0));
-    //     assert_eq!(hash_as_value(1.0), hash_as_value(1.0));
-    //     assert_eq!(hash_as_value(3.0), hash_as_value(1.0 + 2.0));
-    //     // Floats equality is hard.  We don't try to fix that:
-    //     assert_ne!(hash_as_value(0.3), hash_as_value(0.1 + 0.2));
-    // }
+    #[test]
+    fn value_num_hash_unique() {
+        fn hash_as_value(num: f64) -> u64 {
+            use std::hash::{Hash, Hasher};
+            let value = super::Value::Num(num);
+            let mut s = std::collections::hash_map::DefaultHasher::new();
+            value.hash(&mut s);
+            s.finish()
+        }
+        assert_ne!(hash_as_value(1.0), hash_as_value(2.0));
+        assert_eq!(hash_as_value(1.0), hash_as_value(1.0));
+        assert_eq!(hash_as_value(3.0), hash_as_value(1.0 + 2.0));
+        // Floats equality is hard.  We don't try to fix that:
+        assert_ne!(hash_as_value(0.3), hash_as_value(0.1 + 0.2));
+    }
 }

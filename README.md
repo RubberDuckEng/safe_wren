@@ -142,10 +142,3 @@ https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs seems to 
 * If you yield from the root, it gets set to state=OTHER, presumably later you
 might be able to call things on it?
 * WrenConfiguration likely leaked for each WrenVM constructed/destructed?
-
-
-## GC Conversion
-* Does ParseContext handle all value creation?
-* Does GlobalHandle have a default?
-* HeapHandle::default() should == null.
-* Any return of Value should probalby be &HeapHandle?

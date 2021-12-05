@@ -15,7 +15,6 @@ categories = ["compilers"]
 [dependencies]
 # Used for exposing C bindings in src/ffi/c_apis.rs
 libc = "0.2.98"
-vmgc = {path = '../vmgc'}
 
 [build-dependencies]
 # Used by build.rs
