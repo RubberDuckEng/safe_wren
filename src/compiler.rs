@@ -1,10 +1,12 @@
 // analog to wren_compiler.c from wren_c.
 
 use vmgc::heap::*;
-use vmgc::object::{List, Map};
+use vmgc::object::*;
+use vmgc::pointer::ObjectType;
 
 use std::cell::RefCell;
 use std::cmp::{Ord, Ordering};
+use std::collections::HashMap;
 use std::error;
 use std::fmt;
 use std::ops::Range;
@@ -1245,24 +1247,39 @@ impl FnDebug {
 // wren_c uses both a hash and a list when building constants
 // to allow both fast lookup (when there are lots of constants)
 // as well as fast copy from the compiler into the final function.
+type ConstantMap = HashMap<HeapHandle<()>, Constant>;
 pub(crate) struct ConstantsBuilder {
-    hash: GlobalHandle<Map>,
+    hash: ConstantMap,
 
     // public for deconstruction in end_compiler.
-    pub(crate) list: GlobalHandle<List>,
+    pub(crate) list: List<()>,
+}
+
+impl Traceable for ConstantsBuilder {
+    fn trace(&mut self, visitor: &mut ObjectVisitor) {
+        for key in self.hash.keys() {
+            key.trace(visitor);
+        }
+        self.list.trace(visitor);
+    }
+}
+
+impl HostObject for ConstantsBuilder {
+    const TYPE_ID: ObjectType = ObjectType::Host;
 }
 
 impl ConstantsBuilder {
-    fn new(heap: &Heap) -> ConstantsBuilder {
-        let scope = HandleScope::new(heap);
-        ConstantsBuilder {
-            hash: scope.create_null(),
-            list: scope.create_null(),
-        }
+    fn new<'a>(scope: &'a HandleScope<'a>) -> LocalHandle<'a, ConstantsBuilder> {
+        scope
+            .take(ConstantsBuilder {
+                hash: ConstantMap::new(),
+                list: List::default(),
+            })
+            .unwrap()
     }
 
-    fn lookup(&self, value: LocalHandle<()>) -> Option<Constant> {
-        self.hash.as_mut().get(value).map(|u| Constant(*u))
+    fn lookup(&self, value: LocalHandle<()>) -> Option<&Constant> {
+        self.hash.get(&value.into())
     }
 
     fn len(&self) -> usize {
@@ -1273,24 +1290,24 @@ impl ConstantsBuilder {
     // This makes no attempt to check if it's already in the map
     // callers are expected to lookup first.
     fn add(&mut self, value: LocalHandle<()>) -> Constant {
-        let index = self.list.len();
-        self.list.push(value.clone());
-        self.hash.insert(value, index);
-        Constant(index)
+        let constant = Constant(self.list.len());
+        self.list.push(value.into());
+        self.hash.insert(value.into(), constant);
+        constant
     }
 }
 
-impl fmt::Debug for ConstantsBuilder {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}", self.list)
-    }
-}
+// impl fmt::Debug for ConstantsBuilder {
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//         write!(f, "{:?}", self.list)
+//     }
+// }
 
 // Only lives for the function (or module top) compile.
 // Keep a stack of compilers as we recruse the tree.
 pub(crate) struct Compiler {
     // Public for deconstruction by ObjFn::new()
-    pub(crate) constants: ConstantsBuilder,
+    pub(crate) constants: GlobalHandle<ConstantsBuilder>,
     locals: Vec<Local>, // A fixed size array in wren_c
     pub(crate) code: Vec<Ops>,
     scope_depth: ScopeDepth,
@@ -1307,9 +1324,9 @@ pub(crate) struct Compiler {
 }
 
 impl Compiler {
-    fn _with_arg0_name(scope_depth: ScopeDepth, arg0_name: &str) -> Compiler {
+    fn _with_arg0_name(scope: &HandleScope, scope_depth: ScopeDepth, arg0_name: &str) -> Compiler {
         Compiler {
-            constants: ConstantsBuilder::new(),
+            constants: GlobalHandle::from(ConstantsBuilder::new(scope)),
             locals: vec![Local {
                 name: arg0_name.into(),
                 // wren_c has a funny hack here by setting depth to -1 (module)
@@ -1332,19 +1349,19 @@ impl Compiler {
         }
     }
 
-    fn root() -> Compiler {
-        Compiler::_with_arg0_name(ScopeDepth::Module, "")
+    fn root(scope: &HandleScope) -> Compiler {
+        Compiler::_with_arg0_name(scope, ScopeDepth::Module, "")
     }
 
     // FIXME: Why do these always start at Local(0), even if the parent
     // might already have a scopedepth?
     // start_loop copies from parent, but nothing else does?
-    fn block() -> Compiler {
-        Compiler::_with_arg0_name(ScopeDepth::Local(0), "")
+    fn block(scope: &HandleScope) -> Compiler {
+        Compiler::_with_arg0_name(scope, ScopeDepth::Local(0), "")
     }
 
-    fn method() -> Compiler {
-        Compiler::_with_arg0_name(ScopeDepth::Local(0), "this")
+    fn method(scope: &HandleScope) -> Compiler {
+        Compiler::_with_arg0_name(scope, ScopeDepth::Local(0), "this")
     }
 
     fn emit_op_for_line(&mut self, op: Ops, line: usize) -> usize {
@@ -1432,14 +1449,14 @@ fn emit_loop(ctx: &mut ParseContext, offsets: &LoopOffsets) {
     emit(ctx, Ops::Loop(backwards_by));
 }
 
-impl fmt::Debug for Compiler {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_tuple("")
-            .field(&self.constants)
-            .field(&self.code)
-            .finish()
-    }
-}
+// impl fmt::Debug for Compiler {
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//         f.debug_tuple("")
+//             .field(&self.constants)
+//             .field(&self.code)
+//             .finish()
+//     }
+// }
 
 // Adds [constant] to the constant pool and returns its index.
 // wren_c calls this addConstant
@@ -1447,10 +1464,11 @@ fn ensure_constant(
     ctx: &mut ParseContext,
     constant: LocalHandle<()>,
 ) -> Result<Constant, WrenError> {
-    if let Some(index) = ctx.compiler().constants.lookup(&constant) {
-        Ok(index)
-    } else if ctx.compiler().constants.len() < MAX_CONSTANTS {
-        Ok(ctx.compiler_mut().constants.add(constant))
+    let constants = ctx.scope.as_mut(&ctx.compiler().constants);
+    if let Some(index) = constants.lookup(constant) {
+        Ok(*index)
+    } else if constants.len() < MAX_CONSTANTS {
+        Ok(constants.add(constant))
     } else {
         Err(ctx.error_string(format!(
             "A function may only contain {} unique constants.",
@@ -1488,23 +1506,26 @@ impl<'a> ParseContext<'a> {
         self.scope.create_num(value)
     }
     fn wrap_string(&self, value: String) -> LocalHandle<String> {
-        self.scope.take(value)
+        self.scope.take(value).unwrap()
     }
-    fn wrap_str(&self, value: str) -> LocalHandle<String> {
-        self.scope.take(value.to_string())
+    fn wrap_str(&self, value: &str) -> LocalHandle<String> {
+        self.scope.take(value.to_string()).unwrap()
     }
-    fn null(&self) -> LocalHandle<String> {
+    fn null(&self) -> LocalHandle<()> {
         self.scope.create_null()
     }
 }
 
 impl<'a> ParseContext<'a> {
     fn module_name(&self) -> String {
-        self.module.borrow().name.clone()
+        self.scope.as_ref(&self.module).name.clone()
     }
 
     fn in_core_module(&self) -> bool {
-        self.module.borrow().name.eq(crate::vm::CORE_MODULE_NAME)
+        self.scope
+            .as_ref(&self.module)
+            .name
+            .eq(crate::vm::CORE_MODULE_NAME)
     }
 
     fn parse_error(&self, error: ParserError) -> WrenError {
@@ -1620,9 +1641,9 @@ type MethodSignatureParslet =
 fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
     let value = match &ctx.parser.previous.token {
-        Token::Num(n) => ctx.wrap_num(*n),
-        Token::String(s) => ctx.wrap_str(s),
-        Token::Interpolation(s) => ctx.wrap_str(s),
+        Token::Num(n) => ctx.wrap_num(*n).erase_type(),
+        Token::String(s) => ctx.wrap_str(s).erase_type(),
+        Token::Interpolation(s) => ctx.wrap_str(s).erase_type(),
         _ => {
             let name = previous_token_name(ctx);
             return Err(ctx.error_string(format!("Invalid literal {}", name)));
@@ -1829,7 +1850,8 @@ fn call_signature(ctx: &mut ParseContext, signature: Signature, call_type: CallT
             // We bind it at class definition time by storing a reference to the
             // superclass, initially Null. When the method is bound, we'll look
             // up the superclass then and store it in this slot.
-            let super_const = ctx.compiler_mut().constants.add(ctx.null());
+            let constants = ctx.scope.as_mut(&ctx.compiler().constants);
+            let super_const = constants.add(ctx.null());
             emit(ctx, Ops::CallSuper(signature.arity, symbol, super_const));
         }
     }
@@ -2020,12 +2042,7 @@ fn end_compiler<'a>(
 
     // We're done with the compiler, create an ObjFn from it.
     let upvalues = std::mem::take(&mut compiler.upvalues);
-    let fn_obj = ctx.new_fn(ObjFn::from_compiler(
-        ctx.vm,
-        ctx.module.clone(),
-        compiler,
-        arity,
-    ));
+    let fn_obj = ObjFn::from_compiler(ctx.vm, &ctx.scope, &ctx.module, compiler, arity);
 
     // If this was not the top-compiler, load the compile function into
     // the parent code.
@@ -2035,7 +2052,7 @@ fn end_compiler<'a>(
         // makes creating a function a little slower, but makes invoking them
         // faster. Given that functions are invoked more often than they are
         // created, this is a win.
-        let constant = ensure_constant(ctx, fn_obj)?;
+        let constant = ensure_constant(ctx, fn_obj.erase_type())?;
         emit(ctx, Ops::Closure(constant, upvalues));
     }
 
@@ -2074,7 +2091,7 @@ struct PushCompiler<'a, 'b> {
 impl<'a, 'b> PushCompiler<'a, 'b> {
     fn push_root(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
         assert!(ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::root());
+        ctx._compilers.push(Compiler::root(&ctx.scope));
         PushCompiler {
             ctx,
             did_pop: false,
@@ -2083,7 +2100,7 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
 
     fn push_block(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
         assert!(!ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::block());
+        ctx._compilers.push(Compiler::block(&ctx.scope));
         PushCompiler {
             ctx,
             did_pop: false,
@@ -2092,7 +2109,7 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
 
     fn push_method(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
         assert!(!ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::method());
+        ctx._compilers.push(Compiler::method(&ctx.scope));
         PushCompiler {
             ctx,
             did_pop: false,
@@ -2369,7 +2386,8 @@ fn static_field(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenErro
     // If this is the first time we've seen this static field, implicitly
     // define it as a variable in the scope surrounding the class definition.
     if class_compiler.resolve_local(&name).is_none() {
-        let result = class_compiler.declare_variable(&mut ctx.module.borrow_mut(), name);
+        let result =
+            class_compiler.declare_variable(&ctx.scope, ctx.scope.as_mut(&ctx.module), name);
         // map_err takes a closure which requires exclusive access to ctx.
         let symbol = match result {
             Err(e) => return Err(map_declaration_error(e, ctx)),
@@ -2564,13 +2582,17 @@ fn name(ctx: &mut ParseContext, can_assign: bool) -> Result<(), WrenError> {
 
     // Otherwise if in module scope handle module case:
 
-    let maybe_index = ctx.module.borrow().lookup_symbol(&name);
+    let maybe_index = ctx.scope.as_ref(&ctx.module).lookup_symbol(&name);
     let symbol = match maybe_index {
         None => {
             // Implicitly define a module-level variable in
             // the hopes that we get a real definition later.
-            let line_value = ctx.wrap_usize(ctx.line_number());
-            match ctx.module.borrow_mut().add_variable(&name, line_value) {
+            let line_value = ctx.wrap_num(ctx.line_number() as f64);
+            match ctx
+                .scope
+                .as_mut(&ctx.module)
+                .add_variable(&name, line_value.erase_type())
+            {
                 Ok(index) => index,
                 Err(ModuleLimitError::TooManyVariables) => {
                     return Err(ctx.error_str("Too many module variables defined."));
@@ -2670,7 +2692,7 @@ fn resolve_name(ctx: &mut ParseContext, name: &str) -> Option<Variable> {
         return maybe_variable;
     }
 
-    if let Some(index) = ctx.module.borrow().lookup_symbol(name) {
+    if let Some(index) = ctx.scope.as_ref(&ctx.module).lookup_symbol(name) {
         return Some(Variable::module(index));
     }
     None
@@ -3179,11 +3201,11 @@ fn map_declaration_error(error: DeclarationError, ctx: &ParseContext) -> WrenErr
 fn declare_variable(ctx: &mut ParseContext, name: String) -> Result<u16, WrenError> {
     // compiler_mut() borrows the entire ctx, so grab the last compiler directly
     // to allow partial borrows.
-    let result = ctx
-        ._compilers
-        .last_mut()
-        .unwrap()
-        .declare_variable(&mut ctx.module.borrow_mut(), name);
+    let result = ctx._compilers.last_mut().unwrap().declare_variable(
+        &ctx.scope,
+        ctx.scope.as_mut(&ctx.module),
+        name,
+    );
     result.map_err(move |e| map_declaration_error(e, ctx))
 }
 
@@ -3327,7 +3349,7 @@ fn variable_definition(ctx: &mut ParseContext) -> Result<(), WrenError> {
 
 // FIXME: This is probably not needed?  All it really adds is an assert?
 fn load_core_variable(ctx: &mut ParseContext, name: &str) {
-    let symbol = match ctx.module.borrow().lookup_symbol(name) {
+    let symbol = match ctx.scope.as_ref(&ctx.module).lookup_symbol(name) {
         Some(s) => s,
         None => panic!("Failed to find core variable {}", name),
     };
@@ -3519,7 +3541,7 @@ fn method(ctx: &mut ParseContext, class_variable: Variable) -> Result<bool, Wren
 
     // Outside the scope block so we can emit to the outer compiler:
     if is_foreign {
-        emit_constant(ctx, ctx.wrap_string(signature.full_name()))?;
+        emit_constant(ctx, ctx.wrap_string(signature.full_name()).erase_type())?;
     }
 
     // Define the method. For a constructor, this defines the instance
@@ -3554,7 +3576,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     let class_name = ctx.wrap_string(name);
 
     // Make a string constant for the name.
-    emit_constant(ctx, class_name)?;
+    emit_constant(ctx, class_name.erase_type())?;
 
     // Load the superclass (if there is one).
     if match_current(ctx, Token::Is)? {
@@ -4019,8 +4041,8 @@ impl VM {
         input: InputManager,
     ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
         // When compiling, we create a module and register it.
-        let module = self.lookup_or_register_empty_module(module_name);
-        self.compile(input, module, scope)
+        let module = self.lookup_or_register_empty_module(scope, module_name);
+        self.compile(scope, input, module)
     }
 
     // called wrenCompileSource in wren_c
@@ -4031,7 +4053,7 @@ impl VM {
         source: String,
     ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
         let input = InputManager::from_string(source);
-        self.compile_in_module(module_name, input)
+        self.compile_in_module(scope, module_name, input)
     }
 
     // called wrenCompile in wren_c
@@ -4041,7 +4063,7 @@ impl VM {
         input: InputManager,
         module: LocalHandle<Module>,
     ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
-        let num_existing_variables = module.borrow().variable_count();
+        let num_existing_variables = module.as_ref().variable_count();
 
         // Init the parser & compiler
         let mut parse_context = ParseContext {
@@ -4052,10 +4074,11 @@ impl VM {
                 next: ParseToken::before_file(),
             },
             _compilers: vec![],
-            module,
+            module: GlobalHandle::from(module),
             vm: self,
             nesting: 0,
-            scope: HandleScope::new(self.heap),
+            // FIXME: This is the only access to VM.heap outside vm.rs.
+            scope: HandleScope::new(&self.heap),
         };
 
         let mut scope = PushCompiler::push_root(&mut parse_context);
@@ -4095,14 +4118,17 @@ impl VM {
 
         scope
             .ctx
-            .module
-            .borrow()
-            .check_for_undefined_variables(num_existing_variables, handle_undefined)?;
+            .scope
+            .as_ref(&scope.ctx.module)
+            .check_for_undefined_variables(
+                &scope.ctx.scope,
+                num_existing_variables,
+                handle_undefined,
+            )?;
 
         let compiler = scope.pop();
         // wren_c uses (script) :shrug:
         let fn_obj = end_compiler(scope.ctx, compiler, Arity(0), "<script>".into())?;
-        let closure = handles.take(ObjClosure::new(scope.ctx.vm, fn_obj));
-        Ok(closure)
+        Ok(ObjClosure::new(scope.ctx.vm, handles, fn_obj))
     }
 }

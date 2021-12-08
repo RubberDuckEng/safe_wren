@@ -1381,27 +1381,30 @@ pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
 }
 
 // Only used by init_fn_and_fiber
-fn create_and_define_class(
+fn create_and_define_class<'a>(
     vm: &mut VM,
+    scope: &HandleScope<'a>,
     module: &mut Module,
     name: &str,
     superclass: LocalHandle<ObjClass>,
 ) -> GlobalHandle<ObjClass> {
     let class = vm
-        .new_class(&superclass, ClassSource::Internal, name.into())
+        .new_class(scope, superclass, ClassSource::Internal, name.into())
         .unwrap();
-    module.define_variable(name, class).unwrap();
-    class
+    module.define_variable(name, class.erase_type()).unwrap();
+    GlobalHandle::from(class)
 }
 
 // Only used for initing before loading wren_core.wren.
-pub(crate) fn init_fn_and_fiber(vm: &mut VM, module: &mut Module) {
+pub(crate) fn init_fn_and_fiber(vm: &mut VM, scope: &HandleScope, module: &mut Module) {
     // wren_c compiles wren_core.wren with functions/closures with a
     // null class. Manually initialize classes before compiling wren_core.wren.
-    let superclass = module.expect_class("Object");
-    vm.fn_class = Some(create_and_define_class(vm, module, "Fn", &superclass));
+    let superclass = module.expect_class(scope, "Object");
+    vm.fn_class = Some(create_and_define_class(vm, scope, module, "Fn", superclass));
     // The Fiber used to run wren_core for wren_c has a null class.
-    vm.fiber_class = Some(create_and_define_class(vm, module, "Fiber", &superclass));
+    vm.fiber_class = Some(create_and_define_class(
+        vm, scope, module, "Fiber", superclass,
+    ));
 }
 
 pub(crate) fn register_core_primitives(vm: &mut VM) {
@@ -1409,16 +1412,18 @@ pub(crate) fn register_core_primitives(vm: &mut VM) {
     // superclass, so any classes added to a superclass
     // WOULD NOT end up inherited into wren_core.wren subclasses.
 
-    let module = vm.core_module.as_ref().unwrap().borrow();
+    let scope = HandleScope::new(&vm.heap);
+
+    let module = scope.as_ref(&vm.core_module);
 
     let core = CoreClasses {
-        bool_class: module.expect_class("Bool"),
-        num: module.expect_class("Num"),
-        string: module.expect_class("String"),
-        null: module.expect_class("Null"),
-        range: module.expect_class("Range"),
-        list: module.expect_class("List"),
-        map: module.expect_class("Map"),
+        bool_class: GlobalHandle::from(module.expect_class(&scope, "Bool")),
+        num: GlobalHandle::from(module.expect_class(&scope, "Num")),
+        string: GlobalHandle::from(module.expect_class(&scope, "String")),
+        null: GlobalHandle::from(module.expect_class(&scope, "Null")),
+        range: GlobalHandle::from(module.expect_class(&scope, "Range")),
+        list: GlobalHandle::from(module.expect_class(&scope, "List")),
+        map: GlobalHandle::from(module.expect_class(&scope, "Map")),
     };
 
     // primitive!(vm, core.bool_class, "!", bool_not);

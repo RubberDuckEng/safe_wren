@@ -2,9 +2,9 @@
 
 mod compiler;
 mod core;
-mod opt {
-    pub mod random_bindings;
-}
+// mod opt {
+//     pub mod random_bindings;
+// }
 mod vm;
 pub mod wren;
 // mod ffi {

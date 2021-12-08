@@ -3,6 +3,8 @@
 // move away from any ties to needing to by c-like now that we have c_api.rs
 // to implement the C-API on top of whatever rust API this exposes.
 
+use vmgc::heap::HandleScope;
+
 pub use crate::vm::{SlotType, UserData, VM};
 
 pub static VERSION_STRING: &str = "safe_wren-0.1";
@@ -219,7 +221,8 @@ impl VM {
 
     // Should this take a &str?
     pub fn interpret(&mut self, module: &str, source: String) -> InterpretResult {
-        match self.compile_source(module, source) {
+        let scope = HandleScope::new(&self.heap);
+        match self.compile_source(&scope, module, source) {
             Err(error) => {
                 self.report_compile_error(module, error.line, &error.error.to_string());
                 InterpretResult::CompileError
