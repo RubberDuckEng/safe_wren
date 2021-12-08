@@ -1383,7 +1383,7 @@ pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
 // Only used by init_fn_and_fiber
 fn create_and_define_class<'a>(
     vm: &mut VM,
-    scope: &HandleScope<'a>,
+    scope: &HandleScope,
     module: &mut Module,
     name: &str,
     superclass: LocalHandle<ObjClass>,
