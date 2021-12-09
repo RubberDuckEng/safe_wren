@@ -4036,7 +4036,7 @@ impl VM {
     // called wrenCompileInModule in wren_c
     pub(crate) fn compile_in_module<'a>(
         &mut self,
-        scope: &HandleScope,
+        scope: &'a HandleScope,
         module_name: &str,
         input: InputManager,
     ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
@@ -4048,7 +4048,7 @@ impl VM {
     // called wrenCompileSource in wren_c
     pub(crate) fn compile_source<'a>(
         &mut self,
-        scope: &HandleScope,
+        scope: &'a HandleScope,
         module_name: &str,
         source: String,
     ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
@@ -4059,7 +4059,7 @@ impl VM {
     // called wrenCompile in wren_c
     pub(crate) fn compile<'a>(
         &mut self,
-        handles: &HandleScope,
+        handles: &'a HandleScope,
         input: InputManager,
         module: LocalHandle<Module>,
     ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
