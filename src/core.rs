@@ -1414,7 +1414,7 @@ pub(crate) fn register_core_primitives(vm: &mut VM) {
 
     let scope = HandleScope::new(&vm.heap);
 
-    let module = scope.as_ref(&vm.core_module);
+    let module = scope.as_ref(&vm.core_module.unwrap());
 
     let core = CoreClasses {
         bool_class: GlobalHandle::from(module.expect_class(&scope, "Bool")),

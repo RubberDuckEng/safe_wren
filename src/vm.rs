@@ -69,6 +69,21 @@ impl VMError {
     }
 }
 
+// In Wren false and null are false, everything else is true.
+fn is_truthy(value: &HeapHandle<()>) -> bool {
+    if value.is_null() {
+        false
+    } else if value.is_bool() {
+        value.try_into().unwrap()
+    } else {
+        true
+    }
+}
+
+fn is_falsey(value: &HeapHandle<()>) -> bool {
+    !is_truthy(value)
+}
+
 // impl Hash for Value {
 //     // See hashObject in wren_c wren_value.c
 //             Value::String(v) => v.hash(state),
@@ -222,47 +237,15 @@ impl RuntimeError {
     }
 }
 
-macro_rules! try_into {
-    ($func:ident,  $value_type:ident, $return_type:ident) => {
-        pub fn $func(&self) -> Option<Handle<$return_type>> {
-            match self {
-                Value::$value_type(value) => Some(value.clone()),
-                _ => None,
-            }
-        }
-    };
-}
-
-//     pub fn try_into_num(&self) -> Option<f64> {
-//         match self {
-//             Value::Num(value) => Some(*value),
-//             _ => None,
+// macro_rules! try_into {
+//     ($func:ident,  $value_type:ident, $return_type:ident) => {
+//         pub fn $func(&self) -> Option<Handle<$return_type>> {
+//             match self {
+//                 Value::$value_type(value) => Some(value.clone()),
+//                 _ => None,
+//             }
 //         }
-//     }
-
-//     pub fn try_into_bool(&self) -> Option<bool> {
-//         match self {
-//             Value::Boolean(value) => Some(*value),
-//             _ => None,
-//         }
-//     }
-
-//     pub fn try_into_string(&self) -> Option<String> {
-//         match self {
-//             Value::String(string) => Some(string.as_ref().clone()),
-//             _ => None,
-//         }
-//     }
-
-//     try_into!(try_into_range, Range, ObjRange);
-//     try_into!(try_into_map, Map, ObjMap);
-//     try_into!(try_into_class, Class, ObjClass);
-//     try_into!(try_into_list, List, ObjList);
-//     try_into!(try_into_fn, Fn, ObjFn);
-//     try_into!(try_into_closure, Closure, ObjClosure);
-//     try_into!(try_into_instance, Instance, ObjInstance);
-//     try_into!(try_into_fiber, Fiber, ObjFiber);
-//     try_into!(try_into_foreign, Foreign, ObjForeign);
+//     };
 // }
 
 #[derive(Debug, Default)]
@@ -487,9 +470,9 @@ impl ObjFiber {
         &self.stack.borrow()[index]
     }
 
-    fn store(&self, loc: StackOffset, value: LocalHandle<()>) {
+    fn store(&self, loc: StackOffset, value: &HeapHandle<()>) {
         let index = self.index_for_stack_offset(loc);
-        self.stack.borrow_mut()[index] = value.into()
+        self.stack.borrow_mut()[index] = *value
     }
 
     // FIXME: Should this take a Frame for bounds checking?
@@ -515,7 +498,7 @@ impl ObjFiber {
     }
 
     fn store_this(&self, frame: &CallFrame, value: LocalHandle<()>) {
-        self.store_local(frame, 0, value)
+        self.store_local(frame, 0, &value.into())
     }
 
     fn load_local(&self, frame: &CallFrame, offset: usize) -> &HeapHandle<()> {
@@ -523,9 +506,9 @@ impl ObjFiber {
         &self.stack.borrow()[frame.stack_start + offset]
     }
 
-    fn store_local(&self, frame: &CallFrame, offset: usize, value: LocalHandle<()>) {
+    fn store_local(&self, frame: &CallFrame, offset: usize, value: &HeapHandle<()>) {
         // FIXME: bounds-check the number of locals based on compiler data?
-        self.stack.borrow_mut()[frame.stack_start + offset] = value.into()
+        self.stack.borrow_mut()[frame.stack_start + offset] = *value
     }
 
     fn dump_stack(&self, frame: &CallFrame, active_module: &str, frame_depth: usize) {
@@ -664,7 +647,7 @@ pub struct VM {
     pub(crate) heap: Heap,
 
     // The Core module is created first (empty)
-    pub(crate) core_module: GlobalHandle<Module>,
+    pub(crate) core_module: Option<GlobalHandle<Module>>,
     // Then Class
     pub(crate) class_class: Option<GlobalHandle<ObjClass>>,
     // Then Fn and Fiber (which are used by wren_core.wren)
@@ -1407,12 +1390,12 @@ impl VM {
     }
 }
 
-enum FunctionNext {
+enum FunctionNext<'a> {
     // FIXME: Use LocalHandle with the right lifetime?
-    Call(GlobalHandle<ObjClosure>, usize),
-    Return(GlobalHandle<()>),
+    Call(LocalHandle<'a, ObjClosure>, usize),
+    Return(LocalHandle<'a, ()>),
     FiberAction(FiberAction),
-    CaptureUpvalues(GlobalHandle<ObjClosure>, Vec<crate::compiler::Upvalue>),
+    CaptureUpvalues(LocalHandle<'a, ObjClosure>, Vec<crate::compiler::Upvalue>),
     CloseUpvalues(StackOffset),
 }
 
@@ -1522,10 +1505,10 @@ impl Upvalue {
         })
     }
 
-    fn store(&mut self, new_value: LocalHandle<()>) {
+    fn store(&mut self, new_value: &HeapHandle<()>) {
         match &mut self.storage {
             UpvalueStorage::Open(fiber, loc) => fiber.as_mut().store(*loc, new_value),
-            UpvalueStorage::Closed(value) => *value = new_value.into(),
+            UpvalueStorage::Closed(value) => *value = *new_value,
         }
     }
 }
@@ -1671,7 +1654,7 @@ fn bind_method(
             // Patch up the bytecode now that we know the superclass.
             let closure: &ObjClosure = closure_handle.as_mut();
             bind_method_code(&class, closure.fn_obj.as_mut());
-            Method::Block(GlobalHandle::from(closure))
+            Method::Block(GlobalHandle::from(closure_handle))
         } else {
             // Is this a compiler error?  Should this panic?
             return Err(VMError::from_str(
@@ -1697,9 +1680,9 @@ fn resolve_module(vm: &mut VM, importer: &str, name: &str) -> String {
     }
 }
 
-enum ImportResult {
-    Existing(GlobalHandle<Module>),
-    New(GlobalHandle<ObjClosure>),
+enum ImportResult<'a> {
+    Existing(LocalHandle<'a, Module>),
+    New(LocalHandle<'a, ObjClosure>),
 }
 
 fn try_load_module(vm: &mut VM, name: &str) -> Option<LoadModuleResult> {
@@ -1716,7 +1699,11 @@ fn try_load_module(vm: &mut VM, name: &str) -> Option<LoadModuleResult> {
     None
 }
 
-fn import_module(vm: &mut VM, importer_name: &str, unresolved_name: &str) -> Result<ImportResult> {
+fn import_module<'a>(
+    vm: &mut VM,
+    importer_name: &str,
+    unresolved_name: &str,
+) -> Result<ImportResult<'a>> {
     let name = resolve_module(vm, importer_name, unresolved_name);
 
     // If the module is already loaded, we don't need to do anything.
@@ -1755,6 +1742,8 @@ fn get_module_variable<'a>(
 
 impl VM {
     pub fn new(config: Configuration) -> Self {
+        let heap = Heap::new(1000).unwrap();
+        let scope = HandleScope::new(&heap);
         let mut vm = Self {
             // Invalid import name, intentionally.
             methods: SymbolTable::default(),
@@ -1764,8 +1753,8 @@ impl VM {
             class_class: None,
             fn_class: None,
             fiber_class: None,
-            heap: Heap::new(1000).unwrap(),
-            modules: HashMap::new(),
+            heap: heap,
+            modules: GlobalHandle::from(scope.create::<Map<String, Module>>().unwrap()),
             start_time: std::time::Instant::now(),
             last_imported_module: None,
             config,
@@ -1787,11 +1776,11 @@ impl VM {
         // module than the rest of core?
         let mut stub_core = Module {
             name: CORE_MODULE_NAME.into(),
-            variables: Vec::new(),
+            variables: List::default(),
             variable_names: Vec::new(),
         };
         init_base_classes(&mut vm, &mut stub_core);
-        vm.class_class = Some(stub_core.expect_class(&scope, "Class"));
+        vm.class_class = Some(GlobalHandle::from(stub_core.expect_class(&scope, "Class")));
         init_fn_and_fiber(&mut vm, &scope, &mut stub_core);
         vm.core_module = Some(stub_core);
         let core_name = CORE_MODULE_NAME;
@@ -1841,7 +1830,7 @@ impl VM {
     pub(crate) fn class_for_value<'a>(
         &self,
         scope: &'a HandleScope,
-        value: &LocalHandle<()>,
+        value: LocalHandle<()>,
     ) -> LocalHandle<'a, ObjClass> {
         let core = self.core.as_ref().unwrap();
         if value.is_null() {
@@ -1853,7 +1842,7 @@ impl VM {
         } else {
             let maybe_obj: Option<LocalHandle<dyn Obj>> = value.try_downcast();
             if let Some(obj) = maybe_obj {
-                return scope.from_global(obj.class_obj());
+                return scope.from_global(obj.as_ref().class_obj());
             }
             unimplemented!();
         }
@@ -1965,21 +1954,27 @@ impl VM {
         closure: LocalHandle<ObjClosure>,
     ) -> Result<GlobalHandle<()>, RuntimeError> {
         let scope = HandleScope::new(&self.heap);
-        self.fiber = GlobalHandle::from(ObjFiber::new(self, &scope, closure, FiberRunSource::Root));
+        self.fiber = Some(GlobalHandle::from(ObjFiber::new(
+            self,
+            &scope,
+            closure,
+            FiberRunSource::Root,
+        )));
         loop {
-            let fiber = self.fiber;
-            let result = self.run_in_fiber(&fiber);
+            let result = self.run_in_fiber(scope.from_global(&self.fiber.unwrap()));
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
-                    scope.as_mut(&fiber).caller = self.fiber.take();
+                    scope.as_mut(&fiber).caller = self.fiber.take().map(|handle| handle.into());
                     scope
                         .as_mut(&fiber)
                         .push_call_arg_or_return_value(scope.from_global(&arg));
                     self.fiber = Some(fiber);
                 }
                 Ok(FiberAction::Try(fiber, arg)) => {
-                    scope.as_mut(&fiber).caller = self.fiber.take();
-                    scope.as_mut(&fiber).push_call_arg_or_return_value(arg);
+                    scope.as_mut(&fiber).caller = self.fiber.take().map(|handle| handle.into());
+                    scope
+                        .as_mut(&fiber)
+                        .push_call_arg_or_return_value(scope.from_global(&arg));
                     scope.as_mut(&fiber).run_source = FiberRunSource::Try;
                     self.fiber = Some(fiber);
                 }
@@ -2003,12 +1998,14 @@ impl VM {
                     }
                 }
                 Ok(FiberAction::Transfer(fiber, arg)) => {
-                    fiber.borrow_mut().push_call_arg_or_return_value(arg);
-                    self.fiber = Some(fiber.clone());
+                    scope
+                        .as_mut(&fiber)
+                        .push_call_arg_or_return_value(scope.from_global(&arg));
+                    self.fiber = Some(fiber);
                 }
                 Ok(FiberAction::TransferError(fiber, error)) => {
                     self.fiber = Some(fiber);
-                    self.cascade_error(error)?;
+                    self.cascade_error(scope.from_global(&error))?;
                 }
                 Err(error) => {
                     self.cascade_error(error.as_try_return_value(&scope))?;
@@ -2017,7 +2014,7 @@ impl VM {
         }
     }
 
-    fn run_in_fiber(&mut self, fiber_ref: &LocalHandle<ObjFiber>) -> Result<FiberAction, VMError> {
+    fn run_in_fiber(&mut self, fiber_ref: LocalHandle<ObjFiber>) -> Result<FiberAction, VMError> {
         loop {
             let fiber = &fiber_ref.borrow();
             // We pull the frame off of the call_stack so that in Debug mode
@@ -2030,6 +2027,7 @@ impl VM {
             // recursively, or the run_fiber main loop needing to pull
             // the frame on every instruction.  Maybe not worth it?
             let result = self.run_frame_in_fiber(&mut frame, fiber, frame_index);
+            let scope = HandleScope::new(&self.heap);
             match result {
                 Ok(FunctionNext::Call(closure, num_args)) => {
                     // Push the closure and the args on the stack?
@@ -2039,7 +2037,7 @@ impl VM {
                     // Now push our new frame!
                     call_stack.push(CallFrame {
                         pc: 0,
-                        closure: closure,
+                        closure: closure.into(),
                         stack_start: fiber.stack.borrow().len() - num_args,
                     });
                 }
@@ -2056,16 +2054,16 @@ impl VM {
                         frame_index,
                         index: 0,
                     };
-                    fiber.close_upvalues_at_or_above(scope, location);
+                    fiber.close_upvalues_at_or_above(&scope, location);
                     // pop the frame again after upvalues are closed.
                     let frame = fiber.call_stack.borrow_mut().pop().unwrap();
                     fiber.stack.borrow_mut().truncate(frame.stack_start);
 
                     if fiber.call_stack.borrow().is_empty() {
-                        return Ok(FiberAction::Return(value));
+                        return Ok(FiberAction::Return(GlobalHandle::from(value)));
                     } else {
                         // Push the return value onto the calling stack.
-                        fiber.push(value.into());
+                        fiber.push(&value.into());
                     }
                 }
                 Ok(FunctionNext::FiberAction(action)) => {
@@ -2098,18 +2096,14 @@ impl VM {
                                 index: compiler_upvalue.index,
                             };
 
-                            let upvalue = find_or_create_upvalue(scope, fiber_ref, location);
-                            closure.borrow_mut().push_upvalue(upvalue);
+                            let upvalue = find_or_create_upvalue(&scope, fiber_ref, location);
+                            closure.borrow_mut().push_upvalue(&upvalue.into());
                         } else {
                             // Use the same upvalue as the current call frame.
                             let stack = fiber.call_stack.borrow();
                             let top_frame = stack.last();
                             let frame = top_frame.as_ref().unwrap();
-                            let upvalue = frame
-                                .closure
-                                .borrow()
-                                .upvalue(compiler_upvalue.index)
-                                .clone();
+                            let upvalue = frame.closure.borrow().upvalue(compiler_upvalue.index);
                             closure.borrow_mut().push_upvalue(upvalue);
                         }
                     }
@@ -2119,9 +2113,9 @@ impl VM {
                     fiber.call_stack.borrow_mut().push(frame);
                     // Fiber is already borrowed, so we can't borrow_mut here,
                     // thus OpenUpvalues is independently borrowed inside
-                    fiber.close_upvalues_at_or_above(scope, location);
+                    fiber.close_upvalues_at_or_above(&scope, location);
                     // Now actualy do the pop.
-                    fiber.pop(scope)?;
+                    fiber.pop(&scope)?;
                 }
                 Err(vm_error) => {
                     // Push the current frame back onto the fiber so we can
@@ -2178,8 +2172,9 @@ impl VM {
     // }
 
     // ~80% of benchmark time is spent under this function.
-    fn call_method(
+    fn call_method<'a>(
         &mut self,
+        scope: &'a HandleScope,
         fiber: &ObjFiber,
         _frame: &mut CallFrame,
         num_args: usize,
@@ -2208,7 +2203,7 @@ impl VM {
             Method::FunctionCall => {
                 let args = &fiber.stack.borrow()[this_offset..];
                 // Pushes a new stack frame.
-                let closure = check_arity(&args[0], args.len())?;
+                let closure = check_arity(&scope, &args[0], args.len())?;
                 FunctionNext::Call(closure, num_args)
             }
             Method::ForeignFunction(foreign) => {
@@ -2217,7 +2212,7 @@ impl VM {
                     self.call_foreign(foreign, fiber.stack.borrow_mut().split_off(this_offset))?;
                 FunctionNext::Return(value)
             }
-            Method::Block(closure) => FunctionNext::Call(closure.clone(), num_args),
+            Method::Block(closure) => FunctionNext::Call(scope.from_global(closure), num_args),
         };
         Ok(result)
     }
@@ -2232,7 +2227,7 @@ impl VM {
         let scope = HandleScope::new(&self.heap);
         // Copy out a ref, so we can later mut borrow the frame.
         // FIXME: Cloning every op *cannot* be correct!
-        let closure_rc = frame.closure.clone();
+        let closure_rc = frame.closure;
         let closure = closure_rc.borrow();
         let fn_obj = closure.fn_obj.borrow();
         let dump_instructions = self.should_dump_instructions(&fn_obj.debug);
@@ -2273,14 +2268,20 @@ impl VM {
                     // +1 for implicit arg for 'this'.
                     let num_args = arity.as_index() + 1;
                     // Compiler error if this is not a class.
-                    let superclass = fn_obj.lookup_constant(constant).try_into_class().unwrap();
-                    let action =
-                        self.call_method(fiber, frame, num_args, *symbol, &superclass.borrow())?;
+                    let superclass = fn_obj.lookup_constant(constant).try_downcast().unwrap();
+                    let action = self.call_method(
+                        &scope,
+                        fiber,
+                        frame,
+                        num_args,
+                        *symbol,
+                        &superclass.borrow(),
+                    )?;
                     match action {
                         FunctionNext::Return(value) => {
                             // We got an immediate answer from a primitive or
                             // foreign call, we can handle it here and continue.
-                            fiber.push(value.into());
+                            fiber.push(&value.into());
                         }
                         _ => {
                             // Let the caller handle more complicated actions.
@@ -2292,15 +2293,23 @@ impl VM {
                     // +1 for implicit arg for 'this'.
                     let num_args = arity.as_index() + 1;
                     let this_offset = fiber.stack.borrow().len() - num_args;
-                    let this_class =
-                        self.class_for_value(scope, &fiber.stack.borrow()[this_offset]);
-                    let action =
-                        self.call_method(fiber, frame, num_args, *symbol, &this_class.borrow())?;
+                    let this_class = self.class_for_value(
+                        &scope,
+                        scope.from_heap(&fiber.stack.borrow()[this_offset]),
+                    );
+                    let action = self.call_method(
+                        &scope,
+                        fiber,
+                        frame,
+                        num_args,
+                        *symbol,
+                        &this_class.borrow(),
+                    )?;
                     match action {
                         FunctionNext::Return(value) => {
                             // We got an immediate answer from a primitive or
                             // foreign call, we can handle it here and continue.
-                            fiber.push(value);
+                            fiber.push(&value.into());
                         }
                         _ => {
                             // Let the caller handle more complicated actions.
@@ -2311,8 +2320,8 @@ impl VM {
                 // Called as part of constructors to fix "this" to be an
                 // instance before continuing construction.
                 Ops::Construct => {
-                    let this = fiber.load_this(frame);
-                    let class = this.try_into_class().expect("'this' should be a class.");
+                    let this = scope.from_heap(fiber.load_this(frame));
+                    let class = this.try_downcast().expect("'this' should be a class.");
                     let instance = ObjInstance::new(&scope, class);
                     fiber.store_this(frame, instance.erase_type());
                 }
@@ -2326,9 +2335,9 @@ impl VM {
                 Ops::Closure(constant, upvalues) => {
                     let fn_value = fn_obj.lookup_constant(constant).clone();
                     let fn_obj = fn_value
-                        .try_into_fn()
+                        .try_downcast()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
-                    let closure = ObjClosure::new(self, scope, fn_obj);
+                    let closure = ObjClosure::new(self, &scope, fn_obj);
                     fiber.push(&closure.erase_type().into());
                     if !upvalues.is_empty() {
                         return Ok(FunctionNext::CaptureUpvalues(closure, upvalues.to_vec()));
@@ -2336,7 +2345,8 @@ impl VM {
                     // Optimization: if no upvalues, continue as normal.
                 }
                 Ops::EndModule => {
-                    self.last_imported_module = Some(fn_obj.module.clone());
+                    self.last_imported_module =
+                        Some(GlobalHandle::from(scope.from_heap(&fn_obj.module)));
                     fiber.push(&scope.create_null().erase_type().into()); // Is this the return value?
                 }
                 Ops::Return => {
@@ -2373,17 +2383,19 @@ impl VM {
                 }
                 Ops::Load(variable) => {
                     let value = match *variable {
-                        Variable::Module(index) => fn_obj.module.borrow().variables[index].clone(),
-                        Variable::Upvalue(index) => closure.upvalue(index).borrow().load(),
-                        Variable::Local(index) => fiber.load_local(frame, index),
+                        Variable::Module(index) => {
+                            scope.from_heap(&fn_obj.module.borrow().variables[index])
+                        }
+                        Variable::Upvalue(index) => closure.upvalue(index).borrow().load(&scope),
+                        Variable::Local(index) => scope.from_heap(fiber.load_local(frame, index)),
                     };
-                    fiber.push(value);
+                    fiber.push(&value.into());
                 }
                 Ops::Store(variable) => {
                     let value = fiber.peek()?;
                     match *variable {
                         Variable::Module(index) => {
-                            fn_obj.module.borrow_mut().variables[index] = value
+                            fn_obj.module.borrow_mut().variables[index] = *value
                         }
                         Variable::Upvalue(index) => {
                             closure.upvalue(index).borrow_mut().store(value)
@@ -2394,7 +2406,7 @@ impl VM {
                 Ops::LoadField(symbol) => {
                     let receiver = fiber.pop(&scope)?;
                     let instance = receiver
-                        .try_into_instance()
+                        .try_downcast()
                         .ok_or_else(|| VMError::from_str("Receiver should be instance."))?;
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
@@ -2402,9 +2414,9 @@ impl VM {
                     fiber.push(instance.borrow().fields[*symbol].clone());
                 }
                 Ops::StoreField(symbol) => {
-                    let receiver = fiber.pop(scope)?;
+                    let receiver = fiber.pop(&scope)?;
                     let instance = receiver
-                        .try_into_instance()
+                        .try_downcast()
                         .ok_or_else(|| VMError::from_str("Receiver should be instance."))?;
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
@@ -2416,7 +2428,7 @@ impl VM {
                 }
                 Ops::Method(is_static, symbol) => {
                     // wren_c peeks first then drops after bind, unclear why
-                    let class = fiber.pop(&scope)?.try_into_class().unwrap();
+                    let class = fiber.pop(&scope)?.try_downcast().unwrap();
                     let method = fiber.pop(&scope)?;
                     bind_method(
                         self,
@@ -2449,8 +2461,14 @@ impl VM {
                         ImportResult::Existing(module) => {
                             // The module has already been loaded. Remember it so we can import
                             // variables from it if needed.
-                            fiber.push(&scope.take("dummy for module".to_string()).into());
-                            self.last_imported_module = Some(module);
+                            fiber.push(
+                                &scope
+                                    .take("dummy for module".to_string())
+                                    .unwrap()
+                                    .erase_type()
+                                    .into(),
+                            );
+                            self.last_imported_module = Some(GlobalHandle::from(module));
                         }
                     }
                 }
@@ -2459,7 +2477,7 @@ impl VM {
                         .last_imported_module
                         .as_ref()
                         .expect("Should have already imported module.");
-                    let value = get_module_variable(self, &module.borrow(), variable_name)?;
+                    let value = get_module_variable(&scope, scope.as_ref(module), variable_name)?;
                     fiber.push(&value.into());
                 }
                 Ops::Loop(offset_backwards) => {
@@ -2470,14 +2488,14 @@ impl VM {
                 }
                 Ops::JumpIfFalse(offset_forward) => {
                     let value = fiber.pop(&scope)?;
-                    if value.is_falsey() {
+                    if is_falsey(value) {
                         frame.pc += *offset_forward as usize;
                     }
                 }
                 Ops::And(offset_forward) => {
                     // This differs from JumpIfFalse in whether it pops
                     let value = fiber.peek()?;
-                    if value.is_falsey() {
+                    if is_falsey(value) {
                         frame.pc += *offset_forward as usize;
                     } else {
                         fiber.pop(&scope)?;
@@ -2485,7 +2503,7 @@ impl VM {
                 }
                 Ops::Or(offset_forward) => {
                     let value = fiber.peek()?;
-                    if !value.is_falsey() {
+                    if !is_falsey(value) {
                         frame.pc += *offset_forward as usize;
                     } else {
                         fiber.pop(&scope)?;
@@ -2501,8 +2519,15 @@ impl VM {
     }
 }
 
-fn check_arity(value: &HeapHandle<()>, num_args: usize) -> Result<HeapHandle<ObjClosure>> {
-    let closure = value.try_downcast().expect("Receiver must be a closure.");
+fn check_arity<'a>(
+    scope: &'a HandleScope,
+    value: &HeapHandle<()>,
+    num_args: usize,
+) -> Result<LocalHandle<'a, ObjClosure>> {
+    let closure: LocalHandle<ObjClosure> = scope
+        .from_heap(value)
+        .try_downcast()
+        .expect("Receiver must be a closure.");
 
     // num_args includes implicit this, not counted in arity.
     let arity = closure.borrow().fn_obj.borrow().arity.as_index();
@@ -2675,7 +2700,7 @@ pub(crate) fn debug_bytecode(vm: &VM, top_closure: &ObjClosure) {
         }
         // Walk module-level constants looking for code?
         for const_value in &func.constants {
-            let maybe_fn: Option<LocalHandle<ObjFn>> = scope.from_heap(const_value).try_dowcast();
+            let maybe_fn: Option<LocalHandle<ObjFn>> = scope.from_heap(const_value).try_downcast();
             if let Some(fn_obj) = maybe_fn {
                 fn_objs.push(fn_obj.into());
             }
@@ -2736,8 +2761,8 @@ impl ObjMap {
         self.data.len()
     }
 
-    pub fn contains_key(&self, key: &LocalHandle<()>) -> bool {
-        self.data.contains_key(key)
+    pub fn contains_key(&self, key: LocalHandle<()>) -> bool {
+        self.data.contains_key(&key.into())
     }
 }
 
@@ -2800,15 +2825,17 @@ impl ObjClosure {
         fn_obj: LocalHandle<ObjFn>,
     ) -> LocalHandle<'a, ObjClosure> {
         // FIXME: Is this really supposed to also be class = fn?
-        scope.take(ObjClosure {
-            class_obj: vm.fn_class,
-            fn_obj,
-            upvalues: vec![],
-        })
+        scope
+            .take(ObjClosure {
+                class_obj: vm.fn_class.unwrap().into(),
+                fn_obj: fn_obj.into(),
+                upvalues: List::default(),
+            })
+            .unwrap()
     }
 
-    fn push_upvalue(&mut self, upvalue: LocalHandle<Upvalue>) {
-        self.upvalues.push(upvalue)
+    fn push_upvalue(&mut self, upvalue: &HeapHandle<Upvalue>) {
+        self.upvalues.push(*upvalue)
     }
 
     fn upvalue(&self, index: usize) -> &HeapHandle<Upvalue> {
@@ -2875,12 +2902,12 @@ impl ObjFn {
     ) -> LocalHandle<'a, ObjFn> {
         scope
             .take(ObjFn {
-                class_obj: vm.fn_class,
+                class_obj: vm.fn_class.unwrap().into(),
                 constants: compiler.constants.list,
                 code: compiler.code,
                 arity,
                 debug: compiler.fn_debug,
-                module,
+                module: *module.into(),
             })
             .unwrap()
     }
@@ -2906,12 +2933,12 @@ impl ObjFn {
 
         scope
             .take(ObjFn {
-                class_obj: vm.fn_class,
+                class_obj: vm.fn_class.unwrap().into(),
                 // FIXME: Why is this Arity + 1 and the above is not?
                 arity: Arity(num_params + 1),
                 code: code,
-                constants: vec![],
-                module: vm.last_imported_module, // Wrong?
+                constants: List::default(),
+                module: vm.last_imported_module.unwrap().into(), // Wrong?
                 debug: FnDebug::generated(signature, code_len),
             })
             .unwrap()
@@ -2953,8 +2980,8 @@ impl ObjInstance {
         let fields = vec![scope.create_null(); num_fields];
         scope
             .take(ObjInstance {
-                class_obj: class,
-                fields,
+                class_obj: class.into(),
+                fields: List::from(fields),
             })
             .unwrap()
     }
@@ -2989,7 +3016,7 @@ impl ObjForeign {
     ) -> LocalHandle<'a, ObjForeign> {
         scope
             .take(ObjForeign {
-                class_obj: class,
+                class_obj: class.into(),
                 user_data,
             })
             .unwrap()
@@ -3030,7 +3057,6 @@ impl Obj for ObjRange {
 // }
 
 pub(crate) enum FiberAction {
-    // FIXME: Could something trace FiberAction and these be HeapHandles?
     Call(GlobalHandle<ObjFiber>, GlobalHandle<()>),
     Transfer(GlobalHandle<ObjFiber>, GlobalHandle<()>),
     TransferError(GlobalHandle<ObjFiber>, GlobalHandle<()>),
@@ -3119,8 +3145,13 @@ pub struct ObjClass {
 
 impl Traceable for ObjClass {
     fn trace(&mut self, visitor: &mut ObjectVisitor) {
-        self.class.trace(visitor);
-        self.superclass.trace(visitor);
+        // FIXME: Implement Option<Traceable>::trace instead?
+        if let Some(class) = self.class {
+            class.trace(visitor);
+        }
+        if let Some(superclass) = self.superclass {
+            superclass.trace(visitor);
+        }
         // Not currently tracing self.methods, instead Method::Block has
         // a GlobalHandle for now.
     }
@@ -3189,7 +3220,7 @@ impl HostObject for ObjClass {
 
 impl Obj for ObjClass {
     fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class
+        &self.class.unwrap()
     }
 }
 
