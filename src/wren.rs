@@ -229,7 +229,7 @@ impl VM {
             }
             Ok(closure) => {
                 // wren_c does the fiber creation here instead.
-                match self.run(closure) {
+                match self.run(&scope, closure) {
                     Err(e) => {
                         if let Some(error_fn) = self.config.error_fn {
                             // wren_c sends module = null, line = -1 in the

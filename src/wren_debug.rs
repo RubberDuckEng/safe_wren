@@ -58,7 +58,7 @@ pub fn interpret_and_print_vm(bytes: Vec<u8>, module_name: String) {
     let scope = HandleScope::new(&vm.heap);
     let result = vm.compile_in_module(&scope, &module_name, input);
     match result {
-        Ok(closure) => match vm.run(closure) {
+        Ok(closure) => match vm.run(&scope, closure) {
             Ok(_) => println!("{:?}", vm),
             Err(e) => print_runtime_error(e),
         },

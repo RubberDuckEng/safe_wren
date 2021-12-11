@@ -1387,12 +1387,12 @@ fn create_and_define_class<'a>(
     module: &mut Module,
     name: &str,
     superclass: LocalHandle<ObjClass>,
-) -> GlobalHandle<ObjClass> {
+) -> LocalHandle<'a, ObjClass> {
     let class = vm
         .new_class(scope, superclass, ClassSource::Internal, name.into())
         .unwrap();
     module.define_variable(name, class.erase_type()).unwrap();
-    GlobalHandle::from(class)
+    class
 }
 
 // Only used for initing before loading wren_core.wren.
@@ -1400,11 +1400,11 @@ pub(crate) fn init_fn_and_fiber(vm: &mut VM, scope: &HandleScope, module: &mut M
     // wren_c compiles wren_core.wren with functions/closures with a
     // null class. Manually initialize classes before compiling wren_core.wren.
     let superclass = module.expect_class(scope, "Object");
-    vm.fn_class = Some(create_and_define_class(vm, scope, module, "Fn", superclass));
+    scope.as_mut(&vm.globals).fn_class =
+        Some(create_and_define_class(vm, scope, module, "Fn", superclass).into());
     // The Fiber used to run wren_core for wren_c has a null class.
-    vm.fiber_class = Some(create_and_define_class(
-        vm, scope, module, "Fiber", superclass,
-    ));
+    scope.as_mut(&vm.globals).fiber_class =
+        Some(create_and_define_class(vm, scope, module, "Fiber", superclass).into());
 }
 
 pub(crate) fn register_core_primitives(vm: &mut VM) {
@@ -1414,16 +1414,16 @@ pub(crate) fn register_core_primitives(vm: &mut VM) {
 
     let scope = HandleScope::new(&vm.heap);
 
-    let module = scope.as_ref(&vm.core_module.unwrap());
+    let module = scope.as_ref(&vm.globals).core_module.unwrap().as_ref();
 
     let core = CoreClasses {
-        bool_class: GlobalHandle::from(module.expect_class(&scope, "Bool")),
-        num: GlobalHandle::from(module.expect_class(&scope, "Num")),
-        string: GlobalHandle::from(module.expect_class(&scope, "String")),
-        null: GlobalHandle::from(module.expect_class(&scope, "Null")),
-        range: GlobalHandle::from(module.expect_class(&scope, "Range")),
-        list: GlobalHandle::from(module.expect_class(&scope, "List")),
-        map: GlobalHandle::from(module.expect_class(&scope, "Map")),
+        bool_class: module.expect_class(&scope, "Bool").into(),
+        num: module.expect_class(&scope, "Num").into(),
+        string: module.expect_class(&scope, "String").into(),
+        null: module.expect_class(&scope, "Null").into(),
+        range: module.expect_class(&scope, "Range").into(),
+        list: module.expect_class(&scope, "List").into(),
+        map: module.expect_class(&scope, "Map").into(),
     };
 
     // primitive!(vm, core.bool_class, "!", bool_not);
@@ -1589,7 +1589,7 @@ pub(crate) fn register_core_primitives(vm: &mut VM) {
     // // primitive_static!(vm, system, "gc()", system_gc);
     // primitive_static!(vm, system, "writeString_(_)", system_write_string);
 
-    vm.core = Some(core);
+    vm.core = Some(GlobalHandle::from(scope.take(core).unwrap()));
 
     // wren_c walks *all* String objects here to bind a class pointer
     // to them.  We don't currently need to do that, but may need
