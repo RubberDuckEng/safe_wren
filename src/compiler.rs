@@ -12,6 +12,7 @@ use std::fmt;
 use std::ops::Range;
 use std::str;
 
+#[derive(Clone, Copy)]
 pub(crate) struct Constant(usize);
 
 impl fmt::Display for Constant {
@@ -2023,8 +2024,8 @@ fn finish_parameter_list(
 // Finishes [compiler], which is compiling a function, method, or chunk of top
 // level code. If there is a parent compiler, then this emits code in the
 // parent compiler to load the resulting function.
-fn end_compiler<'a>(
-    ctx: &mut ParseContext<'a>,
+fn end_compiler<'a, 'b>(
+    ctx: &'a mut ParseContext<'b>,
     ending: Compiler,
     arity: Arity,
     name: String,
