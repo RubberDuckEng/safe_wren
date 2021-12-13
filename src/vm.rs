@@ -581,10 +581,15 @@ impl ObjFiber {
         run_source: FiberRunSource,
     ) -> LocalHandle<'a, ObjFiber> {
         let stack = scope.create::<List<()>>().unwrap();
-        stack.as_mut().push(closure.into());
+        stack.as_mut().push(closure.clone().into());
         scope
             .take(ObjFiber {
-                class_obj: scope.as_ref(&vm.globals).fiber_class.unwrap().into(),
+                class_obj: scope
+                    .as_ref(&vm.globals)
+                    .fiber_class
+                    .as_ref()
+                    .unwrap()
+                    .clone(),
                 error: scope.create_null().into(),
                 caller: None,
                 run_source,
@@ -1117,7 +1122,7 @@ impl VM {
     ) -> LocalHandle<'a, ObjList> {
         scope
             .take(ObjList {
-                class_obj: scope.as_ref(&self.core.unwrap()).list.into(),
+                class_obj: scope.as_ref(self.core.as_ref().unwrap()).list.clone(),
                 elements: contents.into(),
             })
             .unwrap()
@@ -1126,7 +1131,7 @@ impl VM {
     pub(crate) fn new_map<'a>(&self, scope: &'a HandleScope) -> LocalHandle<'a, ObjMap> {
         scope
             .take(ObjMap {
-                class_obj: scope.as_ref(&self.core.unwrap()).map.into(),
+                class_obj: scope.as_ref(self.core.as_ref().unwrap()).map.clone(),
                 data: HashMap::new(),
             })
             .unwrap()
@@ -1141,7 +1146,7 @@ impl VM {
     ) -> LocalHandle<'a, ObjRange> {
         scope
             .take(ObjRange {
-                class_obj: scope.as_ref(&self.core.unwrap()).range.into(),
+                class_obj: scope.as_ref(self.core.as_ref().unwrap()).range.clone(),
                 from,
                 to,
                 is_inclusive,
@@ -1164,7 +1169,8 @@ impl VM {
         source: ClassSource,
         name: String,
     ) -> Result<LocalHandle<'a, ObjClass>> {
-        let class_class = scope.from_heap(&scope.as_ref(&self.globals).class_class.unwrap());
+        let class_class =
+            scope.from_heap(scope.as_ref(&self.globals).class_class.as_ref().unwrap());
         // Create the metaclass.
         let metaclass_name_string = format!("{} metaclass", name);
         // let metaclass_name = Value::from_string(metaclass_name_string);
@@ -1400,7 +1406,7 @@ impl Module {
             }
             Some(symbol) => {
                 let existing_value = &self.variables[symbol as usize];
-                let maybe_line: Option<f64> = (*existing_value).try_into().ok();
+                let maybe_line: Option<f64> = existing_value.clone().try_into().ok();
                 if let Some(line) = maybe_line {
                     if is_local_name(name) {
                         return Err(DefinitionError::LocalUsedBeforeDefinition(
@@ -1574,7 +1580,7 @@ impl Upvalue {
     fn store(&mut self, new_value: &HeapHandle<()>) {
         match &mut self.storage {
             UpvalueStorage::Open(fiber, loc) => fiber.as_mut().store(*loc, new_value),
-            UpvalueStorage::Closed(value) => *value = *new_value,
+            UpvalueStorage::Closed(value) => *value = new_value.clone(),
         }
     }
 }
@@ -1653,16 +1659,22 @@ fn bind_method_code(scope: &HandleScope, class: &ObjClass, fn_obj: &mut ObjFn) {
     // check for overflow here because we'll see if the number of fields
     // overflows when the subclass is created.
     fn field_adjustment(class: &ObjClass) -> usize {
-        class.superclass.unwrap().as_ref().num_fields().unwrap_or(0)
+        class
+            .superclass
+            .as_ref()
+            .unwrap()
+            .borrow()
+            .num_fields()
+            .unwrap_or(0)
     }
 
     for op in &mut fn_obj.code {
         match op {
             Ops::CallSuper(_, _, super_constant) => {
-                let value = class.superclass.unwrap().erase_type();
+                let value = class.superclass.as_ref().unwrap().erase_type();
                 // Making this a function call triggers a second mut borrow. :/
                 // fn_obj.set_constant(super_constant, value);
-                fn_obj.constants[super_constant.as_index()] = value.into();
+                fn_obj.constants[super_constant.as_index()] = value;
             }
             Ops::LoadField(field) => *field += field_adjustment(class),
             Ops::StoreField(field) => *field += field_adjustment(class),
@@ -1870,7 +1882,7 @@ impl VM {
     ) -> LocalHandle<'a, Module> {
         // We automatically import Core into all modules.
         // Implicitly import the core module.
-        let core = scope.as_ref(&self.globals).core_module.unwrap();
+        let core = scope.from_heap(scope.as_ref(&self.globals).core_module.as_ref().unwrap());
         scope
             .take(Module {
                 name: name.into(),
@@ -1899,7 +1911,7 @@ impl VM {
         scope: &'a HandleScope,
         value: LocalHandle<()>,
     ) -> LocalHandle<'a, ObjClass> {
-        let core = scope.as_ref(&self.core.unwrap());
+        let core = scope.as_ref(self.core.as_ref().unwrap());
         if value.is_null() {
             scope.from_heap(&core.null)
         } else if value.is_num() {
@@ -2002,14 +2014,14 @@ impl VM {
         scope: &HandleScope,
         error: LocalHandle<()>,
     ) -> Result<(), RuntimeError> {
-        let stack_trace_fiber = scope.as_ref(&self.globals).fiber.unwrap();
+        let stack_trace_fiber = scope.as_ref(&self.globals).fiber.as_ref().unwrap();
         loop {
-            let callee = scope.as_ref(&self.globals).fiber.unwrap();
+            let callee = scope.as_ref(&self.globals).fiber.as_ref().unwrap();
             // Set Fiber.error on the current fiber. Can't do this
             // deeper in the stack because can't borrow_mut there.
             callee.borrow_mut().error = error.into();
             // If we have a caller, it's now the new fiber.
-            let caller = match scope.as_ref(&self.globals).fiber {
+            let caller = match scope.as_ref(&self.globals).fiber.as_ref() {
                 Some(fiber) => fiber.as_mut().return_from_fiber_take_caller(scope),
                 _ => None,
             };
@@ -2048,7 +2060,7 @@ impl VM {
         loop {
             let result = self.run_in_fiber(
                 scope,
-                scope.from_heap(&scope.as_ref(&self.globals).fiber.unwrap()),
+                scope.from_heap(scope.as_ref(&self.globals).fiber.as_ref().unwrap()),
             );
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
@@ -2069,14 +2081,14 @@ impl VM {
                     return Ok(scope.create_null());
                 }
                 Ok(FiberAction::Return(value)) => {
-                    let caller = if let Some(fiber) = scope.as_ref(&self.globals).fiber {
+                    let caller = if let Some(fiber) = scope.as_ref(&self.globals).fiber.as_ref() {
                         fiber.borrow_mut().return_from_fiber_take_caller(scope)
                     } else {
                         // This should never be reached?
                         None
                     };
                     scope.as_mut(&self.globals).fiber = caller.map(|local| local.into());
-                    match scope.as_ref(&self.globals).fiber {
+                    match scope.as_ref(&self.globals).fiber.as_ref() {
                         Some(fiber) => fiber.borrow_mut().push_return_value(value),
                         None => return Ok(value),
                     }
@@ -2313,7 +2325,7 @@ impl VM {
     ) -> Result<FunctionNext<'a>> {
         // Copy out a ref, so we can later mut borrow the frame.
         // FIXME: Cloning every op *cannot* be correct!
-        let closure_rc = frame.closure;
+        let closure_rc = &frame.closure;
         let closure = closure_rc.borrow();
         let fn_obj = closure.fn_obj.borrow();
         let dump_instructions = self.should_dump_instructions(&fn_obj.debug);
@@ -2435,7 +2447,7 @@ impl VM {
                     // Optimization: if no upvalues, continue as normal.
                 }
                 Ops::EndModule => {
-                    scope.as_mut(&self.globals).last_imported_module = Some(fn_obj.module);
+                    scope.as_mut(&self.globals).last_imported_module = Some(fn_obj.module.clone());
                     fiber.push(&scope.create_null().erase_type().into()); // Is this the return value?
                 }
                 Ops::Return => {
@@ -2484,7 +2496,7 @@ impl VM {
                     let value = fiber.peek()?;
                     match *variable {
                         Variable::Module(index) => {
-                            fn_obj.module.borrow_mut().variables[index] = *value
+                            fn_obj.module.borrow_mut().variables[index] = value.clone()
                         }
                         Variable::Upvalue(index) => {
                             closure.upvalue(index).borrow_mut().store(value)
@@ -2510,7 +2522,7 @@ impl VM {
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
                     }
-                    instance.borrow_mut().fields[*symbol] = *fiber.peek()?;
+                    instance.borrow_mut().fields[*symbol] = fiber.peek()?.clone();
                 }
                 Ops::Pop => {
                     fiber.pop(&scope)?;
@@ -2567,6 +2579,7 @@ impl VM {
                     let module = scope
                         .as_ref(&self.globals)
                         .last_imported_module
+                        .as_ref()
                         .expect("Should have already imported module.");
                     let value = get_module_variable(&scope, module.as_ref(), variable_name)?;
                     fiber.push(&value.into());
@@ -2914,7 +2927,7 @@ impl ObjClosure {
         // FIXME: Is this really supposed to also be class = fn?
         scope
             .take(ObjClosure {
-                class_obj: scope.as_ref(&vm.globals).fn_class.unwrap(),
+                class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
                 fn_obj: fn_obj.into(),
                 upvalues: List::default(),
             })
@@ -2922,7 +2935,7 @@ impl ObjClosure {
     }
 
     fn push_upvalue(&mut self, upvalue: &HeapHandle<Upvalue>) {
-        self.upvalues.push(*upvalue)
+        self.upvalues.push(upvalue.clone())
     }
 
     fn upvalue(&self, index: usize) -> &HeapHandle<Upvalue> {
@@ -2989,8 +3002,8 @@ impl ObjFn {
     ) -> LocalHandle<'a, ObjFn> {
         scope
             .take(ObjFn {
-                class_obj: scope.as_ref(&vm.globals).fn_class.unwrap(),
-                constants: scope.as_ref(&compiler.constants).list,
+                class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
+                constants: scope.as_ref(&compiler.constants).list.clone(),
                 code: compiler.code,
                 arity,
                 debug: compiler.fn_debug,
@@ -3020,7 +3033,7 @@ impl ObjFn {
 
         scope
             .take(ObjFn {
-                class_obj: scope.as_ref(&vm.globals).fn_class.unwrap().into(),
+                class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
                 // FIXME: Why is this Arity + 1 and the above is not?
                 arity: Arity(num_params + 1),
                 code: code,
@@ -3028,8 +3041,9 @@ impl ObjFn {
                 module: scope
                     .as_ref(&vm.globals)
                     .last_imported_module
+                    .as_ref()
                     .unwrap()
-                    .into(), // Wrong?
+                    .clone(),
                 debug: FnDebug::generated(signature, code_len),
             })
             .unwrap()
@@ -3258,14 +3272,17 @@ pub struct ObjClass {
 impl Traceable for ObjClass {
     fn trace(&mut self, visitor: &mut ObjectVisitor) {
         // FIXME: Implement Option<Traceable>::trace instead?
-        if let Some(class) = self.class {
+        if let Some(class) = &self.class {
             class.trace(visitor);
         }
-        if let Some(superclass) = self.superclass {
+        if let Some(superclass) = &self.superclass {
             superclass.trace(visitor);
         }
-        // Not currently tracing self.methods, instead Method::Block has
-        // a GlobalHandle for now.
+        for maybe_method in self.methods.iter_mut() {
+            if let Some(method) = maybe_method {
+                method.trace(visitor);
+            }
+        }
     }
 }
 
@@ -3332,7 +3349,7 @@ impl HostObject for ObjClass {
 
 impl Obj for ObjClass {
     fn class_obj(&self) -> &HeapHandle<ObjClass> {
-        &self.class.unwrap()
+        &self.class.as_ref().unwrap()
     }
 }
 
