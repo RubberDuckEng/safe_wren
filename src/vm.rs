@@ -490,21 +490,26 @@ impl ObjFiber {
     // FIXME: No longer needs to be Result, now that Stack Underflow panics
     // FIXME: This could return a &Value instead of Value, but the only
     // two callers who *do not* immediately clone() are And and Or ops.
-    fn peek(&self) -> Result<&HeapHandle<()>> {
-        Ok(self.stack.borrow().last().expect("Stack underflow"))
+    fn peek<'a>(&self, scope: &'a HandleScope) -> Result<LocalHandle<'a, ()>> {
+        Ok(scope.from_heap(self.stack.borrow().last().expect("Stack underflow")))
     }
 
-    fn load_this(&self, frame: &CallFrame) -> &HeapHandle<()> {
-        self.load_local(frame, 0)
+    fn load_this<'a>(&self, scope: &'a HandleScope, frame: &CallFrame) -> LocalHandle<'a, ()> {
+        self.load_local(scope, frame, 0)
     }
 
     fn store_this(&self, frame: &CallFrame, value: LocalHandle<()>) {
         self.store_local(frame, 0, &value.into())
     }
 
-    fn load_local(&self, frame: &CallFrame, offset: usize) -> &HeapHandle<()> {
+    fn load_local<'a>(
+        &self,
+        scope: &'a HandleScope,
+        frame: &CallFrame,
+        offset: usize,
+    ) -> LocalHandle<'a, ()> {
         // FIXME: bounds-check the number of locals based on compiler data?
-        &self.stack.borrow()[frame.stack_start + offset]
+        scope.from_heap(&self.stack.borrow()[frame.stack_start + offset])
     }
 
     fn store_local(&self, frame: &CallFrame, offset: usize, value: &HeapHandle<()>) {
@@ -1192,7 +1197,7 @@ impl VM {
 
 impl ObjClass {
     pub(crate) fn bind_superclass(&mut self, superclass: LocalHandle<ObjClass>) {
-        self.superclass = Some(superclass.into());
+        self.superclass = Some(superclass.clone().into());
 
         // Include the superclass in the total number of fields.
         match &mut self.source {
@@ -2325,7 +2330,7 @@ impl VM {
     ) -> Result<FunctionNext<'a>> {
         // Copy out a ref, so we can later mut borrow the frame.
         // FIXME: Cloning every op *cannot* be correct!
-        let closure_rc = &frame.closure;
+        let closure_rc = scope.from_heap(&frame.closure);
         let closure = closure_rc.borrow();
         let fn_obj = closure.fn_obj.borrow();
         let dump_instructions = self.should_dump_instructions(&fn_obj.debug);
@@ -2421,7 +2426,7 @@ impl VM {
                 // Called as part of constructors to fix "this" to be an
                 // instance before continuing construction.
                 Ops::Construct => {
-                    let this = scope.from_heap(fiber.load_this(frame));
+                    let this = fiber.load_this(scope, frame);
                     let class = this.try_downcast().expect("'this' should be a class.");
                     let instance = ObjInstance::new(&scope, class);
                     fiber.store_this(frame, instance.erase_type());
@@ -2488,20 +2493,20 @@ impl VM {
                             scope.from_heap(&fn_obj.module.borrow().variables[index])
                         }
                         Variable::Upvalue(index) => closure.upvalue(index).borrow().load(&scope),
-                        Variable::Local(index) => scope.from_heap(fiber.load_local(frame, index)),
+                        Variable::Local(index) => fiber.load_local(scope, frame, index),
                     };
                     fiber.push(&value.into());
                 }
                 Ops::Store(variable) => {
-                    let value = fiber.peek()?;
+                    let value = fiber.peek(scope)?;
                     match *variable {
                         Variable::Module(index) => {
-                            fn_obj.module.borrow_mut().variables[index] = value.clone()
+                            fn_obj.module.borrow_mut().variables[index] = value.into()
                         }
                         Variable::Upvalue(index) => {
-                            closure.upvalue(index).borrow_mut().store(value)
+                            closure.upvalue(index).borrow_mut().store(&value.into())
                         }
-                        Variable::Local(index) => fiber.store_local(frame, index, value),
+                        Variable::Local(index) => fiber.store_local(frame, index, &value.into()),
                     };
                 }
                 Ops::LoadField(symbol) => {
@@ -2522,7 +2527,7 @@ impl VM {
                     if *symbol >= instance.borrow().fields.len() {
                         return Err(VMError::from_str("Out of bounds field."));
                     }
-                    instance.borrow_mut().fields[*symbol] = fiber.peek()?.clone();
+                    instance.borrow_mut().fields[*symbol] = fiber.peek(scope)?.into();
                 }
                 Ops::Pop => {
                     fiber.pop(&scope)?;
@@ -2598,16 +2603,16 @@ impl VM {
                 }
                 Ops::And(offset_forward) => {
                     // This differs from JumpIfFalse in whether it pops
-                    let value = fiber.peek()?;
-                    if is_falsey(value) {
+                    let value = fiber.peek(scope)?;
+                    if is_falsey(&value.into()) {
                         frame.pc += *offset_forward as usize;
                     } else {
                         fiber.pop(&scope)?;
                     }
                 }
                 Ops::Or(offset_forward) => {
-                    let value = fiber.peek()?;
-                    if !is_falsey(value) {
+                    let value = fiber.peek(scope)?;
+                    if !is_falsey(&value.into()) {
                         frame.pc += *offset_forward as usize;
                     } else {
                         fiber.pop(&scope)?;
