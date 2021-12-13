@@ -1923,7 +1923,7 @@ impl VM {
             scope.from_heap(&core.num)
         } else if value.is_bool() {
             scope.from_heap(&core.bool_class)
-        } else if let Some(obj) = value.try_as_ref::<String>() {
+        } else if let Some(_) = value.try_as_ref::<String>() {
             scope.from_heap(&core.string)
             // FIXME: There should be a better way to handle this without
             // an if-cascade.  Can we cast to dyn Obj instead?
@@ -2199,7 +2199,8 @@ impl VM {
                                 index: compiler_upvalue.index,
                             };
 
-                            let upvalue = find_or_create_upvalue(&scope, fiber_ref, location);
+                            let upvalue =
+                                find_or_create_upvalue(&scope, fiber_ref.clone(), location);
                             closure.as_mut().push_upvalue(&upvalue.into());
                         } else {
                             // Use the same upvalue as the current call frame.
