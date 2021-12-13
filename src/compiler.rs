@@ -1488,10 +1488,10 @@ struct Parser {
     next: ParseToken,     // After-next to consume, peek_next()
 }
 
-struct ParseContext<'a> {
+struct ParseContext<'heap, 'scope> {
     parser: Parser,
     _compilers: Vec<Compiler>,
-    vm: &'a mut VM,
+    vm: &'heap mut VM,
     // We have the module during parse-time in order to be able to
     // make ObjFn objects (which hold a pointer to the module) as
     // well as be able to look-up and define variables on the module.
@@ -1499,25 +1499,25 @@ struct ParseContext<'a> {
     // all other variables are placeholders.
     module: GlobalHandle<Module>,
     nesting: usize,
-    scope: HandleScope<'a>,
+    scope: &'scope HandleScope<'heap>,
 }
 
-impl<'a> ParseContext<'a> {
-    fn wrap_num(&self, value: f64) -> LocalHandle<f64> {
+impl<'heap, 'scope> ParseContext<'heap, 'scope> {
+    fn wrap_num(&self, value: f64) -> LocalHandle<'scope, f64> {
         self.scope.create_num(value)
     }
-    fn wrap_string(&self, value: String) -> LocalHandle<String> {
+    fn wrap_string(&self, value: String) -> LocalHandle<'scope, String> {
         self.scope.take(value).unwrap()
     }
-    fn wrap_str(&self, value: &str) -> LocalHandle<String> {
+    fn wrap_str(&self, value: &str) -> LocalHandle<'scope, String> {
         self.scope.take(value.to_string()).unwrap()
     }
-    fn null(&self) -> LocalHandle<()> {
+    fn null(&self) -> LocalHandle<'scope, ()> {
         self.scope.create_null()
     }
 }
 
-impl<'a> ParseContext<'a> {
+impl<'a, 'b> ParseContext<'a, 'b> {
     fn module_name(&self) -> String {
         self.scope.as_ref(&self.module).name.clone()
     }
@@ -2024,12 +2024,12 @@ fn finish_parameter_list(
 // Finishes [compiler], which is compiling a function, method, or chunk of top
 // level code. If there is a parent compiler, then this emits code in the
 // parent compiler to load the resulting function.
-fn end_compiler<'a, 'b>(
-    ctx: &'a mut ParseContext<'b>,
+fn end_compiler<'a, 'heap, 'scope>(
+    ctx: &'a mut ParseContext<'heap, 'scope>,
     ending: Compiler,
     arity: Arity,
     name: String,
-) -> Result<LocalHandle<'a, ObjFn>, WrenError> {
+) -> Result<LocalHandle<'scope, ObjFn>, WrenError> {
     let mut compiler = ending;
     // Mark the end of the bytecode. Since it may contain multiple early returns,
     // we can't rely on CODE_RETURN to tell us we're at the end.
@@ -2084,33 +2084,33 @@ fn finish_body(ctx: &mut ParseContext) -> Result<(), WrenError> {
     Ok(())
 }
 
-struct PushCompiler<'a, 'b> {
-    ctx: &'a mut ParseContext<'b>,
+struct PushCompiler<'a, 'heap, 'scope> {
+    ctx: &'a mut ParseContext<'heap, 'scope>,
     did_pop: bool,
 }
 
-impl<'a, 'b> PushCompiler<'a, 'b> {
-    fn push_root(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
+impl<'a, 'heap, 'scope> PushCompiler<'a, 'heap, 'scope> {
+    fn push_root(ctx: &'a mut ParseContext<'heap, 'scope>) -> PushCompiler<'a, 'heap, 'scope> {
         assert!(ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::root(&ctx.scope));
+        ctx._compilers.push(Compiler::root(ctx.scope));
         PushCompiler {
             ctx,
             did_pop: false,
         }
     }
 
-    fn push_block(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
+    fn push_block(ctx: &'a mut ParseContext<'heap, 'scope>) -> PushCompiler<'a, 'heap, 'scope> {
         assert!(!ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::block(&ctx.scope));
+        ctx._compilers.push(Compiler::block(ctx.scope));
         PushCompiler {
             ctx,
             did_pop: false,
         }
     }
 
-    fn push_method(ctx: &'a mut ParseContext<'b>) -> PushCompiler<'a, 'b> {
+    fn push_method(ctx: &'a mut ParseContext<'heap, 'scope>) -> PushCompiler<'a, 'heap, 'scope> {
         assert!(!ctx._compilers.is_empty());
-        ctx._compilers.push(Compiler::method(&ctx.scope));
+        ctx._compilers.push(Compiler::method(ctx.scope));
         PushCompiler {
             ctx,
             did_pop: false,
@@ -2126,7 +2126,7 @@ impl<'a, 'b> PushCompiler<'a, 'b> {
     }
 }
 
-impl<'a, 'b> Drop for PushCompiler<'a, 'b> {
+impl<'a, 'heap, 'scope> Drop for PushCompiler<'a, 'heap, 'scope> {
     fn drop(&mut self) {
         if !self.did_pop {
             // Pop this compiler off the stack.
@@ -2449,7 +2449,7 @@ struct FoundUpvalue {
     index: usize,
 }
 
-impl<'a> ParseContext<'a> {
+impl<'heap, 'scope> ParseContext<'heap, 'scope> {
     fn find_upvalue(&self, name: &str) -> Option<FoundUpvalue> {
         // FIXME: Can this be turned into a simple for loop?
         let mut compiler_index = self._compilers.len() - 1;
@@ -2883,14 +2883,17 @@ fn finish_block(ctx: &mut ParseContext) -> Result<bool, WrenError> {
     Ok(false)
 }
 
-struct ScopePusher<'a, 'b> {
-    ctx: &'a mut ParseContext<'b>,
+struct ScopePusher<'a, 'heap, 'scope> {
+    ctx: &'a mut ParseContext<'heap, 'scope>,
     did_pop: bool,
     did_set_class: bool,
 }
 
-impl<'a, 'b> ScopePusher<'a, 'b> {
-    fn push_class(ctx: &'a mut ParseContext<'b>, class_info: ClassInfo) -> ScopePusher<'a, 'b> {
+impl<'a, 'heap, 'scope> ScopePusher<'a, 'heap, 'scope> {
+    fn push_class(
+        ctx: &'a mut ParseContext<'heap, 'scope>,
+        class_info: ClassInfo,
+    ) -> ScopePusher<'a, 'heap, 'scope> {
         Self::push_scope(ctx);
         ctx.compiler_mut().enclosing_class = Some(RefCell::new(class_info));
         ScopePusher {
@@ -2900,7 +2903,7 @@ impl<'a, 'b> ScopePusher<'a, 'b> {
         }
     }
 
-    fn push_block(ctx: &'a mut ParseContext<'b>) -> ScopePusher<'a, 'b> {
+    fn push_block(ctx: &'a mut ParseContext<'heap, 'scope>) -> ScopePusher<'a, 'heap, 'scope> {
         Self::push_scope(ctx);
         ScopePusher {
             ctx,
@@ -2941,7 +2944,7 @@ impl<'a, 'b> ScopePusher<'a, 'b> {
     }
 }
 
-impl<'a, 'b> Drop for ScopePusher<'a, 'b> {
+impl<'a, 'heap, 'scope> Drop for ScopePusher<'a, 'heap, 'scope> {
     fn drop(&mut self) {
         if !self.did_pop {
             // Pop the scope
@@ -3574,7 +3577,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     let name = previous_token_name(ctx);
 
     // FIXME: Clone shouldn't be needed.
-    let class_name = ctx.wrap_string(name);
+    let class_name = ctx.wrap_string(name.clone());
 
     // Make a string constant for the name.
     emit_constant(ctx, class_name.erase_type())?;
@@ -3968,18 +3971,18 @@ fn consume_expecting(
     Ok(())
 }
 
-struct NestingScope<'a, 'b> {
-    ctx: &'a mut ParseContext<'b>,
+struct NestingScope<'a, 'heap, 'scope> {
+    ctx: &'a mut ParseContext<'heap, 'scope>,
 }
 
-impl<'a, 'b> NestingScope<'a, 'b> {
-    fn push(ctx: &'a mut ParseContext<'b>) -> NestingScope<'a, 'b> {
+impl<'a, 'heap, 'scope> NestingScope<'a, 'heap, 'scope> {
+    fn push(ctx: &'a mut ParseContext<'heap, 'scope>) -> NestingScope<'a, 'heap, 'scope> {
         ctx.nesting += 1;
         NestingScope { ctx }
     }
 }
 
-impl<'a, 'b> Drop for NestingScope<'a, 'b> {
+impl<'a, 'heap, 'scope> Drop for NestingScope<'a, 'heap, 'scope> {
     fn drop(&mut self) {
         self.ctx.nesting -= 1;
     }
@@ -4079,7 +4082,7 @@ impl VM {
             vm: self,
             nesting: 0,
             // FIXME: This is the only access to VM.heap outside vm.rs.
-            scope: HandleScope::new(&self.heap),
+            scope: handles,
         };
 
         let mut scope = PushCompiler::push_root(&mut parse_context);

@@ -74,7 +74,8 @@ fn is_truthy(value: &HeapHandle<()>) -> bool {
     if value.is_null() {
         false
     } else if value.is_bool() {
-        (*value).try_into().unwrap()
+        // FIXME: Could also add TryInto to &HeapHandle.
+        value.clone().try_into().unwrap()
     } else {
         true
     }
@@ -354,9 +355,9 @@ impl OpenUpvalues {
         None
     }
 
-    fn push(&mut self, upvalue: LocalHandle<Upvalue>) {
+    fn push(&mut self, upvalue: &HeapHandle<Upvalue>) {
         assert!(upvalue.as_ref().is_open());
-        self.values.push(upvalue.into());
+        self.values.push(upvalue.clone());
     }
 }
 
@@ -383,14 +384,14 @@ impl Traceable for ObjFiber {
     fn trace(&mut self, visitor: &mut ObjectVisitor) {
         self.class_obj.trace(visitor);
         self.error.trace(visitor);
-        if let Some(caller) = self.caller {
+        if let Some(caller) = &self.caller {
             caller.trace(visitor);
         }
-        self.stack.borrow().trace(visitor);
-        for frame in self.call_stack.borrow().iter() {
+        self.stack.borrow_mut().trace(visitor);
+        for frame in self.call_stack.borrow_mut().iter_mut() {
             frame.trace(visitor);
         }
-        self.open_upvalues.borrow().trace(visitor);
+        self.open_upvalues.borrow_mut().trace(visitor);
     }
 }
 
@@ -465,20 +466,20 @@ impl ObjFiber {
         self.call_stack.borrow()[offset.frame_index].stack_start + offset.index
     }
 
-    fn load(&self, loc: StackOffset) -> &HeapHandle<()> {
+    fn load<'a>(&self, scope: &'a HandleScope, loc: StackOffset) -> LocalHandle<'a, ()> {
         let index = self.index_for_stack_offset(loc);
-        &self.stack.borrow()[index]
+        scope.from_heap(&self.stack.borrow()[index])
     }
 
     fn store(&self, loc: StackOffset, value: &HeapHandle<()>) {
         let index = self.index_for_stack_offset(loc);
-        self.stack.borrow_mut()[index] = *value
+        self.stack.borrow_mut()[index] = value.clone()
     }
 
     // FIXME: Should this take a Frame for bounds checking?
     #[inline] // 3% on map_numeric
     fn push(&self, value: &HeapHandle<()>) {
-        self.stack.borrow_mut().push(*value);
+        self.stack.borrow_mut().push(value.clone());
     }
 
     // FIXME: No longer needs to be Result, now that Stack Underflow panics
@@ -508,7 +509,7 @@ impl ObjFiber {
 
     fn store_local(&self, frame: &CallFrame, offset: usize, value: &HeapHandle<()>) {
         // FIXME: bounds-check the number of locals based on compiler data?
-        self.stack.borrow_mut()[frame.stack_start + offset] = *value
+        self.stack.borrow_mut()[frame.stack_start + offset] = value.clone()
     }
 
     fn dump_stack(&self, frame: &CallFrame, active_module: &str, frame_depth: usize) {
@@ -555,7 +556,10 @@ fn find_or_create_upvalue<'a>(
     // If there isn't yet an upvalue (or there are, but they're closed but
     // running the function again, etc.), we make a new one.
     let upvalue = Upvalue::new(scope, fiber_ref, location);
-    fiber.open_upvalues.borrow_mut().push(upvalue);
+    fiber
+        .open_upvalues
+        .borrow_mut()
+        .push(&upvalue.clone().into());
     upvalue
 }
 
@@ -1097,7 +1101,7 @@ impl core::fmt::Debug for VM {
         let scope = HandleScope::new(&self.heap);
         write!(f, "VM {{ ")?;
         let globals = scope.as_ref(&self.globals);
-        if let Some(fiber) = globals.fiber {
+        if let Some(fiber) = &globals.fiber {
             write!(f, "stack: {:?}, ", fiber.as_ref())?;
         }
         write!(f, "methods: (len {}) ", self.methods.names.len())?;
@@ -1166,7 +1170,7 @@ impl VM {
         // let metaclass_name = Value::from_string(metaclass_name_string);
 
         let metaclass = new_single_class(scope, ClassSource::Internal, metaclass_name_string);
-        metaclass.as_mut().class = Some(class_class.into());
+        metaclass.as_mut().class = Some(class_class.clone().into());
 
         // Metaclasses always inherit Class and do not parallel the non-metaclass
         // hierarchy.
@@ -1524,7 +1528,7 @@ impl HostObject for Upvalue {
 
 impl Traceable for Upvalue {
     fn trace(&mut self, visitor: &mut ObjectVisitor) {
-        match self.storage {
+        match &self.storage {
             UpvalueStorage::Open(fiber, _) => fiber.trace(visitor),
             UpvalueStorage::Closed(value) => value.trace(visitor),
         }
@@ -1560,11 +1564,11 @@ impl Upvalue {
     }
 
     fn load<'a>(&self, scope: &'a HandleScope) -> LocalHandle<'a, ()> {
-        scope.from_heap(match &self.storage {
+        match &self.storage {
             // FIXME: Can we avoid making a LocalHandle for Fiber on every load?
-            UpvalueStorage::Open(fiber, loc) => scope.from_heap(fiber).as_ref().load(*loc),
-            UpvalueStorage::Closed(value) => value,
-        })
+            UpvalueStorage::Open(fiber, loc) => scope.from_heap(fiber).as_ref().load(scope, *loc),
+            UpvalueStorage::Closed(value) => scope.from_heap(value),
+        }
     }
 
     fn store(&mut self, new_value: &HeapHandle<()>) {
@@ -1592,8 +1596,8 @@ impl ObjFiber {
             let l = u.as_ref().location().unwrap();
             if l >= location {
                 // Move the value into the upvalue itself and point the upvalue to it.
-                let value = self.load(l);
-                u.as_mut().storage = UpvalueStorage::Closed(*value);
+                let value = self.load(scope, l);
+                u.as_mut().storage = UpvalueStorage::Closed(value.into());
                 true // Remove it from the open upvalue list.
             } else {
                 false

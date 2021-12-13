@@ -1401,7 +1401,7 @@ pub(crate) fn init_fn_and_fiber(vm: &mut VM, scope: &HandleScope, module: &mut M
     // null class. Manually initialize classes before compiling wren_core.wren.
     let superclass = module.expect_class(scope, "Object");
     scope.as_mut(&vm.globals).fn_class =
-        Some(create_and_define_class(vm, scope, module, "Fn", superclass).into());
+        Some(create_and_define_class(vm, scope, module, "Fn", superclass.clone()).into());
     // The Fiber used to run wren_core for wren_c has a null class.
     scope.as_mut(&vm.globals).fiber_class =
         Some(create_and_define_class(vm, scope, module, "Fiber", superclass).into());
@@ -1414,7 +1414,12 @@ pub(crate) fn register_core_primitives(vm: &mut VM) {
 
     let scope = HandleScope::new(&vm.heap);
 
-    let module = scope.as_ref(&vm.globals).core_module.unwrap().as_ref();
+    let module = scope
+        .as_ref(&vm.globals)
+        .core_module
+        .as_ref()
+        .unwrap()
+        .borrow();
 
     let core = CoreClasses {
         bool_class: module.expect_class(&scope, "Bool").into(),
