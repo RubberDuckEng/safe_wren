@@ -1,2 +1,40 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 1): Closure(0, [])
+02 (ln 1): Call(new(_))
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+06 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+08 (ln 2): Call(is(_))
+09 (ln 2): Call(print(_))
+10 (ln 2): Pop
+11 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+12 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+13 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+14 (ln 3): Call(is(_))
+15 (ln 3): Call(print(_))
+16 (ln 3): Pop
+17 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+18 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+19 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+20 (ln 4): Call(is(_))
+21 (ln 4): Call(print(_))
+22 (ln 4): Pop
+23 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+24 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+25 (ln 5): Call(type)
+26 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+27 (ln 5): Call(==(_))
+28 (ln 5): Call(print(_))
+29 (ln 5): Pop
+30 (ln 6): EndModule
+31 (ln 6): Return
+32 (ln 6): End
+new(_) block argument Code:
+00 (ln 1): Null
+01 (ln 1): Return
+02 (ln 1): End

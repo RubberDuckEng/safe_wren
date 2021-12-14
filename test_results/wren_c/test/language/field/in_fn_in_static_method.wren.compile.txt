@@ -1,2 +1,1 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[wren_c/test/language/field/in_fn_in_static_method line 3] Error at '_field': Cannot use an instance field in a static method.

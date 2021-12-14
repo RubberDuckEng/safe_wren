@@ -1,2 +1,147 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+03: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 2): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 2): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 2): Call(..(_))
+03 (ln 2): Store(Module)
+04 (ln 2): Pop
+05 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+06 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 3): Null
+08 (ln 3): Call(iterate(_))
+09 (ln 3): Call(print(_))
+10 (ln 3): Pop
+11 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+12 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+13 (ln 4): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+14 (ln 4): Call(iterate(_))
+15 (ln 4): Call(print(_))
+16 (ln 4): Pop
+17 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+18 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+19 (ln 5): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+20 (ln 5): Call(iterate(_))
+21 (ln 5): Call(print(_))
+22 (ln 5): Pop
+23 (ln 6): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+24 (ln 6): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+25 (ln 6): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+26 (ln 6): Call(iterate(_))
+27 (ln 6): Call(print(_))
+28 (ln 6): Pop
+29 (ln 7): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+30 (ln 7): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+31 (ln 7): Constant(3: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+32 (ln 7): Call(iterate(_))
+33 (ln 7): Call(print(_))
+34 (ln 7): Pop
+35 (ln 10): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+36 (ln 10): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+37 (ln 10): Call(...(_))
+38 (ln 10): Store(Module)
+39 (ln 10): Pop
+40 (ln 11): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+41 (ln 11): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+42 (ln 11): Null
+43 (ln 11): Call(iterate(_))
+44 (ln 11): Call(print(_))
+45 (ln 11): Pop
+46 (ln 12): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+47 (ln 12): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+48 (ln 12): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+49 (ln 12): Call(iterate(_))
+50 (ln 12): Call(print(_))
+51 (ln 12): Pop
+52 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+53 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+54 (ln 13): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+55 (ln 13): Call(iterate(_))
+56 (ln 13): Call(print(_))
+57 (ln 13): Pop
+58 (ln 16): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+59 (ln 16): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+60 (ln 16): Call(..(_))
+61 (ln 16): Store(Module)
+62 (ln 16): Pop
+63 (ln 17): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+64 (ln 17): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+65 (ln 17): Null
+66 (ln 17): Call(iterate(_))
+67 (ln 17): Call(print(_))
+68 (ln 17): Pop
+69 (ln 18): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+70 (ln 18): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+71 (ln 18): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+72 (ln 18): Call(iterate(_))
+73 (ln 18): Call(print(_))
+74 (ln 18): Pop
+75 (ln 19): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+76 (ln 19): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+77 (ln 19): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+78 (ln 19): Call(iterate(_))
+79 (ln 19): Call(print(_))
+80 (ln 19): Pop
+81 (ln 20): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+82 (ln 20): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+83 (ln 20): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+84 (ln 20): Call(iterate(_))
+85 (ln 20): Call(print(_))
+86 (ln 20): Pop
+87 (ln 23): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+88 (ln 23): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+89 (ln 23): Call(...(_))
+90 (ln 23): Store(Module)
+91 (ln 23): Pop
+92 (ln 24): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+93 (ln 24): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+94 (ln 24): Null
+95 (ln 24): Call(iterate(_))
+96 (ln 24): Call(print(_))
+97 (ln 24): Pop
+98 (ln 25): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+99 (ln 25): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+100 (ln 25): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+101 (ln 25): Call(iterate(_))
+102 (ln 25): Call(print(_))
+103 (ln 25): Pop
+104 (ln 26): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+105 (ln 26): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+106 (ln 26): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+107 (ln 26): Call(iterate(_))
+108 (ln 26): Call(print(_))
+109 (ln 26): Pop
+110 (ln 29): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+111 (ln 29): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+112 (ln 29): Call(..(_))
+113 (ln 29): Store(Module)
+114 (ln 29): Pop
+115 (ln 30): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+116 (ln 30): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+117 (ln 30): Null
+118 (ln 30): Call(iterate(_))
+119 (ln 30): Call(print(_))
+120 (ln 30): Pop
+121 (ln 31): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+122 (ln 31): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+123 (ln 31): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+124 (ln 31): Call(iterate(_))
+125 (ln 31): Call(print(_))
+126 (ln 31): Pop
+127 (ln 34): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+128 (ln 34): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+129 (ln 34): Call(...(_))
+130 (ln 34): Store(Module)
+131 (ln 34): Pop
+132 (ln 35): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+133 (ln 35): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+134 (ln 35): Null
+135 (ln 35): Call(iterate(_))
+136 (ln 35): Call(print(_))
+137 (ln 35): Pop
+138 (ln 36): EndModule
+139 (ln 36): Return
+140 (ln 36): End

@@ -1,2 +1,32 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Null
+01 (ln 1): Store(Module)
+02 (ln 1): Pop
+03 (ln 4): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+04 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+05 (ln 8): Closure(1, [Upvalue { is_local_in_parent: true, index: 1 }])
+06 (ln 8): Call(new(_))
+07 (ln 8): Store(Module)
+08 (ln 8): Pop
+09 (ln 9): CloseUpvalues
+10 (ln 11): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+11 (ln 11): Call(call())
+12 (ln 11): Pop
+13 (ln 14): EndModule
+14 (ln 14): Return
+15 (ln 14): End
+new(_) block argument Code:
+00 (ln 6): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 6): Load(Upvalue, 0)
+02 (ln 6): Call(print(_))
+03 (ln 6): Pop
+04 (ln 7): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+05 (ln 7): Load(Upvalue, 0)
+06 (ln 7): Call(print(_))
+07 (ln 7): Pop
+08 (ln 8): Null
+09 (ln 8): Return
+10 (ln 8): End

@@ -1,2 +1,98 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+03: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+04: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+05: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+06: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+07: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+08: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 2): Method(instance, init new())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+10 (ln 2): Method(static, new())
+11 (ln 5): Constant(3: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+12 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+13 (ln 5): Class(0 fields)
+14 (ln 5): Store(Module)
+15 (ln 5): Pop
+16 (ln 7): Closure(4, [])
+17 (ln 7): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+18 (ln 7): Method(instance, init new())
+19 (ln 7): Closure(5, [])
+20 (ln 7): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+21 (ln 7): Method(static, new())
+22 (ln 10): Constant(6: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+23 (ln 10): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+24 (ln 10): Class(0 fields)
+25 (ln 10): Store(Module)
+26 (ln 10): Pop
+27 (ln 13): Closure(7, [])
+28 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+29 (ln 13): Method(instance, init new())
+30 (ln 13): Closure(8, [])
+31 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+32 (ln 13): Method(static, new())
+33 (ln 15): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+34 (ln 15): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+35 (ln 15): Call(new())
+36 (ln 15): Call(print(_))
+37 (ln 15): Pop
+38 (ln 16): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+39 (ln 16): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+40 (ln 16): Call(new())
+41 (ln 16): Call(print(_))
+42 (ln 16): Pop
+43 (ln 17): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+44 (ln 17): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+45 (ln 17): Call(new())
+46 (ln 17): Call(print(_))
+47 (ln 17): Pop
+48 (ln 18): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+49 (ln 18): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+50 (ln 18): Call(new())
+51 (ln 18): Null
+52 (ln 18): Call(!=(_))
+53 (ln 18): Call(print(_))
+54 (ln 18): Pop
+55 (ln 19): EndModule
+56 (ln 19): Return
+57 (ln 19): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(init new())
+02 (ln 2): Return
+03 (ln 2): End
+init new() Code:
+00 (ln 7): Load(Local, 0)
+01 (ln 7): Return
+02 (ln 7): End
+ Code:
+00 (ln 7): Construct
+01 (ln 7): Call(init new())
+02 (ln 7): Return
+03 (ln 7): End
+init new() Code:
+00 (ln 12): Load(Local, 0)
+01 (ln 12): Return
+02 (ln 13): Load(Local, 0)
+03 (ln 13): Return
+04 (ln 13): End
+ Code:
+00 (ln 13): Construct
+01 (ln 13): Call(init new())
+02 (ln 13): Return
+03 (ln 13): End

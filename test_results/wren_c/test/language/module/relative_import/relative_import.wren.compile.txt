@@ -1,2 +1,8 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Code:
+00 (ln 1): ImportModule("./sub/module")
+01 (ln 1): Pop
+02 (ln 2): ImportModule("./sub/././///dir/module")
+03 (ln 2): Pop
+04 (ln 9): EndModule
+05 (ln 9): Return
+06 (ln 9): End

@@ -1,2 +1,89 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+03: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+04: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+05: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+06: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 1): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 1): Call(fraction)
+03 (ln 1): Call(print(_))
+04 (ln 1): Pop
+05 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+06 (ln 2): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 2): Call(-)
+08 (ln 2): Call(fraction)
+09 (ln 2): Call(print(_))
+10 (ln 2): Pop
+11 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+12 (ln 3): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+13 (ln 3): Call(fraction)
+14 (ln 3): Call(print(_))
+15 (ln 3): Pop
+16 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+17 (ln 4): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+18 (ln 4): Call(-)
+19 (ln 4): Call(fraction)
+20 (ln 4): Call(print(_))
+21 (ln 4): Pop
+22 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+23 (ln 5): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+24 (ln 5): Call(fraction)
+25 (ln 5): Call(print(_))
+26 (ln 5): Pop
+27 (ln 6): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+28 (ln 6): Constant(3: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+29 (ln 6): Call(fraction)
+30 (ln 6): Call(print(_))
+31 (ln 6): Pop
+32 (ln 7): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+33 (ln 7): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+34 (ln 7): Call(-)
+35 (ln 7): Call(fraction)
+36 (ln 7): Call(print(_))
+37 (ln 7): Pop
+38 (ln 8): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+39 (ln 8): Constant(3: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+40 (ln 8): Call(-)
+41 (ln 8): Call(fraction)
+42 (ln 8): Call(print(_))
+43 (ln 8): Pop
+44 (ln 12): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+45 (ln 12): Constant(4: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+46 (ln 12): Call(fraction)
+47 (ln 12): Call(print(_))
+48 (ln 12): Pop
+49 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+50 (ln 13): Constant(4: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+51 (ln 13): Call(-)
+52 (ln 13): Call(fraction)
+53 (ln 13): Call(print(_))
+54 (ln 13): Pop
+55 (ln 15): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+56 (ln 15): Constant(5: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+57 (ln 15): Call(fraction)
+58 (ln 15): Call(print(_))
+59 (ln 15): Pop
+60 (ln 16): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+61 (ln 16): Constant(5: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+62 (ln 16): Call(-)
+63 (ln 16): Call(fraction)
+64 (ln 16): Call(print(_))
+65 (ln 16): Pop
+66 (ln 18): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+67 (ln 18): Constant(6: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+68 (ln 18): Call(fraction)
+69 (ln 18): Call(print(_))
+70 (ln 18): Pop
+71 (ln 19): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+72 (ln 19): Constant(6: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+73 (ln 19): Call(-)
+74 (ln 19): Call(fraction)
+75 (ln 19): Call(print(_))
+76 (ln 19): Pop
+77 (ln 20): EndModule
+78 (ln 20): Return
+79 (ln 20): End

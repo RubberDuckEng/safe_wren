@@ -1,2 +1,10 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Code:
+00 (ln 1): Boolean true
+01 (ln 1): JumpIfFalse(2)
+02 (ln 2): Jump(1)
+03 (ln 3): Loop(4)
+04 (ln 4): Boolean false
+05 (ln 4): Pop
+06 (ln 4): EndModule
+07 (ln 4): Return
+08 (ln 4): End

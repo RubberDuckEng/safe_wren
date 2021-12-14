@@ -1,2 +1,63 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+03: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 1): Call(new())
+02 (ln 1): Store(Module)
+03 (ln 1): Pop
+04 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+05 (ln 3): Call(new())
+06 (ln 3): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 3): Call(addCore_(_))
+08 (ln 3): Constant(1: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+09 (ln 3): Call(addCore_(_))
+10 (ln 3): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+11 (ln 3): Call(addCore_(_))
+12 (ln 3): Null
+13 (ln 3): Load(Local, 1)
+14 (ln 3): Load(Local, 2)
+15 (ln 3): Call(iterate(_))
+16 (ln 3): Store(Local, 2)
+17 (ln 3): JumpIfFalse(11)
+18 (ln 3): Load(Local, 1)
+19 (ln 3): Load(Local, 2)
+20 (ln 3): Call(iteratorValue(_))
+21 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+22 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+23 (ln 4): Closure(3, [Upvalue { is_local_in_parent: true, index: 3 }])
+24 (ln 4): Call(new(_))
+25 (ln 4): Call(add(_))
+26 (ln 4): Pop
+27 (ln 5): CloseUpvalues
+28 (ln 5): Loop(16)
+29 (ln 5): Pop
+30 (ln 5): Pop
+31 (ln 7): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+32 (ln 7): Null
+33 (ln 7): Load(Local, 1)
+34 (ln 7): Load(Local, 2)
+35 (ln 7): Call(iterate(_))
+36 (ln 7): Store(Local, 2)
+37 (ln 7): JumpIfFalse(8)
+38 (ln 7): Load(Local, 1)
+39 (ln 7): Load(Local, 2)
+40 (ln 7): Call(iteratorValue(_))
+41 (ln 7): Load(Local, 3)
+42 (ln 7): Call(call())
+43 (ln 7): Pop
+44 (ln 7): Pop
+45 (ln 7): Loop(13)
+46 (ln 7): Pop
+47 (ln 7): Pop
+48 (ln 11): EndModule
+49 (ln 11): Return
+50 (ln 11): End
+new(_) block argument Code:
+00 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 4): Load(Upvalue, 0)
+02 (ln 4): Call(print(_))
+03 (ln 4): Return
+04 (ln 4): End

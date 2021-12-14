@@ -1,2 +1,1 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[wren_c/test/language/nonlocal/localname_forward_declare line 5] Error at '123': Variable 'a' referenced before this definition (first use at line 2).

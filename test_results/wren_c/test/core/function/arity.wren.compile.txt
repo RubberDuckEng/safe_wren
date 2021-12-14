@@ -1,2 +1,65 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+03: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+04: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 1): Closure(0, [])
+03 (ln 1): Call(new(_))
+04 (ln 1): Call(arity)
+05 (ln 1): Call(print(_))
+06 (ln 1): Pop
+07 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+08 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+09 (ln 2): Closure(1, [])
+10 (ln 2): Call(new(_))
+11 (ln 2): Call(arity)
+12 (ln 2): Call(print(_))
+13 (ln 2): Pop
+14 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+15 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+16 (ln 3): Closure(2, [])
+17 (ln 3): Call(new(_))
+18 (ln 3): Call(arity)
+19 (ln 3): Call(print(_))
+20 (ln 3): Pop
+21 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+22 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+23 (ln 4): Closure(3, [])
+24 (ln 4): Call(new(_))
+25 (ln 4): Call(arity)
+26 (ln 4): Call(print(_))
+27 (ln 4): Pop
+28 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+29 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+30 (ln 5): Closure(4, [])
+31 (ln 5): Call(new(_))
+32 (ln 5): Call(arity)
+33 (ln 5): Call(print(_))
+34 (ln 5): Pop
+35 (ln 6): EndModule
+36 (ln 6): Return
+37 (ln 6): End
+new(_) block argument Code:
+00 (ln 1): Null
+01 (ln 1): Return
+02 (ln 1): End
+new(_) block argument Code:
+00 (ln 2): Load(Local, 1)
+01 (ln 2): Return
+02 (ln 2): End
+new(_) block argument Code:
+00 (ln 3): Load(Local, 1)
+01 (ln 3): Return
+02 (ln 3): End
+new(_) block argument Code:
+00 (ln 4): Load(Local, 1)
+01 (ln 4): Return
+02 (ln 4): End
+new(_) block argument Code:
+00 (ln 5): Load(Local, 1)
+01 (ln 5): Return
+02 (ln 5): End

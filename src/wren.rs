@@ -91,8 +91,6 @@ pub struct ForeignClassMethods {
 pub type BindForeignClassFn =
     fn(vm: &VM, module_name: &str, class_name: &str) -> ForeignClassMethods;
 
-// FIXME: derive Default is a hack for now.
-#[derive(Default)]
 pub struct Configuration {
     // The callback Wren uses to resolve a module name.
     //
@@ -171,6 +169,24 @@ pub struct Configuration {
 
     // FIXME: Hack during development, shouldn't be API.
     pub debug_level: Option<DebugLevel>,
+
+    // Unlike wren_c we're currently limiting max-heap size. Defaults to 50mb.
+    pub heap_limit_bytes: usize,
+}
+
+impl Default for Configuration {
+    fn default() -> Self {
+        Self {
+            resolve_module_fn: None,
+            load_module_fn: None,
+            write_fn: None,
+            bind_foreign_class_fn: None,
+            error_fn: None,
+            bind_foreign_method_fn: None,
+            debug_level: None,
+            heap_limit_bytes: 50 * 1024 * 1024,
+        }
+    }
 }
 
 #[allow(dead_code)]

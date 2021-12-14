@@ -1,2 +1,288 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+03: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+04: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+05: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+06: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+07: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+08: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+09: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+10: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+11: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+12: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 1): Class(0 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 2): Method(instance, init new())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+10 (ln 2): Method(static, new())
+11 (ln 6): Closure(3, [])
+12 (ln 6): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+13 (ln 6): Method(instance, test0())
+14 (ln 10): Closure(4, [])
+15 (ln 10): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+16 (ln 10): Method(instance, test1())
+17 (ln 14): Closure(5, [])
+18 (ln 14): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+19 (ln 14): Method(instance, test2())
+20 (ln 19): Closure(6, [])
+21 (ln 19): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+22 (ln 19): Method(instance, [_])
+23 (ln 22): Constant(7: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+24 (ln 22): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+25 (ln 22): Class(1 fields)
+26 (ln 22): Store(Module)
+27 (ln 22): Pop
+28 (ln 73): Closure(8, [])
+29 (ln 73): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+30 (ln 73): Method(instance, init new())
+31 (ln 73): Closure(9, [])
+32 (ln 73): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+33 (ln 73): Method(static, new())
+34 (ln 75): Closure(10, [])
+35 (ln 75): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+36 (ln 75): Method(instance, getter)
+37 (ln 76): Closure(11, [])
+38 (ln 76): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+39 (ln 76): Method(instance, method())
+40 (ln 82): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+41 (ln 82): Call(new())
+42 (ln 82): Store(Module)
+43 (ln 82): Pop
+44 (ln 84): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+45 (ln 84): Call(getter)
+46 (ln 85): Call(test0())
+47 (ln 86): Call(test1())
+48 (ln 87): Call(test2())
+49 (ln 87): Pop
+50 (ln 89): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+51 (ln 89): Call(getter)
+52 (ln 90): Call(test0())
+53 (ln 91): Call(test1())
+54 (ln 92): Call(test2())
+55 (ln 92): Pop
+56 (ln 94): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+57 (ln 94): Call(getter)
+58 (ln 95): Call(test0())
+59 (ln 96): Call(test1())
+60 (ln 97): Call(test2())
+61 (ln 97): Pop
+62 (ln 99): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+63 (ln 99): Call(getter)
+64 (ln 99): Constant(12: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+65 (ln 99): Call([_])
+66 (ln 100): Call(test0())
+67 (ln 100): Pop
+68 (ln 102): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+69 (ln 102): Call(getter)
+70 (ln 102): Constant(12: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+71 (ln 102): Call([_])
+72 (ln 103): Call(test0())
+73 (ln 103): Pop
+74 (ln 105): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+75 (ln 105): Call(method())
+76 (ln 106): Call(test0())
+77 (ln 107): Call(test1())
+78 (ln 108): Call(test2())
+79 (ln 108): Pop
+80 (ln 110): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+81 (ln 110): Call(method())
+82 (ln 111): Call(test0())
+83 (ln 112): Call(test1())
+84 (ln 113): Call(test2())
+85 (ln 113): Pop
+86 (ln 115): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+87 (ln 115): Call(method())
+88 (ln 116): Call(test0())
+89 (ln 117): Call(test1())
+90 (ln 118): Call(test2())
+91 (ln 118): Pop
+92 (ln 120): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+93 (ln 120): Call(method())
+94 (ln 120): Constant(12: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+95 (ln 120): Call([_])
+96 (ln 121): Call(test0())
+97 (ln 121): Pop
+98 (ln 123): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+99 (ln 123): Call(method())
+100 (ln 123): Constant(12: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+101 (ln 123): Call([_])
+102 (ln 124): Call(test0())
+103 (ln 124): Pop
+104 (ln 129): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+105 (ln 129): Call(new())
+106 (ln 129): Store(Module)
+107 (ln 129): Pop
+108 (ln 131): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+109 (ln 132): Call(test0())
+110 (ln 133): Call(test1())
+111 (ln 134): Call(test2())
+112 (ln 134): Pop
+113 (ln 136): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+114 (ln 137): Call(test0())
+115 (ln 138): Call(test1())
+116 (ln 139): Call(test2())
+117 (ln 139): Pop
+118 (ln 141): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+119 (ln 142): Call(test0())
+120 (ln 143): Call(test1())
+121 (ln 144): Call(test2())
+122 (ln 144): Pop
+123 (ln 147): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+124 (ln 147): Constant(12: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+125 (ln 147): Call([_])
+126 (ln 148): Call(test0())
+127 (ln 148): Pop
+128 (ln 150): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+129 (ln 150): Constant(12: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+130 (ln 150): Call([_])
+131 (ln 151): Call(test0())
+132 (ln 151): Pop
+133 (ln 152): EndModule
+134 (ln 152): Return
+135 (ln 152): End
+init new() Code:
+00 (ln 2): Load(Local, 0)
+01 (ln 2): Return
+02 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(init new())
+02 (ln 2): Return
+03 (ln 2): End
+test0() Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+test0() Code:
+00 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 4): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 4): Call(print(_))
+03 (ln 4): Pop
+04 (ln 5): Load(Local, 0)
+05 (ln 5): Return
+06 (ln 6): Null
+07 (ln 6): Return
+08 (ln 6): End
+test1() Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+test1() Code:
+00 (ln 8): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 8): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 8): Call(print(_))
+03 (ln 8): Pop
+04 (ln 9): Load(Local, 0)
+05 (ln 9): Return
+06 (ln 10): Null
+07 (ln 10): Return
+08 (ln 10): End
+test2() Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+test2() Code:
+00 (ln 12): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 12): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 12): Call(print(_))
+03 (ln 12): Pop
+04 (ln 13): Load(Local, 0)
+05 (ln 13): Return
+06 (ln 14): Null
+07 (ln 14): Return
+08 (ln 14): End
+[_] Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+[_] Code:
+00 (ln 17): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 17): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 17): Call(print(_))
+03 (ln 17): Pop
+04 (ln 18): Load(Local, 0)
+05 (ln 18): Return
+06 (ln 19): Null
+07 (ln 19): Return
+08 (ln 19): End
+init new() Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+init new() Code:
+00 (ln 25): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 25): Call(new())
+02 (ln 25): Load(Local, 0)
+03 (ln 25): StoreField(0)
+04 (ln 29): Load(Local, 1)
+05 (ln 30): Call(test0())
+06 (ln 31): Call(test1())
+07 (ln 32): Call(test2())
+08 (ln 32): Pop
+09 (ln 34): Load(Local, 1)
+10 (ln 35): Call(test0())
+11 (ln 36): Call(test1())
+12 (ln 37): Call(test2())
+13 (ln 37): Pop
+14 (ln 39): Load(Local, 1)
+15 (ln 40): Call(test0())
+16 (ln 41): Call(test1())
+17 (ln 42): Call(test2())
+18 (ln 42): Pop
+19 (ln 44): Load(Local, 1)
+20 (ln 44): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+21 (ln 44): Call([_])
+22 (ln 45): Call(test0())
+23 (ln 45): Pop
+24 (ln 47): Load(Local, 1)
+25 (ln 47): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+26 (ln 47): Call([_])
+27 (ln 48): Call(test0())
+28 (ln 48): Pop
+29 (ln 52): Load(Local, 0)
+30 (ln 52): LoadField(0)
+31 (ln 53): Call(test0())
+32 (ln 54): Call(test1())
+33 (ln 55): Call(test2())
+34 (ln 55): Pop
+35 (ln 57): Load(Local, 0)
+36 (ln 57): LoadField(0)
+37 (ln 58): Call(test0())
+38 (ln 59): Call(test1())
+39 (ln 60): Call(test2())
+40 (ln 60): Pop
+41 (ln 62): Load(Local, 0)
+42 (ln 62): LoadField(0)
+43 (ln 63): Call(test0())
+44 (ln 64): Call(test1())
+45 (ln 65): Call(test2())
+46 (ln 65): Pop
+47 (ln 67): Load(Local, 0)
+48 (ln 67): LoadField(0)
+49 (ln 67): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+50 (ln 67): Call([_])
+51 (ln 68): Call(test0())
+52 (ln 68): Pop
+53 (ln 70): Load(Local, 0)
+54 (ln 70): LoadField(0)
+55 (ln 70): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+56 (ln 70): Call([_])
+57 (ln 71): Call(test0())
+58 (ln 71): Pop
+59 (ln 73): Load(Local, 0)
+60 (ln 73): Return
+61 (ln 73): End
+ Code:
+00 (ln 73): Construct
+01 (ln 73): Call(init new())
+02 (ln 73): Return
+03 (ln 73): End
+getter Code:
+00 (ln 75): Load(Local, 0)
+01 (ln 75): LoadField(0)
+02 (ln 75): Return
+03 (ln 75): End
+method() Code:
+00 (ln 76): Load(Local, 0)
+01 (ln 76): LoadField(0)
+02 (ln 76): Return
+03 (ln 76): End

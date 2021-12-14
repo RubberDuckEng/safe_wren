@@ -1,2 +1,13 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Code:
+00 (ln 1): ImportModule("./module")
+01 (ln 1): Pop
+02 (ln 1): ImportVariable("Module")
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+06 (ln 4): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 4): Call(print(_))
+08 (ln 4): Pop
+09 (ln 5): EndModule
+10 (ln 5): Return
+11 (ln 5): End

@@ -1,2 +1,28 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 2): Null
+01 (ln 5): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 6): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+03 (ln 6): Closure(1, [Upvalue { is_local_in_parent: true, index: 2 }])
+04 (ln 6): Call(new(_))
+05 (ln 6): Store(Local, 1)
+06 (ln 6): Pop
+07 (ln 7): CloseUpvalues
+08 (ln 12): Constant(2: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+09 (ln 13): Load(Local, 1)
+10 (ln 13): Call(call())
+11 (ln 13): Pop
+12 (ln 14): Pop
+13 (ln 15): Pop
+14 (ln 18): EndModule
+15 (ln 18): Return
+16 (ln 18): End
+new(_) block argument Code:
+00 (ln 6): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 6): Load(Upvalue, 0)
+02 (ln 6): Call(print(_))
+03 (ln 6): Return
+04 (ln 6): End

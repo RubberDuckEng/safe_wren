@@ -1,2 +1,91 @@
-thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1279:14
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+<script> Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+01: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+02: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+03: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+04: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+05: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+<script> Code:
+00 (ln 1): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 1): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+02 (ln 1): Class(1 fields)
+03 (ln 1): Store(Module)
+04 (ln 1): Pop
+05 (ln 2): Closure(1, [])
+06 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+07 (ln 2): Method(instance, init named())
+08 (ln 2): Closure(2, [])
+09 (ln 2): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+10 (ln 2): Method(static, named())
+11 (ln 3): Closure(3, [])
+12 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+13 (ln 3): Method(instance, init other())
+14 (ln 3): Closure(4, [])
+15 (ln 3): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+16 (ln 3): Method(static, other())
+17 (ln 5): Closure(5, [])
+18 (ln 5): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+19 (ln 5): Method(instance, toString)
+20 (ln 8): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+21 (ln 8): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+22 (ln 8): Call(named())
+23 (ln 8): Call(print(_))
+24 (ln 8): Pop
+25 (ln 9): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+26 (ln 9): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+27 (ln 9): Call(other())
+28 (ln 9): Call(print(_))
+29 (ln 9): Pop
+30 (ln 12): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+31 (ln 12): Call(named())
+32 (ln 12): Store(Module)
+33 (ln 12): Pop
+34 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+35 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+36 (ln 13): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+37 (ln 13): Call(is(_))
+38 (ln 13): Call(print(_))
+39 (ln 13): Pop
+40 (ln 14): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+41 (ln 14): Load(Module, HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+42 (ln 14): Call(toString)
+43 (ln 14): Call(print(_))
+44 (ln 14): Pop
+45 (ln 15): EndModule
+46 (ln 15): Return
+47 (ln 15): End
+init named() Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+init named() Code:
+00 (ln 2): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 2): Load(Local, 0)
+02 (ln 2): StoreField(0)
+03 (ln 2): Pop
+04 (ln 2): Load(Local, 0)
+05 (ln 2): Return
+06 (ln 2): End
+ Code:
+00 (ln 2): Construct
+01 (ln 2): Call(init named())
+02 (ln 2): Return
+03 (ln 2): End
+init other() Constants:
+00: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData }
+init other() Code:
+00 (ln 3): Constant(0: HeapHandle { ptr: Cell { value: TaggedPtr }, _phantom: PhantomData })
+01 (ln 3): Load(Local, 0)
+02 (ln 3): StoreField(0)
+03 (ln 3): Pop
+04 (ln 3): Load(Local, 0)
+05 (ln 3): Return
+06 (ln 3): End
+ Code:
+00 (ln 3): Construct
+01 (ln 3): Call(init other())
+02 (ln 3): Return
+03 (ln 3): End
+toString Code:
+00 (ln 5): Load(Local, 0)
+01 (ln 5): LoadField(0)
+02 (ln 5): Return
+03 (ln 5): End
