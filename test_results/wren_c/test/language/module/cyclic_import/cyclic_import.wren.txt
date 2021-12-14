@@ -1,21 +1,15 @@
 Unexpected output on stderr:
-String does not implement 'toString'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/module/cyclic_import/a line 2] in <script>
+[./test/language/module/cyclic_import/a line 5] in <script>
 Unexpected output on stderr:
 [./test/language/module/cyclic_import/cyclic_import line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/module/cyclic_import/a line 2] in <script>
+List metaclass does not implement 'new()'.
+[./test/language/module/cyclic_import/a line 5] in <script>
 [./test/language/module/cyclic_import/cyclic_import line 1] in <script>
 
-Missing expected output "start a" on line 4.
+Expected output "start a" on line 4 and got "instance of String".
 Missing expected output "a defined a value" on line 5.
 Missing expected output "start b" on line 6.
 Missing expected output "b defined b value" on line 7.

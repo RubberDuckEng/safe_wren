@@ -1,13 +1,11 @@
 Unexpected output on stderr:
-Num metaclass does not implement 'is(_)'.
+Fn metaclass does not implement 'new(_)'.
 Unexpected output on stderr:
-[./test/core/object/is line 1] in <script>
+[./test/core/object/is line 3] in <script>
 Expected return code 0 and got 70. Stderr:
-Num metaclass does not implement 'is(_)'.
-[./test/core/object/is line 1] in <script>
+Fn metaclass does not implement 'new(_)'.
+[./test/core/object/is line 3] in <script>
 
-Missing expected output "true" on line 1.
-Missing expected output "true" on line 2.
 Missing expected output "true" on line 3.
 Missing expected output "true" on line 4.
 Missing expected output "true" on line 5.

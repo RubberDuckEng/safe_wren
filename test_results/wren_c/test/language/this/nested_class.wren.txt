@@ -1,20 +1,13 @@
 Unexpected output on stderr:
-String does not implement 'is(_)'.
+Fn metaclass does not implement 'new(_)'.
 Unexpected output on stderr:
-[#core line 467] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/this/nested_class line 5] in method
+[./test/language/this/nested_class line 20] in method
 Unexpected output on stderr:
 [./test/language/this/nested_class line 26] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'is(_)'.
-[#core line 467] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/this/nested_class line 5] in method
+Fn metaclass does not implement 'new(_)'.
+[./test/language/this/nested_class line 20] in method
 [./test/language/this/nested_class line 26] in <script>
 
-Missing expected output "Outer" on line 5.
 Missing expected output "Outer" on line 8.
 Missing expected output "Inner" on line 14.

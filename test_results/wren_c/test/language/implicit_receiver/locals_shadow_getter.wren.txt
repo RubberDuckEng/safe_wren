@@ -1,21 +1,4 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/implicit_receiver/locals_shadow_getter line 7] in test
-Unexpected output on stderr:
-[./test/language/implicit_receiver/locals_shadow_getter line 19] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/implicit_receiver/locals_shadow_getter line 7] in test
-[./test/language/implicit_receiver/locals_shadow_getter line 19] in <script>
-
-Missing expected output "getter" on line 7.
-Missing expected output "getter" on line 10.
-Missing expected output "local" on line 12.
-Missing expected output "getter" on line 15.
+Expected output "getter" on line 7 and got "instance of String".
+Expected output "getter" on line 10 and got "instance of String".
+Expected output "local" on line 12 and got "instance of String".
+Expected output "getter" on line 15 and got "instance of String".

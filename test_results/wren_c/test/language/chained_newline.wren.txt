@@ -1,88 +1,65 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/chained_newline line 4] in test0()
-Unexpected output on stderr:
-[./test/language/chained_newline line 30] in init new()
-Unexpected output on stderr:
-[./test/language/chained_newline line 73] in 
-Unexpected output on stderr:
-[./test/language/chained_newline line 82] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/chained_newline line 4] in test0()
-[./test/language/chained_newline line 30] in init new()
-[./test/language/chained_newline line 73] in 
-[./test/language/chained_newline line 82] in <script>
-
-Missing expected output "test0" on line 30.
-Missing expected output "test1" on line 31.
-Missing expected output "test2" on line 32.
-Missing expected output "test0" on line 35.
-Missing expected output "test1" on line 36.
-Missing expected output "test2" on line 37.
-Missing expected output "test0" on line 40.
-Missing expected output "test1" on line 41.
-Missing expected output "test2" on line 42.
-Missing expected output "testSubscript" on line 44.
-Missing expected output "test0" on line 45.
-Missing expected output "testSubscript" on line 47.
-Missing expected output "test0" on line 48.
-Missing expected output "test0" on line 53.
-Missing expected output "test1" on line 54.
-Missing expected output "test2" on line 55.
-Missing expected output "test0" on line 58.
-Missing expected output "test1" on line 59.
-Missing expected output "test2" on line 60.
-Missing expected output "test0" on line 63.
-Missing expected output "test1" on line 64.
-Missing expected output "test2" on line 65.
-Missing expected output "testSubscript" on line 67.
-Missing expected output "test0" on line 68.
-Missing expected output "testSubscript" on line 70.
-Missing expected output "test0" on line 71.
-Missing expected output "test0" on line 85.
-Missing expected output "test1" on line 86.
-Missing expected output "test2" on line 87.
-Missing expected output "test0" on line 90.
-Missing expected output "test1" on line 91.
-Missing expected output "test2" on line 92.
-Missing expected output "test0" on line 95.
-Missing expected output "test1" on line 96.
-Missing expected output "test2" on line 97.
-Missing expected output "testSubscript" on line 99.
-Missing expected output "test0" on line 100.
-Missing expected output "testSubscript" on line 102.
-Missing expected output "test0" on line 103.
-Missing expected output "test0" on line 106.
-Missing expected output "test1" on line 107.
-Missing expected output "test2" on line 108.
-Missing expected output "test0" on line 111.
-Missing expected output "test1" on line 112.
-Missing expected output "test2" on line 113.
-Missing expected output "test0" on line 116.
-Missing expected output "test1" on line 117.
-Missing expected output "test2" on line 118.
-Missing expected output "testSubscript" on line 120.
-Missing expected output "test0" on line 121.
-Missing expected output "testSubscript" on line 123.
-Missing expected output "test0" on line 124.
-Missing expected output "test0" on line 132.
-Missing expected output "test1" on line 133.
-Missing expected output "test2" on line 134.
-Missing expected output "test0" on line 137.
-Missing expected output "test1" on line 138.
-Missing expected output "test2" on line 139.
-Missing expected output "test0" on line 142.
-Missing expected output "test1" on line 143.
-Missing expected output "test2" on line 144.
-Missing expected output "testSubscript" on line 147.
-Missing expected output "test0" on line 148.
-Missing expected output "testSubscript" on line 150.
-Missing expected output "test0" on line 151.
+Expected output "test0" on line 30 and got "instance of String".
+Expected output "test1" on line 31 and got "instance of String".
+Expected output "test2" on line 32 and got "instance of String".
+Expected output "test0" on line 35 and got "instance of String".
+Expected output "test1" on line 36 and got "instance of String".
+Expected output "test2" on line 37 and got "instance of String".
+Expected output "test0" on line 40 and got "instance of String".
+Expected output "test1" on line 41 and got "instance of String".
+Expected output "test2" on line 42 and got "instance of String".
+Expected output "testSubscript" on line 44 and got "instance of String".
+Expected output "test0" on line 45 and got "instance of String".
+Expected output "testSubscript" on line 47 and got "instance of String".
+Expected output "test0" on line 48 and got "instance of String".
+Expected output "test0" on line 53 and got "instance of String".
+Expected output "test1" on line 54 and got "instance of String".
+Expected output "test2" on line 55 and got "instance of String".
+Expected output "test0" on line 58 and got "instance of String".
+Expected output "test1" on line 59 and got "instance of String".
+Expected output "test2" on line 60 and got "instance of String".
+Expected output "test0" on line 63 and got "instance of String".
+Expected output "test1" on line 64 and got "instance of String".
+Expected output "test2" on line 65 and got "instance of String".
+Expected output "testSubscript" on line 67 and got "instance of String".
+Expected output "test0" on line 68 and got "instance of String".
+Expected output "testSubscript" on line 70 and got "instance of String".
+Expected output "test0" on line 71 and got "instance of String".
+Expected output "test0" on line 85 and got "instance of String".
+Expected output "test1" on line 86 and got "instance of String".
+Expected output "test2" on line 87 and got "instance of String".
+Expected output "test0" on line 90 and got "instance of String".
+Expected output "test1" on line 91 and got "instance of String".
+Expected output "test2" on line 92 and got "instance of String".
+Expected output "test0" on line 95 and got "instance of String".
+Expected output "test1" on line 96 and got "instance of String".
+Expected output "test2" on line 97 and got "instance of String".
+Expected output "testSubscript" on line 99 and got "instance of String".
+Expected output "test0" on line 100 and got "instance of String".
+Expected output "testSubscript" on line 102 and got "instance of String".
+Expected output "test0" on line 103 and got "instance of String".
+Expected output "test0" on line 106 and got "instance of String".
+Expected output "test1" on line 107 and got "instance of String".
+Expected output "test2" on line 108 and got "instance of String".
+Expected output "test0" on line 111 and got "instance of String".
+Expected output "test1" on line 112 and got "instance of String".
+Expected output "test2" on line 113 and got "instance of String".
+Expected output "test0" on line 116 and got "instance of String".
+Expected output "test1" on line 117 and got "instance of String".
+Expected output "test2" on line 118 and got "instance of String".
+Expected output "testSubscript" on line 120 and got "instance of String".
+Expected output "test0" on line 121 and got "instance of String".
+Expected output "testSubscript" on line 123 and got "instance of String".
+Expected output "test0" on line 124 and got "instance of String".
+Expected output "test0" on line 132 and got "instance of String".
+Expected output "test1" on line 133 and got "instance of String".
+Expected output "test2" on line 134 and got "instance of String".
+Expected output "test0" on line 137 and got "instance of String".
+Expected output "test1" on line 138 and got "instance of String".
+Expected output "test2" on line 139 and got "instance of String".
+Expected output "test0" on line 142 and got "instance of String".
+Expected output "test1" on line 143 and got "instance of String".
+Expected output "test2" on line 144 and got "instance of String".
+Expected output "testSubscript" on line 147 and got "instance of String".
+Expected output "test0" on line 148 and got "instance of String".
+Expected output "testSubscript" on line 150 and got "instance of String".
+Expected output "test0" on line 151 and got "instance of String".

@@ -1,15 +1,1 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/setter/result line 7] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/setter/result line 7] in <script>
-
-Missing expected output "result" on line 7.
+Expected output "result" on line 7 and got "instance of String".

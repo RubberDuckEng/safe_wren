@@ -1,18 +1,12 @@
 Unexpected output on stderr:
-String does not implement 'toString'.
+Fn metaclass does not implement 'new(_)'.
 Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/nonlocal/assignment line 2] in <script>
+[./test/language/nonlocal/assignment line 17] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/nonlocal/assignment line 2] in <script>
+Fn metaclass does not implement 'new(_)'.
+[./test/language/nonlocal/assignment line 17] in <script>
 
-Missing expected output "before" on line 2.
-Missing expected output "after" on line 4.
-Missing expected output "method" on line 13.
+Expected output "before" on line 2 and got "instance of String".
+Expected output "after" on line 4 and got "instance of String".
+Expected output "method" on line 13 and got "instance of String".
 Missing expected output "fn" on line 18.

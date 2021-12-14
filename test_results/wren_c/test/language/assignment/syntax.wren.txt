@@ -1,18 +1,4 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/assignment/syntax line 5] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/assignment/syntax line 5] in <script>
-
-Missing expected output "chain" on line 5.
-Missing expected output "chain" on line 6.
-Missing expected output "var" on line 10.
-Missing expected output "var" on line 11.
+Expected output "chain" on line 5 and got "instance of String".
+Expected output "chain" on line 6 and got "instance of String".
+Expected output "var" on line 10 and got "instance of String".
+Expected output "var" on line 11 and got "instance of String".

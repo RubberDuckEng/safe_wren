@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-StringByteSequence does not implement 'is(_)'.
-Unexpected output on stderr:
-[./test/core/string/bytes line 6] in <script>
-Expected return code 0 and got 70. Stderr:
-StringByteSequence does not implement 'is(_)'.
-[./test/core/string/bytes line 6] in <script>
-
-Missing expected output "true" on line 6.

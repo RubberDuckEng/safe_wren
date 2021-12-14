@@ -1,16 +1,2 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/variable/many_nonsimultaneous_locals line 262] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/variable/many_nonsimultaneous_locals line 262] in <script>
-
-Missing expected output "value a" on line 262.
-Missing expected output "value b" on line 522.
+Expected output "value a" on line 262 and got "instance of String".
+Expected output "value b" on line 522 and got "instance of String".

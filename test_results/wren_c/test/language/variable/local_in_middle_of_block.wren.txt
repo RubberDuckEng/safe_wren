@@ -1,21 +1,15 @@
 Unexpected output on stderr:
-String does not implement 'toString'.
+String does not implement '+(_)'.
 Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/variable/local_in_middle_of_block line 6] in bar
+[./test/language/variable/local_in_middle_of_block line 7] in bar
 Unexpected output on stderr:
 [./test/language/variable/local_in_middle_of_block line 16] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/variable/local_in_middle_of_block line 6] in bar
+String does not implement '+(_)'.
+[./test/language/variable/local_in_middle_of_block line 7] in bar
 [./test/language/variable/local_in_middle_of_block line 16] in <script>
 
-Missing expected output "a" on line 6.
+Expected output "a" on line 6 and got "instance of String".
 Missing expected output "a b" on line 8.
 Missing expected output "a c" on line 10.
 Missing expected output "a b d" on line 12.

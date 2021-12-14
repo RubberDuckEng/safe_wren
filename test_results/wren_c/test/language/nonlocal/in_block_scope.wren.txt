@@ -1,16 +1,2 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/nonlocal/in_block_scope line 5] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/nonlocal/in_block_scope line 5] in <script>
-
-Missing expected output "inner" on line 5.
-Missing expected output "outer" on line 8.
+Expected output "inner" on line 5 and got "instance of String".
+Expected output "outer" on line 8 and got "instance of String".

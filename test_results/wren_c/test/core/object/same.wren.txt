@@ -1,18 +1,12 @@
 Unexpected output on stderr:
-thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', src\vm.rs:3359:30
+String does not implement '+(_)'.
 Unexpected output on stderr:
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-Expected return code 0 and got 101. Stderr:
-thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', src\vm.rs:3359:30
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[./test/core/object/same line 13] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement '+(_)'.
+[./test/core/object/same line 13] in <script>
 
-Missing expected output "true" on line 2.
-Missing expected output "false" on line 3.
-Missing expected output "true" on line 5.
-Missing expected output "true" on line 7.
-Missing expected output "false" on line 8.
-Missing expected output "true" on line 10.
-Missing expected output "false" on line 11.
+Expected output "true" on line 10 and got "false".
 Missing expected output "true" on line 13.
 Missing expected output "false" on line 14.
 Missing expected output "false" on line 17.

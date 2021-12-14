@@ -1,16 +1,14 @@
 Unexpected output on stderr:
-Num does not implement 'is(_)'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[#core line 60] in skip(_)
+[#core line 113] in toList
 Unexpected output on stderr:
-[./test/core/sequence/skip line 13] in <script>
+[./test/core/sequence/skip line 19] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement 'is(_)'.
-[#core line 60] in skip(_)
-[./test/core/sequence/skip line 13] in <script>
+List metaclass does not implement 'new()'.
+[#core line 113] in toList
+[./test/core/sequence/skip line 19] in <script>
 
-Missing expected output "true" on line 15.
-Missing expected output "instance of SkipSequence" on line 16.
 Missing expected output "[1, 2, 3]" on line 19.
 Missing expected output "[2, 3]" on line 22.
 Missing expected output "true" on line 25.

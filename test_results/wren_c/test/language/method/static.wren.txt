@@ -1,18 +1,15 @@
 Unexpected output on stderr:
-String does not implement 'toString'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
+[./test/language/method/static line 6] in bar(_)
 Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/method/static line 10] in <script>
+[./test/language/method/static line 12] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/method/static line 10] in <script>
+List metaclass does not implement 'new()'.
+[./test/language/method/static line 6] in bar(_)
+[./test/language/method/static line 12] in <script>
 
-Missing expected output "on instance" on line 10.
-Missing expected output "on metaclass" on line 11.
+Expected output "on instance" on line 10 and got "instance of String".
+Expected output "on metaclass" on line 11 and got "instance of String".
 Missing expected output "on instance arg" on line 12.
 Missing expected output "on metaclass arg" on line 13.

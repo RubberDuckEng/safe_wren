@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Null does not implement '==(_)'.
-Unexpected output on stderr:
-[./test/language/nonlocal/nonlocal_in_initializer line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Null does not implement '==(_)'.
-[./test/language/nonlocal/nonlocal_in_initializer line 1] in <script>
-
-Missing expected output "true" on line 2.

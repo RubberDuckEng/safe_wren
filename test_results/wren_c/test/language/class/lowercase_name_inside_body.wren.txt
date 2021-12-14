@@ -1,19 +1,2 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/class/lowercase_name_inside_body line 5] in callFoo
-Unexpected output on stderr:
-[./test/language/class/lowercase_name_inside_body line 16] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/class/lowercase_name_inside_body line 5] in callFoo
-[./test/language/class/lowercase_name_inside_body line 16] in <script>
-
-Missing expected output "static foo method" on line 16.
-Missing expected output "instance foo method" on line 17.
+Expected output "static foo method" on line 16 and got "instance of String".
+Expected output "instance foo method" on line 17 and got "instance of String".

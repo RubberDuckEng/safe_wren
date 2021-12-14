@@ -1,19 +1,2 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/super/call_same_method line 11] in foo
-Unexpected output on stderr:
-[./test/language/super/call_same_method line 16] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/super/call_same_method line 11] in foo
-[./test/language/super/call_same_method line 16] in <script>
-
-Missing expected output "Derived.foo" on line 17.
-Missing expected output "Base.foo" on line 18.
+Expected output "Derived.foo" on line 17 and got "instance of String".
+Expected output "Base.foo" on line 18 and got "instance of String".

@@ -1,29 +1,9 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/implicit_receiver/nested_class line 5] in getter
-Unexpected output on stderr:
-[./test/language/implicit_receiver/nested_class line 17] in test
-Unexpected output on stderr:
-[./test/language/implicit_receiver/nested_class line 51] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/implicit_receiver/nested_class line 5] in getter
-[./test/language/implicit_receiver/nested_class line 17] in test
-[./test/language/implicit_receiver/nested_class line 51] in <script>
-
-Missing expected output "outer getter" on line 17.
-Missing expected output "outer setter" on line 18.
-Missing expected output "outer method" on line 19.
-Missing expected output "inner getter" on line 37.
-Missing expected output "inner setter" on line 38.
-Missing expected output "inner method" on line 39.
-Missing expected output "outer getter" on line 45.
-Missing expected output "outer setter" on line 46.
-Missing expected output "outer method" on line 47.
+Expected output "outer getter" on line 17 and got "instance of String".
+Expected output "outer setter" on line 18 and got "instance of String".
+Expected output "outer method" on line 19 and got "instance of String".
+Expected output "inner getter" on line 37 and got "instance of String".
+Expected output "inner setter" on line 38 and got "instance of String".
+Expected output "inner method" on line 39 and got "instance of String".
+Expected output "outer getter" on line 45 and got "instance of String".
+Expected output "outer setter" on line 46 and got "instance of String".
+Expected output "outer method" on line 47 and got "instance of String".

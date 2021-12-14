@@ -1,16 +1,17 @@
 Unexpected output on stderr:
-Num does not implement 'is(_)'.
+Null does not implement '+(_)'.
 Unexpected output on stderr:
-[#core line 68] in take(_)
+[#core line 161] in iterate(_)
 Unexpected output on stderr:
-[./test/core/sequence/take line 13] in <script>
+[#core line 55] in isEmpty
+Unexpected output on stderr:
+[./test/core/sequence/take line 19] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement 'is(_)'.
-[#core line 68] in take(_)
-[./test/core/sequence/take line 13] in <script>
+Null does not implement '+(_)'.
+[#core line 161] in iterate(_)
+[#core line 55] in isEmpty
+[./test/core/sequence/take line 19] in <script>
 
-Missing expected output "true" on line 15.
-Missing expected output "instance of TakeSequence" on line 16.
 Missing expected output "true" on line 19.
 Missing expected output "[1]" on line 22.
 Missing expected output "[1, 2, 3]" on line 25.

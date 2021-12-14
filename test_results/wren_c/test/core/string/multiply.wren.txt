@@ -1,12 +1,12 @@
 Unexpected output on stderr:
-Num does not implement 'is(_)'.
+Range does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[#core line 282] in *(_)
+[#core line 287] in *(_)
 Unexpected output on stderr:
 [./test/core/string/multiply line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement 'is(_)'.
-[#core line 282] in *(_)
+Range does not implement 'iterate(_)'.
+[#core line 287] in *(_)
 [./test/core/string/multiply line 1] in <script>
 
 Missing expected output "||" on line 1.

@@ -28,9 +28,12 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // fn unwrap_this_as_list(args: &[Value]) -> Handle<ObjList> {
 //     args[0].try_into_list().unwrap()
 // }
-// fn unwrap_this_as_class(args: &[Value]) -> Handle<ObjClass> {
-//     args[0].try_into_class().unwrap()
-// }
+fn unwrap_this_as_class<'a>(
+    scope: &'a HandleScope,
+    args: &[HeapHandle<()>],
+) -> LocalHandle<'a, ObjClass> {
+    scope.from_heap(&args[0]).try_downcast().unwrap()
+}
 // fn unwrap_this_as_fiber(args: &[Value]) -> Handle<ObjFiber> {
 //     args[0].try_into_fiber().unwrap()
 // }
@@ -341,69 +344,104 @@ fn num_to_string<'a>(
     Ok(scope.take(string)?.erase_type())
 }
 
-// fn class_name<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_class(&args);
-//     let string = this.borrow().name.clone();
-//     Ok(Value::from_string(string))
-// }
+fn class_name<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_class(scope, &args);
+    let string = this.borrow().name.clone();
+    Ok(scope.take(string)?.erase_type())
+}
 
-// fn class_supertype<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_class(&args);
-//     let maybe_superclass = &this.borrow().superclass;
-//     match maybe_superclass {
-//         None => Ok(Value::Null),
-//         Some(superclass) => Ok(Value::Class(superclass.clone())),
-//     }
-// }
+fn class_supertype<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_class(scope, &args);
+    let maybe_superclass = &this.borrow().superclass;
+    match maybe_superclass {
+        None => Ok(scope.create_null()),
+        Some(superclass) => Ok(scope.from_heap(superclass).erase_type()),
+    }
+}
 
-// fn class_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_class(&args);
-//     let string = this.borrow().name.clone();
-//     Ok(Value::from_string(string))
-// }
+fn class_to_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_class(scope, &args);
+    let string = this.borrow().name.clone();
+    Ok(scope.take(string)?.erase_type())
+}
 
-// fn object_eqeq<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(Value::Boolean(args[0].eq(&args[1])))
-// }
+fn object_eqeq<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.create_bool(args[0].eq(&args[1])).erase_type())
+}
 
-// // Note this is a static method, comparing two passed args.
-// fn object_same<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(Value::Boolean(args[1].eq(&args[2])))
-// }
+// Note this is a static method, comparing two passed args.
+fn object_same<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.create_bool(args[1].eq(&args[2])).erase_type())
+}
 
-// fn object_bangeq<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(Value::Boolean(args[0].ne(&args[1])))
-// }
+fn object_bangeq<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.create_bool(args[0].ne(&args[1])).erase_type())
+}
 
-// fn object_is<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let expected_baseclass = args[1]
-//         .try_into_class()
-//         .ok_or_else(|| VMError::from_str("Right operand must be a class."))?;
-//     // Start the class walk from class of "this".
-//     let mut class = vm.class_for_value(&args[0]);
-//     // Should this just be an iterator?
-//     // e.g. for class in object.class_chain()
+fn object_is<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let expected_baseclass: LocalHandle<ObjClass> = scope
+        .from_heap(&args[1])
+        .try_downcast()
+        .ok_or_else(|| VMError::from_str("Right operand must be a class."))?;
+    // Start the class walk from class of "this".
+    let mut class = vm.class_for_value(scope, &args[0]);
+    // Should this just be an iterator?
+    // e.g. for class in object.class_chain()
 
-//     loop {
-//         if *expected_baseclass.borrow().name == *class.borrow().name {
-//             return Ok(Value::Boolean(true));
-//         }
-//         let superclass = match &class.borrow().superclass {
-//             Some(superclass) => superclass.clone(),
-//             None => {
-//                 return Ok(Value::Boolean(false));
-//             }
-//         };
-//         class = superclass;
-//     }
-// }
+    loop {
+        if *expected_baseclass.borrow().name == *class.borrow().name {
+            return Ok(scope.create_bool(true).erase_type());
+        }
+        let superclass = match &class.borrow().superclass {
+            Some(superclass) => scope.from_heap(superclass),
+            None => {
+                return Ok(scope.create_bool(false).erase_type());
+            }
+        };
+        class = superclass;
+    }
+}
 
-// fn object_to_string<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(Value::from_string(format!(
-//         "instance of {}",
-//         vm.class_for_value(&args[0]).borrow().name
-//     )))
-// }
+fn object_to_string<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope
+        .take(format!(
+            "instance of {}",
+            vm.class_for_value(scope, &args[0]).borrow().name
+        ))?
+        .erase_type())
+}
 
 // macro_rules! range_getter {
 //     ($func:ident, $method:ident, $return_type:ident) => {
@@ -438,7 +476,7 @@ fn num_to_string<'a>(
 
 //     // Special case: empty range.
 //     if range.from == range.to && !range.is_inclusive {
-//         return Ok(Value::Boolean(false)); // No more elements.
+//         return Ok(scope.create_bool(false)); // No more elements.
 //     }
 //     // Start the iteration.
 //     if args[1].is_null() {
@@ -451,17 +489,17 @@ fn num_to_string<'a>(
 //     if range.from < range.to {
 //         iterator += 1.0;
 //         if iterator > range.to {
-//             return Ok(Value::Boolean(false));
+//             return Ok(scope.create_bool(false));
 //         }
 //     } else {
 //         iterator -= 1.0;
 //         if iterator < range.to {
-//             return Ok(Value::Boolean(false));
+//             return Ok(scope.create_bool(false));
 //         }
 //     }
 
 //     if !range.is_inclusive && iterator == range.to {
-//         return Ok(Value::Boolean(false));
+//         return Ok(scope.create_bool(false));
 //     }
 
 //     Ok(Value::Num(iterator))
@@ -481,16 +519,24 @@ fn num_to_string<'a>(
 //     let from = wren_num_to_string(range.from);
 //     let to = wren_num_to_string(range.to);
 //     let op = if range.is_inclusive { ".." } else { "..." };
-//     Ok(Value::from_string(format!("{}{}{}", from, op, to)))
+//     Ok(scope.take(format!("{}{}{}", from, op, to)))
 // }
 
-// fn object_type<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(Value::Class(vm.class_for_value(&args[0])))
-// }
+fn object_type<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(vm.class_for_value(scope, &args[0]).erase_type())
+}
 
-// fn object_not(_vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(Value::Boolean(false))
-// }
+fn object_not<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.create_bool(false).erase_type())
+}
 
 fn bool_not<'a>(
     scope: &'a HandleScope,
@@ -533,7 +579,7 @@ fn bool_to_string<'a>(
 //     } else {
 //         // I guess Fiber.abort(null) clears the error?
 //         // wren_c: If the error is explicitly null, it's not really an abort.
-//         Ok(Value::Boolean(args[1].is_null()))
+//         Ok(scope.create_bool(args[1].is_null()))
 //     }
 // }
 
@@ -607,7 +653,7 @@ fn bool_to_string<'a>(
 //     // We can't get a refernce to the (possibly currently running) stack
 //     // to check if empty, so use the completed_normally_cache.
 //     let is_done = this.has_error() || this.completed_normally_cache;
-//     Ok(Value::Boolean(is_done))
+//     Ok(scope.create_bool(is_done))
 // }
 
 // // Prepare to transfer execution to [fiber] coming from the current fiber.
@@ -646,7 +692,7 @@ fn bool_to_string<'a>(
 // }
 
 // fn null_not(_vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(Value::Boolean(true))
+//     Ok(scope.create_bool(true))
 // }
 
 // fn null_to_string(_vm: &VM, _args: &[Value]) -> Result<Value> {
@@ -669,7 +715,7 @@ fn bool_to_string<'a>(
 //     } else {
 //         let c = char::from_u32(num as u32)
 //             .ok_or_else(|| VMError::from_str("Code point must be valid unicode"))?;
-//         Ok(Value::from_string(c.to_string()))
+//         Ok(scope.take(c.to_string()))
 //     }
 // }
 
@@ -683,14 +729,14 @@ fn bool_to_string<'a>(
 //         let bytes = vec![num as u8];
 //         let string =
 //             String::from_utf8(bytes).map_err(|_| VMError::from_str("Byte must be valid utf8"))?;
-//         Ok(Value::from_string(string))
+//         Ok(scope.take(string))
 //     }
 // }
 
 // fn string_plus<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let a = unwrap_this_as_string(&args);
 //     let b = validate_string(&args[1], "Right operand")?;
-//     Ok(Value::from_string(a + &b))
+//     Ok(scope.take(a + &b))
 // }
 
 // fn adjust_range_to_char_boundaries(
@@ -727,7 +773,7 @@ fn bool_to_string<'a>(
 //             let slice = &string[safe_range];
 //             // This doesn't match the wren_c backwards range behavaior.
 //             if range.reverse {
-//                 Ok(Value::from_string(slice.chars().rev().collect()))
+//                 Ok(scope.take(slice.chars().rev().collect()))
 //             } else {
 //                 Ok(Value::from_str(slice))
 //             }
@@ -767,12 +813,12 @@ fn bool_to_string<'a>(
 // fn string_contains<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
-//     Ok(Value::Boolean(this.contains(&search)))
+//     Ok(scope.create_bool(this.contains(&search)))
 // }
 // fn string_ends_with<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
-//     Ok(Value::Boolean(this.ends_with(&search)))
+//     Ok(scope.create_bool(this.ends_with(&search)))
 // }
 
 // fn index_or_neg_one(maybe_index: Option<usize>) -> Value {
@@ -813,7 +859,7 @@ fn bool_to_string<'a>(
 //     // If we're starting the iteration, return the first index.
 //     if args[1].is_null() {
 //         return Ok(if string.is_empty() {
-//             Value::Boolean(false)
+//             scope.create_bool(false)
 //         } else {
 //             Value::Num(0.0)
 //         });
@@ -821,7 +867,7 @@ fn bool_to_string<'a>(
 
 //     let num = validate_int(&args[1], "Iterator")?;
 //     if num < 0.0 {
-//         return Ok(Value::Boolean(false));
+//         return Ok(scope.create_bool(false));
 //     }
 //     let mut index = num as usize;
 
@@ -829,7 +875,7 @@ fn bool_to_string<'a>(
 //     loop {
 //         index += 1;
 //         if index >= string.len() {
-//             return Ok(Value::Boolean(false));
+//             return Ok(scope.create_bool(false));
 //         }
 //         if string.is_char_boundary(index) {
 //             return Ok(Value::from_usize(index));
@@ -843,7 +889,7 @@ fn bool_to_string<'a>(
 //     // If we're starting the iteration, return the first index.
 //     if args[1].is_null() {
 //         return Ok(if string.is_empty() {
-//             Value::Boolean(false)
+//             scope.create_bool(false)
 //         } else {
 //             Value::Num(0.0)
 //         });
@@ -851,13 +897,13 @@ fn bool_to_string<'a>(
 
 //     let num = validate_int(&args[1], "Iterator")?;
 //     if num < 0.0 {
-//         return Ok(Value::Boolean(false));
+//         return Ok(scope.create_bool(false));
 //     }
 
 //     // Advance to the next byte.
 //     let index = num as usize + 1;
 //     Ok(if index >= string.len() {
-//         Value::Boolean(false)
+//         scope.create_bool(false)
 //     } else {
 //         Value::from_usize(index)
 //     })
@@ -876,7 +922,7 @@ fn bool_to_string<'a>(
 //                 continue;
 //             }
 //         }
-//         return Value::from_string(previous.to_string());
+//         return scope.take(previous.to_string());
 //     }
 // }
 
@@ -890,7 +936,7 @@ fn bool_to_string<'a>(
 // fn string_starts_with<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
-//     Ok(Value::Boolean(this.starts_with(&search)))
+//     Ok(scope.create_bool(this.starts_with(&search)))
 // }
 
 // fn validate_fn(arg: &Value, arg_name: &str) -> Result<Handle<ObjClosure>> {
@@ -983,7 +1029,7 @@ fn bool_to_string<'a>(
 //     validate_key(vm, key)?;
 //     let map = unwrap_this_as_map(&args);
 //     let result = map.borrow().contains_key(key);
-//     Ok(Value::Boolean(result))
+//     Ok(scope.create_bool(result))
 // }
 
 // fn map_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
@@ -1008,13 +1054,13 @@ fn bool_to_string<'a>(
 // fn map_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map = unwrap_this_as_map(&args);
 //     if map.borrow().data.is_empty() {
-//         return Ok(Value::Boolean(false));
+//         return Ok(scope.create_bool(false));
 //     }
 
 //     if !args[1].is_null() {
 //         let value = validate_int(&args[1], "Iterator")?;
 //         if value < 0.0 {
-//             return Ok(Value::Boolean(false));
+//             return Ok(scope.create_bool(false));
 //         }
 
 //         // Advance the iterator.
@@ -1022,7 +1068,7 @@ fn bool_to_string<'a>(
 //         if index < map.borrow().len() {
 //             Ok(Value::from_usize(index))
 //         } else {
-//             Ok(Value::Boolean(false))
+//             Ok(scope.create_bool(false))
 //         }
 //     } else {
 //         Ok(Value::from_usize(0))
@@ -1244,7 +1290,7 @@ fn bool_to_string<'a>(
 
 //     if args[1].is_null() {
 //         if elements_len == 0.0 {
-//             return Ok(Value::Boolean(false));
+//             return Ok(scope.create_bool(false));
 //         }
 //         return Ok(Value::Num(0.0));
 //     }
@@ -1252,7 +1298,7 @@ fn bool_to_string<'a>(
 //     let index = validate_int(&args[1], "Iterator")?;
 //     // Stop if we're out of bounds.
 //     if index < 0.0 || index >= elements_len - 1.0 {
-//         return Ok(Value::Boolean(false));
+//         return Ok(scope.create_bool(false));
 //     }
 //     // Otherwise, move to the next index.
 //     Ok(Value::Num(index + 1.0))
@@ -1302,54 +1348,65 @@ fn bool_to_string<'a>(
 //     Ok(Value::from_usize(count))
 // }
 
-// // Modeled after https://github.com/saghm/unescape-rs
-// fn unescape(s: &str) -> String {
-//     let mut queue: VecDeque<_> = String::from(s).chars().collect();
-//     let mut s = String::new();
+// Modeled after https://github.com/saghm/unescape-rs
+fn unescape(s: &str) -> String {
+    let mut queue: VecDeque<_> = String::from(s).chars().collect();
+    let mut s = String::new();
 
-//     while let Some(c) = queue.pop_front() {
-//         if c != '\\' {
-//             s.push(c);
-//             continue;
-//         }
+    while let Some(c) = queue.pop_front() {
+        if c != '\\' {
+            s.push(c);
+            continue;
+        }
 
-//         match queue.pop_front() {
-//             Some('n') => s.push('\n'),
-//             // Wren seems to intentionally handle \0 as a string terminator?
-//             Some('0') => return s,
-//             // Handle other escapes here if necessary.
-//             Some(c) => {
-//                 s.push('\\');
-//                 s.push(c);
-//             }
-//             None => {
-//                 s.push('\\');
-//                 return s;
-//             }
-//         };
-//     }
-//     s
+        match queue.pop_front() {
+            Some('n') => s.push('\n'),
+            // Wren seems to intentionally handle \0 as a string terminator?
+            Some('0') => return s,
+            // Handle other escapes here if necessary.
+            Some(c) => {
+                s.push('\\');
+                s.push(c);
+            }
+            None => {
+                s.push('\\');
+                return s;
+            }
+        };
+    }
+    s
+}
+
+fn system_clock<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let now = std::time::Instant::now();
+    Ok(scope
+        .create_num(now.duration_since(vm.start_time).as_secs_f64())
+        .erase_type())
+}
+
+// fn system_gc(_vm: &VM, _args: &[Value]) -> Result<Value> {
+//     Ok(Value::Null)
 // }
 
-// fn system_clock(vm: &VM, _args: &[Value]) -> Result<Value> {
-//     let now = std::time::Instant::now();
-//     Ok(Value::Num(now.duration_since(vm.start_time).as_secs_f64()))
-// }
-
-// // fn system_gc(_vm: &VM, _args: &[Value]) -> Result<Value> {
-// //     Ok(Value::Null)
-// // }
-
-// fn system_write_string<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let string = args[1]
-//         .try_into_string()
-//         .ok_or_else(|| VMError::from_str("expected String"))?;
-//     let result = unescape(&string);
-//     if let Some(write_fn) = vm.config.write_fn {
-//         write_fn(vm, &result);
-//     }
-//     Ok(args[1].clone())
-// }
+fn system_write_string<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let string: LocalHandle<String> = scope
+        .from_heap(&args[1])
+        .try_downcast()
+        .ok_or_else(|| VMError::from_str("expected String"))?;
+    let result = unescape(string.borrow());
+    if let Some(write_fn) = vm.config.write_fn {
+        write_fn(vm, &result);
+    }
+    Ok(scope.from_heap(&args[1]))
+}
 
 macro_rules! primitive {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
@@ -1380,16 +1437,16 @@ macro_rules! primitive {
 //     };
 // }
 
-// macro_rules! primitive_static {
-//     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
-//         let symbol = $vm.methods.ensure_symbol($sig);
-//         $class
-//             .borrow_mut()
-//             .class_obj()
-//             .borrow_mut()
-//             .set_method(symbol, Method::ValuePrimitive($func));
-//     };
-// }
+macro_rules! primitive_static {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        let symbol = $vm.methods.ensure_symbol($sig);
+        $class
+            .borrow_mut()
+            .class_obj()
+            .borrow_mut()
+            .set_method(symbol, Method::ValuePrimitive($func));
+    };
+}
 
 pub(crate) fn init_base_classes(scope: &HandleScope, vm: &mut VM, core_module: &mut Module) {
     // wren_c makes a core module, which it then imports
@@ -1400,30 +1457,30 @@ pub(crate) fn init_base_classes(scope: &HandleScope, vm: &mut VM, core_module: &
     // Define the root Object class. This has to be done a little specially
     // because it has no superclass.
     let object = define_class(scope, core_module, "Object");
-    // primitive!(vm, object, "!", object_not);
-    // primitive!(vm, object, "==(_)", object_eqeq);
-    // primitive!(vm, object, "!=(_)", object_bangeq);
-    // primitive!(vm, object, "is(_)", object_is);
-    // primitive!(vm, object, "toString", object_to_string);
-    // primitive!(vm, object, "type", object_type);
+    primitive!(vm, object, "!", object_not);
+    primitive!(vm, object, "==(_)", object_eqeq);
+    primitive!(vm, object, "!=(_)", object_bangeq);
+    primitive!(vm, object, "is(_)", object_is);
+    primitive!(vm, object, "toString", object_to_string);
+    primitive!(vm, object, "type", object_type);
 
     // Now we can define Class, which is a subclass of Object.
     let class = define_class(scope, core_module, "Class");
-    class.borrow_mut().bind_superclass(object);
-    // primitive!(vm, class, "name", class_name);
-    // primitive!(vm, class, "supertype", class_supertype);
-    // primitive!(vm, class, "toString", class_to_string);
-    // // primitive!(vm, class, "attributes", class_attributes);
+    class.borrow_mut().bind_superclass(object.clone());
+    primitive!(vm, class, "name", class_name);
+    primitive!(vm, class, "supertype", class_supertype);
+    primitive!(vm, class, "toString", class_to_string);
+    // primitive!(vm, class, "attributes", class_attributes);
 
-    // // Finally, we can define Object's metaclass which is a subclass of Class.
-    // let object_metaclass = define_class(core_module, "Object metaclass");
-    // // Wire up the metaclass relationships now that all three classes are built.
-    // object.borrow_mut().class = Some(object_metaclass.clone());
-    // object_metaclass.borrow_mut().class = Some(class.clone());
-    // class.borrow_mut().class = Some(class.clone());
-    // object_metaclass.borrow_mut().bind_superclass(&class);
+    // Finally, we can define Object's metaclass which is a subclass of Class.
+    let object_metaclass = define_class(scope, core_module, "Object metaclass");
+    // Wire up the metaclass relationships now that all three classes are built.
+    object.borrow_mut().class = Some(object_metaclass.clone().into());
+    object_metaclass.borrow_mut().class = Some(class.clone().into());
+    class.borrow_mut().class = Some(class.clone().into());
+    object_metaclass.borrow_mut().bind_superclass(class);
 
-    // primitive_static!(vm, object, "same(_,_)", object_same);
+    primitive_static!(vm, object, "same(_,_)", object_same);
 
     // The core class diagram ends up looking like this, where single lines point
     // to a class's superclass, and double lines point to its metaclass:
@@ -1655,10 +1712,10 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     // primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
     // primitive!(vm, core.range, "toString", range_to_string);
 
-    // let system = module.expect_class("System");
-    // primitive_static!(vm, system, "clock", system_clock);
-    // // primitive_static!(vm, system, "gc()", system_gc);
-    // primitive_static!(vm, system, "writeString_(_)", system_write_string);
+    let system = module.expect_class(scope, "System");
+    primitive_static!(vm, system, "clock", system_clock);
+    // primitive_static!(vm, system, "gc()", system_gc);
+    primitive_static!(vm, system, "writeString_(_)", system_write_string);
 
     vm.core = Some(GlobalHandle::from(scope.take(core).unwrap()));
 

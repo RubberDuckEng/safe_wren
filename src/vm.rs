@@ -1920,8 +1920,10 @@ impl VM {
     pub(crate) fn class_for_value<'a>(
         &self,
         scope: &'a HandleScope,
-        value: LocalHandle<()>,
+        value_heap: &HeapHandle<()>,
     ) -> LocalHandle<'a, ObjClass> {
+        // try_as_ref doesn't exist on HeapHandle, so we use a LocalHandle.
+        let value = scope.from_heap(value_heap);
         let core = scope.as_ref(self.core.as_ref().unwrap());
         if value.is_null() {
             scope.from_heap(&core.null)
@@ -2402,10 +2404,8 @@ impl VM {
                     // +1 for implicit arg for 'this'.
                     let num_args = arity.as_index() + 1;
                     let this_offset = fiber.stack.borrow().len() - num_args;
-                    let this_class = self.class_for_value(
-                        &scope,
-                        scope.from_heap(&fiber.stack.borrow()[this_offset]),
-                    );
+                    let this_class =
+                        self.class_for_value(&scope, &fiber.stack.borrow()[this_offset]);
                     let action = self.call_method(
                         &scope,
                         fiber,

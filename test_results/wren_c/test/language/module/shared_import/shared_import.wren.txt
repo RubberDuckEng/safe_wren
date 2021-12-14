@@ -1,22 +1,16 @@
 Unexpected output on stderr:
-String does not implement 'toString'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/module/shared_import/a line 2] in <script>
+[./test/language/module/shared_import/a line 4] in <script>
 Unexpected output on stderr:
 [./test/language/module/shared_import/shared_import line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/module/shared_import/a line 2] in <script>
+List metaclass does not implement 'new()'.
+[./test/language/module/shared_import/a line 4] in <script>
 [./test/language/module/shared_import/shared_import line 1] in <script>
 
-Missing expected output "a" on line 5.
-Missing expected output "shared" on line 6.
+Expected output "a" on line 5 and got "instance of String".
+Expected output "shared" on line 6 and got "instance of String".
 Missing expected output "a done" on line 7.
 Missing expected output "b" on line 8.
 Missing expected output "b done" on line 9.

@@ -1,14 +1,17 @@
 Unexpected output on stderr:
-String does not implement 'is(_)'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[#core line 247] in trim_(_,_,_)
+[#core line 113] in toList
+Unexpected output on stderr:
+[#core line 251] in trim_(_,_,_)
 Unexpected output on stderr:
 [#core line 243] in trimStart()
 Unexpected output on stderr:
 [./test/core/string/trim_start line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-String does not implement 'is(_)'.
-[#core line 247] in trim_(_,_,_)
+List metaclass does not implement 'new()'.
+[#core line 113] in toList
+[#core line 251] in trim_(_,_,_)
 [#core line 243] in trimStart()
 [./test/core/string/trim_start line 1] in <script>
 

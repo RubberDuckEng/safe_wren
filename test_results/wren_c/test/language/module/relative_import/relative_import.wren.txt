@@ -1,23 +1,6 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/module/relative_import/sub/module line 2] in <script>
-Unexpected output on stderr:
-[./test/language/module/relative_import/relative_import line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/module/relative_import/sub/module line 2] in <script>
-[./test/language/module/relative_import/relative_import line 1] in <script>
-
-Missing expected output "sub/module" on line 3.
-Missing expected output "sub/module_2" on line 4.
-Missing expected output "sub/dir/module" on line 5.
-Missing expected output "sub/dir/module_2" on line 6.
-Missing expected output "sub/module_3" on line 7.
-Missing expected output "module_3" on line 8.
+Expected output "sub/module" on line 3 and got "instance of String".
+Expected output "sub/module_2" on line 4 and got "instance of String".
+Expected output "sub/dir/module" on line 5 and got "instance of String".
+Expected output "sub/dir/module_2" on line 6 and got "instance of String".
+Expected output "sub/module_3" on line 7 and got "instance of String".
+Expected output "module_3" on line 8 and got "instance of String".

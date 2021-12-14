@@ -1,16 +1,2 @@
-Unexpected output on stderr:
-Null does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/nonlocal/null_before_defined line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Null does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/nonlocal/null_before_defined line 1] in <script>
-
-Missing expected output "null" on line 1.
-Missing expected output "value" on line 3.
+Expected output "null" on line 1 and got "instance of Null".
+Expected output "value" on line 3 and got "instance of String".

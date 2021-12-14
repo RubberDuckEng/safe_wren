@@ -1,18 +1,4 @@
-Unexpected output on stderr:
-Range does not implement '==(_)'.
-Unexpected output on stderr:
-[./test/core/range/equality line 6] in <script>
-Expected return code 0 and got 70. Stderr:
-Range does not implement '==(_)'.
-[./test/core/range/equality line 6] in <script>
-
-Missing expected output "true" on line 6.
-Missing expected output "false" on line 7.
-Missing expected output "true" on line 8.
-Missing expected output "false" on line 9.
-Missing expected output "true" on line 11.
-Missing expected output "false" on line 12.
-Missing expected output "true" on line 13.
-Missing expected output "false" on line 14.
-Missing expected output "true" on line 16.
-Missing expected output "true" on line 17.
+Expected output "true" on line 6 and got "false".
+Expected output "true" on line 8 and got "false".
+Expected output "false" on line 12 and got "true".
+Expected output "false" on line 14 and got "true".

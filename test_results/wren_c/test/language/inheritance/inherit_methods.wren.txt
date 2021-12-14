@@ -1,24 +1,7 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/inheritance/inherit_methods line 2] in methodOnFoo
-Unexpected output on stderr:
-[./test/language/inheritance/inherit_methods line 17] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/inheritance/inherit_methods line 2] in methodOnFoo
-[./test/language/inheritance/inherit_methods line 17] in <script>
-
-Missing expected output "foo" on line 17.
-Missing expected output "bar" on line 18.
-Missing expected output "foo" on line 21.
-Missing expected output "bar" on line 22.
-Missing expected output "foo" on line 23.
-Missing expected output "bar" on line 24.
-Missing expected output "bar" on line 25.
+Expected output "foo" on line 17 and got "instance of String".
+Expected output "bar" on line 18 and got "instance of String".
+Expected output "foo" on line 21 and got "instance of String".
+Expected output "bar" on line 22 and got "instance of String".
+Expected output "foo" on line 23 and got "instance of String".
+Expected output "bar" on line 24 and got "instance of String".
+Expected output "bar" on line 25 and got "instance of String".

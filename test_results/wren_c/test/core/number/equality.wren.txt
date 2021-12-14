@@ -1,22 +1,2 @@
-Unexpected output on stderr:
-Num does not implement '==(_)'.
-Unexpected output on stderr:
-[./test/core/number/equality line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Num does not implement '==(_)'.
-[./test/core/number/equality line 1] in <script>
-
-Missing expected output "true" on line 1.
-Missing expected output "false" on line 2.
-Missing expected output "false" on line 3.
-Missing expected output "true" on line 4.
-Missing expected output "false" on line 7.
-Missing expected output "false" on line 8.
-Missing expected output "false" on line 9.
-Missing expected output "false" on line 11.
-Missing expected output "true" on line 12.
-Missing expected output "true" on line 13.
-Missing expected output "false" on line 14.
-Missing expected output "true" on line 17.
-Missing expected output "true" on line 18.
-Missing expected output "true" on line 19.
+Expected output "true" on line 4 and got "false".
+Expected output "false" on line 14 and got "true".

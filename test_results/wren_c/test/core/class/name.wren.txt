@@ -1,15 +1,7 @@
-Unexpected output on stderr:
-Foo metaclass does not implement 'name'.
-Unexpected output on stderr:
-[./test/core/class/name line 3] in <script>
-Expected return code 0 and got 70. Stderr:
-Foo metaclass does not implement 'name'.
-[./test/core/class/name line 3] in <script>
-
-Missing expected output "Foo" on line 3.
-Missing expected output "Foo metaclass" on line 4.
-Missing expected output "Object" on line 7.
-Missing expected output "Bool" on line 8.
-Missing expected output "Class" on line 9.
-Missing expected output "Object metaclass" on line 12.
-Missing expected output "Bool metaclass" on line 13.
+Expected output "Foo" on line 3 and got "instance of String".
+Expected output "Foo metaclass" on line 4 and got "instance of String".
+Expected output "Object" on line 7 and got "instance of String".
+Expected output "Bool" on line 8 and got "instance of String".
+Expected output "Class" on line 9 and got "instance of String".
+Expected output "Object metaclass" on line 12 and got "instance of String".
+Expected output "Bool metaclass" on line 13 and got "instance of String".

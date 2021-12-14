@@ -1,23 +1,6 @@
-Unexpected output on stderr:
-String does not implement 'toString'.
-Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
-Unexpected output on stderr:
-[#core line 446] in print(_)
-Unexpected output on stderr:
-[./test/language/static_field/nested_class line 6] in staticMethod
-Unexpected output on stderr:
-[./test/language/static_field/nested_class line 39] in <script>
-Expected return code 0 and got 70. Stderr:
-String does not implement 'toString'.
-[#core line 466] in writeObject_(_)
-[#core line 446] in print(_)
-[./test/language/static_field/nested_class line 6] in staticMethod
-[./test/language/static_field/nested_class line 39] in <script>
-
-Missing expected output "outer" on line 6.
-Missing expected output "inner" on line 13.
-Missing expected output "outer" on line 18.
-Missing expected output "outer" on line 23.
-Missing expected output "inner" on line 30.
-Missing expected output "outer" on line 35.
+Expected output "outer" on line 6 and got "instance of String".
+Expected output "inner" on line 13 and got "instance of String".
+Expected output "outer" on line 18 and got "instance of String".
+Expected output "outer" on line 23 and got "instance of String".
+Expected output "inner" on line 30 and got "instance of String".
+Expected output "outer" on line 35 and got "instance of String".

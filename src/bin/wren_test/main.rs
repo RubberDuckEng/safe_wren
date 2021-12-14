@@ -81,7 +81,7 @@ fn main() {
     if api_test {
         config.bind_foreign_method_fn = Some(api_test_bind_foreign_method_fn);
     }
-    let heap = Heap::new(100000).unwrap();
+    let heap = Heap::new(50 * 1024 * 1024).unwrap();
     let scope = HandleScope::new(&heap);
     let mut vm = VM::new(&scope, config);
 

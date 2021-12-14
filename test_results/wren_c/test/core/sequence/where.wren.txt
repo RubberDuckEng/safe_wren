@@ -1,13 +1,14 @@
 Unexpected output on stderr:
-WhereSequence does not implement 'is(_)'.
+Fn does not implement 'call(_)'.
 Unexpected output on stderr:
-[./test/core/sequence/where line 32] in <script>
+[#core line 176] in iterate(_)
+Unexpected output on stderr:
+[./test/core/sequence/where line 35] in <script>
 Expected return code 0 and got 70. Stderr:
-WhereSequence does not implement 'is(_)'.
-[./test/core/sequence/where line 32] in <script>
+Fn does not implement 'call(_)'.
+[#core line 176] in iterate(_)
+[./test/core/sequence/where line 35] in <script>
 
-Missing expected output "true" on line 32.
-Missing expected output "instance of WhereSequence" on line 33.
 Missing expected output "144" on line 36.
 Missing expected output "233" on line 39.
 Missing expected output "377" on line 42.

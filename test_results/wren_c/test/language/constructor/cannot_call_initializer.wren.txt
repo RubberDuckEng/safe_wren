@@ -1,4 +1,1 @@
-Expected runtime error "Foo does not implement 'new()'." and got:
-String does not implement 'toString'.
-Expected runtime error on line 8 but was on line 3.
-Missing expected output "ok" on line 7.
+Expected output "ok" on line 7 and got "instance of String".
