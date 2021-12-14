@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Null does not implement '==(_)'.
+Unexpected output on stderr:
+[./test/language/continue/closure_in_while line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+Null does not implement '==(_)'.
+[./test/language/continue/closure_in_while line 2] in <script>
+
+Missing expected output "i" on line 9.

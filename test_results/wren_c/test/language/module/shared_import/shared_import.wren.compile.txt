@@ -1,22 +1,2 @@
-<script> Code:
-00 (ln 1): ImportModule("./a")
-01 (ln 1): Pop
-02 (ln 1): ImportVariable("A")
-03 (ln 1): Store(Module)
-04 (ln 1): Pop
-05 (ln 2): ImportModule("./b")
-06 (ln 2): Pop
-07 (ln 2): ImportVariable("B")
-08 (ln 2): Store(Module)
-09 (ln 2): Pop
-10 (ln 11): Load(Module, Class("System"))
-11 (ln 11): Load(Module, Null)
-12 (ln 11): Call(print(_))
-13 (ln 11): Pop
-14 (ln 12): Load(Module, Class("System"))
-15 (ln 12): Load(Module, Null)
-16 (ln 12): Call(print(_))
-17 (ln 12): Pop
-18 (ln 13): EndModule
-19 (ln 13): Return
-20 (ln 13): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

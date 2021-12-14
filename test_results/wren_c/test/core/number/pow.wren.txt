@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+Num does not implement 'pow(_)'.
+Unexpected output on stderr:
+[./test/core/number/pow line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'pow(_)'.
+[./test/core/number/pow line 1] in <script>
+
+Missing expected output "16" on line 1.
+Missing expected output "1024" on line 2.
+Missing expected output "1" on line 4.

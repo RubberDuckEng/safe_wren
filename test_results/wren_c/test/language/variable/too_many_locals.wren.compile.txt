@@ -1,1 +1,2 @@
-[wren_c/test/language/variable/too_many_locals line 258] Error at 'a255': Cannot declare more than 256 variables in one scope.
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

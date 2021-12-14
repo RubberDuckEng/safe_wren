@@ -1,0 +1,21 @@
+Unexpected output on stderr:
+String does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/inheritance/inherit_fields line 10] in fooPrint
+Unexpected output on stderr:
+[./test/language/inheritance/inherit_fields line 33] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/inheritance/inherit_fields line 10] in fooPrint
+[./test/language/inheritance/inherit_fields line 33] in <script>
+
+Missing expected output "foo 1" on line 34.
+Missing expected output "foo 2" on line 35.
+Missing expected output "bar 1" on line 38.
+Missing expected output "bar 2" on line 39.

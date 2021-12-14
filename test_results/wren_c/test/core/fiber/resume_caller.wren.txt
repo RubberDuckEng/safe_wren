@@ -1,0 +1,13 @@
+Unexpected output on stderr:
+Fiber metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/core/fiber/resume_caller line 3] in <script>
+Expected return code 0 and got 70. Stderr:
+Fiber metaclass does not implement 'new(_)'.
+[./test/core/fiber/resume_caller line 3] in <script>
+
+Missing expected output "begin main" on line 15.
+Missing expected output "begin fiber a" on line 16.
+Missing expected output "fiber b" on line 17.
+Missing expected output "end fiber a" on line 18.
+Missing expected output "end main" on line 19.

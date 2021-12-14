@@ -1,18 +1,2 @@
-<script> Constants:
-00: "FAIL"
-01: "PASS"
-<script> Code:
-00 (ln 1): Boolean false
-01 (ln 1): JumpIfFalse(5)
-02 (ln 2): Load(Module, Class("System"))
-03 (ln 2): Constant(0: "FAIL")
-04 (ln 2): Call(print(_))
-05 (ln 2): Pop
-06 (ln 3): Jump(4)
-07 (ln 4): Load(Module, Class("System"))
-08 (ln 4): Constant(1: "PASS")
-09 (ln 4): Call(print(_))
-10 (ln 4): Pop
-11 (ln 5): EndModule
-12 (ln 5): Return
-13 (ln 5): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

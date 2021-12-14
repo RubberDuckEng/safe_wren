@@ -1,0 +1,33 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/core/list/subscript_range line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/core/list/subscript_range line 2] in <script>
+
+Missing expected output "[a]" on line 3.
+Missing expected output "[]" on line 4.
+Missing expected output "[b, c]" on line 5.
+Missing expected output "[b]" on line 6.
+Missing expected output "[c, d, e]" on line 7.
+Missing expected output "[c, d, e]" on line 8.
+Missing expected output "[d, c, b]" on line 11.
+Missing expected output "[d, c]" on line 12.
+Missing expected output "[]" on line 13.
+Missing expected output "[a, b, c, d]" on line 16.
+Missing expected output "[a, b, c]" on line 17.
+Missing expected output "[c, b, a]" on line 18.
+Missing expected output "[c, b, a]" on line 19.
+Missing expected output "[a, b, c, d]" on line 23.
+Missing expected output "[c, d, e]" on line 24.
+Missing expected output "[d, c, b]" on line 25.
+Missing expected output "[d, c, b]" on line 26.
+Missing expected output "[b, c, d]" on line 28.
+Missing expected output "[c, d]" on line 29.
+Missing expected output "[e, d, c, b, a]" on line 30.
+Missing expected output "[d, c, b, a]" on line 31.
+Missing expected output "[]" on line 34.
+Missing expected output "[]" on line 35.
+Missing expected output "[]" on line 38.
+Missing expected output "[]" on line 39.

@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/language/interpolation/interpolation line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/language/interpolation/interpolation line 2] in <script>
+
+Missing expected output "3" on line 2.
+Missing expected output "str3(7%11" on line 5.
+Missing expected output "[{inner}]" on line 8.
+Missing expected output "[template]" on line 15.

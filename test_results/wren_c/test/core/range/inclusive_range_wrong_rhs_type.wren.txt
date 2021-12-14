@@ -1,0 +1,2 @@
+Expected runtime error "Right hand side of range must be a number." and got:
+Num does not implement '..(_)'.

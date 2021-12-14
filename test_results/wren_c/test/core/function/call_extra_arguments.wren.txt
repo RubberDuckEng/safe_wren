@@ -1,0 +1,16 @@
+Unexpected output on stderr:
+Fn metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/core/function/call_extra_arguments line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Fn metaclass does not implement 'new(_)'.
+[./test/core/function/call_extra_arguments line 1] in <script>
+
+Missing expected output "zero" on line 6.
+Missing expected output "zero" on line 7.
+Missing expected output "one a" on line 9.
+Missing expected output "one a" on line 10.
+Missing expected output "two a b" on line 12.
+Missing expected output "two a b" on line 13.
+Missing expected output "three a b c" on line 15.
+Missing expected output "three a b c" on line 16.

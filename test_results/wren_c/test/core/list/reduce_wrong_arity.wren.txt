@@ -1,0 +1,2 @@
+Expected runtime error "Function expects more arguments." and got:
+List metaclass does not implement 'new()'.

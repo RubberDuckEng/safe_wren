@@ -1,0 +1,15 @@
+Unexpected output on stderr:
+Num does not implement '<=(_)'.
+Unexpected output on stderr:
+[./test/language/continue/nested_while_loop line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '<=(_)'.
+[./test/language/continue/nested_while_loop line 2] in <script>
+
+Missing expected output "outer 1" on line 17.
+Missing expected output "inner 1" on line 18.
+Missing expected output "inner 3" on line 19.
+Missing expected output "outer 2" on line 20.
+Missing expected output "outer 3" on line 21.
+Missing expected output "inner 1" on line 22.
+Missing expected output "inner 3" on line 23.

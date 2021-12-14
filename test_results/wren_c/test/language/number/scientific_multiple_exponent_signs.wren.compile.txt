@@ -1,1 +1,2 @@
-[wren_c/test/language/number/scientific_multiple_exponent_signs line 1] Error: Unterminated scientific notation.
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

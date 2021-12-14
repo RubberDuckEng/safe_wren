@@ -1,18 +1,2 @@
-<script> Constants:
-00: "foo"
-01: 42
-02: "bar"
-<script> Code:
-00 (ln 1): Load(Module, Class("System"))
-01 (ln 1): Constant(0: "foo")
-02 (ln 1): Call(print(_))
-03 (ln 1): Pop
-04 (ln 2): Constant(1: 42)
-05 (ln 2): Return
-06 (ln 3): Load(Module, Class("System"))
-07 (ln 3): Constant(2: "bar")
-08 (ln 3): Call(print(_))
-09 (ln 3): Pop
-10 (ln 4): EndModule
-11 (ln 4): Return
-12 (ln 4): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

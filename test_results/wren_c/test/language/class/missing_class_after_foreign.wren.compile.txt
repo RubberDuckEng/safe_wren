@@ -1,1 +1,2 @@
-[wren_c/test/language/class/missing_class_after_foreign line 2] Error at 'blah': Expect 'class' after 'foreign'.
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

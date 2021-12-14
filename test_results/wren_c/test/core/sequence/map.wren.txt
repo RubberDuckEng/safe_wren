@@ -1,0 +1,15 @@
+Unexpected output on stderr:
+MapSequence does not implement 'is(_)'.
+Unexpected output on stderr:
+[./test/core/sequence/map line 32] in <script>
+Expected return code 0 and got 70. Stderr:
+MapSequence does not implement 'is(_)'.
+[./test/core/sequence/map line 32] in <script>
+
+Missing expected output "true" on line 32.
+Missing expected output "instance of MapSequence" on line 33.
+Missing expected output "0" on line 36.
+Missing expected output "1" on line 39.
+Missing expected output "1" on line 42.
+Missing expected output "4" on line 45.
+Missing expected output "9" on line 48.

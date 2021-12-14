@@ -1,0 +1,10 @@
+Unexpected output on stderr:
+Num does not implement '..(_)'.
+Unexpected output on stderr:
+[./test/bringup/for line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '..(_)'.
+[./test/bringup/for line 1] in <script>
+
+Missing expected output "0" on line 4.
+Missing expected output "1" on line 5.

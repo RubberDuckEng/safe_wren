@@ -1,20 +1,2 @@
-<script> Constants:
-00: Fn(new(_) block argument)
-<script> Code:
-00 (ln 1): Load(Module, Class("Fn"))
-01 (ln 3): Closure(0, [])
-02 (ln 3): Call(new(_))
-03 (ln 3): Store(Module)
-04 (ln 3): Pop
-05 (ln 4): Load(Module, Class("System"))
-06 (ln 4): Load(Module, Null)
-07 (ln 4): Call(call())
-08 (ln 4): Call(print(_))
-09 (ln 4): Pop
-10 (ln 5): EndModule
-11 (ln 5): Return
-12 (ln 5): End
-new(_) block argument Code:
-00 (ln 3): Null
-01 (ln 3): Return
-02 (ln 3): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

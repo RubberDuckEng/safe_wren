@@ -1,0 +1,33 @@
+Unexpected output on stderr:
+String does not implement 'indexOf(_,_)'.
+Unexpected output on stderr:
+[./test/core/string/index_of_start line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'indexOf(_,_)'.
+[./test/core/string/index_of_start line 2] in <script>
+
+Missing expected output "0" on line 2.
+Missing expected output "1" on line 3.
+Missing expected output "2" on line 4.
+Missing expected output "0" on line 7.
+Missing expected output "1" on line 8.
+Missing expected output "-1" on line 9.
+Missing expected output "-1" on line 12.
+Missing expected output "-1" on line 13.
+Missing expected output "2" on line 15.
+Missing expected output "2" on line 16.
+Missing expected output "2" on line 17.
+Missing expected output "-1" on line 18.
+Missing expected output "2" on line 21.
+Missing expected output "2" on line 22.
+Missing expected output "2" on line 23.
+Missing expected output "-1" on line 24.
+Missing expected output "16" on line 27.
+Missing expected output "-1" on line 30.
+Missing expected output "3" on line 31.
+Missing expected output "9" on line 32.
+Missing expected output "1" on line 35.
+Missing expected output "0" on line 36.
+Missing expected output "2" on line 37.
+Missing expected output "-1" on line 38.
+Missing expected output "0" on line 39.

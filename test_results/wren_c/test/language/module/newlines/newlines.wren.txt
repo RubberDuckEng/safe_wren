@@ -1,0 +1,20 @@
+Unexpected output on stderr:
+String does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/module/newlines/module line 2] in <script>
+Unexpected output on stderr:
+[./test/language/module/newlines/newlines line 4] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/module/newlines/module line 2] in <script>
+[./test/language/module/newlines/newlines line 4] in <script>
+
+Missing expected output "ran module" on line 12.
+Missing expected output "a" on line 14.
+Missing expected output "b" on line 15.

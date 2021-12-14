@@ -1,1 +1,2 @@
-[wren_c/test/language/method/subscript_setter_too_many_arguments line 2] Error at '=': Methods cannot have more than 16 parameters.
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

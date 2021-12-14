@@ -1,0 +1,31 @@
+Unexpected output on stderr:
+Bool metaclass does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/module/implicitly_imports_core/module line 2] in <script>
+Unexpected output on stderr:
+[./test/language/module/implicitly_imports_core/implicitly_imports_core line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Bool metaclass does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/module/implicitly_imports_core/module line 2] in <script>
+[./test/language/module/implicitly_imports_core/implicitly_imports_core line 1] in <script>
+
+Missing expected output "Bool" on line 2.
+Missing expected output "Class" on line 3.
+Missing expected output "Fiber" on line 4.
+Missing expected output "Fn" on line 5.
+Missing expected output "List" on line 6.
+Missing expected output "Map" on line 7.
+Missing expected output "MapKeySequence" on line 8.
+Missing expected output "MapValueSequence" on line 9.
+Missing expected output "Null" on line 10.
+Missing expected output "Num" on line 11.
+Missing expected output "Object" on line 12.
+Missing expected output "Range" on line 13.
+Missing expected output "Sequence" on line 14.
+Missing expected output "String" on line 15.

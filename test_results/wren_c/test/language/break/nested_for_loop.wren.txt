@@ -1,0 +1,17 @@
+Unexpected output on stderr:
+Num does not implement '..(_)'.
+Unexpected output on stderr:
+[./test/language/break/nested_for_loop line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '..(_)'.
+[./test/language/break/nested_for_loop line 1] in <script>
+
+Missing expected output "outer 0" on line 11.
+Missing expected output "inner 0" on line 12.
+Missing expected output "inner 1" on line 13.
+Missing expected output "inner 2" on line 14.
+Missing expected output "outer 1" on line 15.
+Missing expected output "inner 0" on line 16.
+Missing expected output "inner 1" on line 17.
+Missing expected output "inner 2" on line 18.
+Missing expected output "outer 2" on line 19.

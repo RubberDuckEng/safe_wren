@@ -1,0 +1,10 @@
+Unexpected output on stderr:
+Num does not implement 'max(_)'.
+Unexpected output on stderr:
+[./test/core/number/min_max line 4] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'max(_)'.
+[./test/core/number/min_max line 4] in <script>
+
+Missing expected output "6" on line 4.
+Missing expected output "4" on line 5.

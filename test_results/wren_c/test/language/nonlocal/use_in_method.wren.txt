@@ -1,0 +1,19 @@
+Unexpected output on stderr:
+String does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/nonlocal/use_in_method line 7] in method
+Unexpected output on stderr:
+[./test/language/nonlocal/use_in_method line 15] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/nonlocal/use_in_method line 7] in method
+[./test/language/nonlocal/use_in_method line 15] in <script>
+
+Missing expected output "global" on line 15.
+Missing expected output "global" on line 16.

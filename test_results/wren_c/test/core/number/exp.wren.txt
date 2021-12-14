@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+Num does not implement 'exp'.
+Unexpected output on stderr:
+[./test/core/number/exp line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'exp'.
+[./test/core/number/exp line 1] in <script>
+
+Missing expected output "148.41315910258" on line 1.
+Missing expected output "22026.465794807" on line 2.
+Missing expected output "0.36787944117144" on line 3.

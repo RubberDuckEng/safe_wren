@@ -1,0 +1,15 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/core/list/plus line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/core/list/plus line 1] in <script>
+
+Missing expected output "[1, 2, 3, 4, 5, 6]" on line 1.
+Missing expected output "[1, 2, 3, 4, 5, 6]" on line 2.
+Missing expected output "[1, 2, 3, a, b, c]" on line 3.
+Missing expected output "[]" on line 4.
+Missing expected output "[1, 2]" on line 5.
+Missing expected output "[3, 4]" on line 6.
+Missing expected output "[1, 2, 3]" on line 11.

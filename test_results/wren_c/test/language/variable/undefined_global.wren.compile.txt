@@ -1,1 +1,2 @@
-[wren_c/test/language/variable/undefined_global line 1] Error at 'notDefined': Variable is used but not defined.
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Num metaclass does not implement 'smallest'.
+Unexpected output on stderr:
+[./test/core/number/smallest line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num metaclass does not implement 'smallest'.
+[./test/core/number/smallest line 1] in <script>
+
+Missing expected output "2.2250738585072e-308" on line 1.

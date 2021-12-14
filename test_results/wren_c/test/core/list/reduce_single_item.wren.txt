@@ -1,0 +1,10 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/core/list/reduce_single_item line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/core/list/reduce_single_item line 1] in <script>
+
+Missing expected output "1" on line 1.
+Missing expected output "1" on line 2.

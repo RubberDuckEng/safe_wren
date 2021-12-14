@@ -1,0 +1,21 @@
+Unexpected output on stderr:
+Num does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/number/hex_literals line 3] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/number/hex_literals line 3] in <script>
+
+Missing expected output "255" on line 3.
+Missing expected output "256" on line 4.
+Missing expected output "true" on line 5.
+Missing expected output "true" on line 6.
+Missing expected output "true" on line 7.
+Missing expected output "-255" on line 8.
+Missing expected output "3735928559" on line 9.

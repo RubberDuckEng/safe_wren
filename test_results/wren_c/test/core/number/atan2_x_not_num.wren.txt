@@ -1,0 +1,2 @@
+Expected runtime error "x value must be a number." and got:
+Num does not implement 'atan(_)'.

@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[#core line 113] in toList
+Unexpected output on stderr:
+[./test/core/sequence/to_list line 13] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[#core line 113] in toList
+[./test/core/sequence/to_list line 13] in <script>
+
+Missing expected output "[1, 2, 3]" on line 13.

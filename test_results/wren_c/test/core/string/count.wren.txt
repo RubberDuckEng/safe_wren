@@ -1,0 +1,19 @@
+Unexpected output on stderr:
+String does not implement 'iterate(_)'.
+Unexpected output on stderr:
+[#core line 35] in count
+Unexpected output on stderr:
+[./test/core/string/count line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'iterate(_)'.
+[#core line 35] in count
+[./test/core/string/count line 1] in <script>
+
+Missing expected output "0" on line 1.
+Missing expected output "8" on line 2.
+Missing expected output "1" on line 5.
+Missing expected output "3" on line 6.
+Missing expected output "2" on line 7.
+Missing expected output "5" on line 8.
+Missing expected output "10" on line 15.
+Missing expected output "4" on line 18.

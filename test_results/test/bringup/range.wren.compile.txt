@@ -1,11 +1,2 @@
-<script> Constants:
-00: 1
-01: 10
-<script> Code:
-00 (ln 1): Constant(0: 1)
-01 (ln 1): Constant(1: 10)
-02 (ln 1): Call(..(_))
-03 (ln 1): Pop
-04 (ln 1): EndModule
-05 (ln 1): Return
-06 (ln 1): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

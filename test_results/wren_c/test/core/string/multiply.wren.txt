@@ -1,0 +1,14 @@
+Unexpected output on stderr:
+Num does not implement 'is(_)'.
+Unexpected output on stderr:
+[#core line 282] in *(_)
+Unexpected output on stderr:
+[./test/core/string/multiply line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'is(_)'.
+[#core line 282] in *(_)
+[./test/core/string/multiply line 1] in <script>
+
+Missing expected output "||" on line 1.
+Missing expected output "abc" on line 2.
+Missing expected output "abcabcabcabc" on line 3.

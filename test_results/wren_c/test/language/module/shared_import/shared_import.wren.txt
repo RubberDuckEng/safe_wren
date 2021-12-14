@@ -1,0 +1,24 @@
+Unexpected output on stderr:
+String does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/module/shared_import/a line 2] in <script>
+Unexpected output on stderr:
+[./test/language/module/shared_import/shared_import line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/module/shared_import/a line 2] in <script>
+[./test/language/module/shared_import/shared_import line 1] in <script>
+
+Missing expected output "a" on line 5.
+Missing expected output "shared" on line 6.
+Missing expected output "a done" on line 7.
+Missing expected output "b" on line 8.
+Missing expected output "b done" on line 9.
+Missing expected output "a shared" on line 11.
+Missing expected output "b shared" on line 12.

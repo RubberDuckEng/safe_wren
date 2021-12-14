@@ -1,0 +1,2 @@
+Expected runtime error "Number literal is too large." and got:
+Num metaclass does not implement 'fromString(_)'.

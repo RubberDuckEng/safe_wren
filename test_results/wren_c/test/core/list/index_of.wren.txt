@@ -1,0 +1,14 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/core/list/index_of line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/core/list/index_of line 2] in <script>
+
+Missing expected output "4" on line 3.
+Missing expected output "2" on line 4.
+Missing expected output "3" on line 5.
+Missing expected output "0" on line 6.
+Missing expected output "-1" on line 7.
+Missing expected output "-1" on line 8.

@@ -1,0 +1,10 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/core/system/write_all line 7] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/core/system/write_all line 7] in <script>
+
+Missing expected output "" on line 7.
+Missing expected output "1trueFoos" on line 9.

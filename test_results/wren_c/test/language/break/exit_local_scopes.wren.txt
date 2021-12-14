@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+Num does not implement '..(_)'.
+Unexpected output on stderr:
+[./test/language/break/exit_local_scopes line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '..(_)'.
+[./test/language/break/exit_local_scopes line 1] in <script>
+
+Missing expected output "0" on line 16.
+Missing expected output "1" on line 17.
+Missing expected output "2" on line 18.

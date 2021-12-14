@@ -1,0 +1,3 @@
+Expected runtime error "Could not find a variable named 'DoesNotExist' in module './test/language/module/unknown_variable/module'." and got:
+String does not implement 'toString'.
+Missing expected output "ran module" on line 2.

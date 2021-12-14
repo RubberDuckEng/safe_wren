@@ -1,0 +1,18 @@
+Unexpected output on stderr:
+String does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/nonlocal/assignment line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/nonlocal/assignment line 2] in <script>
+
+Missing expected output "before" on line 2.
+Missing expected output "after" on line 4.
+Missing expected output "method" on line 13.
+Missing expected output "fn" on line 18.

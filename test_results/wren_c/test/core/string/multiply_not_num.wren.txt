@@ -1,0 +1,2 @@
+Expected runtime error "Count must be a non-negative integer." and got:
+String does not implement 'is(_)'.

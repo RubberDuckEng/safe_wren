@@ -1,1 +1,2 @@
-[wren_c/test/regression/561 line 91] Error at 'z': Cannot declare more than 256 variables in one scope. (Not enough space for for-loops internal variables)
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

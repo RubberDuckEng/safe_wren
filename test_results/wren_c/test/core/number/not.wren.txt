@@ -1,0 +1,10 @@
+Unexpected output on stderr:
+Num does not implement '!'.
+Unexpected output on stderr:
+[./test/core/number/not line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '!'.
+[./test/core/number/not line 1] in <script>
+
+Missing expected output "false" on line 1.
+Missing expected output "false" on line 2.

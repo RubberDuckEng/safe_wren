@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+Map metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/language/map/newlines line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+Map metaclass does not implement 'new()'.
+[./test/language/map/newlines line 2] in <script>
+
+Missing expected output "a value" on line 12.
+Missing expected output "b value" on line 13.
+Missing expected output "c value" on line 20.
+Missing expected output "0" on line 27.

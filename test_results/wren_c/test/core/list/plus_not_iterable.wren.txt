@@ -1,0 +1,2 @@
+Expected runtime error "Num does not implement 'iterate(_)'." and got:
+List metaclass does not implement 'new()'.

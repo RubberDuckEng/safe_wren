@@ -1,6 +1,2 @@
-<script> Code:
-00 (ln 1): ImportModule("./module")
-01 (ln 1): Pop
-02 (ln 16): EndModule
-03 (ln 16): Return
-04 (ln 16): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

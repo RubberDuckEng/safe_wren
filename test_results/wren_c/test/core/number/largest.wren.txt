@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Num metaclass does not implement 'largest'.
+Unexpected output on stderr:
+[./test/core/number/largest line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num metaclass does not implement 'largest'.
+[./test/core/number/largest line 1] in <script>
+
+Missing expected output "1.7976931348623e+308" on line 1.

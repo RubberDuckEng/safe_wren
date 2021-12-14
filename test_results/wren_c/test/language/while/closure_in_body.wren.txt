@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/language/while/closure_in_body line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/language/while/closure_in_body line 1] in <script>
+
+Missing expected output "2" on line 11.
+Missing expected output "3" on line 12.
+Missing expected output "4" on line 13.

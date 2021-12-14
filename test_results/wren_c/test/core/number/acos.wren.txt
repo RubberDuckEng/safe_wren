@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+Num does not implement 'acos'.
+Unexpected output on stderr:
+[./test/core/number/acos line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'acos'.
+[./test/core/number/acos line 1] in <script>
+
+Missing expected output "1.5707963267949" on line 1.
+Missing expected output "0" on line 2.
+Missing expected output "3.1415926535898" on line 3.

@@ -1,0 +1,2 @@
+Expected runtime error "Byte cannot be greater than 0xff." and got:
+String metaclass does not implement 'fromByte(_)'.

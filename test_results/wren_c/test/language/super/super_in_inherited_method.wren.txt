@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+Object does not implement 'toString'.
+Unexpected output on stderr:
+[./test/language/super/super_in_inherited_method line 2] in callSuperToString
+Unexpected output on stderr:
+[./test/language/super/super_in_inherited_method line 11] in <script>
+Expected return code 0 and got 70. Stderr:
+Object does not implement 'toString'.
+[./test/language/super/super_in_inherited_method line 2] in callSuperToString
+[./test/language/super/super_in_inherited_method line 11] in <script>
+
+Missing expected output "instance of B" on line 11.

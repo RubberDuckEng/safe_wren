@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Null does not implement '!'.
+Unexpected output on stderr:
+[./test/core/null/not line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Null does not implement '!'.
+[./test/core/null/not line 1] in <script>
+
+Missing expected output "true" on line 1.

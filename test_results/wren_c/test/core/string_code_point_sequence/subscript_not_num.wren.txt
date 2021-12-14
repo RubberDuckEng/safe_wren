@@ -1,0 +1,2 @@
+Expected runtime error "Index must be a number." and got:
+String does not implement 'codePointAt_(_)'.

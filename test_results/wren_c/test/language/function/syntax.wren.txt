@@ -1,0 +1,14 @@
+Unexpected output on stderr:
+Fn metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/language/function/syntax line 2] in <script>
+Expected return code 0 and got 70. Stderr:
+Fn metaclass does not implement 'new(_)'.
+[./test/language/function/syntax line 2] in <script>
+
+Missing expected output "ok" on line 2.
+Missing expected output "ok" on line 6.
+Missing expected output "1" on line 11.
+Missing expected output "2" on line 12.
+Missing expected output "1" on line 19.
+Missing expected output "2" on line 22.

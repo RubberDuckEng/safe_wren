@@ -1,0 +1,3 @@
+Expected runtime error "Range end out of bounds." and got:
+List metaclass does not implement 'new()'.
+Expected runtime error on line 2 but was on line 1.

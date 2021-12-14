@@ -1,0 +1,3 @@
+Expected runtime error "Class 'Subclass' cannot inherit from built-in class 'Fn'." and got:
+Fn metaclass does not implement 'new(_)'.
+Expected runtime error on line 8 but was on line 5.

@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Fn metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/language/return/after_else line 3] in <script>
+Expected return code 0 and got 70. Stderr:
+Fn metaclass does not implement 'new(_)'.
+[./test/language/return/after_else line 3] in <script>
+
+Missing expected output "ok" on line 3.

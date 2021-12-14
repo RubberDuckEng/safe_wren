@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+Fiber metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/core/fiber/transfer_to_parameter line 3] in <script>
+Expected return code 0 and got 70. Stderr:
+Fiber metaclass does not implement 'new(_)'.
+[./test/core/fiber/transfer_to_parameter line 3] in <script>
+
+Missing expected output "start" on line 17.
+Missing expected output "c before null" on line 20.
+Missing expected output "b before null" on line 21.
+Missing expected output "a null" on line 22.

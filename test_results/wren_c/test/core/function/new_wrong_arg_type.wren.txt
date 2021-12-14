@@ -1,0 +1,2 @@
+Expected runtime error "Argument must be a function." and got:
+Fn metaclass does not implement 'new(_)'.

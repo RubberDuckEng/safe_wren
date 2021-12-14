@@ -1,1 +1,2 @@
-[test/fuzz/grammar_nesting line 2] Error at '[': Maximum grammar nesting (64) exceeded.
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

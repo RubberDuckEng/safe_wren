@@ -1,0 +1,10 @@
+Unexpected output on stderr:
+Fiber metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/language/interpolation/switch_fiber line 4] in <script>
+Expected return code 0 and got 70. Stderr:
+Fiber metaclass does not implement 'new(_)'.
+[./test/language/interpolation/switch_fiber line 4] in <script>
+
+Missing expected output "in fiber" on line 7.
+Missing expected output "outer result string" on line 8.

@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Fn metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/limit/reuse_constants line 65548] in <script>
+Expected return code 0 and got 70. Stderr:
+Fn metaclass does not implement 'new(_)'.
+[./test/limit/reuse_constants line 65548] in <script>
+
+Missing expected output "65536" on line 65550.

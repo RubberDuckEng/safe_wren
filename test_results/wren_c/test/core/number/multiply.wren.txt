@@ -1,0 +1,10 @@
+Unexpected output on stderr:
+Num does not implement '*(_)'.
+Unexpected output on stderr:
+[./test/core/number/multiply line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '*(_)'.
+[./test/core/number/multiply line 1] in <script>
+
+Missing expected output "15" on line 1.
+Missing expected output "3.702" on line 2.

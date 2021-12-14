@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Num does not implement '<=(_)'.
+Unexpected output on stderr:
+[./test/language/variable/scope_while line 4] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '<=(_)'.
+[./test/language/variable/scope_while line 4] in <script>
+
+Missing expected output "outer" on line 7.

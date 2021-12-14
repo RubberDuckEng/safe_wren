@@ -1,0 +1,19 @@
+Unexpected output on stderr:
+Num does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/break/in_while_loop line 4] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/break/in_while_loop line 4] in <script>
+
+Missing expected output "1" on line 8.
+Missing expected output "1" on line 9.
+Missing expected output "2" on line 10.
+Missing expected output "2" on line 11.
+Missing expected output "3" on line 12.

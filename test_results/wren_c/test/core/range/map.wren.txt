@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Num does not implement '..(_)'.
+Unexpected output on stderr:
+[./test/core/range/map line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '..(_)'.
+[./test/core/range/map line 1] in <script>
+
+Missing expected output "[2, 3, 4]" on line 3.

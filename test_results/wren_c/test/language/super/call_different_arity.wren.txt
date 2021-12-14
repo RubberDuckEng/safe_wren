@@ -1,0 +1,21 @@
+Unexpected output on stderr:
+String does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/super/call_different_arity line 11] in foo(_)
+Unexpected output on stderr:
+[./test/language/super/call_different_arity line 18] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/super/call_different_arity line 11] in foo(_)
+[./test/language/super/call_different_arity line 18] in <script>
+
+Missing expected output "Derived.bar(a)" on line 19.
+Missing expected output "Base.foo" on line 20.
+Missing expected output "Base.foo(a)" on line 21.
+Missing expected output "Base.foo(a, b)" on line 22.

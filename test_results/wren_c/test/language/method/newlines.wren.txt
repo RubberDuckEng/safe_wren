@@ -1,0 +1,13 @@
+Unexpected output on stderr:
+List metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/language/method/newlines line 3] in method(_,_)
+Unexpected output on stderr:
+[./test/language/method/newlines line 14] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'new()'.
+[./test/language/method/newlines line 3] in method(_,_)
+[./test/language/method/newlines line 14] in <script>
+
+Missing expected output "method a b" on line 14.
+Missing expected output "subscript a b" on line 21.

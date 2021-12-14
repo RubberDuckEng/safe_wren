@@ -1,0 +1,11 @@
+Unexpected output on stderr:
+Num does not implement 'log'.
+Unexpected output on stderr:
+[./test/core/number/log line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'log'.
+[./test/core/number/log line 1] in <script>
+
+Missing expected output "1.0986122886681" on line 1.
+Missing expected output "4.6051701859881" on line 2.
+Missing expected output "nan" on line 3.

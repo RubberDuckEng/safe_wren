@@ -1,25 +1,2 @@
-<script> Constants:
-00: 1
-01: 2
-02: 3
-03: 4
-04: 1.5
-<script> Code:
-00 (ln 1): Load(Module, Class("Map"))
-01 (ln 1): Call(new())
-02 (ln 1): Constant(0: 1)
-03 (ln 1): Constant(1: 2)
-04 (ln 1): Call(addCore_(_,_))
-05 (ln 1): Constant(2: 3)
-06 (ln 1): Constant(3: 4)
-07 (ln 1): Call(addCore_(_,_))
-08 (ln 1): Store(Module)
-09 (ln 1): Pop
-10 (ln 2): Load(Module, Null)
-11 (ln 2): Call(values)
-12 (ln 2): Constant(4: 1.5)
-13 (ln 2): Call(iterate(_))
-14 (ln 2): Pop
-15 (ln 3): EndModule
-16 (ln 3): Return
-17 (ln 3): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

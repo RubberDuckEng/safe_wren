@@ -1,0 +1,2 @@
+Expected runtime error "Size cannot be negative." and got:
+Num does not implement '-'.

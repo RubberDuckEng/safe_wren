@@ -1,0 +1,2 @@
+Expected runtime error "Iterator must be an integer." and got:
+String does not implement 'iterate(_)'.

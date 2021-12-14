@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+Fn metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/language/super/closure line 7] in getClosure
+Unexpected output on stderr:
+[./test/language/super/closure line 11] in <script>
+Expected return code 0 and got 70. Stderr:
+Fn metaclass does not implement 'new(_)'.
+[./test/language/super/closure line 7] in getClosure
+[./test/language/super/closure line 11] in <script>
+
+Missing expected output "Base" on line 12.

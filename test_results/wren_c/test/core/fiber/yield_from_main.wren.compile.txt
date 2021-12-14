@@ -1,18 +1,2 @@
-<script> Constants:
-00: "before"
-01: "not reached"
-<script> Code:
-00 (ln 1): Load(Module, Class("System"))
-01 (ln 1): Constant(0: "before")
-02 (ln 1): Call(print(_))
-03 (ln 1): Pop
-04 (ln 2): Load(Module, Class("Fiber"))
-05 (ln 2): Call(yield())
-06 (ln 2): Pop
-07 (ln 3): Load(Module, Class("System"))
-08 (ln 3): Constant(1: "not reached")
-09 (ln 3): Call(print(_))
-10 (ln 3): Pop
-11 (ln 4): EndModule
-12 (ln 4): Return
-13 (ln 4): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

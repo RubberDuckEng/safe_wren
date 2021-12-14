@@ -1,0 +1,2 @@
+Expected runtime error "Abort!" and got:
+Fiber metaclass does not implement 'abort(_)'.

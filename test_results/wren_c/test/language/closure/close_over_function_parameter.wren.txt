@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Fn metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/language/closure/close_over_function_parameter line 7] in <script>
+Expected return code 0 and got 70. Stderr:
+Fn metaclass does not implement 'new(_)'.
+[./test/language/closure/close_over_function_parameter line 7] in <script>
+
+Missing expected output "param" on line 9.

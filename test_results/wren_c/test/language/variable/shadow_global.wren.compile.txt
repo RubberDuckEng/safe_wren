@@ -1,20 +1,2 @@
-<script> Constants:
-00: "global"
-01: "shadow"
-<script> Code:
-00 (ln 1): Constant(0: "global")
-01 (ln 1): Store(Module)
-02 (ln 1): Pop
-03 (ln 3): Constant(1: "shadow")
-04 (ln 4): Load(Module, Class("System"))
-05 (ln 4): Load(Local, 1)
-06 (ln 4): Call(print(_))
-07 (ln 4): Pop
-08 (ln 5): Pop
-09 (ln 6): Load(Module, Class("System"))
-10 (ln 6): Load(Module, Null)
-11 (ln 6): Call(print(_))
-12 (ln 6): Pop
-13 (ln 6): EndModule
-14 (ln 6): Return
-15 (ln 6): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

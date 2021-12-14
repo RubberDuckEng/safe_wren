@@ -1,0 +1,3 @@
+Expected runtime error "Iterator out of bounds." and got:
+Map metaclass does not implement 'new()'.
+Expected runtime error on line 6 but was on line 1.

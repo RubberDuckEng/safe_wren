@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Map metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/core/map/subscript_empty_map line 3] in <script>
+Expected return code 0 and got 70. Stderr:
+Map metaclass does not implement 'new()'.
+[./test/core/map/subscript_empty_map line 3] in <script>
+
+Missing expected output "null" on line 4.

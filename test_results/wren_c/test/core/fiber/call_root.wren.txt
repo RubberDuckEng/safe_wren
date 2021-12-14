@@ -1,0 +1,5 @@
+Expected runtime error "Cannot call root fiber." and got:
+Fiber metaclass does not implement 'current'.
+Expected runtime error on line 6 but was on line 1.
+Missing expected output "begin root" on line 2.
+Missing expected output "in new fiber" on line 5.

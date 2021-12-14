@@ -1,0 +1,13 @@
+Unexpected output on stderr:
+Num does not implement '..(_)'.
+Unexpected output on stderr:
+[./test/core/range/type line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement '..(_)'.
+[./test/core/range/type line 1] in <script>
+
+Missing expected output "true" on line 3.
+Missing expected output "true" on line 4.
+Missing expected output "true" on line 5.
+Missing expected output "false" on line 6.
+Missing expected output "true" on line 7.

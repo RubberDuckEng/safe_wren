@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\vm.rs:3019:14
+Unexpected output on stderr:
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Expected return code 0 and got 101. Stderr:
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\vm.rs:3019:14
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+Missing expected output "1000" on line 2025.

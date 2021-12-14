@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+Bool does not implement 'is(_)'.
+Unexpected output on stderr:
+[./test/core/bool/type line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Bool does not implement 'is(_)'.
+[./test/core/bool/type line 1] in <script>
+
+Missing expected output "true" on line 1.
+Missing expected output "true" on line 2.
+Missing expected output "false" on line 3.
+Missing expected output "true" on line 4.

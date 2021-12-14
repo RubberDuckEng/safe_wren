@@ -1,1 +1,2 @@
-[wren_c/test/regression/442-000089 line 2] Error: Unexpected char '«'
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

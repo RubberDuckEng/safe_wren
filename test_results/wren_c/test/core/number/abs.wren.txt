@@ -1,0 +1,14 @@
+Unexpected output on stderr:
+Num does not implement 'abs'.
+Unexpected output on stderr:
+[./test/core/number/abs line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'abs'.
+[./test/core/number/abs line 1] in <script>
+
+Missing expected output "123" on line 1.
+Missing expected output "123" on line 2.
+Missing expected output "0" on line 3.
+Missing expected output "0" on line 4.
+Missing expected output "0.12" on line 5.
+Missing expected output "12.34" on line 6.

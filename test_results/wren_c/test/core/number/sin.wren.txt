@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+Num does not implement 'sin'.
+Unexpected output on stderr:
+[./test/core/number/sin line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'sin'.
+[./test/core/number/sin line 1] in <script>
+
+Missing expected output "0" on line 1.
+Missing expected output "1" on line 2.
+Missing expected output "true" on line 5.
+Missing expected output "true" on line 6.

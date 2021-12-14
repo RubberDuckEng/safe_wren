@@ -1,0 +1,12 @@
+Unexpected output on stderr:
+List metaclass does not implement 'filled(_,_)'.
+Unexpected output on stderr:
+[./test/core/list/filled line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+List metaclass does not implement 'filled(_,_)'.
+[./test/core/list/filled line 1] in <script>
+
+Missing expected output "3" on line 2.
+Missing expected output "[value, value, value]" on line 3.
+Missing expected output "0" on line 7.
+Missing expected output "[]" on line 8.

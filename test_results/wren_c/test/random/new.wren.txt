@@ -1,0 +1,9 @@
+Unexpected output on stderr:
+Could not load module 'random'.
+Unexpected output on stderr:
+[./test/random/new line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Could not load module 'random'.
+[./test/random/new line 1] in <script>
+
+Missing expected output "200" on line 12.

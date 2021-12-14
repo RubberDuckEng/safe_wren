@@ -1,0 +1,20 @@
+Unexpected output on stderr:
+Num does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/number/literals line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/number/literals line 1] in <script>
+
+Missing expected output "123" on line 1.
+Missing expected output "987654" on line 2.
+Missing expected output "0" on line 3.
+Missing expected output "-0" on line 4.
+Missing expected output "123.456" on line 6.
+Missing expected output "-0.001" on line 7.

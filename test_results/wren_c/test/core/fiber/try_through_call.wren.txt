@@ -1,0 +1,21 @@
+Unexpected output on stderr:
+Fiber metaclass does not implement 'new(_)'.
+Unexpected output on stderr:
+[./test/core/fiber/try_through_call line 8] in <script>
+Expected return code 0 and got 70. Stderr:
+Fiber metaclass does not implement 'new(_)'.
+[./test/core/fiber/try_through_call line 8] in <script>
+
+Missing expected output "5 before" on line 35.
+Missing expected output "4 before" on line 36.
+Missing expected output "3 before" on line 37.
+Missing expected output "2 before" on line 38.
+Missing expected output "1 before" on line 39.
+Missing expected output "4 after" on line 40.
+Missing expected output "5 after" on line 41.
+Missing expected output "after" on line 42.
+Missing expected output "Abort!" on line 45.
+Missing expected output "Abort!" on line 46.
+Missing expected output "Abort!" on line 47.
+Missing expected output "null" on line 48.
+Missing expected output "null" on line 49.

@@ -1,0 +1,27 @@
+Unexpected output on stderr:
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', src\vm.rs:3359:30
+Unexpected output on stderr:
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Expected return code 0 and got 101. Stderr:
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', src\vm.rs:3359:30
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+Missing expected output "true" on line 2.
+Missing expected output "false" on line 3.
+Missing expected output "true" on line 5.
+Missing expected output "true" on line 7.
+Missing expected output "false" on line 8.
+Missing expected output "true" on line 10.
+Missing expected output "false" on line 11.
+Missing expected output "true" on line 13.
+Missing expected output "false" on line 14.
+Missing expected output "false" on line 17.
+Missing expected output "false" on line 18.
+Missing expected output "false" on line 19.
+Missing expected output "false" on line 20.
+Missing expected output "false" on line 23.
+Missing expected output "true" on line 24.
+Missing expected output "true" on line 32.
+Missing expected output "false" on line 33.
+Missing expected output "true" on line 42.
+Missing expected output "false" on line 43.

@@ -1,24 +1,2 @@
-<script> Constants:
-00: Fn(new(_) block argument)
-<script> Code:
-00 (ln 1): Null
-01 (ln 1): Store(Module)
-02 (ln 1): Pop
-03 (ln 3): Load(Module, Class("Fiber"))
-04 (ln 5): Closure(0, [])
-05 (ln 5): Call(new(_))
-06 (ln 5): Store(Module)
-07 (ln 5): Pop
-08 (ln 7): Load(Module, Null)
-09 (ln 7): Call(call())
-10 (ln 7): Pop
-11 (ln 8): EndModule
-12 (ln 8): Return
-13 (ln 8): End
-new(_) block argument Code:
-00 (ln 4): Load(Module, Null)
-01 (ln 4): Call(try())
-02 (ln 4): Pop
-03 (ln 5): Null
-04 (ln 5): Return
-05 (ln 5): End
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

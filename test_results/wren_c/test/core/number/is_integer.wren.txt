@@ -1,0 +1,15 @@
+Unexpected output on stderr:
+Num does not implement 'isInteger'.
+Unexpected output on stderr:
+[./test/core/number/is_integer line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Num does not implement 'isInteger'.
+[./test/core/number/is_integer line 1] in <script>
+
+Missing expected output "true" on line 1.
+Missing expected output "true" on line 2.
+Missing expected output "true" on line 3.
+Missing expected output "false" on line 4.
+Missing expected output "false" on line 5.
+Missing expected output "false" on line 8.
+Missing expected output "false" on line 11.

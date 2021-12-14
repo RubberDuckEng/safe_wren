@@ -1,0 +1,13 @@
+Unexpected output on stderr:
+Map metaclass does not implement 'new()'.
+Unexpected output on stderr:
+[./test/core/map/contains_key line 1] in <script>
+Expected return code 0 and got 70. Stderr:
+Map metaclass does not implement 'new()'.
+[./test/core/map/contains_key line 1] in <script>
+
+Missing expected output "true" on line 7.
+Missing expected output "true" on line 8.
+Missing expected output "true" on line 9.
+Missing expected output "false" on line 10.
+Missing expected output "false" on line 11.

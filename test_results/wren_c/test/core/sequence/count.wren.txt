@@ -1,0 +1,15 @@
+Unexpected output on stderr:
+Null does not implement '==(_)'.
+Unexpected output on stderr:
+[./test/core/sequence/count line 5] in iterate(_)
+Unexpected output on stderr:
+[#core line 35] in count
+Unexpected output on stderr:
+[./test/core/sequence/count line 13] in <script>
+Expected return code 0 and got 70. Stderr:
+Null does not implement '==(_)'.
+[./test/core/sequence/count line 5] in iterate(_)
+[#core line 35] in count
+[./test/core/sequence/count line 13] in <script>
+
+Missing expected output "10" on line 13.

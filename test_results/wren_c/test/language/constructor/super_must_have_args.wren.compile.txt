@@ -1,1 +1,2 @@
-[wren_c/test/language/constructor/super_must_have_args line 5] Error at 'super': A superclass constructor must have an argument list.
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NoSpace', src\compiler.rs:1510:32
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

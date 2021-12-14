@@ -1,0 +1,23 @@
+Unexpected output on stderr:
+String does not implement 'toString'.
+Unexpected output on stderr:
+[#core line 466] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
+Unexpected output on stderr:
+[./test/language/implicit_receiver/inherited_methods line 5] in getter
+Unexpected output on stderr:
+[./test/language/implicit_receiver/inherited_methods line 21] in test
+Unexpected output on stderr:
+[./test/language/implicit_receiver/inherited_methods line 27] in <script>
+Expected return code 0 and got 70. Stderr:
+String does not implement 'toString'.
+[#core line 466] in writeObject_(_)
+[#core line 446] in print(_)
+[./test/language/implicit_receiver/inherited_methods line 5] in getter
+[./test/language/implicit_receiver/inherited_methods line 21] in test
+[./test/language/implicit_receiver/inherited_methods line 27] in <script>
+
+Missing expected output "getter" on line 21.
+Missing expected output "setter" on line 22.
+Missing expected output "method" on line 23.
