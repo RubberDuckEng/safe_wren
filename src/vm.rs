@@ -676,6 +676,12 @@ pub(crate) struct Globals {
     pub(crate) last_imported_module: Option<HeapHandle<Module>>,
 }
 
+impl VM {
+    fn fiber<'a>(&self, scope: &'a HandleScope) -> Option<LocalHandle<'a, ObjFiber>> {
+        scope.from_maybe_heap(&scope.as_ref(&self.globals).fiber)
+    }
+}
+
 impl HostObject for Globals {
     const TYPE_ID: ObjectType = ObjectType::Host;
 }
@@ -2019,21 +2025,20 @@ impl VM {
         scope: &HandleScope,
         error: LocalHandle<()>,
     ) -> Result<(), RuntimeError> {
-        let stack_trace_fiber =
-            scope.from_heap(scope.as_ref(&self.globals).fiber.as_ref().unwrap());
+        let stack_trace_fiber = self.fiber(scope).unwrap();
         loop {
-            let callee = scope.as_ref(&self.globals).fiber.as_ref().unwrap();
+            let callee = self.fiber(scope).unwrap();
             // Set Fiber.error on the current fiber. Can't do this
             // deeper in the stack because can't borrow_mut there.
             callee.borrow_mut().error = error.into();
             // If we have a caller, it's now the new fiber.
-            let caller = match scope.as_ref(&self.globals).fiber.as_ref() {
+            let caller = match self.fiber(scope) {
                 Some(fiber) => fiber.as_mut().return_from_fiber_take_caller(scope),
                 _ => None,
             };
             scope.as_mut(&self.globals).fiber = caller.map(|local| local.into());
 
-            match &scope.as_ref(&self.globals).fiber {
+            match self.fiber(scope) {
                 // If the previously called fiber was a try, return
                 // control and the error value.
                 Some(fiber) => {
@@ -2064,10 +2069,7 @@ impl VM {
         scope.as_mut(&self.globals).fiber =
             Some(ObjFiber::new(self, &scope, closure, FiberRunSource::Root).into());
         loop {
-            let result = self.run_in_fiber(
-                scope,
-                scope.from_heap(scope.as_ref(&self.globals).fiber.as_ref().unwrap()),
-            );
+            let result = self.run_in_fiber(scope, self.fiber(scope).unwrap());
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
                     fiber.as_mut().caller = scope.as_mut(&self.globals).fiber.take();
@@ -2087,14 +2089,14 @@ impl VM {
                     return Ok(scope.create_null());
                 }
                 Ok(FiberAction::Return(value)) => {
-                    let caller = if let Some(fiber) = scope.as_ref(&self.globals).fiber.as_ref() {
+                    let caller = if let Some(fiber) = self.fiber(scope) {
                         fiber.borrow_mut().return_from_fiber_take_caller(scope)
                     } else {
                         // This should never be reached?
                         unimplemented!();
                     };
                     scope.as_mut(&self.globals).fiber = caller.map(|local| local.into());
-                    match scope.as_ref(&self.globals).fiber.as_ref() {
+                    match self.fiber(scope) {
                         Some(fiber) => fiber.borrow_mut().push_return_value(value),
                         None => return Ok(value),
                     }
