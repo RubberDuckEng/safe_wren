@@ -1,21 +1,17 @@
 Unexpected output on stderr:
-List metaclass does not implement 'new()'.
+Num does not implement '-(_)'.
 Unexpected output on stderr:
-[#core line 113] in toList
-Unexpected output on stderr:
-[#core line 251] in trim_(_,_,_)
+[#core line 266] in trim_(_,_,_)
 Unexpected output on stderr:
 [#core line 239] in trim()
 Unexpected output on stderr:
-[./test/core/string/trim line 1] in <script>
+[./test/core/string/trim line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-List metaclass does not implement 'new()'.
-[#core line 113] in toList
-[#core line 251] in trim_(_,_,_)
+Num does not implement '-(_)'.
+[#core line 266] in trim_(_,_,_)
 [#core line 239] in trim()
-[./test/core/string/trim line 1] in <script>
+[./test/core/string/trim line 2] in <script>
 
-Missing expected output "true" on line 1.
 Missing expected output "true" on line 2.
 Missing expected output "true" on line 3.
 Missing expected output "true" on line 4.

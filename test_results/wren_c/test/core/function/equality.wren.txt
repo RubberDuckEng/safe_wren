@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-List metaclass does not implement 'new()'.
+Range does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/core/function/equality line 19] in <script>
+[./test/core/function/equality line 20] in <script>
 Expected return code 0 and got 70. Stderr:
-List metaclass does not implement 'new()'.
-[./test/core/function/equality line 19] in <script>
+Range does not implement 'iterate(_)'.
+[./test/core/function/equality line 20] in <script>
 
 Missing expected output "false" on line 23.

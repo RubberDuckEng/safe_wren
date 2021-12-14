@@ -1,3 +1,0 @@
-Expected runtime error "Iterator must be an integer." and got:
-List metaclass does not implement 'new()'.
-Expected runtime error on line 2 but was on line 1.

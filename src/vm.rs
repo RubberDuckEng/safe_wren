@@ -1144,6 +1144,20 @@ impl VM {
             .unwrap()
     }
 
+    // FIXME: How to share code?
+    pub(crate) fn new_list_from_heap<'a>(
+        &self,
+        scope: &'a HandleScope,
+        contents: Vec<HeapHandle<()>>,
+    ) -> LocalHandle<'a, ObjList> {
+        scope
+            .take(ObjList {
+                class_obj: scope.as_ref(self.core.as_ref().unwrap()).list.clone(),
+                elements: contents.into(),
+            })
+            .unwrap()
+    }
+
     pub(crate) fn new_map<'a>(&self, scope: &'a HandleScope) -> LocalHandle<'a, ObjMap> {
         scope
             .take(ObjMap {

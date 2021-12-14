@@ -1,2 +1,0 @@
-Expected runtime error "Size cannot be negative." and got:
-List metaclass does not implement 'filled(_,_)'.

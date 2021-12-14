@@ -1,12 +1,14 @@
 Unexpected output on stderr:
-List metaclass does not implement 'new()'.
+Range does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/core/list/plus line 1] in <script>
+[#core line 365] in +(_)
+Unexpected output on stderr:
+[./test/core/list/plus line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-List metaclass does not implement 'new()'.
-[./test/core/list/plus line 1] in <script>
+Range does not implement 'iterate(_)'.
+[#core line 365] in +(_)
+[./test/core/list/plus line 2] in <script>
 
-Missing expected output "[1, 2, 3, 4, 5, 6]" on line 1.
 Missing expected output "[1, 2, 3, 4, 5, 6]" on line 2.
 Missing expected output "[1, 2, 3, a, b, c]" on line 3.
 Missing expected output "[]" on line 4.

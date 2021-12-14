@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-List metaclass does not implement 'new()'.
-Unexpected output on stderr:
-[./test/core/list/each_no_items line 2] in <script>
-Expected return code 0 and got 70. Stderr:
-List metaclass does not implement 'new()'.
-[./test/core/list/each_no_items line 2] in <script>
-
-Missing expected output "0" on line 3.

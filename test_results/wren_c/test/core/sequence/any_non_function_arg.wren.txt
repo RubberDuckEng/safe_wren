@@ -1,2 +1,0 @@
-Expected runtime error "String does not implement 'call(_)'." and got:
-List metaclass does not implement 'new()'.

@@ -10,12 +10,15 @@ use std::ops::*;
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
-// // wren_c has these AS_RANGE, AS_CLASS, etc. macros
-// // which (unsafely) do direct "downcasts" to the type.
-// // These are our safer (and error-message sharing) alternatives.
-// fn unwrap_this_as_range(args: &[Value]) -> Handle<ObjRange> {
-//     args[0].try_into_range().unwrap()
-// }
+// wren_c has these AS_RANGE, AS_CLASS, etc. macros
+// which (unsafely) do direct "downcasts" to the type.
+// These are our safer (and error-message sharing) alternatives.
+fn unwrap_this_as_range<'a>(
+    scope: &'a HandleScope,
+    args: &[HeapHandle<()>],
+) -> LocalHandle<'a, ObjRange> {
+    scope.from_heap(&args[0]).try_downcast().unwrap()
+}
 // FIXME: Unclear if this should return String or LocalHandle<String>
 // before vmgc it returned String.  LocalHandle<String> is potentially
 // cheaper in the large string case?
@@ -31,21 +34,30 @@ fn unwrap_this_as_closure<'a>(
 ) -> LocalHandle<'a, ObjClosure> {
     scope.from_heap(&args[0]).try_downcast().unwrap()
 }
-// fn unwrap_this_as_map(args: &[Value]) -> Handle<ObjMap> {
-//     args[0].try_into_map().unwrap()
-// }
-// fn unwrap_this_as_list(args: &[Value]) -> Handle<ObjList> {
-//     args[0].try_into_list().unwrap()
-// }
+fn unwrap_this_as_map<'a>(
+    scope: &'a HandleScope,
+    args: &[HeapHandle<()>],
+) -> LocalHandle<'a, ObjMap> {
+    scope.from_heap(&args[0]).try_downcast().unwrap()
+}
+fn unwrap_this_as_list<'a>(
+    scope: &'a HandleScope,
+    args: &[HeapHandle<()>],
+) -> LocalHandle<'a, ObjList> {
+    scope.from_heap(&args[0]).try_downcast().unwrap()
+}
 fn unwrap_this_as_class<'a>(
     scope: &'a HandleScope,
     args: &[HeapHandle<()>],
 ) -> LocalHandle<'a, ObjClass> {
     scope.from_heap(&args[0]).try_downcast().unwrap()
 }
-// fn unwrap_this_as_fiber(args: &[Value]) -> Handle<ObjFiber> {
-//     args[0].try_into_fiber().unwrap()
-// }
+fn unwrap_this_as_fiber<'a>(
+    scope: &'a HandleScope,
+    args: &[HeapHandle<()>],
+) -> LocalHandle<'a, ObjList> {
+    scope.from_heap(&args[0]).try_downcast().unwrap()
+}
 
 fn num_from_usize<'a>(scope: &'a HandleScope, value: usize) -> LocalHandle<'a, f64> {
     scope.create_num(value as f64)
@@ -469,7 +481,7 @@ fn object_to_string<'a>(
 //         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let range_cell = unwrap_this_as_range(&args);
 //             let range = range_cell.borrow();
-//             Ok(Value::$return_type(range.$method))
+//             Ok(scope.$return_type(range.$method))
 //         }
 //     };
 // }
@@ -480,7 +492,7 @@ fn object_to_string<'a>(
 //         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let range_cell = unwrap_this_as_range(&args);
 //             let range = range_cell.borrow();
-//             Ok(Value::$return_type(range.$method()))
+//             Ok(scope.$return_type(range.$method()))
 //         }
 //     };
 // }
@@ -584,7 +596,7 @@ fn bool_to_string<'a>(
 //             "Function cannot take more than one parameter.",
 //         ))
 //     } else {
-//         Ok(Value::Fiber(vm.new_fiber(closure)))
+//         Ok(vm.new_fiber(closure).erase_type())
 //     }
 // }
 
@@ -604,8 +616,8 @@ fn bool_to_string<'a>(
 //     }
 // }
 
-// fn fiber_current(vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(Value::Fiber(vm.fiber.as_ref().unwrap().clone()))
+// fn fiber_current<'a>(scope: &'a HandleScope, vm: &VM, _args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
+//     Ok(vm.fiber(scope)))
 // }
 
 // fn fiber_suspend(_vm: &VM, _args: &[Value]) -> Result<FiberAction> {
@@ -613,7 +625,7 @@ fn bool_to_string<'a>(
 // }
 
 // fn fiber_yield(_vm: &VM, _args: &[Value]) -> Result<FiberAction> {
-//     Ok(FiberAction::Return(Value::Null))
+//     Ok(FiberAction::Return(scope.create_null()))
 // }
 
 // fn fiber_yield1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
@@ -623,7 +635,7 @@ fn bool_to_string<'a>(
 // fn fiber_call(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
 //     let this = unwrap_this_as_fiber(&args);
 //     validate_fiber_action(&this.borrow(), true, "call")?;
-//     Ok(FiberAction::Call(this, Value::Null))
+//     Ok(FiberAction::Call(this, scope.create_null()))
 // }
 
 // fn fiber_call1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
@@ -635,7 +647,7 @@ fn bool_to_string<'a>(
 // fn fiber_transfer(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
 //     let this = unwrap_this_as_fiber(&args);
 //     validate_fiber_action(&this.borrow(), false, "transfer to")?;
-//     Ok(FiberAction::Transfer(this, Value::Null))
+//     Ok(FiberAction::Transfer(this, scope.create_null()))
 // }
 
 // fn fiber_transfer1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
@@ -653,7 +665,7 @@ fn bool_to_string<'a>(
 // fn fiber_try(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
 //     let this = unwrap_this_as_fiber(&args);
 //     validate_fiber_action(&this.borrow(), true, "try")?;
-//     Ok(FiberAction::Try(this, Value::Null))
+//     Ok(FiberAction::Try(this, scope.create_null()))
 // }
 
 // fn fiber_try1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
@@ -1094,8 +1106,8 @@ fn fn_to_string<'a>(
     Ok(scope.str("<fn>")?.erase_type())
 }
 
-// fn map_new(vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(Value::Map(vm.new_map()))
+// fn map_new<'a>(scope: &'a HandleScope, vm: &VM, _args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
+//     Ok(vm.new_map())
 // }
 
 // fn map_subscript<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
@@ -1105,7 +1117,7 @@ fn fn_to_string<'a>(
 //     let map = map_cell.borrow();
 //     let maybe_value = map.data.get(key);
 //     match maybe_value {
-//         None => Ok(Value::Null),
+//         None => Ok(scope.create_null()),
 //         Some(v) => Ok(v.clone()),
 //     }
 // }
@@ -1124,7 +1136,7 @@ fn fn_to_string<'a>(
 //         arg,
 //         Value::Boolean(_)
 //             | Value::Class(_)
-//             | Value::Null
+//             | Value::Null()
 //             | Value::Num(_)
 //             | Value::Range(_)
 //             | Value::String(_)
@@ -1149,13 +1161,13 @@ fn fn_to_string<'a>(
 //     let map = unwrap_this_as_map(&args);
 //     map.borrow_mut().data.insert(key.clone(), value.clone());
 //     // Return the map itself.
-//     Ok(Value::Map(map))
+//     Ok(map)
 // }
 
 // fn map_clear<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map = unwrap_this_as_map(&args);
 //     map.borrow_mut().data.clear();
-//     Ok(Value::Null)
+//     Ok(scope.create_null())
 // }
 
 // fn map_contains_key<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
@@ -1178,7 +1190,7 @@ fn fn_to_string<'a>(
 //     let map = unwrap_this_as_map(&args);
 //     let maybe_value = map.borrow_mut().data.remove(key);
 //     match maybe_value {
-//         None => Ok(Value::Null),
+//         None => Ok(scope.create_null()),
 //         Some(value) => Ok(value),
 //     }
 // }
@@ -1225,18 +1237,26 @@ fn fn_to_string<'a>(
 //     Ok(entries.nth(index).unwrap().1.clone())
 // }
 
-// fn list_filled<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let size = validate_int(&args[1], "Size")?;
-//     if size < 0.0 {
-//         return Err(VMError::from_str("Size cannot be negative."));
-//     }
-//     let contents = vec![args[2].clone(); size as usize];
-//     Ok(Value::List(vm.new_list(contents)))
-// }
+fn list_filled<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let size = validate_int(&args[1], "Size")?;
+    if size < 0.0 {
+        return Err(VMError::from_str("Size cannot be negative."));
+    }
+    let contents = vec![args[2].clone(); size as usize];
+    Ok(vm.new_list_from_heap(scope, contents).erase_type())
+}
 
-// fn list_new(vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(Value::List(vm.new_list(Vec::new())))
-// }
+fn list_new<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(vm.new_list(scope, Vec::new()).erase_type())
+}
 
 struct Range {
     range: std::ops::RangeInclusive<usize>,
@@ -1308,99 +1328,135 @@ fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
     }
 }
 
-// fn list_subscript<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
+fn list_subscript<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    // HeapHandle does not have try_as_ref.
+    let arg = scope.from_heap(&args[1]);
 
-//     match &args[1] {
-//         Value::Num(_) => {
-//             let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
-//             Ok(list.borrow().elements[index].clone())
-//         }
-//         Value::Range(r) => {
-//             let range = calculate_range(&r.borrow(), list.borrow().len())?;
-//             if range.range.is_empty() {
-//                 return Ok(Value::List(vm.new_list(Vec::new())));
-//             }
-//             let slice = &list.borrow().elements[range.range];
-//             let mut vec = slice.to_vec();
-//             if range.reverse {
-//                 vec.reverse();
-//             }
-//             Ok(Value::List(vm.new_list(vec)))
-//         }
-//         _ => Err(VMError::from_str("Subscript must be a number or a range.")),
-//     }
-// }
+    if arg.is_num() {
+        let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
+        Ok(scope.from_heap(&list.borrow().elements[index]))
+    } else if let Some(r) = arg.try_as_ref::<ObjRange>() {
+        let range = calculate_range(r, list.borrow().len())?;
+        if range.range.is_empty() {
+            return Ok(vm.new_list(scope, Vec::new()).erase_type());
+        }
+        let slice = &list.borrow().elements[range.range];
+        let mut vec = slice.to_vec();
+        if range.reverse {
+            vec.reverse();
+        }
+        Ok(vm.new_list_from_heap(scope, vec).erase_type())
+    } else {
+        Err(VMError::from_str("Subscript must be a number or a range."))
+    }
+}
 
-// fn list_subscript_setter<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
-//     list.borrow_mut().elements[index] = args[2].clone();
-//     Ok(args[2].clone())
-// }
+fn list_subscript_setter<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
+    list.borrow_mut().elements[index] = args[2].clone();
+    Ok(scope.from_heap(&args[2]))
+}
 
-// fn list_add<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let value = &args[1];
-//     let list = unwrap_this_as_list(&args);
-//     list.borrow_mut().elements.push(value.clone());
-//     Ok(value.clone())
-// }
+fn list_add<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let value = scope.from_heap(&args[1]);
+    let list = unwrap_this_as_list(scope, &args);
+    list.borrow_mut().elements.push(value.into());
+    Ok(value)
+}
 
-// // Adds an element to the list and then returns the list itself. This is called
-// // by the compiler when compiling list literals instead of using add() to
-// // minimize stack churn.
-// fn list_add_core<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let value = &args[1];
-//     let list = unwrap_this_as_list(&args);
-//     list.borrow_mut().elements.push(value.clone());
-//     Ok(args[0].clone())
-// }
+// Adds an element to the list and then returns the list itself. This is called
+// by the compiler when compiling list literals instead of using add() to
+// minimize stack churn.
+fn list_add_core<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let value = &args[1];
+    let list = unwrap_this_as_list(scope, &args);
+    list.borrow_mut().elements.push(value.clone());
+    Ok(list.erase_type())
+}
 
-// fn list_clear<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     list.borrow_mut().elements.clear();
-//     Ok(Value::Null)
-// }
-// fn list_insert<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let elements = &mut list.borrow_mut().elements;
-//     let count = elements.len();
-//     // count + 1 here so you can "insert" at the very end.
-//     let index = validate_index(&args[1], count + 1, "Index")?;
-//     if index == count {
-//         elements.push(args[2].clone());
-//     } else {
-//         elements.insert(index, args[2].clone());
-//     }
-//     Ok(args[2].clone())
-// }
+fn list_clear<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    list.borrow_mut().elements.clear();
+    Ok(scope.create_null())
+}
+fn list_insert<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let elements = &mut list.borrow_mut().elements;
+    let count = elements.len();
+    // count + 1 here so you can "insert" at the very end.
+    let index = validate_index(&args[1], count + 1, "Index")?;
+    if index == count {
+        elements.push(args[2].clone());
+    } else {
+        elements.insert(index, args[2].clone());
+    }
+    Ok(scope.from_heap(&args[2]))
+}
 
-// fn list_remove_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
-//     match maybe_index {
-//         None => Ok(Value::Null),
-//         Some(index) => {
-//             let value = list.borrow_mut().elements.remove(index);
-//             Ok(value)
-//         }
-//     }
-// }
+fn list_remove_value<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
+    match maybe_index {
+        None => Ok(scope.create_null()),
+        Some(index) => {
+            let value = list.borrow_mut().elements.remove(scope, index);
+            Ok(value)
+        }
+    }
+}
 
-// fn list_index_of<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
-//     Ok(index_or_neg_one(maybe_index))
-// }
+fn list_index_of<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
+    Ok(index_or_neg_one(scope, maybe_index).erase_type())
+}
 
-// fn list_swap<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let index_a = validate_index(&args[1], list.borrow().len(), "Index 0")?;
-//     let index_b = validate_index(&args[2], list.borrow().len(), "Index 1")?;
+fn list_swap<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let index_a = validate_index(&args[1], list.borrow().len(), "Index 0")?;
+    let index_b = validate_index(&args[2], list.borrow().len(), "Index 1")?;
 
-//     list.borrow_mut().elements.swap(index_a, index_b);
-//     Ok(Value::Null)
-// }
+    list.borrow_mut().elements.swap(index_a, index_b);
+    Ok(scope.create_null())
+}
 
 fn validate_int_value(value: f64, arg_name: &str) -> Result<f64> {
     if !f64_is_integer(value) {
@@ -1418,25 +1474,29 @@ fn validate_int(value: &HeapHandle<()>, arg_name: &str) -> Result<f64> {
     validate_int_value(num, arg_name)
 }
 
-// fn list_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let elements_len = list.borrow().len() as f64;
+fn list_iterate<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let elements_len = list.borrow().len() as f64;
 
-//     if args[1].is_null() {
-//         if elements_len == 0.0 {
-//             return Ok(scope.create_bool(false));
-//         }
-//         return Ok(scope.create_num(0.0));
-//     }
+    if args[1].is_null() {
+        if elements_len == 0.0 {
+            return Ok(scope.create_bool(false).erase_type());
+        }
+        return Ok(scope.create_num(0.0).erase_type());
+    }
 
-//     let index = validate_int(&args[1], "Iterator")?;
-//     // Stop if we're out of bounds.
-//     if index < 0.0 || index >= elements_len - 1.0 {
-//         return Ok(scope.create_bool(false));
-//     }
-//     // Otherwise, move to the next index.
-//     Ok(scope.create_num(index + 1.0))
-// }
+    let index = validate_int(&args[1], "Iterator")?;
+    // Stop if we're out of bounds.
+    if index < 0.0 || index >= elements_len - 1.0 {
+        return Ok(scope.create_bool(false).erase_type());
+    }
+    // Otherwise, move to the next index.
+    Ok(scope.create_num(index + 1.0).erase_type())
+}
 
 fn validate_index(value: &HeapHandle<()>, count: usize, arg_name: &str) -> Result<usize> {
     let num = validate_num(value, arg_name)?;
@@ -1461,26 +1521,36 @@ fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<
     }
 }
 
-// fn list_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
+fn list_iterator_value<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
 
-//     let index = validate_index(&args[1], list.borrow().len(), "Iterator")?;
-//     let value = list.borrow().elements[index].clone();
-//     Ok(value)
-// }
+    let index = validate_index(&args[1], list.borrow().len(), "Iterator")?;
+    Ok(scope.from_heap(&list.borrow().elements[index]))
+}
 
-// fn list_remove_at<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let index = validate_index(&args[1], list.borrow().len(), "Index")?;
-//     let value = list.borrow_mut().elements.remove(index);
-//     Ok(value)
-// }
+fn list_remove_at<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let index = validate_index(&args[1], list.borrow().len(), "Index")?;
+    Ok(list.borrow_mut().elements.remove(scope, index))
+}
 
-// fn list_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let list = unwrap_this_as_list(&args);
-//     let count = list.borrow().len();
-//     Ok(num_from_usize(scope, count))
-// }
+fn list_count<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let list = unwrap_this_as_list(scope, &args);
+    let count = list.borrow().len();
+    Ok(num_from_usize(scope, count).erase_type())
+}
 
 // Modeled after https://github.com/saghm/unescape-rs
 fn unescape(s: &str) -> String {
@@ -1523,7 +1593,7 @@ fn system_clock<'a>(
 }
 
 // fn system_gc<'a>(scope: &'a HandleScope, _vm: &VM, _args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(Value::Null)
+//     Ok(scope.create_null())
 // }
 
 fn system_write_string<'a>(
@@ -1809,24 +1879,24 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     primitive!(vm, core.string, "startsWith(_)", string_starts_with);
     primitive!(vm, core.string, "toString", string_to_string);
 
-    // let list = module.expect_class("List");
-    // primitive_static!(vm, list, "filled(_,_)", list_filled);
-    // primitive_static!(vm, list, "new()", list_new);
-    // primitive!(vm, list, "[_]", list_subscript);
-    // primitive!(vm, list, "[_]=(_)", list_subscript_setter);
-    // primitive!(vm, list, "add(_)", list_add);
-    // primitive!(vm, list, "addCore_(_)", list_add_core);
-    // primitive!(vm, list, "clear()", list_clear);
-    // primitive!(vm, list, "count", list_count);
-    // primitive!(vm, list, "insert(_,_)", list_insert);
-    // primitive!(vm, list, "iterate(_)", list_iterate);
-    // primitive!(vm, list, "iteratorValue(_)", list_iterator_value);
-    // primitive!(vm, list, "removeAt(_)", list_remove_at);
-    // primitive!(vm, list, "remove(_)", list_remove_value);
-    // primitive!(vm, list, "indexOf(_)", list_index_of);
-    // primitive!(vm, list, "swap(_,_)", list_swap);
+    let list = module.expect_class(scope, "List");
+    primitive_static!(vm, list, "filled(_,_)", list_filled);
+    primitive_static!(vm, list, "new()", list_new);
+    primitive!(vm, list, "[_]", list_subscript);
+    primitive!(vm, list, "[_]=(_)", list_subscript_setter);
+    primitive!(vm, list, "add(_)", list_add);
+    primitive!(vm, list, "addCore_(_)", list_add_core);
+    primitive!(vm, list, "clear()", list_clear);
+    primitive!(vm, list, "count", list_count);
+    primitive!(vm, list, "insert(_,_)", list_insert);
+    primitive!(vm, list, "iterate(_)", list_iterate);
+    primitive!(vm, list, "iteratorValue(_)", list_iterator_value);
+    primitive!(vm, list, "removeAt(_)", list_remove_at);
+    primitive!(vm, list, "remove(_)", list_remove_value);
+    primitive!(vm, list, "indexOf(_)", list_index_of);
+    primitive!(vm, list, "swap(_,_)", list_swap);
 
-    // let map = module.expect_class("Map");
+    // let map = module.expect_class(scope, "Map");
     // primitive_static!(vm, map, "new()", map_new);
     // primitive!(vm, map, "[_]", map_subscript);
     // primitive!(vm, map, "[_]=(_)", map_subscript_setter);

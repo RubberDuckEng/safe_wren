@@ -1,2 +1,0 @@
-Expected runtime error "Num does not implement 'badMethod'." and got:
-List metaclass does not implement 'new()'.

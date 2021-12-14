@@ -1,5 +1,0 @@
-Expected runtime error "Foo does not implement ''." and got:
-List metaclass does not implement 'new()'.
-Expected runtime error on line 15 but was on line 4.
-Missing expected output "Foo.setter = 1" on line 21.
-Missing expected output "Foo.method()" on line 22.

@@ -1,14 +1,16 @@
 Unexpected output on stderr:
-List metaclass does not implement 'new()'.
+Num does not implement '-(_)'.
 Unexpected output on stderr:
-[#core line 113] in toList
+[#core line 145] in iterate(_)
 Unexpected output on stderr:
-[./test/core/sequence/skip line 19] in <script>
+[#core line 114] in toList
+Unexpected output on stderr:
+[./test/core/sequence/skip line 22] in <script>
 Expected return code 0 and got 70. Stderr:
-List metaclass does not implement 'new()'.
-[#core line 113] in toList
-[./test/core/sequence/skip line 19] in <script>
+Num does not implement '-(_)'.
+[#core line 145] in iterate(_)
+[#core line 114] in toList
+[./test/core/sequence/skip line 22] in <script>
 
-Missing expected output "[1, 2, 3]" on line 19.
 Missing expected output "[2, 3]" on line 22.
 Missing expected output "true" on line 25.

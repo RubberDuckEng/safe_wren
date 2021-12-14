@@ -1,9 +1,12 @@
 Unexpected output on stderr:
-List metaclass does not implement 'new()'.
+Range does not implement 'iterate(_)'.
+Unexpected output on stderr:
+[#core line 377] in *(_)
 Unexpected output on stderr:
 [./test/core/list/multiply line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-List metaclass does not implement 'new()'.
+Range does not implement 'iterate(_)'.
+[#core line 377] in *(_)
 [./test/core/list/multiply line 1] in <script>
 
 Missing expected output "[]" on line 1.

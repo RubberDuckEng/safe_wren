@@ -1,2 +1,2 @@
 Expected runtime error "Count must be a non-negative integer." and got:
-List metaclass does not implement 'new()'.
+Fiber metaclass does not implement 'abort(_)'.
