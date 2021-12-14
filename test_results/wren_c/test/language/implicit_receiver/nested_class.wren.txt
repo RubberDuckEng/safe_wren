@@ -1,9 +1,0 @@
-Expected output "outer getter" on line 17 and got "instance of String".
-Expected output "outer setter" on line 18 and got "instance of String".
-Expected output "outer method" on line 19 and got "instance of String".
-Expected output "inner getter" on line 37 and got "instance of String".
-Expected output "inner setter" on line 38 and got "instance of String".
-Expected output "inner method" on line 39 and got "instance of String".
-Expected output "outer getter" on line 45 and got "instance of String".
-Expected output "outer setter" on line 46 and got "instance of String".
-Expected output "outer method" on line 47 and got "instance of String".

@@ -1,3 +1,0 @@
-Expected output "false" on line 2 and got "instance of String".
-Expected output "null" on line 3 and got "instance of String".
-Expected output "empty" on line 8 and got "instance of String".

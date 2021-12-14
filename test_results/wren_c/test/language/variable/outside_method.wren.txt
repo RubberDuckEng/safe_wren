@@ -1,2 +1,0 @@
-Expected output "method" on line 19 and got "instance of String".
-Expected output "class method" on line 20 and got "instance of String".

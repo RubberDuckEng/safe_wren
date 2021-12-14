@@ -1,3 +1,0 @@
-Expected output "getter" on line 17 and got "instance of String".
-Expected output "setter" on line 18 and got "instance of String".
-Expected output "method" on line 19 and got "instance of String".

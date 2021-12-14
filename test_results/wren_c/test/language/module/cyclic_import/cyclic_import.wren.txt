@@ -9,7 +9,6 @@ List metaclass does not implement 'new()'.
 [./test/language/module/cyclic_import/a line 5] in <script>
 [./test/language/module/cyclic_import/cyclic_import line 1] in <script>
 
-Expected output "start a" on line 4 and got "instance of String".
 Missing expected output "a defined a value" on line 5.
 Missing expected output "start b" on line 6.
 Missing expected output "b defined b value" on line 7.

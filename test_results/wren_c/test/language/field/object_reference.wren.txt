@@ -1,4 +1,0 @@
-Expected output "a" on line 30 and got "instance of String".
-Expected output "c" on line 31 and got "instance of String".
-Expected output "b" on line 32 and got "instance of String".
-Expected output "d" on line 33 and got "instance of String".

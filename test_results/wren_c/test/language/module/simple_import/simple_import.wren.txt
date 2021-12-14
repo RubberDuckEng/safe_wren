@@ -1,2 +1,0 @@
-Expected output "ran module" on line 2 and got "instance of String".
-Expected output "from module" on line 4 and got "instance of String".

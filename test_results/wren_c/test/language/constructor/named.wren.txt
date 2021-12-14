@@ -1,1 +1,0 @@
-Expected output "named" on line 14 and got "instance of String".

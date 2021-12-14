@@ -1,2 +1,0 @@
-Expected output "key" on line 3 and got "instance of String".
-Expected output "value" on line 4 and got "instance of String".

@@ -1,5 +1,0 @@
-Expected output """ on line 2 and got "instance of String".
-Expected output "\" on line 3 and got "instance of String".
-Expected output "(" on line 4 and got "instance of String".
-Expected output ")" on line 5 and got "instance of String".
-Missing expected output "%" on line 6.

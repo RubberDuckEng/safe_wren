@@ -1,2 +1,2 @@
 Expected runtime error "To must be a string." and got:
-String does not implement 'iterate(_)'.
+Fiber metaclass does not implement 'abort(_)'.

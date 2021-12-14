@@ -9,7 +9,5 @@ List metaclass does not implement 'new()'.
 [./test/language/method/static line 6] in bar(_)
 [./test/language/method/static line 12] in <script>
 
-Expected output "on instance" on line 10 and got "instance of String".
-Expected output "on metaclass" on line 11 and got "instance of String".
 Missing expected output "on instance arg" on line 12.
 Missing expected output "on metaclass arg" on line 13.

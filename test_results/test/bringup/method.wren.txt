@@ -1,3 +1,0 @@
-Expected output "foo" on line 8 and got "instance of String".
-Expected output "bar" on line 9 and got "instance of String".
-Expected output "baz" on line 10 and got "instance of String".

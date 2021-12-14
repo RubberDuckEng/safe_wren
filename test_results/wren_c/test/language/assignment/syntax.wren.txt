@@ -1,4 +1,0 @@
-Expected output "chain" on line 5 and got "instance of String".
-Expected output "chain" on line 6 and got "instance of String".
-Expected output "var" on line 10 and got "instance of String".
-Expected output "var" on line 11 and got "instance of String".

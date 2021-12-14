@@ -1,1 +1,0 @@
-Expected output "result" on line 8 and got "instance of String".

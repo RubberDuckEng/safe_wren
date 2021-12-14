@@ -1,3 +1,0 @@
-Expected output "c" on line 7 and got "instance of String".
-Expected output "c" on line 8 and got "instance of String".
-Expected output "c" on line 9 and got "instance of String".

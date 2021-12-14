@@ -6,4 +6,3 @@ Expected return code 0 and got 70. Stderr:
 Fiber metaclass does not implement 'yield(_)'.
 [./test/core/fiber/yield_with_value_from_main line 2] in <script>
 
-Expected output "before" on line 1 and got "instance of String".

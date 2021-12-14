@@ -1,1 +1,0 @@
-Expected output "PASS" on line 4 and got "instance of String".

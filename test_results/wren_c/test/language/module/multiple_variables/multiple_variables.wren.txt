@@ -1,6 +1,0 @@
-Expected output "ran module" on line 4 and got "instance of String".
-Expected output "from module one" on line 6 and got "instance of String".
-Expected output "from module two" on line 7 and got "instance of String".
-Expected output "from module three" on line 8 and got "instance of String".
-Expected output "from module four" on line 9 and got "instance of String".
-Expected output "from module five" on line 10 and got "instance of String".

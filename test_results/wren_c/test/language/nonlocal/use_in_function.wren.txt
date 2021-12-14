@@ -1,1 +1,0 @@
-Expected output "global" on line 4 and got "instance of String".

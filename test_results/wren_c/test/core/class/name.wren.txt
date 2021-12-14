@@ -1,7 +1,0 @@
-Expected output "Foo" on line 3 and got "instance of String".
-Expected output "Foo metaclass" on line 4 and got "instance of String".
-Expected output "Object" on line 7 and got "instance of String".
-Expected output "Bool" on line 8 and got "instance of String".
-Expected output "Class" on line 9 and got "instance of String".
-Expected output "Object metaclass" on line 12 and got "instance of String".
-Expected output "Bool metaclass" on line 13 and got "instance of String".

@@ -1,7 +1,5 @@
 Expected runtime error "Foo does not implement ''." and got:
 List metaclass does not implement 'new()'.
 Expected runtime error on line 15 but was on line 4.
-Expected output "Foo constructor" on line 19 and got "instance of String".
-Expected output "Foo.getter" on line 20 and got "instance of String".
 Missing expected output "Foo.setter = 1" on line 21.
 Missing expected output "Foo.method()" on line 22.

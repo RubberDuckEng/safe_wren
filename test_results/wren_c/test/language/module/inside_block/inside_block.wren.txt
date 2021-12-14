@@ -1,3 +1,0 @@
-Expected output "ran module" on line 5 and got "instance of String".
-Expected output "from module" on line 7 and got "instance of String".
-Expected output "outer" on line 10 and got "instance of String".

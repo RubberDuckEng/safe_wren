@@ -1,3 +1,0 @@
-Expected output "good" on line 2 and got "instance of String".
-Expected output "good" on line 3 and got "instance of String".
-Expected output "block" on line 6 and got "instance of String".

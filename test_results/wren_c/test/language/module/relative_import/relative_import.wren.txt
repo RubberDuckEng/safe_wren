@@ -1,6 +1,0 @@
-Expected output "sub/module" on line 3 and got "instance of String".
-Expected output "sub/module_2" on line 4 and got "instance of String".
-Expected output "sub/dir/module" on line 5 and got "instance of String".
-Expected output "sub/dir/module_2" on line 6 and got "instance of String".
-Expected output "sub/module_3" on line 7 and got "instance of String".
-Expected output "module_3" on line 8 and got "instance of String".

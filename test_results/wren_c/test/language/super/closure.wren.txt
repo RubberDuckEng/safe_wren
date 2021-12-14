@@ -1,1 +1,0 @@
-Expected output "Base" on line 12 and got "instance of String".

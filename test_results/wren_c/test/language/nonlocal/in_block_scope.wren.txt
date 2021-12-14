@@ -1,2 +1,0 @@
-Expected output "inner" on line 5 and got "instance of String".
-Expected output "outer" on line 8 and got "instance of String".

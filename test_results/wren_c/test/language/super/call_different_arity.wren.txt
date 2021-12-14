@@ -1,4 +1,0 @@
-Expected output "Derived.bar(a)" on line 19 and got "instance of String".
-Expected output "Base.foo" on line 20 and got "instance of String".
-Expected output "Base.foo(a)" on line 21 and got "instance of String".
-Expected output "Base.foo(a, b)" on line 22 and got "instance of String".

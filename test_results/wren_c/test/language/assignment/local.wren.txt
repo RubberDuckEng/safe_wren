@@ -1,4 +1,0 @@
-Expected output "before" on line 3 and got "instance of String".
-Expected output "after" on line 6 and got "instance of String".
-Expected output "arg" on line 8 and got "instance of String".
-Expected output "arg" on line 9 and got "instance of String".

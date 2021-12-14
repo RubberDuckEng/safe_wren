@@ -1,2 +1,0 @@
-Expected output "shadow" on line 4 and got "instance of String".
-Expected output "global" on line 6 and got "instance of String".

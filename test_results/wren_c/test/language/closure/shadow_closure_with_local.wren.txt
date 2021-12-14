@@ -1,3 +1,0 @@
-Expected output "closure" on line 5 and got "instance of String".
-Expected output "shadow" on line 7 and got "instance of String".
-Expected output "closure" on line 9 and got "instance of String".

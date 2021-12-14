@@ -1,2 +1,0 @@
-Expected output "getter" on line 24 and got "instance of String".
-Expected output "no args" on line 25 and got "instance of String".

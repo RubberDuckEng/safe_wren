@@ -1,6 +1,0 @@
-Expected output "outer" on line 6 and got "instance of String".
-Expected output "inner" on line 13 and got "instance of String".
-Expected output "outer" on line 18 and got "instance of String".
-Expected output "outer" on line 23 and got "instance of String".
-Expected output "inner" on line 30 and got "instance of String".
-Expected output "outer" on line 35 and got "instance of String".

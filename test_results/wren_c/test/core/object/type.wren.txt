@@ -1,1 +1,0 @@
-Expected output "Object metaclass" on line 13 and got "instance of String".

@@ -1,2 +1,0 @@
-Expected output "Derived.foo" on line 17 and got "instance of String".
-Expected output "Base.foo" on line 18 and got "instance of String".

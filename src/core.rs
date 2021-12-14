@@ -16,9 +16,15 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // fn unwrap_this_as_range(args: &[Value]) -> Handle<ObjRange> {
 //     args[0].try_into_range().unwrap()
 // }
-// fn unwrap_this_as_string(args: &[Value]) -> String {
-//     args[0].try_into_string().unwrap()
-// }
+// FIXME: Unclear if this should return String or LocalHandle<String>
+// before vmgc it returned String.  LocalHandle<String> is potentially
+// cheaper in the large string case?
+fn unwrap_this_as_string<'a>(
+    scope: &'a HandleScope,
+    args: &[HeapHandle<()>],
+) -> LocalHandle<'a, String> {
+    scope.from_heap(&args[0]).try_downcast().unwrap()
+}
 fn unwrap_this_as_closure<'a>(
     scope: &'a HandleScope,
     args: &[HeapHandle<()>],
@@ -40,6 +46,18 @@ fn unwrap_this_as_class<'a>(
 // fn unwrap_this_as_fiber(args: &[Value]) -> Handle<ObjFiber> {
 //     args[0].try_into_fiber().unwrap()
 // }
+
+fn num_from_usize<'a>(scope: &'a HandleScope, value: usize) -> LocalHandle<'a, f64> {
+    scope.create_num(value as f64)
+}
+
+fn num_from_u32<'a>(scope: &'a HandleScope, value: u32) -> LocalHandle<'a, f64> {
+    scope.create_num(value as f64)
+}
+
+fn num_from_u8<'a>(scope: &'a HandleScope, value: u8) -> LocalHandle<'a, f64> {
+    scope.create_num(value as f64)
+}
 
 macro_rules! num_constant {
     ($func:ident, $value:expr) => {
@@ -98,7 +116,7 @@ macro_rules! bitwise_num_op {
         ) -> Result<LocalHandle<'a, ()>> {
             let a = validate_num(&args[0], "this")? as u32;
             let b = validate_num(&args[1], "Right operand")? as u32;
-            Ok(scope.create_num(a.$method(&b) as f64).erase_type())
+            Ok(num_from_u32(scope, a.$method(&b)).erase_type())
         }
     };
 }
@@ -112,7 +130,7 @@ macro_rules! overflowing_bitwise_num_op {
         ) -> Result<LocalHandle<'a, ()>> {
             let a = validate_num(&args[0], "this")? as u32;
             let b = validate_num(&args[1], "Right operand")? as u32;
-            Ok(scope.create_num(a.$method(b).0 as f64).erase_type())
+            Ok(num_from_u32(scope, a.$method(b).0).erase_type())
         }
     };
 }
@@ -125,7 +143,7 @@ macro_rules! num_bitwise_unary_op {
             args: &[HeapHandle<()>],
         ) -> Result<LocalHandle<'a, ()>> {
             let a = validate_num(&args[0], "this")? as u32;
-            Ok(scope.create_num(a.$method() as f64).erase_type())
+            Ok(num_from_u32(scope, a.$method()).erase_type())
         }
     };
 }
@@ -483,7 +501,7 @@ fn object_to_string<'a>(
 //     }
 //     // Start the iteration.
 //     if args[1].is_null() {
-//         return Ok(Value::Num(range.from));
+//         return Ok(scope.create_num(range.from));
 //     }
 
 //     let mut iterator = validate_num(&args[1], "Iterator")?;
@@ -505,7 +523,7 @@ fn object_to_string<'a>(
 //         return Ok(scope.create_bool(false));
 //     }
 
-//     Ok(Value::Num(iterator))
+//     Ok(scope.create_num(iterator))
 // }
 
 // fn range_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
@@ -723,240 +741,319 @@ fn validate_string<'a>(
     Ok(handle.borrow().clone())
 }
 
-// fn string_from_code_point<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let num = validate_int(&args[1], "Code point")?;
-//     if num < 0.0 {
-//         Err(VMError::from_str("Code point cannot be negative."))
-//     } else if (num as u32) > 0x10ffff {
-//         Err(VMError::from_str(
-//             "Code point cannot be greater than 0x10ffff.",
-//         ))
-//     } else {
-//         let c = char::from_u32(num as u32)
-//             .ok_or_else(|| VMError::from_str("Code point must be valid unicode"))?;
-//         Ok(scope.take(c.to_string()))
-//     }
-// }
+fn string_from_code_point<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let num = validate_int(&args[1], "Code point")?;
+    if num < 0.0 {
+        Err(VMError::from_str("Code point cannot be negative."))
+    } else if (num as u32) > 0x10ffff {
+        Err(VMError::from_str(
+            "Code point cannot be greater than 0x10ffff.",
+        ))
+    } else {
+        let c = char::from_u32(num as u32)
+            .ok_or_else(|| VMError::from_str("Code point must be valid unicode"))?;
+        Ok(scope.take(c.to_string())?.erase_type())
+    }
+}
 
-// fn string_from_byte<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let num = validate_int(&args[1], "Byte")?;
-//     if num < 0.0 {
-//         Err(VMError::from_str("Byte cannot be negative."))
-//     } else if (num as u32) > 0xff {
-//         Err(VMError::from_str("Byte cannot be greater than 0xff."))
-//     } else {
-//         let bytes = vec![num as u8];
-//         let string =
-//             String::from_utf8(bytes).map_err(|_| VMError::from_str("Byte must be valid utf8"))?;
-//         Ok(scope.take(string))
-//     }
-// }
+fn string_from_byte<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let num = validate_int(&args[1], "Byte")?;
+    if num < 0.0 {
+        Err(VMError::from_str("Byte cannot be negative."))
+    } else if (num as u32) > 0xff {
+        Err(VMError::from_str("Byte cannot be greater than 0xff."))
+    } else {
+        let bytes = vec![num as u8];
+        let string =
+            String::from_utf8(bytes).map_err(|_| VMError::from_str("Byte must be valid utf8"))?;
+        Ok(scope.take(string)?.erase_type())
+    }
+}
 
-// fn string_plus<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let a = unwrap_this_as_string(&args);
-//     let b = validate_string(&args[1], "Right operand")?;
-//     Ok(scope.take(a + &b))
-// }
+fn string_plus<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let a = unwrap_this_as_string(scope, &args);
+    let b = validate_string(scope, &args[1], "Right operand")?;
+    Ok(scope.take(a.borrow().clone() + &b)?.erase_type())
+}
 
-// fn adjust_range_to_char_boundaries(
-//     string: &str,
-//     range: std::ops::RangeInclusive<usize>,
-// ) -> std::ops::Range<usize> {
-//     let mut before = *range.start();
-//     let mut after = range.end() + 1;
-//     // wren_c only includes sequences whose first byte is in the range.
-//     while before <= after && !string.is_char_boundary(before) {
-//         before += 1;
-//     }
-//     while after < string.len() && !string.is_char_boundary(after) {
-//         after += 1;
-//     }
-//     // Intentionally converting to exclusive to avoid -1
-//     before..after
-// }
+fn adjust_range_to_char_boundaries(
+    string: &str,
+    range: std::ops::RangeInclusive<usize>,
+) -> std::ops::Range<usize> {
+    let mut before = *range.start();
+    let mut after = range.end() + 1;
+    // wren_c only includes sequences whose first byte is in the range.
+    while before <= after && !string.is_char_boundary(before) {
+        before += 1;
+    }
+    while after < string.len() && !string.is_char_boundary(after) {
+        after += 1;
+    }
+    // Intentionally converting to exclusive to avoid -1
+    before..after
+}
 
-// fn string_subscript<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let string = unwrap_this_as_string(&args);
+fn string_subscript<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let string = unwrap_this_as_string(scope, &args);
+    // HeapHandle doesn't have try_as_ref
+    let arg = scope.from_heap(&args[1]);
+    if arg.is_num() {
+        let index = validate_index(&arg.into(), string.borrow().len(), "Subscript")?;
+        Ok(wren_string_code_point_at(scope, string.borrow(), index)?.erase_type())
+    } else if let Some(r) = arg.try_as_ref::<ObjRange>() {
+        let range = calculate_range(r, string.borrow().len())?;
+        if range.range.is_empty() {
+            // FIXME: Should we have an emtpy string constant?
+            return Ok(scope.str("")?.erase_type());
+        }
+        let safe_range = adjust_range_to_char_boundaries(string.borrow(), range.range);
+        let slice = &string.borrow()[safe_range];
+        // This doesn't match the wren_c backwards range behavaior.
+        if range.reverse {
+            let result: String = slice.chars().rev().collect();
+            Ok(scope.take(result)?.erase_type())
+        } else {
+            Ok(scope.str(slice)?.erase_type())
+        }
+    } else {
+        Err(VMError::from_str("Subscript must be a number or a range."))
+    }
+}
 
-//     match &args[1] {
-//         Value::Num(_) => {
-//             let index = validate_index(&args[1], string.len(), "Subscript")?;
-//             Ok(wren_string_code_point_at(string, index))
-//         }
-//         Value::Range(r) => {
-//             let range = calculate_range(&r.borrow(), string.len())?;
-//             if range.range.is_empty() {
-//                 return Ok(Value::from_str(""));
-//             }
-//             let safe_range = adjust_range_to_char_boundaries(&string, range.range);
-//             let slice = &string[safe_range];
-//             // This doesn't match the wren_c backwards range behavaior.
-//             if range.reverse {
-//                 Ok(scope.take(slice.chars().rev().collect()))
-//             } else {
-//                 Ok(Value::from_str(slice))
-//             }
-//         }
-//         _ => Err(VMError::from_str("Subscript must be a number or a range.")),
-//     }
-// }
+fn string_to_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    // Do we need to confirm args[0] is a string?  wren_c does not.
+    Ok(scope.from_heap(&args[0]))
+}
 
-// fn string_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     // Do we need to confirm args[0] is a string?  wren_c does not.
-//     Ok(args[0].clone())
-// }
+fn string_byte_count<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(num_from_usize(scope, unwrap_this_as_string(scope, &args).borrow().len()).erase_type())
+}
 
-// fn string_byte_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(Value::from_usize(unwrap_this_as_string(&args).len()))
-// }
+fn string_code_point_at<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_string(scope, &args);
+    let index = validate_index(&args[1], this.borrow().len(), "Index")?;
 
-// fn string_code_point_at<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_string(&args);
-//     let index = validate_index(&args[1], this.len(), "Index")?;
+    // If we are in the middle of a UTF-8 sequence, indicate that.
+    if !this.borrow().is_char_boundary(index) {
+        return Ok(scope.create_num(-1.0).erase_type());
+    }
+    // FIXME: Might be a nicer way to do this in rust?
+    let c = this.borrow().split_at(index).1.chars().next().unwrap();
+    Ok(num_from_usize(scope, c as usize).erase_type())
+}
 
-//     // If we are in the middle of a UTF-8 sequence, indicate that.
-//     if !this.is_char_boundary(index) {
-//         return Ok(Value::Num(-1.0));
-//     }
-//     // FIXME: Might be a nicer way to do this in rust?
-//     let c = this.split_at(index).1.chars().next().unwrap();
-//     Ok(Value::from_usize(c as usize))
-// }
+fn string_byte_at<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let string = unwrap_this_as_string(scope, &args);
+    let index = validate_index(&args[1], string.borrow().len(), "Index")?;
+    Ok(num_from_u8(scope, string.borrow().as_bytes()[index]).erase_type())
+}
 
-// fn string_byte_at<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let string = unwrap_this_as_string(&args);
-//     let index = validate_index(&args[1], string.len(), "Index")?;
-//     Ok(Value::from_u8(string.as_bytes()[index]))
-// }
+fn string_contains<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_string(scope, &args);
+    let search = validate_string(scope, &args[1], "Argument")?;
+    Ok(scope
+        .create_bool(this.borrow().contains(&search))
+        .erase_type())
+}
+fn string_ends_with<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_string(scope, &args);
+    let search = validate_string(scope, &args[1], "Argument")?;
+    Ok(scope
+        .create_bool(this.borrow().ends_with(&search))
+        .erase_type())
+}
 
-// fn string_contains<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_string(&args);
-//     let search = validate_string(&args[1], "Argument")?;
-//     Ok(scope.create_bool(this.contains(&search)))
-// }
-// fn string_ends_with<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_string(&args);
-//     let search = validate_string(&args[1], "Argument")?;
-//     Ok(scope.create_bool(this.ends_with(&search)))
-// }
+fn index_or_neg_one<'a>(
+    scope: &'a HandleScope,
+    maybe_index: Option<usize>,
+) -> LocalHandle<'a, f64> {
+    match maybe_index {
+        None => scope.create_num(-1.0),
+        Some(index) => num_from_usize(scope, index),
+    }
+}
 
-// fn index_or_neg_one(maybe_index: Option<usize>) -> Value {
-//     match maybe_index {
-//         None => Value::Num(-1.0),
-//         Some(index) => Value::from_usize(index),
-//     }
-// }
+fn string_index_of1<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_string(scope, &args);
+    let search = validate_string(scope, &args[1], "Argument")?;
+    let maybe_index = this.borrow().find(&search);
+    Ok(index_or_neg_one(scope, maybe_index).erase_type())
+}
 
-// fn string_index_of1<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_string(&args);
-//     let search = validate_string(&args[1], "Argument")?;
-//     let maybe_index = this.find(&search);
-//     Ok(index_or_neg_one(maybe_index))
-// }
+fn string_index_of2<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_string(scope, &args);
+    let search = validate_string(scope, &args[1], "Argument")?;
+    let mut start = validate_index(&args[2], this.borrow().len(), "Start")?;
+    // Rust will panic if you try to slice in the middle of a code point.
+    // Since it's not possible to "find" a partial codepoint we just
+    // adjust start to the next valid char_boundary and search there.
+    while start < this.borrow().len() && !this.borrow().is_char_boundary(start) {
+        start += 1;
+    }
+    let maybe_index = this.borrow()[start..].find(&search);
+    // This cannot use index_or_neg_one, due to adding start.
+    Ok(match maybe_index {
+        None => scope.create_num(-1.0),
+        Some(index) => num_from_usize(scope, start + index),
+    }
+    .erase_type())
+}
 
-// fn string_index_of2<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_string(&args);
-//     let search = validate_string(&args[1], "Argument")?;
-//     let mut start = validate_index(&args[2], this.len(), "Start")?;
-//     // Rust will panic if you try to slice in the middle of a code point.
-//     // Since it's not possible to "find" a partial codepoint we just
-//     // adjust start to the next valid char_boundary and search there.
-//     while start < this.len() && !this.is_char_boundary(start) {
-//         start += 1;
-//     }
-//     let maybe_index = this[start..].find(&search);
-//     // This cannot use index_or_neg_one, due to adding start.
-//     match maybe_index {
-//         None => Ok(Value::Num(-1.0)),
-//         Some(index) => Ok(Value::from_usize(start + index)),
-//     }
-// }
+fn string_iterate<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let string = unwrap_this_as_string(scope, &args);
 
-// fn string_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let string = unwrap_this_as_string(&args);
+    // If we're starting the iteration, return the first index.
+    if args[1].is_null() {
+        return Ok(if string.borrow().is_empty() {
+            scope.create_bool(false).erase_type()
+        } else {
+            scope.create_num(0.0).erase_type()
+        });
+    }
 
-//     // If we're starting the iteration, return the first index.
-//     if args[1].is_null() {
-//         return Ok(if string.is_empty() {
-//             scope.create_bool(false)
-//         } else {
-//             Value::Num(0.0)
-//         });
-//     }
+    let num = validate_int(&args[1], "Iterator")?;
+    if num < 0.0 {
+        return Ok(scope.create_bool(false).erase_type());
+    }
+    let mut index = num as usize;
 
-//     let num = validate_int(&args[1], "Iterator")?;
-//     if num < 0.0 {
-//         return Ok(scope.create_bool(false));
-//     }
-//     let mut index = num as usize;
+    // Advance to the beginning of the next UTF-8 sequence.
+    loop {
+        index += 1;
+        if index >= string.borrow().len() {
+            return Ok(scope.create_bool(false).erase_type());
+        }
+        if string.borrow().is_char_boundary(index) {
+            return Ok(num_from_usize(scope, index).erase_type());
+        }
+    }
+}
 
-//     // Advance to the beginning of the next UTF-8 sequence.
-//     loop {
-//         index += 1;
-//         if index >= string.len() {
-//             return Ok(scope.create_bool(false));
-//         }
-//         if string.is_char_boundary(index) {
-//             return Ok(Value::from_usize(index));
-//         }
-//     }
-// }
+fn string_iterate_byte<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let string = unwrap_this_as_string(scope, &args);
 
-// fn string_iterate_byte<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let string = unwrap_this_as_string(&args);
+    // If we're starting the iteration, return the first index.
+    if args[1].is_null() {
+        return Ok(if string.borrow().is_empty() {
+            scope.create_bool(false).erase_type()
+        } else {
+            scope.create_num(0.0).erase_type()
+        });
+    }
 
-//     // If we're starting the iteration, return the first index.
-//     if args[1].is_null() {
-//         return Ok(if string.is_empty() {
-//             scope.create_bool(false)
-//         } else {
-//             Value::Num(0.0)
-//         });
-//     }
+    let num = validate_int(&args[1], "Iterator")?;
+    if num < 0.0 {
+        return Ok(scope.create_bool(false).erase_type());
+    }
 
-//     let num = validate_int(&args[1], "Iterator")?;
-//     if num < 0.0 {
-//         return Ok(scope.create_bool(false));
-//     }
+    // Advance to the next byte.
+    let index = num as usize + 1;
+    Ok(if index >= string.borrow().len() {
+        scope.create_bool(false).erase_type()
+    } else {
+        num_from_usize(scope, index).erase_type()
+    })
+}
 
-//     // Advance to the next byte.
-//     let index = num as usize + 1;
-//     Ok(if index >= string.len() {
-//         scope.create_bool(false)
-//     } else {
-//         Value::from_usize(index)
-//     })
-// }
+fn wren_string_code_point_at<'a>(
+    scope: &'a HandleScope,
+    string: &str,
+    index: usize,
+) -> Result<LocalHandle<'a, String>> {
+    let mut chars = string.char_indices();
+    let mut previous: char = char::default();
+    // FIXME: This does not implement the "return an invalid byte"
+    // behavior, since that's incompatible with using rust Strings
+    // as storage.
+    loop {
+        if let Some((start, c)) = chars.next() {
+            if start <= index {
+                previous = c;
+                continue;
+            }
+        }
+        return scope.take(previous.to_string()).map_err(|e| e.into());
+    }
+}
 
-// fn wren_string_code_point_at(string: String, index: usize) -> Value {
-//     let mut chars = string.char_indices();
-//     let mut previous: char = char::default();
-//     // FIXME: This does not implement the "return an invalid byte"
-//     // behavior, since that's incompatible with using rust Strings
-//     // as storage.
-//     loop {
-//         if let Some((start, c)) = chars.next() {
-//             if start <= index {
-//                 previous = c;
-//                 continue;
-//             }
-//         }
-//         return scope.take(previous.to_string());
-//     }
-// }
+fn string_iterator_value<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let string = unwrap_this_as_string(scope, &args);
+    let index = validate_index(&args[1], string.borrow().len(), "Iterator")?;
 
-// fn string_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let string = unwrap_this_as_string(&args);
-//     let index = validate_index(&args[1], string.len(), "Iterator")?;
+    Ok(wren_string_code_point_at(scope, string.borrow(), index)?.erase_type())
+}
 
-//     Ok(wren_string_code_point_at(string, index))
-// }
-
-// fn string_starts_with<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_string(&args);
-//     let search = validate_string(&args[1], "Argument")?;
-//     Ok(scope.create_bool(this.starts_with(&search)))
-// }
+fn string_starts_with<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_string(scope, &args);
+    let search = validate_string(scope, &args[1], "Argument")?;
+    Ok(scope
+        .create_bool(this.borrow().starts_with(&search))
+        .erase_type())
+}
 
 fn validate_fn<'a>(
     scope: &'a HandleScope,
@@ -1072,7 +1169,7 @@ fn fn_to_string<'a>(
 // fn map_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map = unwrap_this_as_map(&args);
 //     let count = map.borrow().len();
-//     Ok(Value::from_usize(count))
+//     Ok(num_from_usize(scope, count))
 // }
 
 // fn map_remove<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
@@ -1103,12 +1200,12 @@ fn fn_to_string<'a>(
 //         // Advance the iterator.
 //         let index = value as usize + 1;
 //         if index < map.borrow().len() {
-//             Ok(Value::from_usize(index))
+//             Ok(num_from_usize(scope, index))
 //         } else {
 //             Ok(scope.create_bool(false))
 //         }
 //     } else {
-//         Ok(Value::from_usize(0))
+//         Ok(num_from_usize(scope, 0))
 //     }
 // }
 
@@ -1141,75 +1238,75 @@ fn fn_to_string<'a>(
 //     Ok(Value::List(vm.new_list(Vec::new())))
 // }
 
-// struct Range {
-//     range: std::ops::RangeInclusive<usize>,
-//     reverse: bool,
-// }
+struct Range {
+    range: std::ops::RangeInclusive<usize>,
+    reverse: bool,
+}
 
-// impl Range {
-//     fn empty() -> Range {
-//         Range {
-//             range: 1..=0, // will be empty.
-//             reverse: false,
-//         }
-//     }
-// }
+impl Range {
+    fn empty() -> Range {
+        Range {
+            range: 1..=0, // will be empty.
+            reverse: false,
+        }
+    }
+}
 
-// // FIXME: This could be much simpler!
-// fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
-//     // Edge case: an empty range is allowed at the end of a sequence. This way,
-//     // list[0..-1] and list[0...list.count] can be used to copy a list even when
-//     // empty.
-//     let len_f = length as f64;
-//     let is_full_slice = if range.is_inclusive {
-//         range.from == len_f && range.to == -1.0
-//     } else {
-//         range.from == len_f && range.to == len_f
-//     };
-//     if is_full_slice {
-//         return Ok(Range::empty());
-//     }
-//     let from = validate_index_value(length, range.from as f64, "Range start")?;
-//     let from_f = from as f64;
-//     // Bounds check the end manually to handle exclusive ranges.
-//     let mut value = validate_int_value(range.to as f64, "Range end")?;
-//     // Negative indices count from the end.
-//     if value < 0.0 {
-//         value += len_f;
-//     }
+// FIXME: This could be much simpler!
+fn calculate_range(range: &ObjRange, length: usize) -> Result<Range> {
+    // Edge case: an empty range is allowed at the end of a sequence. This way,
+    // list[0..-1] and list[0...list.count] can be used to copy a list even when
+    // empty.
+    let len_f = length as f64;
+    let is_full_slice = if range.is_inclusive {
+        range.from == len_f && range.to == -1.0
+    } else {
+        range.from == len_f && range.to == len_f
+    };
+    if is_full_slice {
+        return Ok(Range::empty());
+    }
+    let from = validate_index_value(length, range.from as f64, "Range start")?;
+    let from_f = from as f64;
+    // Bounds check the end manually to handle exclusive ranges.
+    let mut value = validate_int_value(range.to as f64, "Range end")?;
+    // Negative indices count from the end.
+    if value < 0.0 {
+        value += len_f;
+    }
 
-//     // Convert the exclusive range to an inclusive one.
-//     if !range.is_inclusive {
-//         // An exclusive range with the same start and end points is empty.
-//         if value == from_f {
-//             return Ok(Range::empty());
-//         }
+    // Convert the exclusive range to an inclusive one.
+    if !range.is_inclusive {
+        // An exclusive range with the same start and end points is empty.
+        if value == from_f {
+            return Ok(Range::empty());
+        }
 
-//         // Shift the endpoint to make it inclusive, handling both increasing and
-//         // decreasing ranges.
-//         if value >= from_f {
-//             value += -1.0;
-//         } else {
-//             value += 1.0;
-//         }
-//     }
-//     // Check bounds.
-//     if value < 0.0 || value >= len_f {
-//         return Err(VMError::from_str("Range end out of bounds."));
-//     }
-//     let to = value as usize;
-//     if from <= to {
-//         Ok(Range {
-//             range: from..=to,
-//             reverse: false,
-//         })
-//     } else {
-//         Ok(Range {
-//             range: to..=from,
-//             reverse: true,
-//         })
-//     }
-// }
+        // Shift the endpoint to make it inclusive, handling both increasing and
+        // decreasing ranges.
+        if value >= from_f {
+            value += -1.0;
+        } else {
+            value += 1.0;
+        }
+    }
+    // Check bounds.
+    if value < 0.0 || value >= len_f {
+        return Err(VMError::from_str("Range end out of bounds."));
+    }
+    let to = value as usize;
+    if from <= to {
+        Ok(Range {
+            range: from..=to,
+            reverse: false,
+        })
+    } else {
+        Ok(Range {
+            range: to..=from,
+            reverse: true,
+        })
+    }
+}
 
 // fn list_subscript<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
@@ -1305,21 +1402,21 @@ fn fn_to_string<'a>(
 //     Ok(Value::Null)
 // }
 
-// fn validate_int_value(value: f64, arg_name: &str) -> Result<f64> {
-//     if !f64_is_integer(value) {
-//         Err(VMError::from_string(format!(
-//             "{} must be an integer.",
-//             arg_name
-//         )))
-//     } else {
-//         Ok(value)
-//     }
-// }
+fn validate_int_value(value: f64, arg_name: &str) -> Result<f64> {
+    if !f64_is_integer(value) {
+        Err(VMError::from_string(format!(
+            "{} must be an integer.",
+            arg_name
+        )))
+    } else {
+        Ok(value)
+    }
+}
 
-// fn validate_int(value: &Value, arg_name: &str) -> Result<f64> {
-//     let num = validate_num(value, arg_name)?;
-//     validate_int_value(num, arg_name)
-// }
+fn validate_int(value: &HeapHandle<()>, arg_name: &str) -> Result<f64> {
+    let num = validate_num(value, arg_name)?;
+    validate_int_value(num, arg_name)
+}
 
 // fn list_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
@@ -1329,7 +1426,7 @@ fn fn_to_string<'a>(
 //         if elements_len == 0.0 {
 //             return Ok(scope.create_bool(false));
 //         }
-//         return Ok(Value::Num(0.0));
+//         return Ok(scope.create_num(0.0));
 //     }
 
 //     let index = validate_int(&args[1], "Iterator")?;
@@ -1338,31 +1435,31 @@ fn fn_to_string<'a>(
 //         return Ok(scope.create_bool(false));
 //     }
 //     // Otherwise, move to the next index.
-//     Ok(Value::Num(index + 1.0))
+//     Ok(scope.create_num(index + 1.0))
 // }
 
-// fn validate_index(value: &Value, count: usize, arg_name: &str) -> Result<usize> {
-//     let num = validate_num(value, arg_name)?;
-//     validate_index_value(count, num, arg_name)
-// }
+fn validate_index(value: &HeapHandle<()>, count: usize, arg_name: &str) -> Result<usize> {
+    let num = validate_num(value, arg_name)?;
+    validate_index_value(count, num, arg_name)
+}
 
-// // Validates that [value] is an integer within `[0, count)`. Also allows
-// // negative indices which map backwards from the end. Returns the valid positive
-// // index value. If invalid, reports an error.
-// fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<usize> {
-//     validate_int_value(value, arg_name)?;
+// Validates that [value] is an integer within `[0, count)`. Also allows
+// negative indices which map backwards from the end. Returns the valid positive
+// index value. If invalid, reports an error.
+fn validate_index_value(count: usize, mut value: f64, arg_name: &str) -> Result<usize> {
+    validate_int_value(value, arg_name)?;
 
-//     // Negative indices count from the end.
-//     if value < 0.0 {
-//         value += count as f64;
-//     }
-//     // Check bounds.
-//     if value >= 0.0 && value < count as f64 {
-//         Ok(value as usize)
-//     } else {
-//         Err(VMError::from_string(format!("{} out of bounds.", arg_name)))
-//     }
-// }
+    // Negative indices count from the end.
+    if value < 0.0 {
+        value += count as f64;
+    }
+    // Check bounds.
+    if value >= 0.0 && value < count as f64 {
+        Ok(value as usize)
+    } else {
+        Err(VMError::from_string(format!("{} out of bounds.", arg_name)))
+    }
+}
 
 // fn list_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
@@ -1382,7 +1479,7 @@ fn fn_to_string<'a>(
 // fn list_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let count = list.borrow().len();
-//     Ok(Value::from_usize(count))
+//     Ok(num_from_usize(scope, count))
 // }
 
 // Modeled after https://github.com/saghm/unescape-rs
@@ -1695,22 +1792,22 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     //   PRIMITIVE(vm->numClass, "==(_)", num_eqeq);
     //   PRIMITIVE(vm->numClass, "!=(_)", num_bangeq);
 
-    // primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
-    // primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);
-    // primitive!(vm, core.string, "+(_)", string_plus);
-    // primitive!(vm, core.string, "[_]", string_subscript);
-    // primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
-    // primitive!(vm, core.string, "byteCount_", string_byte_count);
-    // primitive!(vm, core.string, "codePointAt_(_)", string_code_point_at);
-    // primitive!(vm, core.string, "contains(_)", string_contains);
-    // primitive!(vm, core.string, "endsWith(_)", string_ends_with);
-    // primitive!(vm, core.string, "indexOf(_)", string_index_of1);
-    // primitive!(vm, core.string, "indexOf(_,_)", string_index_of2);
-    // primitive!(vm, core.string, "iterate(_)", string_iterate);
-    // primitive!(vm, core.string, "iterateByte_(_)", string_iterate_byte);
-    // primitive!(vm, core.string, "iteratorValue(_)", string_iterator_value);
-    // primitive!(vm, core.string, "startsWith(_)", string_starts_with);
-    // primitive!(vm, core.string, "toString", string_to_string);
+    primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
+    primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);
+    primitive!(vm, core.string, "+(_)", string_plus);
+    primitive!(vm, core.string, "[_]", string_subscript);
+    primitive!(vm, core.string, "byteAt_(_)", string_byte_at);
+    primitive!(vm, core.string, "byteCount_", string_byte_count);
+    primitive!(vm, core.string, "codePointAt_(_)", string_code_point_at);
+    primitive!(vm, core.string, "contains(_)", string_contains);
+    primitive!(vm, core.string, "endsWith(_)", string_ends_with);
+    primitive!(vm, core.string, "indexOf(_)", string_index_of1);
+    primitive!(vm, core.string, "indexOf(_,_)", string_index_of2);
+    primitive!(vm, core.string, "iterate(_)", string_iterate);
+    primitive!(vm, core.string, "iterateByte_(_)", string_iterate_byte);
+    primitive!(vm, core.string, "iteratorValue(_)", string_iterator_value);
+    primitive!(vm, core.string, "startsWith(_)", string_starts_with);
+    primitive!(vm, core.string, "toString", string_to_string);
 
     // let list = module.expect_class("List");
     // primitive_static!(vm, list, "filled(_,_)", list_filled);

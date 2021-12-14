@@ -1,3 +1,0 @@
-Expected output "before" on line 3 and got "instance of String".
-Expected output "before" on line 8 and got "instance of String".
-Expected output "after" on line 11 and got "instance of String".

@@ -1,4 +1,0 @@
-Expected output "local" on line 20 and got "instance of String".
-Expected output "after f" on line 21 and got "instance of String".
-Expected output "after f" on line 24 and got "instance of String".
-Expected output "after g" on line 25 and got "instance of String".

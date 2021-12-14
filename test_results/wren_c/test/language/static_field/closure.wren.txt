@@ -1,2 +1,0 @@
-Expected output "Foo field" on line 14 and got "instance of String".
-Expected output "new value" on line 16 and got "instance of String".

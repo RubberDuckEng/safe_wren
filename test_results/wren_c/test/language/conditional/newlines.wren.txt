@@ -1,2 +1,0 @@
-Expected output "yes" on line 3 and got "instance of String".
-Expected output "no" on line 7 and got "instance of String".

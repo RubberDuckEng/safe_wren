@@ -1,2 +1,0 @@
-Expected output "static foo method" on line 16 and got "instance of String".
-Expected output "instance foo method" on line 17 and got "instance of String".

@@ -1,2 +1,0 @@
-Expected output "C.foo" on line 19 and got "instance of String".
-Expected output "A.foo" on line 20 and got "instance of String".
