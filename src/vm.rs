@@ -2019,7 +2019,8 @@ impl VM {
         scope: &HandleScope,
         error: LocalHandle<()>,
     ) -> Result<(), RuntimeError> {
-        let stack_trace_fiber = scope.as_ref(&self.globals).fiber.as_ref().unwrap();
+        let stack_trace_fiber =
+            scope.from_heap(scope.as_ref(&self.globals).fiber.as_ref().unwrap());
         loop {
             let callee = scope.as_ref(&self.globals).fiber.as_ref().unwrap();
             // Set Fiber.error on the current fiber. Can't do this
@@ -2090,7 +2091,7 @@ impl VM {
                         fiber.borrow_mut().return_from_fiber_take_caller(scope)
                     } else {
                         // This should never be reached?
-                        None
+                        unimplemented!();
                     };
                     scope.as_mut(&self.globals).fiber = caller.map(|local| local.into());
                     match scope.as_ref(&self.globals).fiber.as_ref() {

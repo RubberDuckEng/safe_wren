@@ -7,7 +7,27 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'wren_debug'",
+            "name": "Debug 'wren_test'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=wren_test",
+                    "--package=safe_wren"
+                ],
+                "filter": {
+                    "name": "wren_test",
+                    "kind": "bin"
+                }
+            },
+            "args": [
+                "test/bringup/add.wren"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug 'wren_debug'",
             "cargo": {
                 "args": [
                     "build",
@@ -21,24 +41,23 @@
             },
             "args": [
                 "interpret",
-                "--string",
-                "1+1"
+                "test/bringup/add.wren"
             ],
             "cwd": "${workspaceFolder}"
         },
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'wren_debug'",
+            "name": "Debug tests in 'wren_test'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=wren_debug",
+                    "--bin=wren_test",
                     "--package=safe_wren"
                 ],
                 "filter": {
-                    "name": "wren_debug",
+                    "name": "wren_test",
                     "kind": "bin"
                 }
             },
