@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Range does not implement 'iterate(_)'.
-Unexpected output on stderr:
-[./test/core/function/equality line 20] in <script>
-Expected return code 0 and got 70. Stderr:
-Range does not implement 'iterate(_)'.
-[./test/core/function/equality line 20] in <script>
-
-Missing expected output "false" on line 23.

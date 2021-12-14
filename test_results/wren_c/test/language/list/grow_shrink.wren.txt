@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Range does not implement 'iterate(_)'.
-Unexpected output on stderr:
-[./test/language/list/grow_shrink line 3] in <script>
-Expected return code 0 and got 70. Stderr:
-Range does not implement 'iterate(_)'.
-[./test/language/list/grow_shrink line 3] in <script>
-
-Missing expected output "[0, 1, 2, 3, 4]" on line 11.

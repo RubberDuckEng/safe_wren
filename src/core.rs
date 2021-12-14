@@ -476,84 +476,105 @@ fn object_to_string<'a>(
         .erase_type())
 }
 
-// macro_rules! range_getter {
-//     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//             let range_cell = unwrap_this_as_range(&args);
-//             let range = range_cell.borrow();
-//             Ok(scope.$return_type(range.$method))
-//         }
-//     };
-// }
+macro_rules! range_getter {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let range_cell = unwrap_this_as_range(scope, &args);
+            let range = range_cell.borrow();
+            Ok(scope.$return_type(range.$method).erase_type())
+        }
+    };
+}
 
-// // FIXME: Should be possible to share with range_getter?
-// macro_rules! range_getter_fn {
-//     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//             let range_cell = unwrap_this_as_range(&args);
-//             let range = range_cell.borrow();
-//             Ok(scope.$return_type(range.$method()))
-//         }
-//     };
-// }
+// FIXME: Should be possible to share with range_getter?
+macro_rules! range_getter_fn {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let range_cell = unwrap_this_as_range(scope, &args);
+            let range = range_cell.borrow();
+            Ok(scope.$return_type(range.$method()).erase_type())
+        }
+    };
+}
 
-// range_getter!(range_from, from, Num);
-// range_getter!(range_to, to, Num);
-// range_getter!(range_is_inclusive, is_inclusive, Boolean);
-// range_getter_fn!(range_min, min, Num);
-// range_getter_fn!(range_max, max, Num);
+range_getter!(range_from, from, create_num);
+range_getter!(range_to, to, create_num);
+range_getter!(range_is_inclusive, is_inclusive, create_bool);
+range_getter_fn!(range_min, min, create_num);
+range_getter_fn!(range_max, max, create_num);
 
-// fn range_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let range_cell = unwrap_this_as_range(&args);
-//     let range = range_cell.borrow();
+fn range_iterate<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let range_cell = unwrap_this_as_range(scope, &args);
+    let range = range_cell.borrow();
 
-//     // Special case: empty range.
-//     if range.from == range.to && !range.is_inclusive {
-//         return Ok(scope.create_bool(false)); // No more elements.
-//     }
-//     // Start the iteration.
-//     if args[1].is_null() {
-//         return Ok(scope.create_num(range.from));
-//     }
+    // Special case: empty range.
+    if range.from == range.to && !range.is_inclusive {
+        return Ok(scope.create_bool(false).erase_type()); // No more elements.
+    }
+    // Start the iteration.
+    if args[1].is_null() {
+        return Ok(scope.create_num(range.from).erase_type());
+    }
 
-//     let mut iterator = validate_num(&args[1], "Iterator")?;
+    let mut iterator = validate_num(&args[1], "Iterator")?;
 
-//     // Iterate towards [to] from [from].
-//     if range.from < range.to {
-//         iterator += 1.0;
-//         if iterator > range.to {
-//             return Ok(scope.create_bool(false));
-//         }
-//     } else {
-//         iterator -= 1.0;
-//         if iterator < range.to {
-//             return Ok(scope.create_bool(false));
-//         }
-//     }
+    // Iterate towards [to] from [from].
+    if range.from < range.to {
+        iterator += 1.0;
+        if iterator > range.to {
+            return Ok(scope.create_bool(false).erase_type());
+        }
+    } else {
+        iterator -= 1.0;
+        if iterator < range.to {
+            return Ok(scope.create_bool(false).erase_type());
+        }
+    }
 
-//     if !range.is_inclusive && iterator == range.to {
-//         return Ok(scope.create_bool(false));
-//     }
+    if !range.is_inclusive && iterator == range.to {
+        return Ok(scope.create_bool(false).erase_type());
+    }
 
-//     Ok(scope.create_num(iterator))
-// }
+    Ok(scope.create_num(iterator).erase_type())
+}
 
-// fn range_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     // Assuming args[1] is a number.
-//     Ok(args[1].clone())
-// }
+fn range_iterator_value<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    // Assuming args[1] is a number.
+    Ok(scope.from_heap(&args[1]))
+}
 
-// fn range_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let range_ref = args[0]
-//         .try_into_range()
-//         .ok_or_else(|| VMError::from_str("this must be range"))?;
-//     let range = range_ref.borrow();
+fn range_to_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let range_ref: LocalHandle<ObjRange> = scope
+        .from_heap(&args[0])
+        .try_downcast()
+        .ok_or_else(|| VMError::from_str("this must be range"))?;
+    let range = range_ref.borrow();
 
-//     let from = wren_num_to_string(range.from);
-//     let to = wren_num_to_string(range.to);
-//     let op = if range.is_inclusive { ".." } else { "..." };
-//     Ok(scope.take(format!("{}{}{}", from, op, to)))
-// }
+    let from = wren_num_to_string(range.from);
+    let to = wren_num_to_string(range.to);
+    let op = if range.is_inclusive { ".." } else { "..." };
+    Ok(scope.take(format!("{}{}{}", from, op, to))?.erase_type())
+}
 
 fn object_type<'a>(
     scope: &'a HandleScope,
@@ -1909,14 +1930,14 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     // primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
     // primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
 
-    // primitive!(vm, core.range, "from", range_from);
-    // primitive!(vm, core.range, "to", range_to);
-    // primitive!(vm, core.range, "min", range_min);
-    // primitive!(vm, core.range, "max", range_max);
-    // primitive!(vm, core.range, "isInclusive", range_is_inclusive);
-    // primitive!(vm, core.range, "iterate(_)", range_iterate);
-    // primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
-    // primitive!(vm, core.range, "toString", range_to_string);
+    primitive!(vm, core.range, "from", range_from);
+    primitive!(vm, core.range, "to", range_to);
+    primitive!(vm, core.range, "min", range_min);
+    primitive!(vm, core.range, "max", range_max);
+    primitive!(vm, core.range, "isInclusive", range_is_inclusive);
+    primitive!(vm, core.range, "iterate(_)", range_iterate);
+    primitive!(vm, core.range, "iteratorValue(_)", range_iterator_value);
+    primitive!(vm, core.range, "toString", range_to_string);
 
     let system = module.expect_class(scope, "System");
     primitive_static!(vm, system, "clock", system_clock);

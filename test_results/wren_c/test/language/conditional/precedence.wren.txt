@@ -1,2 +1,0 @@
-Expected output "3..4" on line 29 and got "instance of Range".
-Expected output "3..4" on line 45 and got "instance of Range".

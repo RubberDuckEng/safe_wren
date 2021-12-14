@@ -1,8 +1,8 @@
 Unexpected output on stderr:
-Range does not implement 'iterate(_)'.
+Num does not implement '-(_)'.
 Unexpected output on stderr:
-[./example/mandelbrot line 6] in <script>
+[./example/mandelbrot line 7] in <script>
 Expected return code 0 and got 70. Stderr:
-Range does not implement 'iterate(_)'.
-[./example/mandelbrot line 6] in <script>
+Num does not implement '-(_)'.
+[./example/mandelbrot line 7] in <script>
 
