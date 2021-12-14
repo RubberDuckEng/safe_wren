@@ -1,2 +1,0 @@
-Expected runtime error "Right operand must be a number." and got:
-Num does not implement '&(_)'.

@@ -1,9 +1,12 @@
 Unexpected output on stderr:
-Num does not implement '..(_)'.
+Range does not implement 'iterate(_)'.
+Unexpected output on stderr:
+[#core line 27] in contains(_)
 Unexpected output on stderr:
 [./test/core/range/contains line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement '..(_)'.
+Range does not implement 'iterate(_)'.
+[#core line 27] in contains(_)
 [./test/core/range/contains line 2] in <script>
 
 Missing expected output "false" on line 2.

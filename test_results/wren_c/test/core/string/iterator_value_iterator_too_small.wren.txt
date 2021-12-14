@@ -1,2 +1,2 @@
 Expected runtime error "Iterator out of bounds." and got:
-Num does not implement '-'.
+String does not implement 'iteratorValue(_)'.

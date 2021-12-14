@@ -1,9 +1,15 @@
 Unexpected output on stderr:
-Num does not implement 'cos'.
+String does not implement 'is(_)'.
+Unexpected output on stderr:
+[#core line 467] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
 Unexpected output on stderr:
 [./test/core/number/cos line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement 'cos'.
+String does not implement 'is(_)'.
+[#core line 467] in writeObject_(_)
+[#core line 446] in print(_)
 [./test/core/number/cos line 1] in <script>
 
 Missing expected output "1" on line 1.

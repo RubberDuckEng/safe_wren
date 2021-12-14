@@ -1,10 +1,13 @@
 Unexpected output on stderr:
-Num does not implement '..(_)'.
+Range does not implement 'iterate(_)'.
 Unexpected output on stderr:
-[./test/core/range/reduce line 1] in <script>
+[#core line 85] in reduce(_)
+Unexpected output on stderr:
+[./test/core/range/reduce line 3] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement '..(_)'.
-[./test/core/range/reduce line 1] in <script>
+Range does not implement 'iterate(_)'.
+[#core line 85] in reduce(_)
+[./test/core/range/reduce line 3] in <script>
 
 Missing expected output "55" on line 3.
 Missing expected output "1" on line 4.

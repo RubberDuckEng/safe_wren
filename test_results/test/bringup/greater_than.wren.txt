@@ -1,9 +1,15 @@
 Unexpected output on stderr:
-Num does not implement '>(_)'.
+String does not implement 'is(_)'.
+Unexpected output on stderr:
+[#core line 467] in writeObject_(_)
+Unexpected output on stderr:
+[#core line 446] in print(_)
 Unexpected output on stderr:
 [./test/bringup/greater_than line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement '>(_)'.
+String does not implement 'is(_)'.
+[#core line 467] in writeObject_(_)
+[#core line 446] in print(_)
 [./test/bringup/greater_than line 1] in <script>
 
 Missing expected output "true" on line 1.

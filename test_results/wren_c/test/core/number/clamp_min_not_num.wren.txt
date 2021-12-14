@@ -1,2 +1,0 @@
-Expected runtime error "Min value must be a number." and got:
-Num does not implement 'clamp(_,_)'.

@@ -1,2 +1,0 @@
-Expected runtime error "Other value must be a number." and got:
-Num does not implement 'max(_)'.

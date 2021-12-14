@@ -1,2 +1,2 @@
 Expected runtime error "Right operand must be a string." and got:
-Num does not implement '..(_)'.
+Range does not implement 'iterate(_)'.

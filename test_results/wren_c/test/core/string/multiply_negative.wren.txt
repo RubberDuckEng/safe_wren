@@ -1,2 +1,2 @@
 Expected runtime error "Count must be a non-negative integer." and got:
-Num does not implement '-'.
+Num does not implement 'is(_)'.

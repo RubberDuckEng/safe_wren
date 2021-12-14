@@ -1,2 +1,2 @@
 Expected runtime error "Size cannot be negative." and got:
-Num does not implement '-'.
+List metaclass does not implement 'filled(_,_)'.

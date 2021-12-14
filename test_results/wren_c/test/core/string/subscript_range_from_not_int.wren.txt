@@ -1,2 +1,2 @@
 Expected runtime error "Range start must be an integer." and got:
-Num does not implement '..(_)'.
+String does not implement '[_]'.

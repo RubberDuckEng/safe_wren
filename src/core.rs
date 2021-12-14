@@ -35,13 +35,17 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     args[0].try_into_fiber().unwrap()
 // }
 
-// macro_rules! num_constant {
-//     ($func:ident, $value:expr) => {
-//         fn $func(_vm: &VM, _args: &[Value]) -> Result<Value> {
-//             Ok(Value::Num($value))
-//         }
-//     };
-// }
+macro_rules! num_constant {
+    ($func:ident, $value:expr) => {
+        fn $func<'a>(
+            _vm: &VM,
+            scope: &'a HandleScope,
+            _args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            Ok(scope.create_num($value).erase_type())
+        }
+    };
+}
 
 fn validate_num(value: &HeapHandle<()>, arg_name: &str) -> Result<f64> {
     value
@@ -64,226 +68,278 @@ macro_rules! infix_num_op {
     };
 }
 
-// // This is identical to infix_num_op except the borrow for b. :/
-// macro_rules! num_binary_op {
-//     ($func:ident, $method:ident, $return_type:ident, $msg:expr) => {
-//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//             let a = validate_num(&args[0], "this")?;
-//             let b = validate_num(&args[1], $msg)?;
-//             Ok(Value::$return_type(a.$method(b)))
-//         }
-//     };
-// }
+// This is identical to infix_num_op except the borrow for b. :/
+macro_rules! num_binary_op {
+    ($func:ident, $method:ident, $return_type:ident, $msg:expr) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let a = validate_num(&args[0], "this")?;
+            let b = validate_num(&args[1], $msg)?;
+            Ok(scope.$return_type(a.$method(b)).erase_type())
+        }
+    };
+}
 
-// macro_rules! bitwise_num_op {
-//     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//             let a = validate_num(&args[0], "this")? as u32;
-//             let b = validate_num(&args[1], "Right operand")? as u32;
-//             Ok(Value::from_u32(a.$method(&b)))
-//         }
-//     };
-// }
+macro_rules! bitwise_num_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let a = validate_num(&args[0], "this")? as u32;
+            let b = validate_num(&args[1], "Right operand")? as u32;
+            Ok(scope.create_num(a.$method(&b) as f64).erase_type())
+        }
+    };
+}
 
-// macro_rules! overflowing_bitwise_num_op {
-//     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//             let a = validate_num(&args[0], "this")? as u32;
-//             let b = validate_num(&args[1], "Right operand")? as u32;
-//             Ok(Value::from_u32(a.$method(b).0))
-//         }
-//     };
-// }
+macro_rules! overflowing_bitwise_num_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let a = validate_num(&args[0], "this")? as u32;
+            let b = validate_num(&args[1], "Right operand")? as u32;
+            Ok(scope.create_num(a.$method(b).0 as f64).erase_type())
+        }
+    };
+}
 
-// macro_rules! num_bitwise_unary_op {
-//     ($func:ident, $method:ident) => {
-//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//             let a = validate_num(&args[0], "this")? as u32;
-//             Ok(Value::from_u32(a.$method()))
-//         }
-//     };
-// }
+macro_rules! num_bitwise_unary_op {
+    ($func:ident, $method:ident) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let a = validate_num(&args[0], "this")? as u32;
+            Ok(scope.create_num(a.$method() as f64).erase_type())
+        }
+    };
+}
 
-// macro_rules! num_unary_op {
-//     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//             let a = validate_num(&args[0], "this")?;
-//             Ok(Value::$return_type(a.$method()))
-//         }
-//     };
-// }
+macro_rules! num_unary_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let a = validate_num(&args[0], "this")?;
+            Ok(scope.$return_type(a.$method()).erase_type())
+        }
+    };
+}
 
-// num_constant!(num_infinity, f64::INFINITY);
-// num_constant!(num_nan, f64::NAN);
-// num_constant!(num_pi, std::f64::consts::PI);
-// num_constant!(num_tau, std::f64::consts::TAU);
-// num_constant!(num_largest, f64::MAX);
-// num_constant!(num_smallest, f64::MIN_POSITIVE);
-// num_constant!(num_max_safe_integer, 9007199254740991.0);
-// num_constant!(num_min_safe_integer, -9007199254740991.0);
+num_constant!(num_infinity, f64::INFINITY);
+num_constant!(num_nan, f64::NAN);
+num_constant!(num_pi, std::f64::consts::PI);
+num_constant!(num_tau, std::f64::consts::TAU);
+num_constant!(num_largest, f64::MAX);
+num_constant!(num_smallest, f64::MIN_POSITIVE);
+num_constant!(num_max_safe_integer, 9007199254740991.0);
+num_constant!(num_min_safe_integer, -9007199254740991.0);
 
 infix_num_op!(num_plus, add, create_num);
-// infix_num_op!(num_minus, sub, Num);
-// infix_num_op!(num_mult, mul, Num);
-// infix_num_op!(num_divide, div, Num);
-// infix_num_op!(num_lt, lt, Boolean);
-// infix_num_op!(num_gt, gt, Boolean);
-// infix_num_op!(num_lte, le, Boolean);
-// infix_num_op!(num_gte, ge, Boolean);
+infix_num_op!(num_minus, sub, create_num);
+infix_num_op!(num_mult, mul, create_num);
+infix_num_op!(num_divide, div, create_num);
+infix_num_op!(num_lt, lt, create_bool);
+infix_num_op!(num_gt, gt, create_bool);
+infix_num_op!(num_lte, le, create_bool);
+infix_num_op!(num_gte, ge, create_bool);
 
-// bitwise_num_op!(num_bitwise_and, bitand, Num);
-// bitwise_num_op!(num_bitwise_or, bitor, Num);
-// bitwise_num_op!(num_bitwise_xor, bitxor, Num);
-// overflowing_bitwise_num_op!(num_bitwise_shl, overflowing_shl, Num);
-// overflowing_bitwise_num_op!(num_bitwise_shr, overflowing_shr, Num);
+bitwise_num_op!(num_bitwise_and, bitand, create_num);
+bitwise_num_op!(num_bitwise_or, bitor, create_num);
+bitwise_num_op!(num_bitwise_xor, bitxor, create_num);
+overflowing_bitwise_num_op!(num_bitwise_shl, overflowing_shl, create_num);
+overflowing_bitwise_num_op!(num_bitwise_shr, overflowing_shr, create_num);
 
-// fn num_range_inclusive<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let start = validate_num(&args[0], "Left hand side of range")?;
-//     let end = validate_num(&args[1], "Right hand side of range")?;
-//     Ok(Value::Range(vm.new_range(start, end, true)))
-// }
-// fn num_range_exclusive<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let start = validate_num(&args[0], "Left hand side of range")?;
-//     let end = validate_num(&args[1], "Right hand side of range")?;
-//     Ok(Value::Range(vm.new_range(start, end, false)))
-// }
-// num_binary_op!(num_atan2, atan2, Num, "x value");
-// num_binary_op!(num_pow, powf, Num, "Power value");
-// num_unary_op!(num_unary_minus, neg, Num);
+fn num_range_inclusive<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let start = validate_num(&args[0], "Left hand side of range")?;
+    let end = validate_num(&args[1], "Right hand side of range")?;
+    Ok(vm.new_range(scope, start, end, true).erase_type())
+}
+fn num_range_exclusive<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let start = validate_num(&args[0], "Left hand side of range")?;
+    let end = validate_num(&args[1], "Right hand side of range")?;
+    Ok(vm.new_range(scope, start, end, false).erase_type())
+}
+num_binary_op!(num_atan2, atan2, create_num, "x value");
+num_binary_op!(num_pow, powf, create_num, "Power value");
+num_unary_op!(num_unary_minus, neg, create_num);
 
-// fn num_from_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
+// fn num_from_string<'a>(
+//     scope: &'a HandleScope,
+//     _vm: &VM,
+//     args: &[HeapHandle<()>],
+// ) -> Result<LocalHandle<'a, ()>> {
 //     let string = validate_string(&args[1], "Argument")?;
 
 //     // Corner case: Can't parse an empty string.
 //     if string.is_empty() {
-//         return Ok(Value::Null);
+//         return Ok(scope.create_null());
 //     }
 //     // FIXME: This accepts more than wren_c does (uses strtod).
 //     match string.trim().parse::<f64>() {
 //         Ok(num) => {
 //             if num.is_finite() {
-//                 Ok(Value::Num(num))
+//                 Ok(scope.create_num(num).erase_type())
 //             } else {
 //                 Err(VMError::from_str("Number literal is too large."))
 //             }
 //         }
-//         Err(_) => Ok(Value::Null),
+//         Err(_) => Ok(scope.create_null()),
 //     }
 // }
 
-// fn num_fraction<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let a = validate_num(&args[0], "this")?;
-//     let fract = a.fract();
-//     // wren_c uses modf which seems to be negative if original is?
-//     // rust seems to only "get this wrong" for zero.
-//     if fract == 0.0 && a.is_sign_negative() {
-//         Ok(Value::Num(-0.0))
-//     } else {
-//         Ok(Value::Num(fract))
-//     }
-// }
+fn num_fraction<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let a = validate_num(&args[0], "this")?;
+    let fract = a.fract();
+    // wren_c uses modf which seems to be negative if original is?
+    // rust seems to only "get this wrong" for zero.
+    if fract == 0.0 && a.is_sign_negative() {
+        Ok(scope.create_num(-0.0).erase_type())
+    } else {
+        Ok(scope.create_num(fract).erase_type())
+    }
+}
 
-// num_unary_op!(num_is_infinity, is_infinite, Boolean);
-// num_unary_op!(num_is_nan, is_nan, Boolean);
+num_unary_op!(num_is_infinity, is_infinite, create_bool);
+num_unary_op!(num_is_nan, is_nan, create_bool);
 
-// fn num_sign<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     // wren_c Num.sign behavior differs from f64.signum at 0 and nan
-//     let a = validate_num(&args[0], "this")?;
-//     let sign = if a == 0.0 || a.is_nan() {
-//         0.0
-//     } else if a == -0.0 {
-//         -0.0
-//     } else {
-//         a.signum()
-//     };
-//     Ok(Value::Num(sign))
-// }
+fn num_sign<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    // wren_c Num.sign behavior differs from f64.signum at 0 and nan
+    let a = validate_num(&args[0], "this")?;
+    let sign = if a == 0.0 || a.is_nan() {
+        0.0
+    } else if a == -0.0 {
+        -0.0
+    } else {
+        a.signum()
+    };
+    Ok(scope.create_num(sign).erase_type())
+}
 
-// num_unary_op!(num_truncate, trunc, Num);
+num_unary_op!(num_truncate, trunc, create_num);
 
-// num_unary_op!(num_abs, abs, Num);
-// num_unary_op!(num_acos, acos, Num);
-// num_unary_op!(num_asin, asin, Num);
-// num_unary_op!(num_atan, atan, Num);
-// num_unary_op!(num_cbrt, cbrt, Num);
-// num_unary_op!(num_ceil, ceil, Num);
-// num_unary_op!(num_cos, cos, Num);
-// num_unary_op!(num_floor, floor, Num);
+num_unary_op!(num_abs, abs, create_num);
+num_unary_op!(num_acos, acos, create_num);
+num_unary_op!(num_asin, asin, create_num);
+num_unary_op!(num_atan, atan, create_num);
+num_unary_op!(num_cbrt, cbrt, create_num);
+num_unary_op!(num_ceil, ceil, create_num);
+num_unary_op!(num_cos, cos, create_num);
+num_unary_op!(num_floor, floor, create_num);
 
-// num_unary_op!(num_round, round, Num);
-// num_binary_op!(num_min, min, Num, "Other value");
-// num_binary_op!(num_max, max, Num, "Other value");
+num_unary_op!(num_round, round, create_num);
+num_binary_op!(num_min, min, create_num, "Other value");
+num_binary_op!(num_max, max, create_num, "Other value");
 
-// fn num_clamp<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let value = validate_num(&args[0], "this")?;
-//     let min = validate_num(&args[1], "Min value")?;
-//     let max = validate_num(&args[2], "Max value")?;
+fn num_clamp<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let value = validate_num(&args[0], "this")?;
+    let min = validate_num(&args[1], "Min value")?;
+    let max = validate_num(&args[2], "Max value")?;
 
-//     // Rust's f64::clamp panic's if min > max.
-//     let result = if value < min {
-//         min
-//     } else {
-//         if value > max {
-//             max
-//         } else {
-//             value
-//         }
-//     };
-//     Ok(Value::Num(result))
-// }
+    // Rust's f64::clamp panic's if min > max.
+    let result = if value < min {
+        min
+    } else {
+        if value > max {
+            max
+        } else {
+            value
+        }
+    };
+    Ok(scope.create_num(result).erase_type())
+}
 
-// num_unary_op!(num_sin, sin, Num);
-// num_unary_op!(num_sqrt, sqrt, Num);
-// num_unary_op!(num_tan, tan, Num);
-// num_unary_op!(num_log, ln, Num);
-// num_unary_op!(num_log2, log2, Num);
-// num_unary_op!(num_exp, exp, Num);
-// num_binary_op!(num_mod, rem, Num, "Right operand");
-// num_bitwise_unary_op!(num_bitwise_not, not);
+num_unary_op!(num_sin, sin, create_num);
+num_unary_op!(num_sqrt, sqrt, create_num);
+num_unary_op!(num_tan, tan, create_num);
+num_unary_op!(num_log, ln, create_num);
+num_unary_op!(num_log2, log2, create_num);
+num_unary_op!(num_exp, exp, create_num);
+num_binary_op!(num_mod, rem, create_num, "Right operand");
+num_bitwise_unary_op!(num_bitwise_not, not);
 
-// // I don't know of a better way to check this.
-// #[allow(clippy::float_cmp)]
-// fn f64_is_integer(x: f64) -> bool {
-//     x.trunc() == x
-// }
+// I don't know of a better way to check this.
+#[allow(clippy::float_cmp)]
+fn f64_is_integer(x: f64) -> bool {
+    x.trunc() == x
+}
 
-// fn num_is_integer<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let x = validate_num(&args[0], "this")?;
-//     Ok(Value::Boolean(
-//         !x.is_nan() && !x.is_infinite() && f64_is_integer(x),
-//     ))
-// }
+fn num_is_integer<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let x = validate_num(&args[0], "this")?;
+    Ok(scope
+        .create_bool(!x.is_nan() && !x.is_infinite() && f64_is_integer(x))
+        .erase_type())
+}
 
-// fn wren_num_to_string(num: f64) -> String {
-//     // Wren prints nan vs NaN and infinity vs inf.
-//     if num.is_nan() {
-//         return "nan".into();
-//     }
-//     if num.is_infinite() {
-//         if num.is_sign_positive() {
-//             return "infinity".into();
-//         } else {
-//             return "-infinity".into();
-//         }
-//     }
-//     // Wren prints -0 differently from 0.
-//     // rust does sometime too?  But seems inconsistent about it.
-//     // https://github.com/rust-lang/rfcs/issues/1074
-//     if num == -0.0 && num.is_sign_negative() {
-//         return "-0".into();
-//     }
+fn wren_num_to_string(num: f64) -> String {
+    // Wren prints nan vs NaN and infinity vs inf.
+    if num.is_nan() {
+        return "nan".into();
+    }
+    if num.is_infinite() {
+        if num.is_sign_positive() {
+            return "infinity".into();
+        } else {
+            return "-infinity".into();
+        }
+    }
+    // Wren prints -0 differently from 0.
+    // rust does sometime too?  But seems inconsistent about it.
+    // https://github.com/rust-lang/rfcs/issues/1074
+    if num == -0.0 && num.is_sign_negative() {
+        return "-0".into();
+    }
 
-//     // wren_c uses sprintf(buffer, "%.14g", value).  Rust doesn't
-//     // support %g, so we had to write our own.
-//     // See also https://github.com/rust-lang/rfcs/issues/844
-//     float_to_string::float_to_shortest_string(num, 14)
-// }
+    // wren_c uses sprintf(buffer, "%.14g", value).  Rust doesn't
+    // support %g, so we had to write our own.
+    // See also https://github.com/rust-lang/rfcs/issues/844
+    float_to_string::float_to_shortest_string(num, 14)
+}
 
-// fn num_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let value = validate_num(&args[0], "this")?;
-//     let string = wren_num_to_string(value);
-//     Ok(Value::from_string(string))
-// }
+fn num_to_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let value = validate_num(&args[0], "this")?;
+    let string = wren_num_to_string(value);
+    Ok(scope.take(string)?.erase_type())
+}
 
 // fn class_name<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_class(&args);
@@ -597,7 +653,7 @@ fn bool_to_string<'a>(
 //     Ok(Value::from_str("null"))
 // }
 
-// fn validate_string(arg: &Value, arg_name: &str) -> Result<String> {
+// fn validate_string(arg: &HeapHandle<()>, arg_name: &str) -> Result<String> {
 //     arg.try_into_string()
 //         .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))
 // }
@@ -1494,49 +1550,49 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     // primitive_static!(vm, core.num, "minSafeInteger", num_min_safe_integer);
     // primitive!(vm, core.num, "-(_)", num_minus);
     primitive!(vm, core.num, "+(_)", num_plus);
-    // primitive!(vm, core.num, "*(_)", num_mult);
-    // primitive!(vm, core.num, "/(_)", num_divide);
-    // primitive!(vm, core.num, "<(_)", num_lt);
-    // primitive!(vm, core.num, ">(_)", num_gt);
-    // primitive!(vm, core.num, "<=(_)", num_lte);
-    // primitive!(vm, core.num, ">=(_)", num_gte);
-    // primitive!(vm, core.num, "&(_)", num_bitwise_and);
-    // primitive!(vm, core.num, "|(_)", num_bitwise_or);
-    // primitive!(vm, core.num, "^(_)", num_bitwise_xor);
-    // primitive!(vm, core.num, "<<(_)", num_bitwise_shl);
-    // primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
-    // primitive!(vm, core.num, "abs", num_abs);
-    // primitive!(vm, core.num, "acos", num_acos);
-    // primitive!(vm, core.num, "asin", num_asin);
-    // primitive!(vm, core.num, "atan", num_atan);
-    // primitive!(vm, core.num, "cbrt", num_cbrt);
-    // primitive!(vm, core.num, "ceil", num_ceil);
-    // primitive!(vm, core.num, "cos", num_cos);
-    // primitive!(vm, core.num, "floor", num_floor);
-    // primitive!(vm, core.num, "-", num_unary_minus);
-    // primitive!(vm, core.num, "round", num_round);
-    // primitive!(vm, core.num, "min(_)", num_min);
-    // primitive!(vm, core.num, "max(_)", num_max);
-    // primitive!(vm, core.num, "clamp(_,_)", num_clamp);
-    // primitive!(vm, core.num, "sin", num_sin);
-    // primitive!(vm, core.num, "sqrt", num_sqrt);
-    // primitive!(vm, core.num, "tan", num_tan);
-    // primitive!(vm, core.num, "log", num_log);
-    // primitive!(vm, core.num, "log2", num_log2);
-    // primitive!(vm, core.num, "exp", num_exp);
-    // primitive!(vm, core.num, "%(_)", num_mod);
-    // primitive!(vm, core.num, "~", num_bitwise_not);
-    // primitive!(vm, core.num, "..(_)", num_range_inclusive);
-    // primitive!(vm, core.num, "...(_)", num_range_exclusive);
-    // primitive!(vm, core.num, "atan(_)", num_atan2);
-    // primitive!(vm, core.num, "pow(_)", num_pow);
-    // primitive!(vm, core.num, "fraction", num_fraction);
-    // primitive!(vm, core.num, "isInfinity", num_is_infinity);
-    // primitive!(vm, core.num, "isInteger", num_is_integer);
-    // primitive!(vm, core.num, "isNan", num_is_nan);
-    // primitive!(vm, core.num, "sign", num_sign);
-    // primitive!(vm, core.num, "toString", num_to_string);
-    // primitive!(vm, core.num, "truncate", num_truncate);
+    primitive!(vm, core.num, "*(_)", num_mult);
+    primitive!(vm, core.num, "/(_)", num_divide);
+    primitive!(vm, core.num, "<(_)", num_lt);
+    primitive!(vm, core.num, ">(_)", num_gt);
+    primitive!(vm, core.num, "<=(_)", num_lte);
+    primitive!(vm, core.num, ">=(_)", num_gte);
+    primitive!(vm, core.num, "&(_)", num_bitwise_and);
+    primitive!(vm, core.num, "|(_)", num_bitwise_or);
+    primitive!(vm, core.num, "^(_)", num_bitwise_xor);
+    primitive!(vm, core.num, "<<(_)", num_bitwise_shl);
+    primitive!(vm, core.num, ">>(_)", num_bitwise_shr);
+    primitive!(vm, core.num, "abs", num_abs);
+    primitive!(vm, core.num, "acos", num_acos);
+    primitive!(vm, core.num, "asin", num_asin);
+    primitive!(vm, core.num, "atan", num_atan);
+    primitive!(vm, core.num, "cbrt", num_cbrt);
+    primitive!(vm, core.num, "ceil", num_ceil);
+    primitive!(vm, core.num, "cos", num_cos);
+    primitive!(vm, core.num, "floor", num_floor);
+    primitive!(vm, core.num, "-", num_unary_minus);
+    primitive!(vm, core.num, "round", num_round);
+    primitive!(vm, core.num, "min(_)", num_min);
+    primitive!(vm, core.num, "max(_)", num_max);
+    primitive!(vm, core.num, "clamp(_,_)", num_clamp);
+    primitive!(vm, core.num, "sin", num_sin);
+    primitive!(vm, core.num, "sqrt", num_sqrt);
+    primitive!(vm, core.num, "tan", num_tan);
+    primitive!(vm, core.num, "log", num_log);
+    primitive!(vm, core.num, "log2", num_log2);
+    primitive!(vm, core.num, "exp", num_exp);
+    primitive!(vm, core.num, "%(_)", num_mod);
+    primitive!(vm, core.num, "~", num_bitwise_not);
+    primitive!(vm, core.num, "..(_)", num_range_inclusive);
+    primitive!(vm, core.num, "...(_)", num_range_exclusive);
+    primitive!(vm, core.num, "atan(_)", num_atan2);
+    primitive!(vm, core.num, "pow(_)", num_pow);
+    primitive!(vm, core.num, "fraction", num_fraction);
+    primitive!(vm, core.num, "isInfinity", num_is_infinity);
+    primitive!(vm, core.num, "isInteger", num_is_integer);
+    primitive!(vm, core.num, "isNan", num_is_nan);
+    primitive!(vm, core.num, "sign", num_sign);
+    primitive!(vm, core.num, "toString", num_to_string);
+    primitive!(vm, core.num, "truncate", num_truncate);
 
     // // These are defined just so that 0 and -0 are equal, which is specified by
     // // IEEE 754 even though they have different bit representations.

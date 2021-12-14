@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-Num does not implement '..(_)'.
+Range does not implement 'iterate(_)'.
 Unexpected output on stderr:
 [./test/bringup/for line 1] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement '..(_)'.
+Range does not implement 'iterate(_)'.
 [./test/bringup/for line 1] in <script>
 
 Missing expected output "0" on line 4.

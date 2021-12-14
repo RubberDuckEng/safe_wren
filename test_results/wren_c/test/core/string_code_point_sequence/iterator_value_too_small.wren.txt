@@ -1,2 +1,2 @@
 Expected runtime error "Index out of bounds." and got:
-Num does not implement '-'.
+String does not implement 'codePointAt_(_)'.

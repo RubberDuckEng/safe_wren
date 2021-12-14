@@ -1,7 +1,7 @@
 Unexpected output on stderr:
-Num does not implement 'toString'.
+String does not implement 'is(_)'.
 Unexpected output on stderr:
-[#core line 466] in writeObject_(_)
+[#core line 467] in writeObject_(_)
 Unexpected output on stderr:
 [#core line 446] in print(_)
 Unexpected output on stderr:
@@ -11,8 +11,8 @@ Unexpected output on stderr:
 Unexpected output on stderr:
 [./test/limit/many_fields line 262] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement 'toString'.
-[#core line 466] in writeObject_(_)
+String does not implement 'is(_)'.
+[#core line 467] in writeObject_(_)
 [#core line 446] in print(_)
 [./test/limit/many_fields line 258] in init new()
 [./test/limit/many_fields line 259] in 

@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-Num does not implement '..(_)'.
+Range does not implement 'max'.
 Unexpected output on stderr:
 [./test/core/range/max line 2] in <script>
 Expected return code 0 and got 70. Stderr:
-Num does not implement '..(_)'.
+Range does not implement 'max'.
 [./test/core/range/max line 2] in <script>
 
 Missing expected output "5" on line 2.
