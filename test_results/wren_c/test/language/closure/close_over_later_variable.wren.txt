@@ -1,10 +1,2 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/closure/close_over_later_variable line 13] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/closure/close_over_later_variable line 13] in <script>
-
-Missing expected output "b" on line 10.
-Missing expected output "a" on line 11.
+Expected output "b" on line 10 and got "instance of String".
+Expected output "a" on line 11 and got "instance of String".

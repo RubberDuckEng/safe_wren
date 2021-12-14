@@ -1,9 +1,1 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/nonlocal/use_in_function_before_definition line 3] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/nonlocal/use_in_function_before_definition line 3] in <script>
-
-Missing expected output "global" on line 7.
+Expected output "global" on line 7 and got "instance of String".

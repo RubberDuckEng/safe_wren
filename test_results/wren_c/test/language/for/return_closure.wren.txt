@@ -1,9 +1,12 @@
 Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[./test/language/for/return_closure line 5] in <script>
+[./test/language/for/return_closure line 2] in new(_) block argument
+Unexpected output on stderr:
+[./test/language/for/return_closure line 7] in <script>
 Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/for/return_closure line 5] in <script>
+List metaclass does not implement 'new()'.
+[./test/language/for/return_closure line 2] in new(_) block argument
+[./test/language/for/return_closure line 7] in <script>
 
 Missing expected output "1" on line 9.

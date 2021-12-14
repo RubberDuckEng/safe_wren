@@ -1,4 +1,3 @@
-Expected output "null" on line 3 and got "instance of Null".
 Expected output "ok" on line 6 and got "instance of String".
 Expected output "ok" on line 7 and got "instance of String".
 Expected output "ok" on line 8 and got "instance of String".

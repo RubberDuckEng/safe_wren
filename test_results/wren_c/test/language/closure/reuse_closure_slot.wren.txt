@@ -1,9 +1,1 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/closure/reuse_closure_slot line 6] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/closure/reuse_closure_slot line 6] in <script>
-
-Missing expected output "a" on line 13.
+Expected output "a" on line 13 and got "instance of String".

@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/return/return_null_if_newline line 4] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/return/return_null_if_newline line 4] in <script>
-
-Missing expected output "null" on line 6.

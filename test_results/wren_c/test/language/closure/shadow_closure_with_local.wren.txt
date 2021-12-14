@@ -1,11 +1,3 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/closure/shadow_closure_with_local line 10] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/closure/shadow_closure_with_local line 10] in <script>
-
-Missing expected output "closure" on line 5.
-Missing expected output "shadow" on line 7.
-Missing expected output "closure" on line 9.
+Expected output "closure" on line 5 and got "instance of String".
+Expected output "shadow" on line 7 and got "instance of String".
+Expected output "closure" on line 9 and got "instance of String".

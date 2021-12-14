@@ -1,1 +1,0 @@
-Expected output "null" on line 2 and got "instance of Null".

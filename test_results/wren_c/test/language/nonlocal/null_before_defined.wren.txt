@@ -1,2 +1,1 @@
-Expected output "null" on line 1 and got "instance of Null".
 Expected output "value" on line 3 and got "instance of String".

@@ -1,19 +1,9 @@
 Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[./test/core/function/equality line 2] in <script>
+[./test/core/function/equality line 19] in <script>
 Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/core/function/equality line 2] in <script>
+List metaclass does not implement 'new()'.
+[./test/core/function/equality line 19] in <script>
 
-Missing expected output "false" on line 2.
-Missing expected output "true" on line 3.
-Missing expected output "false" on line 6.
-Missing expected output "false" on line 7.
-Missing expected output "false" on line 8.
-Missing expected output "true" on line 9.
-Missing expected output "true" on line 10.
-Missing expected output "true" on line 11.
-Missing expected output "true" on line 15.
-Missing expected output "false" on line 16.
 Missing expected output "false" on line 23.

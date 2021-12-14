@@ -1,2 +1,0 @@
-Expected runtime error "Bool does not implement '+(_)'." and got:
-Fn metaclass does not implement 'new(_)'.

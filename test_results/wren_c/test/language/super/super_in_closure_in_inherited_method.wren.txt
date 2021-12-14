@@ -1,12 +1,1 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/super/super_in_closure_in_inherited_method line 3] in callSuperToString
-Unexpected output on stderr:
-[./test/language/super/super_in_closure_in_inherited_method line 13] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/super/super_in_closure_in_inherited_method line 3] in callSuperToString
-[./test/language/super/super_in_closure_in_inherited_method line 13] in <script>
-
-Missing expected output "instance of B" on line 13.
+Expected output "instance of B" on line 13 and got "instance of String".

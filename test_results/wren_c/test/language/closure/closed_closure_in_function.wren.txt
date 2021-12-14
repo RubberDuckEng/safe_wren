@@ -1,9 +1,1 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/closure/closed_closure_in_function line 7] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/closure/closed_closure_in_function line 7] in <script>
-
-Missing expected output "local" on line 10.
+Expected output "local" on line 10 and got "instance of String".

@@ -19,9 +19,12 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // fn unwrap_this_as_string(args: &[Value]) -> String {
 //     args[0].try_into_string().unwrap()
 // }
-// fn unwrap_this_as_closure(args: &[Value]) -> Handle<ObjClosure> {
-//     args[0].try_into_closure().unwrap()
-// }
+fn unwrap_this_as_closure<'a>(
+    scope: &'a HandleScope,
+    args: &[HeapHandle<()>],
+) -> LocalHandle<'a, ObjClosure> {
+    scope.from_heap(&args[0]).try_downcast().unwrap()
+}
 // fn unwrap_this_as_map(args: &[Value]) -> Handle<ObjMap> {
 //     args[0].try_into_map().unwrap()
 // }
@@ -41,8 +44,8 @@ fn unwrap_this_as_class<'a>(
 macro_rules! num_constant {
     ($func:ident, $value:expr) => {
         fn $func<'a>(
-            _vm: &VM,
             scope: &'a HandleScope,
+            _vm: &VM,
             _args: &[HeapHandle<()>],
         ) -> Result<LocalHandle<'a, ()>> {
             Ok(scope.create_num($value).erase_type())
@@ -186,29 +189,29 @@ num_binary_op!(num_atan2, atan2, create_num, "x value");
 num_binary_op!(num_pow, powf, create_num, "Power value");
 num_unary_op!(num_unary_minus, neg, create_num);
 
-// fn num_from_string<'a>(
-//     scope: &'a HandleScope,
-//     _vm: &VM,
-//     args: &[HeapHandle<()>],
-// ) -> Result<LocalHandle<'a, ()>> {
-//     let string = validate_string(&args[1], "Argument")?;
+fn num_from_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let string = validate_string(scope, &args[1], "Argument")?;
 
-//     // Corner case: Can't parse an empty string.
-//     if string.is_empty() {
-//         return Ok(scope.create_null());
-//     }
-//     // FIXME: This accepts more than wren_c does (uses strtod).
-//     match string.trim().parse::<f64>() {
-//         Ok(num) => {
-//             if num.is_finite() {
-//                 Ok(scope.create_num(num).erase_type())
-//             } else {
-//                 Err(VMError::from_str("Number literal is too large."))
-//             }
-//         }
-//         Err(_) => Ok(scope.create_null()),
-//     }
-// }
+    // Corner case: Can't parse an empty string.
+    if string.is_empty() {
+        return Ok(scope.create_null());
+    }
+    // FIXME: This accepts more than wren_c does (uses strtod).
+    match string.trim().parse::<f64>() {
+        Ok(num) => {
+            if num.is_finite() {
+                Ok(scope.create_num(num).erase_type())
+            } else {
+                Err(VMError::from_str("Number literal is too large."))
+            }
+        }
+        Err(_) => Ok(scope.create_null()),
+    }
+}
 
 fn num_fraction<'a>(
     scope: &'a HandleScope,
@@ -691,18 +694,34 @@ fn bool_to_string<'a>(
 //     Ok(())
 // }
 
-// fn null_not(_vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(scope.create_bool(true))
-// }
+fn null_not<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.create_bool(true).erase_type())
+}
 
-// fn null_to_string(_vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(Value::from_str("null"))
-// }
+fn null_to_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.str("null")?.erase_type())
+}
 
-// fn validate_string(arg: &HeapHandle<()>, arg_name: &str) -> Result<String> {
-//     arg.try_into_string()
-//         .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))
-// }
+// FIXME: Unclear if this should return LocalHandle<String> or String
+fn validate_string<'a>(
+    scope: &'a HandleScope,
+    arg: &HeapHandle<()>,
+    arg_name: &str,
+) -> Result<String> {
+    let handle: LocalHandle<String> = scope
+        .from_heap(arg)
+        .try_downcast()
+        .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))?;
+    Ok(handle.borrow().clone())
+}
 
 // fn string_from_code_point<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let num = validate_int(&args[1], "Code point")?;
@@ -939,26 +958,44 @@ fn bool_to_string<'a>(
 //     Ok(scope.create_bool(this.starts_with(&search)))
 // }
 
-// fn validate_fn(arg: &Value, arg_name: &str) -> Result<Handle<ObjClosure>> {
-//     arg.try_into_closure()
-//         .ok_or_else(|| VMError::from_string(format!("{} must be a function.", arg_name)))
-// }
+fn validate_fn<'a>(
+    scope: &'a HandleScope,
+    arg: &HeapHandle<()>,
+    arg_name: &str,
+) -> Result<LocalHandle<'a, ObjClosure>> {
+    scope
+        .from_heap(arg)
+        .try_downcast()
+        .ok_or_else(|| VMError::from_string(format!("{} must be a function.", arg_name)))
+}
 
-// fn fn_new<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     // Odd that this never checks arg[0].
-//     // The block argument is already a function, so just return it.
-//     Ok(Value::Closure(validate_fn(&args[1], "Argument")?))
-// }
+fn fn_new<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    // Odd that this never checks arg[0].
+    // The block argument is already a function, so just return it.
+    Ok(validate_fn(scope, &args[1], "Argument")?.erase_type())
+}
 
-// fn fn_arity<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let closure = unwrap_this_as_closure(&args);
-//     let arity = closure.borrow().fn_obj.borrow().arity;
-//     Ok(Value::from_usize(arity.as_index()))
-// }
+fn fn_arity<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let closure = unwrap_this_as_closure(scope, &args);
+    let arity = closure.borrow().fn_obj.borrow().arity;
+    Ok(scope.create_num(arity.as_index() as f64).erase_type())
+}
 
-// fn fn_to_string(_vm: &VM, _args: &[Value]) -> Result<Value> {
-//     Ok(Value::from_str("<fn>"))
-// }
+fn fn_to_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.str("<fn>")?.erase_type())
+}
 
 // fn map_new(vm: &VM, _args: &[Value]) -> Result<Value> {
 //     Ok(Value::Map(vm.new_map()))
@@ -1388,7 +1425,7 @@ fn system_clock<'a>(
         .erase_type())
 }
 
-// fn system_gc(_vm: &VM, _args: &[Value]) -> Result<Value> {
+// fn system_gc<'a>(scope: &'a HandleScope, _vm: &VM, _args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     Ok(Value::Null)
 // }
 
@@ -1574,37 +1611,39 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     // fiber_primitive!(vm, fiber, "try()", fiber_try);
     // fiber_primitive!(vm, fiber, "try(_)", fiber_try1);
 
-    // let fn_class = vm.fn_class.as_ref().unwrap();
-    // primitive_static!(vm, fn_class, "new(_)", fn_new);
-    // primitive!(vm, fn_class, "arity", fn_arity);
+    let fn_class = scope
+        .from_maybe_heap(&scope.as_ref(&vm.globals).fn_class)
+        .unwrap();
+    primitive_static!(vm, fn_class, "new(_)", fn_new);
+    primitive!(vm, fn_class, "arity", fn_arity);
 
-    // for arity in 0..=crate::vm::MAX_PARAMETERS {
-    //     let name = if arity == 0 {
-    //         "call()".to_string()
-    //     } else {
-    //         // arity=1 -> "call(_)", arity=2 -> "call(_,_)", etc.
-    //         format!("call({}{})", "_,".repeat(arity - 1), "_")
-    //     };
-    //     let symbol = vm.methods.ensure_symbol(&name);
-    //     fn_class
-    //         .borrow_mut()
-    //         .set_method(symbol, Method::FunctionCall);
-    // }
+    for arity in 0..=crate::vm::MAX_PARAMETERS {
+        let name = if arity == 0 {
+            "call()".to_string()
+        } else {
+            // arity=1 -> "call(_)", arity=2 -> "call(_,_)", etc.
+            format!("call({}{})", "_,".repeat(arity - 1), "_")
+        };
+        let symbol = vm.methods.ensure_symbol(&name);
+        fn_class
+            .borrow_mut()
+            .set_method(symbol, Method::FunctionCall);
+    }
 
-    // primitive!(vm, fn_class, "toString", fn_to_string);
+    primitive!(vm, fn_class, "toString", fn_to_string);
 
-    // primitive!(vm, core.null, "!", null_not);
-    // primitive!(vm, core.null, "toString", null_to_string);
+    primitive!(vm, core.null, "!", null_not);
+    primitive!(vm, core.null, "toString", null_to_string);
 
-    // primitive_static!(vm, core.num, "fromString(_)", num_from_string);
-    // primitive_static!(vm, core.num, "infinity", num_infinity);
-    // primitive_static!(vm, core.num, "nan", num_nan);
-    // primitive_static!(vm, core.num, "pi", num_pi);
-    // primitive_static!(vm, core.num, "tau", num_tau);
-    // primitive_static!(vm, core.num, "largest", num_largest);
-    // primitive_static!(vm, core.num, "smallest", num_smallest);
-    // primitive_static!(vm, core.num, "maxSafeInteger", num_max_safe_integer);
-    // primitive_static!(vm, core.num, "minSafeInteger", num_min_safe_integer);
+    primitive_static!(vm, core.num, "fromString(_)", num_from_string);
+    primitive_static!(vm, core.num, "infinity", num_infinity);
+    primitive_static!(vm, core.num, "nan", num_nan);
+    primitive_static!(vm, core.num, "pi", num_pi);
+    primitive_static!(vm, core.num, "tau", num_tau);
+    primitive_static!(vm, core.num, "largest", num_largest);
+    primitive_static!(vm, core.num, "smallest", num_smallest);
+    primitive_static!(vm, core.num, "maxSafeInteger", num_max_safe_integer);
+    primitive_static!(vm, core.num, "minSafeInteger", num_min_safe_integer);
     // primitive!(vm, core.num, "-(_)", num_minus);
     primitive!(vm, core.num, "+(_)", num_plus);
     primitive!(vm, core.num, "*(_)", num_mult);
@@ -1651,10 +1690,10 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     primitive!(vm, core.num, "toString", num_to_string);
     primitive!(vm, core.num, "truncate", num_truncate);
 
-    // // These are defined just so that 0 and -0 are equal, which is specified by
-    // // IEEE 754 even though they have different bit representations.
-    // //   PRIMITIVE(vm->numClass, "==(_)", num_eqeq);
-    // //   PRIMITIVE(vm->numClass, "!=(_)", num_bangeq);
+    // These are defined just so that 0 and -0 are equal, which is specified by
+    // IEEE 754 even though they have different bit representations.
+    //   PRIMITIVE(vm->numClass, "==(_)", num_eqeq);
+    //   PRIMITIVE(vm->numClass, "!=(_)", num_bangeq);
 
     // primitive_static!(vm, core.string, "fromCodePoint(_)", string_from_code_point);
     // primitive_static!(vm, core.string, "fromByte(_)", string_from_byte);

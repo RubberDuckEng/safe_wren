@@ -1,17 +1,6 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/inheritance/inherited_fields_in_closure line 5] in closeOverFooGet
-Unexpected output on stderr:
-[./test/language/inheritance/inherited_fields_in_closure line 29] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/inheritance/inherited_fields_in_closure line 5] in closeOverFooGet
-[./test/language/inheritance/inherited_fields_in_closure line 29] in <script>
-
-Missing expected output "Foo field" on line 29.
-Missing expected output "Bar field" on line 30.
-Missing expected output "new foo value" on line 32.
-Missing expected output "Bar field" on line 33.
-Missing expected output "new foo value" on line 35.
-Missing expected output "new bar value" on line 36.
+Expected output "Foo field" on line 29 and got "instance of String".
+Expected output "Bar field" on line 30 and got "instance of String".
+Expected output "new foo value" on line 32 and got "instance of String".
+Expected output "Bar field" on line 33 and got "instance of String".
+Expected output "new foo value" on line 35 and got "instance of String".
+Expected output "new bar value" on line 36 and got "instance of String".

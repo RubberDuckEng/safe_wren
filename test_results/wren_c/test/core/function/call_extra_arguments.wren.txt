@@ -1,13 +1,16 @@
 Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[./test/core/function/call_extra_arguments line 1] in <script>
+[./test/core/function/call_extra_arguments line 2] in new(_) block argument
+Unexpected output on stderr:
+[./test/core/function/call_extra_arguments line 9] in <script>
 Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/core/function/call_extra_arguments line 1] in <script>
+List metaclass does not implement 'new()'.
+[./test/core/function/call_extra_arguments line 2] in new(_) block argument
+[./test/core/function/call_extra_arguments line 9] in <script>
 
-Missing expected output "zero" on line 6.
-Missing expected output "zero" on line 7.
+Expected output "zero" on line 6 and got "instance of String".
+Expected output "zero" on line 7 and got "instance of String".
 Missing expected output "one a" on line 9.
 Missing expected output "one a" on line 10.
 Missing expected output "two a b" on line 12.

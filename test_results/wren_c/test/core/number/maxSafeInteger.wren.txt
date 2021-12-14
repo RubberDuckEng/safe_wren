@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Num metaclass does not implement 'maxSafeInteger'.
-Unexpected output on stderr:
-[./test/core/number/maxSafeInteger line 1] in <script>
-Expected return code 0 and got 70. Stderr:
-Num metaclass does not implement 'maxSafeInteger'.
-[./test/core/number/maxSafeInteger line 1] in <script>
-
-Missing expected output "9.007199254741e+15" on line 1.

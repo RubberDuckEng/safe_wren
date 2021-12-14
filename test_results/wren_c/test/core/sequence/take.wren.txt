@@ -1,17 +1,13 @@
 Unexpected output on stderr:
-Null does not implement '+(_)'.
+List metaclass does not implement 'new()'.
 Unexpected output on stderr:
-[#core line 161] in iterate(_)
+[#core line 113] in toList
 Unexpected output on stderr:
-[#core line 55] in isEmpty
-Unexpected output on stderr:
-[./test/core/sequence/take line 19] in <script>
+[./test/core/sequence/take line 22] in <script>
 Expected return code 0 and got 70. Stderr:
-Null does not implement '+(_)'.
-[#core line 161] in iterate(_)
-[#core line 55] in isEmpty
-[./test/core/sequence/take line 19] in <script>
+List metaclass does not implement 'new()'.
+[#core line 113] in toList
+[./test/core/sequence/take line 22] in <script>
 
-Missing expected output "true" on line 19.
 Missing expected output "[1]" on line 22.
 Missing expected output "[1, 2, 3]" on line 25.

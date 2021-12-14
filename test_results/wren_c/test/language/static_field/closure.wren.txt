@@ -1,13 +1,2 @@
-Unexpected output on stderr:
-Fn metaclass does not implement 'new(_)'.
-Unexpected output on stderr:
-[./test/language/static_field/closure line 5] in closeOverGet
-Unexpected output on stderr:
-[./test/language/static_field/closure line 14] in <script>
-Expected return code 0 and got 70. Stderr:
-Fn metaclass does not implement 'new(_)'.
-[./test/language/static_field/closure line 5] in closeOverGet
-[./test/language/static_field/closure line 14] in <script>
-
-Missing expected output "Foo field" on line 14.
-Missing expected output "new value" on line 16.
+Expected output "Foo field" on line 14 and got "instance of String".
+Expected output "new value" on line 16 and got "instance of String".
