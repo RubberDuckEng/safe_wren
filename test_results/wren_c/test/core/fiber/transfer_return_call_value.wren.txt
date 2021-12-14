@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Fiber metaclass does not implement 'current'.
+Fiber does not implement 'transfer()'.
 Unexpected output on stderr:
-[./test/core/fiber/transfer_return_call_value line 1] in <script>
+[./test/core/fiber/transfer_return_call_value line 14] in <script>
 Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'current'.
-[./test/core/fiber/transfer_return_call_value line 1] in <script>
+Fiber does not implement 'transfer()'.
+[./test/core/fiber/transfer_return_call_value line 14] in <script>
 
 Missing expected output "fiber 1" on line 14.
 Missing expected output "main 1" on line 15.

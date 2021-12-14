@@ -1,2 +1,0 @@
-Expected runtime error "Argument must be a function." and got:
-Fiber metaclass does not implement 'new(_)'.

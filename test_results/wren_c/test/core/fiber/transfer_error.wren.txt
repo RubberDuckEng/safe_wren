@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Fiber metaclass does not implement 'new(_)'.
+Fiber does not implement 'try()'.
 Unexpected output on stderr:
-[./test/core/fiber/transfer_error line 4] in <script>
+[./test/core/fiber/transfer_error line 12] in <script>
 Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'new(_)'.
-[./test/core/fiber/transfer_error line 4] in <script>
+Fiber does not implement 'try()'.
+[./test/core/fiber/transfer_error line 12] in <script>
 
 Missing expected output "started B" on line 13.
 Missing expected output "transferred to A" on line 14.

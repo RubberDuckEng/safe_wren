@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Fiber metaclass does not implement 'new(_)'.
+Fiber does not implement 'call()'.
 Unexpected output on stderr:
-[./test/core/fiber/transfer_direct_reenter line 5] in <script>
+[./test/core/fiber/transfer_direct_reenter line 7] in <script>
 Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'new(_)'.
-[./test/core/fiber/transfer_direct_reenter line 5] in <script>
+Fiber does not implement 'call()'.
+[./test/core/fiber/transfer_direct_reenter line 7] in <script>
 
 Missing expected output "1" on line 2.
 Missing expected output "null" on line 3.

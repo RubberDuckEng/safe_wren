@@ -677,7 +677,7 @@ pub(crate) struct Globals {
 }
 
 impl VM {
-    fn fiber<'a>(&self, scope: &'a HandleScope) -> Option<LocalHandle<'a, ObjFiber>> {
+    pub(crate) fn fiber<'a>(&self, scope: &'a HandleScope) -> Option<LocalHandle<'a, ObjFiber>> {
         scope.from_maybe_heap(&scope.as_ref(&self.globals).fiber)
     }
 }

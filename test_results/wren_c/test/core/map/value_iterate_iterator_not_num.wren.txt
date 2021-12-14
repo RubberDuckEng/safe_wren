@@ -1,3 +1,0 @@
-Expected runtime error "Iterator must be a number." and got:
-Map metaclass does not implement 'new()'.
-Expected runtime error on line 2 but was on line 1.

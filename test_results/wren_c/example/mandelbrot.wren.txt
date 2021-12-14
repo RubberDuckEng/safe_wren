@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-Num does not implement '-(_)'.
-Unexpected output on stderr:
-[./example/mandelbrot line 7] in <script>
-Expected return code 0 and got 70. Stderr:
-Num does not implement '-(_)'.
-[./example/mandelbrot line 7] in <script>
-

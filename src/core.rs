@@ -55,7 +55,7 @@ fn unwrap_this_as_class<'a>(
 fn unwrap_this_as_fiber<'a>(
     scope: &'a HandleScope,
     args: &[HeapHandle<()>],
-) -> LocalHandle<'a, ObjList> {
+) -> LocalHandle<'a, ObjFiber> {
     scope.from_heap(&args[0]).try_downcast().unwrap()
 }
 
@@ -610,36 +610,51 @@ fn bool_to_string<'a>(
         .erase_type())
 }
 
-// fn fiber_new<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let closure = validate_fn(&args[1], "Argument")?;
-//     if closure.borrow().fn_obj.borrow().arity.as_index() > 1 {
-//         Err(VMError::from_str(
-//             "Function cannot take more than one parameter.",
-//         ))
-//     } else {
-//         Ok(vm.new_fiber(closure).erase_type())
-//     }
-// }
+fn fiber_new<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let closure = validate_fn(scope, &args[1], "Argument")?;
+    if closure.borrow().fn_obj.borrow().arity.as_index() > 1 {
+        Err(VMError::from_str(
+            "Function cannot take more than one parameter.",
+        ))
+    } else {
+        Ok(vm.new_fiber(scope, closure).erase_type())
+    }
+}
 
-// // This method sometimes causes a FiberAction (abort) and sometimes
-// // returns a value.  So for now it has to be a ValuePrimitive
-// // and use the Err result to cause the abort
-// fn fiber_abort<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let is_abort = !args[1].is_null();
-//     // wren_c just records the error string and continues?
-//     // vm->fiber->error = args[1];
-//     if is_abort {
-//         Err(VMError::FiberAbort(args[1].clone()))
-//     } else {
-//         // I guess Fiber.abort(null) clears the error?
-//         // wren_c: If the error is explicitly null, it's not really an abort.
-//         Ok(scope.create_bool(args[1].is_null()))
-//     }
-// }
+// This method sometimes causes a FiberAction (abort) and sometimes
+// returns a value.  So for now it has to be a ValuePrimitive
+// and use the Err result to cause the abort
+fn fiber_abort<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let is_abort = !args[1].is_null();
+    // wren_c just records the error string and continues?
+    // vm->fiber->error = args[1];
+    if is_abort {
+        // FIXME: GlobalHandle::from(HeapHandle) should exist?
+        Err(VMError::FiberAbort(GlobalHandle::from(
+            scope.from_heap(&args[1]),
+        )))
+    } else {
+        // I guess Fiber.abort(null) clears the error?
+        // wren_c: If the error is explicitly null, it's not really an abort.
+        Ok(scope.create_bool(args[1].is_null()).erase_type())
+    }
+}
 
-// fn fiber_current<'a>(scope: &'a HandleScope, vm: &VM, _args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(vm.fiber(scope)))
-// }
+fn fiber_current<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(vm.fiber(scope).unwrap().erase_type())
+}
 
 // fn fiber_suspend(_vm: &VM, _args: &[Value]) -> Result<FiberAction> {
 //     Ok(FiberAction::Suspend)
@@ -695,20 +710,28 @@ fn bool_to_string<'a>(
 //     Ok(FiberAction::Try(this, args[1].clone()))
 // }
 
-// fn fiber_error<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this = unwrap_this_as_fiber(&args);
-//     let error = this.borrow().error();
-//     Ok(error)
-// }
+fn fiber_error<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    let error = scope.from_heap(this.borrow().error());
+    Ok(error)
+}
 
-// fn fiber_is_done<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let this_handle = unwrap_this_as_fiber(&args);
-//     let this = this_handle.borrow();
-//     // We can't get a refernce to the (possibly currently running) stack
-//     // to check if empty, so use the completed_normally_cache.
-//     let is_done = this.has_error() || this.completed_normally_cache;
-//     Ok(scope.create_bool(is_done))
-// }
+fn fiber_is_done<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let this_handle = unwrap_this_as_fiber(scope, &args);
+    let this = this_handle.borrow();
+    // We can't get a refernce to the (possibly currently running) stack
+    // to check if empty, so use the completed_normally_cache.
+    let is_done = this.has_error() || this.completed_normally_cache;
+    Ok(scope.create_bool(is_done).erase_type())
+}
 
 // // Prepare to transfer execution to [fiber] coming from the current fiber.
 // //
@@ -1127,136 +1150,179 @@ fn fn_to_string<'a>(
     Ok(scope.str("<fn>")?.erase_type())
 }
 
-// fn map_new<'a>(scope: &'a HandleScope, vm: &VM, _args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     Ok(vm.new_map())
-// }
+fn map_new<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(vm.new_map(scope).erase_type())
+}
 
-// fn map_subscript<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let key = &args[1];
-//     validate_key(vm, key)?;
-//     let map_cell = unwrap_this_as_map(&args);
-//     let map = map_cell.borrow();
-//     let maybe_value = map.data.get(key);
-//     match maybe_value {
-//         None => Ok(scope.create_null()),
-//         Some(v) => Ok(v.clone()),
-//     }
-// }
+fn map_subscript<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let key = &args[1];
+    validate_key(vm, key)?;
+    let map_cell = unwrap_this_as_map(scope, &args);
+    let map = map_cell.borrow();
+    let maybe_value = map.data.get(key).map(|h| scope.from_heap(h));
+    match maybe_value {
+        None => Ok(scope.create_null()),
+        Some(v) => Ok(v),
+    }
+}
 
-// fn map_subscript_setter<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let key = &args[1];
-//     validate_key(vm, key)?;
-//     let map = unwrap_this_as_map(&args);
-//     let value = &args[2];
-//     map.borrow_mut().data.insert(key.clone(), value.clone());
-//     Ok(value.clone())
-// }
+fn map_subscript_setter<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let key = &args[1];
+    validate_key(vm, key)?;
+    let map = unwrap_this_as_map(scope, &args);
+    let value = &args[2];
+    map.borrow_mut().data.insert(key.clone(), value.clone());
+    Ok(scope.from_heap(value))
+}
 
-// fn map_is_valid_key(arg: &Value) -> bool {
-//     matches!(
-//         arg,
-//         Value::Boolean(_)
-//             | Value::Class(_)
-//             | Value::Null()
-//             | Value::Num(_)
-//             | Value::Range(_)
-//             | Value::String(_)
-//     )
-// }
+fn map_is_valid_key(arg: &HeapHandle<()>) -> bool {
+    return arg.is_bool()
+        || arg.is_of_type::<ObjClass>()
+        || arg.is_null()
+        || arg.is_num()
+        || arg.is_of_type::<ObjRange>()
+        || arg.is_of_type::<String>();
+}
 
-// fn validate_key(_vm: &VM, arg: &Value) -> Result<bool> {
-//     if map_is_valid_key(arg) {
-//         Ok(true)
-//     } else {
-//         Err(VMError::from_str("Key must be a value type."))
-//     }
-// }
+fn validate_key(_vm: &VM, arg: &HeapHandle<()>) -> Result<bool> {
+    if map_is_valid_key(arg) {
+        Ok(true)
+    } else {
+        Err(VMError::from_str("Key must be a value type."))
+    }
+}
 
-// // Adds an entry to the map and then returns the map itself. This is called by
-// // the compiler when compiling map literals instead of using [_]=(_) to
-// // minimize stack churn.
-// fn map_add_core<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let key = &args[1];
-//     validate_key(vm, key)?;
-//     let value = &args[2];
-//     let map = unwrap_this_as_map(&args);
-//     map.borrow_mut().data.insert(key.clone(), value.clone());
-//     // Return the map itself.
-//     Ok(map)
-// }
+// Adds an entry to the map and then returns the map itself. This is called by
+// the compiler when compiling map literals instead of using [_]=(_) to
+// minimize stack churn.
+fn map_add_core<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let key = &args[1];
+    validate_key(vm, key)?;
+    let value = &args[2];
+    let map = unwrap_this_as_map(scope, &args);
+    map.borrow_mut().data.insert(key.clone(), value.clone());
+    // Return the map itself.
+    Ok(map.erase_type())
+}
 
-// fn map_clear<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let map = unwrap_this_as_map(&args);
-//     map.borrow_mut().data.clear();
-//     Ok(scope.create_null())
-// }
+fn map_clear<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let map = unwrap_this_as_map(scope, &args);
+    map.borrow_mut().data.clear();
+    Ok(scope.create_null())
+}
 
-// fn map_contains_key<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let key = &args[1];
-//     validate_key(vm, key)?;
-//     let map = unwrap_this_as_map(&args);
-//     let result = map.borrow().contains_key(key);
-//     Ok(scope.create_bool(result))
-// }
+fn map_contains_key<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    validate_key(vm, &args[1])?;
+    let key = scope.from_heap(&args[1]);
+    let map = unwrap_this_as_map(scope, &args);
+    let result = map.borrow().contains_key(key);
+    Ok(scope.create_bool(result).erase_type())
+}
 
-// fn map_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let map = unwrap_this_as_map(&args);
-//     let count = map.borrow().len();
-//     Ok(num_from_usize(scope, count))
-// }
+fn map_count<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let map = unwrap_this_as_map(scope, &args);
+    let count = map.borrow().len();
+    Ok(num_from_usize(scope, count).erase_type())
+}
 
-// fn map_remove<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let key = &args[1];
-//     validate_key(vm, key)?;
-//     let map = unwrap_this_as_map(&args);
-//     let maybe_value = map.borrow_mut().data.remove(key);
-//     match maybe_value {
-//         None => Ok(scope.create_null()),
-//         Some(value) => Ok(value),
-//     }
-// }
+fn map_remove<'a>(
+    scope: &'a HandleScope,
+    vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let key = &args[1];
+    validate_key(vm, key)?;
+    let map = unwrap_this_as_map(scope, &args);
+    let maybe_value = scope.from_maybe_heap(&map.borrow_mut().data.remove(key));
+    match maybe_value {
+        None => Ok(scope.create_null()),
+        Some(value) => Ok(value),
+    }
+}
 
-// // FIXME: This is wrong.  This sits on top of rust's hashmap
-// // and does not match wren_c's iterator behavior exactly.
-// fn map_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let map = unwrap_this_as_map(&args);
-//     if map.borrow().data.is_empty() {
-//         return Ok(scope.create_bool(false));
-//     }
+// FIXME: This is wrong.  This sits on top of rust's hashmap
+// and does not match wren_c's iterator behavior exactly.
+fn map_iterate<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let map = unwrap_this_as_map(scope, &args);
+    if map.borrow().data.is_empty() {
+        return Ok(scope.create_bool(false).erase_type());
+    }
 
-//     if !args[1].is_null() {
-//         let value = validate_int(&args[1], "Iterator")?;
-//         if value < 0.0 {
-//             return Ok(scope.create_bool(false));
-//         }
+    if !args[1].is_null() {
+        let value = validate_int(&args[1], "Iterator")?;
+        if value < 0.0 {
+            return Ok(scope.create_bool(false).erase_type());
+        }
 
-//         // Advance the iterator.
-//         let index = value as usize + 1;
-//         if index < map.borrow().len() {
-//             Ok(num_from_usize(scope, index))
-//         } else {
-//             Ok(scope.create_bool(false))
-//         }
-//     } else {
-//         Ok(num_from_usize(scope, 0))
-//     }
-// }
+        // Advance the iterator.
+        let index = value as usize + 1;
+        if index < map.borrow().len() {
+            Ok(num_from_usize(scope, index).erase_type())
+        } else {
+            Ok(scope.create_bool(false).erase_type())
+        }
+    } else {
+        Ok(num_from_usize(scope, 0).erase_type())
+    }
+}
 
-// fn map_key_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let map_handle = unwrap_this_as_map(&args);
-//     let map = map_handle.borrow();
-//     let index = validate_index(&args[1], map.len(), "Iterator")?;
-//     let mut entries = map.data.iter();
-//     Ok(entries.nth(index).unwrap().0.clone())
-// }
+fn map_key_iterator_value<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let map_handle = unwrap_this_as_map(scope, &args);
+    let map = map_handle.borrow();
+    let index = validate_index(&args[1], map.len(), "Iterator")?;
+    let mut entries = map.data.iter();
+    let value = scope.from_heap(entries.nth(index).unwrap().0);
+    Ok(value)
+}
 
-// fn map_value_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
-//     let map_handle = unwrap_this_as_map(&args);
-//     let map = map_handle.borrow();
-//     let index = validate_index(&args[1], map.len(), "Iterator")?;
-//     let mut entries = map.data.iter();
-//     Ok(entries.nth(index).unwrap().1.clone())
-// }
+fn map_value_iterator_value<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    let map_handle = unwrap_this_as_map(scope, &args);
+    let map = map_handle.borrow();
+    let index = validate_index(&args[1], map.len(), "Iterator")?;
+    let mut entries = map.data.iter();
+    let value = scope.from_heap(entries.nth(index).unwrap().1);
+    Ok(value)
+}
 
 fn list_filled<'a>(
     scope: &'a HandleScope,
@@ -1782,17 +1848,19 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     primitive!(vm, core.bool_class, "!", bool_not);
     primitive!(vm, core.bool_class, "toString", bool_to_string);
 
-    // let fiber = vm.fiber_class.as_ref().unwrap();
-    // primitive_static!(vm, fiber, "new(_)", fiber_new);
-    // primitive_static!(vm, fiber, "abort(_)", fiber_abort);
-    // primitive_static!(vm, fiber, "current", fiber_current);
+    let fiber = scope
+        .from_maybe_heap(&scope.as_ref(&vm.globals).fiber_class)
+        .unwrap();
+    primitive_static!(vm, fiber, "new(_)", fiber_new);
+    primitive_static!(vm, fiber, "abort(_)", fiber_abort);
+    primitive_static!(vm, fiber, "current", fiber_current);
     // fiber_primitive_static!(vm, fiber, "suspend()", fiber_suspend);
     // fiber_primitive_static!(vm, fiber, "yield()", fiber_yield);
     // fiber_primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
     // fiber_primitive!(vm, fiber, "call()", fiber_call);
     // fiber_primitive!(vm, fiber, "call(_)", fiber_call1);
-    // primitive!(vm, fiber, "error", fiber_error);
-    // primitive!(vm, fiber, "isDone", fiber_is_done);
+    primitive!(vm, fiber, "error", fiber_error);
+    primitive!(vm, fiber, "isDone", fiber_is_done);
     // fiber_primitive!(vm, fiber, "transfer()", fiber_transfer);
     // fiber_primitive!(vm, fiber, "transfer(_)", fiber_transfer1);
     // fiber_primitive!(vm, fiber, "transferError(_)", fiber_transfer_error);
@@ -1832,7 +1900,7 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     primitive_static!(vm, core.num, "smallest", num_smallest);
     primitive_static!(vm, core.num, "maxSafeInteger", num_max_safe_integer);
     primitive_static!(vm, core.num, "minSafeInteger", num_min_safe_integer);
-    // primitive!(vm, core.num, "-(_)", num_minus);
+    primitive!(vm, core.num, "-(_)", num_minus);
     primitive!(vm, core.num, "+(_)", num_plus);
     primitive!(vm, core.num, "*(_)", num_mult);
     primitive!(vm, core.num, "/(_)", num_divide);
@@ -1917,18 +1985,18 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     primitive!(vm, list, "indexOf(_)", list_index_of);
     primitive!(vm, list, "swap(_,_)", list_swap);
 
-    // let map = module.expect_class(scope, "Map");
-    // primitive_static!(vm, map, "new()", map_new);
-    // primitive!(vm, map, "[_]", map_subscript);
-    // primitive!(vm, map, "[_]=(_)", map_subscript_setter);
-    // primitive!(vm, map, "addCore_(_,_)", map_add_core);
-    // primitive!(vm, map, "clear()", map_clear);
-    // primitive!(vm, map, "containsKey(_)", map_contains_key);
-    // primitive!(vm, map, "count", map_count);
-    // primitive!(vm, map, "remove(_)", map_remove);
-    // primitive!(vm, map, "iterate(_)", map_iterate);
-    // primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
-    // primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
+    let map = module.expect_class(scope, "Map");
+    primitive_static!(vm, map, "new()", map_new);
+    primitive!(vm, map, "[_]", map_subscript);
+    primitive!(vm, map, "[_]=(_)", map_subscript_setter);
+    primitive!(vm, map, "addCore_(_,_)", map_add_core);
+    primitive!(vm, map, "clear()", map_clear);
+    primitive!(vm, map, "containsKey(_)", map_contains_key);
+    primitive!(vm, map, "count", map_count);
+    primitive!(vm, map, "remove(_)", map_remove);
+    primitive!(vm, map, "iterate(_)", map_iterate);
+    primitive!(vm, map, "keyIteratorValue_(_)", map_key_iterator_value);
+    primitive!(vm, map, "valueIteratorValue_(_)", map_value_iterator_value);
 
     primitive!(vm, core.range, "from", range_from);
     primitive!(vm, core.range, "to", range_to);
