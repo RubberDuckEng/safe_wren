@@ -44,5 +44,5 @@ fn compile_opt_random() {
 
 fn main() {
     generate_wren_core_source_rs();
-    compile_opt_random();
+    // compile_opt_random();
 }

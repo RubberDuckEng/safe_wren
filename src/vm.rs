@@ -6,6 +6,7 @@ use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::{TryFrom, TryInto};
+use std::error::Error;
 use std::hash::Hasher;
 use std::{str, usize};
 
@@ -20,6 +21,7 @@ use crate::wren::{Configuration, DebugLevel, ForeignMethodFn, LoadModuleResult, 
 use vmgc::heap::*;
 use vmgc::object::*;
 use vmgc::pointer::ObjectType;
+use vmgc::types::GCError;
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 
@@ -66,6 +68,12 @@ impl VMError {
             VMError::Error(string) => scope.take(string.clone()).unwrap().erase_type(),
             VMError::FiberAbort(value) => scope.from_global(value),
         }
+    }
+}
+
+impl From<GCError> for VMError {
+    fn from(err: GCError) -> Self {
+        VMError::Error(err.to_string())
     }
 }
 
@@ -654,7 +662,7 @@ fn maybe_trace<T: HostObject>(maybe_object: &Option<HeapHandle<T>>, visitor: &mu
         object.trace(visitor)
     }
 }
-struct Globals {
+pub(crate) struct Globals {
     // Current executing Fiber (should eventually be a list?)
     pub(crate) fiber: Option<HeapHandle<ObjFiber>>,
     modules: HashMap<String, HeapHandle<Module>>,
@@ -706,9 +714,6 @@ pub struct VM {
     // Single global symbol table for all method names (matches wren_c)
     // Separate Struct to allow easier passing to register_primitive
     pub methods: SymbolTable,
-
-    // FIXME: Only public for compiler.rs to make a HandleScope.
-    pub(crate) heap: Heap,
 
     // Finally the rest of wren_core.wren
     pub(crate) core: Option<GlobalHandle<CoreClasses>>,
@@ -1108,12 +1113,12 @@ impl VM {
 
 impl core::fmt::Debug for VM {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        let scope = HandleScope::new(&self.heap);
+        // let scope = HandleScope::new(self.heap);
         write!(f, "VM {{ ")?;
-        let globals = scope.as_ref(&self.globals);
-        if let Some(fiber) = &globals.fiber {
-            write!(f, "stack: {:?}, ", fiber.as_ref())?;
-        }
+        // let globals = scope.as_ref(&self.globals);
+        // if let Some(fiber) = &globals.fiber {
+        //     write!(f, "stack: {:?}, ", fiber.as_ref())?;
+        // }
         write!(f, "methods: (len {}) ", self.methods.names.len())?;
         write!(f, "}}")
     }
@@ -1822,22 +1827,17 @@ fn get_module_variable<'a>(
 }
 
 impl VM {
-    pub fn new(config: Configuration) -> Self {
-        let heap = Heap::new(1000).unwrap();
-        let scope = HandleScope::new(&heap);
+    pub fn new(scope: &HandleScope, config: Configuration) -> Self {
         let mut vm = Self {
             // Invalid import name, intentionally.
             methods: SymbolTable::default(),
             globals: GlobalHandle::from(Globals::new(&scope)),
-            heap: heap,
             start_time: std::time::Instant::now(),
             config,
             core: None,
             // api: None,
             // c_config: WrenConfiguration::default(),
         };
-
-        let scope = HandleScope::new(&vm.heap);
 
         // FIXME: This shouldn't be needed anymore.  We no longer
         // remove modules during parsing.
@@ -1854,7 +1854,7 @@ impl VM {
             variables: List::default(),
             variable_names: Vec::new(),
         };
-        init_base_classes(&mut vm, &mut stub_core);
+        init_base_classes(scope, &mut vm, &mut stub_core);
         scope.as_mut(&vm.globals).class_class =
             Some(stub_core.expect_class(&scope, "Class").into());
         init_fn_and_fiber(&mut vm, &scope, &mut stub_core);
@@ -1863,7 +1863,7 @@ impl VM {
         vm.load_wren_core(&scope, core_name);
         scope.as_mut(&vm.globals).core_module =
             Some(scope.as_mut(&vm.globals).modules.remove(core_name).unwrap());
-        register_core_primitives(&mut vm);
+        register_core_primitives(&scope, &mut vm);
         vm
     }
 
@@ -2130,7 +2130,6 @@ impl VM {
             // recursively, or the run_fiber main loop needing to pull
             // the frame on every instruction.  Maybe not worth it?
             let result = self.run_frame_in_fiber(scope, &mut frame, fiber, frame_index);
-            let scope = HandleScope::new(&self.heap);
             match result {
                 Ok(FunctionNext::Call(closure, num_args)) => {
                     // Push the closure and the args on the stack?
@@ -2295,12 +2294,12 @@ impl VM {
         // Even if we got a Method doesn't mean *this* class implements it.
         let result = match method {
             Method::ValuePrimitive(f) => {
-                let value = f(self, scope, &fiber.stack.borrow()[this_offset..])?;
+                let value = f(scope, self, &fiber.stack.borrow()[this_offset..])?;
                 fiber.stack.borrow_mut().truncate(this_offset);
                 FunctionNext::Return(value)
             }
             Method::FiberActionPrimitive(f) => {
-                let action = f(self, scope, &fiber.stack.borrow()[this_offset..])?;
+                let action = f(scope, self, &fiber.stack.borrow()[this_offset..])?;
                 fiber.stack.borrow_mut().truncate(this_offset);
                 FunctionNext::FiberAction(action)
             }
@@ -2780,8 +2779,7 @@ fn op_debug_string(
     }
 }
 
-pub(crate) fn debug_bytecode(vm: &VM, top_closure: &ObjClosure) {
-    let scope = HandleScope::new(&vm.heap);
+pub(crate) fn debug_bytecode(scope: &HandleScope, vm: &VM, top_closure: &ObjClosure) {
     let mut fn_objs = vec![scope.from_heap::<ObjFn>(&top_closure.fn_obj)];
 
     loop {
@@ -3013,7 +3011,7 @@ impl ObjFn {
                 code: compiler.code,
                 arity,
                 debug: compiler.fn_debug,
-                module: (*module).into(),
+                module: scope.from_global(module).into(),
             })
             .unwrap()
     }
@@ -3178,12 +3176,12 @@ pub(crate) enum FiberAction<'a> {
 }
 
 type ValuePrimitive = for<'a> fn(
-    vm: &VM,
     scope: &'a HandleScope,
+    vm: &VM,
     args: &[HeapHandle<()>],
 ) -> Result<LocalHandle<'a, ()>>;
 type FiberActionPrimitive =
-    for<'a> fn(vm: &VM, scope: &'a HandleScope, args: &[HeapHandle<()>]) -> Result<FiberAction<'a>>;
+    for<'a> fn(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<FiberAction<'a>>;
 
 #[derive(Clone)]
 pub(crate) enum Method {

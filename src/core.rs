@@ -1,13 +1,14 @@
 // analog to wren_core.c from wren_c.
 
 use vmgc::heap::*;
+use vmgc::object::*;
 
 use crate::{float_to_string, vm::*};
 use std::collections::VecDeque;
+use std::convert::TryInto;
 use std::ops::*;
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
-// type Handle<T> = std::rc::Rc<std::cell::RefCell<T>>;
 
 // // wren_c has these AS_RANGE, AS_CLASS, etc. macros
 // // which (unsafely) do direct "downcasts" to the type.
@@ -42,26 +43,31 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     };
 // }
 
-// fn validate_num(value: &Value, arg_name: &str) -> Result<f64> {
-//     value
-//         .try_into_num()
-//         .ok_or_else(|| VMError::from_string(format!("{} must be a number.", arg_name)))
-// }
+fn validate_num(value: &HeapHandle<()>, arg_name: &str) -> Result<f64> {
+    value
+        .ptr()
+        .try_into()
+        .map_err(|_| VMError::from_string(format!("{} must be a number.", arg_name)))
+}
 
-// macro_rules! infix_num_op {
-//     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
-//             let a = validate_num(&args[0], "this")?;
-//             let b = validate_num(&args[1], "Right operand")?;
-//             Ok(Value::$return_type(a.$method(&b)))
-//         }
-//     };
-// }
+macro_rules! infix_num_op {
+    ($func:ident, $method:ident, $return_type:ident) => {
+        fn $func<'a>(
+            scope: &'a HandleScope,
+            _vm: &VM,
+            args: &[HeapHandle<()>],
+        ) -> Result<LocalHandle<'a, ()>> {
+            let a = validate_num(&args[0], "this")?;
+            let b = validate_num(&args[1], "Right operand")?;
+            Ok(scope.$return_type(a.$method(&b)).erase_type())
+        }
+    };
+}
 
 // // This is identical to infix_num_op except the borrow for b. :/
 // macro_rules! num_binary_op {
 //     ($func:ident, $method:ident, $return_type:ident, $msg:expr) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
+//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let a = validate_num(&args[0], "this")?;
 //             let b = validate_num(&args[1], $msg)?;
 //             Ok(Value::$return_type(a.$method(b)))
@@ -71,7 +77,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 
 // macro_rules! bitwise_num_op {
 //     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
+//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let a = validate_num(&args[0], "this")? as u32;
 //             let b = validate_num(&args[1], "Right operand")? as u32;
 //             Ok(Value::from_u32(a.$method(&b)))
@@ -81,7 +87,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 
 // macro_rules! overflowing_bitwise_num_op {
 //     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
+//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let a = validate_num(&args[0], "this")? as u32;
 //             let b = validate_num(&args[1], "Right operand")? as u32;
 //             Ok(Value::from_u32(a.$method(b).0))
@@ -91,7 +97,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 
 // macro_rules! num_bitwise_unary_op {
 //     ($func:ident, $method:ident) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
+//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let a = validate_num(&args[0], "this")? as u32;
 //             Ok(Value::from_u32(a.$method()))
 //         }
@@ -100,7 +106,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 
 // macro_rules! num_unary_op {
 //     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
+//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let a = validate_num(&args[0], "this")?;
 //             Ok(Value::$return_type(a.$method()))
 //         }
@@ -116,7 +122,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // num_constant!(num_max_safe_integer, 9007199254740991.0);
 // num_constant!(num_min_safe_integer, -9007199254740991.0);
 
-// infix_num_op!(num_plus, add, Num);
+infix_num_op!(num_plus, add, create_num);
 // infix_num_op!(num_minus, sub, Num);
 // infix_num_op!(num_mult, mul, Num);
 // infix_num_op!(num_divide, div, Num);
@@ -131,12 +137,12 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // overflowing_bitwise_num_op!(num_bitwise_shl, overflowing_shl, Num);
 // overflowing_bitwise_num_op!(num_bitwise_shr, overflowing_shr, Num);
 
-// fn num_range_inclusive(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_range_inclusive<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let start = validate_num(&args[0], "Left hand side of range")?;
 //     let end = validate_num(&args[1], "Right hand side of range")?;
 //     Ok(Value::Range(vm.new_range(start, end, true)))
 // }
-// fn num_range_exclusive(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_range_exclusive<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let start = validate_num(&args[0], "Left hand side of range")?;
 //     let end = validate_num(&args[1], "Right hand side of range")?;
 //     Ok(Value::Range(vm.new_range(start, end, false)))
@@ -145,7 +151,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // num_binary_op!(num_pow, powf, Num, "Power value");
 // num_unary_op!(num_unary_minus, neg, Num);
 
-// fn num_from_string(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_from_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let string = validate_string(&args[1], "Argument")?;
 
 //     // Corner case: Can't parse an empty string.
@@ -165,7 +171,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn num_fraction(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_fraction<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let a = validate_num(&args[0], "this")?;
 //     let fract = a.fract();
 //     // wren_c uses modf which seems to be negative if original is?
@@ -180,7 +186,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // num_unary_op!(num_is_infinity, is_infinite, Boolean);
 // num_unary_op!(num_is_nan, is_nan, Boolean);
 
-// fn num_sign(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_sign<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     // wren_c Num.sign behavior differs from f64.signum at 0 and nan
 //     let a = validate_num(&args[0], "this")?;
 //     let sign = if a == 0.0 || a.is_nan() {
@@ -208,7 +214,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // num_binary_op!(num_min, min, Num, "Other value");
 // num_binary_op!(num_max, max, Num, "Other value");
 
-// fn num_clamp(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_clamp<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let value = validate_num(&args[0], "this")?;
 //     let min = validate_num(&args[1], "Min value")?;
 //     let max = validate_num(&args[2], "Max value")?;
@@ -241,7 +247,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     x.trunc() == x
 // }
 
-// fn num_is_integer(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_is_integer<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let x = validate_num(&args[0], "this")?;
 //     Ok(Value::Boolean(
 //         !x.is_nan() && !x.is_infinite() && f64_is_integer(x),
@@ -273,19 +279,19 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     float_to_string::float_to_shortest_string(num, 14)
 // }
 
-// fn num_to_string(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn num_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let value = validate_num(&args[0], "this")?;
 //     let string = wren_num_to_string(value);
 //     Ok(Value::from_string(string))
 // }
 
-// fn class_name(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn class_name<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_class(&args);
 //     let string = this.borrow().name.clone();
 //     Ok(Value::from_string(string))
 // }
 
-// fn class_supertype(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn class_supertype<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_class(&args);
 //     let maybe_superclass = &this.borrow().superclass;
 //     match maybe_superclass {
@@ -294,26 +300,26 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn class_to_string(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn class_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_class(&args);
 //     let string = this.borrow().name.clone();
 //     Ok(Value::from_string(string))
 // }
 
-// fn object_eqeq(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn object_eqeq<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     Ok(Value::Boolean(args[0].eq(&args[1])))
 // }
 
 // // Note this is a static method, comparing two passed args.
-// fn object_same(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn object_same<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     Ok(Value::Boolean(args[1].eq(&args[2])))
 // }
 
-// fn object_bangeq(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn object_bangeq<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     Ok(Value::Boolean(args[0].ne(&args[1])))
 // }
 
-// fn object_is(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn object_is<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let expected_baseclass = args[1]
 //         .try_into_class()
 //         .ok_or_else(|| VMError::from_str("Right operand must be a class."))?;
@@ -336,7 +342,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn object_to_string(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn object_to_string<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     Ok(Value::from_string(format!(
 //         "instance of {}",
 //         vm.class_for_value(&args[0]).borrow().name
@@ -345,7 +351,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 
 // macro_rules! range_getter {
 //     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
+//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let range_cell = unwrap_this_as_range(&args);
 //             let range = range_cell.borrow();
 //             Ok(Value::$return_type(range.$method))
@@ -356,7 +362,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // // FIXME: Should be possible to share with range_getter?
 // macro_rules! range_getter_fn {
 //     ($func:ident, $method:ident, $return_type:ident) => {
-//         fn $func(_vm: &VM, args: &[Value]) -> Result<Value> {
+//         fn $func<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //             let range_cell = unwrap_this_as_range(&args);
 //             let range = range_cell.borrow();
 //             Ok(Value::$return_type(range.$method()))
@@ -370,7 +376,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // range_getter_fn!(range_min, min, Num);
 // range_getter_fn!(range_max, max, Num);
 
-// fn range_iterate(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn range_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let range_cell = unwrap_this_as_range(&args);
 //     let range = range_cell.borrow();
 
@@ -405,12 +411,12 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(Value::Num(iterator))
 // }
 
-// fn range_iterator_value(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn range_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     // Assuming args[1] is a number.
 //     Ok(args[1].clone())
 // }
 
-// fn range_to_string(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn range_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let range_ref = args[0]
 //         .try_into_range()
 //         .ok_or_else(|| VMError::from_str("this must be range"))?;
@@ -422,7 +428,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(Value::from_string(format!("{}{}{}", from, op, to)))
 // }
 
-// fn object_type(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn object_type<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     Ok(Value::Class(vm.class_for_value(&args[0])))
 // }
 
@@ -430,19 +436,25 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(Value::Boolean(false))
 // }
 
-// fn bool_not(_vm: &VM, args: &[Value]) -> Result<Value> {
-//     Ok(Value::Boolean(!args[0].equals_true()))
-// }
+fn bool_not<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope.create_bool(!args[0].is_true()).erase_type())
+}
 
-// fn bool_to_string(_vm: &VM, args: &[Value]) -> Result<Value> {
-//     if args[0].equals_true() {
-//         Ok(Value::from_str("true"))
-//     } else {
-//         Ok(Value::from_str("false"))
-//     }
-// }
+fn bool_to_string<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<LocalHandle<'a, ()>> {
+    Ok(scope
+        .str(if args[0].is_true() { "true" } else { "false" })?
+        .erase_type())
+}
 
-// fn fiber_new(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn fiber_new<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let closure = validate_fn(&args[1], "Argument")?;
 //     if closure.borrow().fn_obj.borrow().arity.as_index() > 1 {
 //         Err(VMError::from_str(
@@ -456,7 +468,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // // This method sometimes causes a FiberAction (abort) and sometimes
 // // returns a value.  So for now it has to be a ValuePrimitive
 // // and use the Err result to cause the abort
-// fn fiber_abort(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn fiber_abort<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let is_abort = !args[1].is_null();
 //     // wren_c just records the error string and continues?
 //     // vm->fiber->error = args[1];
@@ -527,13 +539,13 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(FiberAction::Try(this, args[1].clone()))
 // }
 
-// fn fiber_error(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn fiber_error<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_fiber(&args);
 //     let error = this.borrow().error();
 //     Ok(error)
 // }
 
-// fn fiber_is_done(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn fiber_is_done<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this_handle = unwrap_this_as_fiber(&args);
 //     let this = this_handle.borrow();
 //     // We can't get a refernce to the (possibly currently running) stack
@@ -590,7 +602,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //         .ok_or_else(|| VMError::from_string(format!("{} must be a string.", arg_name)))
 // }
 
-// fn string_from_code_point(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_from_code_point<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let num = validate_int(&args[1], "Code point")?;
 //     if num < 0.0 {
 //         Err(VMError::from_str("Code point cannot be negative."))
@@ -605,7 +617,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn string_from_byte(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_from_byte<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let num = validate_int(&args[1], "Byte")?;
 //     if num < 0.0 {
 //         Err(VMError::from_str("Byte cannot be negative."))
@@ -619,7 +631,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn string_plus(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_plus<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let a = unwrap_this_as_string(&args);
 //     let b = validate_string(&args[1], "Right operand")?;
 //     Ok(Value::from_string(a + &b))
@@ -642,7 +654,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     before..after
 // }
 
-// fn string_subscript(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_subscript<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let string = unwrap_this_as_string(&args);
 
 //     match &args[1] {
@@ -668,16 +680,16 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn string_to_string(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_to_string<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     // Do we need to confirm args[0] is a string?  wren_c does not.
 //     Ok(args[0].clone())
 // }
 
-// fn string_byte_count(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_byte_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     Ok(Value::from_usize(unwrap_this_as_string(&args).len()))
 // }
 
-// fn string_code_point_at(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_code_point_at<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let index = validate_index(&args[1], this.len(), "Index")?;
 
@@ -690,18 +702,18 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(Value::from_usize(c as usize))
 // }
 
-// fn string_byte_at(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_byte_at<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let string = unwrap_this_as_string(&args);
 //     let index = validate_index(&args[1], string.len(), "Index")?;
 //     Ok(Value::from_u8(string.as_bytes()[index]))
 // }
 
-// fn string_contains(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_contains<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
 //     Ok(Value::Boolean(this.contains(&search)))
 // }
-// fn string_ends_with(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_ends_with<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
 //     Ok(Value::Boolean(this.ends_with(&search)))
@@ -714,14 +726,14 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn string_index_of1(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_index_of1<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
 //     let maybe_index = this.find(&search);
 //     Ok(index_or_neg_one(maybe_index))
 // }
 
-// fn string_index_of2(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_index_of2<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
 //     let mut start = validate_index(&args[2], this.len(), "Start")?;
@@ -739,7 +751,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn string_iterate(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let string = unwrap_this_as_string(&args);
 
 //     // If we're starting the iteration, return the first index.
@@ -769,7 +781,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn string_iterate_byte(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_iterate_byte<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let string = unwrap_this_as_string(&args);
 
 //     // If we're starting the iteration, return the first index.
@@ -812,14 +824,14 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn string_iterator_value(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let string = unwrap_this_as_string(&args);
 //     let index = validate_index(&args[1], string.len(), "Iterator")?;
 
 //     Ok(wren_string_code_point_at(string, index))
 // }
 
-// fn string_starts_with(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn string_starts_with<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let this = unwrap_this_as_string(&args);
 //     let search = validate_string(&args[1], "Argument")?;
 //     Ok(Value::Boolean(this.starts_with(&search)))
@@ -830,13 +842,13 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //         .ok_or_else(|| VMError::from_string(format!("{} must be a function.", arg_name)))
 // }
 
-// fn fn_new(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn fn_new<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     // Odd that this never checks arg[0].
 //     // The block argument is already a function, so just return it.
 //     Ok(Value::Closure(validate_fn(&args[1], "Argument")?))
 // }
 
-// fn fn_arity(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn fn_arity<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let closure = unwrap_this_as_closure(&args);
 //     let arity = closure.borrow().fn_obj.borrow().arity;
 //     Ok(Value::from_usize(arity.as_index()))
@@ -850,7 +862,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(Value::Map(vm.new_map()))
 // }
 
-// fn map_subscript(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_subscript<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let key = &args[1];
 //     validate_key(vm, key)?;
 //     let map_cell = unwrap_this_as_map(&args);
@@ -862,7 +874,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn map_subscript_setter(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_subscript_setter<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let key = &args[1];
 //     validate_key(vm, key)?;
 //     let map = unwrap_this_as_map(&args);
@@ -894,7 +906,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // // Adds an entry to the map and then returns the map itself. This is called by
 // // the compiler when compiling map literals instead of using [_]=(_) to
 // // minimize stack churn.
-// fn map_add_core(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_add_core<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let key = &args[1];
 //     validate_key(vm, key)?;
 //     let value = &args[2];
@@ -904,13 +916,13 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(Value::Map(map))
 // }
 
-// fn map_clear(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_clear<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map = unwrap_this_as_map(&args);
 //     map.borrow_mut().data.clear();
 //     Ok(Value::Null)
 // }
 
-// fn map_contains_key(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_contains_key<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let key = &args[1];
 //     validate_key(vm, key)?;
 //     let map = unwrap_this_as_map(&args);
@@ -918,13 +930,13 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(Value::Boolean(result))
 // }
 
-// fn map_count(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map = unwrap_this_as_map(&args);
 //     let count = map.borrow().len();
 //     Ok(Value::from_usize(count))
 // }
 
-// fn map_remove(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_remove<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let key = &args[1];
 //     validate_key(vm, key)?;
 //     let map = unwrap_this_as_map(&args);
@@ -937,7 +949,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 
 // // FIXME: This is wrong.  This sits on top of rust's hashmap
 // // and does not match wren_c's iterator behavior exactly.
-// fn map_iterate(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map = unwrap_this_as_map(&args);
 //     if map.borrow().data.is_empty() {
 //         return Ok(Value::Boolean(false));
@@ -961,7 +973,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn map_key_iterator_value(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_key_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map_handle = unwrap_this_as_map(&args);
 //     let map = map_handle.borrow();
 //     let index = validate_index(&args[1], map.len(), "Iterator")?;
@@ -969,7 +981,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(entries.nth(index).unwrap().0.clone())
 // }
 
-// fn map_value_iterator_value(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn map_value_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let map_handle = unwrap_this_as_map(&args);
 //     let map = map_handle.borrow();
 //     let index = validate_index(&args[1], map.len(), "Iterator")?;
@@ -977,7 +989,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(entries.nth(index).unwrap().1.clone())
 // }
 
-// fn list_filled(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_filled<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let size = validate_int(&args[1], "Size")?;
 //     if size < 0.0 {
 //         return Err(VMError::from_str("Size cannot be negative."));
@@ -1060,7 +1072,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn list_subscript(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_subscript<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 
 //     match &args[1] {
@@ -1084,14 +1096,14 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn list_subscript_setter(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_subscript_setter<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let index = validate_index(&args[1], list.borrow().len(), "Subscript")?;
 //     list.borrow_mut().elements[index] = args[2].clone();
 //     Ok(args[2].clone())
 // }
 
-// fn list_add(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_add<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let value = &args[1];
 //     let list = unwrap_this_as_list(&args);
 //     list.borrow_mut().elements.push(value.clone());
@@ -1101,19 +1113,19 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // // Adds an element to the list and then returns the list itself. This is called
 // // by the compiler when compiling list literals instead of using add() to
 // // minimize stack churn.
-// fn list_add_core(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_add_core<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let value = &args[1];
 //     let list = unwrap_this_as_list(&args);
 //     list.borrow_mut().elements.push(value.clone());
 //     Ok(args[0].clone())
 // }
 
-// fn list_clear(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_clear<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     list.borrow_mut().elements.clear();
 //     Ok(Value::Null)
 // }
-// fn list_insert(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_insert<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let elements = &mut list.borrow_mut().elements;
 //     let count = elements.len();
@@ -1127,7 +1139,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(args[2].clone())
 // }
 
-// fn list_remove_value(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_remove_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
 //     match maybe_index {
@@ -1139,13 +1151,13 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn list_index_of(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_index_of<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let maybe_index = list.borrow().elements.iter().position(|v| v.eq(&args[1]));
 //     Ok(index_or_neg_one(maybe_index))
 // }
 
-// fn list_swap(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_swap<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let index_a = validate_index(&args[1], list.borrow().len(), "Index 0")?;
 //     let index_b = validate_index(&args[2], list.borrow().len(), "Index 1")?;
@@ -1170,7 +1182,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     validate_int_value(num, arg_name)
 // }
 
-// fn list_iterate(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_iterate<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let elements_len = list.borrow().len() as f64;
 
@@ -1213,7 +1225,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     }
 // }
 
-// fn list_iterator_value(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_iterator_value<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 
 //     let index = validate_index(&args[1], list.borrow().len(), "Iterator")?;
@@ -1221,14 +1233,14 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(value)
 // }
 
-// fn list_remove_at(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_remove_at<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let index = validate_index(&args[1], list.borrow().len(), "Index")?;
 //     let value = list.borrow_mut().elements.remove(index);
 //     Ok(value)
 // }
 
-// fn list_count(_vm: &VM, args: &[Value]) -> Result<Value> {
+// fn list_count<'a>(scope: &'a HandleScope, _vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let list = unwrap_this_as_list(&args);
 //     let count = list.borrow().len();
 //     Ok(Value::from_usize(count))
@@ -1272,7 +1284,7 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 // //     Ok(Value::Null)
 // // }
 
-// fn system_write_string(vm: &VM, args: &[Value]) -> Result<Value> {
+// fn system_write_string<'a>(scope: &'a HandleScope, vm: &VM, args: &[HeapHandle<()>]) -> Result<LocalHandle<'a, ()>> {
 //     let string = args[1]
 //         .try_into_string()
 //         .ok_or_else(|| VMError::from_str("expected String"))?;
@@ -1283,14 +1295,14 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     Ok(args[1].clone())
 // }
 
-// macro_rules! primitive {
-//     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
-//         let symbol = $vm.methods.ensure_symbol($sig);
-//         $class
-//             .borrow_mut()
-//             .set_method(symbol, Method::ValuePrimitive($func));
-//     };
-// }
+macro_rules! primitive {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        let symbol = $vm.methods.ensure_symbol($sig);
+        $class
+            .borrow_mut()
+            .set_method(symbol, Method::ValuePrimitive($func));
+    };
+}
 
 // macro_rules! fiber_primitive {
 //     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
@@ -1323,15 +1335,15 @@ type Result<T, E = VMError> = std::result::Result<T, E>;
 //     };
 // }
 
-pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
+pub(crate) fn init_base_classes(scope: &HandleScope, vm: &mut VM, core_module: &mut Module) {
     // wren_c makes a core module, which it then imports
     // into every module when running.  For now we're just
     // "importing" core directly into the one module we ever have.
 
-    // // FIXME: Store core_module in module map.
-    // // Define the root Object class. This has to be done a little specially
-    // // because it has no superclass.
-    // let object = define_class(core_module, "Object");
+    // FIXME: Store core_module in module map.
+    // Define the root Object class. This has to be done a little specially
+    // because it has no superclass.
+    let object = define_class(scope, core_module, "Object");
     // primitive!(vm, object, "!", object_not);
     // primitive!(vm, object, "==(_)", object_eqeq);
     // primitive!(vm, object, "!=(_)", object_bangeq);
@@ -1339,9 +1351,9 @@ pub(crate) fn init_base_classes(vm: &mut VM, core_module: &mut Module) {
     // primitive!(vm, object, "toString", object_to_string);
     // primitive!(vm, object, "type", object_type);
 
-    // // Now we can define Class, which is a subclass of Object.
-    // let class = define_class(core_module, "Class");
-    // class.borrow_mut().bind_superclass(&object);
+    // Now we can define Class, which is a subclass of Object.
+    let class = define_class(scope, core_module, "Class");
+    class.borrow_mut().bind_superclass(object);
     // primitive!(vm, class, "name", class_name);
     // primitive!(vm, class, "supertype", class_supertype);
     // primitive!(vm, class, "toString", class_to_string);
@@ -1407,12 +1419,10 @@ pub(crate) fn init_fn_and_fiber(vm: &mut VM, scope: &HandleScope, module: &mut M
         Some(create_and_define_class(vm, scope, module, "Fiber", superclass).into());
 }
 
-pub(crate) fn register_core_primitives(vm: &mut VM) {
+pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     // Note: All of these methods are bound *after* setup from
     // superclass, so any classes added to a superclass
     // WOULD NOT end up inherited into wren_core.wren subclasses.
-
-    let scope = HandleScope::new(&vm.heap);
 
     let module = scope
         .as_ref(&vm.globals)
@@ -1431,8 +1441,8 @@ pub(crate) fn register_core_primitives(vm: &mut VM) {
         map: module.expect_class(&scope, "Map").into(),
     };
 
-    // primitive!(vm, core.bool_class, "!", bool_not);
-    // primitive!(vm, core.bool_class, "toString", bool_to_string);
+    primitive!(vm, core.bool_class, "!", bool_not);
+    primitive!(vm, core.bool_class, "toString", bool_to_string);
 
     // let fiber = vm.fiber_class.as_ref().unwrap();
     // primitive_static!(vm, fiber, "new(_)", fiber_new);
@@ -1483,7 +1493,7 @@ pub(crate) fn register_core_primitives(vm: &mut VM) {
     // primitive_static!(vm, core.num, "maxSafeInteger", num_max_safe_integer);
     // primitive_static!(vm, core.num, "minSafeInteger", num_min_safe_integer);
     // primitive!(vm, core.num, "-(_)", num_minus);
-    // primitive!(vm, core.num, "+(_)", num_plus);
+    primitive!(vm, core.num, "+(_)", num_plus);
     // primitive!(vm, core.num, "*(_)", num_mult);
     // primitive!(vm, core.num, "/(_)", num_divide);
     // primitive!(vm, core.num, "<(_)", num_lt);

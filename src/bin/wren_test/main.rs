@@ -15,6 +15,7 @@ mod error;
 use api_tests::api_test_bind_foreign_method_fn;
 use safe_wren::test::test_config;
 use safe_wren::wren::*;
+use vmgc::heap::*;
 
 enum ExitCode {
     Success = 0,
@@ -44,7 +45,7 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
-fn run_file(vm: &mut VM, path: &str) -> ! {
+fn run_file(scope: &HandleScope, vm: &mut VM, path: &str) -> ! {
     let source = fs::read(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
         exit(ExitCode::NoInput);
@@ -60,7 +61,7 @@ fn run_file(vm: &mut VM, path: &str) -> ! {
     if !module_name.starts_with(".") {
         module_name = format!("./{}", module_name);
     }
-    match vm.interpret_bytes(&module_name, source) {
+    match vm.interpret_bytes(scope, &module_name, source) {
         InterpretResult::CompileError => exit(ExitCode::CompileError),
         InterpretResult::RuntimeError => exit(ExitCode::RuntimeError),
         InterpretResult::Success => exit(ExitCode::Success),
@@ -80,8 +81,10 @@ fn main() {
     if api_test {
         config.bind_foreign_method_fn = Some(api_test_bind_foreign_method_fn);
     }
-    let mut vm = VM::new(config);
+    let heap = Heap::new(100000).unwrap();
+    let scope = HandleScope::new(&heap);
+    let mut vm = VM::new(&scope, config);
 
     // handle API tests.
-    run_file(&mut vm, test_path);
+    run_file(&scope, &mut vm, test_path);
 }

@@ -189,10 +189,15 @@ pub enum InterpretResult {
 // context of resolved [module].
 impl VM {
     // Should this take a &[u8]?
-    pub fn interpret_bytes(&mut self, module: &str, source_bytes: Vec<u8>) -> InterpretResult {
+    pub fn interpret_bytes(
+        &mut self,
+        scope: &HandleScope,
+        module: &str,
+        source_bytes: Vec<u8>,
+    ) -> InterpretResult {
         // Attempt to convert to String.
         match String::from_utf8(source_bytes) {
-            Ok(source) => self.interpret(module, source),
+            Ok(source) => self.interpret(scope, module, source),
             Err(error) => {
                 // Convert any unicode failures into compile failures.
                 // Fake the line number according to the number of \n before the offset.
@@ -220,8 +225,12 @@ impl VM {
     }
 
     // Should this take a &str?
-    pub fn interpret(&mut self, module: &str, source: String) -> InterpretResult {
-        let scope = HandleScope::new(&self.heap);
+    pub fn interpret(
+        &mut self,
+        scope: &HandleScope,
+        module: &str,
+        source: String,
+    ) -> InterpretResult {
         match self.compile_source(&scope, module, source) {
             Err(error) => {
                 self.report_compile_error(module, error.line, &error.error.to_string());

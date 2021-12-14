@@ -29,7 +29,7 @@ struct ArgsResult {
 
 fn parse_args() -> ArgsResult {
     let args: Vec<_> = env::args().collect();
-    if args.len() < 2 {
+    if args.len() < 3 {
         print_usage();
         std::process::exit(1);
     }
@@ -37,7 +37,7 @@ fn parse_args() -> ArgsResult {
     if args[2].eq("--string") {
         ArgsResult {
             command,
-            bytes: args[2].as_bytes().into(),
+            bytes: args[3].as_bytes().into(),
             module_name: "<inline>".into(),
         }
     } else {

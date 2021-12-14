@@ -7,36 +7,38 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'safe_wren'",
+            "name": "Debug executable 'wren_debug'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=safe_wren",
+                    "--bin=wren_debug",
                     "--package=safe_wren"
                 ],
                 "filter": {
-                    "name": "safe_wren",
+                    "name": "wren_debug",
                     "kind": "bin"
                 }
             },
             "args": [
-                "1 + 1"
+                "interpret",
+                "--string",
+                "1+1"
             ],
             "cwd": "${workspaceFolder}"
         },
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'safe_wren'",
+            "name": "Debug unit tests in executable 'wren_debug'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=safe_wren",
+                    "--bin=wren_debug",
                     "--package=safe_wren"
                 ],
                 "filter": {
-                    "name": "safe_wren",
+                    "name": "wren_debug",
                     "kind": "bin"
                 }
             },

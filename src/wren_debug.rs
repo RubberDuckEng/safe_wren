@@ -42,20 +42,22 @@ pub fn print_tokens(bytes: Vec<u8>) {
 
 pub fn print_bytecode(bytes: Vec<u8>, module_name: String) {
     let input = InputManager::from_bytes(bytes);
-    let mut vm = VM::new(test_config());
-    let scope = HandleScope::new(&vm.heap);
+    let heap = Heap::new(1000).unwrap();
+    let scope = HandleScope::new(&heap);
+    let mut vm = VM::new(&scope, test_config());
     let result = vm.compile_in_module(&scope, &module_name, input);
     match result {
-        Ok(closure) => debug_bytecode(&vm, closure.as_ref()),
+        Ok(closure) => debug_bytecode(&scope, &vm, closure.as_ref()),
         Err(e) => print_compile_error(e),
     }
 }
 
 pub fn interpret_and_print_vm(bytes: Vec<u8>, module_name: String) {
+    let heap = Heap::new(100000).unwrap();
+    let scope = HandleScope::new(&heap);
     let input = InputManager::from_bytes(bytes);
-    let mut vm = VM::new(test_config());
+    let mut vm = VM::new(&scope, test_config());
     vm.config.debug_level = Some(DebugLevel::NonCore);
-    let scope = HandleScope::new(&vm.heap);
     let result = vm.compile_in_module(&scope, &module_name, input);
     match result {
         Ok(closure) => match vm.run(&scope, closure) {
