@@ -1,4 +1,0 @@
-Expected runtime error "Cannot try an aborted fiber." and got:
-Fiber does not implement 'try()'.
-Expected runtime error on line 7 but was on line 6.
-Missing expected output "try" on line 6.

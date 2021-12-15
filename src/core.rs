@@ -656,59 +656,99 @@ fn fiber_current<'a>(
     Ok(vm.fiber(scope).unwrap().erase_type())
 }
 
-// fn fiber_suspend(_vm: &VM, _args: &[Value]) -> Result<FiberAction> {
-//     Ok(FiberAction::Suspend)
-// }
+fn fiber_suspend<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    Ok(FiberAction::Suspend)
+}
 
-// fn fiber_yield(_vm: &VM, _args: &[Value]) -> Result<FiberAction> {
-//     Ok(FiberAction::Return(scope.create_null()))
-// }
+fn fiber_yield<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    _args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    Ok(FiberAction::Return(scope.create_null()))
+}
 
-// fn fiber_yield1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     Ok(FiberAction::Return(args[1].clone()))
-// }
+fn fiber_yield1<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    Ok(FiberAction::Return(scope.from_heap(&args[1])))
+}
 
-// fn fiber_call(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     let this = unwrap_this_as_fiber(&args);
-//     validate_fiber_action(&this.borrow(), true, "call")?;
-//     Ok(FiberAction::Call(this, scope.create_null()))
-// }
+fn fiber_call<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    validate_fiber_action(&this.borrow(), true, "call")?;
+    Ok(FiberAction::Call(this, scope.create_null()))
+}
 
-// fn fiber_call1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     let this = unwrap_this_as_fiber(&args);
-//     validate_fiber_action(&this.borrow(), true, "call")?;
-//     Ok(FiberAction::Call(this, args[1].clone()))
-// }
+fn fiber_call1<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    validate_fiber_action(&this.borrow(), true, "call")?;
+    Ok(FiberAction::Call(this, scope.from_heap(&args[1])))
+}
 
-// fn fiber_transfer(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     let this = unwrap_this_as_fiber(&args);
-//     validate_fiber_action(&this.borrow(), false, "transfer to")?;
-//     Ok(FiberAction::Transfer(this, scope.create_null()))
-// }
+fn fiber_transfer<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    validate_fiber_action(&this.borrow(), false, "transfer to")?;
+    Ok(FiberAction::Transfer(this, scope.create_null()))
+}
 
-// fn fiber_transfer1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     let this = unwrap_this_as_fiber(&args);
-//     validate_fiber_action(&this.borrow(), false, "transfer to")?;
-//     Ok(FiberAction::Transfer(this, args[1].clone()))
-// }
+fn fiber_transfer1<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    validate_fiber_action(&this.borrow(), false, "transfer to")?;
+    Ok(FiberAction::Transfer(this, scope.from_heap(&args[1])))
+}
 
-// fn fiber_transfer_error(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     let this = unwrap_this_as_fiber(&args);
-//     validate_fiber_action(&this.borrow(), false, "transfer to")?;
-//     Ok(FiberAction::TransferError(this, args[1].clone()))
-// }
+fn fiber_transfer_error<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    validate_fiber_action(&this.borrow(), false, "transfer to")?;
+    Ok(FiberAction::TransferError(this, scope.from_heap(&args[1])))
+}
 
-// fn fiber_try(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     let this = unwrap_this_as_fiber(&args);
-//     validate_fiber_action(&this.borrow(), true, "try")?;
-//     Ok(FiberAction::Try(this, scope.create_null()))
-// }
+fn fiber_try<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    validate_fiber_action(&this.borrow(), true, "try")?;
+    Ok(FiberAction::Try(this, scope.create_null()))
+}
 
-// fn fiber_try1(_vm: &VM, args: &[Value]) -> Result<FiberAction> {
-//     let this = unwrap_this_as_fiber(&args);
-//     validate_fiber_action(&this.borrow(), true, "try")?;
-//     Ok(FiberAction::Try(this, args[1].clone()))
-// }
+fn fiber_try1<'a>(
+    scope: &'a HandleScope,
+    _vm: &VM,
+    args: &[HeapHandle<()>],
+) -> Result<FiberAction<'a>> {
+    let this = unwrap_this_as_fiber(scope, &args);
+    validate_fiber_action(&this.borrow(), true, "try")?;
+    Ok(FiberAction::Try(this, scope.from_heap(&args[1])))
+}
 
 fn fiber_error<'a>(
     scope: &'a HandleScope,
@@ -733,40 +773,40 @@ fn fiber_is_done<'a>(
     Ok(scope.create_bool(is_done).erase_type())
 }
 
-// // Prepare to transfer execution to [fiber] coming from the current fiber.
-// //
-// // [is_call] is true if [fiber] is being called and not transferred.
-// // This is called runFiber in wren_c.
-// fn validate_fiber_action(fiber: &ObjFiber, is_call: bool, verb: &str) -> Result<()> {
-//     if fiber.has_error() {
-//         return Err(VMError::from_string(format!(
-//             "Cannot {} an aborted fiber.",
-//             verb
-//         )));
-//     }
+// Prepare to transfer execution to [fiber] coming from the current fiber.
+//
+// [is_call] is true if [fiber] is being called and not transferred.
+// This is called runFiber in wren_c.
+fn validate_fiber_action(fiber: &ObjFiber, is_call: bool, verb: &str) -> Result<()> {
+    if fiber.has_error() {
+        return Err(VMError::from_string(format!(
+            "Cannot {} an aborted fiber.",
+            verb
+        )));
+    }
 
-//     if is_call {
-//         // You can't call a called fiber, but you can transfer directly to it,
-//         // which is why this check is gated on `isCall`. This way, after
-//         // resuming a suspended fiber, it will run and then return to the fiber
-//         // that called it and so on.
-//         if fiber.caller.is_some() {
-//             return Err(VMError::from_str("Fiber has already been called."));
-//         }
+    if is_call {
+        // You can't call a called fiber, but you can transfer directly to it,
+        // which is why this check is gated on `isCall`. This way, after
+        // resuming a suspended fiber, it will run and then return to the fiber
+        // that called it and so on.
+        if fiber.caller.is_some() {
+            return Err(VMError::from_str("Fiber has already been called."));
+        }
 
-//         if fiber.is_root() {
-//             return Err(VMError::from_str("Cannot call root fiber."));
-//         }
-//     }
+        if fiber.is_root() {
+            return Err(VMError::from_str("Cannot call root fiber."));
+        }
+    }
 
-//     if fiber.completed_normally_cache {
-//         return Err(VMError::from_string(format!(
-//             "Cannot {} a finished fiber.",
-//             verb
-//         )));
-//     }
-//     Ok(())
-// }
+    if fiber.completed_normally_cache {
+        return Err(VMError::from_string(format!(
+            "Cannot {} a finished fiber.",
+            verb
+        )));
+    }
+    Ok(())
+}
 
 fn null_not<'a>(
     scope: &'a HandleScope,
@@ -1708,25 +1748,25 @@ macro_rules! primitive {
     };
 }
 
-// macro_rules! fiber_primitive {
-//     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
-//         let symbol = $vm.methods.ensure_symbol($sig);
-//         $class
-//             .borrow_mut()
-//             .set_method(symbol, Method::FiberActionPrimitive($func));
-//     };
-// }
+macro_rules! fiber_primitive {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        let symbol = $vm.methods.ensure_symbol($sig);
+        $class
+            .borrow_mut()
+            .set_method(symbol, Method::FiberActionPrimitive($func));
+    };
+}
 
-// macro_rules! fiber_primitive_static {
-//     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
-//         let symbol = $vm.methods.ensure_symbol($sig);
-//         $class
-//             .borrow_mut()
-//             .class_obj()
-//             .borrow_mut()
-//             .set_method(symbol, Method::FiberActionPrimitive($func));
-//     };
-// }
+macro_rules! fiber_primitive_static {
+    ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
+        let symbol = $vm.methods.ensure_symbol($sig);
+        $class
+            .borrow_mut()
+            .class_obj()
+            .borrow_mut()
+            .set_method(symbol, Method::FiberActionPrimitive($func));
+    };
+}
 
 macro_rules! primitive_static {
     ($vm:expr, $class:expr, $sig:expr, $func:expr) => {
@@ -1854,18 +1894,18 @@ pub(crate) fn register_core_primitives(scope: &HandleScope, vm: &mut VM) {
     primitive_static!(vm, fiber, "new(_)", fiber_new);
     primitive_static!(vm, fiber, "abort(_)", fiber_abort);
     primitive_static!(vm, fiber, "current", fiber_current);
-    // fiber_primitive_static!(vm, fiber, "suspend()", fiber_suspend);
-    // fiber_primitive_static!(vm, fiber, "yield()", fiber_yield);
-    // fiber_primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
-    // fiber_primitive!(vm, fiber, "call()", fiber_call);
-    // fiber_primitive!(vm, fiber, "call(_)", fiber_call1);
+    fiber_primitive_static!(vm, fiber, "suspend()", fiber_suspend);
+    fiber_primitive_static!(vm, fiber, "yield()", fiber_yield);
+    fiber_primitive_static!(vm, fiber, "yield(_)", fiber_yield1);
+    fiber_primitive!(vm, fiber, "call()", fiber_call);
+    fiber_primitive!(vm, fiber, "call(_)", fiber_call1);
     primitive!(vm, fiber, "error", fiber_error);
     primitive!(vm, fiber, "isDone", fiber_is_done);
-    // fiber_primitive!(vm, fiber, "transfer()", fiber_transfer);
-    // fiber_primitive!(vm, fiber, "transfer(_)", fiber_transfer1);
-    // fiber_primitive!(vm, fiber, "transferError(_)", fiber_transfer_error);
-    // fiber_primitive!(vm, fiber, "try()", fiber_try);
-    // fiber_primitive!(vm, fiber, "try(_)", fiber_try1);
+    fiber_primitive!(vm, fiber, "transfer()", fiber_transfer);
+    fiber_primitive!(vm, fiber, "transfer(_)", fiber_transfer1);
+    fiber_primitive!(vm, fiber, "transferError(_)", fiber_transfer_error);
+    fiber_primitive!(vm, fiber, "try()", fiber_try);
+    fiber_primitive!(vm, fiber, "try(_)", fiber_try1);
 
     let fn_class = scope
         .from_maybe_heap(&scope.as_ref(&vm.globals).fn_class)

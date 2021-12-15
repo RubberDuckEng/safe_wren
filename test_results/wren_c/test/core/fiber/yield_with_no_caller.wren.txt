@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-Fiber does not implement 'transfer()'.
-Unexpected output on stderr:
-[./test/core/fiber/yield_with_no_caller line 11] in <script>
-Expected return code 0 and got 70. Stderr:
-Fiber does not implement 'transfer()'.
-[./test/core/fiber/yield_with_no_caller line 11] in <script>
-
-Missing expected output "before" on line 2.

@@ -1,8 +1,0 @@
-Unexpected output on stderr:
-Fiber metaclass does not implement 'suspend()'.
-Unexpected output on stderr:
-[./test/fiber/suspend line 2] in <script>
-Expected return code 0 and got 70. Stderr:
-Fiber metaclass does not implement 'suspend()'.
-[./test/fiber/suspend line 2] in <script>
-

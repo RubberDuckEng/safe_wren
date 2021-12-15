@@ -1,4 +1,0 @@
-Expected runtime error "Cannot try a finished fiber." and got:
-Fiber does not implement 'try()'.
-Expected runtime error on line 6 but was on line 5.
-Missing expected output "try" on line 5.

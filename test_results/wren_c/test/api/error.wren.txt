@@ -1,10 +1,10 @@
 Unexpected output on stderr:
-Fiber does not implement 'try()'.
+thread 'main' panicked at 'not implemented', src\vm.rs:2336:17
 Unexpected output on stderr:
-[./test/api/error line 9] in <script>
-Expected return code 0 and got 70. Stderr:
-Fiber does not implement 'try()'.
-[./test/api/error line 9] in <script>
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Expected return code 0 and got 101. Stderr:
+thread 'main' panicked at 'not implemented', src\vm.rs:2336:17
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 Missing expected output "Error!" on line 10.
 Missing expected output "true" on line 11.

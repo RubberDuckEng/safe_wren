@@ -1,3 +1,0 @@
-Expected runtime error "Fiber has already been called." and got:
-Fiber does not implement 'call(_)'.
-Expected runtime error on line 2 but was on line 9.
