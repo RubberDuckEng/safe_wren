@@ -2744,6 +2744,8 @@ fn op_debug_string(
                 None => format!("Load(Local, {})", index),
             },
             Variable::Upvalue(index) => match closure {
+                // FIXME: Print upvalue:
+                // "Load(Upvalue, {} -> {:?})",index, c.upvalue(index).borrow()
                 Some(c) => format!("Load(Upvalue, {})", index),
                 None => format!("Load(Upvalue, {})", index),
             },

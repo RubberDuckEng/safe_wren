@@ -657,7 +657,7 @@ fn fiber_current<'a>(
 }
 
 fn fiber_suspend<'a>(
-    scope: &'a HandleScope,
+    _scope: &'a HandleScope,
     _vm: &VM,
     _args: &[HeapHandle<()>],
 ) -> Result<FiberAction<'a>> {
