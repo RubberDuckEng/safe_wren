@@ -1,9 +1,0 @@
-Unexpected output on stderr:
-thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', C:\Users\micro\Documents\GitHub\vmgc\src\object.rs:326:40
-Unexpected output on stderr:
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-Expected return code 0 and got 101. Stderr:
-thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', C:\Users\micro\Documents\GitHub\vmgc\src\object.rs:326:40
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-
-Missing expected output "empty string" on line 5.

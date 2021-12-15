@@ -23,6 +23,9 @@ test/fiber/suspend.wren
 test/fuzz/grammar_nesting.wren
 test/list/equality.wren
 test/map/equality.wren
+test/map/iterate.wren
+test/map/key_iterate.wren
+test/map/value_iterate.wren
 test/module/scoped/scoped.wren
 test/num/clamp_min_larger_than_max.wren
 test/num/shift_overflow.wren
@@ -190,6 +193,10 @@ wren_c/test/core/list/type.wren
 wren_c/test/core/list/where.wren
 wren_c/test/core/map/churn.wren
 wren_c/test/core/map/clear.wren
+wren_c/test/core/map/contains_key.wren
+wren_c/test/core/map/contains_key_not_value.wren
+wren_c/test/core/map/count.wren
+wren_c/test/core/map/empty_string_key.wren
 wren_c/test/core/map/is_empty.wren
 wren_c/test/core/map/iterate_iterator_not_int.wren
 wren_c/test/core/map/iterate_iterator_not_num.wren
@@ -201,7 +208,13 @@ wren_c/test/core/map/iterator_value_iterator_too_small.wren
 wren_c/test/core/map/key_iterate_iterator_not_int.wren
 wren_c/test/core/map/key_iterate_iterator_not_num.wren
 wren_c/test/core/map/new.wren
+wren_c/test/core/map/remove.wren
+wren_c/test/core/map/remove_key_not_value.wren
 wren_c/test/core/map/reuse_tombstone.wren
+wren_c/test/core/map/subscript_empty_map.wren
+wren_c/test/core/map/subscript_key_not_value.wren
+wren_c/test/core/map/subscript_setter_key_not_value.wren
+wren_c/test/core/map/to_string.wren
 wren_c/test/core/map/type.wren
 wren_c/test/core/map/value_iterate_iterator_not_int.wren
 wren_c/test/core/map/value_iterate_iterator_not_num.wren
@@ -592,6 +605,10 @@ wren_c/test/language/map/eof_after_colon.wren
 wren_c/test/language/map/eof_after_comma.wren
 wren_c/test/language/map/eof_after_key.wren
 wren_c/test/language/map/eof_after_value.wren
+wren_c/test/language/map/grow_and_shrink.wren
+wren_c/test/language/map/newlines.wren
+wren_c/test/language/map/precedence.wren
+wren_c/test/language/map/trailing_comma.wren
 wren_c/test/language/method/arity.wren
 wren_c/test/language/method/call_name_too_long.wren
 wren_c/test/language/method/empty_block.wren
