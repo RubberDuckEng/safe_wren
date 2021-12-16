@@ -369,6 +369,79 @@ impl OpenUpvalues {
     }
 }
 
+// use std::ops::{Index, IndexMut};
+
+// struct Stack {
+//     values: List<()>,
+//     pending_result: Option<HeapHandle<()>>,
+//     class_for_dispatch: Option<HeapHandle<ObjClass>>,
+// }
+
+// impl HostObject for Stack {
+//     const TYPE_ID: ObjectType = ObjectType::Host;
+// }
+
+// impl Traceable for Stack {
+//     fn trace(&mut self, visitor: &mut ObjectVisitor) {
+//         self.trace(visitor);
+//         if let Some(result) = &self.pending_result {
+//             result.trace(visitor);
+//         }
+//         if let Some(class) = &self.class_for_dispatch {
+//             class.trace(visitor);
+//         }
+//     }
+// }
+
+// impl Stack {
+//     fn push(&mut self, handle: HeapHandle<()>) {
+//         self.values.push(handle);
+//     }
+
+//     fn pop<'a>(&mut self, scope: &'a HandleScope) -> Option<LocalHandle<'a, ()>> {
+//         self.values.pop(scope)
+//     }
+
+//     fn len(&self) -> usize {
+//         self.values.len()
+//     }
+
+//     fn first(&self) -> Option<&HeapHandle<()>> {
+//         self.values.first()
+//     }
+
+//     fn last(&self) -> Option<&HeapHandle<()>> {
+//         self.values.last()
+//     }
+
+//     fn is_empty(&self) -> bool {
+//         self.values.is_empty()
+//     }
+
+//     fn iter(&self) -> std::slice::Iter<'_, HeapHandle<()>> {
+//         self.values.iter()
+//     }
+
+//     pub fn truncate(&mut self, len: usize) {
+//         self.values.truncate(len);
+//     }
+// }
+
+// impl<I: std::slice::SliceIndex<[HeapHandle<()>]>> std::ops::Index<I> for Stack {
+//     type Output = I::Output;
+
+//     #[inline]
+//     fn index(&self, index: I) -> &Self::Output {
+//         std::ops::Index::index(&self.values, index)
+//     }
+// }
+
+// impl IndexMut<usize> for Stack {
+//     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+//         self.values.index_mut(index)
+//     }
+// }
+
 pub struct ObjFiber {
     class_obj: HeapHandle<ObjClass>,
     pub(crate) error: HeapHandle<()>,
@@ -379,7 +452,8 @@ pub struct ObjFiber {
     // FIXME: This is probably better as an enum?
     pub(crate) completed_normally_cache: bool,
     run_source: FiberRunSource,
-    // FIXME: Should this be HeapHandle instead of RefCell?
+    // Held in a heap handle for flexible mutability.
+    // stack: HeapHandle<Stack>,
     stack: RefCell<List<()>>,
     // Held in a RefCell so others can interact with the rest of
     // ObjFiber (to ask class, etc.) while the stack is  held mutably
@@ -395,6 +469,7 @@ impl Traceable for ObjFiber {
         if let Some(caller) = &self.caller {
             caller.trace(visitor);
         }
+        // self.stack.trace(visitor);
         self.stack.borrow_mut().trace(visitor);
         for frame in self.call_stack.borrow_mut().iter_mut() {
             frame.trace(visitor);
@@ -609,6 +684,14 @@ impl ObjFiber {
                 completed_normally_cache: false,
                 call_stack: RefCell::new(vec![CallFrame::new(closure.into(), 0)]),
                 // FIXME: Should this be HeapHandle instead?
+                // stack: scope
+                //     .take(Stack {
+                //         values: stack.as_ref().clone(),
+                //         pending_result: None,
+                //         class_for_dispatch: None,
+                //     })
+                //     .unwrap()
+                //     .into(),
                 stack: RefCell::new(stack.as_ref().clone()),
                 open_upvalues: RefCell::new(OpenUpvalues {
                     values: List::default(),
@@ -1407,6 +1490,46 @@ impl Traceable for CoreClasses {
     }
 }
 
+impl CoreClasses {
+    pub(crate) fn class_for_value<'a>(
+        &self,
+        scope: &'a HandleScope,
+        value: &HeapHandle<()>,
+    ) -> LocalHandle<'a, ObjClass> {
+        if value.is_null() {
+            scope.from_heap(&self.null)
+        } else if value.is_num() {
+            scope.from_heap(&self.num)
+        } else if value.is_bool() {
+            scope.from_heap(&self.bool_class)
+        } else if let Some(_) = value.try_as_ref::<String>() {
+            scope.from_heap(&self.string)
+            // FIXME: There should be a better way to handle this without
+            // an if-cascade.  Can we cast to dyn Obj instead?
+        } else if let Some(obj) = value.try_as_ref::<ObjList>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjMap>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjRange>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjFiber>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjClass>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjInstance>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjForeign>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjClosure>() {
+            scope.from_heap(obj.class_obj())
+        } else if let Some(obj) = value.try_as_ref::<ObjFn>() {
+            scope.from_heap(obj.class_obj())
+        } else {
+            unimplemented!()
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum DefinitionError {
     VariableAlreadyDefined,                   // -1 in wren_c
@@ -1934,42 +2057,10 @@ impl VM {
     pub(crate) fn class_for_value<'a>(
         &self,
         scope: &'a HandleScope,
-        value_heap: &HeapHandle<()>,
+        value: &HeapHandle<()>,
     ) -> LocalHandle<'a, ObjClass> {
-        // try_as_ref doesn't exist on HeapHandle, so we use a LocalHandle.
-        let value = scope.from_heap(value_heap);
         let core = scope.as_ref(self.core.as_ref().unwrap());
-        if value.is_null() {
-            scope.from_heap(&core.null)
-        } else if value.is_num() {
-            scope.from_heap(&core.num)
-        } else if value.is_bool() {
-            scope.from_heap(&core.bool_class)
-        } else if let Some(_) = value.try_as_ref::<String>() {
-            scope.from_heap(&core.string)
-            // FIXME: There should be a better way to handle this without
-            // an if-cascade.  Can we cast to dyn Obj instead?
-        } else if let Some(obj) = value.try_as_ref::<ObjList>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjMap>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjRange>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjFiber>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjClass>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjInstance>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjForeign>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjClosure>() {
-            scope.from_heap(obj.class_obj())
-        } else if let Some(obj) = value.try_as_ref::<ObjFn>() {
-            scope.from_heap(obj.class_obj())
-        } else {
-            unimplemented!()
-        }
+        core.class_for_value(scope, value)
     }
 
     #[allow(dead_code)]
@@ -2353,6 +2444,7 @@ impl VM {
         let closure = closure_rc.borrow();
         let fn_obj = closure.fn_obj.borrow();
         let dump_instructions = self.should_dump_instructions(&fn_obj.debug);
+        let core = self.core.as_ref().map(|h| scope.as_ref(h));
         loop {
             let op = &fn_obj.code[frame.pc];
             if dump_instructions {
@@ -2418,8 +2510,9 @@ impl VM {
                     // +1 for implicit arg for 'this'.
                     let num_args = arity.as_index() + 1;
                     let this_offset = fiber.stack.borrow().len() - num_args;
-                    let this_class =
-                        self.class_for_value(&scope, &fiber.stack.borrow()[this_offset]);
+                    let this_class = core
+                        .unwrap()
+                        .class_for_value(&scope, &fiber.stack.borrow()[this_offset]);
                     let action = self.call_method(
                         &scope,
                         fiber,

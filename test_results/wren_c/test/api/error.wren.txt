@@ -1,9 +1,9 @@
 Unexpected output on stderr:
-thread 'main' panicked at 'not implemented', src\vm.rs:2336:17
+thread 'main' panicked at 'not implemented', src\vm.rs:2427:17
 Unexpected output on stderr:
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 Expected return code 0 and got 101. Stderr:
-thread 'main' panicked at 'not implemented', src\vm.rs:2336:17
+thread 'main' panicked at 'not implemented', src\vm.rs:2427:17
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 Missing expected output "Error!" on line 10.
