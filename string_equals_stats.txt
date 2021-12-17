@@ -1,0 +1,22 @@
+string_equals - safe_wren      .......... 3.05s 0.1874 no baseline
+
+// Removing value LocalHandle
+string_equals - safe_wren      .......... 2.98s 0.0908 no baseline
+
+// Moving to cached CoreClasses
+string_equals - safe_wren      .......... 2.36s 0.1788 no baseline
+
+// Moving stack onto HeapHandle
+string_equals - safe_wren      .......... 2.86s 0.0608 no baseline
+
+After show:
+
+// AFter removing Stack HeapHandle again?
+string_equals - safe_wren      .......... 1.90s 0.0434 no baseline
+
+// Quiet computer:
+string_equals - safe_wren      .......... 1.82s 0.0746 no baseline
+
+// Quiet,     stack: RefCell<List<()>>,
+string_equals - safe_wren      .......... 1.84s 0.0771 no baseline
+

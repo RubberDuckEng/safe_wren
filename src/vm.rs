@@ -369,78 +369,70 @@ impl OpenUpvalues {
     }
 }
 
-// use std::ops::{Index, IndexMut};
+use std::ops::{Index, IndexMut};
 
-// struct Stack {
-//     values: List<()>,
-//     pending_result: Option<HeapHandle<()>>,
-//     class_for_dispatch: Option<HeapHandle<ObjClass>>,
-// }
+struct Stack {
+    values: List<()>,
+    pending_result: Option<HeapHandle<()>>,
+    class_for_dispatch: Option<HeapHandle<ObjClass>>,
+}
 
-// impl HostObject for Stack {
-//     const TYPE_ID: ObjectType = ObjectType::Host;
-// }
+impl HostObject for Stack {
+    const TYPE_ID: ObjectType = ObjectType::Host;
+}
 
-// impl Traceable for Stack {
-//     fn trace(&mut self, visitor: &mut ObjectVisitor) {
-//         self.trace(visitor);
-//         if let Some(result) = &self.pending_result {
-//             result.trace(visitor);
-//         }
-//         if let Some(class) = &self.class_for_dispatch {
-//             class.trace(visitor);
-//         }
-//     }
-// }
+impl Traceable for Stack {
+    fn trace(&mut self, visitor: &mut ObjectVisitor) {
+        self.trace(visitor);
+        if let Some(result) = &self.pending_result {
+            result.trace(visitor);
+        }
+        if let Some(class) = &self.class_for_dispatch {
+            class.trace(visitor);
+        }
+    }
+}
 
-// impl Stack {
-//     fn push(&mut self, handle: HeapHandle<()>) {
-//         self.values.push(handle);
-//     }
+impl Stack {
+    fn push(&mut self, handle: HeapHandle<()>) {
+        self.values.push(handle);
+    }
 
-//     fn pop<'a>(&mut self, scope: &'a HandleScope) -> Option<LocalHandle<'a, ()>> {
-//         self.values.pop(scope)
-//     }
+    fn pop<'a>(&mut self, scope: &'a HandleScope) -> Option<LocalHandle<'a, ()>> {
+        self.values.pop(scope)
+    }
 
-//     fn len(&self) -> usize {
-//         self.values.len()
-//     }
+    fn len(&self) -> usize {
+        self.values.len()
+    }
 
-//     fn first(&self) -> Option<&HeapHandle<()>> {
-//         self.values.first()
-//     }
+    fn last(&self) -> Option<&HeapHandle<()>> {
+        self.values.last()
+    }
 
-//     fn last(&self) -> Option<&HeapHandle<()>> {
-//         self.values.last()
-//     }
+    fn iter(&self) -> std::slice::Iter<'_, HeapHandle<()>> {
+        self.values.iter()
+    }
 
-//     fn is_empty(&self) -> bool {
-//         self.values.is_empty()
-//     }
+    pub fn truncate(&mut self, len: usize) {
+        self.values.truncate(len);
+    }
+}
 
-//     fn iter(&self) -> std::slice::Iter<'_, HeapHandle<()>> {
-//         self.values.iter()
-//     }
+impl<I: std::slice::SliceIndex<[HeapHandle<()>]>> std::ops::Index<I> for Stack {
+    type Output = I::Output;
 
-//     pub fn truncate(&mut self, len: usize) {
-//         self.values.truncate(len);
-//     }
-// }
+    #[inline]
+    fn index(&self, index: I) -> &Self::Output {
+        std::ops::Index::index(&self.values, index)
+    }
+}
 
-// impl<I: std::slice::SliceIndex<[HeapHandle<()>]>> std::ops::Index<I> for Stack {
-//     type Output = I::Output;
-
-//     #[inline]
-//     fn index(&self, index: I) -> &Self::Output {
-//         std::ops::Index::index(&self.values, index)
-//     }
-// }
-
-// impl IndexMut<usize> for Stack {
-//     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-//         self.values.index_mut(index)
-//     }
-// }
+impl IndexMut<usize> for Stack {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        self.values.index_mut(index)
+    }
+}
 
 pub struct ObjFiber {
     class_obj: HeapHandle<ObjClass>,
@@ -454,7 +446,8 @@ pub struct ObjFiber {
     run_source: FiberRunSource,
     // Held in a heap handle for flexible mutability.
     // stack: HeapHandle<Stack>,
-    stack: RefCell<List<()>>,
+    stack: RefCell<Stack>,
+    // stack: RefCell<List<()>>,
     // Held in a RefCell so others can interact with the rest of
     // ObjFiber (to ask class, etc.) while the stack is  held mutably
     // for the executing fiber.
@@ -692,7 +685,12 @@ impl ObjFiber {
                 //     })
                 //     .unwrap()
                 //     .into(),
-                stack: RefCell::new(stack.as_ref().clone()),
+                stack: RefCell::new(Stack {
+                    values: stack.as_ref().clone(),
+                    pending_result: None,
+                    class_for_dispatch: None,
+                }),
+                // stack: RefCell::new(stack.as_ref().clone()),
                 open_upvalues: RefCell::new(OpenUpvalues {
                     values: List::default(),
                 }),
