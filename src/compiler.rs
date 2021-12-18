@@ -3,6 +3,7 @@
 use vmgc::heap::*;
 use vmgc::object::*;
 use vmgc::pointer::ObjectType;
+use vmgc::types::GCError;
 
 use std::cell::RefCell;
 use std::cmp::{Ord, Ordering};
@@ -1506,11 +1507,11 @@ impl<'heap, 'scope> ParseContext<'heap, 'scope> {
     fn wrap_num(&self, value: f64) -> LocalHandle<'scope, f64> {
         self.scope.create_num(value)
     }
-    fn wrap_string(&self, value: String) -> LocalHandle<'scope, String> {
-        self.scope.take(value).unwrap()
+    fn wrap_string(&self, value: String) -> Result<LocalHandle<'scope, String>, WrenError> {
+        self.scope.take(value).map_err(|e| self.gc_error(e))
     }
-    fn wrap_str(&self, value: &str) -> LocalHandle<'scope, String> {
-        self.scope.take(value.to_string()).unwrap()
+    fn wrap_str(&self, value: &str) -> Result<LocalHandle<'scope, String>, WrenError> {
+        self.scope.str(value).map_err(|e| self.gc_error(e))
     }
     fn null(&self) -> LocalHandle<'scope, ()> {
         self.scope.create_null()
@@ -1547,6 +1548,10 @@ impl<'a, 'b> ParseContext<'a, 'b> {
 
     fn error_str(&self, msg: &str) -> WrenError {
         self.error_string(msg.into())
+    }
+
+    fn gc_error(&self, error: GCError) -> WrenError {
+        self.error_string(error.to_string())
     }
 
     fn label_for_token(&self, token: &Token) -> String {
@@ -1643,8 +1648,8 @@ fn literal(ctx: &mut ParseContext, _can_assign: bool) -> Result<(), WrenError> {
     // TODO: Pass in Token instead of needing to use "previous"?
     let value = match &ctx.parser.previous.token {
         Token::Num(n) => ctx.wrap_num(*n).erase_type(),
-        Token::String(s) => ctx.wrap_str(s).erase_type(),
-        Token::Interpolation(s) => ctx.wrap_str(s).erase_type(),
+        Token::String(s) => ctx.wrap_str(s)?.erase_type(),
+        Token::Interpolation(s) => ctx.wrap_str(s)?.erase_type(),
         _ => {
             let name = previous_token_name(ctx);
             return Err(ctx.error_string(format!("Invalid literal {}", name)));
@@ -3545,7 +3550,7 @@ fn method(ctx: &mut ParseContext, class_variable: Variable) -> Result<bool, Wren
 
     // Outside the scope block so we can emit to the outer compiler:
     if is_foreign {
-        emit_constant(ctx, ctx.wrap_string(signature.full_name()).erase_type())?;
+        emit_constant(ctx, ctx.wrap_string(signature.full_name())?.erase_type())?;
     }
 
     // Define the method. For a constructor, this defines the instance
@@ -3577,7 +3582,7 @@ fn class_definition(ctx: &mut ParseContext, is_foreign: bool) -> Result<(), Wren
     let name = previous_token_name(ctx);
 
     // FIXME: Clone shouldn't be needed.
-    let class_name = ctx.wrap_string(name.clone());
+    let class_name = ctx.wrap_string(name.clone())?;
 
     // Make a string constant for the name.
     emit_constant(ctx, class_name.erase_type())?;
@@ -3896,6 +3901,7 @@ impl From<LexError> for ParserError {
     }
 }
 
+// FIXME: Rename to CompileError
 #[derive(Debug)] // Only so expect() can work.
 pub struct WrenError {
     pub module: String,

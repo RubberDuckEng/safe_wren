@@ -63,11 +63,12 @@ impl VMError {
         VMError::Error(msg)
     }
 
-    fn as_try_return_value<'a>(&self, scope: &'a HandleScope) -> LocalHandle<'a, ()> {
-        match self {
-            VMError::Error(string) => scope.take(string.clone()).unwrap().erase_type(),
+    fn as_try_return_value<'a>(&self, scope: &'a HandleScope) -> Result<LocalHandle<'a, ()>> {
+        // We could be handling an OOM error here.
+        Ok(match self {
+            VMError::Error(string) => scope.take(string.clone())?.erase_type(),
             VMError::FiberAbort(value) => scope.from_global(value),
-        }
+        })
     }
 }
 
@@ -383,7 +384,7 @@ impl HostObject for Stack {
 
 impl Traceable for Stack {
     fn trace(&mut self, visitor: &mut ObjectVisitor) {
-        self.trace(visitor);
+        self.values.trace(visitor);
         if let Some(result) = &self.pending_result {
             result.trace(visitor);
         }
@@ -2102,7 +2103,11 @@ impl VM {
                     self.cascade_error(scope, error)?;
                 }
                 Err(error) => {
-                    self.cascade_error(scope, error.as_try_return_value(&scope))?;
+                    // FIXME: Need a special way to allocate when unwinding OOM.
+                    let return_value = error
+                        .as_try_return_value(&scope)
+                        .unwrap_or_else(|_| scope.str("OOM").unwrap().erase_type());
+                    self.cascade_error(scope, return_value)?;
                 }
             }
         }
@@ -2423,7 +2428,7 @@ impl VM {
                 Ops::Construct => {
                     let this = fiber.load_this(scope, frame);
                     let class = this.try_downcast().expect("'this' should be a class.");
-                    let instance = ObjInstance::new(&scope, class);
+                    let instance = ObjInstance::new(&scope, class)?;
                     fiber.store_this(frame, instance.erase_type());
                 }
                 Ops::ForeignConstruct => {
@@ -3077,19 +3082,17 @@ impl ObjInstance {
     pub(crate) fn new<'a>(
         scope: &'a HandleScope,
         class: LocalHandle<ObjClass>,
-    ) -> LocalHandle<'a, ObjInstance> {
+    ) -> Result<LocalHandle<'a, ObjInstance>, GCError> {
         let num_fields = class
             .borrow()
             .num_fields()
             .expect("Compiler emitted Construct for non-source class.");
         // FIXME: Need a vec!-like constructor for List?
         let fields = vec![scope.create_null(); num_fields];
-        scope
-            .take(ObjInstance {
-                class_obj: class.into(),
-                fields: List::from(fields),
-            })
-            .unwrap()
+        scope.take(ObjInstance {
+            class_obj: class.into(),
+            fields: List::from(fields),
+        })
     }
 }
 
@@ -3119,13 +3122,11 @@ impl ObjForeign {
         class: LocalHandle<ObjClass>,
         scope: &'a HandleScope,
         user_data: Box<dyn UserData>,
-    ) -> LocalHandle<'a, ObjForeign> {
-        scope
-            .take(ObjForeign {
-                class_obj: class.into(),
-                user_data,
-            })
-            .unwrap()
+    ) -> Result<LocalHandle<'a, ObjForeign>, GCError> {
+        scope.take(ObjForeign {
+            class_obj: class.into(),
+            user_data,
+        })
     }
 }
 

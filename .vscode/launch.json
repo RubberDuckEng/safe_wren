@@ -20,7 +20,7 @@
                 }
             },
             "args": [
-                "test/bringup/add.wren"
+                "wren_c/test/benchmark/binary_trees.wren"
             ],
             "cwd": "${workspaceFolder}"
         },
