@@ -145,8 +145,4 @@ might be able to call things on it?
 
 
 ## GC Conversion
-* Does ParseContext handle all value creation?
-* Does GlobalHandle have a default?
-* HeapHandle::default() should == null.
-* Any return of Value should probalby be &HeapHandle?
-* Should the VM itself be tracable?  Or a Globals object it holds?
+* ObjRange eq and hash.

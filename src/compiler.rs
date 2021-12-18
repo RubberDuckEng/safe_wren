@@ -2048,7 +2048,8 @@ fn end_compiler<'a, 'heap, 'scope>(
 
     // We're done with the compiler, create an ObjFn from it.
     let upvalues = std::mem::take(&mut compiler.upvalues);
-    let fn_obj = ObjFn::from_compiler(ctx.vm, &ctx.scope, &ctx.module, compiler, arity);
+    let fn_obj = ObjFn::from_compiler(ctx.vm, &ctx.scope, &ctx.module, compiler, arity)
+        .map_err(|e| ctx.gc_error(e))?;
 
     // If this was not the top-compiler, load the compile function into
     // the parent code.
@@ -4139,6 +4140,6 @@ impl VM {
         let compiler = scope.pop();
         // wren_c uses (script) :shrug:
         let fn_obj = end_compiler(scope.ctx, compiler, Arity(0), "<script>".into())?;
-        Ok(ObjClosure::new(scope.ctx.vm, handles, fn_obj))
+        ObjClosure::new(scope.ctx.vm, handles, fn_obj).map_err(|e| scope.ctx.gc_error(e))
     }
 }

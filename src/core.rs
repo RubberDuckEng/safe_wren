@@ -204,7 +204,7 @@ fn num_range_inclusive<'a>(
 ) -> Result<LocalHandle<'a, ()>> {
     let start = validate_num(&args[0], "Left hand side of range")?;
     let end = validate_num(&args[1], "Right hand side of range")?;
-    Ok(vm.new_range(scope, start, end, true).erase_type())
+    Ok(vm.new_range(scope, start, end, true)?.erase_type())
 }
 fn num_range_exclusive<'a>(
     scope: &'a HandleScope,
@@ -213,7 +213,7 @@ fn num_range_exclusive<'a>(
 ) -> Result<LocalHandle<'a, ()>> {
     let start = validate_num(&args[0], "Left hand side of range")?;
     let end = validate_num(&args[1], "Right hand side of range")?;
-    Ok(vm.new_range(scope, start, end, false).erase_type())
+    Ok(vm.new_range(scope, start, end, false)?.erase_type())
 }
 num_binary_op!(num_atan2, atan2, create_num, "x value");
 num_binary_op!(num_pow, powf, create_num, "Power value");
@@ -621,7 +621,7 @@ fn fiber_new<'a>(
             "Function cannot take more than one parameter.",
         ))
     } else {
-        Ok(vm.new_fiber(scope, closure).erase_type())
+        Ok(vm.new_fiber(scope, closure)?.erase_type())
     }
 }
 
@@ -1195,7 +1195,7 @@ fn map_new<'a>(
     vm: &VM,
     _args: &[HeapHandle<()>],
 ) -> Result<LocalHandle<'a, ()>> {
-    Ok(vm.new_map(scope).erase_type())
+    Ok(vm.new_map(scope)?.erase_type())
 }
 
 fn map_subscript<'a>(
@@ -1374,7 +1374,7 @@ fn list_filled<'a>(
         return Err(VMError::from_str("Size cannot be negative."));
     }
     let contents = vec![args[2].clone(); size as usize];
-    Ok(vm.new_list_from_heap(scope, contents).erase_type())
+    Ok(vm.new_list_from_heap(scope, contents)?.erase_type())
 }
 
 fn list_new<'a>(
@@ -1382,7 +1382,7 @@ fn list_new<'a>(
     vm: &VM,
     _args: &[HeapHandle<()>],
 ) -> Result<LocalHandle<'a, ()>> {
-    Ok(vm.new_list(scope, Vec::new()).erase_type())
+    Ok(vm.new_list(scope, Vec::new())?.erase_type())
 }
 
 struct Range {
@@ -1470,14 +1470,14 @@ fn list_subscript<'a>(
     } else if let Some(r) = arg.try_as_ref::<ObjRange>() {
         let range = calculate_range(r, list.borrow().len())?;
         if range.range.is_empty() {
-            return Ok(vm.new_list(scope, Vec::new()).erase_type());
+            return Ok(vm.new_list(scope, Vec::new())?.erase_type());
         }
         let slice = &list.borrow().elements[range.range];
         let mut vec = slice.to_vec();
         if range.reverse {
             vec.reverse();
         }
-        Ok(vm.new_list_from_heap(scope, vec).erase_type())
+        Ok(vm.new_list_from_heap(scope, vec)?.erase_type())
     } else {
         Err(VMError::from_str("Subscript must be a number or a range."))
     }

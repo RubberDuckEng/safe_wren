@@ -6,8 +6,7 @@ use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::{TryFrom, TryInto};
-use std::error::Error;
-use std::hash::Hasher;
+use std::ops::IndexMut;
 use std::{str, usize};
 
 use crate::compiler::{is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Variable};
@@ -370,8 +369,6 @@ impl OpenUpvalues {
     }
 }
 
-use std::ops::{Index, IndexMut};
-
 struct Stack {
     values: List<()>,
     pending_result: Option<HeapHandle<()>>,
@@ -661,42 +658,40 @@ impl ObjFiber {
         scope: &'a HandleScope,
         closure: LocalHandle<ObjClosure>,
         run_source: FiberRunSource,
-    ) -> LocalHandle<'a, ObjFiber> {
+    ) -> Result<LocalHandle<'a, ObjFiber>, GCError> {
         let stack = scope.create::<List<()>>().unwrap();
         stack.as_mut().push(closure.clone().into());
-        scope
-            .take(ObjFiber {
-                class_obj: scope
-                    .as_ref(&vm.globals)
-                    .fiber_class
-                    .as_ref()
-                    .unwrap()
-                    .clone(),
-                error: scope.create_null().into(),
-                caller: None,
-                run_source,
-                completed_normally_cache: false,
-                call_stack: RefCell::new(vec![CallFrame::new(closure.into(), 0)]),
-                // FIXME: Should this be HeapHandle instead?
-                // stack: scope
-                //     .take(Stack {
-                //         values: stack.as_ref().clone(),
-                //         pending_result: None,
-                //         class_for_dispatch: None,
-                //     })
-                //     .unwrap()
-                //     .into(),
-                stack: RefCell::new(Stack {
-                    values: stack.as_ref().clone(),
-                    pending_result: None,
-                    class_for_dispatch: None,
-                }),
-                // stack: RefCell::new(stack.as_ref().clone()),
-                open_upvalues: RefCell::new(OpenUpvalues {
-                    values: List::default(),
-                }),
-            })
-            .unwrap()
+        scope.take(ObjFiber {
+            class_obj: scope
+                .as_ref(&vm.globals)
+                .fiber_class
+                .as_ref()
+                .unwrap()
+                .clone(),
+            error: scope.create_null().into(),
+            caller: None,
+            run_source,
+            completed_normally_cache: false,
+            call_stack: RefCell::new(vec![CallFrame::new(closure.into(), 0)]),
+            // FIXME: Should this be HeapHandle instead?
+            // stack: scope
+            //     .take(Stack {
+            //         values: stack.as_ref().clone(),
+            //         pending_result: None,
+            //         class_for_dispatch: None,
+            //     })
+            //     .unwrap()
+            //     .into(),
+            stack: RefCell::new(Stack {
+                values: stack.as_ref().clone(),
+                pending_result: None,
+                class_for_dispatch: None,
+            }),
+            // stack: RefCell::new(stack.as_ref().clone()),
+            open_upvalues: RefCell::new(OpenUpvalues {
+                values: List::default(),
+            }),
+        })
     }
 }
 
@@ -783,18 +778,16 @@ impl Traceable for Globals {
 }
 
 impl Globals {
-    fn new<'a>(scope: &'a HandleScope) -> LocalHandle<'a, Globals> {
-        scope
-            .take(Globals {
-                fiber: None,
-                modules: HashMap::new(),
-                core_module: None,
-                class_class: None,
-                fn_class: None,
-                fiber_class: None,
-                last_imported_module: None,
-            })
-            .unwrap()
+    fn new<'a>(scope: &'a HandleScope) -> Result<LocalHandle<'a, Globals>, GCError> {
+        scope.take(Globals {
+            fiber: None,
+            modules: HashMap::new(),
+            core_module: None,
+            class_class: None,
+            fn_class: None,
+            fiber_class: None,
+            last_imported_module: None,
+        })
     }
 }
 
@@ -1104,36 +1097,33 @@ impl VM {
         &self,
         scope: &'a HandleScope,
         contents: Vec<LocalHandle<()>>,
-    ) -> LocalHandle<'a, ObjList> {
-        scope
-            .take(ObjList {
-                class_obj: scope.as_ref(self.core.as_ref().unwrap()).list.clone(),
-                elements: contents.into(),
-            })
-            .unwrap()
+    ) -> Result<LocalHandle<'a, ObjList>, GCError> {
+        scope.take(ObjList {
+            class_obj: scope.as_ref(self.core.as_ref().unwrap()).list.clone(),
+            elements: contents.into(),
+        })
     }
 
-    // FIXME: How to share code?
+    // FIXME: How to share code with new_list?
     pub(crate) fn new_list_from_heap<'a>(
         &self,
         scope: &'a HandleScope,
         contents: Vec<HeapHandle<()>>,
-    ) -> LocalHandle<'a, ObjList> {
-        scope
-            .take(ObjList {
-                class_obj: scope.as_ref(self.core.as_ref().unwrap()).list.clone(),
-                elements: contents.into(),
-            })
-            .unwrap()
+    ) -> Result<LocalHandle<'a, ObjList>, GCError> {
+        scope.take(ObjList {
+            class_obj: scope.as_ref(self.core.as_ref().unwrap()).list.clone(),
+            elements: contents.into(),
+        })
     }
 
-    pub(crate) fn new_map<'a>(&self, scope: &'a HandleScope) -> LocalHandle<'a, ObjMap> {
-        scope
-            .take(ObjMap {
-                class_obj: scope.as_ref(self.core.as_ref().unwrap()).map.clone(),
-                data: HashMap::new(),
-            })
-            .unwrap()
+    pub(crate) fn new_map<'a>(
+        &self,
+        scope: &'a HandleScope,
+    ) -> Result<LocalHandle<'a, ObjMap>, GCError> {
+        scope.take(ObjMap {
+            class_obj: scope.as_ref(self.core.as_ref().unwrap()).map.clone(),
+            data: HashMap::new(),
+        })
     }
 
     pub(crate) fn new_range<'a>(
@@ -1142,22 +1132,20 @@ impl VM {
         from: f64,
         to: f64,
         is_inclusive: bool,
-    ) -> LocalHandle<'a, ObjRange> {
-        scope
-            .take(ObjRange {
-                class_obj: scope.as_ref(self.core.as_ref().unwrap()).range.clone(),
-                from,
-                to,
-                is_inclusive,
-            })
-            .unwrap()
+    ) -> Result<LocalHandle<'a, ObjRange>, GCError> {
+        scope.take(ObjRange {
+            class_obj: scope.as_ref(self.core.as_ref().unwrap()).range.clone(),
+            from,
+            to,
+            is_inclusive,
+        })
     }
 
     pub(crate) fn new_fiber<'a>(
         &self,
         scope: &'a HandleScope,
         closure: LocalHandle<ObjClosure>,
-    ) -> LocalHandle<'a, ObjFiber> {
+    ) -> Result<LocalHandle<'a, ObjFiber>, GCError> {
         ObjFiber::new(self, scope, closure, FiberRunSource::Other)
     }
 
@@ -1472,6 +1460,7 @@ pub(crate) fn define_class<'a>(
     module: &mut Module,
     name: &str,
 ) -> LocalHandle<'a, ObjClass> {
+    // This intentionally panics instead of returning GC Errors.
     let class = scope
         .take(ObjClass {
             name: name.into(),
@@ -1481,7 +1470,6 @@ pub(crate) fn define_class<'a>(
             source: ClassSource::Internal,
         })
         .unwrap();
-
     module
         .define_variable(name, class.erase_type())
         .expect("defined");
@@ -1577,6 +1565,13 @@ impl Traceable for Upvalue {
             UpvalueStorage::Open(fiber, _) => fiber.trace(visitor),
             UpvalueStorage::Closed(value) => value.trace(visitor),
         }
+    }
+}
+
+impl core::fmt::Debug for Upvalue {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        // FIXME: Implement.
+        write!(f, "Upvalue")
     }
 }
 
@@ -1860,7 +1855,7 @@ impl VM {
         let mut vm = Self {
             // Invalid import name, intentionally.
             methods: SymbolTable::default(),
-            globals: GlobalHandle::from(Globals::new(&scope)),
+            globals: GlobalHandle::from(Globals::new(&scope).unwrap()),
             start_time: std::time::Instant::now(),
             config,
             core: None,
@@ -2059,8 +2054,12 @@ impl VM {
         scope: &'a HandleScope,
         closure: LocalHandle<ObjClosure>,
     ) -> Result<LocalHandle<'a, ()>, RuntimeError> {
-        scope.as_mut(&self.globals).fiber =
-            Some(ObjFiber::new(self, &scope, closure, FiberRunSource::Root).into());
+        // FIXME: Unclear how to handle allocation failure here?
+        scope.as_mut(&self.globals).fiber = Some(
+            ObjFiber::new(self, &scope, closure, FiberRunSource::Root)
+                .unwrap()
+                .into(),
+        );
         loop {
             let result = self.run_in_fiber(scope, self.fiber(scope).unwrap());
             match result {
@@ -2444,7 +2443,7 @@ impl VM {
                         .from_heap(&fn_value)
                         .try_downcast()
                         .ok_or_else(|| VMError::from_str("constant was not closure"))?;
-                    let closure = ObjClosure::new(self, &scope, fn_obj);
+                    let closure = ObjClosure::new(self, &scope, fn_obj)?;
                     fiber.push(&closure.erase_type().into());
                     if !upvalues.is_empty() {
                         return Ok(FunctionNext::CaptureUpvalues(closure, upvalues.to_vec()));
@@ -2571,8 +2570,7 @@ impl VM {
                             // variables from it if needed.
                             fiber.push(
                                 &scope
-                                    .take("dummy for module".to_string())
-                                    .unwrap()
+                                    .take("dummy for module".to_string())?
                                     .erase_type()
                                     .into(),
                             );
@@ -2727,9 +2725,11 @@ fn op_debug_string(
                 None => format!("Load(Local, {})", index),
             },
             Variable::Upvalue(index) => match closure {
-                // FIXME: Print upvalue:
-                // "Load(Upvalue, {} -> {:?})",index, c.upvalue(index).borrow()
-                Some(c) => format!("Load(Upvalue, {})", index),
+                Some(c) => format!(
+                    "Load(Upvalue, {} -> {:?})",
+                    index,
+                    c.upvalue(index).borrow()
+                ),
                 None => format!("Load(Upvalue, {})", index),
             },
             Variable::Module(index) => {
@@ -2929,15 +2929,13 @@ impl ObjClosure {
         vm: &VM,
         scope: &'a HandleScope,
         fn_obj: LocalHandle<ObjFn>,
-    ) -> LocalHandle<'a, ObjClosure> {
+    ) -> Result<LocalHandle<'a, ObjClosure>, GCError> {
         // FIXME: Is this really supposed to also be class = fn?
-        scope
-            .take(ObjClosure {
-                class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
-                fn_obj: fn_obj.into(),
-                upvalues: List::default(),
-            })
-            .unwrap()
+        scope.take(ObjClosure {
+            class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
+            fn_obj: fn_obj.into(),
+            upvalues: List::default(),
+        })
     }
 
     fn push_upvalue(&mut self, upvalue: &HeapHandle<Upvalue>) {
@@ -3005,17 +3003,15 @@ impl ObjFn {
         module: &GlobalHandle<Module>,
         compiler: crate::compiler::Compiler,
         arity: Arity,
-    ) -> LocalHandle<'a, ObjFn> {
-        scope
-            .take(ObjFn {
-                class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
-                constants: scope.as_ref(&compiler.constants).list.clone(),
-                code: compiler.code,
-                arity,
-                debug: compiler.fn_debug,
-                module: scope.from_global(module).into(),
-            })
-            .unwrap()
+    ) -> Result<LocalHandle<'a, ObjFn>, GCError> {
+        scope.take(ObjFn {
+            class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
+            constants: scope.as_ref(&compiler.constants).list.clone(),
+            code: compiler.code,
+            arity,
+            debug: compiler.fn_debug,
+            module: scope.from_global(module).into(),
+        })
     }
 
     // pub(crate) fn set_constant(&mut self, constant: &Constant, value: Value) {
@@ -3031,28 +3027,26 @@ impl ObjFn {
         scope: &'a HandleScope,
         signature: &str,
         symbol: Symbol,
-    ) -> LocalHandle<'a, ObjFn> {
+    ) -> Result<LocalHandle<'a, ObjFn>, GCError> {
         let num_params_usize = count_params_in_signature(signature);
         let num_params: u8 = u8::try_from(num_params_usize).unwrap();
         let code = vec![Ops::Call(Arity(num_params), symbol), Ops::Return, Ops::End];
         let code_len = code.len();
 
-        scope
-            .take(ObjFn {
-                class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
-                // FIXME: Why is this Arity + 1 and the above is not?
-                arity: Arity(num_params + 1),
-                code: code,
-                constants: List::default(),
-                module: scope
-                    .as_ref(&vm.globals)
-                    .last_imported_module
-                    .as_ref()
-                    .unwrap()
-                    .clone(),
-                debug: FnDebug::generated(signature, code_len),
-            })
-            .unwrap()
+        scope.take(ObjFn {
+            class_obj: scope.as_ref(&vm.globals).fn_class.as_ref().unwrap().clone(),
+            // FIXME: Why is this Arity + 1 and the above is not?
+            arity: Arity(num_params + 1),
+            code: code,
+            constants: List::default(),
+            module: scope
+                .as_ref(&vm.globals)
+                .last_imported_module
+                .as_ref()
+                .unwrap()
+                .clone(),
+            debug: FnDebug::generated(signature, code_len),
+        })
     }
 }
 
