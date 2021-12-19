@@ -1,7 +1,6 @@
 // analog to wren_core.c from wren_c.
 
-use vmgc::heap::*;
-use vmgc::object::*;
+use vmgc::*;
 
 use crate::{float_to_string, vm::*};
 use std::collections::VecDeque;

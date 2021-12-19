@@ -17,10 +17,7 @@ use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives
 // };
 use crate::wren::{Configuration, DebugLevel, ForeignMethodFn, LoadModuleResult, Slot};
 
-use vmgc::heap::*;
-use vmgc::object::*;
-use vmgc::pointer::ObjectType;
-use vmgc::types::GCError;
+use vmgc::*;
 
 type Result<T, E = VMError> = std::result::Result<T, E>;
 

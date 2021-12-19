@@ -5,7 +5,7 @@ use crate::test::test_config;
 use crate::vm::{debug_bytecode, RuntimeError, VM};
 use crate::wren::DebugLevel;
 
-use vmgc::heap::*;
+use vmgc::*;
 
 fn print_compile_error(e: WrenError) {
     // Matching test.c output:

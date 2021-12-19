@@ -3,7 +3,7 @@
 // move away from any ties to needing to by c-like now that we have c_api.rs
 // to implement the C-API on top of whatever rust API this exposes.
 
-use vmgc::heap::HandleScope;
+use vmgc::HandleScope;
 
 pub use crate::vm::{SlotType, UserData, VM};
 

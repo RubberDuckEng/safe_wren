@@ -15,7 +15,7 @@ mod error;
 use api_tests::api_test_bind_foreign_method_fn;
 use safe_wren::test::test_config;
 use safe_wren::wren::*;
-use vmgc::heap::*;
+use vmgc::*;
 
 enum ExitCode {
     Success = 0,

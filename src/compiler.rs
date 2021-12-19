@@ -1,9 +1,6 @@
 // analog to wren_compiler.c from wren_c.
 
-use vmgc::heap::*;
-use vmgc::object::*;
-use vmgc::pointer::ObjectType;
-use vmgc::types::GCError;
+use vmgc::*;
 
 use std::cell::RefCell;
 use std::cmp::{Ord, Ordering};
@@ -12,6 +9,11 @@ use std::error;
 use std::fmt;
 use std::ops::Range;
 use std::str;
+
+use crate::vm::{
+    DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn, Symbol, SymbolTable, MAX_FIELDS,
+    VM,
+};
 
 #[derive(Clone, Copy)]
 pub(crate) struct Constant(usize);
@@ -61,13 +63,6 @@ impl Arity {
 }
 
 pub(crate) type JumpOffset = u16;
-
-use vmgc::heap::GlobalHandle;
-
-use crate::vm::{
-    DefinitionError, Module, ModuleLimitError, ObjClosure, ObjFn, Symbol, SymbolTable, MAX_FIELDS,
-    VM,
-};
 
 // Maximum times grammar is allowed to recurse through parse_precedence
 // used to turn fuzz test cases (like 100x '[' in a row) into errors
