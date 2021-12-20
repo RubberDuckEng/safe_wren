@@ -4065,11 +4065,14 @@ impl VM {
     // called wrenCompile in wren_c
     pub(crate) fn compile<'a>(
         &mut self,
-        handles: &'a HandleScope,
+        parent_handle_scope: &'a HandleScope,
         input: InputManager,
         module: LocalHandle<Module>,
     ) -> Result<LocalHandle<'a, ObjClosure>, WrenError> {
         let num_existing_variables = module.as_ref().variable_count();
+
+        let parse_handle_scope = parent_handle_scope.create_child_scope();
+        let handles = &parse_handle_scope;
 
         // Init the parser & compiler
         let mut parse_context = ParseContext {
@@ -4135,6 +4138,7 @@ impl VM {
         let compiler = scope.pop();
         // wren_c uses (script) :shrug:
         let fn_obj = end_compiler(scope.ctx, compiler, Arity(0), "<script>".into())?;
-        ObjClosure::new(scope.ctx.vm, handles, fn_obj).map_err(|e| scope.ctx.gc_error(e))
+        ObjClosure::new(scope.ctx.vm, parent_handle_scope, fn_obj)
+            .map_err(|e| scope.ctx.gc_error(e))
     }
 }

@@ -2058,6 +2058,9 @@ impl VM {
                 .into(),
         );
         loop {
+            let parent_scope = scope;
+            let inner_scope = scope.create_child_scope();
+            let scope = &inner_scope;
             let result = self.run_in_fiber(scope, self.fiber(scope).unwrap());
             match result {
                 Ok(FiberAction::Call(fiber, arg)) => {
@@ -2075,7 +2078,7 @@ impl VM {
                     scope.as_mut(&self.globals).fiber = None;
                     // FIXME: This return value is wrong.
                     // The api should not return a value for Fiber.suspend.
-                    return Ok(scope.create_null());
+                    return Ok(parent_scope.create_null());
                 }
                 Ok(FiberAction::Return(value)) => {
                     let caller = if let Some(fiber) = self.fiber(scope) {
@@ -2087,7 +2090,7 @@ impl VM {
                     scope.as_mut(&self.globals).fiber = caller.map(|local| local.into());
                     match self.fiber(scope) {
                         Some(fiber) => fiber.borrow_mut().push_return_value(value),
-                        None => return Ok(value),
+                        None => return Ok(parent_scope.from_local(&value)),
                     }
                 }
                 Ok(FiberAction::Transfer(fiber, arg)) => {
