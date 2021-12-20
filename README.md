@@ -148,3 +148,4 @@ might be able to call things on it?
 * ObjRange eq and hash.
 * C API
 * Consider renaming VM to Machine so that WrenVM can hold both a Machine and Heap.
+* Make sure GCError is uncatchable from wren code.
