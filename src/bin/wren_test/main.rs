@@ -45,7 +45,7 @@ fn exit(code: ExitCode) -> ! {
     process::exit(code as i32);
 }
 
-fn run_file(scope: &HandleScope, vm: &mut VM, path: &str) -> ! {
+fn run_file(wren_vm: &mut VMAndHeap, path: &str) -> ! {
     let source = fs::read(path).unwrap_or_else(|e| {
         eprintln!("Failed to open file \"{}\": {}", path, e);
         exit(ExitCode::NoInput);
@@ -61,7 +61,8 @@ fn run_file(scope: &HandleScope, vm: &mut VM, path: &str) -> ! {
     if !module_name.starts_with(".") {
         module_name = format!("./{}", module_name);
     }
-    match vm.interpret_bytes(scope, &module_name, source) {
+    let scope = HandleScope::new(&wren_vm.heap);
+    match wren_vm.vm.interpret_bytes(&scope, &module_name, source) {
         InterpretResult::CompileError => exit(ExitCode::CompileError),
         InterpretResult::RuntimeError => exit(ExitCode::RuntimeError),
         InterpretResult::Success => exit(ExitCode::Success),
@@ -81,10 +82,7 @@ fn main() {
     if api_test {
         config.bind_foreign_method_fn = Some(api_test_bind_foreign_method_fn);
     }
-    let heap = Heap::new(config.heap_limit_bytes).unwrap();
-    let scope = HandleScope::new(&heap);
-    let mut vm = VM::new(&scope, config);
-
+    let mut wren_vm = VMAndHeap::new(config);
     // handle API tests.
-    run_file(&scope, &mut vm, test_path);
+    run_file(&mut wren_vm, test_path);
 }

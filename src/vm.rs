@@ -11,11 +11,13 @@ use std::{str, usize};
 
 use crate::compiler::{is_local_name, Arity, Constant, FnDebug, InputManager, Ops, Variable};
 use crate::core::{init_base_classes, init_fn_and_fiber, register_core_primitives};
-// use crate::ffi::c_api::WrenConfiguration;
+use crate::ffi::c_api::WrenConfiguration;
 // use crate::opt::random_bindings::{
 //     random_bind_foreign_class, random_bind_foreign_method, random_source,
 // };
-use crate::wren::{Configuration, DebugLevel, ForeignMethodFn, LoadModuleResult, Slot};
+use crate::wren::{
+    Configuration, DebugLevel, ForeignMethodFn, InterpretResult, LoadModuleResult, Slot,
+};
 
 use vmgc::*;
 
@@ -40,6 +42,20 @@ pub(crate) const MAX_PARAMETERS: usize = 16;
 // because creating a class takes the *number* of fields, not the *highest
 // field index*.
 pub(crate) const MAX_FIELDS: usize = 255;
+
+// FIXME: Wrong name, but hopefully right design?
+pub struct VMAndHeap {
+    pub heap: Heap,
+    pub vm: VM,
+}
+
+impl VMAndHeap {
+    pub fn new(config: Configuration) -> VMAndHeap {
+        let heap = Heap::new(config.heap_limit_bytes).unwrap();
+        let vm = { VM::new(&heap, config) };
+        VMAndHeap { heap, vm }
+    }
+}
 
 // Internal VM Error, wrapped in RuntimeError for API.
 #[derive(Debug)]
@@ -242,17 +258,6 @@ impl RuntimeError {
         }
     }
 }
-
-// macro_rules! try_into {
-//     ($func:ident,  $value_type:ident, $return_type:ident) => {
-//         pub fn $func(&self) -> Option<Handle<$return_type>> {
-//             match self {
-//                 Value::$value_type(value) => Some(value.clone()),
-//                 _ => None,
-//             }
-//         }
-//     };
-// }
 
 #[derive(Debug, Default)]
 pub struct SymbolTable {
@@ -699,37 +704,51 @@ impl core::fmt::Debug for ObjFiber {
     }
 }
 
-// struct Api {
-//     stack: GlobalHandle<List>,
-//     error: GlobalHandle<()>,
-// }
+struct Api {
+    stack: List<()>,
+    error: HeapHandle<()>,
+}
 
-// impl Api {
-//     fn new(slots: usize) -> Api {
-//         Api {
-//             stack: vec![Value::Null; slots],
-//             error: Value::Null,
-//         }
-//     }
+impl HostObject for Api {
+    const TYPE_ID: ObjectType = ObjectType::Host;
+}
 
-//     fn with_stack(stack: Vec<Value>) -> Api {
-//         Api {
-//             stack,
-//             error: Value::Null,
-//         }
-//     }
+impl Traceable for Api {
+    fn trace(&mut self, visitor: &mut ObjectVisitor) {
+        self.stack.trace(visitor);
+        self.error.trace(visitor);
+    }
+}
 
-//     fn ensure(&mut self, slots: usize) {
-//         if slots >= self.stack.len() {
-//             self.stack.resize(slots + 1, Value::Null);
-//         }
-//     }
+impl Api {
+    fn new<'a>(scope: &'a HandleScope, slots: usize) -> LocalHandle<'a, Api> {
+        scope
+            .take(Api {
+                stack: List::from(vec![HeapHandle::default(); slots]),
+                error: HeapHandle::default(),
+            })
+            .unwrap()
+    }
 
-//     fn into_return_value(self) -> Value {
-//         // Take without copy.
-//         self.stack.into_iter().next().unwrap()
-//     }
-// }
+    fn with_stack<'a>(scope: &'a HandleScope, stack: Vec<HeapHandle<()>>) -> LocalHandle<'a, Api> {
+        scope
+            .take(Api {
+                stack: List::from(stack),
+                error: HeapHandle::default(),
+            })
+            .unwrap()
+    }
+
+    fn ensure(&mut self, slots: usize) {
+        if slots >= self.stack.len() {
+            self.stack.resize(slots + 1, HeapHandle::default());
+        }
+    }
+
+    fn into_return_value(self) -> HeapHandle<()> {
+        self.stack.first().unwrap().clone()
+    }
+}
 
 fn maybe_trace<T: HostObject>(maybe_object: &Option<HeapHandle<T>>, visitor: &mut ObjectVisitor) {
     if let Some(object) = maybe_object {
@@ -800,11 +819,11 @@ pub struct VM {
     pub(crate) config: Configuration,
     // Args for the foreign function being called.
     // wren_c calls this apiStack
-    // api: Option<Api>,
+    api: Option<GlobalHandle<Api>>,
     // Hold onto the function pointers for the C API so we can
     // use rust function pointers in the normal config and just
     // look up the c ones here through the VM pointer.
-    // pub(crate) c_config: WrenConfiguration,
+    pub(crate) c_config: WrenConfiguration,
 }
 
 pub trait UserData {
@@ -844,236 +863,422 @@ impl Globals {
 // shift to be the *rust* API and follow *rust* patterns.  All the C-isms
 // should move into c_api.rs.
 impl VM {
-    // pub fn ensure_slots(&mut self, slots: usize) {
-    //     match &mut self.api {
-    //         None => self.api = Some(Api::new(slots)),
-    //         Some(api) => api.ensure(slots),
-    //     }
-    // }
+    pub fn ensure_slots<'a>(&mut self, scope: &'a HandleScope, slots: usize) {
+        match &mut self.api {
+            None => self.api = Some(GlobalHandle::from(Api::new(scope, slots))),
+            Some(api) => scope.as_mut(api).ensure(slots),
+        }
+    }
 
-    // pub fn set_slot_string(&mut self, slot: Slot, string: &str) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::from_str(string);
-    //     }
-    // }
+    fn api<'a>(&self, scope: &'a HandleScope) -> &'a Api {
+        scope.as_ref(self.api.as_ref().unwrap())
+    }
 
-    // pub fn abort_fiber(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.error = api.stack[slot].clone();
-    //     }
-    // }
+    fn api_mut<'a>(&mut self, scope: &'a HandleScope) -> &'a mut Api {
+        scope.as_mut(self.api.as_ref().unwrap())
+    }
 
-    // pub fn get_variable(
-    //     &mut self,
-    //     scope: &HandleScope,
-    //     module_name: &str,
-    //     variable_name: &str,
-    //     slot: Slot,
-    // ) {
-    //     let value = if let Some(module) = self.modules.get(module_name) {
-    //         // What if the module is mut_borrowed for execution?
-    //         module
-    //             .borrow()
-    //             .variable_by_name(scope, variable_name)
-    //             .unwrap()
-    //             .clone()
-    //     } else {
-    //         // wren_c asserts in the case of the module not being defined.
-    //         unreachable!("Module not defined.");
-    //     };
-    //     self.set_value_for_slot(slot, value);
-    // }
+    pub fn set_slot_string<'a>(&mut self, scope: &'a HandleScope, slot: Slot, string: &str) {
+        self.api_mut(scope).set_slot_string(scope, slot, string);
+    }
 
-    // pub fn set_slot_new_foreign(
-    //     &mut self,
-    //     slot: Slot,
-    //     class_slot: Slot,
-    //     user_data: Box<dyn UserData>,
-    // ) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         let class = api.stack[class_slot]
-    //             .try_into_class()
-    //             .expect("Slot must hold a class.");
-    //         assert!(matches!(class.borrow().source, ClassSource::Foreign));
-    //         api.stack[slot] = Value::Foreign(new_handle(ObjForeign::new(class, user_data)))
-    //     }
-    // }
+    pub fn abort_fiber<'a>(&mut self, scope: &'a HandleScope, slot: Slot) {
+        self.api_mut(scope).abort_fiber(scope, slot)
+    }
 
-    // pub fn slot_count(&self) -> usize {
-    //     match &self.api {
-    //         None => 0,
-    //         Some(api) => api.stack.len(),
-    //     }
-    // }
+    pub fn get_variable(
+        &mut self,
+        scope: &HandleScope,
+        module_name: &str,
+        variable_name: &str,
+        slot: Slot,
+    ) {
+        let value = if let Some(module) = scope.as_ref(&self.globals).modules.get(module_name) {
+            // What if the module is mut_borrowed for execution?
+            module
+                .borrow()
+                .variable_by_name(scope, variable_name)
+                .unwrap()
+                .clone()
+        } else {
+            // wren_c asserts in the case of the module not being defined.
+            unreachable!("Module not defined.");
+        };
+        self.set_value_for_slot(scope, slot, &value.into());
+    }
 
-    // pub fn set_slot_null(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::Null;
-    //     }
-    // }
+    pub fn set_slot_new_foreign<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        slot: Slot,
+        class_slot: Slot,
+        user_data: Box<dyn UserData>,
+    ) {
+        self.api_mut(scope)
+            .set_slot_new_foreign(scope, slot, class_slot, user_data)
+    }
 
-    // pub fn get_slot_double(&mut self, slot: Slot) -> f64 {
-    //     assert!(self.api.is_some());
-    //     self.api.as_ref().unwrap().stack[slot]
-    //         .try_into_num()
-    //         .expect("slot is not a num")
-    // }
+    pub fn slot_count<'a>(&self, scope: &'a HandleScope) -> usize {
+        match &self.api {
+            None => 0,
+            Some(api) => scope.as_ref(api).stack.len(),
+        }
+    }
 
-    // pub fn set_slot_double(&mut self, slot: Slot, num: f64) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::Num(num)
-    //     }
-    // }
+    pub fn set_slot_null<'a>(&mut self, scope: &'a HandleScope, slot: Slot) {
+        self.api_mut(scope).stack[slot] = HeapHandle::default();
+    }
 
-    // pub fn set_slot_new_list(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let value = Value::List(self.new_list(vec![]));
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = value;
-    //     }
-    // }
+    pub fn get_slot_double<'a>(&mut self, scope: &'a HandleScope, slot: Slot) -> f64 {
+        self.api(scope).get_slot_double(slot)
+    }
 
-    // pub fn get_list_count(&mut self, slot: Slot) -> usize {
-    //     assert!(self.api.is_some());
-    //     let list = self.value_for_slot(slot).try_into_list().unwrap();
-    //     let count = list.borrow().len();
-    //     count
-    // }
+    pub fn set_slot_double<'a>(&mut self, scope: &'a HandleScope, slot: Slot, num: f64) {
+        // FIXME: Is it possible to create a HeapHandle directly from f64?
+        self.api_mut(scope).stack[slot] = scope.create_num(num).erase_type().into()
+    }
 
-    // pub fn get_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let list_ref = self.value_for_slot(list_slot).try_into_list().unwrap();
-    //     let list = list_ref.borrow();
-    //     self.set_value_for_slot(element_slot, list.elements[index].clone())
-    // }
+    pub fn set_slot_new_list<'a>(&mut self, scope: &'a HandleScope, slot: Slot) {
+        let value = self.new_list(scope, vec![]).unwrap();
+        self.api_mut(scope)
+            .set_value_for_slot(slot, &value.erase_type().into())
+    }
 
-    // pub fn set_list_element(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let list = self.value_for_slot(list_slot).try_into_list().unwrap();
-    //     let element = self.value_for_slot(element_slot);
-    //     list.borrow_mut().elements[index] = element.clone();
-    // }
+    pub fn get_list_count<'a>(&self, scope: &'a HandleScope, slot: Slot) -> usize {
+        self.api(scope).get_list_count(scope, slot)
+    }
 
-    // pub fn insert_in_list(&mut self, list_slot: Slot, index: usize, element_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let list = self.value_for_slot(list_slot).try_into_list().unwrap();
-    //     let element = self.value_for_slot(element_slot);
-    //     list.borrow_mut().elements.insert(index, element.clone());
-    // }
+    pub fn get_list_element<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        list_slot: Slot,
+        index: usize,
+        element_slot: Slot,
+    ) {
+        self.api_mut(scope)
+            .get_list_element(scope, list_slot, index, element_slot)
+    }
 
-    // pub fn set_slot_new_map(&mut self, slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let value = Value::Map(self.new_map());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = value;
-    //     }
-    // }
+    pub fn set_list_element<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        list_slot: Slot,
+        index: usize,
+        element_slot: Slot,
+    ) {
+        self.api_mut(scope)
+            .set_list_element(scope, list_slot, index, element_slot)
+    }
 
-    // pub fn map_contains_key(&self, map_slot: Slot, key_slot: Slot) -> bool {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot);
-    //     let contains = map.borrow().contains_key(key);
-    //     contains
-    // }
+    pub fn insert_in_list<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        list_slot: Slot,
+        index: usize,
+        element_slot: Slot,
+    ) {
+        self.api_mut(scope)
+            .insert_in_list(scope, list_slot, index, element_slot)
+    }
 
-    // pub fn get_map_value(&mut self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot);
-    //     let value = map.borrow().data[key].clone();
-    //     self.set_value_for_slot(value_slot, value)
-    // }
+    pub fn set_slot_new_map<'a>(&mut self, scope: &'a HandleScope, slot: Slot) {
+        let value = self.new_map(scope).unwrap();
+        self.api_mut(scope)
+            .set_value_for_slot(slot, &value.erase_type().into())
+    }
 
-    // pub fn set_map_value(&self, map_slot: Slot, key_slot: Slot, value_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot).clone();
-    //     let value = self.value_for_slot(value_slot).clone();
-    //     map.borrow_mut().data.insert(key, value);
-    // }
+    pub fn map_contains_key<'a>(
+        &self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+    ) -> bool {
+        self.api(scope).map_contains_key(scope, map_slot, key_slot)
+    }
 
-    // pub fn remove_map_value(&mut self, map_slot: Slot, key_slot: Slot, removed_value_slot: Slot) {
-    //     assert!(self.api.is_some());
-    //     let map = self
-    //         .value_for_slot(map_slot)
-    //         .try_into_map()
-    //         .expect("slot is not a map");
-    //     let key = self.value_for_slot(key_slot);
-    //     let value = map.borrow_mut().data.remove(key).unwrap_or(Value::Null);
-    //     self.set_value_for_slot(removed_value_slot, value);
-    // }
+    pub fn get_map_value<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+        value_slot: Slot,
+    ) {
+        self.api_mut(scope)
+            .get_map_value(scope, map_slot, key_slot, value_slot)
+    }
 
-    // pub fn get_slot_bool(&mut self, slot: Slot) -> bool {
-    //     assert!(self.api.is_some());
-    //     self.api.as_ref().unwrap().stack[slot]
-    //         .try_into_bool()
-    //         .expect("slot is not a bool")
-    // }
+    pub fn set_map_value<'a>(
+        &self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+        value_slot: Slot,
+    ) {
+        self.api_mut(scope)
+            .set_map_value(scope, map_slot, key_slot, value_slot)
+    }
 
-    // pub fn set_slot_bool(&mut self, slot: Slot, value: bool) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = Value::Boolean(value)
-    //     }
-    // }
+    pub fn remove_map_value<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+        removed_value_slot: Slot,
+    ) {
+        self.api_mut(scope)
+            .remove_map_value(scope, map_slot, key_slot, removed_value_slot)
+    }
 
-    // // This isn't quite right for the rust API, but is used by the C API.
-    // pub(crate) fn call_handle_for_signature(&mut self, signature: &str) -> Value {
-    //     let symbol = self.methods.ensure_symbol(signature);
-    //     // Create a little stub function that assumes the arguments are on the
-    //     // stack and calls the method.
-    //     let fn_obj = ObjFn::stub_call(self, signature, symbol);
-    //     let closure = ObjClosure::new(self, new_handle(fn_obj));
-    //     Value::Closure(new_handle(closure))
-    // }
+    pub fn get_slot_bool<'a>(&mut self, scope: &'a HandleScope, slot: Slot) -> bool {
+        self.api(scope).get_slot_bool(slot)
+    }
 
-    // // This is just a (non-functional) stub for the C API as well.
-    // pub(crate) fn call(&mut self, _method: &Value) -> InterpretResult {
-    //     self.set_value_for_slot(0, Value::Null);
-    //     InterpretResult::Success
-    // }
+    pub fn set_slot_bool<'a>(&mut self, scope: &'a HandleScope, slot: Slot, value: bool) {
+        self.api_mut(scope).stack[slot] = scope.create_bool(value).erase_type().into();
+    }
 
-    // // Allows c_api to write addition APIs which the rust public API
-    // // may not also share.
-    // pub(crate) fn value_for_slot(&self, slot: Slot) -> &Value {
-    //     &self.api.as_ref().unwrap().stack[slot]
-    // }
+    // This isn't quite right for the rust API, but is used by the C API.
+    pub(crate) fn call_handle_for_signature<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        signature: &str,
+    ) -> LocalHandle<'a, ObjClosure> {
+        let symbol = self.methods.ensure_symbol(signature);
+        // Create a little stub function that assumes the arguments are on the
+        // stack and calls the method.
+        let fn_obj = ObjFn::stub_call(self, scope, signature, symbol).unwrap();
+        let closure = ObjClosure::new(self, scope, fn_obj).unwrap();
+        closure
+    }
 
-    // pub(crate) fn set_value_for_slot(&mut self, slot: Slot, value: Value) {
-    //     assert!(self.api.is_some());
-    //     if let Some(api) = &mut self.api {
-    //         api.stack[slot] = value;
-    //     }
-    // }
+    // This is just a (non-functional) stub for the C API as well.
+    pub(crate) fn call<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        _method: &LocalHandle<()>,
+    ) -> InterpretResult {
+        self.set_value_for_slot(scope, 0, &HeapHandle::default());
+        InterpretResult::Success
+    }
 
-    // // Maybe return Option<SlotType> and None on failure instead of panick?
-    // pub fn type_for_slot(&self, slot: Slot) -> SlotType {
-    //     match self.value_for_slot(slot) {
-    //         Value::Boolean(_) => SlotType::Bool,
-    //         Value::Num(_) => SlotType::Num,
-    //         Value::Foreign(_) => SlotType::Foreign,
-    //         Value::List(_) => SlotType::List,
-    //         Value::Map(_) => SlotType::Map,
-    //         Value::Null => SlotType::Null,
-    //         Value::String(_) => SlotType::String,
-    //         _ => SlotType::Unknown,
-    //     }
-    // }
+    // Allows c_api to write addition APIs which the rust public API
+    // may not also share.
+    pub(crate) fn value_for_slot<'a>(
+        &self,
+        scope: &'a HandleScope,
+        slot: Slot,
+    ) -> LocalHandle<'a, ()> {
+        scope.from_heap(self.api(scope).value_for_slot(slot))
+    }
+
+    pub(crate) fn set_value_for_slot<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        slot: Slot,
+        value: &HeapHandle<()>,
+    ) {
+        self.api_mut(scope).set_value_for_slot(slot, value)
+    }
+
+    pub fn type_for_slot<'a>(&self, scope: &'a HandleScope, slot: Slot) -> SlotType {
+        self.api(scope).type_for_slot(slot)
+    }
+}
+
+impl Api {
+    pub fn set_slot_string<'a>(&mut self, scope: &'a HandleScope, slot: Slot, string: &str) {
+        self.stack[slot] = scope.str(string).unwrap().erase_type().into();
+    }
+
+    pub fn abort_fiber<'a>(&mut self, scope: &'a HandleScope, slot: Slot) {
+        self.error = self.stack[slot].clone();
+    }
+
+    pub fn set_slot_new_foreign<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        slot: Slot,
+        class_slot: Slot,
+        user_data: Box<dyn UserData>,
+    ) {
+        let class = self.stack[class_slot]
+            .try_downcast()
+            .expect("Slot must hold a class.");
+        assert!(matches!(class.borrow().source, ClassSource::Foreign));
+        self.stack[slot] = ObjForeign::new(scope, class, user_data)
+            .unwrap()
+            .erase_type()
+            .into()
+    }
+
+    pub fn slot_count(&self) -> usize {
+        self.stack.len()
+    }
+
+    pub fn set_slot_null(&mut self, slot: Slot) {
+        self.stack[slot] = HeapHandle::default();
+    }
+
+    pub fn get_slot_double(&self, slot: Slot) -> f64 {
+        let maybe_num: Result<f64, GCError> = self.stack[slot].try_into();
+        maybe_num.expect("slot is not a num")
+    }
+
+    pub fn set_slot_double<'a>(&mut self, scope: &'a HandleScope, slot: Slot, num: f64) {
+        let value: HeapHandle<f64> = num.into();
+        self.stack[slot] = value.erase_type();
+    }
+
+    pub fn get_list_count<'a>(&mut self, scope: &'a HandleScope, slot: Slot) -> usize {
+        let list: LocalHandle<ObjList> = self.value_for_slot(slot).try_downcast().unwrap();
+        let count = list.borrow().len();
+        count
+    }
+
+    pub fn get_list_element<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        list_slot: Slot,
+        index: usize,
+        element_slot: Slot,
+    ) {
+        let list_ref = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let list = list_ref.borrow();
+        self.set_value_for_slot(element_slot, list.elements[index].clone())
+    }
+
+    pub fn set_list_element<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        list_slot: Slot,
+        index: usize,
+        element_slot: Slot,
+    ) {
+        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let element = self.value_for_slot(element_slot);
+        list.borrow_mut().elements[index] = element;
+    }
+
+    pub fn insert_in_list<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        list_slot: Slot,
+        index: usize,
+        element_slot: Slot,
+    ) {
+        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let element = self.value_for_slot(element_slot);
+        list.borrow_mut().elements.insert(index, element);
+    }
+
+    pub fn map_contains_key<'a>(
+        &self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+    ) -> bool {
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let contains = map.borrow().contains_key(key);
+        contains
+    }
+
+    pub fn get_map_value<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+        value_slot: Slot,
+    ) {
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let value = map.borrow().data[key].clone();
+        self.set_value_for_slot(value_slot, value)
+    }
+
+    pub fn set_map_value<'a>(
+        &self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+        value_slot: Slot,
+    ) {
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let value = self.value_for_slot(value_slot);
+        map.borrow_mut().data.insert(key, value);
+    }
+
+    pub fn remove_map_value<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        map_slot: Slot,
+        key_slot: Slot,
+        removed_value_slot: Slot,
+    ) {
+        let map = self
+            .value_for_slot(map_slot)
+            .try_into_map()
+            .expect("slot is not a map");
+        let key = self.value_for_slot(key_slot);
+        let value = map
+            .borrow_mut()
+            .data
+            .remove(key)
+            .unwrap_or(HeapHandle::default());
+        self.set_value_for_slot(removed_value_slot, value);
+    }
+
+    pub fn get_slot_bool(&self, slot: Slot) -> bool {
+        let value: Result<bool, GCError> = self.stack[slot].try_into();
+        value.expect("slot is not a bool")
+    }
+
+    pub fn set_slot_bool<'a>(&mut self, scope: &'a HandleScope, slot: Slot, value: bool) {
+        let handle: HeapHandle<bool> = value.into();
+        self.stack[slot] = handle.erase_type().into();
+    }
+
+    // Allows c_api to write addition APIs which the rust public API
+    // may not also share.
+    pub(crate) fn value_for_slot(&self, slot: Slot) -> &HeapHandle<()> {
+        &self.stack[slot]
+    }
+
+    pub(crate) fn set_value_for_slot(&mut self, slot: Slot, value: &HeapHandle<()>) {
+        self.stack[slot] = value.clone();
+    }
+
+    // Maybe return Option<SlotType> and None on failure instead of panick?
+    pub fn type_for_slot(&self, slot: Slot) -> SlotType {
+        let value = self.value_for_slot(slot);
+        if value.is_bool() {
+            SlotType::Bool
+        } else if value.is_num() {
+            SlotType::Num
+        } else if value.is_null() {
+            SlotType::Null
+        } else if value.is_of_type::<ObjForeign>() {
+            SlotType::Foreign
+        } else if value.is_of_type::<ObjList>() {
+            SlotType::List
+        } else if value.is_of_type::<ObjMap>() {
+            SlotType::Map
+        } else if value.is_of_type::<String>() {
+            SlotType::String
+        } else {
+            SlotType::Unknown
+        }
+    }
 }
 
 impl core::fmt::Debug for VM {
@@ -1327,12 +1532,6 @@ fn create_class<'a>(
     fiber.push(&class.erase_type().into());
     Ok(())
 }
-
-// type Handle<T> = Rc<RefCell<T>>;
-
-// pub(crate) fn new_handle<T>(t: T) -> Handle<T> {
-//     Rc::new(RefCell::new(t))
-// }
 
 #[derive(Debug)]
 pub(crate) struct CoreClasses {
@@ -1848,7 +2047,8 @@ fn get_module_variable<'a>(
 }
 
 impl VM {
-    pub fn new(scope: &HandleScope, config: Configuration) -> Self {
+    pub fn new(heap: &Heap, config: Configuration) -> Self {
+        let scope = HandleScope::new(heap);
         let mut vm = Self {
             // Invalid import name, intentionally.
             methods: SymbolTable::default(),
@@ -1856,8 +2056,8 @@ impl VM {
             start_time: std::time::Instant::now(),
             config,
             core: None,
-            // api: None,
-            // c_config: WrenConfiguration::default(),
+            api: None,
+            c_config: WrenConfiguration::default(),
         };
 
         // FIXME: This shouldn't be needed anymore.  We no longer
@@ -1875,7 +2075,7 @@ impl VM {
             variables: List::default(),
             variable_names: Vec::new(),
         };
-        init_base_classes(scope, &mut vm, &mut stub_core);
+        init_base_classes(&scope, &mut vm, &mut stub_core);
         scope.as_mut(&vm.globals).class_class =
             Some(stub_core.expect_class(&scope, "Class").into());
         init_fn_and_fiber(&mut vm, &scope, &mut stub_core);
@@ -1993,17 +2193,25 @@ impl VM {
         }
     }
 
-    // fn call_foreign(&mut self, foreign: &ForeignMethodFn, args: Vec<Value>) -> Result<Value> {
-    //     assert!(self.api.is_none(), "Cannot already be in foreign call.");
-    //     self.api = Some(Api::with_stack(args));
-    //     foreign(self);
-    //     let api = self.api.take().unwrap();
-    //     if api.error.is_null() {
-    //         Ok(api.into_return_value())
-    //     } else {
-    //         Err(VMError::FiberAbort(api.error))
-    //     }
-    // }
+    fn call_foreign<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        foreign: &ForeignMethodFn,
+        args: Vec<HeapHandle<()>>,
+    ) -> Result<LocalHandle<'a, ()>> {
+        assert!(self.api.is_none(), "Cannot already be in foreign call.");
+        self.api = Some(GlobalHandle::from(Api::with_stack(scope, args)));
+        foreign(self);
+        let api = self.api(scope);
+        if api.error.is_null() {
+            Ok(scope.from_heap(&api.into_return_value()))
+        } else {
+            // FIXME: Is there a direct path from HeapHandle -> GlobalHandle?
+            Err(VMError::FiberAbort(GlobalHandle::from(
+                scope.from_heap(&api.error),
+            )))
+        }
+    }
 
     fn cascade_error(
         &mut self,
@@ -2239,39 +2447,43 @@ impl VM {
         }
     }
 
-    // fn create_foreign<'a>(&mut self, &HandleScope, class_handle: &LocalHandle<ObjClass>) -> Result<LocalHandle<'a, ()>> {
-    //     // wren_c makes these all asserts, but I'm not sure why?
-    //     fn vm_assert(condition: bool, msg: &str) -> Result<()> {
-    //         if condition {
-    //             Ok(())
-    //         } else {
-    //             Err(VMError::from_str(msg))
-    //         }
-    //     }
+    fn create_foreign<'a>(
+        &mut self,
+        scope: &'a HandleScope,
+        class_handle: &LocalHandle<ObjClass>,
+    ) -> Result<LocalHandle<'a, ()>> {
+        // wren_c makes these all asserts, but I'm not sure why?
+        fn vm_assert(condition: bool, msg: &str) -> Result<()> {
+            if condition {
+                Ok(())
+            } else {
+                Err(VMError::from_str(msg))
+            }
+        }
 
-    //     let class = class_handle.borrow();
-    //     vm_assert(class.is_foreign(), "Class must be a foreign class.")?;
+        let class = class_handle.borrow();
+        vm_assert(class.is_foreign(), "Class must be a foreign class.")?;
 
-    //     // wren_c TODO: Don't look up every time.
-    //     let symbol = self
-    //         .methods
-    //         .symbol_for_name("<allocate>")
-    //         .ok_or_else(|| VMError::from_str("Should have defined <allocate> symbol."))?;
+        // wren_c TODO: Don't look up every time.
+        let symbol = self
+            .methods
+            .symbol_for_name("<allocate>")
+            .ok_or_else(|| VMError::from_str("Should have defined <allocate> symbol."))?;
 
-    //     vm_assert(class.methods.len() > symbol, "Class should have allocator.")?;
-    //     let method = class
-    //         .lookup_method(symbol)
-    //         .ok_or_else(|| VMError::from_str("Class should have allocator."))?;
+        vm_assert(class.methods.len() > symbol, "Class should have allocator.")?;
+        let method = class
+            .lookup_method(symbol)
+            .ok_or_else(|| VMError::from_str("Class should have allocator."))?;
 
-    //     // Pass the constructor arguments to the allocator as well.
-    //     match method {
-    //         Method::ForeignFunction(foreign) => {
-    //             let args = vec![Value::Class(class_handle.clone())];
-    //             self.call_foreign(foreign, args)
-    //         }
-    //         _ => Err(VMError::from_str("Allocator should be foreign.")),
-    //     }
-    // }
+        // Pass the constructor arguments to the allocator as well.
+        match method {
+            Method::ForeignFunction(foreign) => {
+                let args = vec![class_handle];
+                self.call_foreign(scope, foreign, args)
+            }
+            _ => Err(VMError::from_str("Allocator should be foreign.")),
+        }
+    }
 
     // ~80% of benchmark time is spent under this function.
     fn call_method<'a>(
@@ -2310,10 +2522,12 @@ impl VM {
             }
             Method::ForeignFunction(foreign) => {
                 // call_foriegn would copy the args anyway, so copy them here.
-                // let value =
-                //     self.call_foreign(foreign, fiber.stack.borrow_mut().split_off(this_offset))?;
-                // FunctionNext::Return(value)
-                unimplemented!()
+                let value = self.call_foreign(
+                    &scope,
+                    foreign,
+                    fiber.stack.borrow_mut().split_off(this_offset),
+                )?;
+                FunctionNext::Return(value)
             }
             Method::Block(closure) => FunctionNext::Call(scope.from_heap(closure), num_args),
         };
@@ -3113,8 +3327,8 @@ impl Traceable for ObjForeign {
 
 impl ObjForeign {
     pub(crate) fn new<'a>(
-        class: LocalHandle<ObjClass>,
         scope: &'a HandleScope,
+        class: LocalHandle<ObjClass>,
         user_data: Box<dyn UserData>,
     ) -> Result<LocalHandle<'a, ObjForeign>, GCError> {
         scope.take(ObjForeign {

@@ -3,9 +3,9 @@
 // move away from any ties to needing to by c-like now that we have c_api.rs
 // to implement the C-API on top of whatever rust API this exposes.
 
-use vmgc::HandleScope;
+use vmgc::*;
 
-pub use crate::vm::{SlotType, UserData, VM};
+pub use crate::vm::{SlotType, UserData, VMAndHeap, VM};
 
 pub static VERSION_STRING: &str = "safe_wren-0.1";
 

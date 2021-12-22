@@ -1,1 +1,2 @@
-[wren_c/test/regression/561 line 91] Error at 'z': Cannot declare more than 256 variables in one scope. (Not enough space for for-loops internal variables)
+
+thread 'main' has overflowed its stack

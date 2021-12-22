@@ -149,3 +149,5 @@ might be able to call things on it?
 * C API
 * Consider renaming VM to Machine so that WrenVM can hold both a Machine and Heap.
 * Make sure GCError is uncatchable from wren code.
+* Need some way to store "WrenHandles", presumably indexes into an array of GlobalHandles?
+* 

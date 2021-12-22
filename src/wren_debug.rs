@@ -2,7 +2,7 @@
 
 use crate::compiler::{lex, InputManager, WrenError};
 use crate::test::test_config;
-use crate::vm::{debug_bytecode, RuntimeError, VM};
+use crate::vm::{debug_bytecode, RuntimeError, VMAndHeap};
 use crate::wren::DebugLevel;
 
 use vmgc::*;
@@ -43,21 +43,21 @@ pub fn print_tokens(bytes: Vec<u8>) {
 pub fn print_bytecode(bytes: Vec<u8>, module_name: String) {
     let input = InputManager::from_bytes(bytes);
     let config = test_config();
-    let heap = Heap::new(config.heap_limit_bytes).unwrap();
-    let scope = HandleScope::new(&heap);
-    let mut vm = VM::new(&scope, config);
+    let mut wren_vm = VMAndHeap::new(config);
+    let scope = HandleScope::new(&wren_vm.heap);
+    let vm = &mut wren_vm.vm;
     let result = vm.compile_in_module(&scope, &module_name, input);
     match result {
-        Ok(closure) => debug_bytecode(&scope, &vm, closure.as_ref()),
+        Ok(closure) => debug_bytecode(&scope, vm, closure.as_ref()),
         Err(e) => print_compile_error(e),
     }
 }
 
 pub fn interpret_and_print_vm(bytes: Vec<u8>, module_name: String) {
     let config = test_config();
-    let heap = Heap::new(config.heap_limit_bytes).unwrap();
-    let scope = HandleScope::new(&heap);
-    let mut vm = VM::new(&scope, config);
+    let mut wren_vm = VMAndHeap::new(config);
+    let scope = HandleScope::new(&wren_vm.heap);
+    let vm = &mut wren_vm.vm;
     let input = InputManager::from_bytes(bytes);
     vm.config.debug_level = Some(DebugLevel::NonCore);
     let result = vm.compile_in_module(&scope, &module_name, input);
