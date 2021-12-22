@@ -417,6 +417,10 @@ impl Stack {
     pub fn truncate(&mut self, len: usize) {
         self.values.truncate(len);
     }
+
+    pub fn split_off(&mut self, at: usize) -> List<()> {
+        self.values.split_off(at)
+    }
 }
 
 impl<I: std::slice::SliceIndex<[HeapHandle<()>]>> std::ops::Index<I> for Stack {
@@ -745,7 +749,7 @@ impl Api {
         }
     }
 
-    fn into_return_value(self) -> HeapHandle<()> {
+    fn return_value(&self) -> HeapHandle<()> {
         self.stack.first().unwrap().clone()
     }
 }
@@ -883,7 +887,7 @@ impl VM {
     }
 
     pub fn abort_fiber<'a>(&mut self, scope: &'a HandleScope, slot: Slot) {
-        self.api_mut(scope).abort_fiber(scope, slot)
+        self.api_mut(scope).abort_fiber(slot)
     }
 
     pub fn get_variable(
@@ -945,7 +949,9 @@ impl VM {
     }
 
     pub fn get_list_count<'a>(&self, scope: &'a HandleScope, slot: Slot) -> usize {
-        self.api(scope).get_list_count(scope, slot)
+        let list: LocalHandle<ObjList> = self.value_for_slot(scope, slot).try_downcast().unwrap();
+        let count = list.borrow().len();
+        count
     }
 
     pub fn get_list_element<'a>(
@@ -1008,7 +1014,7 @@ impl VM {
     }
 
     pub fn set_map_value<'a>(
-        &self,
+        &mut self,
         scope: &'a HandleScope,
         map_slot: Slot,
         key_slot: Slot,
@@ -1090,7 +1096,7 @@ impl Api {
         self.stack[slot] = scope.str(string).unwrap().erase_type().into();
     }
 
-    pub fn abort_fiber<'a>(&mut self, scope: &'a HandleScope, slot: Slot) {
+    pub fn abort_fiber<'a>(&mut self, slot: Slot) {
         self.error = self.stack[slot].clone();
     }
 
@@ -1101,7 +1107,8 @@ impl Api {
         class_slot: Slot,
         user_data: Box<dyn UserData>,
     ) {
-        let class = self.stack[class_slot]
+        let class: LocalHandle<ObjClass> = scope
+            .from_heap(&self.stack[class_slot])
             .try_downcast()
             .expect("Slot must hold a class.");
         assert!(matches!(class.borrow().source, ClassSource::Foreign));
@@ -1120,19 +1127,13 @@ impl Api {
     }
 
     pub fn get_slot_double(&self, slot: Slot) -> f64 {
-        let maybe_num: Result<f64, GCError> = self.stack[slot].try_into();
+        let maybe_num: Result<f64, GCError> = self.stack[slot].clone().try_into();
         maybe_num.expect("slot is not a num")
     }
 
     pub fn set_slot_double<'a>(&mut self, scope: &'a HandleScope, slot: Slot, num: f64) {
         let value: HeapHandle<f64> = num.into();
         self.stack[slot] = value.erase_type();
-    }
-
-    pub fn get_list_count<'a>(&mut self, scope: &'a HandleScope, slot: Slot) -> usize {
-        let list: LocalHandle<ObjList> = self.value_for_slot(slot).try_downcast().unwrap();
-        let count = list.borrow().len();
-        count
     }
 
     pub fn get_list_element<'a>(
@@ -1142,9 +1143,12 @@ impl Api {
         index: usize,
         element_slot: Slot,
     ) {
-        let list_ref = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let list_ref: LocalHandle<ObjList> = scope
+            .from_heap(self.value_for_slot(list_slot))
+            .try_downcast()
+            .unwrap();
         let list = list_ref.borrow();
-        self.set_value_for_slot(element_slot, list.elements[index].clone())
+        self.set_value_for_slot(element_slot, &list.elements[index])
     }
 
     pub fn set_list_element<'a>(
@@ -1154,9 +1158,12 @@ impl Api {
         index: usize,
         element_slot: Slot,
     ) {
-        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let list: LocalHandle<ObjList> = scope
+            .from_heap(self.value_for_slot(list_slot))
+            .try_downcast()
+            .unwrap();
         let element = self.value_for_slot(element_slot);
-        list.borrow_mut().elements[index] = element;
+        list.borrow_mut().elements[index] = element.clone();
     }
 
     pub fn insert_in_list<'a>(
@@ -1166,9 +1173,12 @@ impl Api {
         index: usize,
         element_slot: Slot,
     ) {
-        let list = self.value_for_slot(list_slot).try_into_list().unwrap();
+        let list: LocalHandle<ObjList> = scope
+            .from_heap(self.value_for_slot(list_slot))
+            .try_downcast()
+            .unwrap();
         let element = self.value_for_slot(element_slot);
-        list.borrow_mut().elements.insert(index, element);
+        list.borrow_mut().elements.insert(index, element.clone());
     }
 
     pub fn map_contains_key<'a>(
@@ -1177,9 +1187,9 @@ impl Api {
         map_slot: Slot,
         key_slot: Slot,
     ) -> bool {
-        let map = self
-            .value_for_slot(map_slot)
-            .try_into_map()
+        let map: LocalHandle<ObjMap> = scope
+            .from_heap(self.value_for_slot(map_slot))
+            .try_downcast()
             .expect("slot is not a map");
         let key = self.value_for_slot(key_slot);
         let contains = map.borrow().contains_key(key);
@@ -1193,12 +1203,12 @@ impl Api {
         key_slot: Slot,
         value_slot: Slot,
     ) {
-        let map = self
-            .value_for_slot(map_slot)
-            .try_into_map()
+        let map: LocalHandle<ObjMap> = scope
+            .from_heap(self.value_for_slot(map_slot))
+            .try_downcast()
             .expect("slot is not a map");
         let key = self.value_for_slot(key_slot);
-        let value = map.borrow().data[key].clone();
+        let value = &map.borrow().data[key];
         self.set_value_for_slot(value_slot, value)
     }
 
@@ -1209,12 +1219,12 @@ impl Api {
         key_slot: Slot,
         value_slot: Slot,
     ) {
-        let map = self
-            .value_for_slot(map_slot)
-            .try_into_map()
+        let map: LocalHandle<ObjMap> = scope
+            .from_heap(self.value_for_slot(map_slot))
+            .try_downcast()
             .expect("slot is not a map");
-        let key = self.value_for_slot(key_slot);
-        let value = self.value_for_slot(value_slot);
+        let key = self.value_for_slot(key_slot).clone();
+        let value = self.value_for_slot(value_slot).clone();
         map.borrow_mut().data.insert(key, value);
     }
 
@@ -1225,9 +1235,9 @@ impl Api {
         key_slot: Slot,
         removed_value_slot: Slot,
     ) {
-        let map = self
-            .value_for_slot(map_slot)
-            .try_into_map()
+        let map: LocalHandle<ObjMap> = scope
+            .from_heap(self.value_for_slot(map_slot))
+            .try_downcast()
             .expect("slot is not a map");
         let key = self.value_for_slot(key_slot);
         let value = map
@@ -1235,11 +1245,11 @@ impl Api {
             .data
             .remove(key)
             .unwrap_or(HeapHandle::default());
-        self.set_value_for_slot(removed_value_slot, value);
+        self.set_value_for_slot(removed_value_slot, &value);
     }
 
     pub fn get_slot_bool(&self, slot: Slot) -> bool {
-        let value: Result<bool, GCError> = self.stack[slot].try_into();
+        let value: Result<bool, GCError> = self.stack[slot].clone().try_into();
         value.expect("slot is not a bool")
     }
 
@@ -2204,7 +2214,7 @@ impl VM {
         foreign(self);
         let api = self.api(scope);
         if api.error.is_null() {
-            Ok(scope.from_heap(&api.into_return_value()))
+            Ok(scope.from_heap(&api.return_value()))
         } else {
             // FIXME: Is there a direct path from HeapHandle -> GlobalHandle?
             Err(VMError::FiberAbort(GlobalHandle::from(
@@ -2478,7 +2488,7 @@ impl VM {
         // Pass the constructor arguments to the allocator as well.
         match method {
             Method::ForeignFunction(foreign) => {
-                let args = vec![class_handle];
+                let args = vec![class_handle.erase_type().into()];
                 self.call_foreign(scope, foreign, args)
             }
             _ => Err(VMError::from_str("Allocator should be foreign.")),
@@ -2525,7 +2535,7 @@ impl VM {
                 let value = self.call_foreign(
                     &scope,
                     foreign,
-                    fiber.stack.borrow_mut().split_off(this_offset),
+                    fiber.stack.borrow_mut().split_off(this_offset).into(),
                 )?;
                 FunctionNext::Return(value)
             }
@@ -3081,8 +3091,8 @@ impl ObjMap {
         self.data.len()
     }
 
-    pub fn contains_key(&self, key: LocalHandle<()>) -> bool {
-        self.data.contains_key(&key.into())
+    pub fn contains_key(&self, key: &HeapHandle<()>) -> bool {
+        self.data.contains_key(key)
     }
 }
 

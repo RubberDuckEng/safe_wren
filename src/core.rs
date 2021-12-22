@@ -1276,7 +1276,7 @@ fn map_contains_key<'a>(
     args: &[HeapHandle<()>],
 ) -> Result<LocalHandle<'a, ()>> {
     validate_key(vm, &args[1])?;
-    let key = scope.from_heap(&args[1]);
+    let key = &args[1];
     let map = unwrap_this_as_map(scope, &args);
     let result = map.borrow().contains_key(key);
     Ok(scope.create_bool(result).erase_type())

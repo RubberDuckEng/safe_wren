@@ -318,7 +318,7 @@ impl<'vm> CallContext<'vm> {
 pub extern "C" fn wrenNewVM(c_config_ptr: *mut WrenConfiguration) -> *mut WrenVM {
     let c_config = unsafe { &*c_config_ptr };
     let config = Configuration::from_c(c_config);
-    let vm_and_heap = VMAndHeap::new(config);
+    let mut vm_and_heap = VMAndHeap::new(config);
     // Also hold onto the config for the function pointers.
     vm_and_heap.vm.c_config = c_config.clone();
     let vm_and_heap_ptr = Box::into_raw(Box::new(vm_and_heap));
@@ -339,10 +339,6 @@ impl InterpretResult {
             InterpretResult::RuntimeError => WrenInterpretResult_WREN_RESULT_RUNTIME_ERROR,
         }
     }
-}
-
-fn to_c_vm(vm: &mut VM) -> *mut WrenVM {
-    unsafe { std::mem::transmute::<&mut VM, *mut WrenVM>(vm) }
 }
 
 // FIXME: This is extra-unsafe.  It's used when the C API callbacks are
